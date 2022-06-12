@@ -31,11 +31,34 @@ export const AnimeToBeListed = styled.div<itemData>`
         flex-direction: column;
         justify-content: space-evenly;
 
+        a{
+            color: #333333;
+
+            :hover{
+                transition: all ease-in-out 100ms;
+                color: #ff1a75;
+            }
+        }
+
+        h3{
+            margin: 0.5rem 0;
+
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
         div.genre{
+
+            margin: 0.5rem 0;
+
             ul{
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
+                
+                li{
+                    color: #b0b0b0;
+                }
 
                 li::after{
                     content: ', ';
@@ -48,20 +71,9 @@ export const AnimeToBeListed = styled.div<itemData>`
         }
 
         div.score{
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
-
-            svg{
-                height: 20px;
-                width: auto;
-
-                margin: 0 0.2rem;
-
-                fill: #ff9130;
-            }
+            margin: 0.5rem 0;
         }
+
     }
 
 `

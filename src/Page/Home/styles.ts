@@ -12,12 +12,33 @@ export const Container = styled.div<ContainerProps>`
     display: flex;
     flex-direction: row;
 
+    @media(max-width: 1080px){
+        flex-wrap: wrap;
+    }
+
+    @media(max-width: 620px){
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
     width: 100%;
 
     background-color: #fafafa;
 
-    
     nav.links{
+        
+        width: 25vh;
+
+        @media(max-width: 1080px){
+            width: 20%;
+            padding-left: 2rem;
+        }
+
+        @media(max-width: 620px){
+            display: none;
+        }
+
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -27,8 +48,6 @@ export const Container = styled.div<ContainerProps>`
         top: 0!important; */
 
         font-size: 1.4rem;
-
-        width: 25%;
 
         padding-left: 4rem;
 
@@ -67,29 +86,27 @@ export const Container = styled.div<ContainerProps>`
 
     >aside{
 
-        width: 40%;
-
-        padding: 0 2rem;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-
-        div.trending{
-
-        }
-
     }
 
     div.main-content{
 
-        width: 60%;
+        width: 55%;
 
         border-left: 2px solid #e6e6e6;
         border-right: 2px solid #e6e6e6;
 
         padding: 1rem 3rem 3rem 3rem;
+
+        @media(max-width: 1080px){
+            width: 70%;
+            padding: 0 1rem ;
+            border-right: none;
+        }
+
+        @media(max-width: 620px){
+            width: 95%;
+            border-left: none;
+        }
 
         .div-skeleton{
             height: 40vh;
@@ -207,6 +224,13 @@ export const Container = styled.div<ContainerProps>`
                 justify-content: space-between;
                 align-items: center;
 
+                @media(max-width: 620px){
+                    display: -webkit-box;
+                    justify-content: center;
+
+                    overflow-y: auto;
+                }
+
             }
         }
 
@@ -222,8 +246,68 @@ export const Container = styled.div<ContainerProps>`
 
     }
 
-    aside.trending{
+    aside{
         width: 25%;
+
+        padding: 0 2rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+
+        @media(max-width: 1020px){
+            width: 100%;
+        }
+
+        @media(max-width: 620px){
+            padding: 0 1rem;
+        }
+        
+        .trending-heading{
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            margin: 2rem 0;
+
+            h3{
+                font-size: 1.6rem;
+                font-weight: 600;
+                color: #625e5e;
+            }
+
+            svg{
+                width: 15px;
+                height: auto;
+                color: #625e5e;
+            }
+
+        }
+
+        div.trending-items{
+
+            a.button-see-more{
+                width: 100%;
+
+                display: flex;
+                justify-content: center;
+
+                padding: 1.3rem 0;
+                margin: 2rem 0;
+
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #ff1a75;
+
+                border-radius: 2px;
+                background-color: #ffd0e3;
+
+            }
+
+        }
 
     }
 

@@ -22,6 +22,11 @@ export const AnimeFromHeading = styled.div<itemData>`
         height: 100%;
         width: 60%;
 
+        @media(max-width: 790px){
+            width: auto;
+            padding-left: 2rem;
+        }
+
         padding-left: 3rem;
 
         display: flex;
@@ -37,6 +42,14 @@ export const AnimeFromHeading = styled.div<itemData>`
             width: 60%;
 
             margin: 2rem 0;
+
+            @media(max-width: 390px){
+                margin: 0;
+
+                h1{
+                    font-size: 2.4rem!important;
+                }
+            }
 
             a:hover{
                 h1{

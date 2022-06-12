@@ -5,7 +5,9 @@ import API from '../../API/anilist'
 import HeadingContent from '../../Components/Home/HeadingContent'
 import AnimesReleasingThisWeek from '../../Components/Home/AnimesReleasingThisWeekList'
 import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.svg'
+import { ReactComponent as DotSvg } from '../../imgs/svg/dot.svg'
 import Trending from '../../Components/Home/Trending'
+import SearchInnerPage from '../../Components/SearchInnerPage'
 
 export default function Home() {
 
@@ -151,13 +153,33 @@ export default function Home() {
       </div >
 
       <aside>
+
+        <div className='search'>
+
+          <SearchInnerPage />
+
+        </div>
+
         <div className='trending'>
           {loading === false && (
-            trending.map((item, key) => (
-              <Trending key={key} data={item} />
-            ))
+            <>
+              <div className='trending-heading'>
+                <h3>Trending Animes</h3>
+                <div>
+                  <DotSvg />
+                  <DotSvg />
+                </div>
+              </div>
+              <div className='trending-items'>
+                {trending.map((item, key) => (
+                  <Trending key={key} data={item} />
+                ))}
+                <Link to={`/animes/trending`} className='button-see-more'>See More</Link>
+              </div>
+
+            </>
           )}
-          aside
+
         </div>
         <div>
           aside

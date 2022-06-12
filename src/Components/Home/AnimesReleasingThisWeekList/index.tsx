@@ -5,8 +5,6 @@ import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 
 export default function AnimesReleasingThisWeek(data: any) {
 
-    console.log(data.data)
-
     return (
 
         <C.AnimeToBeListed info={data.data} >

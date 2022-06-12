@@ -169,6 +169,11 @@ export default {
                                     status
                                     episodes
                                     averageScore
+                                    nextAiringEpisode{
+                                        id
+                                        episode
+                                        airingAt
+                                    }
                                     startDate{
                                         year
                                         month
@@ -202,7 +207,7 @@ export default {
                     `,
                     variables:{
                         'page': 1,
-                        'perPage': 5,
+                        'perPage': 3,
                         'year': new Date().getFullYear(),
                     }
                 })
