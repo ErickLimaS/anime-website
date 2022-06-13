@@ -15,6 +15,10 @@ export const Container = styled.header<ContainerProps>`
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+
+    @media(max-width: 620px){
+        display: flex;
+    }
     
     padding: 0 1rem;
 
@@ -33,6 +37,8 @@ export const Container = styled.header<ContainerProps>`
     div.nav-links{
 
         height: 100%;
+
+        display: none;
 
         @media(max-width: 620px){
             display: flex;
@@ -67,6 +73,10 @@ export const Container = styled.header<ContainerProps>`
 
         nav{
 
+            z-index: 1000;
+
+            padding: 2rem 0;
+
             @media(max-width: 620px){
                 display: ${props => props.display === true ? 'flex' : 'none'};
                 flex-direction: column;
@@ -81,6 +91,10 @@ export const Container = styled.header<ContainerProps>`
                 position: absolute;
                 top: 9vh;
                 right: 0;
+
+                *{
+                    width: 100%;
+                }
                 
 
                 a{
@@ -97,16 +111,25 @@ export const Container = styled.header<ContainerProps>`
             
             height: 100%;
 
-            a{
+            h3{
                 display: flex;
-                flex-direction: row;
-                align-items: center;
+                justify-content: center;
+                color: #ff1a75;
+            }
+            ul{
+                padding-left: 1rem;
 
-                height: 100%;
-                margin: 0 1rem;
+                a{
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
 
-                :hover{
-                    color: #999999;
+                    height: 100%;
+                    margin: 0 1rem;
+
+                    :hover{
+                        color: #999999;
+                    }
                 }
             }
 

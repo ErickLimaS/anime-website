@@ -21,9 +21,32 @@ export default function Header() {
                 </button>
 
                 <nav className='mobile-display-menu-dropdown'>
-                    <Link to={'/'}>Animes</Link>
-                    <Link to={'/'}>Mangas</Link>
-                    <Link to={'/'}>Characters</Link>
+
+                    <h3>Category</h3>
+
+                    <ul>
+
+                        <li><Link to={``}>Shonen</Link></li>
+                        <li><Link to={``}>Shojo</Link></li>
+                        <li><Link to={``}>Seinen</Link></li>
+                        <li><Link to={``}>Sports</Link></li>
+                        <li><Link to={``}>Action</Link></li>
+
+                    </ul>
+
+                    <h3>Categories</h3>
+
+                    <ul>
+
+                        <li><Link to={``}>Tv</Link></li>
+                        <li><Link to={``}>Manga</Link></li>
+                        <li><Link to={``}>One Shot</Link></li>
+                        <li><Link to={``}>Novel</Link></li>
+                        <li><Link to={``}>Movie</Link></li>
+                        <li><Link to={``}>Special</Link></li>
+                        <li><Link to={``}>OVA</Link></li>
+
+                    </ul>
                 </nav>
 
             </div>

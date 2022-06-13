@@ -11,6 +11,7 @@ export const Container = styled.div<ContainerProps>`
     display: flex;
     flex-direction: row;
 
+
     @media(max-width: 1080px){
         flex-wrap: wrap;
     }
