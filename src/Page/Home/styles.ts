@@ -28,6 +28,10 @@ export const Container = styled.div<ContainerProps>`
 
     nav.links{
         
+        position: sticky;
+        top: 0;
+        
+        height: max-content;
         width: 25vh;
 
         @media(max-width: 1080px){
@@ -43,10 +47,6 @@ export const Container = styled.div<ContainerProps>`
         flex-direction: column;
         justify-content: flex-start;
 
-        /* position: -webkit-sticky!important;
-        position: sticky!important;
-        top: 0!important; */
-
         font-size: 1.4rem;
 
         padding-left: 4rem;
@@ -54,7 +54,7 @@ export const Container = styled.div<ContainerProps>`
         h3{
             margin: 1rem 0;
             
-            color: #625e5e;
+            color: #999999;
             font-weight: 600;
         }
 
@@ -77,15 +77,11 @@ export const Container = styled.div<ContainerProps>`
                 width: 100%;
 
                 font-weight: 600;
-                color: #888888; 
+                color: #757474; 
             }
 
         }
         
-    }
-
-    >aside{
-
     }
 
     div.main-content{
@@ -231,6 +227,16 @@ export const Container = styled.div<ContainerProps>`
                     overflow-y: auto;
                 }
 
+            }
+
+            div.top-rated-animes{
+                display: flex;
+                flex-direction: row;
+
+                @media(max-width: 620px){
+
+                    overflow-y: auto;
+                }
             }
         }
 

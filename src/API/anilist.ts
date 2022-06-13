@@ -224,5 +224,70 @@ export default {
 
         }
 
+    },
+
+    getTopRated: async () => {
+
+        try {
+
+            const { data } = await Axios({
+                url: `${BASE_URL}`,
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    query: `
+                        query($perPage: Int, $page: Int){
+                            Page(page: $page, perPage: $perPage){
+                                media(type: ANIME, sort: SCORE_DESC){
+                                    title{
+                                        romaji
+                                        native
+                                    }
+                                    status
+                                    episodes
+                                    averageScore
+                                    startDate{
+                                        year
+                                    }
+                                    isAdult
+                                    id
+                                    trailer{
+                                        thumbnail
+                                    }
+                                    bannerImage
+                                    coverImage{
+                                        extraLarge
+                                        large
+                                        medium
+                                        color
+                                    }
+                                    type
+                                    format
+                                    genres
+                                    trending
+                                    popularity
+                                    averageScore
+                                }
+                            }
+                        }
+                    `,
+                    variables:{
+                        'page': 1,
+                        'perPage': 3,
+                    }
+                })
+            })
+
+            console.log(data.data.Page.media)
+
+            return data.data.Page.media
+
+        }
+        catch (error) {
+
+            return console.log(error)
+
+        }
+
     }
 }

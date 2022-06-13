@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import * as C from './styles'
 import { ReactComponent as ListSvg } from '../../imgs/svg/list.svg'
+import SearchInnerPage from '../SearchInnerPage'
 
 export default function Header() {
 
@@ -26,7 +27,6 @@ export default function Header() {
                 </nav>
 
             </div>
-
 
         </C.Container>
     )

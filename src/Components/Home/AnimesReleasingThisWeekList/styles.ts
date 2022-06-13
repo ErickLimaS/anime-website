@@ -9,6 +9,12 @@ export const AnimeToBeListed = styled.div<itemData>`
     height: 28rem;
     width: 20rem;
 
+    margin: 0 0.7rem;
+
+    @media(max-width: 520px){
+        margin: 0 0.3rem;
+    }
+
     background-image: ${(props) => props.info.coverImage && `url("${props.info.coverImage.large}")`};
     background-position: center;
     background-repeat: no-repeat;

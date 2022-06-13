@@ -8,6 +8,7 @@ import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.
 import { ReactComponent as DotSvg } from '../../imgs/svg/dot.svg'
 import Trending from '../../Components/Home/Trending'
 import SearchInnerPage from '../../Components/SearchInnerPage'
+import TopRated from '../../Components/Home/TopRated'
 
 export default function Home() {
 
@@ -21,6 +22,7 @@ export default function Home() {
   const [releasingThisSeason, setReleasingThisSeason] = useState([])
   const [releasingThisWeek, setReleasingThisWeek] = useState([])
   const [trending, setTrending] = useState([])
+  const [topRated, setTopRated] = useState([])
 
   useEffect(() => {
 
@@ -39,6 +41,10 @@ export default function Home() {
       //stores what is trending 
       const data3 = await API.getTrending()
       setTrending(data3)
+
+      //stores top rated animes
+      const data4 = await API.getTopRated();
+      setTopRated(data4)
 
       setLoading(false)
 
@@ -68,25 +74,26 @@ export default function Home() {
 
         </ul>
 
-        <h3>Discover</h3>
+        <h3>Categories</h3>
 
         <ul>
 
-          <li><Link to={``}>Placeholder</Link></li>
-          <li><Link to={``}>Placeholder</Link></li>
-          <li><Link to={``}>Placeholder</Link></li>
-          <li><Link to={``}>Placeholder</Link></li>
+          <li><Link to={``}>Tv</Link></li>
+          <li><Link to={``}>Manga</Link></li>
+          <li><Link to={``}>One Shot</Link></li>
+          <li><Link to={``}>Novel</Link></li>
+          <li><Link to={``}>Movie</Link></li>
+          <li><Link to={``}>Special</Link></li>
+          <li><Link to={``}>OVA</Link></li>
 
         </ul>
 
-        <h3>Discover</h3>
+        <h3>General</h3>
 
         <ul>
 
-          <li><Link to={``}>Placeholder</Link></li>
-          <li><Link to={``}>Placeholder</Link></li>
-          <li><Link to={``}>Placeholder</Link></li>
-          <li><Link to={``}>Placeholder</Link></li>
+          <li><Link to={``}>Settings</Link></li>
+          <li><Link to={``}>Log Out</Link></li>
 
 
         </ul>
@@ -134,7 +141,7 @@ export default function Home() {
           <div className={loading === true ? 'best-rated div-skeleton' : 'best-rated'}>
             <div className='heading'>
 
-              <h2>Top Rated</h2>
+              <h2>Top Rated Animes</h2>
 
               <div className='nav-buttons'>
                 <button type='button'><ArrowLeftSvg /></button>
@@ -143,7 +150,13 @@ export default function Home() {
 
             </div>
 
-            c
+            <div className='top-rated-animes'>
+              {loading === false && (
+                topRated.map((item, key) => (
+                  <TopRated key={key} data={item} />
+                ))
+              )}
+            </div>
           </div>
         </section>
 
