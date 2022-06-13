@@ -5,10 +5,52 @@ const BASE_URL: String = 'https://graphql.anilist.co/'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
 
-    getNewReleases: async () => {
+    getNewReleases: async (type: String, format?: String) => {
 
-        let season = 'SUMMER' //fix to correspond month
-        let seasonYear = new Date().getFullYear() - 2
+        const seasonYear = new Date().getFullYear() - 3
+        let season;
+
+        switch (new Date().getMonth()) {
+            case 0:
+                season = 'WINTER'
+                break;
+            case 1:
+                season = 'WINTER'
+                break;
+            case 2:
+                season = 'SPRING'
+                break;
+            case 3:
+                season = 'SPRING'
+                break;
+            case 4:
+                season = 'SPRING'
+                break;
+            case 5:
+                season = 'SUMMER'
+                break;
+            case 6:
+                season = 'SUMMER'
+                break;
+            case 7:
+                season = 'SUMMER'
+                break;
+            case 8:
+                season = 'AUTUMN'
+                break;
+            case 9:
+                season = 'AUTUMN'
+                break;
+            case 10:
+                season = 'AUTUMN'
+                break;
+            case 11:
+                season = 'WINTER'
+                break;
+            default: // exception/error
+                season = 'SUMMER'
+                break;
+        }
 
         try {
 
@@ -20,9 +62,9 @@ export default {
                 },
                 data: JSON.stringify({
 
-                    query: `query($season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int) {
+                    query: `query($type: MediaType, $format: MediaFormat, $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int) {
                         Page(page: $page, perPage: $perPage){
-                            media (season: $season, seasonYear: $seasonYear, type: ANIME, isAdult: false){
+                            media (season: $season, seasonYear: $seasonYear, type: $type, format: $format, isAdult: false){
                                 title{
                                     romaji
                                     native
@@ -54,6 +96,8 @@ export default {
                     }
                 `,
                     variables: {
+                        'type': `${type}`,
+                        'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
                         'perPage': 1,
                         // 'perPage': 5,
@@ -65,7 +109,8 @@ export default {
 
             })
 
-            // console.log(data.data.Page.media)
+            console.log(data.data.Page.media)
+
             return data.data.Page.media
 
         }
@@ -76,7 +121,7 @@ export default {
         }
     },
 
-    getReleasingThisWeek: async () => {
+    getReleasingThisWeek: async (type: String, format?: String) => {
 
         try {
 
@@ -86,12 +131,16 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($perPage: Int, $page: Int){
+                        query($type: MediaType, $format: MediaFormat, $perPage: Int, $page: Int){
                             Page(page: $page, perPage: $perPage){
-                                media(status: RELEASING, type: ANIME, sort: TRENDING_DESC){
+                                media(status: RELEASING, type: $type, format: $format, isAdult: false, sort: UPDATED_AT_DESC){
                                     title{
                                         romaji
                                         native
+                                    }
+                                    nextAiringEpisode{
+                                        airingAt
+                                        episode
                                     }
                                     status
                                     episodes
@@ -127,7 +176,9 @@ export default {
                             }
                         }
                     `,
-                    variables:{
+                    variables: {
+                        'type': `${type}`,
+                        'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
                         'perPage': 4,
                         'year': new Date().getFullYear(),
@@ -148,7 +199,7 @@ export default {
 
     },
 
-    getTrending: async () => {
+    getTrending: async (type: String, format?: String) => {
 
         try {
 
@@ -158,9 +209,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($perPage: Int, $page: Int){
+                        query($type: MediaType, $perPage: Int, $page: Int){
                             Page(page: $page, perPage: $perPage){
-                                media(type: ANIME, sort: TRENDING_DESC){
+                                media(type: $type, isAdult: false, sort: TRENDING_DESC){
                                     title{
                                         romaji
                                         native
@@ -205,7 +256,9 @@ export default {
                             }
                         }
                     `,
-                    variables:{
+                    variables: {
+                        'type': `${type}`,
+                        'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
                         'perPage': 3,
                         'year': new Date().getFullYear(),
@@ -226,7 +279,7 @@ export default {
 
     },
 
-    getTopRated: async () => {
+    getTopRated: async (type: String, format?: String) => {
 
         try {
 
@@ -236,9 +289,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($perPage: Int, $page: Int){
+                        query($type: MediaType, $perPage: Int, $page: Int){
                             Page(page: $page, perPage: $perPage){
-                                media(type: ANIME, sort: SCORE_DESC){
+                                media(type: $type, isAdult: false, sort: SCORE_DESC){
                                     title{
                                         romaji
                                         native
@@ -271,14 +324,16 @@ export default {
                             }
                         }
                     `,
-                    variables:{
+                    variables: {
+                        'type': `${type}`,
+                        'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
                         'perPage': 3,
                     }
                 })
             })
 
-            console.log(data.data.Page.media)
+            // console.log(data.data.Page.media)
 
             return data.data.Page.media
 

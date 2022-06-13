@@ -5,7 +5,7 @@ import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 
 export default function TopRated(data: any) {
 
-    console.log(data.data)
+    // console.log(data.data)
 
     return (
 

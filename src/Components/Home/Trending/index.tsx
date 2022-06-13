@@ -9,7 +9,7 @@ export default function Trending(data: any) {
 
     const score = data.data.averageScore / 2
 
-    console.log(data.data)
+    // console.log(data.data)
 
     return (
 
@@ -25,8 +25,8 @@ export default function Trending(data: any) {
                 <Link to={`/anime/${data.data.id}`}><h3>{data.data.title.romaji}</h3></Link>
                 <div className='genre'>
                     <ul>
-                        {(data.data.genres).slice(0, 3).map((item: any) => (
-                            <li>{item}</li>
+                        {(data.data.genres).slice(0, 3).map((item: any, key: React.Key | null | undefined) => (
+                            <li key={key}>{item}</li>
                         ))}
                     </ul>
                 </div>

@@ -19,8 +19,8 @@ export const AnimeToBeListed = styled.div<itemData>`
     div.cover{
         
         img{
-            height: 10rem;
-            width: auto;
+            height: auto;
+            width: 8rem;
         }
     }
 

@@ -4,7 +4,6 @@ interface ContainerProps {
 
     innerPageLink: number; //aux to show which inner page must be shown
 
-
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -25,6 +24,30 @@ export const Container = styled.div<ContainerProps>`
     width: 100%;
 
     background-color: #fafafa;
+    
+    //LOADING effect
+    .div-skeleton{
+        height: 40vh;
+        margin: 2rem 0;
+
+        border-radius: 4px;
+
+        animation: skeleton-loading 1s linear infinite alternate;
+
+        .heading{
+            display: none!important;;
+        }
+
+        @keyframes skeleton-loading{
+            0%{
+                background-color: #c0c0c0;
+            }
+            100%{
+                background-color: #999999;
+            }
+        }
+
+    }
 
     nav.links{
         
@@ -104,40 +127,25 @@ export const Container = styled.div<ContainerProps>`
             border-left: none;
         }
 
-        .div-skeleton{
-            height: 40vh;
-
-            animation: skeleton-loading 1s linear infinite alternate;
-
-            @keyframes skeleton-loading{
-                0%{
-                    background-color: #c0c0c0;
-                }
-                100%{
-                    background-color: #888888;
-                }
-            }
-
-        }
-
         nav.links-inner-page{
 
             font-size: 2rem;
-            font-weight: 400;
+            font-weight: 600;
 
             margin-bottom: 2rem;
 
             a{
                 margin-right: 2rem;
+                color: #888888;
             }
             a.anime{
-                color: ${props => props.innerPageLink === 0 && `#ff1a75`};
+                color: ${props => props.innerPageLink === 0 && `#01066b`};
             } 
             a.manga{
-                color: ${props => props.innerPageLink === 1 && `#ff1a75`};
+                color: ${props => props.innerPageLink === 1 && `#01066b`};
             }
             a.movie{
-                color: ${props => props.innerPageLink === 2 && `#ff1a75`};
+                color: ${props => props.innerPageLink === 2 && `#01066b`};
             }
 
         }
@@ -148,9 +156,8 @@ export const Container = styled.div<ContainerProps>`
         }
 
         // gets link clicked on Home and shows which section is correspondent
-        section#anime {
+        section#anime, section#manga, section#movie {
             display: ${props => props.innerPageLink === 0 ? `flex` : `none`};
-
 
             div.heading{
 
@@ -270,52 +277,55 @@ export const Container = styled.div<ContainerProps>`
             padding: 0 1rem;
         }
         
-        .trending-heading{
+        .trending{
+            width: 100%;
 
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-
-            margin: 2rem 0;
-
-            h3{
-                font-size: 1.6rem;
-                font-weight: 600;
-                color: #625e5e;
-            }
-
-            svg{
-                width: 15px;
-                height: auto;
-                color: #625e5e;
-            }
-
-        }
-
-        div.trending-items{
-
-            a.button-see-more{
-                width: 100%;
+            .trending-heading{
 
                 display: flex;
-                justify-content: center;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
 
-                padding: 1.3rem 0;
                 margin: 2rem 0;
 
-                font-size: 1.4rem;
-                font-weight: 600;
-                color: #ff1a75;
+                h3{
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    color: #625e5e;
+                }
 
-                border-radius: 2px;
-                background-color: #ffd0e3;
+                svg{
+                    width: 15px;
+                    height: auto;
+                    color: #625e5e;
+                }
+
+            }
+
+            div.trending-items{
+
+                a.button-see-more{
+                    width: 100%;
+
+                    display: flex;
+                    justify-content: center;
+
+                    padding: 1.3rem 0;
+                    margin: 2rem 0;
+
+                    font-size: 1.4rem;
+                    font-weight: 600;
+                    color: #ff1a75;
+
+                    border-radius: 2px;
+                    background-color: #ffd0e3;
+
+                }
 
             }
 
         }
-
     }
-
 
 `

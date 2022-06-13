@@ -30,31 +30,80 @@ export default function Home() {
 
       setLoading(true)
 
-      //stores the heading content, which is the releases of the season
-      const data1 = await API.getNewReleases()
-      setReleasingThisSeason(data1)
+      let data1, data2, data3, data4;
 
-      //stores releases of this week
-      const data2 = await API.getReleasingThisWeek()
-      setReleasingThisWeek(data2)
+      switch (indexInnerPageLink) {
 
-      //stores what is trending 
-      const data3 = await API.getTrending()
-      setTrending(data3)
+        case 0: //ANIME
+          //stores the heading content, which is the releases of the season
+          data1 = await API.getNewReleases('ANIME')
+          setReleasingThisSeason(data1)
 
-      //stores top rated animes
-      const data4 = await API.getTopRated();
-      setTopRated(data4)
+          //stores releases of this week
+          data2 = await API.getReleasingThisWeek('ANIME')
+          setReleasingThisWeek(data2)
 
-      setLoading(false)
+          //stores what is trending 
+          data3 = await API.getTrending('ANIME')
+          setTrending(data3)
+
+          //stores top rated animes
+          data4 = await API.getTopRated('ANIME');
+          setTopRated(data4)
+
+          setLoading(false)
+
+          break;
+
+        case 1: //MANGA
+          //stores the heading content, which is the releases of the season
+          data1 = await API.getNewReleases('MANGA')
+          setReleasingThisSeason(data1)
+
+          //stores releases of this week
+          data2 = await API.getReleasingThisWeek('MANGA')
+          setReleasingThisWeek(data2)
+
+          //stores what is trending 
+          data3 = await API.getTrending('MANGA')
+          setTrending(data3)
+
+          //stores top rated animes
+          data4 = await API.getTopRated('MANGA');
+          setTopRated(data4)
+
+          setLoading(false)
+
+          break;
+
+        case 2: //MOVIE
+          //stores the heading content, which is the releases of the season
+          data1 = await API.getNewReleases('ANIME', 'MOVIE')
+          setReleasingThisSeason(data1)
+
+          //stores releases of this week
+          data2 = await API.getReleasingThisWeek('ANIME', 'MOVIE')
+          setReleasingThisWeek(data2)
+
+          //stores what is trending 
+          data3 = await API.getTrending('ANIME', 'MOVIE')
+          setTrending(data3)
+
+          //stores top rated animes
+          data4 = await API.getTopRated('ANIME', 'MOVIE');
+          setTopRated(data4)
+
+          setLoading(false)
+
+          break;
+      }
 
     }
     loadData()
 
     console.log(releasingThisSeason)
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [indexInnerPageLink])
 
 
   return (
@@ -160,9 +209,111 @@ export default function Home() {
           </div>
         </section>
 
-        <section id='manga'></section>
+        <section id='manga'>
+          <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
+            {loading === false && (
+              releasingThisSeason.map((item: any, key) => (
+                <HeadingContent key={key} data={item} />
+              ))
+            )}
+          </div>
 
-        <section id='movie'></section>
+          <div className={loading === true ? 'new-episodes div-skeleton' : 'new-episodes'}>
+            <div className='heading'>
+
+              <h2>Releasing This Week</h2>
+
+              <div className='nav-buttons'>
+                <button type='button'><ArrowLeftSvg /></button>
+                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+              </div>
+
+            </div>
+
+            <div className='releasing-this-week'>
+              {loading === false && (
+                releasingThisWeek.map((item: any, key) => (
+                  <AnimesReleasingThisWeek key={key} data={item} />
+                ))
+              )}
+            </div>
+
+          </div>
+
+          <div className={loading === true ? 'best-rated div-skeleton' : 'best-rated'}>
+            <div className='heading'>
+
+              <h2>Top Rated Mangas</h2>
+
+              <div className='nav-buttons'>
+                <button type='button'><ArrowLeftSvg /></button>
+                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+              </div>
+
+            </div>
+
+            <div className='top-rated-animes'>
+              {loading === false && (
+                topRated.map((item, key) => (
+                  <TopRated key={key} data={item} />
+                ))
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section id='movie'>
+          <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
+            {loading === false && (
+              releasingThisSeason.map((item: any, key) => (
+                <HeadingContent key={key} data={item} />
+              ))
+            )}
+          </div>
+
+          <div className={loading === true ? 'new-episodes div-skeleton' : 'new-episodes'}>
+            <div className='heading'>
+
+              <h2>Releasing This Week</h2>
+
+              <div className='nav-buttons'>
+                <button type='button'><ArrowLeftSvg /></button>
+                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+              </div>
+
+            </div>
+
+            <div className='releasing-this-week'>
+              {loading === false && (
+                releasingThisWeek.map((item: any, key) => (
+                  <AnimesReleasingThisWeek key={key} data={item} />
+                ))
+              )}
+            </div>
+
+          </div>
+
+          <div className={loading === true ? 'best-rated div-skeleton' : 'best-rated'}>
+            <div className='heading'>
+
+              <h2>Top Rated Movies</h2>
+
+              <div className='nav-buttons'>
+                <button type='button'><ArrowLeftSvg /></button>
+                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+              </div>
+
+            </div>
+
+            <div className='top-rated-animes'>
+              {loading === false && (
+                topRated.map((item, key) => (
+                  <TopRated key={key} data={item} />
+                ))
+              )}
+            </div>
+          </div>
+        </section>
       </div >
 
       <aside>
@@ -173,11 +324,11 @@ export default function Home() {
 
         </div>
 
-        <div className='trending'>
+        <div className={loading === true ? 'trending div-skeleton' : 'trending'}>
           {loading === false && (
             <>
               <div className='trending-heading'>
-                <h3>Trending Animes</h3>
+                <h3>Trending</h3>
                 <div>
                   <DotSvg />
                   <DotSvg />
@@ -193,9 +344,6 @@ export default function Home() {
             </>
           )}
 
-        </div>
-        <div>
-          aside
         </div>
       </aside>
 
