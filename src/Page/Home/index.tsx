@@ -150,6 +150,10 @@ export default function Home() {
 
       <div className='main-content'>
 
+        <div className='search-mobile'>
+          <SearchInnerPage />
+        </div>
+
         <nav className='links-inner-page'>
           <Link to={`/`} onClick={() => setIndexInnerPageLink(0)} className='anime'>Anime</Link>
           <Link to={`/`} onClick={() => setIndexInnerPageLink(1)} className='manga'>Manga</Link>

@@ -128,6 +128,18 @@ export const Container = styled.div<ContainerProps>`
             border-left: none;
         }
 
+        .search-mobile{
+
+            display: none;
+            
+            @media(max-width: 620px){
+                display: block;
+
+                padding: 1rem 0 2rem 0;
+            }
+
+        }
+
         nav.links-inner-page{
 
             font-size: 2rem;
@@ -274,8 +286,13 @@ export const Container = styled.div<ContainerProps>`
             width: 100%;
         }
 
-        @media(max-width: 620px){
+        @media(max-width: 1080px){
             padding: 0 1rem;
+
+            .search{
+                display: none;
+            }
+
         }
         
         .trending{

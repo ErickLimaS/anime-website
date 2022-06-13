@@ -15,6 +15,10 @@ export default function Header() {
                 <a href='/'>Anime Website</a>
             </div>
 
+            <div className='search-header'>
+                <SearchInnerPage />
+            </div>
+
             <div className='nav-links nav-links-mobile'>
                 <button type='button' onClick={() => setMenuMobile(!menuMobile)}>
                     <ListSvg />

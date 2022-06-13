@@ -5,6 +5,7 @@ const BASE_URL: String = 'https://graphql.anilist.co/'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
 
+    // HOME PAGE
     getNewReleases: async (type: String, format?: String) => {
 
         const seasonYear = new Date().getFullYear() - 3
@@ -343,6 +344,67 @@ export default {
             return console.log(error)
 
         }
+
+    },
+
+    //SEARCH
+    getSeachResults: async (searchThis: String, type?: String) => {
+
+        try {
+
+            const { data } = await Axios({
+                url: `${BASE_URL}`,
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    query: `
+                        query($perPage: Int, $page: Int, $type: MediaType, $search: String){
+                            Page(page: $page, perPage: $perPage){
+                                media(type: $type, isAdult: false, search: $search){
+                                    title{
+                                        romaji
+                                        native
+                                    }
+                                    episodes
+                                    startDate{
+                                        year
+                                    }
+                                    isAdult
+                                    id
+                                    coverImage{
+                                        extraLarge
+                                        large
+                                        medium
+                                        color
+                                    }
+                                    type
+                                    format
+                                    genres
+                                    averageScore
+                                }
+                            }
+                        }
+                    `,
+                    variables: {
+                        'type': `${type ? `${type}` : 'ANIME'}`,
+                        'search': `${searchThis}`,
+                        'page': 1,
+                        'perPage': 3,
+                    }
+                })
+            })
+
+            console.log(data.data.Page.media)
+
+            return data.data.Page.media
+
+        }
+        catch (error) {
+
+            console.log(error)
+
+        }
+
 
     }
 }

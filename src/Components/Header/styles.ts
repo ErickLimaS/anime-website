@@ -34,6 +34,16 @@ export const Container = styled.header<ContainerProps>`
 
     }
 
+    div.search-header{
+
+        display: none;
+
+        @media(max-width: 1080px) and (min-width: 620px){
+            display: block;
+        }
+
+    }
+
     div.nav-links{
 
         height: 100%;

@@ -29,6 +29,10 @@ export const Container = styled.div`
         width: auto;
 
         padding: 0.9rem 1rem;
+
+        *{
+            color: #ff5ebc;
+        }
     }
        
     input{
@@ -61,6 +65,10 @@ export const Container = styled.div`
     button{
         svg{
             display: none;
+
+            *{
+                color: #fff;
+            }
         }
 
         background-color: #f3f2ff;
@@ -68,7 +76,6 @@ export const Container = styled.div`
         border: none;
         border-radius: 0 18px 18px 0;
         font-size: 1.4rem;
-                /* display: none; */
     }
     
 
