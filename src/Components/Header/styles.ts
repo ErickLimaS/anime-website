@@ -13,7 +13,7 @@ export const Container = styled.header<ContainerProps>`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
 
     @media(max-width: 620px){
