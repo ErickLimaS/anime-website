@@ -12,18 +12,35 @@ export default function HeadingContent(data: any) {
 
     // console.log(data.data)
 
+    let format;
+
+    switch (data.data.format) {
+        case 'TV':
+            format = 'anime';
+            break;
+        case 'MANGA':
+            format = 'manga';
+            break;
+        case 'MOVIE':
+            format = 'movie';
+            break;
+        default:
+            format = 'anime'; //fix exception
+            break;
+    }
+
     return (
 
         <C.AnimeFromHeading headingContent={data.data} >
 
             <div className='item-about'>
                 <div className='item-info'>
-                <Link to={`/anime/${data.data.id}`}><h1>{data.data.title.romaji}</h1></Link>
+                    <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji}</h1></Link>
                     <h2>{data.data.title.native}</h2>
                 </div>
 
                 <div className='item-button'>
-                    <Link to={`/anime/${data.data.id}`}>See More</Link>
+                    <Link to={`/${format}/${data.data.id}`}>See More</Link>
                     <button type='button' onClick={() => console.log(data.data)}><PlusSvg /></button>
                 </div>
             </div>

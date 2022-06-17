@@ -7,10 +7,27 @@ export default function TopRated(data: any) {
 
     // console.log(data.data)
 
+    let format;
+
+    switch (data.data.format) {
+        case 'TV':
+            format = 'anime';
+            break;
+        case 'MANGA':
+            format = 'manga';
+            break;
+        case 'MOVIE':
+            format = 'movie';
+            break;
+        default:
+            format = 'anime'; //fix exception
+            break;
+    }
+
     return (
 
         <C.TopRatedAnime info={data.data} >
-            <Link to={`/anime/${data.data.id}`}>
+            <Link to={`/${format}/${data.data.id}`}>
                 <div className='anime-name'>
                     <h5>{data.data.title.romaji} <span>({data.data.startDate.year})</span></h5>
                 </div>

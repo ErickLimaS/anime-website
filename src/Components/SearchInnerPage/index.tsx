@@ -54,7 +54,7 @@ export default function SearchInnerPage() {
                     {searchResults.map((item: any, key) => (
 
                         <div key={key} className='result-item'>
-                            <Link to={`anime/${item.id}`}>
+                            <Link to={`/anime/${item.id}`}>
                                 <img src={item.coverImage.medium} alt={`${item.title.romaji} Cover`}>
                                 </img>
                                 <div className='item-info'>

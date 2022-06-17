@@ -5,6 +5,25 @@ import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 
 export default function AnimesReleasingThisWeek(data: any) {
 
+    console.log(data.data.format) //tv, mnga, movie
+
+    let format;
+
+    switch (data.data.format) {
+        case 'TV':
+            format = 'anime';
+            break;
+        case 'MANGA':
+            format = 'manga';
+            break;
+        case 'MOVIE':
+            format = 'movie';
+            break;
+        default:
+            format = 'anime'; //fix exception
+            break;
+    }
+
     return (
 
         <C.AnimeToBeListed info={data.data} >
@@ -12,7 +31,7 @@ export default function AnimesReleasingThisWeek(data: any) {
                 <button type='button' onClick={() => console.log(data.data)}><PlusSvg /></button>
             </div>
             <div className='see-more-button'>
-                <Link to={`/anime/${data.data.id}`}>See More</Link>
+                <Link to={`/${format}/${data.data.id}`}>See More</Link>
             </div>
         </C.AnimeToBeListed>
     )

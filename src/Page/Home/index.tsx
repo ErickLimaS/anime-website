@@ -9,6 +9,7 @@ import { ReactComponent as DotSvg } from '../../imgs/svg/dot.svg'
 import Trending from '../../Components/Home/Trending'
 import SearchInnerPage from '../../Components/SearchInnerPage'
 import TopRated from '../../Components/Home/TopRated'
+import AsideNavLinks from '../../Components/AsideNavLinks'
 
 export default function Home() {
 
@@ -109,44 +110,7 @@ export default function Home() {
   return (
     <C.Container innerPageLink={indexInnerPageLink}>
 
-      <nav className='links'>
-
-        <h3>Category</h3>
-
-        <ul>
-
-          <li><Link to={``}>Shonen</Link></li>
-          <li><Link to={``}>Shojo</Link></li>
-          <li><Link to={``}>Seinen</Link></li>
-          <li><Link to={``}>Sports</Link></li>
-          <li><Link to={``}>Action</Link></li>
-
-        </ul>
-
-        <h3>Categories</h3>
-
-        <ul>
-
-          <li><Link to={``}>Tv</Link></li>
-          <li><Link to={``}>Manga</Link></li>
-          <li><Link to={``}>One Shot</Link></li>
-          <li><Link to={``}>Novel</Link></li>
-          <li><Link to={``}>Movie</Link></li>
-          <li><Link to={``}>Special</Link></li>
-          <li><Link to={``}>OVA</Link></li>
-
-        </ul>
-
-        <h3>General</h3>
-
-        <ul>
-
-          <li><Link to={``}>Settings</Link></li>
-          <li><Link to={``}>Log Out</Link></li>
-
-
-        </ul>
-      </nav>
+      <AsideNavLinks />
 
       <div className='main-content'>
 
