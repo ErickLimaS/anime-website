@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as C from './styles'
 import { ReactComponent as DotSvg } from '../../../imgs/svg/dot.svg'
+import { ReactComponent as AngleLeftSolidSvg } from '../../../imgs/svg/angle-left-solid.svg'
+import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-right-solid.svg'
 import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
 
@@ -8,7 +10,35 @@ export default function AnimePageContent(data: any) {
 
   console.log(data.data)
 
-  const [moreDetails, setMoreDetails] = useState(false)
+  const [moreDetails, setMoreDetails] = useState<boolean>(false)
+  const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
+  const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
+
+  useEffect(() => {
+
+    let howManyPages: number = 0;
+    let howMuchEpisodes: number = data.data.streamingEpisodes.length;
+
+    if (data.data.streamingEpisodes.length <= 26) {
+      setHowManyPagesPagination(1);
+    }
+
+    let episodesLeft = data.data.streamingEpisodes.length;
+    while (episodesLeft > 0) {
+      episodesLeft = episodesLeft - 26;
+      howManyPages = howManyPages + 1;
+      howMuchEpisodes = episodesLeft;
+    }
+
+    setHowManyPagesPagination(howManyPages - 1)
+
+    console.log(howManyPages + ' pages')
+    console.log(howMuchEpisodes + ' h m epis')
+    console.log(episodesLeft + ' ep left')
+
+  }, [data.data.streamingEpisodes.length])
+
+  console.log(howManyPagesPagination)
 
   return (
     <C.Container data={data.data}>
@@ -16,7 +46,7 @@ export default function AnimePageContent(data: any) {
       <div className='search-mobile'>
         <SearchInnerPage />
       </div>
-      
+
       <div className='banner-img'>
         {
           /* <img src={`${data.data.bannerImage}`} alt={`${data.data.title.romaji} Cover Art`} /> */
@@ -58,20 +88,144 @@ export default function AnimePageContent(data: any) {
           </div>
           <div className='anime-episodes'>
 
+            {indexEpisodesPagination === 0 && (
 
+              data.data.streamingEpisodes.slice(0, 26).map((item: any, key: any) => (
+                <div key={key} className='episode'>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                  </a>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <h3>{item.title}</h3>
+                  </a>
+                </div>
+              ))
 
-            {data.data.streamingEpisodes.map((item: any, key: any) => (
-              <div key={key} className='episode'>
-                <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                  <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                </a>
-                <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                  <h3>{item.title}</h3>
-                </a>
-              </div>
-            ))}
+            )}
+
+            {indexEpisodesPagination === 1 && (
+
+              data.data.streamingEpisodes.slice(26, 52).map((item: any, key: any) => (
+                <div key={key} className='episode'>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                  </a>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <h3>{item.title}</h3>
+                  </a>
+                </div>
+              ))
+
+            )}
+            {indexEpisodesPagination === 2 && (
+
+              data.data.streamingEpisodes.slice(52, 76).map((item: any, key: any) => (
+                <div key={key} className='episode'>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                  </a>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <h3>{item.title}</h3>
+                  </a>
+                </div>
+              ))
+
+            )}
+            {indexEpisodesPagination === 3 && (
+
+              data.data.streamingEpisodes.slice(76, 102).map((item: any, key: any) => (
+                <div key={key} className='episode'>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                  </a>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <h3>{item.title}</h3>
+                  </a>
+                </div>
+              ))
+
+            )}
+            {indexEpisodesPagination === 4 && (
+
+              data.data.streamingEpisodes.slice(102, 128).map((item: any, key: any) => (
+                <div key={key} className='episode'>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                  </a>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <h3>{item.title}</h3>
+                  </a>
+                </div>
+              ))
+
+            )}
+            {indexEpisodesPagination === 5 && (
+
+              data.data.streamingEpisodes.slice(128, 154).map((item: any, key: any) => (
+                <div key={key} className='episode'>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                  </a>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <h3>{item.title}</h3>
+                  </a>
+                </div>
+              ))
+
+            )}
+            {indexEpisodesPagination === 6 && (
+
+              data.data.streamingEpisodes.slice(154, 180).map((item: any, key: any) => (
+                <div key={key} className='episode'>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                  </a>
+                  <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                    <h3>{item.title}</h3>
+                  </a>
+                </div>
+              ))
+
+            )}
 
           </div>
+
+          {data.data.streamingEpisodes.length > 26 && (
+            <div className='pagination-buttons'>
+              <button type='button'
+                disabled={indexEpisodesPagination === 0 ? true : false}
+                onClick={() => {
+                  if (indexEpisodesPagination === 0) {
+                    setIndexEpisodePagination(0)
+                    console.log('if')
+                  } else {
+                    setIndexEpisodePagination(indexEpisodesPagination - 1)
+                    console.log('else')
+                  }
+                }}>
+                <AngleLeftSolidSvg />
+              </button>
+
+              <span>
+                {indexEpisodesPagination + 1}
+              </span>
+
+              <button type='button'
+                disabled={indexEpisodesPagination === howManyPagesPagination ? true : false}
+                onClick={() => {
+                  if (indexEpisodesPagination === howManyPagesPagination) {
+                    setIndexEpisodePagination(0)
+                    console.log('if')
+                  } else {
+                    setIndexEpisodePagination(indexEpisodesPagination + 1)
+                    console.log('else')
+                  }
+                }}>
+                <AngleRightSolidSvg />
+              </button>
+            </div>
+          )}
+
         </>
       ) : (
         <div className='heading'>
@@ -79,7 +233,8 @@ export default function AnimePageContent(data: any) {
           <h2>Theres no Episodes to Display Here!</h2>
 
         </div>
-      )}
+      )
+      }
 
       <div className='similar-animes'>
         <h2>Similar to <span>{data.data.title.romaji}</span></h2>
@@ -91,6 +246,6 @@ export default function AnimePageContent(data: any) {
         </ul>
       </div>
 
-    </C.Container>
+    </C.Container >
   )
 }

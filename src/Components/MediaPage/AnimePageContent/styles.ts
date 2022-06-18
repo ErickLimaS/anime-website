@@ -96,12 +96,34 @@ export const Container = styled.div<Props>`
         grid-template-columns: auto auto auto auto;
         gap: 2rem 1rem;
 
+        @media(max-width: 1080px){
+            grid-template-columns: auto auto auto;
+            justify-items: center;
+        }
+
+        @media(max-width: 730px){
+            grid-template-columns: auto auto;
+            justify-items: center;
+        }
+
+        @media(max-width: 430px){
+            grid-template-columns: auto auto;
+            justify-items: center;
+        }
+
         .episode{
+
+            width: min-content;
+
             img{
                 width: 180px;
                 height: auto;
 
                 border-radius: 4px;
+
+                @media(max-width: 430px){
+                    width: 140px;
+                }
 
             }
 
@@ -119,6 +141,56 @@ export const Container = styled.div<Props>`
                     transition: all ease-in-out 100ms;
                     color: #ff0095;
                 }
+            }
+        }
+    }
+
+    div.pagination-buttons{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+
+        margin: 2rem 0;
+
+        span{
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ff0095;
+
+            padding: 0 1rem;
+
+            border-bottom: 2px solid #ff0095;
+        }
+
+        button[disabled]{
+            cursor: default;
+            opacity: 0.5;
+
+            :hover{
+                background-color: initial;
+            }
+        }
+
+        button{
+            cursor: pointer;
+
+            padding: 1rem;
+            margin: 0 1rem;
+
+            border: 0;
+            background-color: transparent;
+            border-radius: 20%;
+            
+            :hover{
+                background-color: #e1e1e1;
+            }
+
+            svg{
+                width: 0.7rem;
+                height: auto;
             }
         }
     }
