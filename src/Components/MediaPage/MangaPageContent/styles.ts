@@ -90,107 +90,45 @@ export const Container = styled.div<Props>`
         }
     }
 
-    .anime-episodes{
+    .from-same-franchise{
 
-        display: grid;
-        grid-template-columns: auto auto auto auto;
-        gap: 2rem 1rem;
-
-        @media(max-width: 1080px){
-            grid-template-columns: auto auto auto;
-            justify-items: center;
-        }
-
-        @media(max-width: 730px){
-            grid-template-columns: auto auto;
-            justify-items: center;
-        }
-
-        @media(max-width: 430px){
-            grid-template-columns: auto auto;
-            justify-items: center;
-        }
-
-        .episode{
-
-            width: min-content;
-
-            img{
-                width: 180px;
-                height: auto;
-
-                border-radius: 4px;
-
-                @media(max-width: 430px){
-                    width: 140px;
-                }
-
-            }
-
-            h3{
-                color: #444444;
-            }
-
-            :hover{
-
-                img{
-                    transition: all ease-in-out 100ms;
-                    transform: scale(1.1);
-                }
-                h3{
-                    transition: all ease-in-out 100ms;
-                    color: #ff0095;
-                }
-            }
-        }
-    }
-
-    div.pagination-buttons{
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-
-        width: 100%;
-
-        margin: 2rem 0;
-
-        span{
+        h2{
             font-size: 2rem;
             font-weight: 600;
-            color: #ff0095;
+            color: #222222;
+            margin: 2rem 0;
 
-            padding: 0 1rem;
-
-            border-bottom: 2px solid #ff0095;
-        }
-
-        button[disabled]{
-            cursor: default;
-            opacity: 0.5;
-
-            :hover{
-                background-color: initial;
+            span{
+                color: #ff5ebc;
             }
         }
 
-        button{
-            cursor: pointer;
+        ul{
+            overflow: auto;
+            width: 110vh;
+            display: flex;
+            flex-direction: row;
 
-            padding: 1rem;
-            margin: 0 1rem;
+            @media(max-width: 1080px){
+                width: auto;
+            }
+           
+            ::-webkit-scrollbar {
+                height: 8px;
+            }
 
-            border: 0;
-            background-color: transparent;
-            border-radius: 20%;
+            ::-webkit-scrollbar-track {
+                background: #f1f1f1; 
+            }
             
-            :hover{
-                background-color: #e1e1e1;
+            ::-webkit-scrollbar-thumb {
+                background: #888;
+
+                border-radius: 2px;
             }
 
-            svg{
-                width: 0.7rem;
-                height: auto;
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555; 
             }
         }
     }
@@ -200,6 +138,7 @@ export const Container = styled.div<Props>`
         flex-direction: column;
 
         margin: 2rem 0;
+
         border-top: 4px solid #ff5ebc;
 
         h2{
@@ -219,6 +158,10 @@ export const Container = styled.div<Props>`
             display: flex;
             flex-direction: row;
 
+            @media(max-width: 1080px){
+                width: auto;
+            }
+
             ::-webkit-scrollbar {
                 height: 8px;
             }
@@ -235,10 +178,6 @@ export const Container = styled.div<Props>`
 
             ::-webkit-scrollbar-thumb:hover {
                 background: #555; 
-            }
-
-            @media(max-width: 1080px){
-                width: auto;
             }
         }
     }

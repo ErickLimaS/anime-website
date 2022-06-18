@@ -56,14 +56,59 @@ export const AnimeToBeListed = styled.div<itemData>`
 
     }
 
+    :hover{
+            
+            
+            .see-more-button{
+            background-image: linear-gradient(rgba(0,0,0,.01) , rgba(0,0,0,.8) 20%);
+
+            .name-fade{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                width: 90%;
+
+                transition: all ease-in-out 200ms;
+                opacity: 1;
+                
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #c0c0c0;
+                /* color:  ${props => props.info.coverImage.color}; */
+
+            }
+        }
+        }
+
     div.see-more-button{
 
         height: 50%;
 
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: flex-end;
-        justify-content: center;
+        justify-content: space-between;
+        align-items: center;
+
+        .name-fade{
+            transition: all ease-in-out 200ms;
+            opacity: 0;
+
+            margin-top: 10%;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 90%;
+
+            transition: all ease-in-out 200ms;
+                
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #c0c0c0;
+        }
 
         a{
             width: 75%;

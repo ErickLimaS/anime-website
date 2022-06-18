@@ -31,6 +31,15 @@ export default function AnimesReleasingThisWeek(data: any) {
                 <button type='button' onClick={() => console.log(data.data)}><PlusSvg /></button>
             </div>
             <div className='see-more-button'>
+                {data.data.title.romaji.length > 25 ? (
+                    <h1 className='name-fade'>
+                        {data.data.title.romaji.slice(0, 25)}... ({data.data.type})
+                    </h1>
+                ) : (
+                    <h1 className='name-fade'>
+                        {data.data.title.romaji} ({data.data.type})
+                    </h1>
+                )}
                 <Link to={`/${format}/${data.data.id}`}>See More</Link>
             </div>
         </C.AnimeToBeListed>

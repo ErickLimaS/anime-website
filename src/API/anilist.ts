@@ -425,9 +425,27 @@ export default {
                                         romaji
                                         native
                                     }
-                                    description
+                                    description(asHtml: false)
                                     status
+                                    relations{
+                                        nodes{
+                                            id
+                                            type
+                                            format
+                                            title{
+                                                native
+                                                romaji
+                                            }
+                                            coverImage{
+                                                large
+                                                extraLarge
+                                                medium
+                                            }
+                                        }
+                                    }
                                     episodes
+                                    chapters
+                                    volumes
                                     duration
                                     source
                                     countryOfOrigin
@@ -492,6 +510,8 @@ export default {
                                                 id
                                                 mediaRecommendation{
                                                     id
+                                                    type
+                                                    format
                                                     title{
                                                         romaji
                                                     }
@@ -504,7 +524,6 @@ export default {
                                                 }
                                             }
                                         }
-
                                     }
                                     studios{
                                         edges{

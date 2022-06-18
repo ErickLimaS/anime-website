@@ -19,13 +19,13 @@ export default function AnimePageContent(data: any) {
     let howManyPages: number = 0;
     let howMuchEpisodes: number = data.data.streamingEpisodes.length;
 
-    if (data.data.streamingEpisodes.length <= 26) {
+    if (data.data.streamingEpisodes.length <= 24) {
       setHowManyPagesPagination(1);
     }
 
     let episodesLeft = data.data.streamingEpisodes.length;
     while (episodesLeft > 0) {
-      episodesLeft = episodesLeft - 26;
+      episodesLeft = episodesLeft - 24;
       howManyPages = howManyPages + 1;
       howMuchEpisodes = episodesLeft;
     }
@@ -90,7 +90,7 @@ export default function AnimePageContent(data: any) {
 
             {indexEpisodesPagination === 0 && (
 
-              data.data.streamingEpisodes.slice(0, 26).map((item: any, key: any) => (
+              data.data.streamingEpisodes.slice(0, 24).map((item: any, key: any) => (
                 <div key={key} className='episode'>
                   <a href={`${item.url}`} target='_blank' rel='noreferrer'>
                     <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
@@ -105,7 +105,7 @@ export default function AnimePageContent(data: any) {
 
             {indexEpisodesPagination === 1 && (
 
-              data.data.streamingEpisodes.slice(26, 52).map((item: any, key: any) => (
+              data.data.streamingEpisodes.slice(24, 24 * 2).map((item: any, key: any) => (
                 <div key={key} className='episode'>
                   <a href={`${item.url}`} target='_blank' rel='noreferrer'>
                     <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
@@ -119,7 +119,7 @@ export default function AnimePageContent(data: any) {
             )}
             {indexEpisodesPagination === 2 && (
 
-              data.data.streamingEpisodes.slice(52, 76).map((item: any, key: any) => (
+              data.data.streamingEpisodes.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
                 <div key={key} className='episode'>
                   <a href={`${item.url}`} target='_blank' rel='noreferrer'>
                     <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
@@ -133,7 +133,7 @@ export default function AnimePageContent(data: any) {
             )}
             {indexEpisodesPagination === 3 && (
 
-              data.data.streamingEpisodes.slice(76, 102).map((item: any, key: any) => (
+              data.data.streamingEpisodes.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
                 <div key={key} className='episode'>
                   <a href={`${item.url}`} target='_blank' rel='noreferrer'>
                     <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
@@ -147,7 +147,7 @@ export default function AnimePageContent(data: any) {
             )}
             {indexEpisodesPagination === 4 && (
 
-              data.data.streamingEpisodes.slice(102, 128).map((item: any, key: any) => (
+              data.data.streamingEpisodes.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
                 <div key={key} className='episode'>
                   <a href={`${item.url}`} target='_blank' rel='noreferrer'>
                     <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
@@ -161,7 +161,7 @@ export default function AnimePageContent(data: any) {
             )}
             {indexEpisodesPagination === 5 && (
 
-              data.data.streamingEpisodes.slice(128, 154).map((item: any, key: any) => (
+              data.data.streamingEpisodes.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
                 <div key={key} className='episode'>
                   <a href={`${item.url}`} target='_blank' rel='noreferrer'>
                     <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
@@ -175,7 +175,7 @@ export default function AnimePageContent(data: any) {
             )}
             {indexEpisodesPagination === 6 && (
 
-              data.data.streamingEpisodes.slice(154, 180).map((item: any, key: any) => (
+              data.data.streamingEpisodes.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
                 <div key={key} className='episode'>
                   <a href={`${item.url}`} target='_blank' rel='noreferrer'>
                     <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
@@ -236,15 +236,17 @@ export default function AnimePageContent(data: any) {
       )
       }
 
-      <div className='similar-animes'>
-        <h2>Similar to <span>{data.data.title.romaji}</span></h2>
+      {data.data.recommendations.edges && (
+        <div className='similar-animes'>
+          <h2>Similar to <span>{data.data.title.romaji}</span></h2>
 
-        <ul>
-          {data.data.recommendations.edges.slice(0, 8).map((item: any) => (
-            <li><AnimesReleasingThisWeek data={item.node.mediaRecommendation} /></li>
-          ))}
-        </ul>
-      </div>
+          <ul>
+            {data.data.recommendations.edges.slice(0, 8).map((item: any) => (
+              <li><AnimesReleasingThisWeek data={item.node.mediaRecommendation} /></li>
+            ))}
+          </ul>
+        </div>
+      )}
 
     </C.Container >
   )

@@ -5,7 +5,6 @@ import * as C from './styles'
 export default function AsideInfo(data: any) {
 
   const [nextEpisodeDate, setNextEpisodeDate] = useState<any>(data.data.nextAiringEpisode && new Date(data.data.nextAiringEpisode.airingAt * 1000));
-  let aux: any;
 
   return (
     <C.Container data={data.data}>
@@ -23,7 +22,7 @@ export default function AsideInfo(data: any) {
           <div className='search-desktop'>
             <SearchInnerPage />
           </div>
-          
+
           <div className='info-aside'>
 
             <div className='info-heading'>
@@ -43,6 +42,14 @@ export default function AsideInfo(data: any) {
                 <li><strong>{data.data.episodes} Episodes</strong></li>
               )}
 
+              {data.data.chapters && (
+                <li><strong>{data.data.chapters} Chapters</strong></li>
+              )}
+
+              {data.data.volumes && (
+                <li><strong>{data.data.volumes} Volumes</strong></li>
+              )}
+
               {data.data.status === 'RELEASING' && (
 
                 <li className='releasing'>Status: <span>Releasing</span></li>
@@ -53,13 +60,38 @@ export default function AsideInfo(data: any) {
                 <li className='releasing'>Next Episode on <span>{nextEpisodeDate.getDate()}/{nextEpisodeDate.getMonth() + 1}/{nextEpisodeDate.getYear()}</span></li>
               )}
 
-              <li>{data.data.duration} Minutes Long Each Episode</li>
+              {data.data.type === 'ANIME' && (
+                <li>{data.data.duration} Minutes Long Each Episode</li>
+              )}
 
-              <li>First Transmition: {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}</li>
+              {(data.data.type === 'ANIME' && (
+                <li>First Transmition on <span>
+                  {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}</span>
+                </li>
+
+              )) || (data.data.type === 'MANGA' && (
+                <li>First Release on <span>
+                  {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}
+                </span>
+                </li>
+              )) || (data.data.type === 'MOVIE' && (
+                <p>movie</p>
+              ))}
+
               {data.data.status === 'FINISHED' && (
 
-                <li>Last Transmition: {data.data.endDate.day && `${data.data.endDate.day}/`}{data.data.endDate.month && `${data.data.endDate.month}/`}{data.data.endDate.year && `${data.data.endDate.year}`}</li>
+                (data.data.type === 'ANIME' && (
 
+                  <li>Last Transmition: {data.data.endDate.day && `${data.data.endDate.day}/`}{data.data.endDate.month && `${data.data.endDate.month}/`}{data.data.endDate.year && `${data.data.endDate.year}`}</li>
+
+                )) || (data.data.type === 'MANGA' && (
+
+                  <li>Last Release on <span>
+                    {data.data.startDate.day && `${data.data.endDate.day}/`}{data.data.endDate.month && `${data.data.endDate.month}/`}{data.data.endDate.year && `${data.data.endDate.year}`}
+                  </span>
+                  </li>
+
+                ))
               )}
 
               {/* Fix for more studios */}
@@ -109,8 +141,9 @@ export default function AsideInfo(data: any) {
 
           </div>
         </>
-      )}
+      )
+      }
 
-    </C.Container>
+    </C.Container >
   )
 }
