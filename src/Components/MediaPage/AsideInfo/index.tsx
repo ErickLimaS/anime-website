@@ -20,8 +20,10 @@ export default function AsideInfo(data: any) {
 
       ) : (
         <>
-          <SearchInnerPage />
-
+          <div className='search-desktop'>
+            <SearchInnerPage />
+          </div>
+          
           <div className='info-aside'>
 
             <div className='info-heading'>
@@ -36,22 +38,22 @@ export default function AsideInfo(data: any) {
               <h2>{data.data.type}</h2>
             </div>
 
-            <ul>
+            <ul className='general-info'>
               {data.data.episodes && (
-                <li>{data.data.episodes} Episodes</li>
+                <li><strong>{data.data.episodes} Episodes</strong></li>
               )}
 
               {data.data.status === 'RELEASING' && (
 
-                <li className='releasing'>Status: Releasing</li>
+                <li className='releasing'>Status: <span>Releasing</span></li>
 
               )}
 
               {data.data.nextAiringEpisode && (
-                <li className='releasing'>Next Episode on {nextEpisodeDate.getDate()}/{nextEpisodeDate.getMonth() + 1}/{nextEpisodeDate.getYear()}</li>
+                <li className='releasing'>Next Episode on <span>{nextEpisodeDate.getDate()}/{nextEpisodeDate.getMonth() + 1}/{nextEpisodeDate.getYear()}</span></li>
               )}
 
-              <li>{data.data.duration} Minutes Each Episode</li>
+              <li>{data.data.duration} Minutes Long Each Episode</li>
 
               <li>First Transmition: {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}</li>
               {data.data.status === 'FINISHED' && (
@@ -78,7 +80,7 @@ export default function AsideInfo(data: any) {
                 </a>
               </div>
             )}
-            
+
             {data.data.genres && (
               <div className='genres'>
                 <h2>Genres</h2>

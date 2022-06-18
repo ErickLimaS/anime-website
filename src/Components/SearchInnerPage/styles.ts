@@ -186,9 +186,8 @@ export const SearchResults = styled.div`
                 ul{
                     display: flex;
                     flex-direction: row;
+                    flex-wrap: wrap;
 
-                    margin: 1rem 0;
-                    
                     font-size: 1.2rem;
                     font-weight: 600;
                     color: #555555;

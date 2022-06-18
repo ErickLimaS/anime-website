@@ -13,6 +13,27 @@ export const Container = styled.div<Props>`
 
     padding: 1rem 3rem 3rem 3rem;
 
+    @media(max-width: 1020px){
+        width: -webkit-fill-available;
+        padding: 1rem ;
+    }
+
+    @media(max-width: 620px){
+        border-left: 0;
+        border-right: 0;
+        padding: 0;
+    }
+
+    .search-mobile{
+        display: none;
+    
+        @media(max-width: 620px){
+            display: block;
+
+            padding: 1rem 0;
+        }
+    }
+
     .banner-img{
         height: 40vh;
         width: auto;
@@ -35,7 +56,8 @@ export const Container = styled.div<Props>`
         h1{
             font-size: 3rem;
             font-weight: 600;
-            color: #ff5ebc;
+            /* color: #ff5ebc; */
+            color: ${props => props.data.coverImage.color};
         }
         
         p{
@@ -124,6 +146,10 @@ export const Container = styled.div<Props>`
             width: 110vh;
             display: flex;
             flex-direction: row;
+
+            @media(max-width: 1080px){
+                width: auto;
+            }
         }
     }
 

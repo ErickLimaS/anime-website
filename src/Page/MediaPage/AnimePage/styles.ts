@@ -12,11 +12,20 @@ export const Container = styled.div`
 
         width: 100%;
 
+        @media(max-width: 1080px){
+            flex-wrap: wrap;
+            width: 80%;
+        }
+
+        @media(max-width: 620px){
+            flex-wrap: wrap;
+            width: 95%;
+        }
     }
 
 
     @media(max-width: 1080px){
-        flex-wrap: wrap;
+        /* flex-wrap: wrap; */
     }
 
     @media(max-width: 620px){

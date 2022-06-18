@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import * as C from './styles'
 import { ReactComponent as DotSvg } from '../../../imgs/svg/dot.svg'
 import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
+import SearchInnerPage from '../../SearchInnerPage'
 
 export default function AnimePageContent(data: any) {
 
@@ -12,6 +13,10 @@ export default function AnimePageContent(data: any) {
   return (
     <C.Container data={data.data}>
 
+      <div className='search-mobile'>
+        <SearchInnerPage />
+      </div>
+      
       <div className='banner-img'>
         {
           /* <img src={`${data.data.bannerImage}`} alt={`${data.data.title.romaji} Cover Art`} /> */
@@ -40,30 +45,41 @@ export default function AnimePageContent(data: any) {
         </p>
       </div>
 
-      <div className='heading'>
+      {data.data.streamingEpisodes.length > 0 ? (
+        <>
+          <div className='heading'>
 
-        <h2>Episodes</h2>
+            <h2>Episodes</h2>
 
-        <div>
-          <DotSvg />
-          <DotSvg />
-        </div>
-      </div>
-
-      <div className='anime-episodes'>
-
-        {data.data.streamingEpisodes.map((item: any, key: any) => (
-          <div key={key} className='episode'>
-            <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-              <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-            </a>
-            <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-              <h3>{item.title}</h3>
-            </a>
+            <div>
+              <DotSvg />
+              <DotSvg />
+            </div>
           </div>
-        ))}
+          <div className='anime-episodes'>
 
-      </div>
+
+
+            {data.data.streamingEpisodes.map((item: any, key: any) => (
+              <div key={key} className='episode'>
+                <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                  <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                </a>
+                <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                  <h3>{item.title}</h3>
+                </a>
+              </div>
+            ))}
+
+          </div>
+        </>
+      ) : (
+        <div className='heading'>
+
+          <h2>Theres no Episodes to Display Here!</h2>
+
+        </div>
+      )}
 
       <div className='similar-animes'>
         <h2>Similar to <span>{data.data.title.romaji}</span></h2>

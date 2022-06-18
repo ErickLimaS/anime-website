@@ -6,8 +6,6 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-
-
 padding: 0 2rem;
 
 display: flex;
@@ -22,6 +20,13 @@ justify-content: flex-start;
 @media(max-width: 1080px){
     padding: 0 1rem;
 
+}
+
+.search-desktop{
+    
+    @media(max-width: 1080px){
+        display: none;
+    }
 }
 
 div.skeleton{
@@ -77,16 +82,32 @@ div.skeleton{
         }
     }
 
-    ul{
+    ul.general-info{
 
         li{
             font-size: 1.5rem;
             font-weight: 400;
             margin: 1rem 0;
 
+            border-bottom: 1px solid #c0c0c0;
+            
+            span{
+                font-weight: 600;
+
+            }
+
             a{
                 color: inherit;
                 text-decoration: underline;
+                padding-left: 0.5rem;
+
+                :after{
+                    content: ', ';
+                }   
+
+                :last-child:after{
+                    content: '';
+                } 
             }
         }
     }
@@ -146,6 +167,17 @@ div.skeleton{
             justify-content: center;
             align-items: center;
 
+            li{
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin: 1rem 0;
+
+                a{
+                    color: inherit;
+                    text-decoration: underline;
+                }
+            }
+
             li:after{
                 content: ', ';
             }
@@ -176,10 +208,13 @@ div.skeleton{
         ul{
             width: 100%;
 
-            
             display: grid;
             grid-template-columns: auto auto auto;
             gap: 1rem 0;
+
+            @media(max-width: 1080px){
+                justify-items: center;
+            }
 
             li{
                 display: flex;
@@ -202,6 +237,11 @@ div.skeleton{
                     width: 100px;
                     
                     overflow: hidden;
+
+                    @media(max-width: 620px){
+                        height: 90px;
+                        width: 90px;
+                    }
 
                 }
 
