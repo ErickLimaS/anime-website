@@ -77,6 +77,7 @@ export const Container = styled.header<ContainerProps>`
             svg{
                 width: 25px;
                 height: auto;
+                fill: ${props => props.display === true ? '#fff' : '#666666'};
             }
 
         }
@@ -127,7 +128,7 @@ export const Container = styled.header<ContainerProps>`
                 color: #ff1a75;
             }
             ul{
-                padding-left: 1rem;
+                /* padding-left: 1rem; */
 
                 a{
                     display: flex;
@@ -141,6 +142,58 @@ export const Container = styled.header<ContainerProps>`
                         color: #999999;
                     }
                 }
+
+                li{
+            margin: 1rem 0;
+
+            >a{
+                display: flex;
+                align-items: center;
+
+                width: 100%;
+
+                font-weight: 600;
+                color: #757474; 
+
+                >svg{
+                    padding-left: 1rem;
+                    height: 2.4rem;
+                    width: min-content;
+
+                    margin-right: 1rem;
+
+                    fill: #757474;
+                }
+            }
+
+            :hover{
+                border-right: 4px solid #ff1a75;
+
+                >a{
+                    color: #ff1a75;
+
+                    >svg{
+                        fill: #ff1a75;
+                    }
+                }
+                
+            }
+        }
+
+        .settings li:last-child{
+                
+            :hover{
+                border-right: 4px solid #e62517;
+
+                >a{
+                    color: #e62517;
+
+                    >svg{
+                        fill: #e62517;
+                    }
+                }
+            }
+        }
             }
 
         }

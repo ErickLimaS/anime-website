@@ -36,29 +36,52 @@ export const Container = styled.nav`
         li{
             margin: 1rem 0;
 
-            :hover{
-                border-right: 4px solid #ff1a75;
-
-                >a{
-                    
-                    color: #ff1a75;
-                }
-            }
-
             >a{
                 display: flex;
-                
+                align-items: center;
 
                 width: 100%;
 
                 font-weight: 600;
                 color: #757474; 
+
+                >svg{
+                    height: 2.4rem;
+                    width: min-content;
+
+                    margin-right: 1rem;
+
+                    fill: #757474;
+                }
             }
 
+            :hover{
+                border-right: 4px solid #ff1a75;
+
+                >a{
+                    color: #ff1a75;
+
+                    >svg{
+                        fill: #ff1a75;
+                    }
+                }
+                
+            }
         }
-        
 
+        .settings li:last-child{
+                
+            :hover{
+                border-right: 4px solid #e62517;
 
+                >a{
+                    color: #e62517;
 
+                    >svg{
+                        fill: #e62517;
+                    }
+                }
+            }
+        }
 
 `

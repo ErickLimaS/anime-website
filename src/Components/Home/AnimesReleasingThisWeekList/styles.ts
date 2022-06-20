@@ -60,17 +60,18 @@ export const AnimeToBeListed = styled.div<itemData>`
             
             
             .see-more-button{
-            background-image: linear-gradient(rgba(0,0,0,.01) , rgba(0,0,0,.8) 20%);
+                background-image: linear-gradient(rgba(0,0,0,.01) , rgba(0,0,0,.8) 20%);
 
             .name-fade{
+                opacity: 1;
                 display: flex;
+                flex-direction: column;
                 justify-content: center;
                 align-items: center;
 
                 width: 90%;
 
                 transition: all ease-in-out 200ms;
-                opacity: 1;
                 
                 font-size: 1.4rem;
                 font-weight: 600;
@@ -79,7 +80,7 @@ export const AnimeToBeListed = styled.div<itemData>`
 
             }
         }
-        }
+    }
 
     div.see-more-button{
 
@@ -94,6 +95,11 @@ export const AnimeToBeListed = styled.div<itemData>`
         .name-fade{
             transition: all ease-in-out 200ms;
             opacity: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
 
             margin-top: 10%;
             
@@ -105,9 +111,11 @@ export const AnimeToBeListed = styled.div<itemData>`
 
             transition: all ease-in-out 200ms;
                 
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #c0c0c0;
+            h1{
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #c0c0c0;
+            }
         }
 
         a{
