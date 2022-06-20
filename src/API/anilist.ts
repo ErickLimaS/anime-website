@@ -409,7 +409,7 @@ export default {
     //ANIME, MOVIE, MANGA PAGE 
 
     //INFO OF CERTAIN anime/movie/manga ID
-    getInfoFromThisMedia: async (id: number, type: String) => {
+    getInfoFromThisMedia: async (id: number, type: String, format?: String) => {
 
         try {
 
@@ -419,8 +419,8 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $id: Int){
-                                Media(type: $type, id: $id){
+                        query($type: MediaType, $id: Int, $format: MediaFormat){
+                                Media(type: $type, format: $format, id: $id){
                                     title{
                                         romaji
                                         native
@@ -579,6 +579,7 @@ export default {
                     variables: {
                         'id': `${id}`,
                         'type': `${type}`,
+                        'format': `${format !== undefined ? `${format}` : (type === 'ANIME' && 'TV') || (type === 'MANGA' && 'MANGA')}`
                     }
                 })
             })

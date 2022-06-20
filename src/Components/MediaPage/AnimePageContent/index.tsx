@@ -197,10 +197,8 @@ export default function AnimePageContent(data: any) {
                 onClick={() => {
                   if (indexEpisodesPagination === 0) {
                     setIndexEpisodePagination(0)
-                    console.log('if')
                   } else {
                     setIndexEpisodePagination(indexEpisodesPagination - 1)
-                    console.log('else')
                   }
                 }}>
                 <AngleLeftSolidSvg />
@@ -215,10 +213,8 @@ export default function AnimePageContent(data: any) {
                 onClick={() => {
                   if (indexEpisodesPagination === howManyPagesPagination) {
                     setIndexEpisodePagination(0)
-                    console.log('if')
                   } else {
                     setIndexEpisodePagination(indexEpisodesPagination + 1)
-                    console.log('else')
                   }
                 }}>
                 <AngleRightSolidSvg />

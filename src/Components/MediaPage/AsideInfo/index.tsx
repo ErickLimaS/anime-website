@@ -34,13 +34,25 @@ export default function AsideInfo(data: any) {
             </div>
 
             <div className='type'>
-              <h2>{data.data.type}</h2>
+              {(data.data.format === 'MOVIE' && (
+                <h2>{data.data.format}</h2>
+              )) || (data.data.type === 'ANIME' && (
+                <h2>{data.data.type}</h2>
+              ))}
             </div>
 
             <ul className='general-info'>
-              {data.data.episodes && (
-                <li><strong>{data.data.episodes} Episodes</strong></li>
+              {data.data.format === 'MOVIE' ? (
+
+                <>
+                </>
+
+              ) : (
+                data.data.episodes && (
+                  <li><strong>{data.data.episodes} Episodes</strong></li>
+                )
               )}
+
 
               {data.data.chapters && (
                 <li><strong>{data.data.chapters} Chapters</strong></li>
@@ -60,29 +72,41 @@ export default function AsideInfo(data: any) {
                 <li className='releasing'>Next Episode on <span>{nextEpisodeDate.getDate()}/{nextEpisodeDate.getMonth() + 1}/{nextEpisodeDate.getYear()}</span></li>
               )}
 
-              {data.data.type === 'ANIME' && (
+              {(data.data.format === 'MOVIE' && (
+
+                <li>{data.data.duration} Minutes Long </li>
+
+              )) || (data.data.type === 'ANIME' && (
+
                 <li>{data.data.duration} Minutes Long Each Episode</li>
-              )}
 
-              {(data.data.type === 'ANIME' && (
-                <li>First Transmition on <span>
-                  {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}</span>
+              ))}
+
+              {(data.data.format === 'MOVIE' && (
+                <li>Released on <span>
+                  {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}
+                </span>
                 </li>
-
               )) || (data.data.type === 'MANGA' && (
                 <li>First Release on <span>
                   {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}
                 </span>
                 </li>
-              )) || (data.data.type === 'MOVIE' && (
-                <p>movie</p>
+              )) || (data.data.type === 'ANIME' && (
+                <li>First Transmition on <span>
+                  {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}</span>
+                </li>
+
               ))}
 
               {data.data.status === 'FINISHED' && (
 
-                (data.data.type === 'ANIME' && (
+                (data.data.format === 'MOVIE' && (
+                  <>
+                  </>
+                )) || (data.data.type === 'ANIME' && (
 
-                  <li>Last Transmition: {data.data.endDate.day && `${data.data.endDate.day}/`}{data.data.endDate.month && `${data.data.endDate.month}/`}{data.data.endDate.year && `${data.data.endDate.year}`}</li>
+                  <li>Last Transmition on <span>{data.data.endDate.day && `${data.data.endDate.day}/`}{data.data.endDate.month && `${data.data.endDate.month}/`}{data.data.endDate.year && `${data.data.endDate.year}`}</span></li>
 
                 )) || (data.data.type === 'MANGA' && (
 
@@ -95,7 +119,7 @@ export default function AsideInfo(data: any) {
               )}
 
               {/* Fix for more studios */}
-              {data.data.studios.edges && (
+              {data.data.studios.edges.length > 0 && (
                 <li>
                   Studios:
                   {data.data.studios.edges.slice(0, 3).map((item: any) => (
@@ -104,13 +128,17 @@ export default function AsideInfo(data: any) {
                 </li>
               )}
             </ul>
+            
             {data.data.trailer && (
-              <div className='trailer'>
-                <h2>Trailer</h2>
-                <a href={`http://youtu.be/${data.data.trailer.id}`} target='_blank' rel='noreferrer'>
-                  <img src={data.data.trailer.thumbnail} alt={`Trailer of ${data.data.title.romaji}`}></img>
-                </a>
-              </div>
+              // <div className='trailer'>
+              //   <h2>Trailer</h2>
+              //   <a href={`http://youtu.be/${data.data.trailer.id}`} target='_blank' rel='noreferrer'>
+              //     <img src={data.data.trailer.thumbnail} alt={`Trailer of ${data.data.title.romaji}`}></img>
+              //   </a>
+              // </div>
+              <iframe width='100%' height='240px' src={`https://www.youtube.com/embed/${data.data.trailer.id}`}>
+                
+              </iframe>
             )}
 
             {data.data.genres && (

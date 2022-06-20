@@ -30,7 +30,7 @@ export default function MangaPage() {
 
       setLoading(false)
 
-      document.title = `${data.title.romaji}`
+      document.title = `${data.title.romaji} | Manga`
 
     }
     load(id, type)
