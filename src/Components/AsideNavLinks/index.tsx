@@ -1,11 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import * as C from './styles'
 import { ReactComponent as ShurikenSvg } from '../../imgs/svg/shuriken-svgrepo.svg'
 import { ReactComponent as HeartsSvg } from '../../imgs/svg/hearts-svgrepo.svg'
 import { ReactComponent as SwordsSvg } from '../../imgs/svg/swords-in-cross-svgrepo.svg'
-import { ReactComponent as SportsSvg } from '../../imgs/svg/basketball-sports-svgrepo.svg'
-import { ReactComponent as ActionSvg } from '../../imgs/svg/running-stick-figure-svgrepo.svg'
+import { ReactComponent as SuperPowerSvg } from '../../imgs/svg/burst-solid.svg'
+import { ReactComponent as SchoolBusSvg } from '../../imgs/svg/school-bus-svgrepo1.svg'
 import { ReactComponent as TvSvg } from '../../imgs/svg/tv-solid.svg'
 import { ReactComponent as BallonSvg } from '../../imgs/svg/speech-balloon-svgrepo.svg'
 import { ReactComponent as OneShotSvg } from '../../imgs/svg/magazines-svgrepo.svg'
@@ -30,11 +30,11 @@ export default function AsideNavLinks() {
 
       <ul>
 
-        <li><Link to={`/genre/shonen`}><ShurikenSvg /> Shonen</Link></li>
-        <li><Link to={`/genre/shoujo`}><HeartsSvg /> Shoujo</Link></li>
-        <li><Link to={`/genre/seinen`}><SwordsSvg /> Seinen</Link></li>
-        <li><Link to={`/genre/sports`}><SportsSvg /> Sports</Link></li>
-        <li><Link to={`/genre/action`}><ActionSvg /> Action</Link></li>
+        <li><Link to={`/genre/Shounen`}><ShurikenSvg /> Shounen</Link></li>
+        <li><Link to={`/genre/Shoujo`}><HeartsSvg /> Shoujo</Link></li>
+        <li><Link to={`/genre/Seinen`}><SwordsSvg /> Seinen</Link></li>
+        <li><Link to={`/genre/Super%20Power`}><SuperPowerSvg /> Super Power</Link></li>
+        <li><Link to={`/genre/School`}><SchoolBusSvg /> School</Link></li>
 
       </ul>
 

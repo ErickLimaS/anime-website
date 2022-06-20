@@ -7,7 +7,7 @@ import Home from './Page/Home';
 import MangaPage from './Page/MediaPage/MangaPage';
 import MoviePage from './Page/MediaPage/MoviePage';
 import * as C from './styles';
-import AsideNavLinks from './Components/AsideNavLinks';
+import GenrePage from './Page/GenrePage';
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
 
 
         <Routes>
+          <Route path='/genre/:genre' element={<GenrePage />} />
           <Route path='/anime/:id' element={<AnimePage />} />
           <Route path='/movie/:id' element={<MoviePage />} />
           <Route path='/manga/:id' element={<MangaPage />} />

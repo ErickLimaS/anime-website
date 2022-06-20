@@ -592,5 +592,383 @@ export default {
         }
 
 
+    },
+
+    //Genre Page
+    // anime
+    getAnimesForThisGenre: async (tag: any) => {
+
+        try {
+
+            const { data } = await Axios({
+                url: `${BASE_URL}`,
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    query: `
+                        query($page: Int, $perPage: Int, $tag: String, $type: MediaType){
+                            Page(page: $page, perPage: $perPage){
+                                media(tag: $tag, sort: TRENDING_DESC, type: $type){
+                                    title{
+                                        romaji
+                                        native
+                                    }
+                                    description(asHtml: false)
+                                    status
+                                    relations{
+                                        nodes{
+                                            id
+                                            type
+                                            format
+                                            title{
+                                                native
+                                                romaji
+                                            }
+                                            coverImage{
+                                                large
+                                                extraLarge
+                                                medium
+                                            }
+                                        }
+                                    }
+                                    episodes
+                                    chapters
+                                    volumes
+                                    duration
+                                    source
+                                    countryOfOrigin
+                                    trailer{
+                                        id
+                                        site
+                                        thumbnail
+                                    }
+                                    updatedAt
+                                    favourites
+                                    tags{
+                                        name
+                                        description
+                                        isAdult
+                                        isMediaSpoiler
+                                    }
+                                    characters(sort: ROLE){
+                                        edges{
+                                            id
+                                            role
+                                            node{
+                                                name{
+                                                    full
+                                                    native
+                                                    alternative
+                                                }
+                                                image{
+                                                    large
+                                                    medium
+                                                }
+                                                gender
+                                                age
+                                            }
+                                            voiceActors{
+                                                id
+                                                name{
+                                                    first
+                                                    middle
+                                                    last
+                                                    full
+                                                    native
+                                                    alternative
+                                                }
+                                                image{
+                                                    large
+                                                    medium
+                                                }
+                                                description
+                                                age
+                                            }
+                                            media{
+                                                title{
+                                                    romaji
+                                                    native
+                                                }
+                                            }
+                                        }
+                                    }
+                                    recommendations{
+                                        edges{
+                                            node{
+                                                id
+                                                mediaRecommendation{
+                                                    id
+                                                    type
+                                                    format
+                                                    title{
+                                                        romaji
+                                                    }
+                                                    coverImage{
+                                                        extraLarge
+                                                        large
+                                                        medium
+                                                        color
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    studios{
+                                        edges{
+                                            node{
+                                                name
+                                                id
+                                                isAnimationStudio
+                                                siteUrl
+                                            }
+                                        }
+                                    }
+                                    streamingEpisodes{
+                                        title
+                                        thumbnail
+                                        url
+                                        site
+                                    }
+                                    averageScore
+                                    nextAiringEpisode{
+                                        id
+                                        episode
+                                        airingAt
+                                    }
+                                    startDate{
+                                        year
+                                        month
+                                        day
+                                    }
+                                    endDate{
+                                        year
+                                        month
+                                        day
+                                    }
+                                    season
+                                    seasonYear
+                                    isAdult
+                                    id
+                                    coverImage{
+                                        extraLarge
+                                        large
+                                        medium
+                                        color
+                                    }
+                                    bannerImage
+                                    type
+                                    format
+                                    genres
+                                    popularity
+                                    averageScore
+                                }
+                            }
+                        }
+                    `,
+                    variables: {
+                        'page': 1,
+                        'perPage': 5,
+                        'tag': `${tag}`,
+                        'type' : 'ANIME'
+                    }
+                })
+            })
+
+            return data.data.Page.media;
+        }
+        catch (error) {
+
+            return console.log(error)
+        }
+
+    },
+
+    //manga
+    getMangasForThisGenre: async (tag: any) => {
+
+        try {
+
+            const { data } = await Axios({
+                url: `${BASE_URL}`,
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    query: `
+                        query($page: Int, $perPage: Int, $tag: String, $type: MediaType){
+                            Page(page: $page, perPage: $perPage){
+                                media(tag: $tag, sort: TRENDING_DESC, type: $type){
+                                    title{
+                                        romaji
+                                        native
+                                    }
+                                    description(asHtml: false)
+                                    status
+                                    relations{
+                                        nodes{
+                                            id
+                                            type
+                                            format
+                                            title{
+                                                native
+                                                romaji
+                                            }
+                                            coverImage{
+                                                large
+                                                extraLarge
+                                                medium
+                                            }
+                                        }
+                                    }
+                                    episodes
+                                    chapters
+                                    volumes
+                                    duration
+                                    source
+                                    countryOfOrigin
+                                    trailer{
+                                        id
+                                        site
+                                        thumbnail
+                                    }
+                                    updatedAt
+                                    favourites
+                                    tags{
+                                        name
+                                        description
+                                        isAdult
+                                        isMediaSpoiler
+                                    }
+                                    characters(sort: ROLE){
+                                        edges{
+                                            id
+                                            role
+                                            node{
+                                                name{
+                                                    full
+                                                    native
+                                                    alternative
+                                                }
+                                                image{
+                                                    large
+                                                    medium
+                                                }
+                                                gender
+                                                age
+                                            }
+                                            voiceActors{
+                                                id
+                                                name{
+                                                    first
+                                                    middle
+                                                    last
+                                                    full
+                                                    native
+                                                    alternative
+                                                }
+                                                image{
+                                                    large
+                                                    medium
+                                                }
+                                                description
+                                                age
+                                            }
+                                            media{
+                                                title{
+                                                    romaji
+                                                    native
+                                                }
+                                            }
+                                        }
+                                    }
+                                    recommendations{
+                                        edges{
+                                            node{
+                                                id
+                                                mediaRecommendation{
+                                                    id
+                                                    type
+                                                    format
+                                                    title{
+                                                        romaji
+                                                    }
+                                                    coverImage{
+                                                        extraLarge
+                                                        large
+                                                        medium
+                                                        color
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    studios{
+                                        edges{
+                                            node{
+                                                name
+                                                id
+                                                isAnimationStudio
+                                                siteUrl
+                                            }
+                                        }
+                                    }
+                                    streamingEpisodes{
+                                        title
+                                        thumbnail
+                                        url
+                                        site
+                                    }
+                                    averageScore
+                                    nextAiringEpisode{
+                                        id
+                                        episode
+                                        airingAt
+                                    }
+                                    startDate{
+                                        year
+                                        month
+                                        day
+                                    }
+                                    endDate{
+                                        year
+                                        month
+                                        day
+                                    }
+                                    season
+                                    seasonYear
+                                    isAdult
+                                    id
+                                    coverImage{
+                                        extraLarge
+                                        large
+                                        medium
+                                        color
+                                    }
+                                    bannerImage
+                                    type
+                                    format
+                                    genres
+                                    popularity
+                                    averageScore
+                                }
+                            }
+                        }
+                    `,
+                    variables: {
+                        'page': 1,
+                        'perPage': 5,
+                        'tag': `${tag}`,
+                        'type' : 'MANGA'
+                    }
+                })
+            })
+
+            return data.data.Page.media;
+        }
+        catch (error) {
+
+            return console.log(error)
+        }
+
+
     }
 }
