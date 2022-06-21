@@ -16,15 +16,17 @@ import { ReactComponent as OpenBookSvg } from '../../imgs/svg/open-book-svgrepo.
 import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.svg'
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
 
-export default function AsideNavLinks() {
+export default function AsideNavLinks(data: any) {
 
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault()
     //make logout system with redux after making the sign up
   }
 
+  // console.log(data)
+
   return (
-    <C.Container>
+    <C.Container data={data.data}>
 
       <h3>Category</h3>
 

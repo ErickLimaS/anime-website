@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const Container = styled.nav`
+interface Props {
+    data: any
+}
+
+export const Container = styled.nav<Props>`
 
     
         position: sticky;
@@ -43,7 +47,7 @@ export const Container = styled.nav`
                 width: 100%;
 
                 font-weight: 600;
-                color: #757474; 
+                color: #757474;
 
                 >svg{
                     height: 2.4rem;

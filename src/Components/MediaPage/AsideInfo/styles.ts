@@ -66,6 +66,12 @@ div.skeleton{
         }
     }
 
+    .title-score{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .type{
         display: flex;
         flex-direction: column;

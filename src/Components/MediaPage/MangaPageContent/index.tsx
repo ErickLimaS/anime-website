@@ -9,12 +9,13 @@ import { Link } from 'react-router-dom'
 
 export default function MangaPageContent(data: any) {
 
-  console.log(data.data)
 
   const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
   const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
 
   useEffect(() => {
+
+    window.scrollTo(0, 0);
 
     let howManyPages: number = 0;
     let howMuchEpisodes: number = data.data.streamingEpisodes.length;
@@ -32,6 +33,7 @@ export default function MangaPageContent(data: any) {
 
     setHowManyPagesPagination(howManyPages - 1)
 
+    // console.log(data.data)
 
   }, [data.data.streamingEpisodes.length])
 

@@ -4,6 +4,7 @@ export const Container = styled.div`
 
     display: flex;
     flex-direction: row;
+    justify-content: center;
 
     .skeleton{
 
@@ -41,6 +42,14 @@ export const Container = styled.div`
         /* border-right: 2px solid #e6e6e6; */
         border-left: 2px solid #e6e6e6;
         padding: 1rem 3rem 3rem 3rem;
+
+        @media(max-width: 1080px){
+            width: 95%;
+            
+            border-left: 0;
+
+            padding: 0;
+        }
 
         h1{
             margin: 2rem 0;
@@ -116,9 +125,95 @@ export const Container = styled.div`
 
         }
 
-        .list{
+        .top-rated-manga, .top-rated-anime{
+            .list{
+                display: flex;
+                flex-direction: row;
+
+                /* overflow-y: auto; */
+            }
+        }
+
+        .trending{
+
             display: flex;
             flex-direction: row;
+            justify-content: space-evenly;
+            align-items: flex-start;
+
+            @media(max-width: 620px){
+
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+            }
+
+            margin: 2rem 0;
+
+            >div{
+                margin: 0 2rem;
+            }
+
+            .trending-anime, .trending-manga{
+
+                width: 40%;
+
+                @media(max-width: 620px){
+                    
+                    width: 100%;
+
+                }
+
+                .heading{
+                    background-color: initial;
+                }
+
+                >div{
+                    background-color: rgb(255 222 245 / 0.44);
+                    border-radius: 4px;
+                    
+                    
+                    margin: 1rem 0;
+                }
+
+            }
+
+            .trending-anime{
+
+                .heading h2{
+                    flex-direction: row!important;
+                    span{
+                        margin-left: 0.5rem;
+                    }
+                }
+
+                >div{
+                    flex-direction: row-reverse;
+
+                    >*{
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-end;
+                        align-items: flex-end;
+
+                    }
+
+                    @media(max-width: 620px){
+
+                        flex-direction: row;
+                            
+                        >*{
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+                        }
+                    } 
+                }
+
+            }
+
         }
     }
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
+import Score from '../../Score';
 import SearchInnerPage from '../../SearchInnerPage'
 import * as C from './styles'
 
@@ -33,11 +34,25 @@ export default function AsideInfo(data: any) {
 
             </div>
 
+            {data.data.averageScore && (
+              <div className='title-score'>
+                <Score data={data.data.averageScore} />
+              </div>
+            )}
+
             <div className='type'>
               {(data.data.format === 'MOVIE' && (
+
                 <h2>{data.data.format}</h2>
+
               )) || (data.data.type === 'ANIME' && (
+
                 <h2>{data.data.type}</h2>
+                
+              )) || (data.data.type === 'MANGA' && (
+
+                <h2>{data.data.type}</h2>
+                
               ))}
             </div>
 
@@ -128,17 +143,20 @@ export default function AsideInfo(data: any) {
                 </li>
               )}
             </ul>
-            
+
             {data.data.trailer && (
-              // <div className='trailer'>
-              //   <h2>Trailer</h2>
-              //   <a href={`http://youtu.be/${data.data.trailer.id}`} target='_blank' rel='noreferrer'>
+              <div className='trailer'>
+                <h2>Trailer</h2>
+
+                {/* //   <a href={`http://youtu.be/${data.data.trailer.id}`} target='_blank' rel='noreferrer'>
               //     <img src={data.data.trailer.thumbnail} alt={`Trailer of ${data.data.title.romaji}`}></img>
-              //   </a>
-              // </div>
-              <iframe width='100%' height='240px' src={`https://www.youtube.com/embed/${data.data.trailer.id}`}>
-                
-              </iframe>
+              //   </a> */}
+
+                <iframe width='100%' height='240px' title='Trailer' src={`https://www.youtube.com/embed/${data.data.trailer.id}`}>
+
+                </iframe>
+
+              </div>
             )}
 
             {data.data.genres && (

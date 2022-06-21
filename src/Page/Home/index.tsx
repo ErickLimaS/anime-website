@@ -27,6 +27,8 @@ export default function Home() {
 
   useEffect(() => {
 
+    window.scrollTo(0, 0);
+    
     const loadData = async () => {
 
       setLoading(true)
@@ -303,7 +305,7 @@ export default function Home() {
                 </div>
               </div>
               <div className='trending-items'>
-                {trending.map((item, key) => (
+                {trending.slice(0,3).map((item, key) => (
                   <Trending key={key} data={item} />
                 ))}
                 <Link to={`/animes/trending`} className='button-see-more'>See More</Link>

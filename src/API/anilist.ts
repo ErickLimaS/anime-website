@@ -217,7 +217,6 @@ export default {
                                         romaji
                                         native
                                     }
-                                    
                                     status
                                     episodes
                                     averageScore
@@ -261,7 +260,7 @@ export default {
                         'type': `${type}`,
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
-                        'perPage': 3,
+                        'perPage': 5,
                         'year': new Date().getFullYear(),
                     }
                 })

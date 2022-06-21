@@ -6,9 +6,11 @@ import { ReactComponent as StarHalfSvg } from '../../imgs/svg/star-half.svg'
 
 export default function Score(data: any) {
 
+    const score = data.data / 2
+
     return (
         <C.Container>
-            {data.data === 50 && (
+            {score === 50 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />
@@ -17,7 +19,7 @@ export default function Score(data: any) {
                     <StarFillSvg />
                 </>
             )}
-            {data.data >= 45 && (
+            {score >= 45 && score < 50 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />
@@ -26,7 +28,7 @@ export default function Score(data: any) {
                     <StarHalfSvg />
                 </>
             )}
-            {data.data >= 40 && data.data < 45 && (
+            {score >= 40 && score < 45 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />
@@ -35,7 +37,7 @@ export default function Score(data: any) {
                     <StarSvg />
                 </>
             )}
-            {data.data >= 35 && data.data < 40 && (
+            {score >= 35 && score < 40 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />
@@ -44,7 +46,7 @@ export default function Score(data: any) {
                     <StarSvg />
                 </>
             )}
-            {data.data >= 30 && data.data < 35 && (
+            {score >= 30 && score < 35 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />
@@ -53,7 +55,7 @@ export default function Score(data: any) {
                     <StarSvg />
                 </>
             )}
-            {data.data >= 25 && data.data < 30 && (
+            {score >= 25 && score < 30 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />
@@ -62,7 +64,7 @@ export default function Score(data: any) {
                     <StarSvg />
                 </>
             )}
-            {data.data >= 20 && data.data < 25 && (
+            {score >= 20 && score < 25 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />
@@ -71,7 +73,7 @@ export default function Score(data: any) {
                     <StarSvg />
                 </>
             )}
-            {data.data >= 15 && data.data < 20 && (
+            {score >= 15 && score < 20 && (
                 <>
                     <StarFillSvg />
                     <StarHalfSvg />
@@ -80,7 +82,7 @@ export default function Score(data: any) {
                     <StarSvg />
                 </>
             )}
-            {data.data >= 10 && data.data < 15 && (
+            {score >= 10 && score < 15 && (
                 <>
                     <StarFillSvg />
                     <StarSvg />
@@ -89,7 +91,7 @@ export default function Score(data: any) {
                     <StarSvg />
                 </>
             )}
-            {data.data < 10 && (
+            {score < 10 && (
                 <>
                     <StarHalfSvg />
                     <StarSvg />

@@ -9,8 +9,6 @@ export default function Trending(data: any) {
 
     // console.log(data.data)
 
-    const score = data.data.averageScore / 2
-
     let format;
 
     switch (data.data.format) {
@@ -49,7 +47,7 @@ export default function Trending(data: any) {
                     </ul>
                 </div>
                 <div className='score'>
-                    <Score data={score} />
+                    <Score data={data.data.averageScore} />
                 </div>
             </div>
 

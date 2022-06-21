@@ -16,7 +16,6 @@ function App() {
 
         <Header />
 
-
         <Routes>
           <Route path='/genre/:genre' element={<GenrePage />} />
           <Route path='/anime/:id' element={<AnimePage />} />
@@ -24,7 +23,6 @@ function App() {
           <Route path='/manga/:id' element={<MangaPage />} />
           <Route path='/' element={<Home />} />
         </Routes>
-
 
         <Footer />
 

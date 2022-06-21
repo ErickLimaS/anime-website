@@ -16,6 +16,8 @@ export default function AnimePageContent(data: any) {
 
   useEffect(() => {
 
+    window.scrollTo(0, 0);
+
     let howManyPages: number = 0;
     let howMuchEpisodes: number = data.data.streamingEpisodes.length;
 
@@ -32,9 +34,9 @@ export default function AnimePageContent(data: any) {
 
     setHowManyPagesPagination(howManyPages - 1)
 
-    console.log(howManyPages + ' pages')
-    console.log(howMuchEpisodes + ' h m epis')
-    console.log(episodesLeft + ' ep left')
+    // console.log(howManyPages + ' pages')
+    // console.log(howMuchEpisodes + ' h m epis')
+    // console.log(episodesLeft + ' ep left')
 
   }, [data.data.streamingEpisodes.length])
 

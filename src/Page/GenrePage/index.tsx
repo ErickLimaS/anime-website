@@ -6,17 +6,24 @@ import AsideNavLinks from '../../Components/AsideNavLinks'
 import HeadingContent from '../../Components/Home/HeadingContent'
 import TopRated from '../../Components/Home/TopRated'
 import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.svg'
+import Trending from '../../Components/Home/Trending'
 
 export default function GenrePage() {
 
     const { genre } = useParams()
+
     const [animesGenreList, setAnimesGenreList] = useState([])
     const [mangasGenreList, setMangasGenreList] = useState([])
+    const [animesTrending, setAnimesTrending] = useState([])
+    const [mangasTrending, setMangasTrending] = useState([])
+
     const [randomIndex, setRandomIndex] = useState<number>(0)
 
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+
+        window.scrollTo(0, 0);
 
         document.title = `${genre} Genre`
 
@@ -26,9 +33,13 @@ export default function GenrePage() {
 
             const data1 = await API.getAnimesForThisGenre(genre)
             const data2 = await API.getMangasForThisGenre(genre)
+            const data3 = await API.getTrending('ANIME')
+            const data4 = await API.getTrending('MANGA')
 
             setAnimesGenreList(data1)
             setMangasGenreList(data2)
+            setAnimesTrending(data3)
+            setMangasTrending(data4)
 
             setRandomIndex(Math.floor(Math.random() * data1.length))
 
@@ -44,7 +55,7 @@ export default function GenrePage() {
 
             {loading === true ? (
                 <>
-                    <AsideNavLinks />
+                    <AsideNavLinks data={genre} />
 
                     <div className='content skeleton'>
                         <div className='skeleton-name'></div>
@@ -56,7 +67,7 @@ export default function GenrePage() {
             ) : (
 
                 <>
-                    <AsideNavLinks />
+                    <AsideNavLinks data={genre} />
 
                     <div className='content'>
 
@@ -100,6 +111,43 @@ export default function GenrePage() {
                                     <TopRated data={item} />
                                 ))}
                             </div>
+                        </div>
+
+                        <div className='trending'>
+
+                            <div className='trending-anime'>
+
+                                <div className='heading'>
+
+                                    <h2>Trending <span> Mangas</span></h2>
+
+                                </div>
+
+
+                                {mangasTrending.map((item: any, key) => (
+
+                                    <Trending data={item} />
+
+                                ))}
+
+                            </div>
+
+                            <div className='trending-manga'>
+
+                                <div className='heading'>
+
+                                    <h2>Trending <span> Animes</span></h2>
+
+                                </div>
+
+                                {animesTrending.map((item: any, key) => (
+
+                                    <Trending data={item} />
+
+                                ))}
+
+                            </div>
+
                         </div>
                     </div>
                 </>
