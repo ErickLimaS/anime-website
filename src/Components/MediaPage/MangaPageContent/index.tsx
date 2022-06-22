@@ -8,8 +8,7 @@ import SearchInnerPage from '../../SearchInnerPage'
 import { Link } from 'react-router-dom'
 
 export default function MangaPageContent(data: any) {
-
-
+  
   const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
   const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
 

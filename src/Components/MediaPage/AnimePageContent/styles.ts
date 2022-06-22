@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface Props {
     data: any;
+    indexHeading: number
 }
 
 export const Container = styled.div<Props>`
@@ -83,11 +84,56 @@ export const Container = styled.div<Props>`
 
         margin: 2rem 0;
 
+        div.nav{
+            display: flex;
+            flex-direction: row;
+
+            >*{
+                margin: 0 1rem;
+            }
+            
+            overflow: auto;
+        }
+
         h2{
+            cursor: pointer;
+
+            height: min-content;
+
+            padding: 0.5rem 1rem;
+
+            border-radius: 4px;
+
             font-size: 2rem;
             font-weight: 600;
-            color: #222222;
+
+            :hover{
+                background-color: #ff5ebc33!important;
+            }
         }
+
+        #h2-0{
+            border: ${props => props.indexHeading === 0 ? '1px solid transparent': '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 0 ? '#ff5ebc!important': '#fafafa'};
+            color: ${props => props.indexHeading === 0 ? '#fff': '#ff5ebc'};
+        }
+        #h2-1{
+            border: ${props => props.indexHeading === 1 ? '1px solid transparent': '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 1 ? '#ff5ebc!important': '#fafafa'};
+            color: ${props => props.indexHeading === 1 ? '#fff': '#ff5ebc'};
+        }
+        #h2-2{
+            border: ${props => props.indexHeading === 2 ? '1px solid transparent': '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 2 ? '#ff5ebc!important': '#fafafa'};
+            color: ${props => props.indexHeading === 2 ? '#fff': '#ff5ebc'};
+        }
+        
+        @media(max-width: 620px){
+            .svg-dots{
+                display: none;
+            }
+        }
+        
     }
 
     .anime-episodes{
@@ -193,6 +239,61 @@ export const Container = styled.div<Props>`
                 height: auto;
             }
         }
+    }
+
+    .cast{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        h1{
+            margin: 2rem 0;
+        }
+    }
+
+    ul.more-info{
+        
+        font-size: 2rem;
+        font-weight: 600;
+
+        display: flex;
+        flex-direction: column;
+
+        li{
+            font-size: 1.8rem;
+            font-weight: 400;
+
+            margin: 2rem 0;
+
+            border-bottom: 2px solid #c0c0c0;
+
+            span{
+                font-weight: 600;
+            }
+        }
+
+        .studios, .tags{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            li{
+                border-bottom: 0;
+
+                margin: 0.5rem 0;
+            }
+
+            li:after{
+                content: ', ';
+                white-space: pre;
+            }
+
+            li:last-child:after{
+                content: '';
+            }
+        }
+
     }
 
     .similar-animes{

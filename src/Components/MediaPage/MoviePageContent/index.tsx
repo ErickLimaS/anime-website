@@ -6,11 +6,17 @@ import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-ri
 import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
 import { Link } from 'react-router-dom'
+import CharacterAndActor from '../../CharacterAndActor'
 
 export default function MoviePageContent(data: any) {
 
+  const [indexPageInfo, setIndexPageInfo] = useState(0)
+
   const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
   const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
+
+  const [mainCastCharacters, setMainCastCharacters] = useState([])
+  const [supportingCastCharacters, setSupportingCastCharacters] = useState([])
 
   useEffect(() => {
 
@@ -32,6 +38,19 @@ export default function MoviePageContent(data: any) {
 
     setHowManyPagesPagination(howManyPages - 1)
 
+    //gets the main and support characters
+    const mainChar = data.data.characters.edges.filter((item: any) => {
+      return item.role === 'MAIN'
+    })
+    setMainCastCharacters(mainChar)
+    console.log(mainChar)
+
+    const supChar = data.data.characters.edges.filter((item: any) => {
+      return item.role === 'SUPPORTING'
+    })
+    setSupportingCastCharacters(supChar)
+    console.log(supChar)
+
     // console.log(data.data)
 
   }, [data.data.streamingEpisodes.length])
@@ -39,7 +58,7 @@ export default function MoviePageContent(data: any) {
   console.log(howManyPagesPagination)
 
   return (
-    <C.Container data={data.data}>
+    <C.Container data={data.data} indexHeading={indexPageInfo}>
 
       <div className='search-mobile'>
         <SearchInnerPage />
@@ -57,6 +76,75 @@ export default function MoviePageContent(data: any) {
         <p>{data.data.description}</p>
 
       </div>
+
+      <div className='heading'>
+
+        <div className='nav'>
+          <h2 id='h2-0' onClick={() => setIndexPageInfo(0)}>Cast</h2>
+          <h2 id='h2-1' onClick={() => setIndexPageInfo(1)}>More Info</h2>
+        </div>
+
+        <div className='svg-dots'>
+          <DotSvg />
+          <DotSvg />
+        </div>
+      </div>
+
+      {indexPageInfo === 0 && (
+        <div className='cast'>
+
+          <h1>Main Cast</h1>
+
+          {mainCastCharacters.map((item: any, key: any) => (
+            <CharacterAndActor data={item} key={key} />
+          ))}
+
+          {/* 
+          <h1>Supporting Cast</h1>
+
+          {supportingCastCharacters.map((item: any, key: any) => (
+            <CharacterAndActor data={item} key={key} />
+          ))} */}
+        </div>
+      )}
+
+      {indexPageInfo === 1 && (
+        <ul className='more-info'>
+          {data.data.source && (
+            <li>Source: <span>{data.data.source}</span></li>
+          )}
+          {data.data.countryOfOrigin && (
+            <li>From <span>{data.data.countryOfOrigin}</span></li>
+          )}
+          {data.data.favourites && (
+            <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
+          )}
+          {data.data.studios.edges && (
+            <li><span>Studios</span>:
+              <ul className='studios'>
+                {data.data.studios.edges.map((item: any) => (
+                  <li>
+                    <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
+                      {item.node.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          )}
+          {data.data.tags && (
+
+            <li><span>Tags</span>:
+              <ul className='tags'>
+                {data.data.tags.map((item: any) => (
+                  <li>{item.name}</li>
+                ))}
+              </ul>
+            </li>
+
+          )}
+        </ul>
+      )}
 
       {data.data.relations.nodes && (
         <div className='from-same-franchise'>

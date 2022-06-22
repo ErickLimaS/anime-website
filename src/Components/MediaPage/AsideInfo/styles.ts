@@ -105,10 +105,10 @@ div.skeleton{
             a{
                 color: inherit;
                 text-decoration: underline;
-                padding-left: 0.5rem;
 
                 :after{
-                    content: ', ';
+                content: ', ';
+                white-space: pre;
                 }   
 
                 :last-child:after{
@@ -186,6 +186,7 @@ div.skeleton{
 
             li:after{
                 content: ', ';
+                white-space: pre;
             }
 
             li:last-child:after{

@@ -418,7 +418,7 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $id: Int, $format: MediaFormat){
+                        query($type: MediaType, $id: Int, $format: MediaFormat, $language: StaffLanguage){
                                 Media(type: $type, format: $format, id: $id){
                                     title{
                                         romaji
@@ -478,7 +478,7 @@ export default {
                                                 gender
                                                 age
                                             }
-                                            voiceActors{
+                                            voiceActors(language: $language){
                                                 id
                                                 name{
                                                     first
@@ -577,8 +577,9 @@ export default {
                     `,
                     variables: {
                         'id': `${id}`,
+                        'language': 'JAPANESE',
                         'type': `${type}`,
-                        'format': `${format !== undefined ? `${format}` : (type === 'ANIME' && 'TV') || (type === 'MANGA' && 'MANGA')}`
+                        'format': `${format !== undefined ? `${format}` : (type === 'ANIME' && 'TV') || (type === 'MANGA' && 'MANGA')}`,
                     }
                 })
             })
