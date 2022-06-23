@@ -71,14 +71,14 @@ export default function CharacterAndActor(data: any) {
 
               {data.data.voiceActors[0].name.full && (
                 <h2>{data.data.voiceActors[0].name.full}</h2>
-              )}
+              )} 
             </>
           )}
         </div>
 
       </div>
 
-      <div>
+      {/* <div>
 
         <div className='character'>
           {data.data.node.gender && (
@@ -100,7 +100,7 @@ export default function CharacterAndActor(data: any) {
             )}
           </div>
         )}
-      </div>
+      </div> */}
 
     </C.Container>
   )

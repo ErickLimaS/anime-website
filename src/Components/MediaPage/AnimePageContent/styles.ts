@@ -93,24 +93,34 @@ export const Container = styled.div<Props>`
             }
             
             overflow: auto;
+
+            h2{
+                cursor: pointer;
+
+                height: min-content;
+
+                padding: 0.5rem 1rem;
+
+                border-radius: 4px;
+
+                font-size: 2rem;
+                font-weight: 600;
+
+                :hover{
+                    background-color: #ff5ebc33!important;
+                }
+            }
         }
 
         h2{
-            cursor: pointer;
-
-            height: min-content;
 
             padding: 0.5rem 1rem;
-
-            border-radius: 4px;
 
             font-size: 2rem;
             font-weight: 600;
 
-            :hover{
-                background-color: #ff5ebc33!important;
-            }
         }
+        
 
         #h2-0{
             border: ${props => props.indexHeading === 0 ? '1px solid transparent': '1px solid #ff5ebc'};

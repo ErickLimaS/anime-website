@@ -92,21 +92,22 @@ export default function AnimePageContent(data: any) {
         </p>
       </div>
 
+      <div className='heading'>
+
+        <div className='nav'>
+          <h2 id='h2-0' onClick={() => setIndexPageInfo(0)}>Episodes</h2>
+          <h2 id='h2-1' onClick={() => setIndexPageInfo(1)}>Cast</h2>
+          <h2 id='h2-2' onClick={() => setIndexPageInfo(2)}>More Info</h2>
+        </div>
+
+        <div className='svg-dots'>
+          <DotSvg />
+          <DotSvg />
+        </div>
+      </div>
+
       {data.data.streamingEpisodes.length > 0 ? (
         <>
-          <div className='heading'>
-
-            <div className='nav'>
-              <h2 id='h2-0' onClick={() => setIndexPageInfo(0)}>Episodes</h2>
-              <h2 id='h2-1' onClick={() => setIndexPageInfo(1)}>Cast</h2>
-              <h2 id='h2-2' onClick={() => setIndexPageInfo(2)}>More Info</h2>
-            </div>
-
-            <div className='svg-dots'>
-              <DotSvg />
-              <DotSvg />
-            </div>
-          </div>
 
           {indexPageInfo === 0 && (
             <>
@@ -304,11 +305,70 @@ export default function AnimePageContent(data: any) {
           )}
         </>
       ) : (
-        <div className='heading'>
+        <>
+          <div className='heading'>
 
-          <h2>Theres no Episodes to Display Here!</h2>
+            {indexPageInfo === 0 && (
+              <h2>Theres no Episodes to Display Here!</h2>
+            )}
 
-        </div>
+
+          </div>
+          {indexPageInfo === 1 && (
+            <div className='cast'>
+
+              <h1>Main Cast</h1>
+
+              {mainCastCharacters.map((item: any, key: any) => (
+                <CharacterAndActor data={item} key={key} />
+              ))}
+
+              <h1>Supporting Cast</h1>
+
+              {supportingCastCharacters.map((item: any, key: any) => (
+                <CharacterAndActor data={item} key={key} />
+              ))}
+            </div>
+          )}
+
+          {indexPageInfo === 2 && (
+            <ul className='more-info'>
+              {data.data.source && (
+                <li>Source: <span>{data.data.source}</span></li>
+              )}
+              {data.data.countryOfOrigin && (
+                <li>From <span>{data.data.countryOfOrigin}</span></li>
+              )}
+              {data.data.favourites && (
+                <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
+              )}
+              {data.data.studios.edges && (
+                <li><span>Studios</span>:
+                  <ul className='studios'>
+                    {data.data.studios.edges.map((item: any) => (
+                      <li>
+                        <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
+                          {item.node.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              )}
+              {data.data.tags && (
+
+                <li><span>Tags</span>:
+                  <ul className='tags'>
+                    {data.data.tags.map((item: any) => (
+                      <li>{item.name}</li>
+                    ))}
+                  </ul>
+                </li>
+
+              )}
+            </ul>
+          )}
+        </>
       )
       }
 
