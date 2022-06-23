@@ -64,7 +64,7 @@ export default function Header() {
 
                         <li><Link to={`/format/tv`}><TvSvg /> TV</Link></li>
                         <li><Link to={`/format/manga`}><BallonSvg /> Manga</Link></li>
-                        <li><Link to={`/format/one-shot`}><OneShotSvg /> One Shot</Link></li>
+                        <li><Link to={`/format/one_shot`}><OneShotSvg /> One Shot</Link></li>
                         <li><Link to={`/format/novel`}><RomanceBookSvg /> Novel</Link></li>
                         <li><Link to={`/format/movie`}><MovieSvg /> Movie</Link></li>
                         <li><Link to={`/format/special`}><StarSvg /> Special</Link></li>

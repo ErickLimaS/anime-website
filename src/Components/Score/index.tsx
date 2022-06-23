@@ -10,7 +10,7 @@ export default function Score(data: any) {
 
     return (
         <C.Container>
-            {score === 50 && (
+            {score >= 49 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />
@@ -19,7 +19,7 @@ export default function Score(data: any) {
                     <StarFillSvg />
                 </>
             )}
-            {score >= 45 && score < 50 && (
+            {score >= 45 && score < 49 && (
                 <>
                     <StarFillSvg />
                     <StarFillSvg />

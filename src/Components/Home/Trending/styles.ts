@@ -19,8 +19,11 @@ export const AnimeToBeListed = styled.div<itemData>`
     div.cover{
         
         img{
-            height: auto;
-            width: 8rem;
+            height: 14rem;
+            width:  10rem;
+            /* width: 8rem; */
+
+            border: 2px solid transparent;
         }
     }
 
@@ -72,6 +75,59 @@ export const AnimeToBeListed = styled.div<itemData>`
 
         div.score{
             margin: 0.5rem 0;
+        }
+
+    }
+
+    //description of item on hover
+    div.description-hover{
+        display: none!important;
+    }
+
+    :hover{
+
+        .cover{
+
+            img{
+                border: 2px solid #ff1a75;
+            }
+
+
+        }
+
+        div.description-hover{
+            span{
+           
+                content: ' ';
+
+            }
+
+            display: flex!important;
+            align-items: center;
+            justify-content: center;
+            
+            position: absolute!important;
+
+            right: 34rem;
+
+            width: 24%;
+
+            padding: 1rem;
+
+            background-color: #333333!important;
+            border-radius: 2px;
+
+            p{
+                font-size: 1.4rem;
+                font-weight: 600;
+
+                color: #b0b0b0;
+            }
+
+            a{
+                color: #fff;
+                text-decoration: underline;
+            }
         }
 
     }

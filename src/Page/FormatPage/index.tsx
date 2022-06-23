@@ -8,9 +8,13 @@ import TopRated from '../../Components/Home/TopRated'
 import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.svg'
 import Trending from '../../Components/Home/Trending'
 
-export default function GenrePage() {
+export default function FormatPage() {
 
-    const { genre } = useParams()
+    const { format } = useParams()
+    function formatName(format: any) {
+        return format.slice(0, 1).toUpperCase() + format.slice(1)
+    }
+    const name = formatName(format)
 
     const [animesGenreList, setAnimesGenreList] = useState([])
     const [mangasGenreList, setMangasGenreList] = useState([])
@@ -25,19 +29,19 @@ export default function GenrePage() {
 
         window.scrollTo(0, 0);
 
-        document.title = `${genre} Genre`
+        document.title = `${format} Format`
 
         const load = async () => {
 
             setLoading(true)
 
-            const data1 = await API.getAnimesForThisGenre(genre)
-            const data2 = await API.getMangasForThisGenre(genre)
-            const data3 = await API.getTrending('ANIME', '' ,genre)
-            const data4 = await API.getTrending('MANGA', '' ,genre)
+            const data1 = await API.getMediaForThisFormat(format)
+            // const data2 = await API.getMangasForThisFormat(format)
+            const data3 = await API.getTrending('ANIME', format, '')
+            const data4 = await API.getTrending('MANGA', format, '')
 
             setAnimesGenreList(data1)
-            setMangasGenreList(data2)
+            // setMangasGenreList(data2)
             setAnimesTrending(data3)
             setMangasTrending(data4)
 
@@ -48,14 +52,14 @@ export default function GenrePage() {
         }
         load()
 
-    }, [genre])
+    }, [format])
 
     return (
         <C.Container>
 
             {loading === true ? (
                 <>
-                    <AsideNavLinks data={genre} />
+                    <AsideNavLinks data={format} />
 
                     <div className='content skeleton'>
                         <div className='skeleton-name'></div>
@@ -67,18 +71,18 @@ export default function GenrePage() {
             ) : (
 
                 <>
-                    <AsideNavLinks data={genre} />
+                    <AsideNavLinks data={format} />
 
                     <div className='content'>
 
-                        <h1>{genre}</h1>
+                        <h1>{name} Format</h1>
 
                         <HeadingContent data={animesGenreList[randomIndex]} />
 
                         <div className='top-rated-anime'>
 
                             <div className='heading'>
-                                <h2>Top Rated <span>{genre} Animes</span></h2>
+                                <h2>Top Rated on <span>{name} Format</span></h2>
 
                                 <div className='nav-buttons'>
                                     <button type='button'><ArrowLeftSvg /></button>
@@ -88,25 +92,6 @@ export default function GenrePage() {
 
                             <div className='list'>
                                 {animesGenreList.map((item: any, key) => (
-
-                                    <TopRated data={item} />
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className='top-rated-manga'>
-
-                            <div className='heading'>
-                                <h2>Top Rated <span>{genre} Mangas</span></h2>
-
-                                <div className='nav-buttons'>
-                                    <button type='button'><ArrowLeftSvg /></button>
-                                    <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
-                                </div>
-                            </div>
-
-                            <div className='list'>
-                                {mangasGenreList.map((item: any, key) => (
 
                                     <TopRated data={item} />
                                 ))}
@@ -151,8 +136,9 @@ export default function GenrePage() {
                         </div>
                     </div>
                 </>
-            )}
+            )
+            }
 
-        </C.Container>
+        </C.Container >
     )
 }

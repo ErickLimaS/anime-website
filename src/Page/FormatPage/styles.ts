@@ -165,12 +165,12 @@ export const Container = styled.div`
 
                 }
 
-                .heading{
-                    background-color: initial;
-                }
-
                 div.description-hover{
                         display: none!important;;
+                }
+
+                .heading{
+                    background-color: initial;
                 }
 
                 >div{
@@ -202,6 +202,7 @@ export const Container = styled.div`
                         align-items: flex-end;
 
                     }
+                    
 
                     @media(max-width: 620px){
 

@@ -47,7 +47,7 @@ export default function Home() {
           setReleasingThisWeek(data2)
 
           //stores what is trending 
-          data3 = await API.getTrending('ANIME')
+          data3 = await API.getTrending('ANIME', '', '')
           setTrending(data3)
 
           //stores top rated animes
@@ -68,7 +68,7 @@ export default function Home() {
           setReleasingThisWeek(data2)
 
           //stores what is trending 
-          data3 = await API.getTrending('MANGA')
+          data3 = await API.getTrending('MANGA', '', '')
           setTrending(data3)
 
           //stores top rated animes
@@ -89,7 +89,7 @@ export default function Home() {
           setReleasingThisWeek(data2)
 
           //stores what is trending 
-          data3 = await API.getTrending('ANIME', 'MOVIE')
+          data3 = await API.getTrending('ANIME', 'MOVIE', '')
           setTrending(data3)
 
           //stores top rated animes
