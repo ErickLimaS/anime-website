@@ -1,0 +1,49 @@
+POST http://localhost:9000/users/register
+Content-Type: application/json
+
+{
+    "name": "test1",
+    "email":"email",
+    "password":"password"
+}
+
+###
+
+POST http://localhost:9000/users/login
+Content-Type: application/json
+
+{
+    "email":"email",
+    "password":"password"
+}
+
+###
+
+POST http://localhost:9000/users/add-media
+Content-Type: application/json
+
+
+{
+    "id": "62b60725c6d209e1756ad0d1",
+    "media": {
+        "id": 1231232191,
+        "fullTitle": "full name1",
+        "nativeTitle": "native name1",
+        "format": "tv",
+        "type": "anime",
+        "status": "Releasing",
+        "isAdult": true
+    }
+}
+
+###
+
+POST http://localhost:9000/users/remove-media
+Content-Type: application/json
+
+{
+    "id": "62b5f61b3ba5d72b06c097ab",
+    "media": {
+        "id": 1231232191
+    }
+}
