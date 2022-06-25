@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
         name: {type: String, required: true},
         email: {type: String, required: true},
         password: {type: String, required: true},
-        dateAccountCreated: {type: Date},
+        createdAt: {type: Date},
         mediaAdded: [{
             addedAt: {type: Date},
             id: {type: Number},

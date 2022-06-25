@@ -22,7 +22,7 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: hashedPassword,
-            dateAccountCreated: new Date(),
+            createdAt: new Date(),
         })
 
         user.save()
@@ -32,7 +32,7 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             password: user.password,
-            date: user.dateAccountCreated,
+            createdAt: user.createdAt,
 
         })
 

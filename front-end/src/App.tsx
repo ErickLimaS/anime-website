@@ -9,6 +9,7 @@ import MoviePage from './Page/MediaPage/MoviePage';
 import * as C from './styles';
 import GenrePage from './Page/GenrePage';
 import FormatPage from './Page/FormatPage';
+import RegisterUser from './Page/User/RegisterUser';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Header />
 
         <Routes>
+          <Route path='/register' element={<RegisterUser />} />
           <Route path='/format/:format' element={<FormatPage />} />
           <Route path='/genre/:genre' element={<GenrePage />} />
           <Route path='/anime/:id' element={<AnimePage />} />
