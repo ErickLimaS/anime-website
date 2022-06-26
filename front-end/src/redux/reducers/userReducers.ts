@@ -1,4 +1,4 @@
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants";
+import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants";
 
 
 export const userRegisterReducer = (state = {}, action: any) => {
@@ -31,6 +31,22 @@ export const userLoginReducer = (state = {}, action: any) => {
         default:
             return state;
 
+    }
+
+}
+
+export const userLogoutReducer = (state = {}, action: any) => {
+
+    switch (action.type) {
+
+        case USER_LOGOUT_REQUEST:
+            return { loading: true }
+        case USER_LOGOUT_SUCCESS:
+            return { loading: false }
+        case USER_LOGOUT_FAIL:
+            return { loading: false, error: action.payload }
+        default:
+            return state
     }
 
 }

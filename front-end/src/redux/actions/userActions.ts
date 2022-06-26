@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { AnyAction, Dispatch } from "redux";
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants";
+import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants";
 
 const MONGODB_USER_URL = "https://animes-website-db.herokuapp.com/users"
 const CORS_ANYWHERE = 'https://cors-anywhere.herokuapp.com/'
@@ -72,11 +72,35 @@ export const loginUser = (email: String, password: String) => async (dispatch: D
     }
     catch (error: any) {
 
+        console.log(error.response.status)
         dispatch({
             type: USER_LOGIN_FAIL,
-            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+            payload: error.response && error.response.data.message ? error.response.status : error.response.status
+            // payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
 
+
+    }
+
+
+}
+
+export const logoutUser = (id: number) => async (dispatch: Dispatch<AnyAction>) => {
+
+    dispatch({type: USER_LOGOUT_REQUEST, action: id })
+
+    try{
+
+        localStorage.removeItem('userInfo')
+
+        dispatch({type: USER_LOGOUT_SUCCESS, action: id })
+
+        document.location.reload()
+        
+    }
+    catch(error: any){
+
+        dispatch({type: USER_LOGOUT_FAIL, payload: error})
 
     }
 

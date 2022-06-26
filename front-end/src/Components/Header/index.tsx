@@ -17,16 +17,26 @@ import { ReactComponent as StarSvg } from '../../imgs/svg/star-fill.svg'
 import { ReactComponent as OpenBookSvg } from '../../imgs/svg/open-book-svgrepo.svg'
 import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.svg'
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
+import { useDispatch, useSelector } from 'react-redux'
+import { logoutUser } from '../../redux/actions/userActions'
 
 
 export default function Header() {
 
     const [menuMobile, setMenuMobile] = useState(false)
 
-    const handleLogOut = (e: React.MouseEvent) => {
-        e.preventDefault()
-        //make logout system with redux after making the sign up
-    }
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
+
+  const dispatch: any = useDispatch()
+
+  const handleLogOut = (e: React.MouseEvent) => {
+    e.preventDefault()
+    //make logout system with redux after making the sign up
+
+    dispatch(logoutUser(userInfo.id))
+
+  }
 
     return (
         <C.Container display={menuMobile}>
@@ -45,6 +55,41 @@ export default function Header() {
                 </button>
 
                 <nav className='mobile-display-menu-dropdown'>
+
+                    {userInfo ? (
+                        <>
+                            <h3>User</h3>
+
+                            <ul className='settings'>
+                                <li className='user-li'>
+                                    <div className='user'>
+                                        <div>
+                                            <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+                                        </div>
+                                        <div>
+                                            <h2>{userInfo.name}</h2>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
+                                <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
+
+                            </ul>
+                        </>
+                    ) : (
+                        <>
+
+                            <h3>User</h3>
+
+                            <ul className='settings'>
+
+                                <li><Link to={`/login`}>Log In</Link></li>
+                                <li><Link to={`/register`}>Sign Up</Link></li>
+
+                            </ul>
+                        </>
+                    )}
 
                     <h3>Category</h3>
 
@@ -72,14 +117,14 @@ export default function Header() {
 
                     </ul>
 
-                    <h3>General</h3>
+                    {/* <h3>General</h3> */}
 
-                    <ul className='settings'>
+                    {/* <ul className='settings'>
 
                         <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
                         <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
 
-                    </ul>
+                    </ul> */}
                 </nav>
 
             </div>

@@ -8,26 +8,12 @@ import * as C from './styles'
 
 export default function LoginUser() {
 
-
     const email = React.useRef() as React.MutableRefObject<HTMLInputElement>
     const password = React.useRef() as React.MutableRefObject<HTMLInputElement>
 
+    const userLogin = useSelector((state: any) => state.userLogin)
 
-    const userRegister = useSelector((state: any) => state.userRegister)
-
-    const { userInfo, loading, error } = userRegister
-
-    useEffect(() => {
-
-        if(userInfo != null){
-
-            <Route>
-            </Route>
-
-        }
-
-    }, [])
-
+    const { userInfo, loading, error } = userLogin
 
     const dispatch: any = useDispatch()
 
@@ -47,11 +33,62 @@ export default function LoginUser() {
             })
 
         }
+        else if (email.current.value.length === 0) {
+
+            return Swal.fire({
+
+                icon: 'warning',
+                title: 'Ops',
+                titleText: 'Where is Your Email?',
+                text: 'Email was not typed in. Try Typing Again!'
+
+            })
+
+        }
         else {
 
             dispatch(loginUser(email.current.value, password.current.value))
 
         }
+    }
+
+    const errorAlert = (errorStatus: any) => {
+
+        console.log(errorStatus)
+
+        switch (errorStatus) {
+            case 400:
+                Swal.fire({
+
+                    icon: 'warning',
+                    title: 'Error',
+                    titleText: `${errorStatus}: Password Incorrect!`,
+                    text: 'Password Incorrect. Try Typing Again!'
+
+                })
+                break
+            case 404:
+                Swal.fire({
+
+                    icon: 'info',
+                    title: 'Error',
+                    titleText: `${errorStatus}: Email Not Registered!`,
+                    text: 'This Email Is Not on Our Database. Register Your Account.'
+
+                })
+                break
+            default:
+                Swal.fire({
+
+                    icon: 'error',
+                    title: 'Error',
+                    titleText: `${errorStatus}: Something Happen!`,
+                    text: "We Don't Know What Happen. But Try Again!"
+
+                })
+                break
+        }
+
     }
 
     return (
@@ -90,7 +127,7 @@ export default function LoginUser() {
                         <span>loading...</span>
                     )}
                     {error && (
-                        <span>error: {error}</span>
+                        errorAlert(error)
                     )}
                 </div>
 

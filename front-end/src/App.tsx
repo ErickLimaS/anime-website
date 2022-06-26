@@ -15,10 +15,13 @@ import { useSelector } from 'react-redux';
 
 function App() {
 
+  //Checks if user is Logged In
   const userLogin = useSelector((state: any) => state.userLogin)
 
   const { userInfo } = userLogin
 
+  window.scrollTo(0, 0);
+  
   return (
     <BrowserRouter >
       <C.Container>
@@ -30,7 +33,7 @@ function App() {
           <Route path='/login' element={!userInfo ? <LoginUser /> : <Navigate to='/' />} />
 
           <Route path='/register' element={!userInfo ? <RegisterUser /> : <Navigate to='/' />} />
-          
+
           <Route path='/format/:format' element={<FormatPage />} />
           <Route path='/genre/:genre' element={<GenrePage />} />
           <Route path='/anime/:id' element={<AnimePage />} />

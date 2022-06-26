@@ -15,15 +15,26 @@ import { ReactComponent as StarSvg } from '../../imgs/svg/star-fill.svg'
 import { ReactComponent as OpenBookSvg } from '../../imgs/svg/open-book-svgrepo.svg'
 import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.svg'
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginUser, logoutUser } from '../../redux/actions/userActions'
 
 export default function AsideNavLinks(data: any) {
+
+  const userLogin = useSelector((state: any) => state.userLogin)
+  const { userInfo } = userLogin
+
+  const dispatch: any = useDispatch()
 
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault()
     //make logout system with redux after making the sign up
+
+    dispatch(logoutUser(userInfo.id))
+
   }
 
   // console.log(data)
+
 
   return (
     <C.Container data={data.data}>
@@ -54,14 +65,42 @@ export default function AsideNavLinks(data: any) {
 
       </ul>
 
-      <h3>General</h3>
 
-      <ul className='settings'>
+      {userInfo ? (
+        <>
+          <h3>User</h3>
 
-        <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
-        <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
+          <ul className='settings'>
+            <li className='user-li'>
+              <div className='user'>
+                <div>
+                  <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+                </div>
+                <div>
+                  <h2>{userInfo.name}</h2>
+                </div>
+              </div>
+            </li>
 
-      </ul>
+            <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
+            <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
+
+          </ul>
+        </>
+      ) : (
+        <>
+
+          <h3>User</h3>
+
+          <ul className='settings'>
+
+            <li><Link to={`/login`}>Log In</Link></li>
+            <li><Link to={`/register`}>Sign Up</Link></li>
+
+          </ul>
+        </>
+      )}
+
     </C.Container>
   )
 }
