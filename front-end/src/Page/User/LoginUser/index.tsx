@@ -1,40 +1,41 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import { AnyAction, Dispatch } from 'redux';
 import Swal from 'sweetalert2';
-import { registerUser } from '../../../redux/actions/userActions';
+import { loginUser, registerUser } from '../../../redux/actions/userActions';
 import * as C from './styles'
 
-export default function RegisterUser() {
+export default function LoginUser() {
 
 
-    const name = React.useRef() as React.MutableRefObject<HTMLInputElement>;
     const email = React.useRef() as React.MutableRefObject<HTMLInputElement>
     const password = React.useRef() as React.MutableRefObject<HTMLInputElement>
-    const confirmPassword = React.useRef() as React.MutableRefObject<HTMLInputElement>
 
-    const dispatch: any = useDispatch()
 
     const userRegister = useSelector((state: any) => state.userRegister)
 
     const { userInfo, loading, error } = userRegister
 
+    useEffect(() => {
+
+        if(userInfo != null){
+
+            <Route>
+            </Route>
+
+        }
+
+    }, [])
+
+
+    const dispatch: any = useDispatch()
+
     const formHandler = (e: React.FormEvent) => {
 
         e.preventDefault()
 
-        if (password.current.value !== confirmPassword.current.value) {
-
-            return Swal.fire({
-                icon: 'warning',
-                title: 'Ops',
-                titleText: 'Problem With Your Password!',
-                text: "Your Passwords don't match! Check Then and Try Again!"
-            })
-            
-        }
-        else if (password.current.value.length < 8) {
+        if (password.current.value.length < 8) {
 
             return Swal.fire({
 
@@ -48,8 +49,8 @@ export default function RegisterUser() {
         }
         else {
 
-            dispatch(registerUser(name.current.value, email.current.value, password.current.value))
-        
+            dispatch(loginUser(email.current.value, password.current.value))
+
         }
     }
 
@@ -71,13 +72,7 @@ export default function RegisterUser() {
 
             <form onSubmit={(e) => formHandler(e)}>
 
-
-                <h1>Register</h1>
-
-                <div>
-                    <label htmlFor='name'>Name</label>
-                    <input type='text' id='name' placeholder='Name' ref={name}></input>
-                </div>
+                <h1>Login</h1>
 
                 <div>
                     <label htmlFor='email'>Email</label>
@@ -90,12 +85,7 @@ export default function RegisterUser() {
                 </div>
 
                 <div>
-                    <label htmlFor='confirm-password'>Confirm Password</label>
-                    <input type='password' id='confirm-password' placeholder='Confirm Password' ref={confirmPassword}></input>
-                </div>
-
-                <div>
-                    <button type='submit' id='submit'>Register</button>
+                    <button type='submit' id='login'>Login</button>
                     {loading && (
                         <span>loading...</span>
                     )}
@@ -104,8 +94,8 @@ export default function RegisterUser() {
                     )}
                 </div>
 
-                <div className='login'>
-                    <Link to={`/login`}>Already have a Account? Click Here!</Link>
+                <div className='register'>
+                    <Link to={`/register`}>Don't have a Account Yet? Click Here!</Link>
                 </div>
 
 

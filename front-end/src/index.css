@@ -4,6 +4,12 @@ html {
 
 }
 
+.swal2-popup, .swal2-modal, .swal2-show{
+  
+  font-size: initial!important;
+
+}
+
 body {
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',

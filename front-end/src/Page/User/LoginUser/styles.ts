@@ -26,9 +26,9 @@ export const Container = styled.div`
             }
         }
 
-        }
+    }
 
-        @media(max-width: 851px){
+    @media(max-width: 851px){
 
         height: auto;
 
@@ -57,9 +57,9 @@ export const Container = styled.div`
 
             padding: 0 2rem!important;
         }
-        }
+    }
 
-        @media(max-width: 560px){
+    @media(max-width: 560px){
 
         form{
             
@@ -68,7 +68,7 @@ export const Container = styled.div`
             padding: 0 2rem!important;
         }
 
-        }
+    }
 
     .text{
 
@@ -143,7 +143,7 @@ export const Container = styled.div`
 
                 color: #df085e;
                 font-size: 2rem;
-
+                
                 margin: 0.4rem 0;
 
             }
@@ -193,7 +193,7 @@ export const Container = styled.div`
 
         }
 
-        div.login{
+        div.register{
 
             display: flex;
             justify-content: center;

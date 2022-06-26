@@ -28,11 +28,10 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
         user.save()
 
         res.status(201).send({
+
             id: user._id,
             name: user.name,
-            email: user.email,
-            password: user.password,
-            createdAt: user.createdAt,
+            email: user.email
 
         })
 
@@ -94,6 +93,7 @@ userRouter.get('/media', expressAsyncHandler(async (req, res) => {
 
         return res.status(200).send({
 
+            id: user.id,
             name: user.name,
             email: user.email,
             mediaAdded: user.mediaAdded
@@ -125,6 +125,7 @@ userRouter.post('/add-media', expressAsyncHandler(async (req, res) => {
 
         return res.status(201).send({
 
+            id: user.id,
             name: user.name,
             email: user.email,
             mediaAdded: user.mediaAdded
@@ -160,6 +161,7 @@ userRouter.post('/remove-media', expressAsyncHandler(async (req, res) => {
 
         return res.status(202).send({
 
+            id: user.id,
             name: user.name,
             email: user.email,
             mediaAdded: user.mediaAdded
