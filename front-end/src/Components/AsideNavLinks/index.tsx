@@ -15,6 +15,7 @@ import { ReactComponent as StarSvg } from '../../imgs/svg/star-fill.svg'
 import { ReactComponent as OpenBookSvg } from '../../imgs/svg/open-book-svgrepo.svg'
 import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.svg'
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
+import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fill.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser, logoutUser } from '../../redux/actions/userActions'
 
@@ -39,9 +40,9 @@ export default function AsideNavLinks(data: any) {
 
   useEffect(() => {
 
-    if(userInfo){
+    if (userInfo) {
       setUserName(userInfo.name)
-      
+
     }
   }, [userInfo])
 
@@ -88,12 +89,15 @@ export default function AsideNavLinks(data: any) {
                   <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
                 </div>
                 <div>
-                  <h2>{userName}</h2>
+                  <h2>{userName?.slice(0,7)}</h2>
+                </div>
+                <div>
+                <Link to={`/settings`}><SettingsSvg /></Link>
                 </div>
               </div>
             </li>
 
-            <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
+            <li><Link to={`/bookmarks`}><BookmarkSvg /> Bookmarks</Link></li>
             <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
 
           </ul>

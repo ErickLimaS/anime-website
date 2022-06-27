@@ -82,9 +82,37 @@ export const Container = styled.header<ContainerProps>`
                     justify-content: flex-start;
                     align-items: center;
 
+                    width: 98%;
+
                     padding: 0.5rem 0;
 
                     border-bottom: 2px solid #c0c0c0;
+
+                    >div{
+
+                        display: flex!important;
+                        justify-content: flex-start!important;
+                        align-items: center!important;
+
+                        a {
+                            
+                            display: flex!important;
+                            justify-content: center!important;
+                            align-items: center!important;
+
+                            svg{
+                                cursor: pointer!important;
+
+                                fill: #757474!important;
+                                width: 40%!important;
+
+                                :hover{
+                                    fill: #ff1a75!important;
+                                }
+                            }
+                        }
+                    }
+
 
                     div{
                         width: min-content;
@@ -105,7 +133,7 @@ export const Container = styled.header<ContainerProps>`
                     }
 
                     h2{
-                        font-size: 1.6rem;
+                        font-size: 2rem;
                         font-weight: 400;
 
                         color: #333333;
@@ -158,11 +186,25 @@ export const Container = styled.header<ContainerProps>`
                 background-color: #fafafa;
                 
                 height: auto!important;
-                width: 100%;
+                width: 75%;
 
                 position: absolute;
                 top: 9vh;
-                right: 0;
+                left: 0;
+                
+                border-right: 2px solid pink;
+
+                animation: drawer-animation 700ms;
+
+                @keyframes drawer-animation{
+                    0% {
+                        left: -52rem;
+                    }
+                    100%{
+                        left: 0;
+                    }
+                }
+
 
                 *{
                     width: 100%;

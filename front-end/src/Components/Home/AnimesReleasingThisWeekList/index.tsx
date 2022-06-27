@@ -66,6 +66,8 @@ export default function AnimesReleasingThisWeek(data: any) {
                     'status': data.data.status,
                     'isAdult': Boolean(data.data.isAdult)
                 }))
+                
+                setIsAlreadyAdded(true)
 
             }
             else {
@@ -91,7 +93,8 @@ export default function AnimesReleasingThisWeek(data: any) {
 
             <div className='add-button'>
                 <button type='button' onClick={() => addMediaToAccount()}>
-                    {isAlreadyAdded == null || undefined ? <PlusSvg /> : <CheckSvg />}
+                    {isAlreadyAdded == null  && (<PlusSvg />)}
+                    {isAlreadyAdded && (<CheckSvg fill='#ff7fb2'/>)}
                 </button>
             </div>
 

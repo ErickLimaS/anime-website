@@ -16,6 +16,7 @@ import { ReactComponent as MovieSvg } from '../../imgs/svg/movie-player-svgrepo.
 import { ReactComponent as StarSvg } from '../../imgs/svg/star-fill.svg'
 import { ReactComponent as OpenBookSvg } from '../../imgs/svg/open-book-svgrepo.svg'
 import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.svg'
+import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fill.svg'
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../../redux/actions/userActions'
@@ -28,15 +29,15 @@ export default function Header() {
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
 
-  const dispatch: any = useDispatch()
+    const dispatch: any = useDispatch()
 
-  const handleLogOut = (e: React.MouseEvent) => {
-    e.preventDefault()
-    //make logout system with redux after making the sign up
+    const handleLogOut = (e: React.MouseEvent) => {
+        e.preventDefault()
+        //make logout system with redux after making the sign up
 
-    dispatch(logoutUser(userInfo.id))
+        dispatch(logoutUser(userInfo.id))
 
-  }
+    }
 
     return (
         <C.Container display={menuMobile}>
@@ -73,6 +74,7 @@ export default function Header() {
                                 </li>
 
                                 <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
+                                <li><Link to={`/bookmarks`}><BookmarkSvg /> Bookmarks</Link></li>
                                 <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
 
                             </ul>

@@ -83,19 +83,44 @@ export const Container = styled.nav<Props>`
             }
 
             div.user{
+                width: inherit;
 
                 display: flex;
                 flex-direction: row;
-                justify-content: flex-start;
+                justify-content: space-between;
                 align-items: center;
 
                 border-bottom: 2px solid #c0c0c0;
 
+                >div{
+                    width: 33%;
+
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+
+                    a {
+                        
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        svg{
+                            cursor: pointer;
+
+                            fill: #757474;
+                            width: 40%;
+
+                            :hover{
+                                fill: #ff1a75 ;
+                            }
+                        }
+                    }
+                }
+
                 img{
                     width: auto;
-                    height: 4rem;
-
-                    margin-right: 0.2rem ;
+                    height: 3.5rem;
 
                     display: flex;
                     flex-direction: row;
@@ -110,7 +135,6 @@ export const Container = styled.nav<Props>`
                     font-size: 1.6rem;
                     font-weight: 400;
 
-                    margin-left: 0.2rem ;
                     
                     color: #333333;
                 }
