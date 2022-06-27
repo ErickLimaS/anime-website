@@ -137,8 +137,8 @@ export default function AsideInfo(data: any) {
               {data.data.studios.edges.length > 0 && (
                 <li>
                   Studios:
-                  {data.data.studios.edges.slice(0, 3).map((item: any) => (
-                    <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer'> {item.node.name}</a>
+                  {data.data.studios.edges.slice(0, 3).map((item: any, key: any) => (
+                    <a key={key} href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer'> {item.node.name}</a>
                   ))}
                 </li>
               )}
@@ -163,8 +163,8 @@ export default function AsideInfo(data: any) {
               <div className='genres'>
                 <h2>Genres</h2>
                 <ul>
-                  {data.data.genres.map((item: any) => (
-                    <li>{item}</li>
+                  {data.data.genres.map((item: any, key: any) => (
+                    <li key={key}>{item}</li>
                   ))}
                 </ul>
               </div>
@@ -174,8 +174,8 @@ export default function AsideInfo(data: any) {
               <h2>Characters</h2>
 
               <ul>
-                {data.data.characters.edges.slice(0, 6).map((item: any) => (
-                  <li>
+                {data.data.characters.edges.slice(0, 6).map((item: any, key: any) => (
+                  <li key={key}>
                     <div className='img'>
                       <img src={`${item.node.image.medium}`} alt={`${item.node.name.full}`} />
                     </div>

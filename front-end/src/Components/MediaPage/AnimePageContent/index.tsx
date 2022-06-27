@@ -45,17 +45,17 @@ export default function AnimePageContent(data: any) {
       return item.role === 'MAIN'
     })
     setMainCastCharacters(mainChar)
-    console.log(mainChar)
+    // console.log(mainChar)
 
     const supChar = data.data.characters.edges.filter((item: any) => {
       return item.role === 'SUPPORTING'
     })
     setSupportingCastCharacters(supChar)
-    console.log(supChar)
+    // console.log(supChar)
 
   }, [data.data.characters.edges, data.data.streamingEpisodes.length])
 
-  console.log(howManyPagesPagination)
+  // console.log(howManyPagesPagination)
 
   return (
     <C.Container data={data.data} indexHeading={indexPageInfo}>
@@ -377,8 +377,8 @@ export default function AnimePageContent(data: any) {
           <h2>Similar to <span>{data.data.title.romaji}</span></h2>
 
           <ul>
-            {data.data.recommendations.edges.slice(0, 8).map((item: any) => (
-              <li><AnimesReleasingThisWeek data={item.node.mediaRecommendation} /></li>
+            {data.data.recommendations.edges.slice(0, 8).map((item: any, key: any) => (
+              <li><AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} /></li>
             ))}
           </ul>
         </div>

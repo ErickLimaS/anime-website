@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
 interface itemData {
-    info: any
+    info: any,
+    isAlreadyAdded: any
 }
 
 export const AnimeToBeListed = styled.div<itemData>`
@@ -40,7 +41,7 @@ export const AnimeToBeListed = styled.div<itemData>`
             border: none;
             outline: 0;
 
-            background-color: #8d8d8dc9;
+            background-color: ${props => props.isAlreadyAdded ? '#505050e6' : '#8d8d8dc9'};
 
             svg{
                 color: #fff;

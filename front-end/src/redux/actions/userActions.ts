@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { AnyAction, Dispatch } from "redux";
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants";
+import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_MEDIA_ADD_FAIL, USER_MEDIA_ADD_REQUEST, USER_MEDIA_ADD_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants";
 
 const MONGODB_USER_URL = "https://animes-website-db.herokuapp.com/users"
 const CORS_ANYWHERE = 'https://cors-anywhere.herokuapp.com/'
@@ -65,7 +65,7 @@ export const loginUser = (email: String, password: String) => async (dispatch: D
             }
         })
 
-        dispatch({type: USER_LOGIN_SUCCESS, payload: data})
+        dispatch({ type: USER_LOGIN_SUCCESS, payload: data })
 
         localStorage.setItem('userInfo', JSON.stringify(data))
 
@@ -87,20 +87,55 @@ export const loginUser = (email: String, password: String) => async (dispatch: D
 
 export const logoutUser = (id: number) => async (dispatch: Dispatch<AnyAction>) => {
 
-    dispatch({type: USER_LOGOUT_REQUEST, action: id })
+    dispatch({ type: USER_LOGOUT_REQUEST, action: id })
 
-    try{
+    try {
 
         localStorage.removeItem('userInfo')
 
-        dispatch({type: USER_LOGOUT_SUCCESS, action: id })
+        dispatch({ type: USER_LOGOUT_SUCCESS, action: id })
 
         document.location.reload()
-        
-    }
-    catch(error: any){
 
-        dispatch({type: USER_LOGOUT_FAIL, payload: error})
+    }
+    catch (error: any) {
+
+        dispatch({ type: USER_LOGOUT_FAIL, payload: error })
+
+    }
+
+
+}
+
+export const addMediaToUserAccount = (id: String, media: any) => async (dispatch: Dispatch<AnyAction>) => {
+
+    dispatch({ type: USER_MEDIA_ADD_REQUEST, action: media })
+
+    try {
+
+        const { data } = await Axios({
+            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/add-media`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/JSON'
+            },
+            data: {
+                'id': `${id}`,
+                'media': media
+            }
+
+        })
+
+        console.log(data)
+
+        localStorage.setItem('userInfo', JSON.stringify(data))
+
+        dispatch({ type: USER_MEDIA_ADD_SUCCESS, action: data })
+
+    }
+    catch (error: any) {
+
+        dispatch({ type: USER_MEDIA_ADD_FAIL, action: error })
 
     }
 

@@ -52,6 +52,7 @@ export default function LoginUser() {
         }
     }
 
+    //handles errors
     const errorAlert = (errorStatus: any) => {
 
         console.log(errorStatus)
@@ -65,6 +66,17 @@ export default function LoginUser() {
                     titleText: `${errorStatus}: Password Incorrect!`,
                     text: 'Password Incorrect. Try Typing Again!'
 
+                })
+                break
+            case 403:
+                Swal.fire({
+
+                    icon: 'info',
+                    title: 'Error',
+                    titleText: `${errorStatus}: Before Log In!`,
+                    text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
+                    allowOutsideClick: false,
+                    footer: 'https://cors-anywhere.herokuapp.com/'
                 })
                 break
             case 404:

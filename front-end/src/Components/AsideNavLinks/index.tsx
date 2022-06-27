@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import * as C from './styles'
 import { ReactComponent as ShurikenSvg } from '../../imgs/svg/shuriken-svgrepo.svg'
@@ -23,18 +23,29 @@ export default function AsideNavLinks(data: any) {
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
 
+  const [userName, setUserName] = useState<String>()
+
   const dispatch: any = useDispatch()
 
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault()
-    //make logout system with redux after making the sign up
 
+    //makes logout 
     dispatch(logoutUser(userInfo.id))
 
   }
 
   // console.log(data)
 
+  useEffect(() => {
+
+    if(userInfo){
+      setUserName(userInfo.name)
+      
+    }
+  }, [userInfo])
+
+  console.log(userInfo)
 
   return (
     <C.Container data={data.data}>
@@ -77,7 +88,7 @@ export default function AsideNavLinks(data: any) {
                   <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
                 </div>
                 <div>
-                  <h2>{userInfo.name}</h2>
+                  <h2>{userName}</h2>
                 </div>
               </div>
             </li>

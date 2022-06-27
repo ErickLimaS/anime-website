@@ -1,20 +1,21 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunk from "redux-thunk";
-import { userLoginReducer, userLogoutReducer, userRegisterReducer } from "./reducers/userReducers";
+import { addMediaReducer, userLoginReducer, userLogoutReducer, userRegisterReducer } from "./reducers/userReducers";
 
 
 const initialState = {
     userLogin: {
         userInfo: localStorage.getItem('userInfo') ?
-            JSON.stringify(localStorage.getItem('userInfo')) : null
-        // JSON.parse(localStorage.getItem('userInfo')) : null
+        JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
+            // JSON.stringify(localStorage.getItem('userInfo')) : null
     }
 }
 
 const reducer = combineReducers({
     userRegister: userRegisterReducer,
     userLogin: userLoginReducer,
-    userLogout: userLogoutReducer
+    userLogout: userLogoutReducer,
+    addMediaToUserAccount: addMediaReducer
 })
 
 const composeEnhancer = typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
