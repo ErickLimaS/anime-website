@@ -48,11 +48,11 @@ export default function AsideInfo(data: any) {
               )) || (data.data.type === 'ANIME' && (
 
                 <h2>{data.data.type}</h2>
-                
+
               )) || (data.data.type === 'MANGA' && (
 
                 <h2>{data.data.type}</h2>
-                
+
               ))}
             </div>
 
@@ -170,20 +170,22 @@ export default function AsideInfo(data: any) {
               </div>
             )}
 
-            <div className='characters'>
-              <h2>Characters</h2>
+            {data.data.characters.edges && (
+              <div className='characters'>
+                <h2>Characters</h2>
 
-              <ul>
-                {data.data.characters.edges.slice(0, 6).map((item: any, key: any) => (
-                  <li key={key}>
-                    <div className='img'>
-                      <img src={`${item.node.image.medium}`} alt={`${item.node.name.full}`} />
-                    </div>
-                    <h3>{item.node.name.full}</h3>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                <ul>
+                  {data.data.characters.edges.slice(0, 6).map((item: any, key: any) => (
+                    <li key={key}>
+                      <div className='img'>
+                        <img src={`${item.node.image.medium}`} alt={`${item.node.name.full}`} />
+                      </div>
+                      <h3>{item.node.name.full}</h3>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
           </div>
         </>

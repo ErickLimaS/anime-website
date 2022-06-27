@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { AnyAction, Dispatch } from "redux";
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_MEDIA_ADD_FAIL, USER_MEDIA_ADD_REQUEST, USER_MEDIA_ADD_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants";
+import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_MEDIA_ADD_FAIL, USER_MEDIA_ADD_REQUEST, USER_MEDIA_ADD_SUCCESS, USER_MEDIA_REMOVE_FAIL, USER_MEDIA_REMOVE_REQUEST, USER_MEDIA_REMOVE_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants";
 
 const MONGODB_USER_URL = "https://animes-website-db.herokuapp.com/users"
 const CORS_ANYWHERE = 'https://cors-anywhere.herokuapp.com/'
@@ -139,5 +139,36 @@ export const addMediaToUserAccount = (id: String, media: any) => async (dispatch
 
     }
 
+}
+
+export const removeMediaFromUserAccount = (id: String, media: any) => async (dispatch: Dispatch<AnyAction>) => {
+
+    dispatch({ type: USER_MEDIA_REMOVE_REQUEST, action: media })
+
+    try {
+
+        const { data } = await Axios({
+            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/remove-media`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/JSON'
+            },
+            data: {
+                'id': `${id}`,
+                'media': media
+            }
+
+        })
+
+        localStorage.setItem('userInfo', JSON.stringify(data))
+
+        dispatch({ type: USER_MEDIA_REMOVE_SUCCESS, action: data })
+
+    }
+    catch (error: any) {
+
+        dispatch({ type: USER_MEDIA_REMOVE_FAIL, action: error })
+
+    }
 
 }

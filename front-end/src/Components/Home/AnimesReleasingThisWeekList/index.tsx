@@ -4,7 +4,7 @@ import * as C from './styles'
 import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { addMediaToUserAccount } from '../../../redux/actions/userActions'
+import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 
 export default function AnimesReleasingThisWeek(data: any) {
 
@@ -35,7 +35,6 @@ export default function AnimesReleasingThisWeek(data: any) {
         if (userInfo) {
             userInfo.mediaAdded.find((item: any) => {
                 if (item.id === data.data.id) {
-                    console.log('yes')
                     setIsAlreadyAdded(true)
                 }
             })
@@ -47,7 +46,7 @@ export default function AnimesReleasingThisWeek(data: any) {
     const dispatch: any = useDispatch()
     const navigate: any = useNavigate()
 
-    const addMediaToAccount = () => {
+    const handleMediaToAccount = () => {
 
         // console.log(userInfo.name)
 
@@ -80,19 +79,26 @@ export default function AnimesReleasingThisWeek(data: any) {
         }
         else {
 
-            //remove dispatch
+            //remove dispatch 
+            dispatch(removeMediaFromUserAccount(userInfo.id, {
+
+                'id': Number(data.data.id)
+
+            }))
+
+            setIsAlreadyAdded(null)
+
 
         }
 
     }
-    console.log(isAlreadyAdded)
 
     return (
 
         <C.AnimeToBeListed info={data.data} isAlreadyAdded={isAlreadyAdded}>
 
             <div className='add-button'>
-                <button type='button' onClick={() => addMediaToAccount()}>
+                <button type='button' onClick={() => handleMediaToAccount()}>
                     {isAlreadyAdded == null  && (<PlusSvg />)}
                     {isAlreadyAdded && (<CheckSvg fill='#ff7fb2'/>)}
                 </button>

@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import * as C from './styles'
+import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
+import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
 import { ReactComponent as DotSvg } from '../../../imgs/svg/dot.svg'
 import { ReactComponent as AngleLeftSolidSvg } from '../../../imgs/svg/angle-left-solid.svg'
 import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-right-solid.svg'
 import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function MangaPageContent(data: any) {
-  
+
   const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
   const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
+
+  const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
+
+  const userLogin = useSelector((state: any) => state.userLogin)
+  const { userInfo } = userLogin
 
   useEffect(() => {
 
@@ -32,14 +41,68 @@ export default function MangaPageContent(data: any) {
 
     setHowManyPagesPagination(howManyPages - 1)
 
-    // console.log(data.data)
+    //find if the current media was already added to user account
+    if (userInfo) {
+      userInfo.mediaAdded.find((item: any) => {
+        if (item.id === data.data.id) {
+          setIsAlreadyAdded(true)
+        }
+      })
+    }
 
   }, [data.data.streamingEpisodes.length])
 
-  console.log(howManyPagesPagination)
+  // add media to user
+  const dispatch: any = useDispatch()
+  const navigate: any = useNavigate()
+
+  const handleMediaToAccount = () => {
+
+    //CHECKS if dont has on user account
+    if (isAlreadyAdded == null || undefined) {
+
+      if (userInfo) {
+
+        dispatch(addMediaToUserAccount(userInfo.id, {
+          'addedAt': new Date(),
+          'id': Number(data.data.id),
+          'fullTitle': data.data.title.romaji,
+          'nativeTitle': data.data.title.native,
+          'format': data.data.format,
+          'type': data.data.type,
+          'status': data.data.status,
+          'isAdult': Boolean(data.data.isAdult)
+        }))
+
+        setIsAlreadyAdded(true)
+
+      }
+      else {
+
+        navigate('/login')
+
+      }
+
+
+    }
+    else {
+
+      //remove dispatch 
+      dispatch(removeMediaFromUserAccount(userInfo.id, {
+
+        'id': Number(data.data.id)
+
+      }))
+
+      setIsAlreadyAdded(null)
+
+
+    }
+
+  }
 
   return (
-    <C.Container data={data.data}>
+    <C.Container data={data.data} isAlreadyAdded={isAlreadyAdded}>
 
       <div className='search-mobile'>
         <SearchInnerPage />
@@ -52,7 +115,19 @@ export default function MangaPageContent(data: any) {
       </div>
 
       <div className='name-and-description'>
-        <h1>{data.data.title.romaji}</h1>
+        <div className='title-and-add-media-button'>
+
+          <h1>{data.data.title.romaji}</h1>
+
+          {isAlreadyAdded == null && (
+            <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
+          )}
+
+          {isAlreadyAdded && (
+            <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
+          )}
+
+        </div>
 
         <p>{data.data.description}</p>
 

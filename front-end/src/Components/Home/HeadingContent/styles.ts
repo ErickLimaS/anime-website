@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
 interface itemData {
-    headingContent: any
+    headingContent: any;
+    isAlreadyAdded: any
 }
 
 export const AnimeFromHeading = styled.div<itemData>`
@@ -125,7 +126,7 @@ export const AnimeFromHeading = styled.div<itemData>`
                 align-items: center;
                 justify-content: center;
 
-                background-color: #8d8d8dc9;
+                background-color: ${props => props.isAlreadyAdded ? '#505050e6' : '#8d8d8dc9'};
                 
                 svg{
                     color: #fff;

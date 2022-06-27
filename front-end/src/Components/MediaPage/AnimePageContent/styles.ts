@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 interface Props {
     data: any;
-    indexHeading: number
+    indexHeading: number,
+    isAlreadyAdded: any
 }
 
 export const Container = styled.div<Props>`
@@ -42,6 +43,18 @@ export const Container = styled.div<Props>`
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
+
+        @media(max-width: 620px){
+
+            height: 25vh;
+
+            margin: 0 -0.9rem;
+
+            background-size: cover;
+
+            overflow: hidden;
+
+        }
     }
 
     .name-and-description{
@@ -54,11 +67,67 @@ export const Container = styled.div<Props>`
             margin: 1rem 0;
         }
 
-        h1{
-            font-size: 3rem;
-            font-weight: 600;
-            /* color: #ff5ebc; */
-            color: ${props => props.data.coverImage.color};
+        .title-and-add-media-button{
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+
+            @media(max-width: 620px){
+                flex-direction: column;
+
+                >*{
+                    margin: 1rem 0!important;
+                }
+            }
+
+            h1{
+                margin: 0;
+
+                font-size: 3rem;
+                font-weight: 600;
+                /* color: #ff5ebc; */
+                color: ${props => props.data.coverImage.color};
+            }
+
+            button{
+                cursor: pointer;
+                margin: 0;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+
+                padding: 0.7rem;
+
+                font-size: 1.6rem;
+                color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};;
+
+                border: 2px solid #ff5ebc;
+                border-radius: 4px;
+
+                background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
+
+                svg{
+
+                    width: 1.5rem;
+                    transform: scale(2);
+                    height: auto;
+
+                    fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+
+                    margin: 0.5rem 1rem;
+
+                }
+
+                :hover{
+                    opacity: 0.75;
+                }
+
+            }
         }
         
         p{
@@ -178,6 +247,10 @@ export const Container = styled.div<Props>`
                 border-radius: 4px;
 
                 @media(max-width: 430px){
+                    width: 160px;
+                }
+
+                @media(max-width: 360px){
                     width: 140px;
                 }
 
