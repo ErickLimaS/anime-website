@@ -88,8 +88,11 @@ export default function AnimePageContent(data: any) {
         dispatch(addMediaToUserAccount(userInfo.id, {
           'addedAt': new Date(),
           'id': Number(data.data.id),
+          'primaryColor': data.data.coverImage.color ? data.data.coverImage.color : '',
           'fullTitle': data.data.title.romaji,
           'nativeTitle': data.data.title.native,
+          'bannerImg': data.data.bannerImage ? data.data.bannerImage : '',
+          'coverImg': data.data.coverImage.large ? data.data.coverImage.large : data.data.coverImage.extraLarge || data.data.coverImage.medium,
           'format': data.data.format,
           'type': data.data.type,
           'status': data.data.status,
@@ -146,7 +149,7 @@ export default function AnimePageContent(data: any) {
           )}
 
           {isAlreadyAdded && (
-            <button onClick={() =>handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
+            <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
           )}
 
         </div>

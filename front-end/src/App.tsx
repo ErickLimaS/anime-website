@@ -12,6 +12,8 @@ import FormatPage from './Page/FormatPage';
 import RegisterUser from './Page/User/RegisterUser';
 import LoginUser from './Page/User/LoginUser';
 import { useSelector } from 'react-redux';
+import SettingsUser from './Page/User/SettingsUser';
+import BookmarkUser from './Page/User/BookmarksUser';
 
 function App() {
 
@@ -34,6 +36,8 @@ function App() {
 
           <Route path='/register' element={!userInfo ? <RegisterUser /> : <Navigate to='/' />} />
 
+          <Route path='/bookmarks' element={<BookmarkUser />} />
+          <Route path='/settings' element={<SettingsUser />} />
           <Route path='/format/:format' element={<FormatPage />} />
           <Route path='/genre/:genre' element={<GenrePage />} />
           <Route path='/anime/:id' element={<AnimePage />} />

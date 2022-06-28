@@ -10,8 +10,11 @@ const userSchema = new mongoose.Schema(
         mediaAdded: [{
             addedAt: {type: Date},
             id: {type: Number},
+            primaryColor: {type: String},
             fullTitle: {type: String},
             nativeTitle: {type: String},
+            coverImg: {type: String},
+            bannerImg: {type: String},
             format: {type: String},
             type: {type: String},
             status: {type: String},
