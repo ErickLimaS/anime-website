@@ -27,7 +27,7 @@ export default {
 
     getInfoFromThisMedia: async (id: String | number) => {
 
-        try{
+        try {
             const { data } = await Axios({
                 url: `${GOGOANIME_URL}/anime-details/${id}`,
                 method: 'GET'
@@ -40,10 +40,60 @@ export default {
             console.log(error)
 
         }
-        
 
+    },
 
-    }
+    //LINK streaming episodes
+    getStreamingVideoUrlVIDCDN: async (id: String) => {
 
+        try {
+            const { data } = await Axios({
+                url: `${GOGOANIME_URL}/vidcdn/watch/${id}`,
+                method: 'GET'
+            })
+
+            return data;
+        }
+        catch (error) {
+
+            console.log(error)
+
+        }
+
+    },
+    getStreamingVideoUrlStreamSB: async (id: String) => {
+
+        try {
+            const { data } = await Axios({
+                url: `${GOGOANIME_URL}/streamsb/watch/${id}`,
+                method: 'GET'
+            })
+
+            return data;
+        }
+        catch (error) {
+
+            console.log(error)
+
+        }
+
+    },
+    getStreamingVideoUrlFembed: async (id: String) => {
+
+        try {
+            const { data } = await Axios({
+                url: `${GOGOANIME_URL}/VIDCDN/fembed/${id}`,
+                method: 'GET'
+            })
+
+            return data;
+        }
+        catch (error) {
+
+            console.log(error)
+
+        }
+
+    },
 
 }

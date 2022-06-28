@@ -71,7 +71,7 @@ export default function AnimePageContentV2(data: any) {
 
         dispatch(addMediaToUserAccount(userInfo.id, {
           'addedAt': new Date(),
-          'id': data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
+          'idGoGoAnime': data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
           'fullTitle': data.data.animeTitle,
           'nativeTitle': data.data.otherNames && data.data.otherNames,
           'coverImg': data.data.animeImg && data.data.animeImg,
