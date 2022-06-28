@@ -140,7 +140,7 @@ export default function BookmarkUser() {
                                                     <div className='grid-item' key={item.id}>
 
                                                         <div className='item-img'>
-                                                            <img src={`https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx108556-NHjkz0BNJhLx.jpg`} alt={`${item.fullTitle}`}>
+                                                            <img src={`${item.coverImg}`} alt={`${item.fullTitle}`}>
 
                                                             </img>
                                                         </div>

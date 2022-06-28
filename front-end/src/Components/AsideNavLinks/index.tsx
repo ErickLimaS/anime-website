@@ -46,20 +46,21 @@ export default function AsideNavLinks(data: any) {
     }
   }, [userInfo])
 
-  console.log(userInfo)
+  //gets params to set styles on which nav link is clicked or been viewed
+  const { format, genre } = useParams()
 
   return (
-    <C.Container data={data.data}>
+    <C.Container data={data.data} format={format} genre={genre}>
 
       <h3>Category</h3>
 
       <ul>
 
-        <li><Link to={`/genre/Shounen`}><ShurikenSvg /> Shounen</Link></li>
-        <li><Link to={`/genre/Shoujo`}><HeartsSvg /> Shoujo</Link></li>
-        <li><Link to={`/genre/Seinen`}><SwordsSvg /> Seinen</Link></li>
-        <li><Link to={`/genre/Super%20Power`}><SuperPowerSvg /> Super Power</Link></li>
-        <li><Link to={`/genre/School`}><SchoolBusSvg /> School</Link></li>
+        <li id='shounen'><Link to={`/genre/Shounen`}><ShurikenSvg /> Shounen</Link></li>
+        <li id='shoujo'><Link to={`/genre/Shoujo`}><HeartsSvg /> Shoujo</Link></li>
+        <li id='seinen'><Link to={`/genre/Seinen`}><SwordsSvg /> Seinen</Link></li>
+        <li id='superpower'><Link to={`/genre/Super%20Power`} ><SuperPowerSvg /> Super Power</Link></li>
+        <li id='school'><Link to={`/genre/School`}><SchoolBusSvg /> School</Link></li>
 
       </ul>
 
@@ -67,55 +68,57 @@ export default function AsideNavLinks(data: any) {
 
       <ul>
 
-        <li><Link to={`/format/tv`}><TvSvg /> TV</Link></li>
-        <li><Link to={`/format/manga`}><BallonSvg /> Manga</Link></li>
-        <li><Link to={`/format/one_shot`}><OneShotSvg /> One Shot</Link></li>
-        <li><Link to={`/format/novel`}><RomanceBookSvg /> Novel</Link></li>
-        <li><Link to={`/format/movie`}><MovieSvg /> Movie</Link></li>
-        <li><Link to={`/format/special`}><StarSvg /> Special</Link></li>
-        <li><Link to={`/format/ova`}><OpenBookSvg /> OVA</Link></li>
+        <li id='tv'><Link to={`/format/tv`}><TvSvg /> TV</Link></li>
+        <li id='manga'><Link to={`/format/manga`}><BallonSvg /> Manga</Link></li>
+        <li id='one_shot'><Link to={`/format/one_shot`}><OneShotSvg /> One Shot</Link></li>
+        <li id='novel'><Link to={`/format/novel`}><RomanceBookSvg /> Novel</Link></li>
+        <li id='movie'><Link to={`/format/movie`}><MovieSvg /> Movie</Link></li>
+        <li id='special'><Link to={`/format/special`}><StarSvg /> Special</Link></li>
+        <li id='ova'><Link to={`/format/ova`}><OpenBookSvg /> OVA</Link></li>
 
       </ul>
 
 
-      {userInfo ? (
-        <>
-          <h3>User</h3>
+      {
+        userInfo ? (
+          <>
+            <h3>User</h3>
 
-          <ul className='settings'>
-            <li className='user-li'>
-              <div className='user'>
-                <div>
-                  <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+            <ul className='settings'>
+              <li className='user-li'>
+                <div className='user'>
+                  <div>
+                    <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+                  </div>
+                  <div>
+                    <h2>{userName?.slice(0, 7)}</h2>
+                  </div>
+                  <div>
+                    <Link to={`/settings`}><SettingsSvg /></Link>
+                  </div>
                 </div>
-                <div>
-                  <h2>{userName?.slice(0,7)}</h2>
-                </div>
-                <div>
-                <Link to={`/settings`}><SettingsSvg /></Link>
-                </div>
-              </div>
-            </li>
+              </li>
 
-            <li><Link to={`/bookmarks`}><BookmarkSvg /> Bookmarks</Link></li>
-            <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
+              <li><a href={`/bookmarks`}><BookmarkSvg /> Bookmarks</a></li>
+              <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
 
-          </ul>
-        </>
-      ) : (
-        <>
+            </ul>
+          </>
+        ) : (
+          <>
 
-          <h3>User</h3>
+            <h3>User</h3>
 
-          <ul className='settings'>
+            <ul className='settings'>
 
-            <li><Link to={`/login`}>Log In</Link></li>
-            <li><Link to={`/register`}>Sign Up</Link></li>
+              <li><Link to={`/login`}>Log In</Link></li>
+              <li><Link to={`/register`}>Sign Up</Link></li>
 
-          </ul>
-        </>
-      )}
+            </ul>
+          </>
+        )
+      }
 
-    </C.Container>
+    </C.Container >
   )
 }

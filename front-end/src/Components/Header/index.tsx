@@ -74,7 +74,7 @@ export default function Header() {
                                 </li>
 
                                 <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
-                                <li><Link to={`/bookmarks`}><BookmarkSvg /> Bookmarks</Link></li>
+                                <li><a href={`/bookmarks`}><BookmarkSvg /> Bookmarks</a></li>
                                 <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
 
                             </ul>

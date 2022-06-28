@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
         createdAt: {type: Date},
         mediaAdded: [{
             addedAt: {type: Date},
-            id: {type: Number},
+            id: {type: Number | String},
             primaryColor: {type: String},
             fullTitle: {type: String},
             nativeTitle: {type: String},
@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema(
             format: {type: String},
             type: {type: String},
             status: {type: String},
-            isAdult: {type: Boolean}
+            isAdult: {type: Boolean},
+            fromGoGoAnime: {type: Boolean, default: false}
 
         }]
 

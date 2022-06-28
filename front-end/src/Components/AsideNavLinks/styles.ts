@@ -1,7 +1,9 @@
 import styled from "styled-components";
 
 interface Props {
-    data: any
+    data: any;
+    format: any;
+    genre: any
 }
 
 export const Container = styled.nav<Props>`
@@ -38,6 +40,139 @@ export const Container = styled.nav<Props>`
             
             color: #999999;
             font-weight: 600;
+        }
+
+        li#shounen{
+            border-right: ${props => props.genre === 'Shounen' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.genre === 'Shounen' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.genre === 'Shounen' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#shoujo{
+            border-right: ${props => props.genre === 'Shoujo' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.genre === 'Shoujo' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.genre === 'Shoujo' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#seinen{
+            border-right: ${props => props.genre === 'seinen' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.genre === 'Seinen' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.genre === 'Seinen' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#superpower{
+            border-right: ${props => props.genre === 'Super Power' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.genre === 'Super Power' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.genre === 'Super Power' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#school{
+            border-right: ${props => props.genre === 'School' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.genre === 'School' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.genre === 'School' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#tv{
+            border-right: ${props => props.format === 'tv' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.format === 'tv' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.format === 'tv' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#manga{
+            border-right: ${props => props.format === 'manga' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.format === 'manga' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.format === 'manga' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#one_shot{
+            border-right: ${props => props.format === 'one_shot' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.format === 'one_shot' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.format === 'one_shot' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#novel{
+            border-right: ${props => props.format === 'novel' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.format === 'novel' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.format === 'novel' ? '#ff1a75' : ''};
+                }
+            }
+        } 
+        li#movie{
+            border-right: ${props => props.format === 'movie' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.format === 'movie' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.format === 'movie' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#special{
+            border-right: ${props => props.format === 'special' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.format === 'special' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.format === 'special' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#ova{
+            border-right: ${props => props.format === 'ova' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.format === 'ova' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.format === 'ova' ? '#ff1a75' : ''};
+                }
+            }
         }
 
         li{
