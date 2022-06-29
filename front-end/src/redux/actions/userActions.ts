@@ -100,7 +100,10 @@ export const logoutUser = (id: number) => async (dispatch: Dispatch<AnyAction>) 
     }
     catch (error: any) {
 
-        dispatch({ type: USER_LOGOUT_FAIL, payload: error })
+        dispatch({
+            type: USER_LOGOUT_FAIL,
+            payload: error.response && error.response.data.message ? error.response.status : error.response.status
+        })
 
     }
 
@@ -109,7 +112,7 @@ export const logoutUser = (id: number) => async (dispatch: Dispatch<AnyAction>) 
 
 export const addMediaToUserAccount = (id: String, media: any) => async (dispatch: Dispatch<AnyAction>) => {
 
-    dispatch({ type: USER_MEDIA_ADD_REQUEST, action: media })
+    dispatch({ type: USER_MEDIA_ADD_REQUEST, payload: media })
 
     try {
 
@@ -130,12 +133,15 @@ export const addMediaToUserAccount = (id: String, media: any) => async (dispatch
 
         localStorage.setItem('userInfo', JSON.stringify(data))
 
-        dispatch({ type: USER_MEDIA_ADD_SUCCESS, action: data })
+        dispatch({ type: USER_MEDIA_ADD_SUCCESS, payload: data })
 
     }
     catch (error: any) {
 
-        dispatch({ type: USER_MEDIA_ADD_FAIL, action: error })
+        dispatch({
+            type: USER_MEDIA_ADD_FAIL,
+            payload: error.response && error.response.data.message ? error.response.status : error.response.status
+        })
 
     }
 
@@ -143,7 +149,7 @@ export const addMediaToUserAccount = (id: String, media: any) => async (dispatch
 
 export const removeMediaFromUserAccount = (id: String, media: any) => async (dispatch: Dispatch<AnyAction>) => {
 
-    dispatch({ type: USER_MEDIA_REMOVE_REQUEST, action: media })
+    dispatch({ type: USER_MEDIA_REMOVE_REQUEST, payload: media })
 
     try {
 
@@ -162,12 +168,15 @@ export const removeMediaFromUserAccount = (id: String, media: any) => async (dis
 
         localStorage.setItem('userInfo', JSON.stringify(data))
 
-        dispatch({ type: USER_MEDIA_REMOVE_SUCCESS, action: data })
+        dispatch({ type: USER_MEDIA_REMOVE_SUCCESS, payload: data })
 
     }
     catch (error: any) {
 
-        dispatch({ type: USER_MEDIA_REMOVE_FAIL, action: error })
+        dispatch({
+            type: USER_MEDIA_REMOVE_FAIL,
+            payload: error.response && error.response.data.message ? error.response.status : error.response.status
+        })
 
     }
 

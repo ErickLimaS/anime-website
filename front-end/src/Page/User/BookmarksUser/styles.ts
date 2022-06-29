@@ -187,6 +187,9 @@ export const Container = styled.div`
                 }
 
                 .item-info{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
 
                     margin: 0 1rem;
 
@@ -197,11 +200,24 @@ export const Container = styled.div`
                         margin: 0.5rem 0;
                     }
 
-                    small{
-                        
-                        color: #333333;
-                        font-size: 1.2rem;
-                        font-weight: 400;
+                    .info{
+                        display: flex;
+                        flex-direction: column;
+
+                    >*{
+                        margin: 0.4rem 0;
+                    }
+
+                        small{
+                            color: #333333;
+                            font-size: 1.2rem;
+                            font-weight: 400;
+                        }
+                        span{
+                            color: #333333;
+                            font-size: 1.4rem;
+                            font-weight: 400;
+                        }
                     }
 
                     ul{

@@ -12,6 +12,7 @@ import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redu
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import gogoAnime from '../../../API/gogo-anime'
+import Swal from 'sweetalert2'
 
 export default function AnimePageContentV2(data: any) {
 
@@ -30,7 +31,11 @@ export default function AnimePageContentV2(data: any) {
   const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
 
   const userLogin = useSelector((state: any) => state.userLogin)
+  const addMediaToUserAccounts = useSelector((state: any) => state.addMediaToUserAccount)
+  const removeMediaFromUserAccounts = useSelector((state: any) => state.removeMediaFromUserAccount)
   const { userInfo } = userLogin
+  const { error, loading } = addMediaToUserAccounts
+
 
   useEffect(() => {
 
@@ -55,7 +60,7 @@ export default function AnimePageContentV2(data: any) {
     //find if the current media was already added to user account
     if (userInfo) {
       userInfo.mediaAdded.find((item: any) => {
-        if (item.id === data.data.id) {
+        if (item.idGoGoAnime === data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
           setIsAlreadyAdded(true)
         }
       })
@@ -102,7 +107,7 @@ export default function AnimePageContentV2(data: any) {
       //remove dispatch 
       dispatch(removeMediaFromUserAccount(userInfo.id, {
 
-        'id': data.data.animeId.replace(/!|#|/g, ``).replace(/%20/g, `-`)
+        'idGoGoAnime': data.data.animeTitle.replace(/!|#|/g, ``).replace(/%20/g, `-`)
 
       }))
 
@@ -110,6 +115,36 @@ export default function AnimePageContentV2(data: any) {
 
 
     }
+
+  }
+
+  //if theres a error, it shows what happen
+  if (error) {
+
+    switch (error) {
+      case 403:
+        Swal.fire({
+
+          icon: 'info',
+          title: 'Error',
+          titleText: `${error}: Before Doing It!`,
+          text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
+          allowOutsideClick: false,
+          footer: 'https://cors-anywhere.herokuapp.com/'
+        })
+        break
+      default:
+        Swal.fire({
+
+          icon: 'error',
+          title: 'Error',
+          titleText: `${error}: Something Happen!`,
+          text: "We Don't Know What Happen. But Try Again!"
+
+        })
+        break
+    }
+
 
   }
 
@@ -138,10 +173,10 @@ export default function AnimePageContentV2(data: any) {
         <SearchInnerPage />
       </div>
 
-      <div className='banner-img'>
-        {
-          /* <img src={`${data.data.bannerImage}`} alt={`${data.data.title.romaji} Cover Art`} /> */
-        }
+      <div className='banner-img'>{
+
+        /* <img src={`${data.data.bannerImage}`} alt={`${data.data.title.romaji} Cover Art`} /> */
+      }
       </div>
 
       <div className='name-and-description'>
@@ -149,6 +184,8 @@ export default function AnimePageContentV2(data: any) {
 
           <h1>{data.data.animeTitle}</h1>
 
+          {loading && <p>loading</p>}
+          
           {isAlreadyAdded == null && (
             <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
           )}

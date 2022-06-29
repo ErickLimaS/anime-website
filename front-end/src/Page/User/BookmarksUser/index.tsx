@@ -23,6 +23,8 @@ export default function BookmarkUser() {
 
     useEffect(() => {
 
+        document.title = 'Loading...'
+
         setLoading(true)
 
         if (!userInfo) {
@@ -32,6 +34,8 @@ export default function BookmarkUser() {
         }
 
         setLoading(false)
+
+        document.title = 'Bookmarks'
 
     }, [])
 
@@ -136,7 +140,11 @@ export default function BookmarkUser() {
                                     <>
                                         {
                                             userInfo.mediaAdded.map((item: any, key: any) => (
-                                                <Link className='button-link' to={`/${(item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id}`}>
+                                                <Link
+                                                    key={item.id ? item.id : item.idGoGoAnime}
+                                                    className='button-link'
+                                                    to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
+                                                >
                                                     <div className='grid-item' key={item.id}>
 
                                                         <div className='item-img'>
@@ -148,7 +156,9 @@ export default function BookmarkUser() {
                                                         <div className='item-info'>
 
                                                             {item.fullTitle && (
-                                                                <Link to={`/${(item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id}`}>
+                                                                <Link
+                                                                    to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
+                                                                >
                                                                     <h1>
                                                                         {item.fullTitle.length > 15 ? (
                                                                             `${item.fullTitle.slice(0, 15)}...`
@@ -158,16 +168,25 @@ export default function BookmarkUser() {
                                                                     </h1>
                                                                 </Link>
                                                             )}
-                                                            {item.nativeTitle && (
-                                                                <small>{item.nativeTitle}</small>
-                                                            )}
+
+                                                            <div className='info'>
+                                                                {item.nativeTitle && (
+                                                                    <small>{item.nativeTitle}</small>
+                                                                )}
+
+                                                                {item.idGoGoAnime && (
+                                                                    <span><strong>From GoGoAnime</strong></span>
+                                                                )}
+                                                            </div>
 
                                                             <ul>
                                                                 {item.status && (
                                                                     <li>Status: {item.status}</li>
                                                                 )}
                                                                 <li>Type: {item.type}</li>
-                                                                <li>Format: {item.format}</li>
+                                                                {item.format && (
+                                                                    <li>Format: {item.format}</li>
+                                                                )}
                                                             </ul>
 
                                                         </div>
