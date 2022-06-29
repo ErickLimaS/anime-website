@@ -4,7 +4,8 @@ interface Props {
     data: any;
     indexHeading: number,
     isAlreadyAdded: any,
-    videoReady: any
+    videoReady: any,
+    exitFullScreen: boolean
 }
 
 export const Container = styled.div<Props>`
@@ -194,19 +195,19 @@ export const Container = styled.div<Props>`
         
 
         #h2-0{
-            border: ${props => props.indexHeading === 0 ? '1px solid transparent': '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 0 ? '#ff5ebc!important': '#fafafa'};
-            color: ${props => props.indexHeading === 0 ? '#fff': '#ff5ebc'};
+            border: ${props => props.indexHeading === 0 ? '1px solid transparent' : '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 0 ? '#ff5ebc!important' : '#fafafa'};
+            color: ${props => props.indexHeading === 0 ? '#fff' : '#ff5ebc'};
         }
         #h2-1{
-            border: ${props => props.indexHeading === 1 ? '1px solid transparent': '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 1 ? '#ff5ebc!important': '#fafafa'};
-            color: ${props => props.indexHeading === 1 ? '#fff': '#ff5ebc'};
+            border: ${props => props.indexHeading === 1 ? '1px solid transparent' : '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 1 ? '#ff5ebc!important' : '#fafafa'};
+            color: ${props => props.indexHeading === 1 ? '#fff' : '#ff5ebc'};
         }
         #h2-2{
-            border: ${props => props.indexHeading === 2 ? '1px solid transparent': '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 2 ? '#ff5ebc!important': '#fafafa'};
-            color: ${props => props.indexHeading === 2 ? '#fff': '#ff5ebc'};
+            border: ${props => props.indexHeading === 2 ? '1px solid transparent' : '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 2 ? '#ff5ebc!important' : '#fafafa'};
+            color: ${props => props.indexHeading === 2 ? '#fff' : '#ff5ebc'};
         }
         
         @media(max-width: 620px){
@@ -222,9 +223,23 @@ export const Container = styled.div<Props>`
         justify-content: center;
         align-items: center;
 
+        background-color: rgba(0,0,0,.8);
+
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        position: fixed;
+
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+
         animation: video 100ms;
 
-        width: 100%;
+        width: 100vw;
+        height: 100vh;
 
         @keyframes video{
             0%{
@@ -235,10 +250,54 @@ export const Container = styled.div<Props>`
             }
         }
 
-        iframe{
+        p{
+            font-size: 2rem;
+            color: #ff0095;
+                
+            animation: text-desapear 8s;
+            animation-fill-mode: forwards;
 
-            width: 78rem;
-            height: 45rem;
+            @keyframes text-desapear{
+                0%{
+                    opacity: 100%;
+                    margin-top: 0;
+                }
+                100%{
+                    opacity: 0%;
+                    margin-top: -3rem;
+                }
+            }
+        }
+
+        .buttons{
+            display: flex;
+            flex-direction: row;
+
+            >*{
+                margin: 1rem;
+            }
+
+            button{
+                cursor: pointer;
+
+                margin-top: ${props => props.exitFullScreen ? '-8rem' : 'none'};
+
+                padding: 0.7rem 1rem;
+
+                background-color: #ff5ebc;
+                border: 0;
+                border-radius: 4px;
+            }
+        }
+
+        iframe{
+            display: ${props => props.videoReady ? `flex` : 'none'};
+            width: ${props => props.exitFullScreen ? `100vw` : '50vw'};
+            height: ${props => props.exitFullScreen ? `100vh` : '70vh'};
+
+            position: relative;
+
+            overflow: hidden;
 
             border: 0;
 
@@ -254,6 +313,14 @@ export const Container = styled.div<Props>`
                 height: 35rem;
 
             }
+        }
+
+        :hover{
+
+            button{
+                margin-top: initial;
+            }
+
         }
     }
 
@@ -280,7 +347,7 @@ export const Container = styled.div<Props>`
         }
 
         .episode{
-            
+            cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -294,6 +361,7 @@ export const Container = styled.div<Props>`
             height: 40px;
 
             button{
+                cursor: pointer;
                 background-color: transparent;
                 border: 0;
             }

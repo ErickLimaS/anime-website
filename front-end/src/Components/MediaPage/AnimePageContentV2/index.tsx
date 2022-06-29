@@ -28,6 +28,8 @@ export default function AnimePageContentV2(data: any) {
   const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
   const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
 
+  const [exitFullScreen, setExitFullScreen] = useState<boolean>(false) //when video url is fetch, this set fullscreen to player  
+
   const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
 
   const userLogin = useSelector((state: any) => state.userLogin)
@@ -159,14 +161,32 @@ export default function AnimePageContentV2(data: any) {
 
     setVideoReady(true)
 
+    setExitFullScreen(true)
+
   }
 
+  const handleFullScreen = (decision: boolean) => {
+
+    switch (decision) {
+
+      case true:
+        setExitFullScreen(!exitFullScreen)
+        break
+
+      case false:
+        setVideoReady(false)
+        setVideoURL(undefined)
+        break
+    }
+
+  }
   return (
     <C.Container
       data={data.data}
       indexHeading={indexPageInfo}
       isAlreadyAdded={isAlreadyAdded}
       videoReady={videoReady}
+      exitFullScreen={exitFullScreen}
     >
 
       <div className='search-mobile'>
@@ -185,7 +205,7 @@ export default function AnimePageContentV2(data: any) {
           <h1>{data.data.animeTitle}</h1>
 
           {loading && <p>loading</p>}
-          
+
           {isAlreadyAdded == null && (
             <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
           )}
@@ -228,6 +248,13 @@ export default function AnimePageContentV2(data: any) {
       </div>
 
       <div className='video'>
+
+      <p>Put the Mouse Indicator Away from The Window, or from the Video Player.</p>
+      
+        <div className='buttons'>
+          <button type='button' onClick={() => handleFullScreen(false)}>Close Video Player</button>
+          <button type='button' onClick={() => handleFullScreen(true)}>Video on FullScreen</button>
+        </div>
 
         <iframe src={videoURL} title={data.data.animeTitle}>
         </iframe>
