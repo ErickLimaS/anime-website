@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import SettingsUser from './Page/User/SettingsUser';
 import BookmarkUser from './Page/User/BookmarksUser';
 import AnimePageV2 from './Page/MediaPage/AnimePageV2';
+import Watch from './Page/Watch';
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
           <Route path='/settings' element={<SettingsUser />} />
           <Route path='/format/:format' element={<FormatPage />} />
           <Route path='/genre/:genre' element={<GenrePage />} />
+          <Route path='/watch=:id' element={<Watch />} />
           <Route path='/anime/v2/:id' element={<AnimePageV2 />} />
           <Route path='/anime/:id' element={<AnimePage />} />
           <Route path='/movie/:id' element={<MoviePage />} />

@@ -11,10 +11,16 @@ import CharacterAndActor from '../../CharacterAndActor'
 import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
+import gogoAnime from '../../../API/gogo-anime'
 
 export default function AnimePageContentV2(data: any) {
 
   const [moreDetails, setMoreDetails] = useState<boolean>(false)
+
+  const [animeTitleWithoutSpace, setAnimeTitleWithoutSpace] = useState(data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`))
+
+  const [videoReady, setVideoReady] = useState(false)
+  const [videoURL, setVideoURL] = useState()
 
   const [indexPageInfo, setIndexPageInfo] = useState(0)
 
@@ -54,7 +60,6 @@ export default function AnimePageContentV2(data: any) {
         }
       })
     }
-
 
   }, [data.data.episodesList[0].length])
 
@@ -108,8 +113,26 @@ export default function AnimePageContentV2(data: any) {
 
   }
 
+  const getStreamingLink = async (id: String) => {
+
+    setVideoReady(false)
+
+    const data = await gogoAnime.getStreamingVideoUrlVIDCDN(id)
+
+    // setVideoURL(data.sources[0].file)
+    setVideoURL(data.Referer)
+
+    setVideoReady(true)
+
+  }
+
   return (
-    <C.Container data={data.data} indexHeading={indexPageInfo} isAlreadyAdded={isAlreadyAdded}>
+    <C.Container
+      data={data.data}
+      indexHeading={indexPageInfo}
+      isAlreadyAdded={isAlreadyAdded}
+      videoReady={videoReady}
+    >
 
       <div className='search-mobile'>
         <SearchInnerPage />
@@ -167,6 +190,14 @@ export default function AnimePageContentV2(data: any) {
         </div>
       </div>
 
+      <div className='video'>
+
+        <iframe src={videoURL} title={data.data.animeTitle}>
+        </iframe>
+
+      </div>
+
+
       {data.data.episodesList.length > 0 ? (
         <>
 
@@ -178,9 +209,9 @@ export default function AnimePageContentV2(data: any) {
 
                   data.data.episodesList.slice(0, 24).map((item: any, key: any) => (
                     <div key={key} className='episode'>
-                      <a href={`${item.episodeUrl}`} target='_blank' rel='noreferrer'>
+                      <button onClick={() => getStreamingLink(item.episodeId)}>
                         <h3>Episode {item.episodeNum}</h3>
-                      </a>
+                      </button>
                     </div>
                   ))
 

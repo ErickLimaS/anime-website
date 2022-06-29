@@ -96,7 +96,8 @@ export default function AnimePageContent(data: any) {
           'format': data.data.format,
           'type': data.data.type,
           'status': data.data.status,
-          'isAdult': Boolean(data.data.isAdult)
+          'isAdult': Boolean(data.data.isAdult),
+          'fromGoGoAnime': Boolean(false)
         }))
 
         setIsAlreadyAdded(true)

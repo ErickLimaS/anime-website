@@ -3,7 +3,8 @@ import styled from "styled-components";
 interface Props {
     data: any;
     indexHeading: number,
-    isAlreadyAdded: any
+    isAlreadyAdded: any,
+    videoReady: any
 }
 
 export const Container = styled.div<Props>`
@@ -216,6 +217,46 @@ export const Container = styled.div<Props>`
         
     }
 
+    div.video{
+        display: ${props => props.videoReady ? `flex` : 'none'};
+        justify-content: center;
+        align-items: center;
+
+        animation: video 100ms;
+
+        width: 100%;
+
+        @keyframes video{
+            0%{
+                opacity: 0;
+            }
+            100%{
+                opacity: 100%;
+            }
+        }
+
+        iframe{
+
+            width: 78rem;
+            height: 45rem;
+
+            border: 0;
+
+            @media(max-width: 1080px){
+                
+                width: 58rem;
+                height: 35rem;
+
+            }
+            @media(max-width: 620px){
+                
+                width: 100%;
+                height: 35rem;
+
+            }
+        }
+    }
+
     .anime-episodes{
 
         display: grid;
@@ -251,6 +292,11 @@ export const Container = styled.div<Props>`
 
             width: 120px;
             height: 40px;
+
+            button{
+                background-color: transparent;
+                border: 0;
+            }
 
             img{
                 width: 180px;
