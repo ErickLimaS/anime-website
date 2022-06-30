@@ -10,6 +10,7 @@ import Trending from '../../Components/Home/Trending'
 import SearchInnerPage from '../../Components/SearchInnerPage'
 import TopRated from '../../Components/Home/TopRated'
 import AsideNavLinks from '../../Components/AsideNavLinks'
+import { useSelector } from 'react-redux'
 
 export default function Home() {
 
@@ -20,15 +21,22 @@ export default function Home() {
 
   const [loading, setLoading] = useState(true)
 
+  const [randomIndex, setRandomIndex] = useState<number>(0)
+
   const [releasingThisSeason, setReleasingThisSeason] = useState([])
   const [releasingThisWeek, setReleasingThisWeek] = useState([])
   const [trending, setTrending] = useState([])
   const [topRated, setTopRated] = useState([])
 
+  const userLogin = useSelector((state: any) => state.userLogin)
+  const { userInfo } = userLogin
+
   useEffect(() => {
 
     window.scrollTo(0, 0);
-    
+
+    document.title = 'Loading...'
+
     const loadData = async () => {
 
       setLoading(true)
@@ -41,6 +49,8 @@ export default function Home() {
           //stores the heading content, which is the releases of the season
           data1 = await API.getNewReleases('ANIME')
           setReleasingThisSeason(data1)
+
+          setRandomIndex(Math.floor(Math.random() * data1.length))
 
           //stores releases of this week
           data2 = await API.getReleasingThisWeek('ANIME')
@@ -60,8 +70,10 @@ export default function Home() {
 
         case 1: //MANGA
           //stores the heading content, which is the releases of the season
-          data1 = await API.getNewReleases('MANGA')
-          setReleasingThisSeason(data1)
+          // data1 = await API.getNewReleases('MANGA')
+          // setReleasingThisSeason(data1)
+
+          // setRandomIndex(Math.floor(Math.random() * data1.length))
 
           //stores releases of this week
           data2 = await API.getReleasingThisWeek('MANGA')
@@ -84,6 +96,8 @@ export default function Home() {
           data1 = await API.getNewReleases('ANIME', 'MOVIE')
           setReleasingThisSeason(data1)
 
+          setRandomIndex(Math.floor(Math.random() * data1.length))
+
           //stores releases of this week
           data2 = await API.getReleasingThisWeek('ANIME', 'MOVIE')
           setReleasingThisWeek(data2)
@@ -104,7 +118,7 @@ export default function Home() {
     }
     loadData()
 
-    console.log(releasingThisSeason)
+    document.title = 'Home'
 
   }, [indexInnerPageLink])
 
@@ -129,9 +143,9 @@ export default function Home() {
         <section id='anime'>
           <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
             {loading === false && (
-              releasingThisSeason.map((item: any, key) => (
-                <HeadingContent key={key} data={item} />
-              ))
+
+              <HeadingContent data={releasingThisSeason[randomIndex]} />
+
             )}
           </div>
 
@@ -181,11 +195,7 @@ export default function Home() {
 
         <section id='manga'>
           <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
-            {loading === false && (
-              releasingThisSeason.map((item: any, key) => (
-                <HeadingContent key={key} data={item} />
-              ))
-            )}
+
           </div>
 
           <div className={loading === true ? 'new-episodes div-skeleton' : 'new-episodes'}>
@@ -235,9 +245,9 @@ export default function Home() {
         <section id='movie'>
           <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
             {loading === false && (
-              releasingThisSeason.map((item: any, key) => (
-                <HeadingContent key={key} data={item} />
-              ))
+
+              <HeadingContent data={releasingThisSeason[randomIndex]} />
+
             )}
           </div>
 
@@ -305,13 +315,33 @@ export default function Home() {
                 </div>
               </div>
               <div className='trending-items'>
-                {trending.slice(0,3).map((item, key) => (
+                {trending.slice(0, 3).map((item: any, key) => (
                   <Trending key={key} data={item} />
                 ))}
                 <Link to={`/animes/trending`} className='button-see-more'>See More</Link>
               </div>
 
             </>
+          )}
+          {userInfo && (
+            loading === false && (
+              <>
+                <div className='trending-heading'>
+                  <h3>Bookmarks</h3>
+                  <div>
+                    <DotSvg />
+                    <DotSvg />
+                  </div>
+                </div>
+                <div className='trending-items'>
+                  {userInfo.mediaAdded.slice(0, 3).map((item: any, key: any) => (
+                    <Trending key={key} data={item} />
+                  ))}
+                  <Link to={`/bookmarks`} className='button-see-more'>See More</Link>
+                </div>
+
+              </>
+            )
           )}
 
         </div>

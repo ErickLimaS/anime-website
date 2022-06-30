@@ -13,6 +13,8 @@ interface props {
 
 export default function HeadingContent(data: any) {
 
+    // console.log(data)
+
     const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
 
     let format;
@@ -52,8 +54,6 @@ export default function HeadingContent(data: any) {
     const navigate: any = useNavigate()
 
     const handleMediaToAccount = () => {
-
-        // console.log(userInfo.name)
 
         //CHECKS if dont has on user account
         if (isAlreadyAdded == null || undefined) {
@@ -107,7 +107,11 @@ export default function HeadingContent(data: any) {
 
             <div className='item-about'>
                 <div className='item-info'>
-                    <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji}</h1></Link>
+                    {data.data.title.romaji.length > 35 ? (
+                        <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji.slice(0,35)}...</h1></Link>
+                    ) : (
+                        <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji}</h1></Link>
+                    )}
                     <h2>{data.data.title.native}</h2>
                 </div>
 

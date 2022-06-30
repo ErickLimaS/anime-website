@@ -11,6 +11,7 @@ import CharacterAndActor from '../../CharacterAndActor'
 import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
+import Swal from 'sweetalert2'
 
 export default function AnimePageContent(data: any) {
 
@@ -30,6 +31,10 @@ export default function AnimePageContent(data: any) {
 
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+  const addMediaToUserAccounts = useSelector((state: any) => state.addMediaToUserAccount)
+  const removeMediaFromUserAccounts = useSelector((state: any) => state.removeMediaFromUserAccount)
+  const addError = addMediaToUserAccounts.error
+  const remError = removeMediaFromUserAccounts.error
 
   useEffect(() => {
 
@@ -123,6 +128,35 @@ export default function AnimePageContent(data: any) {
       setIsAlreadyAdded(null)
 
 
+    }
+
+  }
+
+  //if theres a error, it shows what happen
+  if (addError || remError) {
+
+    switch (addError || remError) {
+      case 403:
+        Swal.fire({
+
+          icon: 'info',
+          title: 'Error',
+          titleText: `${addError || remError}: Before Doing It!`,
+          text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
+          allowOutsideClick: false,
+          footer: 'https://cors-anywhere.herokuapp.com/'
+        })
+        break
+      default:
+        Swal.fire({
+
+          icon: 'error',
+          title: 'Error',
+          titleText: `${addError || remError}: Something Happen!`,
+          text: "We Don't Know What Happen. But Try Again!"
+
+        })
+        break
     }
 
   }

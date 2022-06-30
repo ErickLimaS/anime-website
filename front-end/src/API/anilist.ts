@@ -8,7 +8,7 @@ export default {
     // HOME PAGE
     getNewReleases: async (type: String, format?: String) => {
 
-        const seasonYear = new Date().getFullYear() - 3
+        const seasonYear = new Date().getFullYear()  
         let season;
 
         switch (new Date().getMonth()) {
@@ -100,8 +100,7 @@ export default {
                         'type': `${type}`,
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
-                        'perPage': 1,
-                        // 'perPage': 5,
+                        'perPage': 10,
                         'season': `${season}`,
                         'seasonYear': `${seasonYear}`
                     }
@@ -110,7 +109,7 @@ export default {
 
             })
 
-            console.log(data.data.Page.media)
+            // console.log(data.data.Page.media)
 
             return data.data.Page.media
 

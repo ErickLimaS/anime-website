@@ -113,7 +113,7 @@ export const AnimeFromHeading = styled.div<itemData>`
             button{
                 cursor: pointer;
                 
-                width: 20%;
+                width: 4rem;
                 
                 margin-left: 1rem;
 
