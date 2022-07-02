@@ -76,22 +76,22 @@ export default function RegisterUser() {
 
                 <div>
                     <label htmlFor='name'>Name</label>
-                    <input type='text' id='name' placeholder='Name' ref={name}></input>
+                    <input type='text' id='name' placeholder='Name' ref={name} required></input>
                 </div>
 
                 <div>
                     <label htmlFor='email'>Email</label>
-                    <input type='email' id='email' placeholder='Email' ref={email}></input>
+                    <input type='email' id='email' placeholder='Email' ref={email} required></input>
                 </div>
 
                 <div>
                     <label htmlFor='password'>Password</label>
-                    <input type='password' id='password' placeholder='Password' ref={password}></input>
+                    <input type='password' id='password' placeholder='Password' ref={password} required></input>
                 </div>
 
                 <div>
                     <label htmlFor='confirm-password'>Confirm Password</label>
-                    <input type='password' id='confirm-password' placeholder='Confirm Password' ref={confirmPassword}></input>
+                    <input type='password' id='confirm-password' placeholder='Confirm Password' ref={confirmPassword} required></input>
                 </div>
 
                 <div>

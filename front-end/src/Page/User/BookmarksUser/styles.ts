@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
+interface Props {
+    tabIndex: any;
+}
+
+export const Container = styled.div<Props>`
 
     display: flex;
     flex-direction: row;
@@ -28,7 +32,7 @@ export const Container = styled.div`
                 }
             }
         }
-
+        
         .grid{
             
             display: grid;
@@ -101,6 +105,34 @@ export const Container = styled.div`
             border-left: 0;
         }
 
+        .content{
+                
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            @media(max-width: 620px){
+                flex-direction: column-reverse;
+            }
+
+            div#tab-0{
+                display: ${props => props.tabIndex === 0 ? `block` : 'none'};
+            }
+            div#tab-1{
+                display: ${props => props.tabIndex === 1 ? `block` : 'none'};
+            }
+            div#tab-2{
+                display: ${props => props.tabIndex === 2 ? `block` : 'none'};
+            }
+            div#tab-3{
+                display: ${props => props.tabIndex === 3 ? `block` : 'none'};
+            }
+            div#tab-4{
+                display: ${props => props.tabIndex === 4 ? `block` : 'none'};
+            }
+
+        }
+
         h1{
             margin: 2rem 0;
 
@@ -111,42 +143,58 @@ export const Container = styled.div`
 
         .sort{
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             justify-content: flex-start;
 
-            margin: 1rem 0;
-            padding: 1rem 0;
+            margin: 0 1rem;
+            padding: 0 2rem ;
 
-            background-color: #ff1a7512;
+            /* background-color: #ff1a7512; */
+            border-left: 2px solid #ff1a7512;
             border-radius: 4px;
 
+            
             @media(max-width: 620px){
 
+                border-left: 0;
                 justify-content: center;
             }
 
-            >div{
+            div.media-type{
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
+                flex-wrap: wrap;
 
                 margin: 0 1rem;
 
-                label{
-                    font-size: 1.4rem;
+                h1{
+                    margin: 1rem 0;
+                    font-size: 3rem;
                 }
 
-                select{
-                    border: 1px solid #999999;
-                    border-radius: 4px;
+                >div{
 
-                    padding: 0.7rem 1rem;
-
-                    option{
-                    padding: 0.7rem 1rem;
-
+                    @media(max-width: 620px){
+                        margin-top: 1rem;
+                        margin-bottom: 2rem;
+                        display: flex;
+                        flex-wrap: wrap;
                     }
 
+                    p{
+                        cursor: pointer;
+                        font-size: 1.6rem;
+
+                        @media(max-width: 620px){
+                            font-size: 1.8rem;
+                            margin: 1rem;
+                        }
+
+                        :hover{
+                            color: #999999;
+                        }
+                    }
                 }
             }
         }
@@ -228,8 +276,13 @@ export const Container = styled.div`
                         }
 
                         li{
-                            font-size: 1.4rem;
-                            font-weight: 400;
+                            font-size: 1.3rem;
+                            font-weight: 600;
+                            color: #888888;
+
+                            span{
+                                color: #555555;
+                            }
                         }
 
                     }

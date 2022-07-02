@@ -16,14 +16,17 @@ export default function SearchInnerPage() {
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        setResultsWasFetched(false)
+        if (searchInput.current.value.length > 0) {
+            setResultsWasFetched(false)
 
-        const dataAni = await API.getSeachResults(searchInput.current.value)
-        const dataGogo = await gogoAnime.searchMedia(searchInput.current.value)
-        setAniListSearchResults(dataAni)
-        setGogoSearchResults(dataGogo)
 
-        setResultsWasFetched(true)
+            const dataAni = await API.getSeachResults(searchInput.current.value)
+            const dataGogo = await gogoAnime.searchMedia(searchInput.current.value)
+            setAniListSearchResults(dataAni)
+            setGogoSearchResults(dataGogo)
+
+            setResultsWasFetched(true)
+        }
 
     }
 

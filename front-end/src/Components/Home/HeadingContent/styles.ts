@@ -11,7 +11,7 @@ export const AnimeFromHeading = styled.div<itemData>`
 
     height: 300px;
 
-    background-image: ${(props) => props.headingContent.bannerImage && `url("${props.headingContent.bannerImage}")`};
+    background-image: ${(props) => props.headingContent.bannerImage ? `url("${props.headingContent.bannerImage}")` : `url('https://wallpaperaccess.com/full/2825138.jpg')`};
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

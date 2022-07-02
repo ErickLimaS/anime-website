@@ -125,12 +125,12 @@ export default function LoginUser() {
 
                 <div>
                     <label htmlFor='email'>Email</label>
-                    <input type='email' id='email' placeholder='Email' ref={email}></input>
+                    <input type='email' id='email' placeholder='Email' ref={email} required></input>
                 </div>
 
                 <div>
                     <label htmlFor='password'>Password</label>
-                    <input type='password' id='password' placeholder='Password' ref={password}></input>
+                    <input type='password' id='password' placeholder='Password' ref={password} required></input>
                 </div>
 
                 <div>
