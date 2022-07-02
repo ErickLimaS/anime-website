@@ -15,8 +15,7 @@ export const Container = styled.div`
     }
 
     .imgs{
-            
-        background-image: linear-gradient(to right, #fff, pink, #fff);
+        background-image: linear-gradient(to right, #fff 10%, #ff5ebc33 50%, #fff 90%);
     }
 
     >div{
@@ -27,10 +26,11 @@ export const Container = styled.div`
         align-items: center;
 
         .img-character, .img-actor{
+            width: 50%;
 
             img{
-                height: 140px;
-                width: auto;
+                height: auto;
+                width: 35%;
                 
                 display: flex;
                 justify-content: center;
@@ -42,21 +42,53 @@ export const Container = styled.div`
                     height: 100px;
                 }
             }
+
+            .names{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+
+                *{
+                    margin: 1rem;
+                }
+
+                h2{
+                    color: #222222;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                }
+                h2:last-child{
+                    color: #666666;
+                    font-size: 1.4rem;
+                    font-weight: 400;
+                }
+
+                @media(max-width: 620px){
+                    h2:first-child{
+                        width: fit-content;
+                    }
+                    h2{
+                        color: #222222;
+                        font-size: 1.4rem;
+                        font-weight: 600;
+                    }
+                    h2:last-child{
+                        color: #666666;
+                        font-size: 1.2rem;
+                        font-weight: 400;
+                    }
+                }
+                
+            }
         }
 
         .img-character{
             
             display: flex;
             flex-direction: row;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
 
-            img{
-            }
-            h2{
-                
-                margin-left: 1rem;
-            }
 
         }
 
@@ -77,14 +109,13 @@ export const Container = styled.div`
 
             display: flex;
             flex-direction: row-reverse;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
 
-            img{
-            }
-            h2{
-                margin-right: 1rem;
-
+            .names{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
             }
 
         }

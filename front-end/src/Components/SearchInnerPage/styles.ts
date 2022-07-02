@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const Search = styled.div`
+interface Props {
+    hasText: any;
+}
+
+export const Search = styled.div<Props>`
 
     form{
         display: flex;
@@ -25,10 +29,32 @@ export const Search = styled.div`
 
         color: #ff5ebc;
 
-        height: 20px;
+        height: 22px;
         width: auto;
 
         padding: 0.9rem 1rem;
+
+        *{
+            color: #ff5ebc;
+        }
+    }
+
+    svg#input-loading-svg{
+        
+        transform: scale(2);
+
+        background-color: #f3f2ff!important;
+
+        border: none;
+        border-right: none;
+        border-radius: 18px 0 0 18px;
+
+        color: #ff5ebc;
+
+        height: 20px;
+        width: auto;
+
+        /* padding: 0.9rem 1rem; */
 
         *{
             color: #ff5ebc;
@@ -42,16 +68,23 @@ export const Search = styled.div`
         border-left: none;
         border-radius: 0 0 0 0;
 
-        padding: 1rem;
+        padding: 0.5rem 1rem;
+
+        height: 30px;
 
         font-size: 1.6rem;
         font-weight: 400;
+
+        :active{
+            
+            background-color: #f3f2ff;
+        }
 
         :focus{
             background-color: #f3f2ff;
             ~button{
                 cursor: pointer;
-                padding: 1.1rem ;
+                padding: 1.1rem;
                 background-color: #ff5ebc;
 
                 svg{
@@ -63,16 +96,26 @@ export const Search = styled.div`
         }
     }
     button{
+
+        background-color: ${props => props.hasText.current?.value?.length > 0 ? '#ff5ebc!important' : ''};
+
+        cursor: ${props => props.hasText.current?.value?.length > 0 ? 'pointer!important' : 'default'};
+        
+        padding: ${props => props.hasText.current?.value?.length > 0 ? '1.1rem!important' : ''};
+
         svg{
-            display: none;
+            transition: all ease-in 200ms;
+            display: ${props => props.hasText.current?.value?.length > 0 ? 'block!important' : 'none'};
 
             *{
                 color: #fff;
             }
         }
 
+        height: 40px;
+
         background-color: #f3f2ff;
-        padding: 1.9rem ;
+        padding: 1.1rem;
         border: none;
         border-radius: 0 18px 18px 0;
         font-size: 1.4rem;

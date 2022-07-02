@@ -146,8 +146,8 @@ export const Container = styled.div<Props>`
             flex-direction: column;
             justify-content: flex-start;
 
-            margin: 0 1rem;
-            padding: 0 2rem ;
+            margin-left: 1rem;
+            padding: 0 1rem;
 
             /* background-color: #ff1a7512; */
             border-left: 2px solid #ff1a7512;
@@ -155,6 +155,8 @@ export const Container = styled.div<Props>`
 
             
             @media(max-width: 620px){
+                margin: 0;
+                padding: 0;
 
                 border-left: 0;
                 justify-content: center;
@@ -169,8 +171,13 @@ export const Container = styled.div<Props>`
                 margin: 0 1rem;
 
                 h1{
-                    margin: 1rem 0;
-                    font-size: 3rem;
+                    margin-top: 0rem;
+                    margin-bottom: 2rem;
+                    font-size: 2rem;
+
+                    @media(max-width: 620px){
+                        font-size: 3rem;
+                    }
                 }
 
                 >div{
@@ -185,6 +192,10 @@ export const Container = styled.div<Props>`
                     p{
                         cursor: pointer;
                         font-size: 1.6rem;
+                        padding: 1rem;
+                        margin: 1rem 0;
+                        border: 1px solid #ff1a75;
+                        border-radius: 4px;
 
                         @media(max-width: 620px){
                             font-size: 1.8rem;

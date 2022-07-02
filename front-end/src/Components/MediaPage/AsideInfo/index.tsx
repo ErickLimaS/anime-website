@@ -1,6 +1,11 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import Score from '../../Score';
 import SearchInnerPage from '../../SearchInnerPage'
+import { ReactComponent as WatchSvg } from '../../../imgs/svg/watch.svg'
+import { ReactComponent as BookSvg } from '../../../imgs/svg/book.svg'
+import { ReactComponent as PlayCaretSvg } from '../../../imgs/svg/caret-right-square.svg'
+import { ReactComponent as BrodcastSvg } from '../../../imgs/svg/broadcast-pin.svg'
+import { ReactComponent as CollectionEpisodesSvg } from '../../../imgs/svg/collection-play.svg'
 import * as C from './styles'
 
 export default function AsideInfo(data: any) {
@@ -64,17 +69,17 @@ export default function AsideInfo(data: any) {
 
               ) : (
                 data.data.episodes && (
-                  <li><strong>{data.data.episodes} Episodes</strong></li>
+                  <li><CollectionEpisodesSvg /> <strong>{data.data.episodes} Episodes</strong></li>
                 )
               )}
 
 
               {data.data.chapters && (
-                <li><strong>{data.data.chapters} Chapters</strong></li>
+                <li><BookSvg /> <strong>{data.data.chapters} Chapters</strong></li>
               )}
 
               {data.data.volumes && (
-                <li><strong>{data.data.volumes} Volumes</strong></li>
+                <li><BookSvg /> <strong>{data.data.volumes} Volumes</strong></li>
               )}
 
               {data.data.status === 'RELEASING' && (
@@ -84,31 +89,31 @@ export default function AsideInfo(data: any) {
               )}
 
               {data.data.nextAiringEpisode && (
-                <li className='releasing'>Next Episode on <span>{nextEpisodeDate.getDate()}/{nextEpisodeDate.getMonth() + 1}/{nextEpisodeDate.getYear()}</span></li>
+                <li className='releasing'><PlayCaretSvg /> Next Episode on <span>{nextEpisodeDate.getDate()}/{nextEpisodeDate.getMonth() + 1}/{nextEpisodeDate.getYear()}</span></li>
               )}
 
               {(data.data.format === 'MOVIE' && (
 
-                <li>{data.data.duration} Minutes Long </li>
+                <li><WatchSvg /> {data.data.duration} Minutes Long </li>
 
               )) || (data.data.type === 'ANIME' && (
 
-                <li>{data.data.duration} Minutes Long Each Episode</li>
+                <li><WatchSvg />  {data.data.duration} Minutes Long Each Episode</li>
 
               ))}
 
               {(data.data.format === 'MOVIE' && (
-                <li>Released on <span>
+                <li><BrodcastSvg /> Released on <span>
                   {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}
                 </span>
                 </li>
               )) || (data.data.type === 'MANGA' && (
-                <li>First Release on <span>
+                <li><BrodcastSvg /> First Release on <span>
                   {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}
                 </span>
                 </li>
               )) || (data.data.type === 'ANIME' && (
-                <li>First Transmition on <span>
+                <li><BrodcastSvg /> First Transmition on <span>
                   {data.data.startDate.day && `${data.data.startDate.day}/`}{data.data.startDate.month && `${data.data.startDate.month}/`}{data.data.startDate.year && `${data.data.startDate.year}`}</span>
                 </li>
 
@@ -121,11 +126,11 @@ export default function AsideInfo(data: any) {
                   </>
                 )) || (data.data.type === 'ANIME' && (
 
-                  <li>Last Transmition on <span>{data.data.endDate.day && `${data.data.endDate.day}/`}{data.data.endDate.month && `${data.data.endDate.month}/`}{data.data.endDate.year && `${data.data.endDate.year}`}</span></li>
+                  <li><BrodcastSvg /> Last Transmition on <span>{data.data.endDate.day && `${data.data.endDate.day}/`}{data.data.endDate.month && `${data.data.endDate.month}/`}{data.data.endDate.year && `${data.data.endDate.year}`}</span></li>
 
                 )) || (data.data.type === 'MANGA' && (
 
-                  <li>Last Release on <span>
+                  <li><BrodcastSvg /> Last Release on <span>
                     {data.data.startDate.day && `${data.data.endDate.day}/`}{data.data.endDate.month && `${data.data.endDate.month}/`}{data.data.endDate.year && `${data.data.endDate.year}`}
                   </span>
                   </li>

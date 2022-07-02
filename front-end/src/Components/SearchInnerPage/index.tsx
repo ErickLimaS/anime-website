@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import * as C from './styles'
 import { ReactComponent as SearchSvg } from '../../imgs/svg/search.svg'
+import { ReactComponent as LoadingSvg } from '../../imgs/svg/Spinner-1s-200px.svg'
 import API from '../../API/anilist'
 import gogoAnime from '../../API/gogo-anime'
 import { Link } from 'react-router-dom'
@@ -11,14 +12,16 @@ export default function SearchInnerPage() {
 
     const [aniListSearchResults, setAniListSearchResults] = useState([null])
     const [gogoSearchResults, setGogoSearchResults] = useState([null])
-    const [resultsWasFetched, setResultsWasFetched] = useState(false)
+    const [resultsWasFetched, setResultsWasFetched] = useState<boolean>(false)
+
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault()
 
         if (searchInput.current.value.length > 0) {
+            setLoading(true)
             setResultsWasFetched(false)
-
 
             const dataAni = await API.getSeachResults(searchInput.current.value)
             const dataGogo = await gogoAnime.searchMedia(searchInput.current.value)
@@ -26,6 +29,7 @@ export default function SearchInnerPage() {
             setGogoSearchResults(dataGogo)
 
             setResultsWasFetched(true)
+            setLoading(false)
         }
 
     }
@@ -38,12 +42,13 @@ export default function SearchInnerPage() {
     // console.log(gogoSearchResults)
     return (
         <>
-            <C.Search>
+            <C.Search hasText={searchInput}>
 
                 <form onSubmit={(e) => handleSearch(e)}>
                     <div>
                         <label htmlFor='search-input' />
-                        <SearchSvg id='input-svg' />
+                        {loading === false && <SearchSvg id='input-svg' />}
+                        {loading === true && <LoadingSvg id='input-loading-svg' />}
                         <input id='search-input' type='text' placeholder='Search' ref={searchInput}></input>
                         <button type='submit'>{' '}<SearchSvg /></button>
                     </div>

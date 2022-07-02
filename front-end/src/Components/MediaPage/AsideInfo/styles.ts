@@ -95,10 +95,17 @@ div.skeleton{
             font-weight: 400;
             margin: 1rem 0;
 
+
             border-bottom: 1px solid #c0c0c0;
             
             span{
                 font-weight: 600;
+
+            }
+            
+            svg{
+                
+                margin-right: 0.5rem;
 
             }
 
@@ -231,6 +238,8 @@ div.skeleton{
 
                 width: min-content;
                 height: min-content;
+
+                margin: 0 0.1rem;
 
                 .img{
                     display: flex;

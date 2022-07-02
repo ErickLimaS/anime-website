@@ -51,15 +51,12 @@ export default function CharacterAndActor(data: any) {
           )}
 
           {data.data.node.name.full && (
-            <h2>{data.data.node.name.full}</h2>
+            <div className='names'>
+              <h2>{data.data.node.name.full}</h2>
+              <h2>{data.data.node.name.native}</h2>
+            </div>
           )}
         </div>
-
-        {/* <div className='span'>
-          <span>
-            X
-          </span>
-        </div> */}
 
         <div className='img-actor'>
           {data.data.voiceActors[0] && (
@@ -70,8 +67,11 @@ export default function CharacterAndActor(data: any) {
             }
 
               {data.data.voiceActors[0].name.full && (
-                <h2>{data.data.voiceActors[0].name.full}</h2>
-              )} 
+                <div className='names'>
+                  <h2>{data.data.voiceActors[0].name.full}</h2>
+                  <h2>{data.data.voiceActors[0].name.native}</h2>
+                </div>
+              )}
             </>
           )}
         </div>

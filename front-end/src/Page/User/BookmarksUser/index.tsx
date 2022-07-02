@@ -461,7 +461,7 @@ export default function BookmarkUser() {
                                             <h1>Type</h1>
 
                                             <div>
-                                                <p onClick={() => setTabIndex(0)}>All ({animesTypeItems?.length})</p>
+                                                <p onClick={() => setTabIndex(0)}>All ({userInfo.mediaAdded.length})</p>
                                                 <p onClick={() => setTabIndex(1)}>Animes ({animesTypeItems?.length})</p>
                                                 <p onClick={() => setTabIndex(2)}>Mangas ({mangasTypeItems?.length})</p>
                                                 <p onClick={() => setTabIndex(3)}>Movies ({moviesTypeItems?.length})</p>
