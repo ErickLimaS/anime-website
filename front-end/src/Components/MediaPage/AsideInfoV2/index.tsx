@@ -2,6 +2,11 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import Score from '../../Score';
 import SearchInnerPage from '../../SearchInnerPage'
 import * as C from './styles'
+import { ReactComponent as WatchSvg } from '../../../imgs/svg/watch.svg'
+import { ReactComponent as BookSvg } from '../../../imgs/svg/book.svg'
+import { ReactComponent as PlayCaretSvg } from '../../../imgs/svg/caret-right-square.svg'
+import { ReactComponent as BrodcastSvg } from '../../../imgs/svg/broadcast-pin.svg'
+import { ReactComponent as CollectionEpisodesSvg } from '../../../imgs/svg/collection-play.svg'
 
 export default function AsideInfoV2(data: any) {
 
@@ -40,15 +45,15 @@ export default function AsideInfoV2(data: any) {
 
             <ul className='general-info'>
               {data.data.totalEpisodes && (
-                <li><strong>{data.data.totalEpisodes} Episodes</strong></li>
+                <li><CollectionEpisodesSvg /> <strong>{data.data.totalEpisodes} Episodes</strong></li>
               )}
 
               {data.data.chapters && (
-                <li><strong>{data.data.chapters} Chapters</strong></li>
+                <li><BookSvg /> <strong>{data.data.chapters} Chapters</strong></li>
               )}
 
               {data.data.volumes && (
-                <li><strong>{data.data.volumes} Volumes</strong></li>
+                <li><BookSvg /> <strong>{data.data.volumes} Volumes</strong></li>
               )}
 
               {data.data.status && (

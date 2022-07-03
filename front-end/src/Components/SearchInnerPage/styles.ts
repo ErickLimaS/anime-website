@@ -49,6 +49,8 @@ export const Search = styled.div<Props>`
         border-right: none;
         border-radius: 18px 0 0 18px;
 
+        margin-right: 1rem;
+
         color: #ff5ebc;
 
         height: 20px;
@@ -75,6 +77,13 @@ export const Search = styled.div<Props>`
         font-size: 1.6rem;
         font-weight: 400;
 
+        :-webkit-autofill,
+        :-webkit-autofill:hover, 
+        :-webkit-autofill:focus, 
+        :-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px #f3f2ff inset !important;
+        }
+
         :active{
             
             background-color: #f3f2ff;
@@ -89,7 +98,7 @@ export const Search = styled.div<Props>`
 
                 svg{
                     transition: all ease-in 200ms;
-                    display: block;
+                    opacity: 1;
                     color: #fff;
                 }
             }
@@ -105,7 +114,7 @@ export const Search = styled.div<Props>`
 
         svg{
             transition: all ease-in 200ms;
-            display: ${props => props.hasText.current?.value?.length > 0 ? 'block!important' : 'none'};
+            opacity: ${props => props.hasText.current?.value?.length > 0 ? '1!important' : '0'};
 
             *{
                 color: #fff;

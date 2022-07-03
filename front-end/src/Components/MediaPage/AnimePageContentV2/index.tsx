@@ -36,7 +36,9 @@ export default function AnimePageContentV2(data: any) {
   const { userInfo } = userLogin
   const addMediaToUserAccounts = useSelector((state: any) => state.addMediaToUserAccount)
   const removeMediaFromUserAccounts = useSelector((state: any) => state.removeMediaFromUserAccount)
+  const addLoading = addMediaToUserAccounts.loading
   const addError = addMediaToUserAccounts.error
+  const remLoading = removeMediaFromUserAccounts.loading
   const remError = removeMediaFromUserAccounts.error
 
   useEffect(() => {
@@ -73,7 +75,6 @@ export default function AnimePageContentV2(data: any) {
   // add media to user
   const dispatch: any = useDispatch()
   const navigate: any = useNavigate()
-
   const handleMediaToAccount = () => {
 
     //CHECKS if dont has on user account
@@ -95,6 +96,18 @@ export default function AnimePageContentV2(data: any) {
 
         setIsAlreadyAdded(true)
 
+        if (!addLoading && !addError) {
+          Swal.fire({
+            icon: "success",
+            title: 'Added To Bookmarks!',
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 7000,
+            timerProgressBar: true,
+          })
+        }
+
       }
       else {
 
@@ -115,6 +128,17 @@ export default function AnimePageContentV2(data: any) {
 
       setIsAlreadyAdded(null)
 
+      if (!remLoading && !remError) {
+        Swal.fire({
+          icon: "success",
+          title: 'Removed From Bookmarks!',
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 7000,
+          timerProgressBar: true,
+        })
+      }
 
     }
 
@@ -150,6 +174,7 @@ export default function AnimePageContentV2(data: any) {
 
   }
 
+  //gets the streaming url of choose episode
   const getStreamingLink = async (id: String) => {
 
     setVideoReady(false)
@@ -165,6 +190,7 @@ export default function AnimePageContentV2(data: any) {
 
   }
 
+  //NEEDS FIX: TRIES to make video player stay on full screen
   const handleFullScreen = (decision: boolean) => {
 
     switch (decision) {
@@ -180,6 +206,7 @@ export default function AnimePageContentV2(data: any) {
     }
 
   }
+
   return (
     <C.Container
       data={data.data}
@@ -891,7 +918,7 @@ export default function AnimePageContentV2(data: any) {
 
               </div>
 
-              {data.data.episodesList.length > 26 && (
+              {data.data.episodesList.length > 24 && (
                 <div className='pagination-buttons'>
                   <button type='button'
                     disabled={indexEpisodesPagination === 0 ? true : false}

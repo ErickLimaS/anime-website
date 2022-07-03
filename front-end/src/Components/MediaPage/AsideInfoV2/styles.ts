@@ -108,6 +108,10 @@ div.skeleton{
 
             }
 
+            svg{
+                margin-right: 0.5rem;
+            }
+
             a{
                 color: inherit;
                 text-decoration: underline;

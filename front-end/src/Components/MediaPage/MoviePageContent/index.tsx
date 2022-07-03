@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import CharacterAndActor from '../../CharacterAndActor'
 import { useDispatch, useSelector } from 'react-redux'
 import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
+import Swal from 'sweetalert2'
 
 export default function MoviePageContent(data: any) {
 
@@ -26,6 +27,12 @@ export default function MoviePageContent(data: any) {
 
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+  const addMediaToUserAccounts = useSelector((state: any) => state.addMediaToUserAccount)
+  const removeMediaFromUserAccounts = useSelector((state: any) => state.removeMediaFromUserAccount)
+  const addLoading = addMediaToUserAccounts.loading
+  const addError = addMediaToUserAccounts.error
+  const remLoading = removeMediaFromUserAccounts.loading
+  const remError = removeMediaFromUserAccounts.error
 
   useEffect(() => {
 
@@ -98,6 +105,17 @@ export default function MoviePageContent(data: any) {
 
         setIsAlreadyAdded(true)
 
+        if (!addLoading && !addError) {
+          Swal.fire({
+            icon: "success",
+            title: 'Added To Bookmarks!',
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 7000,
+            timerProgressBar: true,
+          })
+        }
       }
       else {
 
@@ -118,6 +136,17 @@ export default function MoviePageContent(data: any) {
 
       setIsAlreadyAdded(null)
 
+      if (!remLoading && !remError) {
+        Swal.fire({
+          icon: "success",
+          title: 'Removed From Bookmarks!',
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 7000,
+          timerProgressBar: true,
+        })
+      }
 
     }
 
