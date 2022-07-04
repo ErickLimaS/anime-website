@@ -143,6 +143,10 @@ div.skeleton{
             margin: 1rem 0;
         }
 
+        iframe{
+            border: 0;
+        }
+
         a{
             display: flex;
             flex-direction: column;

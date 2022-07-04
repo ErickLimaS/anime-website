@@ -361,6 +361,17 @@ export const Container = styled.div<Props>`
             flex-direction: row;
             flex-wrap: wrap;
 
+            a{
+                color: #444444;
+                text-decoration: underline;
+
+                :hover{
+
+                    color: #777;
+
+                }
+            }
+
             li{
                 border-bottom: 0;
 
@@ -377,6 +388,52 @@ export const Container = styled.div<Props>`
             }
         }
 
+    }
+
+    .from-same-franchise{
+
+        margin-top: 1rem;
+        border-top: 4px solid #ff5ebc;
+
+        h2{
+            font-size: 2rem;
+            font-weight: 600;
+            color: #222222;
+            margin: 2rem 0;
+
+            span{
+                color: #ff5ebc;
+            }
+        }
+
+        ul{
+            overflow: auto;
+            width: 110vh;
+            display: flex;
+            flex-direction: row;
+
+            @media(max-width: 1080px){
+                width: auto;
+            }
+        
+            ::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #f1f1f1; 
+            }
+            
+            ::-webkit-scrollbar-thumb {
+                background: #888;
+
+                border-radius: 2px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555; 
+            }
+        }
     }
 
     .similar-animes{

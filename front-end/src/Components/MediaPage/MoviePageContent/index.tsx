@@ -253,7 +253,7 @@ export default function MoviePageContent(data: any) {
         </ul>
       )}
 
-      {data.data.relations.nodes && (
+      {data.data.relations.nodes.length > 0 && (
         <div className='from-same-franchise'>
 
           <h2>From Same Franchise</h2>
@@ -269,7 +269,7 @@ export default function MoviePageContent(data: any) {
         </div>
       )}
 
-      {data.data.recommendations.edges && (
+      {data.data.recommendations.edges.length > 0 && (
         <div className='similar-animes'>
           <h2>Similar to <span>{data.data.title.romaji}</span></h2>
 

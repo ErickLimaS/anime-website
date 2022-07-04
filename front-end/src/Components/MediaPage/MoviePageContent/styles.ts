@@ -257,6 +257,9 @@ export const Container = styled.div<Props>`
 
     .from-same-franchise{
 
+        margin-top: 1rem;
+        border-top: 4px solid #ff5ebc;
+
         h2{
             font-size: 2rem;
             font-weight: 600;

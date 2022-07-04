@@ -106,10 +106,16 @@ export const Container = styled.div<Props>`
         }
 
         .content{
-                
+
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+            
+            @media(max-width: 1440px){
+                width: fit-content;
+                justify-content: space-evenly;
+            }
+                
 
             @media(max-width: 620px){
                 flex-direction: column-reverse;
@@ -142,6 +148,8 @@ export const Container = styled.div<Props>`
         }
 
         .sort{
+            width: 20%;
+
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -155,6 +163,9 @@ export const Container = styled.div<Props>`
 
             
             @media(max-width: 620px){
+
+                width: 100%;
+
                 margin: 0;
                 padding: 0;
 
@@ -221,7 +232,7 @@ export const Container = styled.div<Props>`
 
             }
 
-            @media(max-width:760px){
+            @media(max-width:768px){
 
                 grid-template-columns: auto;
 

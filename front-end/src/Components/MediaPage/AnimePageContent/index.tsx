@@ -12,6 +12,7 @@ import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redu
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
+import { Link } from 'react-router-dom'
 
 export default function AnimePageContent(data: any) {
 
@@ -500,7 +501,7 @@ export default function AnimePageContent(data: any) {
                 <li><span>Tags</span>:
                   <ul className='tags'>
                     {data.data.tags.map((item: any) => (
-                      <li>{item.name}</li>
+                      <li><Link to={`/genre/${item.name}`}>{item.name}</Link></li>
                     ))}
                   </ul>
                 </li>
@@ -509,8 +510,23 @@ export default function AnimePageContent(data: any) {
             </ul>
           )}
         </>
-      )
-      }
+      )}
+
+      {data.data.relations.nodes.length > 0 && (
+        <div className='from-same-franchise'>
+
+          <h2>From Same Franchise</h2>
+
+          <ul>
+            {data.data.relations.nodes.map((item: any) => (
+              <li>
+                <AnimesReleasingThisWeek data={item} />
+              </li>
+            ))}
+          </ul>
+
+        </div>
+      )}
 
       {data.data.recommendations.edges.length > 0 && (
         <div className='similar-animes'>
