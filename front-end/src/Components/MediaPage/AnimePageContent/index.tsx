@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import ReactHtmlParser from 'react-html-parser'
 import * as C from './styles'
 import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
@@ -60,15 +61,17 @@ export default function AnimePageContent(data: any) {
     setHowManyPagesPagination(howManyPages - 1)
 
     //filter MAIN and SUPPORTING characters
-    const mainChar = data.data.characters.edges.filter((item: any) => {
-      return item.role === 'MAIN'
-    })
-    setMainCastCharacters(mainChar)
+    if (data.data.characters.edges.length > 0) {
+      const mainChar = data.data.characters.edges.filter((item: any) => {
+        return item.role === 'MAIN'
+      })
+      setMainCastCharacters(mainChar)
 
-    const supChar = data.data.characters.edges.filter((item: any) => {
-      return item.role === 'SUPPORTING'
-    })
-    setSupportingCastCharacters(supChar)
+      const supChar = data.data.characters.edges.filter((item: any) => {
+        return item.role === 'SUPPORTING'
+      })
+      setSupportingCastCharacters(supChar)
+    }
 
     //check if the current media is currently added to user account
     if (userInfo) {
@@ -214,23 +217,25 @@ export default function AnimePageContent(data: any) {
 
         </div>
 
-        <p>
+        <div className='description' onClick={() => setMoreDetails(!moreDetails)}>
           {data.data.description.length >= 420 ? (
             moreDetails === false ? (
-              <p>
-                {data.data.description.slice(0, 420)}
+              <>
+                {ReactHtmlParser(data.data.description.slice(0, 420))}
                 <span onClick={() => setMoreDetails(!moreDetails)}> ...more details.</span>
-              </p>
+              </>
             ) : (
-              <p>
-                {data.data.description}
-                <span onClick={() => setMoreDetails(!moreDetails)}> less details.</span>
-              </p>
+              <>
+                {ReactHtmlParser(data.data.description)}
+                <span onClick={() => setMoreDetails(!moreDetails)}> ...less details.</span>
+              </>
             )
           ) : (
-            <p>{data.data.description}</p>
+            <>
+              {ReactHtmlParser(data.data.description)}
+            </>
           )}
-        </p>
+        </div>
       </div>
 
       <div className='heading'>
@@ -247,298 +252,309 @@ export default function AnimePageContent(data: any) {
         </div>
       </div>
 
-      {data.data.streamingEpisodes.length > 0 ? (
-        <>
-
-          {indexPageInfo === 0 && (
-            <>
-              <div className='anime-episodes' >
-
-                {indexEpisodesPagination === 0 && (
-
-                  data.data.streamingEpisodes.slice(0, 24).map((item: any, key: any) => (
-                    <div key={key} className='episode'>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                      </a>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <h3>{item.title}</h3>
-                      </a>
-                    </div>
-                  ))
-
-                )}
-
-                {indexEpisodesPagination === 1 && (
-
-                  data.data.streamingEpisodes.slice(24, 24 * 2).map((item: any, key: any) => (
-                    <div key={key} className='episode'>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                      </a>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <h3>{item.title}</h3>
-                      </a>
-                    </div>
-                  ))
-
-                )}
-                {indexEpisodesPagination === 2 && (
-
-                  data.data.streamingEpisodes.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
-                    <div key={key} className='episode'>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                      </a>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <h3>{item.title}</h3>
-                      </a>
-                    </div>
-                  ))
-
-                )}
-                {indexEpisodesPagination === 3 && (
-
-                  data.data.streamingEpisodes.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
-                    <div key={key} className='episode'>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                      </a>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <h3>{item.title}</h3>
-                      </a>
-                    </div>
-                  ))
-
-                )}
-                {indexEpisodesPagination === 4 && (
-
-                  data.data.streamingEpisodes.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
-                    <div key={key} className='episode'>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                      </a>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <h3>{item.title}</h3>
-                      </a>
-                    </div>
-                  ))
-
-                )}
-                {indexEpisodesPagination === 5 && (
-
-                  data.data.streamingEpisodes.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
-                    <div key={key} className='episode'>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                      </a>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <h3>{item.title}</h3>
-                      </a>
-                    </div>
-                  ))
-
-                )}
-                {indexEpisodesPagination === 6 && (
-
-                  data.data.streamingEpisodes.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
-                    <div key={key} className='episode'>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                      </a>
-                      <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                        <h3>{item.title}</h3>
-                      </a>
-                    </div>
-                  ))
-
-                )}
-
-              </div>
-
-              {data.data.streamingEpisodes.length > 24 && (
-                <div className='pagination-buttons'>
-                  <button type='button'
-                    disabled={indexEpisodesPagination === 0 ? true : false}
-                    onClick={() => {
-                      if (indexEpisodesPagination === 0) {
-                        setIndexEpisodePagination(0)
-                      } else {
-                        setIndexEpisodePagination(indexEpisodesPagination - 1)
-                      }
-                    }}>
-                    <AngleLeftSolidSvg />
-                  </button>
-
-                  <span>
-                    {indexEpisodesPagination + 1}
-                  </span>
-
-                  <button type='button'
-                    disabled={indexEpisodesPagination === howManyPagesPagination ? true : false}
-                    onClick={() => {
-                      if (indexEpisodesPagination === howManyPagesPagination) {
-                        setIndexEpisodePagination(0)
-                      } else {
-                        setIndexEpisodePagination(indexEpisodesPagination + 1)
-                      }
-                    }}>
-                    <AngleRightSolidSvg />
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-
-          {indexPageInfo === 1 && (
-            <div className='cast'>
-
-              <h1>Main Cast</h1>
-
-              {mainCastCharacters.map((item: any, key: any) => (
-                <CharacterAndActor data={item} key={key} />
-              ))}
-
-              <h1>Supporting Cast</h1>
-
-              {supportingCastCharacters.map((item: any, key: any) => (
-                <CharacterAndActor data={item} key={key} />
-              ))}
-            </div>
-          )}
-
-          {indexPageInfo === 2 && (
-            <ul className='more-info'>
-              {data.data.source && (
-                <li>Source: <span>{data.data.source}</span></li>
-              )}
-              {data.data.countryOfOrigin && (
-                <li>From <span>{data.data.countryOfOrigin}</span></li>
-              )}
-              {data.data.favourites && (
-                <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
-              )}
-              {data.data.studios.edges && (
-                <li><span>Studios</span>:
-                  <ul className='studios'>
-                    {data.data.studios.edges.map((item: any) => (
-                      <li>
-                        <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
-                          {item.node.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              )}
-              {data.data.tags && (
-
-                <li><span>Tags</span>:
-                  <ul className='tags'>
-                    {data.data.tags.map((item: any) => (
-                      <li>{item.name}</li>
-                    ))}
-                  </ul>
-                </li>
-
-              )}
-            </ul>
-          )}
-        </>
-      ) : (
-        <>
-          <div className='heading'>
+      {
+        data.data.streamingEpisodes.length > 0 ? (
+          <>
 
             {indexPageInfo === 0 && (
-              <h2>Theres no Episodes to Display Here!</h2>
+              <>
+                <div className='anime-episodes' >
+
+                  {indexEpisodesPagination === 0 && (
+
+                    data.data.streamingEpisodes.slice(0, 24).map((item: any, key: any) => (
+                      <div key={key} className='episode'>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                        </a>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <h3>{item.title}</h3>
+                        </a>
+                      </div>
+                    ))
+
+                  )}
+
+                  {indexEpisodesPagination === 1 && (
+
+                    data.data.streamingEpisodes.slice(24, 24 * 2).map((item: any, key: any) => (
+                      <div key={key} className='episode'>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                        </a>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <h3>{item.title}</h3>
+                        </a>
+                      </div>
+                    ))
+
+                  )}
+                  {indexEpisodesPagination === 2 && (
+
+                    data.data.streamingEpisodes.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
+                      <div key={key} className='episode'>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                        </a>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <h3>{item.title}</h3>
+                        </a>
+                      </div>
+                    ))
+
+                  )}
+                  {indexEpisodesPagination === 3 && (
+
+                    data.data.streamingEpisodes.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
+                      <div key={key} className='episode'>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                        </a>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <h3>{item.title}</h3>
+                        </a>
+                      </div>
+                    ))
+
+                  )}
+                  {indexEpisodesPagination === 4 && (
+
+                    data.data.streamingEpisodes.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
+                      <div key={key} className='episode'>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                        </a>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <h3>{item.title}</h3>
+                        </a>
+                      </div>
+                    ))
+
+                  )}
+                  {indexEpisodesPagination === 5 && (
+
+                    data.data.streamingEpisodes.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
+                      <div key={key} className='episode'>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                        </a>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <h3>{item.title}</h3>
+                        </a>
+                      </div>
+                    ))
+
+                  )}
+                  {indexEpisodesPagination === 6 && (
+
+                    data.data.streamingEpisodes.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
+                      <div key={key} className='episode'>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
+                        </a>
+                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
+                          <h3>{item.title}</h3>
+                        </a>
+                      </div>
+                    ))
+
+                  )}
+
+                </div>
+
+                {data.data.streamingEpisodes.length > 24 && (
+                  <div className='pagination-buttons'>
+                    <button type='button'
+                      disabled={indexEpisodesPagination === 0 ? true : false}
+                      onClick={() => {
+                        if (indexEpisodesPagination === 0) {
+                          setIndexEpisodePagination(0)
+                        } else {
+                          setIndexEpisodePagination(indexEpisodesPagination - 1)
+                        }
+                      }}>
+                      <AngleLeftSolidSvg />
+                    </button>
+
+                    <span>
+                      {indexEpisodesPagination + 1}
+                    </span>
+
+                    <button type='button'
+                      disabled={indexEpisodesPagination === howManyPagesPagination ? true : false}
+                      onClick={() => {
+                        if (indexEpisodesPagination === howManyPagesPagination) {
+                          setIndexEpisodePagination(0)
+                        } else {
+                          setIndexEpisodePagination(indexEpisodesPagination + 1)
+                        }
+                      }}>
+                      <AngleRightSolidSvg />
+                    </button>
+                  </div>
+                )}
+              </>
             )}
 
+            {indexPageInfo === 1 && (
+              <div className='cast'>
+
+                <h1>Main Cast</h1>
+
+                {mainCastCharacters.map((item: any, key: any) => (
+                  <CharacterAndActor data={item} key={key} />
+                ))}
+
+                <h1>Supporting Cast</h1>
+
+                {supportingCastCharacters.map((item: any, key: any) => (
+                  <CharacterAndActor data={item} key={key} />
+                ))}
+              </div>
+            )}
+
+            {indexPageInfo === 2 && (
+              <ul className='more-info'>
+                {data.data.source && (
+                  <li>Source: <span>{data.data.source}</span></li>
+                )}
+                {data.data.countryOfOrigin && (
+                  <li>From <span>{data.data.countryOfOrigin}</span></li>
+                )}
+                {data.data.favourites && (
+                  <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
+                )}
+                {data.data.studios.edges && (
+                  <li><span>Studios</span>:
+                    <ul className='studios'>
+                      {data.data.studios.edges.map((item: any) => (
+                        <li>
+                          <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
+                            {item.node.name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
+                {data.data.tags && (
+
+                  <li><span>Tags</span>:
+                    <ul className='tags'>
+                      {data.data.tags.map((item: any) => (
+                        <li>{item.name}</li>
+                      ))}
+                    </ul>
+                  </li>
+
+                )}
+              </ul>
+            )}
+          </>
+        ) : (
+          <>
+            <div className='heading'>
+
+              {indexPageInfo === 0 && (
+                <h2>Theres no Episodes to Display Here!</h2>
+              )}
+
+
+            </div>
+            {indexPageInfo === 1 && (
+              <div className='cast'>
+                {data.data.characters.edges.length > 0 ? (
+                  <>
+                    <h1>Main Cast</h1>
+
+                    {mainCastCharacters.map((item: any, key: any) => (
+                      <CharacterAndActor data={item} key={key} />
+                    ))}
+
+                    <h1>Supporting Cast</h1>
+
+                    {supportingCastCharacters.map((item: any, key: any) => (
+                      <CharacterAndActor data={item} key={key} />
+                    ))}
+                  </>
+                ) : (
+                  <h2>Theres no info about the cast.</h2>
+                )}
+              </div>
+            )}
+
+            {indexPageInfo === 2 && (
+              <ul className='more-info'>
+                {data.data.source && (
+                  <li>Source: <span>{data.data.source}</span></li>
+                )}
+                {data.data.countryOfOrigin && (
+                  <li>From <span>{data.data.countryOfOrigin}</span></li>
+                )}
+                {data.data.favourites && (
+                  <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
+                )}
+                {data.data.studios.edges && (
+                  <li><span>Studios</span>:
+                    <ul className='studios'>
+                      {data.data.studios.edges.map((item: any) => (
+                        <li>
+                          <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
+                            {item.node.name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
+                {data.data.tags && (
+
+                  <li><span>Tags</span>:
+                    <ul className='tags'>
+                      {data.data.tags.map((item: any) => (
+                        <li><Link to={`/genre/${item.name}`}>{item.name}</Link></li>
+                      ))}
+                    </ul>
+                  </li>
+
+                )}
+              </ul>
+            )}
+          </>
+        )
+      }
+
+      {
+        data.data.relations.nodes.length > 0 && (
+          <div className='from-same-franchise'>
+
+            <h2>From Same Franchise</h2>
+
+            <ul>
+              {data.data.relations.nodes.map((item: any) => (
+                <li>
+                  <AnimesReleasingThisWeek data={item} />
+                </li>
+              ))}
+            </ul>
 
           </div>
-          {indexPageInfo === 1 && (
-            <div className='cast'>
+        )
+      }
 
-              <h1>Main Cast</h1>
+      {
+        data.data.recommendations.edges.length > 0 && (
+          <div className='similar-animes'>
+            <h2>Similar to <span>{data.data.title.romaji}</span></h2>
 
-              {mainCastCharacters.map((item: any, key: any) => (
-                <CharacterAndActor data={item} key={key} />
+            <ul>
+              {data.data.recommendations.edges.slice(0, 8).map((item: any, key: any) => (
+                <li><AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} /></li>
               ))}
-
-              <h1>Supporting Cast</h1>
-
-              {supportingCastCharacters.map((item: any, key: any) => (
-                <CharacterAndActor data={item} key={key} />
-              ))}
-            </div>
-          )}
-
-          {indexPageInfo === 2 && (
-            <ul className='more-info'>
-              {data.data.source && (
-                <li>Source: <span>{data.data.source}</span></li>
-              )}
-              {data.data.countryOfOrigin && (
-                <li>From <span>{data.data.countryOfOrigin}</span></li>
-              )}
-              {data.data.favourites && (
-                <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
-              )}
-              {data.data.studios.edges && (
-                <li><span>Studios</span>:
-                  <ul className='studios'>
-                    {data.data.studios.edges.map((item: any) => (
-                      <li>
-                        <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
-                          {item.node.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              )}
-              {data.data.tags && (
-
-                <li><span>Tags</span>:
-                  <ul className='tags'>
-                    {data.data.tags.map((item: any) => (
-                      <li><Link to={`/genre/${item.name}`}>{item.name}</Link></li>
-                    ))}
-                  </ul>
-                </li>
-
-              )}
             </ul>
-          )}
-        </>
-      )}
-
-      {data.data.relations.nodes.length > 0 && (
-        <div className='from-same-franchise'>
-
-          <h2>From Same Franchise</h2>
-
-          <ul>
-            {data.data.relations.nodes.map((item: any) => (
-              <li>
-                <AnimesReleasingThisWeek data={item} />
-              </li>
-            ))}
-          </ul>
-
-        </div>
-      )}
-
-      {data.data.recommendations.edges.length > 0 && (
-        <div className='similar-animes'>
-          <h2>Similar to <span>{data.data.title.romaji}</span></h2>
-
-          <ul>
-            {data.data.recommendations.edges.slice(0, 8).map((item: any, key: any) => (
-              <li><AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} /></li>
-            ))}
-          </ul>
-        </div>
-      )}
+          </div>
+        )
+      }
 
     </C.Container >
   )

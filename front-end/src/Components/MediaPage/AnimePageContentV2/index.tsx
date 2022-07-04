@@ -241,7 +241,7 @@ export default function AnimePageContentV2(data: any) {
 
         </div>
 
-        <p>
+        <div>
           {data.data.synopsis.length >= 420 ? (
             moreDetails === false ? (
               <p>
@@ -257,7 +257,7 @@ export default function AnimePageContentV2(data: any) {
           ) : (
             <p>{data.data.synopsis}</p>
           )}
-        </p>
+        </div>
       </div>
 
       <div className='heading'>

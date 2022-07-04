@@ -425,7 +425,7 @@ export default {
                                         romaji
                                         native
                                     }
-                                    description(asHtml: false)
+                                    description(asHtml: true)
                                     status
                                     relations{
                                         nodes{

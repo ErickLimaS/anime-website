@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import * as C from './styles'
+import ReactHtmlParser from 'react-html-parser'
 import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
 import { ReactComponent as DotSvg } from '../../../imgs/svg/dot.svg'
@@ -180,7 +181,7 @@ export default function MoviePageContent(data: any) {
 
         </div>
 
-        <p>{data.data.description}</p>
+        <div className='description'>{ReactHtmlParser(data.data.description)}</div>
 
       </div>
 

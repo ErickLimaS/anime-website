@@ -134,6 +134,8 @@ export const Container = styled.div<Props>`
         }
         
         p{
+            margin-top: 2rem;
+            
             font-size: 1.6rem;
             font-weight: 400;
 
