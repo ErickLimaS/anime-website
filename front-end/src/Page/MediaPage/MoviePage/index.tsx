@@ -25,7 +25,7 @@ export default function MoviePage() {
 
       setLoading(true)
 
-      const data = await API.getInfoFromThisMedia(id, type ,format);
+      const data = await API.getInfoFromThisMedia(id, type, format);
       setAnimeInfo(data)
       console.log(data)
 
@@ -38,21 +38,32 @@ export default function MoviePage() {
 
   }, [id])
 
-  console.log(animeInfo)
-
   return (
-    <C.Container>
+    <C.Container loading={loading}>
 
-        <AsideNavLinks />
+      <AsideNavLinks />
 
       <div className={loading === true ? 'skeleton' : 'main'}>
+
+        <div>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+
+        </div>
+
+        <div>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+        </div>
 
         {loading === false && (
           <>
             <MoviePageContent data={animeInfo} />
 
             <AsideInfo data={animeInfo} />
-            
+
           </>
         )}
 

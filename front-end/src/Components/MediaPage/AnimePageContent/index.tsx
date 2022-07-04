@@ -512,7 +512,7 @@ export default function AnimePageContent(data: any) {
       )
       }
 
-      {data.data.recommendations.edges && (
+      {data.data.recommendations.edges.length > 0 && (
         <div className='similar-animes'>
           <h2>Similar to <span>{data.data.title.romaji}</span></h2>
 

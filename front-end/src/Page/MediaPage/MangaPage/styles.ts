@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface Props {
+    loading: boolean;
+}
+
+export const Container = styled.div<Props>`
 
     display: flex;
     flex-direction: row;
@@ -39,7 +43,99 @@ export const Container = styled.div`
     background-color: #fafafa;
 
     div.skeleton{
-        background-color: #c0c0c0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        width: 80vw;
+        height: 100vh;
+        margin: 0 2rem;
+
+        div:first-child{
+            
+            display: flex;
+            flex-direction: column;
+
+            span.skeleton{
+                display: ${props => props.loading === true ? 'block' : 'none'};
+
+                :first-child{
+                    width: 40vw;
+                    height: 20vh;
+
+                    @media(max-width: 1310px){
+                        width: 50vw;
+                        height: 20vh;
+                    }
+                }
+
+                border-radius: 4px;
+
+                width: 55vw;
+                height: 50vh;
+                
+                @media(max-width: 1310px){
+                    width: 75vw;
+                    height: 50vh;
+                }
+                @media(max-width: 620px){
+                    width: 80vw;
+                    height: 50vh;
+                }
+
+                margin: 1rem 0;
+
+                animation: loading 1s linear infinite alternate;
+
+                @keyframes loading{
+
+                    0%{
+
+                        background-color: #c0c0c0;
+                    }
+                    100%{
+                        background-color: #999999;
+                    }
+
+                }
+            }
+        }
+
+        div:last-child{
+            
+            display: flex;
+            flex-direction: column;
+
+            @media(max-width: 1310px){
+                display: none;
+            }
+
+            span.skeleton{
+                display: ${props => props.loading === true ? 'block' : 'none'};
+
+                border-radius: 4px;
+
+                width: 20vw;
+                height: 60vh;
+
+                margin: 1rem 0;
+
+                animation: loading 1s linear infinite alternate;
+
+                @keyframes loading{
+
+                    0%{
+
+                        background-color: #c0c0c0;
+                    }
+                    100%{
+                        background-color: #999999;
+                    }
+
+                }
+            }
+        }
+        
     }
 
     /* >div:last-child{

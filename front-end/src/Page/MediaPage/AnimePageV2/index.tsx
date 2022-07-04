@@ -40,19 +40,31 @@ export default function AnimePageV2() {
   }, [id])
 
   return (
-    <C.Container>
+    <C.Container loading={loading}>
 
-        <AsideNavLinks />
+      <AsideNavLinks />
 
       <div className={loading === true ? 'skeleton' : 'main'}>
 
+        <div>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+        </div>
+
+        <div>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+        </div>
+        
         {loading === false && (
           <>
 
             <AnimePageContentV2 data={animeInfo} />
 
             <AsideInfoV2 data={animeInfo} />
-            
+
           </>
         )}
 

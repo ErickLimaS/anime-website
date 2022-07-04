@@ -37,22 +37,32 @@ export default function AnimePage() {
 
   }, [id])
 
-  console.log(animeInfo)
 
   return (
-    <C.Container>
+    <C.Container loading={loading}>
 
-        <AsideNavLinks />
-
+      <AsideNavLinks />
 
       <div className={loading === true ? 'skeleton' : 'main'}>
+
+        <div>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+        </div>
+
+        <div>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+          <span className={loading === true ? 'skeleton' : ''}></span>
+        </div>
 
         {loading === false && (
           <>
             <AnimePageContent data={animeInfo} />
 
             <AsideInfo data={animeInfo} />
-            
+
           </>
         )}
 

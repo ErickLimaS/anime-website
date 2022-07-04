@@ -94,11 +94,15 @@ export default function AsideInfo(data: any) {
 
               {(data.data.format === 'MOVIE' && (
 
-                <li><WatchSvg /> {data.data.duration} Minutes Long </li>
-
+                data.data.duration && (
+                  <li><WatchSvg /> {data.data.duration} Minutes Long </li>
+                )
+                
               )) || (data.data.type === 'ANIME' && (
 
-                <li><WatchSvg />  {data.data.duration} Minutes Long Each Episode</li>
+                data.data.duration && (
+                  <li><WatchSvg />  {data.data.duration} Minutes Long Each Episode</li>
+                )
 
               ))}
 
