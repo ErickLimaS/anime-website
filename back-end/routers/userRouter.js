@@ -177,4 +177,50 @@ userRouter.post('/remove-media', expressAsyncHandler(async (req, res) => {
 
 }))
 
+//UPDATE USER PROFILE
+userRouter.put('/update-user-profile', expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.body.id)
+
+    if (!user) {
+        return res.status(404).send(`User Don't Exist`)
+    }
+
+    try {
+
+        if (req.body.name !== '') {
+
+            user.name = req.body.name
+
+        }
+        if (req.body.email !== '') {
+
+            user.email = req.body.email
+
+        }
+        if (req.body.password !== '') {
+
+            user.password = await bcrypt(req.body.password, 10)
+
+        }
+
+        user.save()
+
+        return res.status(200).send({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            mediaAdded: user.mediaAdded
+        })
+
+    }
+    catch (error) {
+
+        return res.status(500).send(`${error}`)
+
+    }
+
+
+}))
+
 export default userRouter;

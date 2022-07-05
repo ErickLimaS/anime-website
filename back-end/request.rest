@@ -47,3 +47,15 @@ Content-Type: application/json
         "id": 1231232191
     }
 }
+
+###
+
+PUT http://localhost:9000/users/update-user-profile
+Content-Type: application/json
+
+{
+    "id": "0",
+    "name": "Erick",
+    "email": "",
+    "password": ""
+}
