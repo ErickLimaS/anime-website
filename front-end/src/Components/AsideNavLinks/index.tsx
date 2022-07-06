@@ -18,6 +18,7 @@ import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bra
 import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fill.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser, logoutUser } from '../../redux/actions/userActions'
+import logo from '../../imgs/logo.png'
 
 export default function AsideNavLinks(data: any) {
 
@@ -51,6 +52,8 @@ export default function AsideNavLinks(data: any) {
 
   return (
     <C.Container data={data.data} format={format} genre={genre}>
+
+      <a href='/'><img src={logo} alt='AniProject Logo' id='logo'></img></a>
 
       <h3>Category</h3>
 
@@ -94,7 +97,7 @@ export default function AsideNavLinks(data: any) {
                     <h2>{userName?.slice(0, 7)}</h2>
                   </div>
                   <div>
-                    <Link to={`/settings`}><SettingsSvg /></Link>
+                    <Link to={`/settings`}><SettingsSvg id='engine-svg'/></Link>
                   </div>
                 </div>
               </li>

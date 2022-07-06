@@ -11,7 +11,6 @@ export const Container = styled.div<ContainerProps>`
     display: flex;
     flex-direction: row;
 
-
     @media(max-width: 1080px){
         flex-wrap: wrap;
     }
@@ -57,15 +56,18 @@ export const Container = styled.div<ContainerProps>`
         border-left: 2px solid #e6e6e6;
         border-right: 2px solid #e6e6e6;
 
-        padding: 1rem 3rem 3rem 3rem;
+        padding: 3rem 3rem 3rem 3rem;
 
         @media(max-width: 1080px){
+
+            padding: 3rem 2rem!important;
+
             width: 70%;
             padding: 0 1rem ;
             border-right: none;
         }
 
-        @media(max-width: 620px){
+        @media(max-width: 768px){
             width: 95%;
             border-left: none;
         }
@@ -74,7 +76,7 @@ export const Container = styled.div<ContainerProps>`
 
             display: none;
             
-            @media(max-width: 620px){
+            @media(max-width: 768px){
                 display: block;
 
                 padding: 1rem 0 2rem 0;
@@ -182,7 +184,7 @@ export const Container = styled.div<ContainerProps>`
                 justify-content: space-between;
                 align-items: center;
 
-                @media(max-width: 620px){
+                @media(max-width: 768px){
                     display: -webkit-box;
                     justify-content: center;
 
@@ -195,7 +197,7 @@ export const Container = styled.div<ContainerProps>`
                 display: flex;
                 flex-direction: row;
 
-                @media(max-width: 620px){
+                @media(max-width: 768px){
 
                     overflow-y: auto;
                 }
@@ -217,7 +219,7 @@ export const Container = styled.div<ContainerProps>`
     aside{
         width: 25%;
 
-        padding: 0 2rem;
+        padding: 2rem;
 
         display: flex;
         flex-direction: column;

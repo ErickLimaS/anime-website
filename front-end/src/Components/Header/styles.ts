@@ -10,14 +10,15 @@ export const Container = styled.header<ContainerProps>`
 
     background-color: #fafafa;
 
-    display: flex;
+    display: none;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
 
-    @media(max-width: 620px){
+    @media(max-width: 768px){
         display: flex;
+        align-items: center;
     }
     
     padding: 0 1rem;
@@ -29,8 +30,18 @@ export const Container = styled.header<ContainerProps>`
     }
 
     div.logo{
-        
-        font-size: 2.6rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        a{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+                img{
+                    width: 30vw;
+                }
+        }
 
     }
 
@@ -38,9 +49,6 @@ export const Container = styled.header<ContainerProps>`
 
         display: none;
 
-        @media(max-width: 1080px) and (min-width: 620px){
-            display: block;
-        }
 
     }
 
@@ -50,7 +58,7 @@ export const Container = styled.header<ContainerProps>`
 
         display: none;
 
-        @media(max-width: 620px){
+        @media(max-width: 768px){
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -79,7 +87,7 @@ export const Container = styled.header<ContainerProps>`
 
                     display: flex;
                     flex-direction: row;
-                    justify-content: flex-start;
+                    justify-content: center;
                     align-items: center;
 
                     width: 98%;
@@ -113,13 +121,12 @@ export const Container = styled.header<ContainerProps>`
                         }
                     }
 
-
                     div{
                         width: min-content;
                     }
                     img{
-                        width: 4rem;
-                        height: 4rem;
+                        width: 5rem;
+                        height: 5rem;
 
                         margin-right: 1rem;
                         
@@ -133,7 +140,7 @@ export const Container = styled.header<ContainerProps>`
                     }
 
                     h2{
-                        font-size: 2rem;
+                        font-size: 2.4rem;
                         font-weight: 400;
 
                         color: #333333;
@@ -177,7 +184,7 @@ export const Container = styled.header<ContainerProps>`
 
             padding: 2rem 0;
 
-            @media(max-width: 620px){
+            @media(max-width: 768px){
                 display: ${props => props.display === true ? 'flex' : 'none'};
                 flex-direction: column;
                 align-items: center;

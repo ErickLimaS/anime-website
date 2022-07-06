@@ -8,7 +8,6 @@ interface Props {
 
 export const Container = styled.nav<Props>`
 
-    
         position: sticky;
         top: 0;
         
@@ -23,7 +22,7 @@ export const Container = styled.nav<Props>`
             padding-left: 2rem;
         }
 
-        @media(max-width: 620px){
+        @media(max-width: 768px){
             display: none;
         }
 
@@ -34,6 +33,26 @@ export const Container = styled.nav<Props>`
         font-size: 1.4rem;
 
         padding-left: 4rem;
+
+        img#logo{
+            margin: 1rem 0;
+
+            position: relative;
+            left: -10%;
+            width: 25vh;
+            height: auto;
+
+            border: 1px solid transparent;
+            border-radius: 4px;
+
+            @media(max-width: 1080px){
+                width: 20vw;
+            }
+
+            :hover{
+                border: 1px solid #ff1a75;
+            }
+        }
 
         h3{
             margin: 1rem 0;
@@ -222,29 +241,37 @@ export const Container = styled.nav<Props>`
 
                 display: flex;
                 flex-direction: row;
-                justify-content: space-between;
+                justify-content: space-around;
                 align-items: center;
 
+                border: 2px solid transparent;
+
                 border-bottom: 2px solid #c0c0c0;
+                border-radius: 4px;
 
                 >div{
-                    width: 33%;
+
+                    width: inherit;
+                    height: inherit;
 
                     display: flex;
-                    justify-content: flex-start;
+                    justify-content: space-between;
                     align-items: center;
 
                     a {
+                        width: 4rem;
+                        height: auto;
                         
                         display: flex;
                         justify-content: center;
                         align-items: center;
 
-                        svg{
+                        svg#engine-svg{
                             cursor: pointer;
 
                             fill: #757474;
-                            width: 40%;
+                            width: 55%;
+                            height: 55%;
 
                             :hover{
                                 fill: #ff1a75 ;
@@ -262,22 +289,23 @@ export const Container = styled.nav<Props>`
                     justify-content: center;
                     align-items: center;
 
-                    border: 2px solid transparent;
+                    border: 1px solid transparent;
                     border-radius: 50%;
                 }
 
                 h2{
-                    font-size: 1.6rem;
-                    font-weight: 400;
+                    font-size: 1.8rem;
+                    font-weight: 600;
 
-                    
                     color: #333333;
                 }
 
                 :hover{
 
+                    border: 2px solid #ff1a75;
+
                     img{
-                        border: 2px solid #ff1a75;
+                        border: 1px solid #ff1a75;
                     }
 
                 }

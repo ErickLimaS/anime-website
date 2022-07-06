@@ -20,6 +20,7 @@ import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fil
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../../redux/actions/userActions'
+import logo from '../../imgs/logo.png'
 
 
 export default function Header() {
@@ -43,7 +44,7 @@ export default function Header() {
         <C.Container display={menuMobile}>
 
             <div className='logo'>
-                <a href='/'>Anime Website</a>
+                <a href='/'><img src={logo} alt='AniProject Logo' id='logo'></img></a>
             </div>
 
             <div className='search-header'>
@@ -65,7 +66,7 @@ export default function Header() {
                                 <li className='user-li'>
                                     <div className='user'>
                                         <div>
-                                            <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+                                            <img src={userInfo.avatarImg} alt='User Avatar'></img>
                                         </div>
                                         <div>
                                             <h2>{userInfo.name}</h2>
