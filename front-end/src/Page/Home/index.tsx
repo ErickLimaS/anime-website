@@ -346,7 +346,6 @@ export default function Home() {
 
         </div>
       </aside>
-
     </C.Container >
 
   )

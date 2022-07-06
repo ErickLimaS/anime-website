@@ -90,7 +90,7 @@ export const updateUserInfoReducer = (state = {}, action: any) => {
         case USER_PROFILE_UPDATE_REQUEST:
             return { loading: true }
         case USER_PROFILE_UPDATE_SUCCESS:
-            return { loading: false, userInfo: action.payload }
+            return { loading: false, error: false }
         case USER_PROFILE_UPDATE_FAIL:
             return { loading: false, error: action.payload }
         default:
@@ -107,7 +107,7 @@ export const updateAvatarImgReducer = (state = {}, action: any) => {
         case UPDATE_USER_AVATAR_IMAGE_REQUEST:
             return { loading: true }
         case UPDATE_USER_AVATAR_IMAGE_SUCCESS:
-            return { loading: false, userInfo: action.payload }
+            return { loading: false, error: false }
         case UPDATE_USER_AVATAR_IMAGE_FAIL:
             return { loading: false, error: action.payload }
         default:
@@ -124,7 +124,7 @@ export const removeMediaFromUserReducer = (state = {}, action: any) => {
         case DELETE_USER_MEDIA_REQUEST:
             return { loading: true }
         case DELETE_USER_MEDIA_SUCCESS:
-            return { loading: false, userInfo: action.payload }
+            return { loading: false, error: false }
         case DELETE_USER_MEDIA_FAIL:
             return { loading: false, error: action.payload }
         default:

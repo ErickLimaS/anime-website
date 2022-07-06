@@ -1,14 +1,26 @@
 import * as C from './styles'
-import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect,  useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import AsideNavLinks from '../../../Components/AsideNavLinks'
+import Swal from 'sweetalert2'
+import { removeDataFromUserMedia, updateAvatarImg, updateUserInfo } from '../../../redux/actions/userActions'
 
 
 export default function SettingsUser() {
 
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+
+  const updateUserInfoRedux = useSelector((state: any) => state.updateUserInfo)
+  const errorUpdateUser = updateUserInfoRedux.error
+
+  const updateAvatarImgRedux = useSelector((state: any) => state.updateAvatarImg)
+  const  errorUpdateAvatarImg = updateAvatarImgRedux.error
+
+  const deleteUserMediaRedux = useSelector((state: any) => state.deleteUserMedia)
+  const  errorDeleteUserMedia  = deleteUserMediaRedux.error
+
 
   const [tabIndex, setTabIndex] = useState<number>(0)
 
@@ -26,6 +38,8 @@ export default function SettingsUser() {
 
   const navigate = useNavigate()
 
+  const dispatch: any = useDispatch()
+
   useEffect(() => {
 
     document.title = 'Settings'
@@ -38,19 +52,124 @@ export default function SettingsUser() {
 
   }, [navigate, userInfo])
 
-  const setNewAvatarImg = (imgUrl: string) => {
+  const setNewAvatarImg = () => {
+
+    // dispatch(updateAvatarImg(userInfo.id, imgUrl))
+    dispatch(updateAvatarImg(userInfo.id, 'https://pm1.narvii.com/6445/d9dff8ed0332a39b97195b55fa6f597c82d9c1b6_hq.jpg')) //test
 
   }
 
+  //form submit
   const handleSubmit = (e: React.FormEvent) => {
-
     e.preventDefault()
 
-    //make submit
+    if (currentPasswordRef.current.value.length >= 8) {
+
+      if (newPasswordRef.current.value === confirmNewPassowrdRef.current.value) {
+
+        dispatch(updateUserInfo(userInfo.id, nameRef.current.value, emailRef.current.value, currentPasswordRef.current.value, newPasswordRef.current.value))
+
+      }
+      else {
+
+        Swal.fire({
+
+          icon: 'warning',
+          title: 'Error',
+          titleText: `New Password Don't Match with Confirm New Password!`,
+          text: 'Try Typing Again!'
+
+        })
+
+      }
+
+    }
+    else {
+
+      Swal.fire({
+
+        icon: 'error',
+        title: 'Error',
+        titleText: `Current Password is Not Correct!`,
+        text: 'Try Typing Again!'
+
+      })
+
+    }
 
   }
 
+  //removes all data from book
   const handleEraseData = () => {
+
+    dispatch(removeDataFromUserMedia(userInfo.id))
+
+  }
+
+  //error mensages
+  if (errorUpdateUser || errorUpdateAvatarImg || errorDeleteUserMedia) {
+
+    switch (errorUpdateUser || errorUpdateAvatarImg || errorDeleteUserMedia) {
+      case 400:
+        Swal.fire({
+
+          icon: 'info',
+          title: 'Error',
+          titleText: `${errorUpdateUser || errorUpdateAvatarImg || errorDeleteUserMedia}: Current Password is Incorrect!`,
+          text: 'Try Typing Again!',
+          allowOutsideClick: true
+        })
+        break
+      case 403:
+        Swal.fire({
+
+          icon: 'info',
+          title: 'Error',
+          titleText: `${errorUpdateUser || errorUpdateAvatarImg || errorDeleteUserMedia}: Before Doing It!`,
+          text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
+          allowOutsideClick: false,
+          footer: 'https://cors-anywhere.herokuapp.com/'
+        })
+        break
+      default:
+        Swal.fire({
+
+          icon: 'error',
+          title: 'Error',
+          titleText: `${errorUpdateUser || errorUpdateAvatarImg || errorDeleteUserMedia}: Something Happen!`,
+          text: "We Don't Know What Happen. But Try Again!"
+
+        })
+        break
+    }
+
+  }
+
+  //success mensages
+  if (errorUpdateUser === false || errorUpdateAvatarImg === false || errorDeleteUserMedia === false) {
+
+    switch (errorUpdateUser || errorUpdateAvatarImg || errorDeleteUserMedia) {
+      case 200:
+        Swal.fire({
+
+          icon: 'success',
+          title: 'Success',
+          titleText: `Success`,
+          text: "Everything Went Fine!",
+          allowOutsideClick: true
+        })
+        break
+      default:
+        Swal.fire({
+
+          icon: 'success',
+          title: 'Success',
+          titleText: `Success`,
+          text: "Everything Went Fine!"
+
+        })
+        break
+    }
 
   }
 
@@ -64,9 +183,9 @@ export default function SettingsUser() {
         <div className='menu-profile'>
 
           <ul>
-            <li onClick={() => setTabIndex(0)}>User Profile</li>
-            <li onClick={() => setTabIndex(1)}>User ID</li>
-            <li onClick={() => setTabIndex(2)}>Bookmark Data</li>
+            <li onClick={() => setTabIndex(0)} id='tab-0'>User Profile</li>
+            <li onClick={() => setTabIndex(1)} id='tab-1'>User ID</li>
+            <li onClick={() => setTabIndex(2)} id='tab-2'>Bookmark Data</li>
           </ul>
 
         </div>
@@ -79,7 +198,7 @@ export default function SettingsUser() {
           )}
 
           <div className='user-avatar'>
-            <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar' onClick={() => setHandleAvatarImgPanel(!handleAvatarImgPanel)}></img>
+            <img src={userInfo.avatarImg} alt='User Avatar' onClick={() => setHandleAvatarImgPanel(!handleAvatarImgPanel)}></img>
             <div className='middle'>
               <span onClick={() => setHandleAvatarImgPanel(!handleAvatarImgPanel)}>Change Avatar</span>
             </div>
@@ -93,15 +212,15 @@ export default function SettingsUser() {
 
             <div className='imgs'>
 
-              <div onClick={() => setNewAvatarImg}>
+              <div onClick={() => setNewAvatarImg()}>
                 <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
                 <small>Name</small>
               </div>
-              <div onClick={() => setNewAvatarImg}>
-                <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+              <div onClick={() => setNewAvatarImg()}>
+                <img src='https://pm1.narvii.com/6445/d9dff8ed0332a39b97195b55fa6f597c82d9c1b6_hq.jpg' alt='User Avatar'></img>
                 <small>Name</small>
               </div>
-              <div onClick={() => setNewAvatarImg}>
+              <div onClick={() => setNewAvatarImg()}>
                 <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
                 <small>Name</small>
               </div>

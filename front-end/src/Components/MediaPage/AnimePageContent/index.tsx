@@ -17,8 +17,6 @@ import { Link } from 'react-router-dom'
 
 export default function AnimePageContent(data: any) {
 
-  console.log(data.data)
-
   const [mainCastCharacters, setMainCastCharacters] = useState([])
   const [supportingCastCharacters, setSupportingCastCharacters] = useState([])
 

@@ -16,10 +16,19 @@ export const Container = styled.div<Props>`
 
     div.content{
 
-        width: -webkit-fill-available;
+        /* width: -webkit-fill-available; */
+        width: 80%;
 
-        margin: 0 2rem;
+        @media(max-width: 768px){
+            width: -webkit-fill-available; 
+        } 
+
+        margin-right: 2rem;
         padding: 2rem 0;
+
+        @media(max-width: 620px){
+            margin: 0 2rem;
+        } 
 
         display: flex;
         flex-direction: row;
@@ -56,6 +65,24 @@ export const Container = styled.div<Props>`
         position: sticky;
         top: 5vh;
 
+        #tab-0{
+            
+            background-color: ${props => props.tabIndex === 0 ? '#ff1a75' : '#ffd0e3'};
+            color:  ${props => props.tabIndex === 0 ? '#fff' : '#444444'};
+            border-radius: 4px 4px 0 0;
+        }
+        #tab-1{
+            
+            background-color: ${props => props.tabIndex === 1 ? '#ff1a75' : '#ffd0e3'};
+            color:  ${props => props.tabIndex === 1 ? '#fff' : '#444444'};
+        }
+        #tab-2{
+            
+            background-color: ${props => props.tabIndex === 2 ? '#ff1a75' : '#ffd0e3'};
+            color:  ${props => props.tabIndex === 2 ? '#fff' : '#444444'};
+            border-radius: 0 0 4px 4px;
+        }
+        
         @media(max-width: 768px){
             
             position: initial;
@@ -260,7 +287,7 @@ export const Container = styled.div<Props>`
 
             }
 
-            opacity: 0.93;
+            opacity: 0.97;
             background-color: #444;
             border-radius: 4px;
 
@@ -445,6 +472,8 @@ export const Container = styled.div<Props>`
                 }
             }
             button{
+                cursor: pointer;
+
                 padding: 1rem;
 
                 border: 0;
@@ -453,6 +482,10 @@ export const Container = styled.div<Props>`
                 background-color: #ff1a75;
 
                 color: #fff;
+
+                :hover{
+                    opacity: 0.85;
+                }
             }
         }
     }

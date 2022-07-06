@@ -88,7 +88,7 @@ export default function AsideNavLinks(data: any) {
               <li className='user-li'>
                 <div className='user'>
                   <div>
-                    <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+                    <img src={userInfo.avatarImg} alt='User Avatar'></img>
                   </div>
                   <div>
                     <h2>{userName?.slice(0, 7)}</h2>
