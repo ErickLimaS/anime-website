@@ -1,6 +1,6 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunk from "redux-thunk";
-import { addMediaReducer, removeMediaReducer, userLoginReducer, userLogoutReducer, userRegisterReducer } from "./reducers/userReducers";
+import { addMediaReducer, removeMediaFromUserReducer, removeMediaReducer, updateAvatarImgReducer, updateUserInfoReducer, userLoginReducer, userLogoutReducer, userRegisterReducer } from "./reducers/userReducers";
 
 
 const initialState = {
@@ -16,7 +16,10 @@ const reducer = combineReducers({
     userLogin: userLoginReducer,
     userLogout: userLogoutReducer,
     addMediaToUserAccount: addMediaReducer,
-    removeMediaFromUserAccount: removeMediaReducer
+    removeMediaFromUserAccount: removeMediaReducer,
+    updateUserInfo: updateUserInfoReducer,
+    updateAvatarImg: updateAvatarImgReducer,
+    deleteUserMedia: removeMediaFromUserReducer
 })
 
 const composeEnhancer = typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
