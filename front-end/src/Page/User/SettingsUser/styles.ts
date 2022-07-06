@@ -2,7 +2,8 @@ import styled from 'styled-components'
 
 interface Props {
 
-    tabIndex: number
+    tabIndex: number,
+    handleAvatarImgPanel: boolean
 
 }
 
@@ -143,9 +144,13 @@ export const Container = styled.div<Props>`
         display: ${props => props.tabIndex === 2 ? `flex` : 'none'};
     }
 
-    .user{
-            
+    div#index-0, div#index-1, div#index-2{
+
         width: 60%;
+
+    }
+
+    .user-info{
 
         display: flex;
         flex-direction: column;
@@ -154,7 +159,7 @@ export const Container = styled.div<Props>`
 
         @media(max-width: 768px){
 
-            width: 100%;
+            width: 100%!important;
 
         }
 
@@ -232,6 +237,105 @@ export const Container = styled.div<Props>`
 
         }
 
+        .avatar-img-panel{
+
+            display: ${props => props.handleAvatarImgPanel ? 'flex' : 'none'};
+            flex-direction: column;
+            align-items: center;
+
+            position: absolute;
+
+            width: inherit;
+            height: 100vh;
+
+            @media(max-width: 380px){
+
+                width: 70%!important;
+
+            }
+
+            @media(max-width: 768px){
+
+                width: 90%!important;
+
+            }
+
+            opacity: 0.93;
+            background-color: #444;
+            border-radius: 4px;
+
+            button{
+                cursor: pointer;
+
+                margin: 2rem 0;
+                padding: 1rem;
+
+                background-color: #ff1a75;
+                border: 0;
+                border-radius: 4px;
+                
+                font-size: 1.8rem;
+                color: #fafafa;
+
+                :hover{
+                    opacity: 0.9;
+                }
+            }
+
+            .imgs{
+                display: grid;
+                grid-template-columns: auto auto auto;
+                justify-content: center;
+                gap: 1rem;
+
+                @media(max-width: 620px){
+                    grid-template-columns: auto auto;
+                }
+
+                >div{
+                    cursor: pointer;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    
+                    border: 2px solid transparent;
+
+                    img{
+                        margin: 1rem;
+
+                        width: 20rem;
+                        height: auto;
+
+                        border-radius: 50%;
+
+                        @media(max-width: 1120px){
+                            width: 15rem;
+                        }
+                        @media(max-width: 880px){
+                            width: 12rem;
+                        }
+                        @media(max-width: 620px){
+                            width: 12rem;
+                        }
+                    }
+                    small{
+                        font-size: 1.4rem;
+                        color: #fafafa;
+                    }
+
+                    :hover{
+                        border: 2px solid #ff1a75;
+                        border-radius: 4px;
+                    }
+                }
+
+                
+
+            }
+
+        }
+
         form{
 
             width: 100%;
@@ -286,5 +390,115 @@ export const Container = styled.div<Props>`
 
     }
 
+    #index-1{
+
+        @media(max-width: 768px){
+
+            margin-top: 2rem;
+
+            padding: 2rem;
+
+            width: 80%!important;
+
+        }
+
+        justify-content: space-evenly;
+
+        border: 2px solid #ffd0e3;
+        border-radius: 4px;
+
+        h1{
+            font-size: 4rem;
+        }
+
+        >div{
+            width: min-content;
+
+            padding: 1rem 2rem;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-wrap: wrap;
+
+            background-color: #ffd0e3;
+            border-radius: 4px;
+
+            *{
+                margin: 1rem 0;
+            }
+
+            @media(max-width: 620px){
+                padding: 1rem;
+            }
+
+            label{
+                font-size: 2.6rem;
+                color: #111;
+            }
+            h2{
+                font-size: 2.2rem;
+                color: #222222;
+
+                @media(max-width: 620px){
+                    font-size: 1.6rem;
+                }
+            }
+            button{
+                padding: 1rem;
+
+                border: 0;
+                border-radius: 4px;
+
+                background-color: #ff1a75;
+
+                color: #fff;
+            }
+        }
+    }
+
+    #index-2{
+
+        @media(max-width: 768px){
+
+            margin-top: 2rem;
+
+            padding: 2rem;
+
+            width: 80%!important;
+
+        }
+
+        justify-content: space-evenly;
+
+        border: 2px solid #ffd0e3;
+        border-radius: 4px;
+
+        h1{
+            font-size: 4rem;
+        }
+        h2{
+            font-size: 2rem;
+            font-weight: 400;
+        }
+        button{
+            cursor: pointer;
+
+            background-color: #ff3333;
+
+            padding: 1rem 2rem;
+
+            border: 1px solid #ff1a1a;
+            border-radius: 4px;
+
+            font-size: 1.6rem;
+            color: #fff;
+
+            :hover{
+                opacity: 0.9;
+            }
+        }
+
+    }
 
 `

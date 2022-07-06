@@ -24,7 +24,7 @@ function App() {
   const { userInfo } = userLogin
 
   window.scrollTo(0, 0);
-  
+
   return (
     <BrowserRouter >
       <C.Container>
@@ -37,8 +37,8 @@ function App() {
 
           <Route path='/register' element={!userInfo ? <RegisterUser /> : <Navigate to='/' />} />
 
-          <Route path='/bookmarks' element={<BookmarkUser />} />
-          <Route path='/settings' element={<SettingsUser />} />
+          <Route path='/bookmarks' element={userInfo ? < BookmarkUser /> : <Navigate to='/' />} />
+          <Route path='/settings' element={userInfo ? <SettingsUser /> : <Navigate to='/' />} />
           <Route path='/format/:format' element={<FormatPage />} />
           <Route path='/genre/:genre' element={<GenrePage />} />
           <Route path='/anime/v2/:id' element={<AnimePageV2 />} />
@@ -46,7 +46,7 @@ function App() {
           <Route path='/movie/:id' element={<MoviePage />} />
           <Route path='/manga/:id' element={<MangaPage />} />
           <Route path='/' element={<Home />} />
-          
+
         </Routes>
 
         <Footer />

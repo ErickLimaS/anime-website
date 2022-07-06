@@ -12,14 +12,23 @@ export default function SettingsUser() {
 
   const [tabIndex, setTabIndex] = useState<number>(0)
 
+  //TAB 1
   const nameRef = React.useRef() as React.MutableRefObject<HTMLInputElement>
   const emailRef = React.useRef() as React.MutableRefObject<HTMLInputElement>
-  const passwordRef = React.useRef() as React.MutableRefObject<HTMLInputElement>
-  const confirmPassowrdRef = React.useRef() as React.MutableRefObject<HTMLInputElement>
+  const currentPasswordRef = React.useRef() as React.MutableRefObject<HTMLInputElement>
+  const newPasswordRef = React.useRef() as React.MutableRefObject<HTMLInputElement>
+  const confirmNewPassowrdRef = React.useRef() as React.MutableRefObject<HTMLInputElement>
+
+  const [handleAvatarImgPanel, setHandleAvatarImgPanel] = useState<boolean>(false)
+
+  //TAB 2
+  const [handleChangeVisibility, setHandleChangeVisibility] = useState<boolean>(false)
 
   const navigate = useNavigate()
 
   useEffect(() => {
+
+    document.title = 'Settings'
 
     if (!userInfo) {
 
@@ -29,6 +38,10 @@ export default function SettingsUser() {
 
   }, [navigate, userInfo])
 
+  const setNewAvatarImg = (imgUrl: string) => {
+
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
 
     e.preventDefault()
@@ -37,9 +50,12 @@ export default function SettingsUser() {
 
   }
 
+  const handleEraseData = () => {
+
+  }
 
   return (
-    <C.Container tabIndex={tabIndex}>
+    <C.Container tabIndex={tabIndex} handleAvatarImgPanel={handleAvatarImgPanel}>
 
       <AsideNavLinks />
 
@@ -55,17 +71,43 @@ export default function SettingsUser() {
 
         </div>
 
-        <div className='user' id='index-0'>
+        {/*TAB INDEX 0 */}
+        <div className='user-info' id='index-0'>
 
           {userInfo && (
             <h1>{userInfo.name}'s Profile</h1>
           )}
 
           <div className='user-avatar'>
-            <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar' onClick={() => console.log('')}></img>
+            <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar' onClick={() => setHandleAvatarImgPanel(!handleAvatarImgPanel)}></img>
             <div className='middle'>
-              <span>Change Avatar</span>
+              <span onClick={() => setHandleAvatarImgPanel(!handleAvatarImgPanel)}>Change Avatar</span>
             </div>
+          </div>
+
+          <div className='avatar-img-panel'>
+
+            <button type='button' onClick={() => setHandleAvatarImgPanel(!handleAvatarImgPanel)}>
+              Close Panel
+            </button>
+
+            <div className='imgs'>
+
+              <div onClick={() => setNewAvatarImg}>
+                <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+                <small>Name</small>
+              </div>
+              <div onClick={() => setNewAvatarImg}>
+                <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+                <small>Name</small>
+              </div>
+              <div onClick={() => setNewAvatarImg}>
+                <img src='https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg' alt='User Avatar'></img>
+                <small>Name</small>
+              </div>
+
+            </div>
+
           </div>
 
           <form onSubmit={(e) => handleSubmit(e)}>
@@ -81,13 +123,18 @@ export default function SettingsUser() {
             </div>
 
             <div>
-              <label htmlFor='new-password'>Change Password</label>
-              <input type='password' id='new-password' placeholder='********' ref={passwordRef}></input>
+              <label htmlFor='current-password'>Current Password <span>*</span></label>
+              <input type='password' id='current-password' placeholder='********' ref={currentPasswordRef} required></input>
+            </div>
+
+            <div>
+              <label htmlFor='new-password'>New Password</label>
+              <input type='password' id='new-password' placeholder='********' ref={newPasswordRef}></input>
             </div>
 
             <div>
               <label htmlFor='confirm-new-password'>Confirm New Password</label>
-              <input type='password' id='confirm-new-password' placeholder='********' ref={confirmPassowrdRef}></input>
+              <input type='password' id='confirm-new-password' placeholder='********' ref={confirmNewPassowrdRef}></input>
             </div>
 
             <div>
@@ -98,10 +145,46 @@ export default function SettingsUser() {
 
         </div>
 
-        <div id='index-1'></div>
-        <div id='index-2'></div>
+
+        {/*TAB INDEX 1 */}
+        <div className='user-info' id='index-1'>
+
+          <h1>This is Your ID</h1>
+
+          <div>
+            <label htmlFor='user-id'>User ID</label>
+
+            {handleChangeVisibility ? (
+              <>
+                <h2 id='user-id'>{userInfo.id}</h2>
+
+                <button type='button' onClick={() => setHandleChangeVisibility(!handleChangeVisibility)}>Hide ID</button>
+              </>
+            ) : (
+              <>
+                <h2 id='user-id'>*****************</h2>
+                <button type='button' onClick={() => setHandleChangeVisibility(!handleChangeVisibility)}>Show ID</button>
+              </>
+            )}
+
+          </div>
+
+        </div>
+
+
+        {/*TAB INDEX 2 */}
+        <div className='user-info' id='index-2'>
+
+          <h1>Bookmark Data</h1>
+
+          <h2>Erase <strong>all data</strong> you have save until now on this account?</h2>
+
+          <button type='button' onClick={() => handleEraseData()}>Yes, erase all Data!</button>
+
+        </div>
 
       </div>
+
     </C.Container>
   )
 }

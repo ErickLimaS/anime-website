@@ -186,40 +186,48 @@ userRouter.put('/update-user-profile', expressAsyncHandler(async (req, res) => {
         return res.status(404).send(`User Don't Exist`)
     }
 
+    const comparePassword = await bcrypt.compare(req.body.currentPassword, user.password)
+
+    if(!comparePassword){
+        return res.status(400).send('Wrong Current Password')
+    }
+
     try {
 
-        if (req.body.name !== '') {
+        if (comparePassword) {
 
-            user.name = req.body.name
+            if (req.body.name !== '') {
+
+                user.name = req.body.name
+
+            }
+            if (req.body.email !== '') {
+
+                user.email = req.body.email
+
+            }
+            if (req.body.newPassword !== '') {
+
+                user.password = await bcrypt.hash(req.body.newPassword, 10)
+
+            }
+
+            user.save()
+
+            return res.status(200).send({
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                mediaAdded: user.mediaAdded
+            })
 
         }
-        if (req.body.email !== '') {
-
-            user.email = req.body.email
-
-        }
-        if (req.body.password !== '') {
-
-            user.password = await bcrypt(req.body.password, 10)
-
-        }
-
-        user.save()
-
-        return res.status(200).send({
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            mediaAdded: user.mediaAdded
-        })
-
     }
     catch (error) {
 
         return res.status(500).send(`${error}`)
 
     }
-
 
 }))
 
