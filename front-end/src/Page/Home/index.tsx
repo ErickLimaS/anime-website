@@ -323,7 +323,7 @@ export default function Home() {
 
             </>
           )}
-          {userInfo && (
+          {(userInfo !== null && userInfo.mediaAdded !== null) && (
             loading === false && (
               <>
                 <div className='trending-heading'>

@@ -39,7 +39,7 @@ export default function HeadingContent(data: any) {
 
     useEffect(() => {
 
-        if (userInfo) {
+        if (userInfo !== null && userInfo.mediaAdded !== null) {
             userInfo.mediaAdded.find((item: any) => {
                 if (item.id === data.data.id) {
                     setIsAlreadyAdded(true)

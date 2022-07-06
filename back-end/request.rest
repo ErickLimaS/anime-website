@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
     "name": "test1",
-    "email":"email",
+    "email":"email@gmail",
     "password":"password"
 }
 
@@ -54,9 +54,26 @@ PUT http://localhost:9000/users/update-user-profile
 Content-Type: application/json
 
 {
-    "id": "0",
+    "id": "62c5dd7e24ba24b1258564ab",
     "name": "Erick",
     "email": "",
     "currentPassword": "",
     "newPassword": ""
+}
+
+###
+PUT http://localhost:9000/users/change-user-avatar-image
+Content-Type: application/json
+
+{
+    "id": "62c5dd7e24ba24b1258564ab",
+    "newAvatarImg": "nova url"
+}
+
+###
+PUT http://localhost:9000/users/erase-media-added-data
+Content-Type: application/json
+
+{
+    "id": "62c5dd7e24ba24b1258564ab"
 }

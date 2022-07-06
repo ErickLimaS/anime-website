@@ -22,6 +22,7 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: hashedPassword,
+            avatarImg: 'https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg', // temporary
             createdAt: new Date(),
         })
 
@@ -31,7 +32,8 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
 
             id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            avatarImg: user.avatarImg
 
         })
 
@@ -63,6 +65,7 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded
 
             })
@@ -96,6 +99,7 @@ userRouter.get('/media', expressAsyncHandler(async (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
+            avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded
 
         })
@@ -128,6 +132,7 @@ userRouter.post('/add-media', expressAsyncHandler(async (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
+            avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded
 
         })
@@ -164,6 +169,7 @@ userRouter.post('/remove-media', expressAsyncHandler(async (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
+            avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded
 
         })
@@ -188,7 +194,7 @@ userRouter.put('/update-user-profile', expressAsyncHandler(async (req, res) => {
 
     const comparePassword = await bcrypt.compare(req.body.currentPassword, user.password)
 
-    if(!comparePassword){
+    if (!comparePassword) {
         return res.status(400).send('Wrong Current Password')
     }
 
@@ -218,6 +224,7 @@ userRouter.put('/update-user-profile', expressAsyncHandler(async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded
             })
 
@@ -227,6 +234,66 @@ userRouter.put('/update-user-profile', expressAsyncHandler(async (req, res) => {
 
         return res.status(500).send(`${error}`)
 
+    }
+
+}))
+
+//CHANGE USER AVATAR IMAGE
+userRouter.put('/change-user-avatar-image', expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.body.id)
+
+    if(!user){
+        return res.status(404).send('User Not Found')
+    }
+
+    try{
+
+        user.avatarImg = req.body.newAvatarImg
+
+        user.save()
+
+        return res.status(200).send({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            avatarImg: user.avatarImg,
+            mediaAdded: user.mediaAdded
+        })
+
+    }
+    catch(error){
+        return res.status(500).send(error)
+    }
+
+}))
+
+//ERASE MEDIA DATA
+userRouter.put('/erase-media-added-data', expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.body.id)
+
+    if(!user){
+        return res.status(404).send('User Not Found')
+    }
+
+    try{
+
+       user.mediaAdded = user.mediaAdded.splice(0,0)
+
+       user.save()
+
+        return res.status(200).send({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            avatarImg: user.avatarImg,
+            mediaAdded: user.mediaAdded
+        })
+
+    }
+    catch(error){
+        return res.status(500).send(error)
     }
 
 }))
