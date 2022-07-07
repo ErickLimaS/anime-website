@@ -5,12 +5,13 @@ import AsideInfo from '../../../Components/MediaPage/AsideInfo'
 import * as C from './styles'
 import API from '../../../API/anilist'
 import MangaPageContent from '../../../Components/MediaPage/MangaPageContent'
+import AnimePageContent from '../../../Components/MediaPage/AnimePageContent'
 
-export default function NovelPage() {
+export default function TvShortPage() {
 
   const { id } = useParams();
-  const type = 'MANGA'
-  const format = 'NOVEL'
+  const type = 'ANIME'
+  const format = 'TV_SHORT'
 
   const [animeInfo, setAnimeInfo] = useState([] as any[])
   // const [animeEpisodes, setAnimeEpisodes] = useState([] as any[])
@@ -60,7 +61,7 @@ export default function NovelPage() {
         
         {loading === false && (
           <>
-            <MangaPageContent data={animeInfo} />
+            <AnimePageContent data={animeInfo} />
 
             <AsideInfo data={animeInfo} />
 

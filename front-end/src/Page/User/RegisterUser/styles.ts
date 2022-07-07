@@ -25,15 +25,21 @@ export const Container = styled.div`
                 font-size: 4rem;
             }
         }
+        
+        form{
+
+            margin: 2rem 0;
 
         }
 
-        @media(max-width: 851px){
+    }
+
+    @media(max-width: 851px){
 
         height: auto;
 
         display: flex;
-        flex-direction: column-reverse;
+        flex-direction: column;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
@@ -55,18 +61,24 @@ export const Container = styled.div`
             
             width: 60%!important;
 
-            padding: 0 2rem!important;
+            padding: 3rem 2rem!important;
         }
         }
 
         @media(max-width: 560px){
 
-        form{
-            
-            width: 80%!important;
+            .text{
+                ul{
+                    display: none!important;
+                }
+            }
 
-            padding: 0 2rem!important;
-        }
+            form{
+                
+                width: 80%!important;
+
+                padding: 4rem 2rem!important;
+            }
 
         }
 

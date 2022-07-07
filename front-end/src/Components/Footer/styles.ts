@@ -118,7 +118,7 @@ export const Container = styled.footer`
             text-decoration: underline;
 
             :hover{
-                color: #999999;
+                color: #c0c0c0;
             }
         }
     }

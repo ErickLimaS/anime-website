@@ -29,7 +29,7 @@ export default function BookmarkUser() {
 
     useEffect(() => {
 
-        document.title = 'Loading...'
+        document.title = 'Loading... | AniProject'
 
         setLoading(true)
 
@@ -61,7 +61,7 @@ export default function BookmarkUser() {
 
         setLoading(false)
 
-        document.title = 'Bookmarks'
+        document.title = 'Bookmarks | AniProject'
 
     }, [])
 

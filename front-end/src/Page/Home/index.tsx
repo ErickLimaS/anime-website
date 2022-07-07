@@ -35,7 +35,7 @@ export default function Home() {
 
     window.scrollTo(0, 0);
 
-    document.title = 'Loading...'
+    document.title = 'Loading... | AniProject'
 
     const loadData = async () => {
 
@@ -118,7 +118,7 @@ export default function Home() {
     }
     loadData()
 
-    document.title = 'Home'
+    document.title = 'Home | AniProject'
 
   }, [indexInnerPageLink])
 

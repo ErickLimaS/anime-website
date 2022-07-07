@@ -23,7 +23,8 @@ export default function AnimePageV2() {
 
     const load = async (id: any) => {
 
-      document.title = 'Loading'
+      document.title = 'Loading | AniProject'
+      window.scrollTo(0, 0);
 
       setLoading(true)
 
@@ -32,7 +33,7 @@ export default function AnimePageV2() {
 
       setLoading(false)
 
-      document.title = `${data.animeTitle} (GoGoAnime)`
+      document.title = `${data.animeTitle} | AniProject`
 
     }
     load(id)

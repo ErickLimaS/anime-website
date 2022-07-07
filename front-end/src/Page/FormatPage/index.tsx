@@ -29,7 +29,7 @@ export default function FormatPage() {
 
         window.scrollTo(0, 0);
 
-        document.title = `${format} Format`
+        document.title = `${format?.toLocaleUpperCase()} Format | AniProject`
 
         const load = async () => {
 

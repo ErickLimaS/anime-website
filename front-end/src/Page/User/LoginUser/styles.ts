@@ -21,6 +21,8 @@ export const Container = styled.div`
 
         div.text{
 
+            padding: 2rem 0rem;
+
             h1{
                 font-size: 4rem;
             }
@@ -33,7 +35,7 @@ export const Container = styled.div`
         height: auto;
 
         display: flex;
-        flex-direction: column-reverse;
+        flex-direction: column;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
@@ -48,6 +50,9 @@ export const Container = styled.div`
 
             h1{
                 font-size: 3.6rem;
+            }
+            ul{
+                display: none!important;
             }
         }
 
@@ -65,7 +70,7 @@ export const Container = styled.div`
             
             width: 80%!important;
 
-            padding: 0 2rem!important;
+            padding: 4rem 2rem!important;
         }
 
     }

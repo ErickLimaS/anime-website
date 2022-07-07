@@ -35,6 +35,9 @@ export default function TopRated(data: any) {
         case 'ONA':
             format = 'ona';
             break;
+        case 'TV_SHORT':
+            format = 'tv-short';
+            break;
         default:
             format = 'anime'; //fix exception
             break;

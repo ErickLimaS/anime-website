@@ -21,8 +21,9 @@ export default function SpecialPage() {
 
     const load = async (id: any, type: String) => {
 
-      document.title = 'Loading'
-
+      document.title = 'Loading | AniProject'
+      window.scrollTo(0, 0);
+      
       setLoading(true)
 
       const data = await API.getInfoFromThisMedia(id, type, format);
@@ -31,7 +32,7 @@ export default function SpecialPage() {
 
       setLoading(false)
 
-      document.title = `${data.title.romaji} | Manga`
+      document.title = `${data.title.romaji} | AniProject`
 
     }
     load(id, type)

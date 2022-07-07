@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route } from 'react-router-dom';
 import { AnyAction, Dispatch } from 'redux';
 import Swal from 'sweetalert2';
+import HeaderAlternative from '../../../Components/HeaderAlternative';
 import { loginUser, registerUser } from '../../../redux/actions/userActions';
 import * as C from './styles'
 
@@ -16,6 +17,12 @@ export default function LoginUser() {
     const { userInfo, loading, error } = userLogin
 
     const dispatch: any = useDispatch()
+
+    useEffect(() => {
+
+        document.title = 'Login | AniProject'
+
+    }, [])
 
     const formHandler = (e: React.FormEvent) => {
 
@@ -104,54 +111,53 @@ export default function LoginUser() {
     }
 
     return (
-        <C.Container>
+        <>
+            <HeaderAlternative />
+            <C.Container>
+                <div className='text'>
 
-            <div className='text'>
+                    <h1>Create Your Account and Stay Up to Date With New Animes!</h1>
 
-                <h1>Create Your Accont and Be Up to Date With New Animes!</h1>
+                    <ul>
+                        <li>Favorite Your Animes, Mangas or Movies</li>
+                        <li>Receive Notifications When A New Episodes Releases</li>
+                        <li>Example</li>
+                    </ul>
 
-                <ul>
-                    <li>Favorite Your Animes, Mangas or Movies</li>
-                    <li>Receive Notifications When A New Episodes Releases</li>
-                    <li>Example</li>
-                </ul>
-
-            </div>
-
-
-            <form onSubmit={(e) => formHandler(e)}>
-
-                <h1>Login</h1>
-
-                <div>
-                    <label htmlFor='email'>Email</label>
-                    <input type='email' id='email' placeholder='Email' ref={email} required></input>
-                </div>
-
-                <div>
-                    <label htmlFor='password'>Password</label>
-                    <input type='password' id='password' placeholder='Password' ref={password} required></input>
-                </div>
-
-                <div>
-                    <button type='submit' id='login'>Login</button>
-                    {loading && (
-                        <span>loading...</span>
-                    )}
-                    {error && (
-                        errorAlert(error)
-                    )}
-                </div>
-
-                <div className='register'>
-                    <Link to={`/register`}>Don't have a Account Yet? Click Here!</Link>
                 </div>
 
 
-            </form>
+                <form onSubmit={(e) => formHandler(e)}>
 
+                    <h1>Login</h1>
 
+                    <div>
+                        <label htmlFor='email'>Email</label>
+                        <input type='email' id='email' placeholder='Email' ref={email} required></input>
+                    </div>
 
-        </C.Container>
+                    <div>
+                        <label htmlFor='password'>Password</label>
+                        <input type='password' id='password' placeholder='Password' ref={password} required></input>
+                    </div>
+
+                    <div>
+                        <button type='submit' id='login'>Login</button>
+                        {loading && (
+                            <span>loading...</span>
+                        )}
+                        {error && (
+                            errorAlert(error)
+                        )}
+                    </div>
+
+                    <div className='register'>
+                        <Link to={`/register`}>Don't have a Account Yet? Click Here!</Link>
+                    </div>
+
+                </form>
+
+            </C.Container>
+        </>
     )
 }

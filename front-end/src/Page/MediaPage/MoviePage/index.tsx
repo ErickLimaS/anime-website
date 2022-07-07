@@ -21,7 +21,8 @@ export default function MoviePage() {
 
     const load = async (id: any, type: String) => {
 
-      document.title = 'Loading'
+      document.title = 'Loading | AniProject'
+      window.scrollTo(0, 0);
 
       setLoading(true)
 
@@ -31,7 +32,7 @@ export default function MoviePage() {
 
       setLoading(false)
 
-      document.title = `${data.title.romaji} | Movie`
+      document.title = `${data.title.romaji} | AniProject`
 
     }
     load(id, type)

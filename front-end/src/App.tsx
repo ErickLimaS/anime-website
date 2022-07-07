@@ -20,6 +20,7 @@ import OneShotPage from './Page/MediaPage/OneShotPage';
 import OvaPage from './Page/MediaPage/OvaPage';
 import SpecialPage from './Page/MediaPage/SpecialPage';
 import OnaPage from './Page/MediaPage/OnaPage';
+import TvShortPage from './Page/MediaPage/TvShortPage';
 
 function App() {
 
@@ -53,6 +54,7 @@ function App() {
           <Route path='/anime/v2/:id' element={<AnimePageV2 />} />
 
           {/* MEDIA Page */}
+          <Route path='/tv-short/:id' element={<TvShortPage />} />
           <Route path='/ona/:id' element={<OnaPage />} />
           <Route path='/ova/:id' element={<OvaPage />} />
           <Route path='/special/:id' element={<SpecialPage />} />

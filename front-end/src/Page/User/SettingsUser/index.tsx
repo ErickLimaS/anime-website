@@ -42,7 +42,7 @@ export default function SettingsUser() {
 
   useEffect(() => {
 
-    document.title = 'Settings'
+    document.title = 'Settings | AniProject'
 
     if (!userInfo) {
 

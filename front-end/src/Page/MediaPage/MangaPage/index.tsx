@@ -20,7 +20,8 @@ export default function MangaPage() {
 
     const load = async (id: any, type: String) => {
 
-      document.title = 'Loading'
+      document.title = 'Loading | AniProject'
+      window.scrollTo(0, 0);
 
       setLoading(true)
 
@@ -30,7 +31,7 @@ export default function MangaPage() {
 
       setLoading(false)
 
-      document.title = `${data.title.romaji} | Manga`
+      document.title = `${data.title.romaji} | AniProject`
 
     }
     load(id, type)

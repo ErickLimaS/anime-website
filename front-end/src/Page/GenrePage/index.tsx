@@ -25,7 +25,7 @@ export default function GenrePage() {
 
         window.scrollTo(0, 0);
 
-        document.title = `${genre} Genre`
+        document.title = `${genre} Genre | AniProject`
 
         const load = async () => {
 
