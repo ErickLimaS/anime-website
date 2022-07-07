@@ -7,6 +7,7 @@ interface ContainerProps {
 export const Container = styled.header<ContainerProps>`
 
     height: 9vh;
+    width: auto;
 
     background-color: #fafafa;
 

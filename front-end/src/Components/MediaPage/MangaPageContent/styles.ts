@@ -12,7 +12,7 @@ export const Container = styled.div<Props>`
     border-left: 2px solid #e6e6e6;
     border-right: 2px solid #e6e6e6;
 
-    padding: 1rem 3rem 3rem 3rem;
+    padding: 2rem;
 
     @media(max-width: 1020px){
         width: -webkit-fill-available;

@@ -18,12 +18,12 @@ export const Container = styled.div<Props>`
 
         @media(max-width: 1080px){
             flex-wrap: wrap;
-            width: 80%;
+            /* width: 80%; */
         }
 
         @media(max-width: 620px){
             flex-wrap: wrap;
-            width: 95%;
+            width: 90%;
         }
     }
 
@@ -49,8 +49,10 @@ export const Container = styled.div<Props>`
 
         width: 80vw;
         height: 100vh;
-        margin: 0 2rem;
+        padding: 0 2rem;
 
+        border-left: 2px solid #e6e6e6;
+        
         div:first-child{
             
             display: flex;

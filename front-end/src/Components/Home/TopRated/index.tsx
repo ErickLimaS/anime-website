@@ -20,6 +20,21 @@ export default function TopRated(data: any) {
         case 'MOVIE':
             format = 'movie';
             break;
+        case 'NOVEL':
+            format = 'novel';
+            break;
+        case 'SPECIAL':
+            format = 'special';
+            break;
+        case 'ONE_SHOT':
+            format = 'one-shot';
+            break;
+        case 'OVA':
+            format = 'ova';
+            break;
+        case 'ONA':
+            format = 'ona';
+            break;
         default:
             format = 'anime'; //fix exception
             break;

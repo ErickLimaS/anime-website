@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-operators */
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import Score from '../../Score';
 import SearchInnerPage from '../../SearchInnerPage'
@@ -46,19 +47,19 @@ export default function AsideInfo(data: any) {
             )}
 
             <div className='type'>
-              {(data.data.format === 'MOVIE' && (
 
+              {(data.data.type === 'ANIME') && (data.data.format === 'MOVIE') && (
                 <h2>{data.data.format}</h2>
+              ) || (data.data.type === 'ANIME' && data.data.format === 'ANIME') && (
+                <h2>{data.data.format}</h2>
+              ) || (data.data.type === 'ANIME' && data.data.format !== 'ANIME') && (
+                <h2>{data.data.type} | {data.data.format}</h2>
+              ) || (data.data.type === 'MANGA' && data.data.format === 'MANGA') && (
+                <h2>{data.data.format} </h2>
+              ) || (data.data.type === 'MANGA' && data.data.format !== 'MANGA') && (
+                <h2>{data.data.type} | {data.data.format}</h2>
+              ) }
 
-              )) || (data.data.type === 'ANIME' && (
-
-                <h2>{data.data.type}</h2>
-
-              )) || (data.data.type === 'MANGA' && (
-
-                <h2>{data.data.type}</h2>
-
-              ))}
             </div>
 
             <ul className='general-info'>
@@ -69,17 +70,17 @@ export default function AsideInfo(data: any) {
 
               ) : (
                 data.data.episodes && (
-                  <li><CollectionEpisodesSvg /> <strong>{data.data.episodes} Episodes</strong></li>
+                  <li><CollectionEpisodesSvg /> <strong>{data.data.episodes} Episode{data.data.episodes > 1 && ('s')}</strong></li>
                 )
               )}
 
 
               {data.data.chapters && (
-                <li><BookSvg /> <strong>{data.data.chapters} Chapters</strong></li>
+                <li><BookSvg /> <strong>{data.data.chapters} Chapter{data.data.chapters > 1 && ('s')}</strong></li>
               )}
 
               {data.data.volumes && (
-                <li><BookSvg /> <strong>{data.data.volumes} Volumes</strong></li>
+                <li><BookSvg /> <strong>{data.data.volumes} Volume{data.data.volumes > 1 && ('s')}</strong></li>
               )}
 
               {data.data.status === 'RELEASING' && (
@@ -97,7 +98,7 @@ export default function AsideInfo(data: any) {
                 data.data.duration && (
                   <li><WatchSvg /> {data.data.duration} Minutes Long </li>
                 )
-                
+
               )) || (data.data.type === 'ANIME' && (
 
                 data.data.duration && (

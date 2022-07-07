@@ -22,6 +22,21 @@ export default function AnimesReleasingThisWeek(data: any) {
         case 'MOVIE':
             format = 'movie';
             break;
+        case 'NOVEL':
+            format = 'novel';
+            break;
+        case 'SPECIAL':
+            format = 'special';
+            break;
+        case 'ONE_SHOT':
+            format = 'one-shot';
+            break;
+        case 'OVA':
+            format = 'ova';
+            break;
+        case 'ONA':
+            format = 'ona';
+            break;
         default:
             format = 'anime'; //fix exception
             break;
@@ -68,7 +83,7 @@ export default function AnimesReleasingThisWeek(data: any) {
                     'status': data.data.status,
                     'isAdult': Boolean(data.data.isAdult)
                 }))
-                
+
                 setIsAlreadyAdded(true)
 
             }
@@ -102,22 +117,22 @@ export default function AnimesReleasingThisWeek(data: any) {
 
             <div className='add-button'>
                 <button type='button' onClick={() => handleMediaToAccount()}>
-                    {isAlreadyAdded == null  && (<PlusSvg />)}
-                    {isAlreadyAdded && (<CheckSvg fill='#ff7fb2'/>)}
+                    {isAlreadyAdded == null && (<PlusSvg />)}
+                    {isAlreadyAdded && (<CheckSvg fill='#ff7fb2' />)}
                 </button>
             </div>
 
             <div className='see-more-button'>
                 {data.data.title.romaji.length > 25 ? (
                     <div className='name-fade'>
-                        <h1>{data.data.title.romaji.slice(0, 25)}... ({data.data.type})</h1>
+                        <h1>{data.data.title.romaji.slice(0, 25)}... ({format.toUpperCase()})</h1>
                         {/* <Score data={data.data.averageScore} /> */}
                     </div>
 
                 ) : (
                     <>
                         <div className='name-fade'>
-                            <h1>{data.data.title.romaji} ({data.data.type})</h1>
+                            <h1>{data.data.title.romaji} ({format.toUpperCase()})</h1>
                             {/* <Score data={data.data.averageScore} /> */}
                         </div>
 

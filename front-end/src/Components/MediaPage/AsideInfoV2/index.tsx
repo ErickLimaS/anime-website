@@ -45,15 +45,15 @@ export default function AsideInfoV2(data: any) {
 
             <ul className='general-info'>
               {data.data.totalEpisodes && (
-                <li><CollectionEpisodesSvg /> <strong>{data.data.totalEpisodes} Episodes</strong></li>
+                <li><CollectionEpisodesSvg /> <strong>{data.data.totalEpisodes} Episode{data.data.totalEpisodes > 1 && ('s')}</strong></li>
               )}
 
               {data.data.chapters && (
-                <li><BookSvg /> <strong>{data.data.chapters} Chapters</strong></li>
+                <li><BookSvg /> <strong>{data.data.chapters} Chapter{data.data.chapters > 1 && ('s')}</strong></li>
               )}
 
               {data.data.volumes && (
-                <li><BookSvg /> <strong>{data.data.volumes} Volumes</strong></li>
+                <li><BookSvg /> <strong>{data.data.volumes} Volume{data.data.volumes > 1 && ('s')}</strong></li>
               )}
 
               {data.data.status && (

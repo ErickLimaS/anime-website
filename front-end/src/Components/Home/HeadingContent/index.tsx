@@ -29,6 +29,21 @@ export default function HeadingContent(data: any) {
         case 'MOVIE':
             format = 'movie';
             break;
+        case 'NOVEL':
+            format = 'novel';
+            break;
+        case 'SPECIAL':
+            format = 'special';
+            break;
+        case 'ONE_SHOT':
+            format = 'one-shot';
+            break;
+        case 'OVA':
+            format = 'ova';
+            break;
+        case 'ONA':
+            format = 'ona';
+            break;
         default:
             format = 'anime'; //fix exception
             break;
@@ -108,7 +123,7 @@ export default function HeadingContent(data: any) {
             <div className='item-about'>
                 <div className='item-info'>
                     {data.data.title.romaji.length > 35 ? (
-                        <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji.slice(0,35)}...</h1></Link>
+                        <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji.slice(0, 35)}...</h1></Link>
                     ) : (
                         <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji}</h1></Link>
                     )}

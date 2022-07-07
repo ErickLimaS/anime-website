@@ -6,7 +6,7 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-padding: 0 2rem;
+padding: 2rem 1.5rem;
 
 display: flex;
 flex-direction: column;

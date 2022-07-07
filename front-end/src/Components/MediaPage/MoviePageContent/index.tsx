@@ -245,7 +245,7 @@ export default function MoviePageContent(data: any) {
             <li><span>Tags</span>:
               <ul className='tags'>
                 {data.data.tags.map((item: any) => (
-                  <li>{item.name}</li>
+                  <li><Link to={`/genre/${item.name}`}>{item.name}</Link></li>
                 ))}
               </ul>
             </li>
