@@ -33,6 +33,7 @@ export const Container = styled.nav<Props>`
         font-size: 1.4rem;
 
         padding-left: 4rem;
+        margin-bottom: 3rem;
 
         img#logo{
             margin: 1rem 0;

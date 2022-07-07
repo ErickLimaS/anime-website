@@ -260,7 +260,7 @@ export default {
                         'type': `${type}`,
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
-                        'perPage': 5,
+                        'perPage': 10,
                         'year': new Date().getFullYear(),
                         'tag': `${(tag ? `${tag}` : ``)}`
                     }

@@ -241,7 +241,7 @@ export default function AnimePageContentV2(data: any) {
 
         </div>
 
-        <div>
+        <div onClick={() => setMoreDetails(!moreDetails)}>
           {data.data.synopsis.length >= 420 ? (
             moreDetails === false ? (
               <p>

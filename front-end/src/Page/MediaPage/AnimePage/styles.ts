@@ -53,6 +53,10 @@ export const Container = styled.div<Props>`
 
         border-left: 2px solid #e6e6e6;
 
+        @media(max-width: 620px){        
+            border-left: 0;
+        }
+
         div:first-child{
             
             display: flex;

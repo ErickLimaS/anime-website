@@ -72,6 +72,13 @@ export const Container = styled.div<ContainerProps>`
             border-left: none;
         }
 
+        @media(max-width: 620px){
+            padding: 1rem 0!important;
+
+            width: 95%;
+            border-left: none;
+        }
+
         .search-mobile{
 
             display: none;
