@@ -7,7 +7,7 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 ## :hammer: Funcionalidades
 
 - `Pesquise`: Use o sistema de busca para saber detalhes de animes, mangas, e mais.
-- `Ache Aquele Episódios Para Assitir`: Achando o anime que procurava, será possivel ver grande parte dos episódios disponibilizados pela Crunchyroll.
+- `Assista`: Achando o anime que procurava, será possivel ver grande parte dos episódios disponibilizados pela Crunchyroll através da API.
 - `Crie sua Conta`: Usando MongoDB e Express, criei um banco de dados para salvar os dados dos usuários que se registrarem no site.
 - `Marque seus Animes e Mangas Favoritos`: Apos criar uma conta, você podera marcar animes e mangas, para ter um rápido acesso da próxima vez que usar o site.
 - `Encontre Novos Animes`: Ache novos animes para assistir usando a seção de categorias ou formatos.
