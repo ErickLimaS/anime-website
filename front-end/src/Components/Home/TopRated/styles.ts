@@ -7,7 +7,7 @@ interface itemData {
 export const TopRatedAnime = styled.div<itemData>`
 
     height: 18rem;
-    width: 28rem;
+    min-width: 28rem;
 
     margin: 0 0.7rem;
 

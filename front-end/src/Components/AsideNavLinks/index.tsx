@@ -17,7 +17,7 @@ import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.s
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
 import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fill.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser, logoutUser } from '../../redux/actions/userActions'
+import { logoutUser } from '../../redux/actions/userActions'
 import logo from '../../imgs/logo.png'
 
 export default function AsideNavLinks(data: any) {
@@ -71,7 +71,7 @@ export default function AsideNavLinks(data: any) {
 
       <ul>
 
-        <li id='tv'><Link to={`/format/tv`}><TvSvg /> TV</Link></li>
+        <li id='tv'><Link to={`/format/tv`}><TvSvg /> TV | Anime</Link></li>
         <li id='manga'><Link to={`/format/manga`}><BallonSvg /> Manga</Link></li>
         <li id='one_shot'><Link to={`/format/one_shot`}><OneShotSvg /> One Shot</Link></li>
         <li id='novel'><Link to={`/format/novel`}><RomanceBookSvg /> Novel</Link></li>

@@ -29,8 +29,32 @@ export const AnimeToBeListed = styled.div<itemData>`
 
         display: flex;
         flex-direction: row;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: flex-start;
+
+        overflow: hidden;
+        
+        div.media-type{
+            background-color: rgba(0,0,0,.75);
+
+            margin-top: -4rem;
+
+            min-width: 15rem;
+            overflow: hidden;
+            transform: skewY(-41deg);
+
+            svg{
+                fill: #ff1a75;
+
+                padding: 0.5rem;
+                margin: 1rem 1.5rem;
+
+                transform: skewY(41deg);
+
+                width: 2rem;
+                height: 2rem;
+            }
+        }
 
         button{
             cursor: pointer;
@@ -101,8 +125,7 @@ export const AnimeToBeListed = styled.div<itemData>`
             justify-content: center;
             align-items: center;
 
-
-            margin-top: 10%;
+            margin-top: 14%;
             
             display: flex;
             justify-content: center;
@@ -122,7 +145,7 @@ export const AnimeToBeListed = styled.div<itemData>`
         a{
             width: 75%;
 
-            margin: 1.5rem 0;
+            margin-bottom: 1.5rem;
             padding: 1rem;
             
             display: flex;

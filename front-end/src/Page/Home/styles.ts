@@ -119,6 +119,15 @@ export const Container = styled.div<ContainerProps>`
             flex-direction: column;
         }
 
+        //component AnimesReleasing Tweak
+        /* div.media-type{
+            margin-top: -2.5rem!important;
+
+            @media(max-width: 620px){
+                margin-top: -4rem!important;
+            }
+        } */
+
         // gets link clicked on Home and shows which section is correspondent
         section#anime, section#manga, section#movie {
             display: ${props => props.innerPageLink === 0 ? `flex` : `none`};
@@ -191,11 +200,31 @@ export const Container = styled.div<ContainerProps>`
                 justify-content: space-between;
                 align-items: center;
 
+                overflow: auto;
+
                 @media(max-width: 768px){
                     display: -webkit-box;
                     justify-content: center;
 
                     overflow-y: auto;
+                }
+
+                ::-webkit-scrollbar {
+                    height: 8px;
+                }
+
+                ::-webkit-scrollbar-track {
+                    background: #f1f1f1; 
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: #888;
+
+                    border-radius: 2px;
+                }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: #555; 
                 }
 
             }

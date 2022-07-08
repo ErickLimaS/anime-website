@@ -126,11 +126,33 @@ export const Container = styled.div`
         }
 
         .top-rated-manga, .top-rated-anime{
+
             .list{
+                padding: 0.5rem 0;
+
+                overflow: auto;
+                
                 display: flex;
                 flex-direction: row;
 
-                /* overflow-y: auto; */
+
+                ::-webkit-scrollbar {
+                    height: 8px;
+                }
+
+                ::-webkit-scrollbar-track {
+                    background: #f1f1f1; 
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: #888;
+
+                    border-radius: 2px;
+                }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: #555; 
+                }
             }
         }
 

@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import * as C from './styles'
+
 import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
+import { ReactComponent as HeartsSvg } from '../../../imgs/svg/hearts-svgrepo.svg'
+import { ReactComponent as SwordsSvg } from '../../../imgs/svg/swords-in-cross-svgrepo.svg'
+import { ReactComponent as SuperPowerSvg } from '../../../imgs/svg/burst-solid.svg'
+import { ReactComponent as SchoolBusSvg } from '../../../imgs/svg/school-bus-svgrepo1.svg'
+import { ReactComponent as TvSvg } from '../../../imgs/svg/tv-solid.svg'
+import { ReactComponent as BallonSvg } from '../../../imgs/svg/speech-balloon-svgrepo.svg'
+import { ReactComponent as OneShotSvg } from '../../../imgs/svg/magazines-svgrepo.svg'
+import { ReactComponent as RomanceBookSvg } from '../../../imgs/svg/picture-love-and-romance-svgrepo.svg'
+import { ReactComponent as MovieSvg } from '../../../imgs/svg/movie-player-svgrepo.svg'
+import { ReactComponent as StarSvg } from '../../../imgs/svg/star-fill.svg'
+import { ReactComponent as OpenBookSvg } from '../../../imgs/svg/open-book-svgrepo.svg'
+import { ReactComponent as BookmarkSvg } from '../../../imgs/svg/bookmark-check-fill.svg'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 
@@ -11,37 +25,49 @@ export default function AnimesReleasingThisWeek(data: any) {
     const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
 
     let format;
+    let IconSvg: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 
+    //helps adding kind of media`s format to a format used on urls
     switch (data.data.format) {
         case 'TV':
             format = 'anime';
+            IconSvg = TvSvg
             break;
         case 'MANGA':
             format = 'manga';
+            IconSvg = BallonSvg
             break;
         case 'MOVIE':
             format = 'movie';
+            IconSvg = MovieSvg
             break;
         case 'NOVEL':
             format = 'novel';
+            IconSvg = BallonSvg
             break;
         case 'SPECIAL':
             format = 'special';
+            IconSvg = TvSvg
             break;
         case 'ONE_SHOT':
             format = 'one-shot';
+            IconSvg = BallonSvg
             break;
         case 'OVA':
             format = 'ova';
+            IconSvg = TvSvg
             break;
         case 'ONA':
             format = 'ona';
+            IconSvg = TvSvg
             break;
         case 'TV_SHORT':
             format = 'tv-short';
+            IconSvg = TvSvg
             break;
         default:
-            format = 'anime'; //fix exception
+            format = 'manga'; //exception
+            IconSvg = BallonSvg
             break;
     }
 
@@ -58,7 +84,7 @@ export default function AnimesReleasingThisWeek(data: any) {
             })
         }
 
-    }, [isAlreadyAdded, userInfo])
+    }, [data.data.id, isAlreadyAdded, userInfo])
 
     // add media to user
     const dispatch: any = useDispatch()
@@ -119,6 +145,10 @@ export default function AnimesReleasingThisWeek(data: any) {
         <C.AnimeToBeListed info={data.data} isAlreadyAdded={isAlreadyAdded}>
 
             <div className='add-button'>
+                <div className='media-type'>
+                    <IconSvg  />
+                </div>
+
                 <button type='button' onClick={() => handleMediaToAccount()}>
                     {isAlreadyAdded == null && (<PlusSvg />)}
                     {isAlreadyAdded && (<CheckSvg fill='#ff7fb2' />)}
@@ -128,14 +158,14 @@ export default function AnimesReleasingThisWeek(data: any) {
             <div className='see-more-button'>
                 {data.data.title.romaji.length > 25 ? (
                     <div className='name-fade'>
-                        <h1>{data.data.title.romaji.slice(0, 25)}... ({format.toUpperCase()})</h1>
+                        <h1>{data.data.title.romaji.slice(0, 25)}... </h1>
                         {/* <Score data={data.data.averageScore} /> */}
                     </div>
 
                 ) : (
                     <>
                         <div className='name-fade'>
-                            <h1>{data.data.title.romaji} ({format.toUpperCase()})</h1>
+                            <h1>{data.data.title.romaji}</h1>
                             {/* <Score data={data.data.averageScore} /> */}
                         </div>
 

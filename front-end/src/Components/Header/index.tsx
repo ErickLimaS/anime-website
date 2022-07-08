@@ -110,7 +110,7 @@ export default function Header() {
 
                     <ul>
 
-                        <li><Link to={`/format/tv`}><TvSvg /> TV</Link></li>
+                        <li><Link to={`/format/tv`}><TvSvg /> TV | Anime</Link></li>
                         <li><Link to={`/format/manga`}><BallonSvg /> Manga</Link></li>
                         <li><Link to={`/format/one_shot`}><OneShotSvg /> One Shot</Link></li>
                         <li><Link to={`/format/novel`}><RomanceBookSvg /> Novel</Link></li>
