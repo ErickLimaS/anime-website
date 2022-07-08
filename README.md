@@ -17,6 +17,7 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 - ``React``
 - ``TypeScript``
 - ``Redux``
+- ``Node.js``
 - ``MongoDB``
 - ``Express``
 - ``Bcrypt``
