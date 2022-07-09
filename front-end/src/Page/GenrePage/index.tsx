@@ -6,6 +6,8 @@ import AsideNavLinks from '../../Components/AsideNavLinks'
 import HeadingContent from '../../Components/Home/HeadingContent'
 import TopRated from '../../Components/Home/TopRated'
 import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.svg'
+import { ReactComponent as AngleLeftSolidSvg } from '../../imgs/svg/angle-left-solid.svg'
+import { ReactComponent as AngleRightSolidSvg } from '../../imgs/svg/angle-right-solid.svg'
 import Trending from '../../Components/Home/Trending'
 
 export default function GenrePage() {
@@ -17,9 +19,14 @@ export default function GenrePage() {
     const [animesTrending, setAnimesTrending] = useState([])
     const [mangasTrending, setMangasTrending] = useState([])
 
+    const [indexPageAnimeList, setIndexPageAnimeList] = useState<number>(1)
+    const [indexPageMangaList, setIndexPageMangaList] = useState<number>(1)
+
     const [randomIndex, setRandomIndex] = useState<number>(0)
 
     const [loading, setLoading] = useState(true)
+    const [loadingSectionTopRated, setLoadingSectionTopRated] = useState(false)
+    const [loadingSectionReleasingThisWeek, setLoadingSectionReleasingThisWeek] = useState(false)
 
     useEffect(() => {
 
@@ -33,8 +40,8 @@ export default function GenrePage() {
 
             const data1 = await API.getAnimesForThisGenre(genre)
             const data2 = await API.getMangasForThisGenre(genre)
-            const data3 = await API.getTrending('ANIME', '' ,genre)
-            const data4 = await API.getTrending('MANGA', '' ,genre)
+            const data3 = await API.getTrending('ANIME', '', genre)
+            const data4 = await API.getTrending('MANGA', '', genre)
 
             setAnimesGenreList(data1)
             setMangasGenreList(data2)
@@ -49,6 +56,82 @@ export default function GenrePage() {
         load()
 
     }, [genre])
+
+    //handles button navigation through results to topRated and Releasing sections
+    const handleSectionPreviousPage = async (section: String) => {
+
+        switch (section) {
+
+            case 'anime':
+
+                let page;
+
+                if (indexPageAnimeList <= 1) {
+                    page = 1
+                    setIndexPageAnimeList(1)
+                    console.log(page)
+                }
+                else {
+                    page = indexPageAnimeList - 1
+                    setIndexPageAnimeList(indexPageAnimeList - 1)
+                    console.log(page)
+                }
+
+                const data = await API.getAnimesForThisGenre(genre, page);
+                setAnimesGenreList(data)
+
+                break;
+
+            case 'manga':
+
+                let page1
+
+                if (indexPageMangaList <= 1) {
+                    page1 = 1
+                    setIndexPageMangaList(1)
+                }
+                else {
+                    page1 = indexPageMangaList - 1
+                    setIndexPageMangaList(indexPageMangaList - 1)
+                }
+
+                const data1 = await API.getMangasForThisGenre(genre, page1);
+                setMangasGenreList(data1)
+
+                break;
+
+        }
+
+    }
+
+    //handles button navigation through results to topRated and Releasing sections
+    const handleSectionNextPage = async (section: String) => {
+
+        switch (section) {
+
+            case 'anime':
+
+                const page = indexPageAnimeList + 1
+                setIndexPageAnimeList(indexPageAnimeList + 1)
+
+                const data = await API.getAnimesForThisGenre(genre, page);
+                setAnimesGenreList(data)
+
+                break;
+
+            case 'manga':
+
+                const page1 = indexPageMangaList + 1
+                setIndexPageMangaList(indexPageMangaList + 1)
+
+                const data1 = await API.getMangasForThisGenre(genre, page1);
+                setMangasGenreList(data1)
+
+                break;
+
+        }
+
+    }
 
     return (
         <C.Container>
@@ -81,8 +164,20 @@ export default function GenrePage() {
                                 <h2>Top Rated <span>{genre} Animes</span></h2>
 
                                 <div className='nav-buttons'>
-                                    <button type='button'><ArrowLeftSvg /></button>
-                                    <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+                                    <button
+                                        type='button'
+                                        disabled={indexPageAnimeList === 1 ? true : false}
+                                        onClick={() => handleSectionPreviousPage('anime')}
+                                    >
+                                        <AngleLeftSolidSvg />
+                                    </button>
+
+                                    <button
+                                        type='button'
+                                        onClick={() => handleSectionNextPage('anime')}
+                                    >
+                                        <AngleRightSolidSvg />
+                                    </button>
                                 </div>
                             </div>
 
@@ -100,8 +195,20 @@ export default function GenrePage() {
                                 <h2>Top Rated <span>{genre} Mangas</span></h2>
 
                                 <div className='nav-buttons'>
-                                    <button type='button'><ArrowLeftSvg /></button>
-                                    <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+                                    <button
+                                        type='button'
+                                        disabled={indexPageMangaList === 1 ? true : false}
+                                        onClick={() => handleSectionPreviousPage('manga')}
+                                    >
+                                        <AngleLeftSolidSvg />
+                                    </button>
+
+                                    <button
+                                        type='button'
+                                        onClick={() => handleSectionNextPage('manga')}
+                                    >
+                                        <AngleRightSolidSvg />
+                                    </button>
                                 </div>
                             </div>
 

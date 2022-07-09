@@ -7,7 +7,7 @@ interface itemData {
 
 export const AnimeToBeListed = styled.div<itemData>`
 
-    height: 28rem;
+    height: 26rem;
     width: 20rem;
 
     margin: 0 0.7rem;
@@ -37,19 +37,21 @@ export const AnimeToBeListed = styled.div<itemData>`
         div.media-type{
             background-color: rgba(0,0,0,.75);
 
-            margin-top: -4rem;
+            margin-top: -5rem;
 
-            min-width: 15rem;
+            min-width: 8rem;
+            min-height: 8rem;
+
             overflow: hidden;
-            transform: skewY(-41deg);
+            transform: skewY(-48deg);
 
             svg{
                 fill: #ff1a75;
 
-                padding: 0.5rem;
-                margin: 1rem 1.5rem;
+                padding: 1rem;
+                margin: 3.5rem 1.5rem 0rem 0.4rem;
 
-                transform: skewY(41deg);
+                transform: skewY(48deg);
 
                 width: 2rem;
                 height: 2rem;
@@ -60,7 +62,8 @@ export const AnimeToBeListed = styled.div<itemData>`
             cursor: pointer;
 
             padding: 0.5rem;
-            margin: 1rem;
+            margin-top: 1rem;
+            margin-right: 1rem;
 
             border: none;
             outline: 0;

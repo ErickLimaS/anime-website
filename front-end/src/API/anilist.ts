@@ -8,7 +8,7 @@ export default {
     // HOME PAGE
     getNewReleases: async (type: String, format?: String) => {
 
-        const seasonYear = new Date().getFullYear()  
+        const seasonYear = new Date().getFullYear()
         let season;
 
         switch (new Date().getMonth()) {
@@ -121,7 +121,7 @@ export default {
         }
     },
 
-    getReleasingThisWeek: async (type: String, format?: String) => {
+    getReleasingThisWeek: async (type: String, format?: String, page?: Number) => {
 
         try {
 
@@ -179,7 +179,7 @@ export default {
                     variables: {
                         'type': `${type}`,
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
-                        'page': 1,
+                        'page': page ? page : 1,
                         'perPage': 4,
                         'year': new Date().getFullYear(),
                     }
@@ -280,7 +280,7 @@ export default {
 
     },
 
-    getTopRated: async (type: String, format?: String) => {
+    getTopRated: async (type: String, format?: String, page?: Number) => {
 
         try {
 
@@ -328,7 +328,7 @@ export default {
                     variables: {
                         'type': `${type}`,
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
-                        'page': 1,
+                        'page': page ? page : 1,
                         'perPage': 3,
                     }
                 })
@@ -597,7 +597,7 @@ export default {
 
     //Genre Page
     // anime
-    getAnimesForThisGenre: async (tag: any) => {
+    getAnimesForThisGenre: async (tag: any, page?: Number) => {
 
         try {
 
@@ -767,7 +767,7 @@ export default {
                         }
                     `,
                     variables: {
-                        'page': 1,
+                        'page': page ? page : 1,
                         'perPage': 5,
                         'tag': `${tag}`,
                         'type': 'ANIME'
@@ -785,7 +785,7 @@ export default {
     },
 
     //manga
-    getMangasForThisGenre: async (tag: any) => {
+    getMangasForThisGenre: async (tag: any, page?: Number) => {
 
         try {
 
@@ -955,7 +955,7 @@ export default {
                         }
                     `,
                     variables: {
-                        'page': 1,
+                        'page': page ? page : 1,
                         'perPage': 5,
                         'tag': `${tag}`,
                         'type': 'MANGA'
@@ -975,7 +975,7 @@ export default {
 
     //Format Page
     // anime
-    getMediaForThisFormat: async (format: any) => {
+    getMediaForThisFormat: async (format: any, page?: Number) => {
 
         try {
 
@@ -1145,7 +1145,7 @@ export default {
                         }
                     `,
                     variables: {
-                        'page': 1,
+                        'page': page ? page : 1,
                         'perPage': 5,
                         'format': `${format.toUpperCase()}`,
                         'type': 'ANIME'

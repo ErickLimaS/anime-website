@@ -7,15 +7,20 @@ interface itemData {
 export const TopRatedAnime = styled.div<itemData>`
 
     height: 18rem;
-    min-width: 28rem;
+    width: 28rem;
 
     margin: 0 0.7rem;
 
-    @media(max-width: 520px){
-        margin: 0 0.3rem;
+    @media(max-width: 768px){
+        min-width: 28rem;
     }
 
-    background-image: ${(props) => props.info.bannerImage && `url("${props.info.bannerImage}")`};
+    @media(max-width: 520px){
+        margin: 0 0.3rem;
+        min-width: 28rem;
+    }
+
+    background-image: ${(props) => props.info.bannerImage ? `url("${props.info.bannerImage}")` : `url('https://wallpaperaccess.com/full/2825138.jpg')`};
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -27,9 +32,32 @@ export const TopRatedAnime = styled.div<itemData>`
 
         transform: scale(1.05);
 
+        @media(min-width: 620px){
+            animation: sizing forwards 600ms;
+
+            @keyframes sizing{
+                0%{
+                    min-width: 20rem;
+                }
+                100%{
+                    min-width: 28rem;
+                }
+            }
+        }
+
         @media(max-width: 620px){
+            animation: sizing forwards 600ms;
 
             transform: scale(1);
+
+            @keyframes sizing{
+                0%{
+                    min-width: 28rem;
+                }
+                100%{
+                    min-width: 36rem;
+                }
+            }
 
         }
     }

@@ -6,6 +6,8 @@ import HeadingContent from '../../Components/Home/HeadingContent'
 import AnimesReleasingThisWeek from '../../Components/Home/AnimesReleasingThisWeekList'
 import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.svg'
 import { ReactComponent as DotSvg } from '../../imgs/svg/dot.svg'
+import { ReactComponent as AngleLeftSolidSvg } from '../../imgs/svg/angle-left-solid.svg'
+import { ReactComponent as AngleRightSolidSvg } from '../../imgs/svg/angle-right-solid.svg'
 import Trending from '../../Components/Home/Trending'
 import SearchInnerPage from '../../Components/SearchInnerPage'
 import TopRated from '../../Components/Home/TopRated'
@@ -20,6 +22,8 @@ export default function Home() {
   // setIncreaseIdNumberFromMape((increaseIdNumberFromMap) + 1)
 
   const [loading, setLoading] = useState(true)
+  const [loadingSectionTopRated, setLoadingSectionTopRated] = useState(false)
+  const [loadingSectionReleasingThisWeek, setLoadingSectionReleasingThisWeek] = useState(false)
 
   const [randomIndex, setRandomIndex] = useState<number>(0)
 
@@ -27,6 +31,9 @@ export default function Home() {
   const [releasingThisWeek, setReleasingThisWeek] = useState([])
   const [trending, setTrending] = useState([])
   const [topRated, setTopRated] = useState([])
+
+  const [indexPageTopRated, setIndexPageTopRated] = useState<number>(1)
+  const [indexPageReleasingThisWeek, setIndexPageReleasingThisWeek] = useState<number>(1)
 
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
@@ -122,6 +129,89 @@ export default function Home() {
 
   }, [indexInnerPageLink])
 
+  //handles button navigation through results to topRated and Releasing sections
+  const handleSectionPreviousPage = async (section: String, mediaType: String, mediaFormat?: String) => {
+
+    switch (section) {
+
+      case 'top-rated':
+        setLoadingSectionTopRated(true)
+
+        let page;
+
+        if (indexPageTopRated <= 1) {
+          page = 1
+          setIndexPageTopRated(1)
+          console.log(page)
+        }
+        else {
+          page = indexPageTopRated - 1
+          setIndexPageTopRated(indexPageTopRated - 1)
+          console.log(page)
+        }
+
+        const data = await API.getTopRated(mediaType, mediaFormat && mediaFormat, page);
+        setTopRated(data)
+
+        setLoadingSectionTopRated(false)
+        break;
+
+      case 'releasing-this-week':
+        setLoadingSectionReleasingThisWeek(true)
+
+        let page1
+
+        if (indexPageReleasingThisWeek <= 1) {
+          page1 = 1
+          setIndexPageReleasingThisWeek(1)
+        }
+        else {
+          page1 = indexPageReleasingThisWeek - 1
+          setIndexPageReleasingThisWeek(indexPageReleasingThisWeek - 1)
+        }
+
+        const data1 = await API.getReleasingThisWeek(mediaType, mediaFormat && mediaFormat, page1);
+        setReleasingThisWeek(data1)
+
+        setLoadingSectionReleasingThisWeek(false)
+        break;
+
+    }
+
+  }
+
+  //handles button navigation through results to topRated and Releasing sections
+  const handleSectionNextPage = async (section: String, mediaType: String, mediaFormat?: String) => {
+
+    switch (section) {
+
+      case 'top-rated':
+        setLoadingSectionTopRated(true)
+
+        const page = indexPageTopRated + 1
+        setIndexPageTopRated(indexPageTopRated + 1)
+
+        const data = await API.getTopRated(mediaType, mediaFormat && mediaFormat, page);
+        setTopRated(data)
+
+        setLoadingSectionTopRated(false)
+        break;
+
+      case 'releasing-this-week':
+        setLoadingSectionReleasingThisWeek(true)
+
+        const page1 = indexPageReleasingThisWeek + 1
+        setIndexPageReleasingThisWeek(indexPageReleasingThisWeek + 1)
+
+        const data1 = await API.getReleasingThisWeek(mediaType, mediaFormat && mediaFormat, page1);
+        setReleasingThisWeek(data1)
+
+        setLoadingSectionReleasingThisWeek(false)
+        break;
+
+    }
+
+  }
 
   return (
     <C.Container innerPageLink={indexInnerPageLink}>
@@ -155,18 +245,32 @@ export default function Home() {
               <h2>Releasing This Week</h2>
 
               <div className='nav-buttons'>
-                <button type='button'><ArrowLeftSvg /></button>
-                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+                <button
+                  type='button'
+                  disabled={indexPageReleasingThisWeek === 1 ? true : false}
+                  onClick={() => handleSectionPreviousPage('releasing-this-week', 'ANIME')}
+                >
+                  <AngleLeftSolidSvg />
+                </button>
+
+                <button
+                  type='button'
+                  onClick={() => handleSectionNextPage('releasing-this-week', 'ANIME')}
+                >
+                  <AngleRightSolidSvg />
+                </button>
               </div>
 
             </div>
 
             <div className='releasing-this-week'>
+
               {loading === false && (
                 releasingThisWeek.map((item: any, key) => (
                   <AnimesReleasingThisWeek key={key} data={item} />
                 ))
               )}
+
             </div>
 
           </div>
@@ -176,10 +280,26 @@ export default function Home() {
 
               <h2>Top Rated Animes</h2>
 
+
               <div className='nav-buttons'>
-                <button type='button'><ArrowLeftSvg /></button>
-                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+
+                <button
+                  type='button'
+                  disabled={indexPageTopRated === 1 ? true : false}
+                  onClick={() => handleSectionPreviousPage('top-rated', 'ANIME')}
+                >
+                  <AngleLeftSolidSvg />
+                </button>
+
+                <button
+                  type='button'
+                  onClick={() => handleSectionNextPage('top-rated', 'ANIME')}
+                >
+                  <AngleRightSolidSvg />
+                </button>
+
               </div>
+
 
             </div>
 
@@ -190,6 +310,7 @@ export default function Home() {
                 ))
               )}
             </div>
+
           </div>
         </section>
 
@@ -204,8 +325,20 @@ export default function Home() {
               <h2>Releasing This Week</h2>
 
               <div className='nav-buttons'>
-                <button type='button'><ArrowLeftSvg /></button>
-                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+                <button
+                  type='button'
+                  disabled={indexPageReleasingThisWeek === 1 ? true : false}
+                  onClick={() => handleSectionPreviousPage('releasing-this-week', 'MANGA')}
+                >
+                  <AngleLeftSolidSvg />
+                </button>
+
+                <button
+                  type='button'
+                  onClick={() => handleSectionNextPage('releasing-this-week', 'MANGA')}
+                >
+                  <AngleRightSolidSvg />
+                </button>
               </div>
 
             </div>
@@ -226,8 +359,20 @@ export default function Home() {
               <h2>Top Rated Mangas</h2>
 
               <div className='nav-buttons'>
-                <button type='button'><ArrowLeftSvg /></button>
-                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+                <button
+                  type='button'
+                  disabled={indexPageTopRated === 1 ? true : false}
+                  onClick={() => handleSectionPreviousPage('top-rated', 'MANGA')}
+                >
+                  <AngleLeftSolidSvg />
+                </button>
+
+                <button
+                  type='button'
+                  onClick={() => handleSectionNextPage('top-rated', 'MANGA')}
+                >
+                  <AngleRightSolidSvg />
+                </button>
               </div>
 
             </div>
@@ -257,8 +402,20 @@ export default function Home() {
               <h2>Releasing This Week</h2>
 
               <div className='nav-buttons'>
-                <button type='button'><ArrowLeftSvg /></button>
-                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+                <button
+                  type='button'
+                  disabled={indexPageTopRated === 1 ? true : false}
+                  onClick={() => handleSectionPreviousPage('releasing-this-week', 'ANIME', 'MOVIE')}
+                >
+                  <AngleLeftSolidSvg />
+                </button>
+
+                <button
+                  type='button'
+                  onClick={() => handleSectionNextPage('releasing-this-week', 'ANIME', 'MOVIE')}
+                >
+                  <AngleRightSolidSvg />
+                </button>
               </div>
 
             </div>
@@ -279,8 +436,20 @@ export default function Home() {
               <h2>Top Rated Movies</h2>
 
               <div className='nav-buttons'>
-                <button type='button'><ArrowLeftSvg /></button>
-                <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+                <button
+                  type='button'
+                  disabled={indexPageTopRated === 1 ? true : false}
+                  onClick={() => handleSectionPreviousPage('top-rated', 'ANIME', 'MOVIE')}
+                >
+                  <AngleLeftSolidSvg />
+                </button>
+
+                <button
+                  type='button'
+                  onClick={() => handleSectionNextPage('top-rated', 'ANIME', 'MOVIE')}
+                >
+                  <AngleRightSolidSvg />
+                </button>
               </div>
 
             </div>

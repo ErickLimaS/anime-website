@@ -6,6 +6,8 @@ export const Container = styled.div`
     flex-direction: row;
     justify-content: center;
 
+    border-radius: 4px;
+
     .skeleton{
 
         .skeleton-name{
@@ -105,10 +107,10 @@ export const Container = styled.div`
                     border: 1px solid #c0c0c0;
 
                     svg{
-                        width: 2rem;
+                        width: 0.7rem;
                         height: auto;
 
-                        color: #333333;
+                        fill: #444;
                     }
 
                     :hover{
@@ -116,8 +118,16 @@ export const Container = styled.div`
                     }
 
                 }
-                button.arrow-to-be-inverted{
-                    transform: rotate(180deg);
+                button[disabled]{
+                    cursor: default;
+
+                    background-color: rgba(0,0,0,.1);
+
+                    opacity: 0.6;
+
+                    :hover{
+                        border: 1px solid #c0c0c0;
+                    }
                 }
 
                 

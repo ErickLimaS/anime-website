@@ -5,7 +5,8 @@ import { useParams } from 'react-router'
 import AsideNavLinks from '../../Components/AsideNavLinks'
 import HeadingContent from '../../Components/Home/HeadingContent'
 import TopRated from '../../Components/Home/TopRated'
-import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.svg'
+import { ReactComponent as AngleLeftSolidSvg } from '../../imgs/svg/angle-left-solid.svg'
+import { ReactComponent as AngleRightSolidSvg } from '../../imgs/svg/angle-right-solid.svg'
 import Trending from '../../Components/Home/Trending'
 
 export default function FormatPage() {
@@ -22,6 +23,8 @@ export default function FormatPage() {
     const [mangasTrending, setMangasTrending] = useState([])
 
     const [randomIndex, setRandomIndex] = useState<number>(0)
+
+    const [indexPage, setIndexPage] = useState<number>(1)
 
     const [loading, setLoading] = useState(true)
 
@@ -54,6 +57,41 @@ export default function FormatPage() {
 
     }, [format])
 
+    //handles button navigation through results to topRated and Releasing sections
+    const handleSectionPreviousPage = async (section: String) => {
+
+
+        let page;
+
+        if (indexPage <= 1) {
+            page = 1
+            setIndexPage(1)
+            console.log(page)
+        }
+        else {
+            page = indexPage - 1
+            setIndexPage(indexPage - 1)
+            console.log(page)
+        }
+
+        const data = await API.getMediaForThisFormat(format, page);
+        setAnimesGenreList(data)
+
+
+    }
+
+    //handles button navigation through results to topRated and Releasing sections
+    const handleSectionNextPage = async (section: String) => {
+
+        const page = indexPage + 1
+        setIndexPage(indexPage + 1)
+
+        const data = await API.getMediaForThisFormat(format, page);
+        setAnimesGenreList(data)
+
+
+    }
+
     return (
         <C.Container>
 
@@ -82,11 +120,23 @@ export default function FormatPage() {
                         <div className='top-rated-anime'>
 
                             <div className='heading'>
-                                <h2>Top Rated on <span>{name} Format</span></h2>
+                                <h2>Top Rated <span>{name}'s</span></h2>
 
                                 <div className='nav-buttons'>
-                                    <button type='button'><ArrowLeftSvg /></button>
-                                    <button type='button' className='arrow-to-be-inverted'><ArrowLeftSvg /></button>
+                                    <button
+                                        type='button'
+                                        disabled={indexPage === 1 ? true : false}
+                                        onClick={() => handleSectionPreviousPage('anime')}
+                                    >
+                                        <AngleLeftSolidSvg />
+                                    </button>
+
+                                    <button
+                                        type='button'
+                                        onClick={() => handleSectionNextPage('anime')}
+                                    >
+                                        <AngleRightSolidSvg />
+                                    </button>
                                 </div>
                             </div>
 
