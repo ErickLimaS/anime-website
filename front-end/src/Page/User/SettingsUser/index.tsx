@@ -55,7 +55,7 @@ export default function SettingsUser() {
   const setNewAvatarImg = () => {
 
     // dispatch(updateAvatarImg(userInfo.id, imgUrl))
-    dispatch(updateAvatarImg(userInfo.id, 'https://pm1.narvii.com/6445/d9dff8ed0332a39b97195b55fa6f597c82d9c1b6_hq.jpg')) //test
+    dispatch(updateAvatarImg('https://pm1.narvii.com/6445/d9dff8ed0332a39b97195b55fa6f597c82d9c1b6_hq.jpg')) //test
 
   }
 
@@ -67,7 +67,7 @@ export default function SettingsUser() {
 
       if (newPasswordRef.current.value === confirmNewPassowrdRef.current.value) {
 
-        dispatch(updateUserInfo(userInfo.id, nameRef.current.value, emailRef.current.value, currentPasswordRef.current.value, newPasswordRef.current.value))
+        dispatch(updateUserInfo(nameRef.current.value, emailRef.current.value, currentPasswordRef.current.value, newPasswordRef.current.value))
 
       }
       else {
@@ -102,7 +102,7 @@ export default function SettingsUser() {
   //removes all data from book
   const handleEraseData = () => {
 
-    dispatch(removeDataFromUserMedia(userInfo.id))
+    dispatch(removeDataFromUserMedia())
 
   }
 
