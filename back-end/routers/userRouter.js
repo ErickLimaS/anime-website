@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from 'bcrypt'
 import expressAsyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
+import { generateToken, isAuth } from "../utils.js";
 
 const userRouter = express.Router()
 
@@ -33,7 +34,8 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
-            avatarImg: user.avatarImg
+            avatarImg: user.avatarImg,
+            token: generateToken(user)
 
         })
 
@@ -66,7 +68,8 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
                 name: user.name,
                 email: user.email,
                 avatarImg: user.avatarImg,
-                mediaAdded: user.mediaAdded
+                mediaAdded: user.mediaAdded,
+                token: generateToken(user)
 
             })
 
@@ -83,10 +86,10 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
 
 }))
 
-//GET MEDIA USER'S MEDIA
-userRouter.get('/media', expressAsyncHandler(async (req, res) => {
+//GET USER'S BOOKMARKED MEDIA
+userRouter.get('/media', isAuth, expressAsyncHandler(async (req, res) => {
 
-    const user = await User.findById(req.body.id)
+    const user = await User.findById(req.user.id)
 
     if (!user) {
         return res.status(404).send("User Don't Exist.")
@@ -113,9 +116,9 @@ userRouter.get('/media', expressAsyncHandler(async (req, res) => {
 }))
 
 //ADD MEDIA TO USER
-userRouter.post('/add-media', expressAsyncHandler(async (req, res) => {
+userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
 
-    const user = await User.findById(req.body.id)
+    const user = await User.findById(req.user.id)
 
     if (!user) {
         return res.status(404).send("User Don't Exist.")
@@ -146,9 +149,9 @@ userRouter.post('/add-media', expressAsyncHandler(async (req, res) => {
 }))
 
 //REMOVE MEDIA FROM USER
-userRouter.post('/remove-media', expressAsyncHandler(async (req, res) => {
+userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) => {
 
-    const user = await User.findById(req.body.id)
+    const user = await User.findById(req.user.id)
 
     if (!user) {
         return res.status(404).send("User Don't Exist.")
@@ -184,9 +187,9 @@ userRouter.post('/remove-media', expressAsyncHandler(async (req, res) => {
 }))
 
 //UPDATE USER PROFILE
-userRouter.put('/update-user-profile', expressAsyncHandler(async (req, res) => {
+userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, res) => {
 
-    const user = await User.findById(req.body.id)
+    const user = await User.findById(req.user.id)
 
     if (!user) {
         return res.status(404).send(`User Don't Exist`)
@@ -239,15 +242,15 @@ userRouter.put('/update-user-profile', expressAsyncHandler(async (req, res) => {
 }))
 
 //CHANGE USER AVATAR IMAGE
-userRouter.put('/change-user-avatar-image', expressAsyncHandler(async (req, res) => {
+userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (req, res) => {
 
-    const user = await User.findById(req.body.id)
+    const user = await User.findById(req.user.id)
 
-    if(!user){
+    if (!user) {
         return res.status(404).send('User Not Found')
     }
 
-    try{
+    try {
 
         user.avatarImg = req.body.newAvatarImg
 
@@ -262,26 +265,26 @@ userRouter.put('/change-user-avatar-image', expressAsyncHandler(async (req, res)
         })
 
     }
-    catch(error){
+    catch (error) {
         return res.status(500).send(error)
     }
 
 }))
 
 //ERASE MEDIA DATA
-userRouter.put('/erase-media-added-data', expressAsyncHandler(async (req, res) => {
+userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req, res) => {
 
-    const user = await User.findById(req.body.id)
+    const user = await User.findById(req.user.id)
 
-    if(!user){
+    if (!user) {
         return res.status(404).send('User Not Found')
     }
 
-    try{
+    try {
 
-       user.mediaAdded = user.mediaAdded.splice(0,0)
+        user.mediaAdded = user.mediaAdded.splice(0, 0)
 
-       user.save()
+        user.save()
 
         return res.status(200).send({
             id: user._id,
@@ -292,7 +295,7 @@ userRouter.put('/erase-media-added-data', expressAsyncHandler(async (req, res) =
         })
 
     }
-    catch(error){
+    catch (error) {
         return res.status(500).send(error)
     }
 

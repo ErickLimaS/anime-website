@@ -2,9 +2,9 @@ POST http://localhost:9000/users/register
 Content-Type: application/json
 
 {
-    "name": "test1",
-    "email":"email@gmail",
-    "password":"password"
+    "name": "test01",
+    "email":"email01@gmail",
+    "password":"email01@gmail"
 }
 
 ###
@@ -18,13 +18,19 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:9000/users/media
+Content-Type: application/json
 
+{
+
+}
+
+###
 POST http://localhost:9000/users/add-media
 Content-Type: application/json
 
 
 {
-    "id": "62b60725c6d209e1756ad0d1",
     "media": {
         "id": 1231232191,
         "fullTitle": "full name1",
@@ -42,7 +48,6 @@ POST http://localhost:9000/users/remove-media
 Content-Type: application/json
 
 {
-    "id": "62b5f61b3ba5d72b06c097ab",
     "media": {
         "id": 1231232191
     }
@@ -54,7 +59,6 @@ PUT http://localhost:9000/users/update-user-profile
 Content-Type: application/json
 
 {
-    "id": "62c5dd7e24ba24b1258564ab",
     "name": "Erick",
     "email": "",
     "currentPassword": "",
@@ -66,7 +70,6 @@ PUT http://localhost:9000/users/change-user-avatar-image
 Content-Type: application/json
 
 {
-    "id": "62c5dd7e24ba24b1258564ab",
     "newAvatarImg": "nova url"
 }
 
@@ -75,5 +78,4 @@ PUT http://localhost:9000/users/erase-media-added-data
 Content-Type: application/json
 
 {
-    "id": "62c5dd7e24ba24b1258564ab"
 }
