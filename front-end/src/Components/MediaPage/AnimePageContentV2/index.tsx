@@ -82,7 +82,7 @@ export default function AnimePageContentV2(data: any) {
 
       if (userInfo) {
 
-        dispatch(addMediaToUserAccount(userInfo.id, {
+        dispatch(addMediaToUserAccount({
           'addedAt': new Date(),
           'idGoGoAnime': data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
           'fullTitle': data.data.animeTitle,
@@ -120,7 +120,7 @@ export default function AnimePageContentV2(data: any) {
     else {
 
       //remove dispatch 
-      dispatch(removeMediaFromUserAccount(userInfo.id, {
+      dispatch(removeMediaFromUserAccount({
 
         'idGoGoAnime': data.data.animeTitle.replace(/!|#|/g, ``).replace(/%20/g, `-`)
 

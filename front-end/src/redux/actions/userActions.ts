@@ -24,8 +24,6 @@ export const registerUser = (name: String, email: String, password: String) => a
             }
         })
 
-        console.log(data)
-
         dispatch({ type: USER_REGISTER_SUCCESS, payload: data })
         dispatch({ type: USER_LOGIN_SUCCESS, payload: data })
 
@@ -110,26 +108,26 @@ export const logoutUser = (id: number) => async (dispatch: Dispatch<AnyAction>) 
 
 }
 
-export const addMediaToUserAccount = (id: String, media: any) => async (dispatch: Dispatch<AnyAction>) => {
+export const addMediaToUserAccount = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({ type: USER_MEDIA_ADD_REQUEST, payload: media })
 
     try {
 
+        const { userLogin: { userInfo } } = getState()
+
         const { data } = await Axios({
             url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/add-media`,
             method: 'POST',
             headers: {
-                'Content-Type': 'application/JSON'
+                'Content-Type': 'application/JSON',
+                Authorization: `Bearer ${userInfo.token}`
             },
             data: {
-                'id': `${id}`,
                 'media': media
             }
 
         })
-
-        console.log(data)
 
         localStorage.setItem('userInfo', JSON.stringify(data))
 
@@ -147,20 +145,22 @@ export const addMediaToUserAccount = (id: String, media: any) => async (dispatch
 
 }
 
-export const removeMediaFromUserAccount = (id: String, media: any) => async (dispatch: Dispatch<AnyAction>) => {
+export const removeMediaFromUserAccount = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({ type: USER_MEDIA_REMOVE_REQUEST, payload: media })
 
     try {
 
+        const { userLogin: { userInfo } } = getState()
+
         const { data } = await Axios({
             url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/remove-media`,
             method: 'POST',
             headers: {
-                'Content-Type': 'application/JSON'
+                'Content-Type': 'application/JSON',
+                Authorization: `Bearer ${userInfo.token}`
             },
             data: {
-                'id': `${id}`,
                 'media': media
             }
 
@@ -182,7 +182,7 @@ export const removeMediaFromUserAccount = (id: String, media: any) => async (dis
 
 }
 
-export const updateUserInfo = (id: String, name: String, email: String, currentPassword: String, newPassword: String) => async (dispatch: Dispatch<AnyAction>) => {
+export const updateUserInfo = (name: String, email: String, currentPassword: String, newPassword: String) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
         type: USER_PROFILE_UPDATE_REQUEST,
@@ -191,14 +191,16 @@ export const updateUserInfo = (id: String, name: String, email: String, currentP
 
     try {
 
+        const { userLogin: { userInfo } } = getState()
+
         const { data } = await Axios({
             url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/update-user-profile`,
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/JSON'
+                'Content-Type': 'application/JSON',
+                Authorization: `Bearer ${userInfo.token}`
             },
             data: {
-                'id': `${id}`,
                 'name': `${name}`,
                 'email': `${email}`,
                 'currentPassword': `${currentPassword}`,
@@ -206,8 +208,6 @@ export const updateUserInfo = (id: String, name: String, email: String, currentP
             }
 
         })
-
-        console.log(data)
 
         dispatch({ type: USER_PROFILE_UPDATE_SUCCESS, payload: data })
 
@@ -226,7 +226,7 @@ export const updateUserInfo = (id: String, name: String, email: String, currentP
 
 }
 
-export const updateAvatarImg = (id: String, imgUrl: String) => async (dispatch: Dispatch<AnyAction>) => {
+export const updateAvatarImg = (imgUrl: String) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
         type: UPDATE_USER_AVATAR_IMAGE_REQUEST,
@@ -235,20 +235,20 @@ export const updateAvatarImg = (id: String, imgUrl: String) => async (dispatch: 
 
     try {
 
+        const { userLogin: { userInfo } } = getState()
+
         const { data } = await Axios({
             url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/change-user-avatar-image`,
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/JSON'
+                'Content-Type': 'application/JSON',
+                Authorization: `Bearer ${userInfo.token}`
             },
             data: {
-                'id': `${id}`,
                 'newAvatarImg': `${imgUrl}`
             }
 
         })
-
-        console.log(data)
 
         dispatch({ type: UPDATE_USER_AVATAR_IMAGE_SUCCESS, payload: data })
 
@@ -267,7 +267,7 @@ export const updateAvatarImg = (id: String, imgUrl: String) => async (dispatch: 
 
 }
 
-export const removeDataFromUserMedia = (id: String) => async (dispatch: Dispatch<AnyAction>) => {
+export const removeDataFromUserMedia = () => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
         type: DELETE_USER_MEDIA_REQUEST
@@ -275,19 +275,18 @@ export const removeDataFromUserMedia = (id: String) => async (dispatch: Dispatch
 
     try {
 
+        const { userLogin: { userInfo } } = getState()
+
         const { data } = await Axios({
             url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/erase-media-added-data`,
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/JSON'
+                'Content-Type': 'application/JSON',
+                Authorization: `Bearer ${userInfo.token}`
             },
-            data: {
-                'id': `${id}`
-            }
+            data: {}
 
         })
-
-        console.log(data)
 
         dispatch({ type: DELETE_USER_MEDIA_SUCCESS, payload: data })
 

@@ -44,7 +44,6 @@ export default function Trending(data: any) {
             break;
     }
 
-
     return (
         <>
             <C.AnimeToBeListed info={data.data} >

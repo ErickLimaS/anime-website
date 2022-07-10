@@ -103,7 +103,8 @@ userRouter.get('/media', isAuth, expressAsyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             avatarImg: user.avatarImg,
-            mediaAdded: user.mediaAdded
+            mediaAdded: user.mediaAdded,
+            token: generateToken(user)
 
         })
 
@@ -136,7 +137,8 @@ userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             avatarImg: user.avatarImg,
-            mediaAdded: user.mediaAdded
+            mediaAdded: user.mediaAdded,
+            token: generateToken(user)
 
         })
 
@@ -173,7 +175,8 @@ userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) =>
             name: user.name,
             email: user.email,
             avatarImg: user.avatarImg,
-            mediaAdded: user.mediaAdded
+            mediaAdded: user.mediaAdded,
+            token: generateToken(user)
 
         })
 
@@ -228,7 +231,8 @@ userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, r
                 name: user.name,
                 email: user.email,
                 avatarImg: user.avatarImg,
-                mediaAdded: user.mediaAdded
+                mediaAdded: user.mediaAdded,
+                token: generateToken(user)
             })
 
         }
@@ -261,7 +265,8 @@ userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (r
             name: user.name,
             email: user.email,
             avatarImg: user.avatarImg,
-            mediaAdded: user.mediaAdded
+            mediaAdded: user.mediaAdded,
+            token: generateToken(user)
         })
 
     }
@@ -291,7 +296,8 @@ userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req
             name: user.name,
             email: user.email,
             avatarImg: user.avatarImg,
-            mediaAdded: user.mediaAdded
+            mediaAdded: user.mediaAdded,
+            token: generateToken(user)
         })
 
     }

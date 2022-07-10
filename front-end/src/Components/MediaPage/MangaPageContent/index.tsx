@@ -71,7 +71,7 @@ export default function MangaPageContent(data: any) {
 
       if (userInfo) {
 
-        dispatch(addMediaToUserAccount(userInfo.id, {
+        dispatch(addMediaToUserAccount({
           'addedAt': new Date(),
           'id': Number(data.data.id),
           'primaryColor': data.data.coverImage.color ? data.data.coverImage.color : '',
@@ -111,7 +111,7 @@ export default function MangaPageContent(data: any) {
     else {
 
       //remove dispatch 
-      dispatch(removeMediaFromUserAccount(userInfo.id, {
+      dispatch(removeMediaFromUserAccount({
 
         'id': Number(data.data.id)
 
