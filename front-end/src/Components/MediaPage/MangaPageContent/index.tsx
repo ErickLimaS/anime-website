@@ -64,6 +64,9 @@ export default function MangaPageContent(data: any) {
   const dispatch: any = useDispatch()
   const navigate: any = useNavigate()
 
+  //store current media url to redirect if user is not logged in
+  const currentUrlToRedirect = window.location.pathname
+  
   const handleMediaToAccount = () => {
 
     //CHECKS if dont has on user account
@@ -102,7 +105,7 @@ export default function MangaPageContent(data: any) {
       }
       else {
 
-        navigate('/login')
+        navigate(`/login?redirect=${currentUrlToRedirect.slice(1,currentUrlToRedirect.length)}`)
 
       }
 

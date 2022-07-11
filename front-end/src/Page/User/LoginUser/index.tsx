@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, Route } from 'react-router-dom';
+import { Link, Route, useNavigate } from 'react-router-dom';
+import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
 import { AnyAction, Dispatch } from 'redux';
 import Swal from 'sweetalert2';
 import HeaderAlternative from '../../../Components/HeaderAlternative';
@@ -18,11 +19,18 @@ export default function LoginUser() {
 
     const dispatch: any = useDispatch()
 
+    const redirect = window.location.search ? `/${window.location.search.split(`=`)[1]}` : "/"
+    const navigate = useNavigate()
+
     useEffect(() => {
 
         document.title = 'Login | AniProject'
 
-    }, [])
+        if (userInfo) {
+            navigate(`${redirect}`)
+        }
+
+    }, [navigate, redirect, userInfo])
 
     const formHandler = (e: React.FormEvent) => {
 
@@ -61,8 +69,6 @@ export default function LoginUser() {
 
     //handles errors
     const errorAlert = (errorStatus: any) => {
-
-        console.log(errorStatus)
 
         switch (errorStatus) {
             case 400:
@@ -131,6 +137,13 @@ export default function LoginUser() {
 
                     <h1>Login</h1>
 
+                    {loading && (
+                        <LoadingSvg />
+                    )}
+                    {error && (
+                        errorAlert(error)
+                    )}
+
                     <div>
                         <label htmlFor='email'>Email</label>
                         <input type='email' id='email' placeholder='Email' ref={email} required></input>
@@ -143,12 +156,6 @@ export default function LoginUser() {
 
                     <div>
                         <button type='submit' id='login'>Login</button>
-                        {loading && (
-                            <span>loading...</span>
-                        )}
-                        {error && (
-                            errorAlert(error)
-                        )}
                     </div>
 
                     <div className='register'>

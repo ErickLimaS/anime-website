@@ -83,7 +83,9 @@ export default function AnimePageContent(data: any) {
 
   }, [data.data.characters.edges, data.data.streamingEpisodes.length])
 
-  // add media to user
+  //store current media url to redirect if user is not logged in
+  const currentUrlToRedirect = window.location.pathname
+
   const dispatch: any = useDispatch()
   const navigate: any = useNavigate()
 
@@ -125,10 +127,9 @@ export default function AnimePageContent(data: any) {
       }
       else {
 
-        navigate('/login')
+        navigate(`/login?redirect=${currentUrlToRedirect.slice(1,currentUrlToRedirect.length)}`)
 
       }
-
 
     }
     else {

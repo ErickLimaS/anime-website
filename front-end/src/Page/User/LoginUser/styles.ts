@@ -61,6 +61,7 @@ export const Container = styled.div`
             width: 60%!important;
 
             padding: 0 2rem!important;
+
         }
     }
 
@@ -71,6 +72,7 @@ export const Container = styled.div`
             width: 80%!important;
 
             padding: 4rem 2rem!important;
+
         }
 
     }
@@ -123,6 +125,24 @@ export const Container = styled.div`
         background-color: #fafafa;
 
         border-radius: 4px;
+
+        svg{
+            height: 2rem;
+            width: auto;
+
+            animation: opacity forwards 300ms;
+
+             @keyframes opacity{
+                0%{
+                    opacity: 0;
+                    min-height: 0;
+                }
+                100%{
+                    min-height: 6rem;
+                    opacity: 1;
+                }
+            }
+        }
 
         h1{
             margin: 1rem 0;

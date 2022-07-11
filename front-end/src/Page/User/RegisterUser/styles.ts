@@ -139,6 +139,24 @@ export const Container = styled.div`
 
         }
 
+        svg, #error{
+            height: 1rem;
+            width: auto;
+
+            animation: opacity forwards 300ms;
+
+             @keyframes opacity{
+                0%{
+                    opacity: 0;
+                    min-height: 0;
+                }
+                100%{
+                    min-height: 5rem;
+                    opacity: 1;
+                }
+            }
+        }
+
         >div{
             
             width: 100%;

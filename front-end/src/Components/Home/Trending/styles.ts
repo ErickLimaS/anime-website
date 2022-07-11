@@ -85,6 +85,21 @@ export const AnimeToBeListed = styled.div<itemData>`
     }
 
     :hover{
+        
+        @media(max-width: 768px){
+
+            animation: opacity forwards 450ms;
+
+            @keyframes opacity {
+                0%{
+                    opacity: 0;
+                }
+                100%{
+                    opacity: 1;
+                }
+            }
+
+        }
 
         .cover{
 
@@ -111,6 +126,13 @@ export const AnimeToBeListed = styled.div<itemData>`
             right: 34rem;
 
             width: 24%;
+
+            @media(max-width: 768px){
+                
+                right: initial;
+
+                width: initial;
+            }
 
             padding: 1rem;
 

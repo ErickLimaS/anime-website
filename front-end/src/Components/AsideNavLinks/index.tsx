@@ -33,7 +33,7 @@ export default function AsideNavLinks(data: any) {
     e.preventDefault()
 
     //makes logout 
-    dispatch(logoutUser(userInfo.id))
+    dispatch(logoutUser())
 
   }
 

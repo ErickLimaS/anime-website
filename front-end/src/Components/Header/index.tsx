@@ -36,7 +36,7 @@ export default function Header() {
         e.preventDefault()
         //make logout system with redux after making the sign up
 
-        dispatch(logoutUser(userInfo.id))
+        dispatch(logoutUser())
 
     }
 

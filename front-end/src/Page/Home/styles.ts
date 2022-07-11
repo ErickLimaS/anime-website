@@ -196,7 +196,6 @@ export const Container = styled.div<ContainerProps>`
                                 border: 1px solid #c0c0c0;
                             }
                         }
-
                         
                     }
 
@@ -215,7 +214,7 @@ export const Container = styled.div<ContainerProps>`
                     overflow-y: auto;
                 }
 
-                ::-webkit-scrollbar {
+                /* ::-webkit-scrollbar {
                     height: 8px;
                 }
 
@@ -231,7 +230,7 @@ export const Container = styled.div<ContainerProps>`
 
                 ::-webkit-scrollbar-thumb:hover {
                     background: #555; 
-                }
+                } */
 
             }
 

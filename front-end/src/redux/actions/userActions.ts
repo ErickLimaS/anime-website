@@ -83,15 +83,15 @@ export const loginUser = (email: String, password: String) => async (dispatch: D
 
 }
 
-export const logoutUser = (id: number) => async (dispatch: Dispatch<AnyAction>) => {
+export const logoutUser = () => async (dispatch: Dispatch<AnyAction>) => {
 
-    dispatch({ type: USER_LOGOUT_REQUEST, action: id })
+    dispatch({ type: USER_LOGOUT_REQUEST})
 
     try {
 
         localStorage.removeItem('userInfo')
 
-        dispatch({ type: USER_LOGOUT_SUCCESS, action: id })
+        dispatch({ type: USER_LOGOUT_SUCCESS })
 
         document.location.reload()
 

@@ -194,19 +194,19 @@ export const Container = styled.div<Props>`
         
 
         #h2-0{
-            border: ${props => props.indexHeading === 0 ? '1px solid transparent': '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 0 ? '#ff5ebc!important': '#fafafa'};
-            color: ${props => props.indexHeading === 0 ? '#fff': '#ff5ebc'};
+            border: ${props => props.indexHeading === 0 ? '1px solid transparent' : '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 0 ? '#ff5ebc!important' : '#fafafa'};
+            color: ${props => props.indexHeading === 0 ? '#fff' : '#ff5ebc'};
         }
         #h2-1{
-            border: ${props => props.indexHeading === 1 ? '1px solid transparent': '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 1 ? '#ff5ebc!important': '#fafafa'};
-            color: ${props => props.indexHeading === 1 ? '#fff': '#ff5ebc'};
+            border: ${props => props.indexHeading === 1 ? '1px solid transparent' : '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 1 ? '#ff5ebc!important' : '#fafafa'};
+            color: ${props => props.indexHeading === 1 ? '#fff' : '#ff5ebc'};
         }
         #h2-2{
-            border: ${props => props.indexHeading === 2 ? '1px solid transparent': '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 2 ? '#ff5ebc!important': '#fafafa'};
-            color: ${props => props.indexHeading === 2 ? '#fff': '#ff5ebc'};
+            border: ${props => props.indexHeading === 2 ? '1px solid transparent' : '1px solid #ff5ebc'};
+            background-color: ${props => props.indexHeading === 2 ? '#ff5ebc!important' : '#fafafa'};
+            color: ${props => props.indexHeading === 2 ? '#fff' : '#ff5ebc'};
         }
         
         @media(max-width: 620px){
@@ -418,22 +418,24 @@ export const Container = styled.div<Props>`
                 width: auto;
             }
         
-            ::-webkit-scrollbar {
-                height: 8px;
-            }
+            @media(min-width: 1080px){
+                ::-webkit-scrollbar {
+                    height: 8px;
+                }
 
-            ::-webkit-scrollbar-track {
-                background: #f1f1f1; 
-            }
-            
-            ::-webkit-scrollbar-thumb {
-                background: #888;
+                ::-webkit-scrollbar-track {
+                    background: #f1f1f1; 
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: #888;
 
-                border-radius: 2px;
-            }
+                    border-radius: 2px;
+                }
 
-            ::-webkit-scrollbar-thumb:hover {
-                background: #555; 
+                ::-webkit-scrollbar-thumb:hover {
+                    background: #555; 
+                }
             }
         }
     }
@@ -462,27 +464,30 @@ export const Container = styled.div<Props>`
             display: flex;
             flex-direction: row;
 
-            ::-webkit-scrollbar {
-                height: 8px;
-            }
-
-            ::-webkit-scrollbar-track {
-                background: #f1f1f1; 
-            }
-            
-            ::-webkit-scrollbar-thumb {
-                background: #888;
-
-                border-radius: 2px;
-            }
-
-            ::-webkit-scrollbar-thumb:hover {
-                background: #555; 
-            }
-
             @media(max-width: 1080px){
                 width: auto;
             }
+
+            @media(min-width: 1080px){
+                ::-webkit-scrollbar {
+                    height: 8px;
+                }
+
+                ::-webkit-scrollbar-track {
+                    background: #f1f1f1; 
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: #888;
+
+                    border-radius: 2px;
+                }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: #555; 
+                }
+            }
+            
         }
     }
 

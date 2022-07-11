@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom';
+import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
+import { Link, useNavigate } from 'react-router-dom';
 import { AnyAction, Dispatch } from 'redux';
 import Swal from 'sweetalert2';
 import HeaderAlternative from '../../../Components/HeaderAlternative';
@@ -14,9 +15,19 @@ export default function RegisterUser() {
     const password = React.useRef() as React.MutableRefObject<HTMLInputElement>
     const confirmPassword = React.useRef() as React.MutableRefObject<HTMLInputElement>
 
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
+
+    const redirect = window.location.search ? `/${window.location.search.split(`=`)[1]}` : "/"
+    const navigate = useNavigate()
+
     useEffect(() => {
 
         document.title = 'Register | AniProject'
+
+        if (userInfo) {
+            navigate(`${redirect}`)
+        }
 
     }, [])
 
@@ -25,6 +36,55 @@ export default function RegisterUser() {
     const userRegister = useSelector((state: any) => state.userRegister)
 
     const { loading, error } = userRegister
+
+    //handles errors
+    const errorAlert = (errorStatus: any) => {
+
+        switch (errorStatus) {
+            case 400:
+                Swal.fire({
+
+                    icon: 'warning',
+                    title: 'Error',
+                    titleText: `${errorStatus}: Password Incorrect!`,
+                    text: 'Password Incorrect. Try Typing Again!'
+
+                })
+                break
+            case 403:
+                Swal.fire({
+
+                    icon: 'info',
+                    title: 'Error',
+                    titleText: `${errorStatus}: Before Log In!`,
+                    text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
+                    allowOutsideClick: false,
+                    footer: 'https://cors-anywhere.herokuapp.com/'
+                })
+                break
+            case 404:
+                Swal.fire({
+
+                    icon: 'info',
+                    title: 'Error',
+                    titleText: `${errorStatus}: Email Not Registered!`,
+                    text: 'This Email Is Not on Our Database. Register Your Account.'
+
+                })
+                break
+            default:
+                Swal.fire({
+
+                    icon: 'error',
+                    title: 'Error',
+                    titleText: `${errorStatus}: Something Happen!`,
+                    text: "We Don't Know What Happen. But Try Again!"
+
+                })
+                break
+        }
+
+    }
 
     const formHandler = (e: React.FormEvent) => {
 
@@ -82,6 +142,14 @@ export default function RegisterUser() {
 
                     <h1>Register</h1>
 
+                    {loading && (
+                        <LoadingSvg />
+                    )}
+                    {error && (
+                        // errorAlert(error.status())
+                        <span id='error'>error: {error}</span>
+                    )}
+
                     <div>
                         <label htmlFor='name'>Name</label>
                         <input type='text' id='name' placeholder='Name' ref={name} required></input>
@@ -104,12 +172,6 @@ export default function RegisterUser() {
 
                     <div>
                         <button type='submit' id='submit'>Register</button>
-                        {loading && (
-                            <span>loading...</span>
-                        )}
-                        {error && (
-                            <span>error: {error}</span>
-                        )}
                     </div>
 
                     <div className='login'>

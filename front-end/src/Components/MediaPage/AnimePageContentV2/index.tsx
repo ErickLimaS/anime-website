@@ -41,6 +41,9 @@ export default function AnimePageContentV2(data: any) {
   const remLoading = removeMediaFromUserAccounts.loading
   const remError = removeMediaFromUserAccounts.error
 
+  //store current media url to redirect if user is not logged in
+  const currentUrlToRedirect = window.location.pathname
+
   useEffect(() => {
 
     window.scrollTo(0, 0);
@@ -111,7 +114,7 @@ export default function AnimePageContentV2(data: any) {
       }
       else {
 
-        navigate('/login')
+        navigate(`/login?redirect=${currentUrlToRedirect.slice(1,currentUrlToRedirect.length)}`)
 
       }
 

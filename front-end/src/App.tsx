@@ -11,7 +11,7 @@ import GenrePage from './Page/GenrePage';
 import FormatPage from './Page/FormatPage';
 import RegisterUser from './Page/User/RegisterUser';
 import LoginUser from './Page/User/LoginUser';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SettingsUser from './Page/User/SettingsUser';
 import BookmarkUser from './Page/User/BookmarksUser';
 import AnimePageV2 from './Page/MediaPage/AnimePageV2';
@@ -21,13 +21,47 @@ import OvaPage from './Page/MediaPage/OvaPage';
 import SpecialPage from './Page/MediaPage/SpecialPage';
 import OnaPage from './Page/MediaPage/OnaPage';
 import TvShortPage from './Page/MediaPage/TvShortPage';
+import { logoutUser } from './redux/actions/userActions';
+import Swal from 'sweetalert2';
 
 function App() {
 
   //Checks if user is Logged In
   const userLogin = useSelector((state: any) => state.userLogin)
+  const addMediaToUserAccount = useSelector((state: any) => state.addMediaToUserAccount)
+  const removeMediaFromUserAccount = useSelector((state: any) => state.removeMediaFromUserAccount)
+  const updateAvatarImg = useSelector((state: any) => state.updateAvatarImg)
+  const updateUserInfo = useSelector((state: any) => state.updateUserInfo)
+  const deleteUserMedia = useSelector((state: any) => state.deleteUserMedia)
 
   const { userInfo } = userLogin
+
+  //handles token expiration error, forcing log out to get a new token 
+  const remError = removeMediaFromUserAccount.error
+  const updateAvatarError = updateAvatarImg.error
+  const updateUserError = updateUserInfo.error
+  const addError = addMediaToUserAccount.error
+  const deleteMediaError = deleteUserMedia.error
+
+  const dispatch: any = useDispatch()
+
+  if (addError == 401 || remError == 401 || updateAvatarError == 401 || updateUserError == 401 || deleteMediaError == 401) {
+
+    dispatch(logoutUser())
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Security First!',
+      titleText: `401: Security First!`,
+      text: 'You Will Need To Login Again So We Will Make Your Account Secure!',
+      allowOutsideClick: false
+    }).then(() => {
+
+      window.location.pathname = "/login"
+
+    })
+
+  }
 
   window.scrollTo(0, 0);
 
@@ -40,8 +74,8 @@ function App() {
         <Routes>
 
           {/* USER LOG IN/SIGN UP */}
-          <Route path='/login' element={!userInfo ? <LoginUser /> : <Navigate to='/' />} />
-          <Route path='/register' element={!userInfo ? <RegisterUser /> : <Navigate to='/' />} />
+          <Route path='/login' element={<LoginUser />} />
+          <Route path='/register' element={<RegisterUser />} />
 
           {/* USER CATEGORY */}
           <Route path='/bookmarks' element={userInfo ? < BookmarkUser /> : <Navigate to='/' />} />
