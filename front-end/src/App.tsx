@@ -47,18 +47,18 @@ function App() {
 
   if (addError == 401 || remError == 401 || updateAvatarError == 401 || updateUserError == 401 || deleteMediaError == 401) {
 
-    dispatch(logoutUser())
-
     Swal.fire({
       icon: 'warning',
       title: 'Security First!',
       titleText: `401: Security First!`,
       text: 'You Will Need To Login Again So We Will Make Your Account Secure!',
-      allowOutsideClick: false
-    }).then(() => {
+      allowOutsideClick: false,
+      didClose: () => {
 
-      window.location.pathname = "/login"
+        dispatch(logoutUser())
+        window.location.pathname = "/login"
 
+      }
     })
 
   }
