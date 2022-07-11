@@ -100,7 +100,11 @@ export const Container = styled.div<Props>`
         border-left: 2px solid #e6e6e6;
         padding: 1rem 3rem 3rem 3rem;
 
-        @media(max-width: 620px){
+        @media(max-width: 768px){
+
+            width: auto;    
+
+            padding: 1rem 0rem;
 
             border-left: 0;
         }
@@ -112,7 +116,7 @@ export const Container = styled.div<Props>`
             justify-content: space-between;
             
             @media(max-width: 1440px){
-                width: fit-content;
+                width: -webkit-fill-available;
                 justify-content: space-evenly;
             }
                 
@@ -123,18 +127,28 @@ export const Container = styled.div<Props>`
 
             div#tab-0{
                 display: ${props => props.tabIndex === 0 ? `block` : 'none'};
+                width: -webkit-fill-available;
+                height: -webkit-fill-available;
             }
             div#tab-1{
                 display: ${props => props.tabIndex === 1 ? `block` : 'none'};
+                width: -webkit-fill-available;
+                height: -webkit-fill-available;
             }
             div#tab-2{
                 display: ${props => props.tabIndex === 2 ? `block` : 'none'};
+                width: -webkit-fill-available;
+                height: -webkit-fill-available;
             }
             div#tab-3{
                 display: ${props => props.tabIndex === 3 ? `block` : 'none'};
+                width: -webkit-fill-available;
+                height: -webkit-fill-available;
             }
             div#tab-4{
                 display: ${props => props.tabIndex === 4 ? `block` : 'none'};
+                width: -webkit-fill-available;
+                height: -webkit-fill-available;
             }
 
         }
@@ -142,7 +156,7 @@ export const Container = styled.div<Props>`
         h1{
             margin: 2rem 0;
 
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 600;
             color: #ff1a75;
         }
@@ -160,7 +174,6 @@ export const Container = styled.div<Props>`
             /* background-color: #ff1a7512; */
             border-left: 2px solid #ff1a7512;
             border-radius: 4px;
-
             
             @media(max-width: 620px){
 
@@ -187,7 +200,7 @@ export const Container = styled.div<Props>`
                     font-size: 2rem;
 
                     @media(max-width: 620px){
-                        font-size: 3rem;
+                        font-size: 2.6rem;
                     }
                 }
 
@@ -232,9 +245,16 @@ export const Container = styled.div<Props>`
 
             }
 
-            @media(max-width:768px){
+            @media(max-width: 768px){
+
+                grid-template-columns: auto auto;
+
+            }
+
+            @media(max-width: 720px){
 
                 grid-template-columns: auto;
+                justify-items: center;
 
             }
 
@@ -242,10 +262,28 @@ export const Container = styled.div<Props>`
 
                 display: flex;
                 flex-direction: row;
-                height: min-content;
+                justify-content: space-evenly;
+                align-items: center;
+
+                height: 20rem;
+                width: 28rem;
+            
+                @media(min-width: 620px) and (max-width: 720px){
+
+                    width: 60vw;
+
+                }
+
+                @media(min-width: 320px) and (max-width: 620px){
+                    width: 80vw;
+                }
+                
+
+                padding: 0.2rem;
 
                 background-color: #fff;
                 border: 1px solid #ff1a75;
+                border-radius: 4px;
 
                 .item-img{
                     height: min-content;
@@ -253,18 +291,23 @@ export const Container = styled.div<Props>`
                     img{
                         height: 18rem;
                         width: 12rem;
+
+                        border-radius: 4px;
                     }
                 }
 
                 .item-info{
+                    width: 11rem;
+
                     display: flex;
                     flex-direction: column;
                     justify-content: space-evenly;
+                    flex-wrap: wrap;
 
                     margin: 0 1rem;
 
                     h1{
-                        font-size: 2rem;
+                        font-size: 1.6rem;
                         font-weight: 600;
 
                         margin: 0.5rem 0;
@@ -274,18 +317,18 @@ export const Container = styled.div<Props>`
                         display: flex;
                         flex-direction: column;
 
-                    >*{
-                        margin: 0.4rem 0;
-                    }
+                        >*{
+                            margin: 0.4rem 0;
+                        }
 
                         small{
                             color: #333333;
-                            font-size: 1.2rem;
+                            font-size: 1.1rem;
                             font-weight: 400;
                         }
                         span{
                             color: #333333;
-                            font-size: 1.4rem;
+                            font-size: 1.2rem;
                             font-weight: 400;
                         }
                     }
@@ -302,6 +345,8 @@ export const Container = styled.div<Props>`
                             font-weight: 600;
                             color: #888888;
 
+                            margin: 0.5rem 0;
+
                             span{
                                 color: #555555;
                             }
@@ -312,6 +357,38 @@ export const Container = styled.div<Props>`
                     
                 }
 
+                :hover{
+                    transition: all ease-in-out 100ms;
+                    box-shadow: 0px 0px 8px 3px #bfbfbf;
+                }
+
+            }
+
+        }
+
+        .no-items-bookmarked{
+
+            width: 60vw;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            *{
+                margin: 2rem;
+            }
+
+            h2{
+                font-size: 3rem;
+                font-weight: 600;
+
+                color: #ff1a75;
+            }
+
+            p{
+                font-size: 2rem;
+                font-weight: 400;
             }
 
         }

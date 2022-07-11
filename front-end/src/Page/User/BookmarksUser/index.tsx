@@ -4,22 +4,20 @@ import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 import AsideNavLinks from '../../../Components/AsideNavLinks'
 import { Link } from 'react-router-dom'
+import Axios from 'axios'
 
 
 export default function BookmarkUser() {
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
+    const [allTypes, setAllTypes] = useState<any>()
     const [animesTypeItems, setAnimesTypeItems] = useState<any>()
     const [mangasTypeItems, setMangasTypeItems] = useState<any>()
     const [moviesTypeItems, setMoviesTypeItems] = useState<any>()
     const [otherTypeItems, setOtherTypeItems] = useState<any>()
-    const [sort, setSort] = useState<any>(null)
 
     const [tabIndex, setTabIndex] = useState<number>(0)
-
-    const selectTypeRef: MutableRefObject<any> = useRef()
-    const selectAddedWhenRef: MutableRefObject<any> = useRef()
 
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
@@ -39,41 +37,43 @@ export default function BookmarkUser() {
 
         }
 
-        const animesType = userInfo.mediaAdded.filter((item: any) => {
-            return item.type === "ANIME" && item.format !== "MOVIE"
-        })
-        setAnimesTypeItems(animesType)
+        //request all media added from users account
+        const load = async () => {
 
-        const mangasType = userInfo.mediaAdded.filter((item: any) => {
-            return item.type === "MANGA"
-        })
+            const data: any = await Axios({
+                url: `https://cors-anywhere.herokuapp.com/https://animes-website-db.herokuapp.com/users/media`,
+                headers: { Authorization: `Bearer ${userInfo.token}` }
+            })
+            setAllTypes(data.data.mediaAdded)
 
-        setMangasTypeItems(mangasType)
-        const moviesType = userInfo.mediaAdded.filter((item: any) => {
-            return item.format === "MOVIE"
-        })
+            const animesType = data.data.mediaAdded.filter((item: any) => {
+                return item.type === "ANIME" && item.format !== "MOVIE"
+            })
+            setAnimesTypeItems(animesType)
+            console.log('then')
 
-        setMoviesTypeItems(moviesType)
-        const otherType = userInfo.mediaAdded.filter((item: any) => {
-            return item.type !== "MANGA" && item.type !== "ANIME"
-        })
-        setOtherTypeItems(otherType)
+            const mangasType = data.data.mediaAdded.filter((item: any) => {
+                return item.type === "MANGA"
+            })
+
+            setMangasTypeItems(mangasType)
+            const moviesType = data.data.mediaAdded.filter((item: any) => {
+                return item.format === "MOVIE"
+            })
+
+            setMoviesTypeItems(moviesType)
+            const otherType = data.data.mediaAdded.filter((item: any) => {
+                return item.type !== "MANGA" && item.type !== "ANIME"
+            })
+            setOtherTypeItems(otherType)
+        }
+        load()
 
         setLoading(false)
 
         document.title = 'Bookmarks | AniProject'
 
     }, [])
-
-    // makes sorting of bookmark items
-    const handleSelectSort = () => {
-
-        setLoading(true)
-
-        setLoading(false)
-
-    }
-
 
     return (
         <C.Container tabIndex={tabIndex}>
@@ -107,14 +107,14 @@ export default function BookmarkUser() {
                         </h1>
 
                         <div className='content'>
-                            {userInfo && userInfo.mediaAdded != null || undefined ? (
+                            {allTypes != null || undefined ? (
                                 <>
                                     <div id='tab-0'>
                                         <div className='grid'>
 
                                             <>
                                                 {
-                                                    userInfo.mediaAdded.map((item: any, key: any) => (
+                                                    allTypes.map((item: any, key: any) => (
                                                         <Link
                                                             key={item.id ? item.id : item.idGoGoAnime}
                                                             className='button-link'
@@ -158,10 +158,13 @@ export default function BookmarkUser() {
                                                                         {item.status && (
                                                                             <li>Status: <span>{item.status}</span></li>
                                                                         )}
-                                                                        <li>Type: <span>{item.type}</span></li>
-                                                                        {item.format && (
-                                                                            <li>Format: <span>{item.format}</span></li>
-                                                                        )}
+                                                                        <li>
+                                                                            <span>
+                                                                                {item.type}{item.format && (<>
+                                                                                    , {item.format}
+                                                                                </>)}
+                                                                            </span>
+                                                                        </li>
                                                                     </ul>
 
                                                                 </div>
@@ -226,9 +229,12 @@ export default function BookmarkUser() {
                                                                             {item.status && (
                                                                                 <li>Status: <span>{item.status}</span></li>
                                                                             )}
-                                                                            <li>Type: <span>{item.type}</span></li>
                                                                             {item.format && (
-                                                                                <li>Format: <span>{item.format}</span></li>
+                                                                                <li><span>
+                                                                                {item.type}{item.format && (<>
+                                                                                    , {item.format}
+                                                                                </>)}
+                                                                            </span></li>
                                                                             )}
                                                                         </ul>
 
@@ -296,9 +302,12 @@ export default function BookmarkUser() {
                                                                             {item.status && (
                                                                                 <li>Status: <span>{item.status}</span></li>
                                                                             )}
-                                                                            <li>Type: <span>{item.type}</span></li>
-                                                                            {item.format && (
-                                                                                <li>Format: <span>{item.format}</span></li>
+                                                                            {item.type && (
+                                                                                <li><span>
+                                                                                {item.type}{item.format && (<>
+                                                                                    , {item.format}
+                                                                                </>)}
+                                                                            </span></li>
                                                                             )}
                                                                         </ul>
 
@@ -366,9 +375,12 @@ export default function BookmarkUser() {
                                                                             {item.status && (
                                                                                 <li>Status: <span>{item.status}</span></li>
                                                                             )}
-                                                                            <li>Type: <span>{item.type}</span></li>
-                                                                            {item.format && (
-                                                                                <li>Format: <span>{item.format}</span></li>
+                                                                            {item.type && (
+                                                                                <li><span>
+                                                                                {item.type}{item.format && (<>
+                                                                                    , {item.format}
+                                                                                </>)}
+                                                                            </span></li>
                                                                             )}
                                                                         </ul>
 
@@ -436,9 +448,12 @@ export default function BookmarkUser() {
                                                                             {item.status && (
                                                                                 <li>Status: <span>{item.status}</span></li>
                                                                             )}
-                                                                            <li>Type: <span>{item.type}</span></li>
-                                                                            {item.format && (
-                                                                                <li>Format: <span>{item.format}</span></li>
+                                                                            {item.type && (
+                                                                                <li><span>
+                                                                                {item.type}{item.format && (<>
+                                                                                    , {item.format}
+                                                                                </>)}
+                                                                            </span></li>
                                                                             )}
                                                                         </ul>
 
@@ -473,9 +488,9 @@ export default function BookmarkUser() {
                                 </>
                             ) : (
 
-                                <div>
+                                <div className='no-items-bookmarked'>
 
-                                    <h2>There's Nothing Marked on Your Bookmarks.</h2>
+                                    <h2>There's Nothing Marked on Your Bookmarks</h2>
 
                                     <p>
 
