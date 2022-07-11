@@ -21,6 +21,7 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 - ``MongoDB``
 - ``Express``
 - ``Bcrypt``
+- ``Json Web Token``
 - ``Styled-Components``
 - ``SweetAlert2``
 - ``Axios``
