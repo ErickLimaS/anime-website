@@ -242,7 +242,7 @@ export default function SettingsUser() {
 
             <div>
               <label htmlFor='email'>Change Email</label>
-              <input type='email' id='email' placeholder={`${userInfo.email}`} ref={emailRef}></input>
+              <input type='email' id='email' placeholder={`Your Current Email`} ref={emailRef}></input>
             </div>
 
             <div>

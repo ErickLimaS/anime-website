@@ -33,7 +33,6 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
 
             id: user._id,
             name: user.name,
-            email: user.email,
             avatarImg: user.avatarImg,
             token: generateToken(user)
 
@@ -66,7 +65,6 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
 
                 id: user._id,
                 name: user.name,
-                email: user.email,
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
                 token: generateToken(user)
@@ -101,7 +99,6 @@ userRouter.get('/media', isAuth, expressAsyncHandler(async (req, res) => {
 
             id: user._id,
             name: user.name,
-            email: user.email,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             token: generateToken(user)
@@ -135,7 +132,6 @@ userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
 
             id: user._id,
             name: user.name,
-            email: user.email,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             token: generateToken(user)
@@ -173,7 +169,6 @@ userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) =>
 
             id: user._id,
             name: user.name,
-            email: user.email,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             token: generateToken(user)
@@ -229,7 +224,6 @@ userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, r
             return res.status(200).send({
                 id: user._id,
                 name: user.name,
-                email: user.email,
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
                 token: generateToken(user)
@@ -263,7 +257,6 @@ userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (r
         return res.status(200).send({
             id: user._id,
             name: user.name,
-            email: user.email,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             token: generateToken(user)
@@ -294,7 +287,6 @@ userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req
         return res.status(200).send({
             id: user._id,
             name: user.name,
-            email: user.email,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             token: generateToken(user)
