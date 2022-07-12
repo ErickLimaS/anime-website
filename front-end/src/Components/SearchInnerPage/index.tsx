@@ -81,9 +81,10 @@ export default function SearchInnerPage() {
                                                         {item.title.romaji.slice(0, 20)}
                                                     </h2>
                                                 )}
-                                                {item.title.native && (<h3>
-                                                    {item.title.native.slice(0, 20)}
-                                                </h3>
+                                                {item.title.native && (
+                                                    <h3>
+                                                        {item.title.native.slice(0, 20)}
+                                                    </h3>
                                                 )}
                                                 {item.startDate.year && (
                                                     <p>{item.startDate.year}</p>
@@ -124,10 +125,8 @@ export default function SearchInnerPage() {
                                                     </h2>
                                                 )}
                                                 <h3>GogoAnime</h3>
-                                                {item.animeUrl && (
-                                                    <a href={`${item.animeUrl}`}>
-                                                        Go Page
-                                                    </a>
+                                                {item.status && (
+                                                    <p>{item.status}</p>
                                                 )}
                                             </div>
                                         </Link>

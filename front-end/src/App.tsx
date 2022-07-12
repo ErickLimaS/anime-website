@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router'
 import Footer from './Components/Footer';
 import Header from './Components/Header';
 import AnimePage from './Page/MediaPage/AnimePage';
@@ -50,7 +51,7 @@ function App() {
   if (userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError) {
 
     //store current media url to redirect if user is not logged in
-    const redirect = window.location.pathname ? `?redirect=${window.location.pathname}` : '/'
+    const redirect = window.location.pathname ? `${window.location.pathname}` : ''
 
     switch (userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError) {
       case 403: //CORS
@@ -77,7 +78,7 @@ function App() {
           didClose: () => {
 
             dispatch(logoutUser())
-            window.location.pathname = `/login${redirect}`
+            window.location.href = redirect !== '' ? `/login?redirect=${redirect.slice(1, redirect.length)}` : '/login'
 
           }
         })

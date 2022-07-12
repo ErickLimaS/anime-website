@@ -5,7 +5,7 @@ interface Props {
     indexHeading: number,
     isAlreadyAdded: any,
     videoReady: any,
-    exitFullScreen: boolean
+    videoId: any
 }
 
 export const Container = styled.div<Props>`
@@ -220,109 +220,51 @@ export const Container = styled.div<Props>`
         
     }
 
-    div.video{
-        display: ${props => props.videoReady ? `flex` : 'none'};
+    .video{
+        display: flex;
         justify-content: center;
         align-items: center;
 
-        background-color: rgba(0,0,0,.8);
+        margin: 2rem 0;
 
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+        width: inherit;
+        height: inherit;
 
-        position: fixed;
-
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-
-        animation: video 100ms;
-
-        width: 100vw;
-        height: 100vh;
-
-        @keyframes video{
-            0%{
-                opacity: 0;
-            }
-            100%{
-                opacity: 100%;
-            }
-        }
-
-        p{
-            font-size: 2rem;
-            color: #ff0095;
-                
-            animation: text-desapear 8s;
-            animation-fill-mode: forwards;
-
-            @keyframes text-desapear{
-                0%{
-                    opacity: 100%;
-                    margin-top: 0;
-                }
-                100%{
-                    opacity: 0%;
-                    margin-top: -3rem;
-                }
-            }
-        }
-
-        .buttons{
-            display: flex;
-            flex-direction: row;
-
-            >*{
-                margin: 1rem;
-            }
-
-            button{
-                cursor: pointer;
-
-                margin-top: ${props => props.exitFullScreen ? '-8rem' : 'none'};
-
-                padding: 0.7rem 1rem;
-
-                background-color: #ff5ebc;
-                border: 0;
-                border-radius: 4px;
-            }
+        svg{
+            width: 20%;
+            height: auto;
         }
 
         iframe{
-            display: ${props => props.videoReady ? `flex` : 'none'};
-            width: ${props => props.exitFullScreen ? `100vw` : '50vw'};
-            height: ${props => props.exitFullScreen ? `100vh` : '70vh'};
-
-            position: relative;
-
-            overflow: hidden;
-
-            border: 0;
-
-            @media(max-width: 1080px){
-                
-                width: 58rem;
-                height: 35rem;
-
-            }
-            @media(max-width: 620px){
-                
+                display: ${props => props.videoReady ? `flex` : 'none'};
                 width: 100%;
-                height: 35rem;
+                height: 48rem;
 
-            }
-        }
+                @media(min-width: 1440px){
+                    
+                    width: 100%;
+                    height: 720px;
 
-        :hover{
+                }
 
-            button{
-                margin-top: initial;
-            }
+                @media(max-width: 1080px){
+                    
+                    width: 48rem;
+                    height: 32rem;
 
+                }
+                @media(max-width: 620px){
+                    
+                    width: 48rem;
+                    height: 32rem;
+
+                }
+                @media(max-width: 440px){
+                    
+                    width: 32rem;
+                    height: 26rem;
+
+                }
         }
     }
 
@@ -364,6 +306,10 @@ export const Container = styled.div<Props>`
 
             button{
                 cursor: pointer;
+
+                width: -webkit-fill-available;
+                height: -webkit-fill-available;
+
                 background-color: transparent;
                 border: 0;
             }
@@ -408,6 +354,15 @@ export const Container = styled.div<Props>`
                     transition: all ease-in-out 100ms;
                     color: #ff0095;
                 }
+            }
+        }
+
+        .episode.active{
+            background-color: #f92f7f;
+            border-color: #f92f7f;
+
+            h3{
+                color: #fff;
             }
         }
     }
