@@ -10,9 +10,11 @@ export const Container = styled.div<ContainerProps>`
 
     display: flex;
     flex-direction: row;
+    justify-content: center;
 
     @media(max-width: 1080px){
         flex-wrap: wrap;
+        justify-content: center;
     }
 
     @media(max-width: 620px){
@@ -60,7 +62,7 @@ export const Container = styled.div<ContainerProps>`
 
         @media(max-width: 1080px){
 
-            padding: 3rem 2rem!important;
+            /* padding: 3rem 2rem!important; */
 
             width: 70%;
             padding: 0 1rem ;
@@ -189,9 +191,14 @@ export const Container = styled.div<ContainerProps>`
                         button[disabled]{
                             cursor: default;
 
-                            background-color: rgba(0,0,0,.1);
+                            background-color: rgb(84 84 84 / 10%);
+                            
+                            border-color: #dddddd;
 
-                            opacity: 0.6;
+                            svg{
+                                fill: #c0c0c0!important;
+                            }
+
                             :hover{
                                 border: 1px solid #c0c0c0;
                             }
@@ -213,24 +220,6 @@ export const Container = styled.div<ContainerProps>`
 
                     overflow-y: auto;
                 }
-
-                /* ::-webkit-scrollbar {
-                    height: 8px;
-                }
-
-                ::-webkit-scrollbar-track {
-                    background: #f1f1f1; 
-                }
-                
-                ::-webkit-scrollbar-thumb {
-                    background: #888;
-
-                    border-radius: 2px;
-                }
-
-                ::-webkit-scrollbar-thumb:hover {
-                    background: #555; 
-                } */
 
             }
 
@@ -267,12 +256,9 @@ export const Container = styled.div<ContainerProps>`
         align-items: center;
         justify-content: flex-start;
 
-        @media(max-width: 1020px){
-            width: 100%;
-        }
-
         @media(max-width: 1080px){
             padding: 0 1rem;
+            width: 100%;
 
             .search{
                 display: none;

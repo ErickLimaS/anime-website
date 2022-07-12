@@ -177,6 +177,13 @@ export const Container = styled.div<Props>`
 
     }
 
+    div#index-1, div#index-2{
+
+        width: 60%;
+        height: 50vh;
+    }
+    
+
     .user-info{
 
         display: flex;
@@ -275,6 +282,26 @@ export const Container = styled.div<Props>`
             width: inherit;
             height: 100vh;
 
+            overflow: auto;
+
+            ::-webkit-scrollbar {
+                    width: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                    background: #f1f1f1; 
+            }
+                
+            ::-webkit-scrollbar-thumb {
+                    background: #888;
+
+                    border-radius: 2px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                    background: #555; 
+            } 
+
             @media(max-width: 380px){
 
                 width: 70%!important;
@@ -331,8 +358,8 @@ export const Container = styled.div<Props>`
                     img{
                         margin: 1rem;
 
-                        width: 20rem;
-                        height: auto;
+                        width: 14rem;
+                        height: 14rem;
 
                         border-radius: 50%;
 

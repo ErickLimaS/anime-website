@@ -121,15 +121,18 @@ export const Container = styled.div`
                 button[disabled]{
                     cursor: default;
 
-                    background-color: rgba(0,0,0,.1);
+                    background-color: rgb(84 84 84 / 10%);
+                            
+                    border-color: #dddddd;
 
-                    opacity: 0.6;
+                    svg{
+                        fill: #c0c0c0!important;
+                    }
 
                     :hover{
                         border: 1px solid #c0c0c0;
                     }
-                }
-
+                }             
                 
             }
 

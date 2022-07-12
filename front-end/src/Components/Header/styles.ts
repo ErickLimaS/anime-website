@@ -9,7 +9,12 @@ export const Container = styled.header<ContainerProps>`
     height: 9vh;
     width: auto;
 
+    position: ${props => props.display === true ? 'sticky' : 'initial' };
+    top: ${props => props.display === true ? '0' : 'initial' };
+
     background-color: #fafafa;
+
+    z-index: 10000;
 
     display: none;
     flex-direction: row;
@@ -76,7 +81,7 @@ export const Container = styled.header<ContainerProps>`
                 }
 
                 a{
-                    width: fit-content;
+                    width: auto;
                 }
 
                 li{
@@ -161,20 +166,23 @@ export const Container = styled.header<ContainerProps>`
 
         button{ 
 
+            transition: all ease-in-out 300ms;
+
             display: none;
 
             border: 0;
 
-            background-color: ${props => props.display === true ? '#c0c0c0' : 'transparent'};
+            background-color: ${props => props.display === true ? '#ff1a75' : 'transparent'};
             
             padding: 0.5rem;
 
             border-radius: 4px;
 
             svg{
+                transition: all ease-in-out 300ms;
                 width: 25px;
                 height: auto;
-                fill: ${props => props.display === true ? '#fff' : '#666666'};
+                fill: ${props => props.display === true ? '#fff' : '#ff1a75'};
             }
 
         }
@@ -183,29 +191,33 @@ export const Container = styled.header<ContainerProps>`
 
             z-index: 1000;
 
-            padding: 2rem 0;
 
             @media(max-width: 768px){
-                display: ${props => props.display === true ? 'flex' : 'none'};
+                display: flex;
                 flex-direction: column;
-                align-items: center;
-                justify-content: center;
+                align-items: flex-start;
+                justify-content: flex-start;
+                flex-wrap: nowrap;
 
                 background-color: #fafafa;
                 
-                height: auto!important;
-                width: 75%;
+                height: 100%!important;
+                width: 80%;
 
-                position: absolute;
+                overflow: auto;
+
+                position: fixed;
                 top: 9vh;
                 left: 0;
                 
                 border-right: 2px solid pink;
 
                 animation: drawer-animation 700ms;
+                animation-fill-mode: ${props => props.display === true && 'forwards'};
+                animation-fill-mode: ${props => props.display === false && 'backwards'};
 
                 @keyframes drawer-animation{
-                    0% {
+                    0%{
                         left: -52rem;
                     }
                     100%{
@@ -213,9 +225,19 @@ export const Container = styled.header<ContainerProps>`
                     }
                 }
 
+                display: ${props => props.display === false && 'none!important' };
+                /* @keyframes drawer-animation-close{
+                    0% {
+                        left: 0;
+                    }
+                    100%{
+                        left: -52rem;
+                    }
+                } */
 
-                *{
-                    width: 100%;
+                >*{
+                    width: -webkit-fill-available;
+                    width: -moz-available;
                 }
                 
 
@@ -255,41 +277,41 @@ export const Container = styled.header<ContainerProps>`
                 }
 
                 li{
-            margin: 1rem 0;
+                    margin: 2rem 0;
 
-            >a{
-                display: flex;
-                align-items: center;
+                    >a{
+                        display: flex;
+                        align-items: center;
 
-                width: 100%;
+                        width: 100%;
 
-                font-weight: 600;
-                color: #757474; 
+                        font-weight: 600;
+                        color: #757474; 
 
-                >svg{
-                    padding-left: 1rem;
-                    height: 2.4rem;
-                    width: min-content;
+                        >svg{
+                            padding-left: 1rem;
+                            height: 2.4rem;
+                            width: min-content;
 
-                    margin-right: 1rem;
+                            margin-right: 1rem;
 
-                    fill: #757474;
-                }
-            }
+                            fill: #757474;
+                        }
+                    }
 
-            :hover{
-                border-right: 4px solid #ff1a75;
+                    :hover{
+                        border-right: 4px solid #ff1a75;
 
-                >a{
-                    color: #ff1a75;
+                        >a{
+                            color: #ff1a75;
 
-                    >svg{
-                        fill: #ff1a75;
+                            >svg{
+                                fill: #ff1a75;
+                            }
+                        }
+                        
                     }
                 }
-                
-            }
-        }
 
         
         .settings{

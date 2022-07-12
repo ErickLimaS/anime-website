@@ -155,6 +155,7 @@ export const Container = styled.div<Props>`
 
         h1{
             margin: 2rem 0;
+            margin-left: 2rem;
 
             font-size: 3rem;
             font-weight: 600;
