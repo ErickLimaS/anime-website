@@ -159,35 +159,6 @@ export default function AnimePageContent(data: any) {
 
   }
 
-  //if theres a error, it shows what happen
-  if (addError || remError) {
-
-    switch (addError || remError) {
-      case 403:
-        Swal.fire({
-
-          icon: 'info',
-          title: 'Error',
-          titleText: `${addError || remError}: Before Doing It!`,
-          text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
-          allowOutsideClick: false,
-          footer: 'https://cors-anywhere.herokuapp.com/'
-        })
-        break
-      default:
-        Swal.fire({
-
-          icon: 'error',
-          title: 'Error',
-          titleText: `${addError || remError}: Something Happen!`,
-          text: "We Don't Know What Happen. But Try Again!"
-
-        })
-        break
-    }
-
-  }
-
   return (
     <C.Container data={data.data} indexHeading={indexPageInfo} isAlreadyAdded={isAlreadyAdded}>
 

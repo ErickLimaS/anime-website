@@ -37,6 +37,7 @@ function App() {
   const { userInfo } = userLogin
 
   //handles token expiration error, forcing log out to get a new token 
+  const userError = userLogin.error
   const remError = removeMediaFromUserAccount.error
   const updateAvatarError = updateAvatarImg.error
   const updateUserError = updateUserInfo.error
@@ -45,21 +46,57 @@ function App() {
 
   const dispatch: any = useDispatch()
 
-  if (addError == 401 || remError == 401 || updateAvatarError == 401 || updateUserError == 401 || deleteMediaError == 401) {
+  //if theres a error, it shows what happen
+  if (userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError) {
 
-    Swal.fire({
-      icon: 'warning',
-      title: 'Security First!',
-      titleText: `401: Security First!`,
-      text: 'You Will Need To Login Again So We Will Make Your Account Secure!',
-      allowOutsideClick: false,
-      didClose: () => {
+    //store current media url to redirect if user is not logged in
+    const redirect = window.location.pathname ? `?redirect=${window.location.pathname}` : '/'
 
-        dispatch(logoutUser())
-        window.location.pathname = "/login"
+    switch (userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError) {
+      case 403: //CORS
+        Swal.fire({
 
-      }
-    })
+          icon: 'info',
+          title: 'Error',
+          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError}: Before Doing It!`,
+          text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
+          allowOutsideClick: false,
+          footer: 'https://cors-anywhere.herokuapp.com/',
+          didClose: () => {
+            window.location.reload()
+          }
+        })
+        break
+      case 401: //TOKEN VALIDATION/EXPIRATION
+        Swal.fire({
+          icon: 'warning',
+          title: 'Security First!',
+          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError}: Security First!`,
+          text: 'You Will Need To Login Again So We Will Make Your Account Secure!',
+          allowOutsideClick: false,
+          didClose: () => {
+
+            dispatch(logoutUser())
+            window.location.pathname = `/login${redirect}`
+
+          }
+        })
+        break
+      default:
+        Swal.fire({
+
+          icon: 'error',
+          title: 'Error',
+          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError}: Something Happen!`,
+          text: "We Don't Know What Happen. But Try Again!",
+          footer: 'Or report this on My GitHub: www.github.com/ErickLimaS',
+          didClose: () => {
+            window.location.reload()
+          }
+
+        })
+        break
+    }
 
   }
 
