@@ -45,8 +45,8 @@ function App() {
   const updateUserError = updateUserInfo.error
   const addError = addMediaToUserAccount.error
   const deleteMediaError = deleteUserMedia.error
-  const addWatchedError = addFromAlreadyWatched.error
-  const removeWatchedError = removeFromAlreadyWatched.error
+  const addWatchedError = addFromAlreadyWatched?.error
+  const removeWatchedError = removeFromAlreadyWatched?.error
 
   const dispatch: any = useDispatch()
 
