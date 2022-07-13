@@ -17,6 +17,8 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 - `Marque Animes, Mangas ou Filmes já vistos`: Em Andamento
 - `Marque Episódios Já Assistidos`: Sem Previsão 
 - `Seja Alertado de Novos Episódios Lançados`: Sem Previsão 
+- `Modo Noturno`: Sem Previsão 
+
 
 ## :heavy_check_mark: Tecnologias Utilizadas
 
