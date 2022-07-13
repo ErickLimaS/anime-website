@@ -99,6 +99,46 @@ export default function SettingsUser() {
 
   }
 
+  //form new config for search results
+  const handleConfigSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (currentPasswordRef.current.value.length >= 8) {
+
+      if (newPasswordRef.current.value === confirmNewPassowrdRef.current.value) {
+
+        dispatch(updateUserInfo(nameRef.current.value, emailRef.current.value, currentPasswordRef.current.value, newPasswordRef.current.value))
+
+      }
+      else {
+
+        Swal.fire({
+
+          icon: 'warning',
+          title: 'Error',
+          titleText: `New Password Don't Match with Confirm New Password!`,
+          text: 'Try Typing Again!'
+
+        })
+
+      }
+
+    }
+    else {
+
+      Swal.fire({
+
+        icon: 'error',
+        title: 'Error',
+        titleText: `Current Password is Not Correct!`,
+        text: 'Try Typing Again!'
+
+      })
+
+    }
+
+  }
+
   //removes all data from book
   const handleEraseData = () => {
 
@@ -147,6 +187,7 @@ export default function SettingsUser() {
             <li onClick={() => setTabIndex(0)} id='tab-0'>User Profile</li>
             <li onClick={() => setTabIndex(1)} id='tab-1'>User ID</li>
             <li onClick={() => setTabIndex(2)} id='tab-2'>Bookmark Data</li>
+            <li onClick={() => setTabIndex(3)} id='tab-3'>Search Results</li>
           </ul>
 
         </div>
@@ -181,7 +222,7 @@ export default function SettingsUser() {
                 <img src='https://pm1.narvii.com/6445/d9dff8ed0332a39b97195b55fa6f597c82d9c1b6_hq.jpg' alt='User Avatar'></img>
                 <small>Pain</small>
               </div>
-              <div onClick={() => setNewAvatarImg('https://sm.ign.com/t/ign_br/screenshot/default/tanjiro_ef6a.1080.jpg' )}>
+              <div onClick={() => setNewAvatarImg('https://sm.ign.com/t/ign_br/screenshot/default/tanjiro_ef6a.1080.jpg')}>
                 <img src='https://sm.ign.com/t/ign_br/screenshot/default/tanjiro_ef6a.1080.jpg' alt='User Avatar'></img>
                 <small>Tanjiro</small>
               </div>
@@ -242,7 +283,7 @@ export default function SettingsUser() {
 
             <div>
               <label htmlFor='email'>Change Email</label>
-              <input type='email' id='email' placeholder={`Your Current Email`} ref={emailRef}></input>
+              <input type='email' id='email' placeholder={`Your New Email`} ref={emailRef}></input>
             </div>
 
             <div>
@@ -303,6 +344,26 @@ export default function SettingsUser() {
           <h2>Erase <strong>all data</strong> you have save until now on this account?</h2>
 
           <button type='button' onClick={() => handleEraseData()}>Yes, erase all Data!</button>
+
+        </div>
+
+        {/*TAB INDEX 3 */}
+        <div className='user-info' id='index-3'>
+
+          <h1>Search Results Configuration</h1>
+
+          <form onSubmit={(e) => handleConfigSearch(e)}>
+
+            <div>
+              <label htmlFor='placeholder'>placeholder</label>
+              <input type='text' id='placeholder' placeholder='placeholder' ref={nameRef}></input>
+            </div>
+
+            <div>
+              <button type='submit'>Submit Changes</button>
+            </div>
+
+          </form>
 
         </div>
 

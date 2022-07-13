@@ -95,39 +95,61 @@ export const Container = styled.div<Props>`
                 color: #333333;
             }
 
-            button{
-                cursor: pointer;
-                margin: 0;
+            .buttons{
 
                 display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
+                
+                button{
+                    cursor: pointer;
+                    margin: 0 1rem;
 
-                padding: 0.7rem;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
 
-                font-size: 1.6rem;
-                color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};;
+                    padding: 0.7rem;
 
-                border: 2px solid #ff5ebc;
-                border-radius: 4px;
+                    font-size: 1.6rem;
+                    color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};
 
-                background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
+                    border: 2px solid #ff5ebc;
+                    border-radius: 4px;
 
-                svg{
+                    background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
 
-                    width: 1.5rem;
-                    transform: scale(2);
-                    height: auto;
+                    svg{
 
-                    fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+                        width: 1.5rem;
+                        transform: scale(2);
+                        height: auto;
 
-                    margin: 0.5rem 1rem;
+                        fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+
+                        margin: 0.5rem 1rem;
+
+                    }
+
+                    :hover{
+                        opacity: 0.75;
+                    }
 
                 }
 
-                :hover{
-                    opacity: 0.75;
+                button.watched{
+
+                    color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};
+
+                    background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
+
+                    svg{
+
+                        fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+
+                        padding-right: 0.4rem;
+                        padding-left: 0.1rem;
+                    }
+
                 }
 
             }

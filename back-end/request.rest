@@ -38,7 +38,8 @@ Content-Type: application/json
         "format": "tv",
         "type": "anime",
         "status": "Releasing",
-        "isAdult": true
+        "isAdult": true,
+        "fromGoGoAnime": false
     }
 }
 
@@ -79,3 +80,9 @@ Content-Type: application/json
 
 {
 }
+
+###
+
+POST http://localhost:9000/users/add-already-watched
+Content-Type: application/json
+

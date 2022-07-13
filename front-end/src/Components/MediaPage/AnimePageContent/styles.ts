@@ -92,9 +92,13 @@ export const Container = styled.div<Props>`
                 color: ${props => props.data.coverImage.color};
             }
 
+            .buttons{
+
+            display: flex;
+
             button{
                 cursor: pointer;
-                margin: 0;
+                margin: 0 1rem;
 
                 display: flex;
                 flex-direction: row;
@@ -104,7 +108,7 @@ export const Container = styled.div<Props>`
                 padding: 0.7rem;
 
                 font-size: 1.6rem;
-                color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};;
+                color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};
 
                 border: 2px solid #ff5ebc;
                 border-radius: 4px;
@@ -126,6 +130,24 @@ export const Container = styled.div<Props>`
                 :hover{
                     opacity: 0.75;
                 }
+
+            }
+
+            button.watched{
+
+                color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};
+
+                background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
+
+                svg{
+
+                    fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+
+                    padding-right: 0.4rem;
+                    padding-left: 0.1rem;
+                }
+
+            }
 
             }
         }

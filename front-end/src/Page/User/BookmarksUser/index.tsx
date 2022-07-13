@@ -231,10 +231,10 @@ export default function BookmarkUser() {
                                                                             )}
                                                                             {item.format && (
                                                                                 <li><span>
-                                                                                {item.type}{item.format && (<>
-                                                                                    , {item.format}
-                                                                                </>)}
-                                                                            </span></li>
+                                                                                    {item.type}{item.format && (<>
+                                                                                        , {item.format}
+                                                                                    </>)}
+                                                                                </span></li>
                                                                             )}
                                                                         </ul>
 
@@ -304,10 +304,10 @@ export default function BookmarkUser() {
                                                                             )}
                                                                             {item.type && (
                                                                                 <li><span>
-                                                                                {item.type}{item.format && (<>
-                                                                                    , {item.format}
-                                                                                </>)}
-                                                                            </span></li>
+                                                                                    {item.type}{item.format && (<>
+                                                                                        , {item.format}
+                                                                                    </>)}
+                                                                                </span></li>
                                                                             )}
                                                                         </ul>
 
@@ -377,10 +377,10 @@ export default function BookmarkUser() {
                                                                             )}
                                                                             {item.type && (
                                                                                 <li><span>
-                                                                                {item.type}{item.format && (<>
-                                                                                    , {item.format}
-                                                                                </>)}
-                                                                            </span></li>
+                                                                                    {item.type}{item.format && (<>
+                                                                                        , {item.format}
+                                                                                    </>)}
+                                                                                </span></li>
                                                                             )}
                                                                         </ul>
 
@@ -450,10 +450,10 @@ export default function BookmarkUser() {
                                                                             )}
                                                                             {item.type && (
                                                                                 <li><span>
-                                                                                {item.type}{item.format && (<>
-                                                                                    , {item.format}
-                                                                                </>)}
-                                                                            </span></li>
+                                                                                    {item.type}{item.format && (<>
+                                                                                        , {item.format}
+                                                                                    </>)}
+                                                                                </span></li>
                                                                             )}
                                                                         </ul>
 

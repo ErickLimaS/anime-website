@@ -170,8 +170,11 @@ export const Container = styled.div<Props>`
     div#index-2{
         display: ${props => props.tabIndex === 2 ? `flex` : 'none'};
     }
+    div#index-3{
+        display: ${props => props.tabIndex === 3 ? `flex` : 'none'};
+    }
 
-    div#index-0, div#index-1, div#index-2{
+    div#index-0, div#index-1, div#index-2, div#index-3{
 
         width: 60%;
 
@@ -561,4 +564,47 @@ export const Container = styled.div<Props>`
 
     }
 
+    #index-3{
+
+        @media(max-width: 768px){
+
+            margin-top: 2rem;
+
+            padding: 2rem;
+
+            width: 80%!important;
+
+        }
+
+        justify-content: space-evenly;
+
+        border: 2px solid #ffd0e3;
+        border-radius: 4px;
+
+        h1{
+            font-size: 4rem;
+        }
+        h2{
+            font-size: 2rem;
+            font-weight: 400;
+        }
+        button{
+            cursor: pointer;
+
+            background-color: #ff3333;
+
+            padding: 1rem 2rem;
+
+            border: 1px solid #ff1a1a;
+            border-radius: 4px;
+
+            font-size: 1.6rem;
+            color: #fff;
+
+            :hover{
+                opacity: 0.9;
+            }
+        }
+
+    }
 `

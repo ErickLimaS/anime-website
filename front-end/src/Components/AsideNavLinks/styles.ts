@@ -209,7 +209,7 @@ export const Container = styled.nav<Props>`
 
                 >svg{
                     height: 2.4rem;
-                    width: min-content;
+                    width: 2.4rem;
 
                     margin-right: 1rem;
 

@@ -9,7 +9,27 @@ const userSchema = new mongoose.Schema(
         avatarImg: {type: String, required: true},
         createdAt: {type: Date},
         mediaAdded: [{
+            
             addedAt: {type: Date},
+            updatedAt: {type: Date},
+            id: {type: Number},
+            idGoGoAnime: {type: String},
+            primaryColor: {type: String},
+            fullTitle: {type: String},
+            nativeTitle: {type: String},
+            coverImg: {type: String},
+            bannerImg: {type: String},
+            format: {type: String},
+            type: {type: String},
+            status: {type: String},
+            isAdult: {type: Boolean},
+            fromGoGoAnime: {type: Boolean},
+
+        }],
+        alreadyWatched: [{
+
+            addedAt: {type: Date},
+            updatedAt: {type: Date},
             id: {type: Number},
             idGoGoAnime: {type: String},
             primaryColor: {type: String},

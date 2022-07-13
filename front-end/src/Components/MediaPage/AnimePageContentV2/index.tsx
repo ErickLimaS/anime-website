@@ -5,11 +5,13 @@ import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
 import { ReactComponent as DotSvg } from '../../../imgs/svg/dot.svg'
 import { ReactComponent as AngleLeftSolidSvg } from '../../../imgs/svg/angle-left-solid.svg'
 import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-right-solid.svg'
+import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
+import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
 import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
 import CharacterAndActor from '../../CharacterAndActor'
-import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
+import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import gogoAnime from '../../../API/gogo-anime'
@@ -33,6 +35,7 @@ export default function AnimePageContentV2(data: any) {
   const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
 
   const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
+  const [alreadyWatched, setAlreadyWatched] = useState<any>()
 
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
@@ -68,6 +71,11 @@ export default function AnimePageContentV2(data: any) {
 
     //find if the current media was already added to user account
     if (userInfo) {
+      // userInfo.alreadyWatched.find((item: any) => {
+      //   if (item.idGoGoAnime === data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
+      //     setAlreadyWatched(true)
+      //   }
+      // })
       userInfo.mediaAdded.find((item: any) => {
         if (item.idGoGoAnime === data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
           setIsAlreadyAdded(true)
@@ -149,6 +157,78 @@ export default function AnimePageContentV2(data: any) {
 
   }
 
+  // ADD, REMOVE FROM ALREADY WATCHED
+  const handleAlreadyWatched = () => {
+
+    //CHECKS if dont has on user account
+    if (alreadyWatched == null || undefined) {
+
+      if (userInfo) {
+
+        dispatch(addToAlreadyWatched({
+          'addedAt': new Date(),
+          'updatedAt': new Date(),
+          'idGoGoAnime': data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
+          'fullTitle': data.data.animeTitle,
+          'nativeTitle': data.data.otherNames && data.data.otherNames,
+          'coverImg': data.data.animeImg && data.data.animeImg,
+          'type': data.data.type,
+          'status': data.data.status,
+          'isAdult': Boolean(data.data.isAdult),
+          'fromGoGoAnime': Boolean(true)
+        }))
+
+        setAlreadyWatched(true)
+
+        if (!addLoading && !addError) {
+          Swal.fire({
+            icon: "success",
+            title: 'Added To Bookmarks!',
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 7000,
+            timerProgressBar: true,
+          })
+        }
+
+      }
+      else {
+
+        navigate(`/login?redirect=${currentUrlToRedirect.slice(1, currentUrlToRedirect.length)}`)
+
+      }
+
+
+    }
+    else {
+
+      //remove dispatch 
+      dispatch(removeFromAlreadyWatched({
+
+        'idGoGoAnime': data.data.animeTitle.replace(/!|#|/g, ``).replace(/%20/g, `-`),
+        'fromGoGoAnime': true
+
+      }))
+
+      setAlreadyWatched(null)
+
+      if (!remLoading && !remError) {
+        Swal.fire({
+          icon: "success",
+          title: 'Removed From Bookmarks!',
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 7000,
+          timerProgressBar: true,
+        })
+      }
+
+    }
+
+  }
+
   //gets the streaming url of choose episode
   const getStreamingLink = async (id: String) => {
 
@@ -180,8 +260,6 @@ export default function AnimePageContentV2(data: any) {
       </div>
 
       <div className='banner-img'>{
-
-        /* <img src={`${data.data.bannerImage}`} alt={`${data.data.title.romaji} Cover Art`} /> */
       }
       </div>
 
@@ -190,14 +268,23 @@ export default function AnimePageContentV2(data: any) {
 
           <h1>{data.data.animeTitle}</h1>
 
-          {isAlreadyAdded == null && (
-            <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
-          )}
+          <div className='buttons'>
+            {alreadyWatched == null && (
+              <button onClick={() => handleAlreadyWatched()} className='watched'><EyeSlashSvg />  Not Watched</button>
+            )}
 
-          {isAlreadyAdded && (
-            <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
-          )}
+            {alreadyWatched && (
+              <button onClick={() => handleAlreadyWatched()} className='watched'><EyeSvg />  Watched</button>
+            )}
 
+            {isAlreadyAdded == null && (
+              <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
+            )}
+
+            {isAlreadyAdded && (
+              <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
+            )}
+          </div>
         </div>
 
         <div onClick={() => setMoreDetails(!moreDetails)}>

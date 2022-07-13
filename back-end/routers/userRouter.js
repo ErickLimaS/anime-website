@@ -34,6 +34,8 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
             id: user._id,
             name: user.name,
             avatarImg: user.avatarImg,
+            mediaAdded: [],
+            alreadyWatched: [],
             token: generateToken(user)
 
         })
@@ -67,6 +69,7 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
                 name: user.name,
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
+                alreadyWatched: user.alreadyWatched,
                 token: generateToken(user)
 
             })
@@ -101,6 +104,7 @@ userRouter.get('/media', isAuth, expressAsyncHandler(async (req, res) => {
             name: user.name,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
+            alreadyWatched: user.alreadyWatched,
             token: generateToken(user)
 
         })
@@ -134,6 +138,7 @@ userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
             name: user.name,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
+            alreadyWatched: user.alreadyWatched,
             token: generateToken(user)
 
         })
@@ -146,7 +151,8 @@ userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
 
 }))
 
-//REMOVE MEDIA FROM USER
+//REMOVE MEDIA FROM USER 
+//CHANGE TO PUT
 userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
@@ -171,6 +177,7 @@ userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) =>
             name: user.name,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
+            alreadyWatched: user.alreadyWatched,
             token: generateToken(user)
 
         })
@@ -226,6 +233,7 @@ userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, r
                 name: user.name,
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
+                alreadyWatched: user.alreadyWatched,
                 token: generateToken(user)
             })
 
@@ -234,6 +242,113 @@ userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, r
     catch (error) {
 
         return res.status(500).send(`${error}`)
+
+    }
+
+}))
+
+//ADD TO ALREADY WATCHED
+userRouter.post('/add-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.user.id, '-password -email')
+
+    if (!user) {
+        return res.status(404).send({ msg: 'User Not Found / Dont Exist' })
+    }
+
+    try {
+
+        // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+        if (req.body.media.fromGoGoAnime === true) {
+
+            const alreadyExist = user.alreadyWatched.find(item => item.idGoGoAnime === req.body.media.idGoGoAnime)
+
+            if (alreadyExist) {
+
+                return res.status(409).send({ msg: 'Already Added' })
+
+            }
+
+        }
+        else {
+
+            const alreadyExist = user.alreadyWatched.find(item => item.id === req.body.media.id)
+
+            if (alreadyExist) {
+
+                return res.status(409).send({ msg: 'Already Added' })
+
+            }
+        }
+
+        user.alreadyWatched.push(req.body.media)
+
+        await user.save()
+
+        return res.status(201).send({
+            id: user._id,
+            name: user.name,
+            avatarImg: user.avatarImg,
+            mediaAdded: user.mediaAdded,
+            alreadyWatched: user.alreadyWatched,
+            token: generateToken(user)
+        })
+
+    }
+    catch (error) {
+
+        return res.status(500).send(error)
+
+    }
+
+}))
+
+//REMOVE FROM ALREADY WATCHED
+userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.user.id, '-password -email')
+
+    if (!user) {
+        return res.status(404).send({ msg: 'User Not Found / Dont Exist' })
+    }
+
+    try {
+
+        // CHECKS TYPE OF MEDIA THEN FILTER ONLY THE ONE THE ID MATCHS ON AlreadyWatched
+        if (req.body.media.fromGoGoAnime === true) {
+
+            const newAlreadyWatched = user.alreadyWatched.filter(item => item.idGoGoAnime != req.body.media.idGoGoAnime)
+
+            user.alreadyWatched = newAlreadyWatched
+
+            await user.save()
+
+            return res.status(200).send(user)
+
+        }
+        else {
+
+            const newAlreadyWatched = user.alreadyWatched.filter(item => item.id != req.body.media.id)
+
+            user.alreadyWatched = newAlreadyWatched
+
+            await user.save()
+
+            return res.status(200).send({
+                id: user._id,
+                name: user.name,
+                avatarImg: user.avatarImg,
+                mediaAdded: user.mediaAdded,
+                alreadyWatched: user.alreadyWatched,
+                token: generateToken(user)
+            })
+
+        }
+
+    }
+    catch (error) {
+
+        return res.status(500).send(error)
 
     }
 
@@ -259,6 +374,7 @@ userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (r
             name: user.name,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
+            alreadyWatched: user.alreadyWatched,
             token: generateToken(user)
         })
 
@@ -289,6 +405,7 @@ userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req
             name: user.name,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
+            alreadyWatched: user.alreadyWatched,
             token: generateToken(user)
         })
 
