@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import { useNavigate } from 'react-router'
 import Footer from './Components/Footer';
 import Header from './Components/Header';
 import AnimePage from './Page/MediaPage/AnimePage';
@@ -34,6 +33,8 @@ function App() {
   const updateAvatarImg = useSelector((state: any) => state.updateAvatarImg)
   const updateUserInfo = useSelector((state: any) => state.updateUserInfo)
   const deleteUserMedia = useSelector((state: any) => state.deleteUserMedia)
+  const addFromAlreadyWatched = useSelector((state: any) => state.addFromAlreadyWatched)
+  const removeFromAlreadyWatched = useSelector((state: any) => state.removeFromAlreadyWatched)
 
   const { userInfo } = userLogin
 
@@ -44,22 +45,24 @@ function App() {
   const updateUserError = updateUserInfo.error
   const addError = addMediaToUserAccount.error
   const deleteMediaError = deleteUserMedia.error
+  const addWatchedError = addFromAlreadyWatched.error
+  const removeWatchedError = removeFromAlreadyWatched.error
 
   const dispatch: any = useDispatch()
 
   //if theres a error, it shows what happen
-  if (userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError) {
+  if (userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError || addWatchedError || removeWatchedError) {
 
     //store current media url to redirect if user is not logged in
     const redirect = window.location.pathname ? `${window.location.pathname}` : ''
 
-    switch (userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError) {
+    switch (userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError || addWatchedError || removeWatchedError) {
       case 403: //CORS
         Swal.fire({
 
           icon: 'info',
           title: 'Error',
-          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError}: Before Doing It!`,
+          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError || addWatchedError || removeWatchedError}: Before Doing It!`,
           text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
           allowOutsideClick: false,
           footer: 'https://cors-anywhere.herokuapp.com/',
@@ -72,7 +75,7 @@ function App() {
         Swal.fire({
           icon: 'warning',
           title: 'Security First!',
-          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError}: Security First!`,
+          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError || addWatchedError || removeWatchedError}: Security First!`,
           text: 'You Will Need To Login Again So We Will Make Your Account Secure!',
           allowOutsideClick: false,
           didClose: () => {
@@ -88,7 +91,7 @@ function App() {
 
           icon: 'error',
           title: 'Error',
-          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError}: Something Happen!`,
+          titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError || addWatchedError || removeWatchedError}: Something Happen!`,
           text: "We Don't Know What Happen. But Try Again!",
           footer: 'Or report this on My GitHub: www.github.com/ErickLimaS',
           didClose: () => {
