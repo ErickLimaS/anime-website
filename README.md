@@ -12,6 +12,12 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 - `Marque seus Animes e Mangas Favoritos`: Apos criar uma conta, você podera marcar animes e mangas, para ter um rápido acesso da próxima vez que usar o site.
 - `Encontre Novos Animes`: Ache novos animes para assistir usando a seção de categorias ou formatos.
 
+## :pushpin: Em Planejamento
+
+- `Marque Animes, Mangas ou Filmes já vistos`
+- `Marque Episódios Já Assistidos`
+- `Seja Alertado de Novos Episódios Lançados`
+
 ## :heavy_check_mark: Tecnologias Utilizadas
 
 - ``React``
