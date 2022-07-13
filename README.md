@@ -15,6 +15,7 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 ## :pushpin: Em Planejamento
 
 - `Marque Animes, Mangas ou Filmes já vistos`: Em Andamento
+- `Fix: Misspelled English Words/Corrigir Palavras em Inglês`: Sem Previsão
 - `Marque Episódios Já Assistidos`: Sem Previsão 
 - `Seja Alertado de Novos Episódios Lançados`: Sem Previsão 
 - `Modo Noturno`: Sem Previsão 
