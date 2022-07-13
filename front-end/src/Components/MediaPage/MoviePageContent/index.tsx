@@ -4,14 +4,14 @@ import ReactHtmlParser from 'react-html-parser'
 import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
 import { ReactComponent as DotSvg } from '../../../imgs/svg/dot.svg'
-import { ReactComponent as AngleLeftSolidSvg } from '../../../imgs/svg/angle-left-solid.svg'
-import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-right-solid.svg'
+import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
+import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
 import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
 import { Link, useNavigate } from 'react-router-dom'
 import CharacterAndActor from '../../CharacterAndActor'
 import { useDispatch, useSelector } from 'react-redux'
-import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
+import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import Swal from 'sweetalert2'
 
 export default function MoviePageContent(data: any) {
@@ -25,6 +25,7 @@ export default function MoviePageContent(data: any) {
   const [supportingCastCharacters, setSupportingCastCharacters] = useState([])
 
   const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
+  const [alreadyWatched, setAlreadyWatched] = useState<any>()
 
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
@@ -60,16 +61,19 @@ export default function MoviePageContent(data: any) {
       return item.role === 'MAIN'
     })
     setMainCastCharacters(mainChar)
-    console.log(mainChar)
 
     const supChar = data.data.characters.edges.filter((item: any) => {
       return item.role === 'SUPPORTING'
     })
     setSupportingCastCharacters(supChar)
-    console.log(supChar)
 
     //find if the current media was already added to user account
     if (userInfo) {
+      userInfo.alreadyWatched.find((item: any) => {
+        if (item.id === data.data.id) {
+          setAlreadyWatched(true)
+        }
+      })
       userInfo.mediaAdded.find((item: any) => {
         if (item.id === data.data.id) {
           setIsAlreadyAdded(true)
@@ -123,7 +127,7 @@ export default function MoviePageContent(data: any) {
       }
       else {
 
-        navigate(`/login?redirect=${currentUrlToRedirect.slice(1,currentUrlToRedirect.length)}`)
+        navigate(`/login?redirect=${currentUrlToRedirect.slice(1, currentUrlToRedirect.length)}`)
 
       }
 
@@ -156,17 +160,93 @@ export default function MoviePageContent(data: any) {
 
   }
 
+  // ADD, REMOVE FROM ALREADY WATCHED
+  const handleAlreadyWatched = () => {
+
+    //CHECKS if dont has on user account
+    if (alreadyWatched == null || undefined) {
+
+      if (userInfo) {
+
+        dispatch(addToAlreadyWatched({
+          'addedAt': new Date(),
+          'updatedAt': new Date(),
+          'id': Number(data.data.id),
+          'primaryColor': data.data.coverImage.color ? data.data.coverImage.color : '',
+          'fullTitle': data.data.title.romaji,
+          'nativeTitle': data.data.title.native,
+          'bannerImg': data.data.bannerImage ? data.data.bannerImage : '',
+          'coverImg': data.data.coverImage.large ? data.data.coverImage.large : data.data.coverImage.extraLarge || data.data.coverImage.medium,
+          'format': data.data.format,
+          'type': data.data.type,
+          'status': data.data.status,
+          'isAdult': Boolean(data.data.isAdult)
+        }))
+
+        setAlreadyWatched(true)
+
+        if (!addLoading && !addError) {
+          Swal.fire({
+            icon: "success",
+            title: 'Added To Bookmarks!',
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 7000,
+            timerProgressBar: true,
+          })
+        }
+
+      }
+      else {
+
+        navigate(`/login?redirect=${currentUrlToRedirect.slice(1, currentUrlToRedirect.length)}`)
+
+      }
+
+
+    }
+    else {
+
+      //remove dispatch 
+      dispatch(removeFromAlreadyWatched({
+
+        'id': Number(data.data.id),
+        'fromGoGoAnime': Boolean(false)
+
+      }))
+
+      setAlreadyWatched(null)
+
+      if (!remLoading && !remError) {
+        Swal.fire({
+          icon: "success",
+          title: 'Removed From Bookmarks!',
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 7000,
+          timerProgressBar: true,
+        })
+      }
+
+    }
+
+  }
+
   return (
-    <C.Container data={data.data} indexHeading={indexPageInfo} isAlreadyAdded={isAlreadyAdded}>
+    <C.Container
+      data={data.data}
+      indexHeading={indexPageInfo}
+      isAlreadyAdded={isAlreadyAdded}
+      alreadyWatched={alreadyWatched}
+    >
 
       <div className='search-mobile'>
         <SearchInnerPage />
       </div>
 
       <div className='banner-img'>
-        {
-          /* <img src={`${data.data.bannerImage}`} alt={`${data.data.title.romaji} Cover Art`} /> */
-        }
       </div>
 
       <div className='name-and-description'>
@@ -174,13 +254,23 @@ export default function MoviePageContent(data: any) {
 
           <h1>{data.data.title.romaji}</h1>
 
-          {isAlreadyAdded == null && (
-            <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
-          )}
+          <div className='buttons'>
+            {alreadyWatched == null && (
+              <button onClick={() => handleAlreadyWatched()} className='watched'><EyeSlashSvg />  Not Watched</button>
+            )}
 
-          {isAlreadyAdded && (
-            <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
-          )}
+            {alreadyWatched && (
+              <button onClick={() => handleAlreadyWatched()} className='watched'><EyeSvg />  Watched</button>
+            )}
+
+            {isAlreadyAdded == null && (
+              <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
+            )}
+
+            {isAlreadyAdded && (
+              <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
+            )}
+          </div>
 
         </div>
 
@@ -210,12 +300,12 @@ export default function MoviePageContent(data: any) {
             <CharacterAndActor data={item} key={key} />
           ))}
 
-          {/* 
+
           <h1>Supporting Cast</h1>
 
           {supportingCastCharacters.map((item: any, key: any) => (
             <CharacterAndActor data={item} key={key} />
-          ))} */}
+          ))}
         </div>
       )}
 
@@ -265,7 +355,7 @@ export default function MoviePageContent(data: any) {
           <ul>
             {data.data.relations.nodes.map((item: any) => (
               <li>
-                <AnimesReleasingThisWeek data={item} />
+                <AnimesReleasingThisWeek key={item.id} data={item} />
               </li>
             ))}
           </ul>
@@ -279,7 +369,7 @@ export default function MoviePageContent(data: any) {
 
           <ul>
             {data.data.recommendations.edges.slice(0, 8).map((item: any) => (
-              <li><AnimesReleasingThisWeek data={item.node.mediaRecommendation} /></li>
+              <li key={item.node.id}><AnimesReleasingThisWeek data={item.node.mediaRecommendation} /></li>
             ))}
           </ul>
         </div>

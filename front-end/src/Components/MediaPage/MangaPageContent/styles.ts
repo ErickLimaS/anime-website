@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 interface Props {
     data: any;
-    isAlreadyAdded: any
+    isAlreadyAdded: any,
+    alreadyWatched: any
 }
 
 export const Container = styled.div<Props>`
@@ -91,39 +92,61 @@ export const Container = styled.div<Props>`
                 color: ${props => props.data.coverImage.color};
             }
 
-            button{
-                cursor: pointer;
-                margin: 0;
+            .buttons{
 
                 display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
 
-                padding: 0.7rem;
+                button{
+                    cursor: pointer;
+                    margin: 0 1rem;
 
-                font-size: 1.6rem;
-                color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
 
-                border: 2px solid #ff5ebc;
-                border-radius: 4px;
+                    padding: 0.7rem;
 
-                background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
+                    font-size: 1.6rem;
+                    color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};
 
-                svg{
+                    border: 2px solid #ff5ebc;
+                    border-radius: 4px;
 
-                    width: 1.5rem;
-                    transform: scale(2);
-                    height: auto;
+                    background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
 
-                    fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+                    svg{
 
-                    margin: 0.5rem 1rem;
+                        width: 1.5rem;
+                        transform: scale(2);
+                        height: auto;
+
+                        fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+
+                        margin: 0.5rem 1rem;
+
+                    }
+
+                    :hover{
+                        opacity: 0.75;
+                    }
 
                 }
 
-                :hover{
-                    opacity: 0.75;
+                button.watched{
+
+                    color: ${props => props.alreadyWatched == null ? '#333333' : '#fff'};
+
+                    background-color: ${props => props.alreadyWatched == null ? 'transparent' : '#ff5ebc'};
+
+                    svg{
+
+                        fill: ${props => props.alreadyWatched == null ? '#ff5ebc' : '#fff'};
+
+                        padding-right: 0.4rem;
+                        padding-left: 0.1rem;
+                    }
+
                 }
 
             }

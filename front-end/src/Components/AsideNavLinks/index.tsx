@@ -37,8 +37,6 @@ export default function AsideNavLinks(data: any) {
 
   }
 
-  // console.log(data)
-
   useEffect(() => {
 
     if (userInfo) {

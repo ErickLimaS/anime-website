@@ -587,7 +587,7 @@ export default function AnimePageContent(data: any) {
             <ul>
               {data.data.relations.nodes.map((item: any) => (
                 <li>
-                  <AnimesReleasingThisWeek data={item} />
+                  <AnimesReleasingThisWeek key={item.id} data={item} />
                 </li>
               ))}
             </ul>
@@ -603,7 +603,7 @@ export default function AnimePageContent(data: any) {
 
             <ul>
               {data.data.recommendations.edges.slice(0, 8).map((item: any, key: any) => (
-                <li><AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} /></li>
+                <li key={item.node.id}><AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} /></li>
               ))}
             </ul>
           </div>

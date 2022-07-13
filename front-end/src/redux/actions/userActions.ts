@@ -210,7 +210,7 @@ export const addToAlreadyWatched = (media: any) => async (dispatch: Dispatch<Any
 
         dispatch({
             type: USER_ALREADY_WATCHED_ADD_SUCCESS,
-            payload: data
+            payload: data.alreadyWatched
         })
 
     }
@@ -237,7 +237,7 @@ export const removeFromAlreadyWatched = (media: any) => async (dispatch: Dispatc
         const { userLogin: { userInfo } } = getState()
 
         const { data } = await Axios({
-            method: 'POST',
+            method: 'PUT',
             url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/remove-already-watched`,
             headers: {
                 Authorization: `Bearer ${userInfo.token}`
@@ -251,7 +251,7 @@ export const removeFromAlreadyWatched = (media: any) => async (dispatch: Dispatc
 
         dispatch({
             type: USER_ALREADY_WATCHED_REMOVE_SUCCESS,
-            payload: data
+            payload: data.alreadyWatched
         })
 
     }

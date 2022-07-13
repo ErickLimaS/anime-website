@@ -8,7 +8,6 @@ import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-ri
 import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
 import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
-import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
 import CharacterAndActor from '../../CharacterAndActor'
 import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
@@ -71,11 +70,11 @@ export default function AnimePageContentV2(data: any) {
 
     //find if the current media was already added to user account
     if (userInfo) {
-      // userInfo.alreadyWatched.find((item: any) => {
-      //   if (item.idGoGoAnime === data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
-      //     setAlreadyWatched(true)
-      //   }
-      // })
+      userInfo.alreadyWatched.find((item: any) => {
+        if (item.idGoGoAnime === data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
+          setAlreadyWatched(true)
+        }
+      })
       userInfo.mediaAdded.find((item: any) => {
         if (item.idGoGoAnime === data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
           setIsAlreadyAdded(true)
@@ -85,9 +84,10 @@ export default function AnimePageContentV2(data: any) {
 
   }, [data.data.episodesList[0].length])
 
-  // add media to user
   const dispatch: any = useDispatch()
   const navigate: any = useNavigate()
+
+  // add media to user
   const handleMediaToAccount = () => {
 
     //CHECKS if dont has on user account
@@ -207,7 +207,7 @@ export default function AnimePageContentV2(data: any) {
       dispatch(removeFromAlreadyWatched({
 
         'idGoGoAnime': data.data.animeTitle.replace(/!|#|/g, ``).replace(/%20/g, `-`),
-        'fromGoGoAnime': true
+        'fromGoGoAnime': Boolean(true)
 
       }))
 
@@ -251,6 +251,7 @@ export default function AnimePageContentV2(data: any) {
       data={data.data}
       indexHeading={indexPageInfo}
       isAlreadyAdded={isAlreadyAdded}
+      alreadyWatched={alreadyWatched}
       videoReady={videoReady}
       videoId={videoId}
     >

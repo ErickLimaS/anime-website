@@ -4,6 +4,7 @@ interface Props {
     data: any;
     indexHeading: number,
     isAlreadyAdded: any,
+    alreadyWatched: any,
     videoReady: any,
     videoId: any
 }
@@ -138,13 +139,13 @@ export const Container = styled.div<Props>`
 
                 button.watched{
 
-                    color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};
+                    color: ${props => props.alreadyWatched == null ? '#333333' : '#fff'};
 
-                    background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
+                    background-color: ${props => props.alreadyWatched == null ? 'transparent' : '#ff5ebc'};
 
                     svg{
 
-                        fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+                        fill: ${props => props.alreadyWatched == null ? '#ff5ebc' : '#fff'};
 
                         padding-right: 0.4rem;
                         padding-left: 0.1rem;

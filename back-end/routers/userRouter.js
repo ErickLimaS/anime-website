@@ -323,7 +323,14 @@ userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req
 
             await user.save()
 
-            return res.status(200).send(user)
+            return res.status(200).send({
+                id: user._id,
+                name: user.name,
+                avatarImg: user.avatarImg,
+                mediaAdded: user.mediaAdded,
+                alreadyWatched: user.alreadyWatched,
+                token: generateToken(user)
+            })
 
         }
         else {

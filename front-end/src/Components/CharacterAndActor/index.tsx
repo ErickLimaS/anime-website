@@ -4,45 +4,8 @@ import { Link } from 'react-router-dom'
 
 export default function CharacterAndActor(data: any) {
 
-  console.log(data.data)
-
   return (
     <C.Container>
-
-      {/* <div>
-        <div className='img-character-actor'>
-          <img src={`${data.data.node.image.large}`} alt={`${data.data.node.name.full}`} />
-        </div>
-
-        {data.data.node.name.full && (
-          <h1>{data.data.node.name.full}</h1>
-        )}
-        {data.data.node.gender && (
-          <p>{data.data.node.gender}</p>
-        )}
-        {data.data.node.age && (
-          <p>{data.data.node.age}</p>
-        )}
-
-      </div>
-
-      <div>
-        <div className='img-character-actor'>
-          <img src={`${data.data.voiceActors[0].image.large}`} alt={`${data.data.node.name.full}`} />
-        </div>
-
-        {data.data.voiceActors[0].name.full && (
-          <h1>{data.data.voiceActors[0].name.full}</h1>
-        )}
-        {data.data.voiceActors[0].gender && (
-          <p>{data.data.voiceActors[0].gender}</p>
-        )}
-
-        {data.data.voiceActors[0].age && (
-          <p>{data.data.voiceActors[0].age}</p>
-        )}
-
-      </div> */}
 
       <div className='imgs'>
         <div className='img-character'>

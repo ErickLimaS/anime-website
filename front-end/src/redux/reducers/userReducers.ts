@@ -90,7 +90,7 @@ export const addToAlreadyWatchedReducer = (state = {}, action: any) => {
         case USER_ALREADY_WATCHED_ADD_REQUEST:
             return { loading: true }
         case USER_ALREADY_WATCHED_ADD_SUCCESS:
-            return { loading: false, userInfo: action.payload }
+            return { loading: false, alreadyWatched: action.payload }
         case USER_ALREADY_WATCHED_ADD_FAIL:
             return { loading: false, error: action.payload }
         default:
@@ -107,7 +107,7 @@ export const removeFromAlreadyWatchedReducer = (state = {}, action: any) => {
         case USER_ALREADY_WATCHED_REMOVE_REQUEST:
             return { loading: true }
         case USER_ALREADY_WATCHED_REMOVE_SUCCESS:
-            return { loading: false, userInfo: action.payload }
+            return { loading: false, alreadyWatched: action.payload }
         case USER_ALREADY_WATCHED_REMOVE_FAIL:
             return { loading: false, error: action.payload }
         default:

@@ -81,7 +81,7 @@ export default function Footer() {
 
               <ul>
                 {trending?.map((item: any) => (
-                  <li><Link to={`/anime/${item.id}`}>{item.title.romaji.length > 30 ? item.title.romaji.slice(0, 30) + `...` : item.title.romaji}</Link></li>
+                  <li key={item.id}><Link to={`/anime/${item.id}`}>{item.title.romaji.length > 30 ? item.title.romaji.slice(0, 30) + `...` : item.title.romaji}</Link></li>
                 ))}
               </ul>
             </div>
