@@ -8,6 +8,7 @@ import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-ri
 import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
 import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
+import { ReactComponent as WarningSvg } from '../../../imgs/svg/exclamation-triangle.svg'
 import SearchInnerPage from '../../SearchInnerPage'
 import CharacterAndActor from '../../CharacterAndActor'
 import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
@@ -15,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import gogoAnime from '../../../API/gogo-anime'
 import Swal from 'sweetalert2'
+import EpisodesGoGoAnime from '../../EpisodesGoGoAnime/EpisodesGoGoAnime'
 
 export default function AnimePageContentV2(data: any) {
 
@@ -319,7 +321,6 @@ export default function AnimePageContentV2(data: any) {
         </div>
       </div>
 
-
       <div className='video'>
 
         {loading && (
@@ -330,6 +331,15 @@ export default function AnimePageContentV2(data: any) {
         </iframe>
       </div>
 
+      <div className='warning'>
+        <span>
+          <WarningSvg /><h1> Attention</h1>
+        </span>
+        <p>
+          The player being use to stream these episode bellow is being shown as a pontential threat of data leaking by some antivirus.
+        </p>
+        <h2>Watch It By Your Own Risk.</h2>
+      </div>
 
       {data.data.episodesList.length > 0 ? (
         <>
@@ -341,11 +351,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 0 && (
 
                   data.data.episodesList.slice(0, 24).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -353,143 +365,156 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 1 && (
 
                   data.data.episodesList.slice(24, 24 * 2).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 2 && (
 
                   data.data.episodesList.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 3 && (
 
                   data.data.episodesList.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 4 && (
 
                   data.data.episodesList.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 5 && (
 
                   data.data.episodesList.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 6 && (
 
                   data.data.episodesList.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 7 && (
 
                   data.data.episodesList.slice(24 * 7, 24 * 8).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 8 && (
 
                   data.data.episodesList.slice(24 * 8, 24 * 9).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 9 && (
 
                   data.data.episodesList.slice(24 * 9, 24 * 10).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 10 && (
 
                   data.data.episodesList.slice(24 * 10, 24 * 11).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 11 && (
 
                   data.data.episodesList.slice(24 * 11, 24 * 12).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 12 && (
 
                   data.data.episodesList.slice(24 * 12, 24 * 13).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -497,12 +522,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 13 && (
 
                   data.data.episodesList.slice(24 * 13, 24 * 14).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -510,48 +536,52 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 14 && (
 
                   data.data.episodesList.slice(24 * 14, 24 * 15).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 15 && (
 
                   data.data.episodesList.slice(24 * 15, 24 * 16).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 16 && (
 
                   data.data.episodesList.slice(24 * 16, 24 * 17).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 17 && (
 
                   data.data.episodesList.slice(24 * 17, 24 * 18).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -559,12 +589,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 18 && (
 
                   data.data.episodesList.slice(24 * 18, 24 * 19).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -572,12 +603,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 19 && (
 
                   data.data.episodesList.slice(24 * 19, 24 * 20).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -585,12 +617,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 20 && (
 
                   data.data.episodesList.slice(24 * 20, 24 * 21).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -598,24 +631,26 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 21 && (
 
                   data.data.episodesList.slice(24 * 21, 24 * 22).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 22 && (
 
                   data.data.episodesList.slice(24 * 22, 24 * 23).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -623,12 +658,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 23 && (
 
                   data.data.episodesList.slice(24 * 23, 24 * 24).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -636,48 +672,52 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 24 && (
 
                   data.data.episodesList.slice(24 * 24, 24 * 25).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 25 && (
 
                   data.data.episodesList.slice(24 * 25, 24 * 26).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 26 && (
 
                   data.data.episodesList.slice(24 * 26, 24 * 27).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 27 && (
 
                   data.data.episodesList.slice(24 * 27, 24 * 28).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -685,12 +725,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 28 && (
 
                   data.data.episodesList.slice(24 * 28, 24 * 29).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -698,12 +739,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 29 && (
 
                   data.data.episodesList.slice(24 * 29, 24 * 30).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -711,12 +753,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 30 && (
 
                   data.data.episodesList.slice(24 * 30, 24 * 31).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -724,24 +767,26 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 31 && (
 
                   data.data.episodesList.slice(24 * 31, 24 * 32).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 32 && (
 
                   data.data.episodesList.slice(24 * 32, 24 * 33).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -749,12 +794,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 33 && (
 
                   data.data.episodesList.slice(24 * 33, 24 * 34).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -762,48 +808,52 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 34 && (
 
                   data.data.episodesList.slice(24 * 34, 24 * 35).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 35 && (
 
                   data.data.episodesList.slice(24 * 35, 24 * 36).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 36 && (
 
                   data.data.episodesList.slice(24 * 36, 24 * 37).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 37 && (
 
                   data.data.episodesList.slice(24 * 37, 24 * 38).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -811,12 +861,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 38 && (
 
                   data.data.episodesList.slice(24 * 38, 24 * 39).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -824,12 +875,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 39 && (
 
                   data.data.episodesList.slice(24 * 39, 24 * 40).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -837,12 +889,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 40 && (
 
                   data.data.episodesList.slice(24 * 40, 24 * 41).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -850,24 +903,26 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 41 && (
 
                   data.data.episodesList.slice(24 * 41, 24 * 42).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 42 && (
 
                   data.data.episodesList.slice(24 * 42, 24 * 43).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -875,12 +930,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 43 && (
 
                   data.data.episodesList.slice(24 * 43, 24 * 44).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -888,48 +944,52 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 44 && (
 
                   data.data.episodesList.slice(24 * 44, 24 * 45).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 45 && (
 
                   data.data.episodesList.slice(24 * 45, 24 * 46).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 46 && (
 
                   data.data.episodesList.slice(24 * 46, 24 * 47).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
                 {indexEpisodesPagination === 47 && (
 
                   data.data.episodesList.slice(24 * 47, 24 * 48).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -937,12 +997,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 48 && (
 
                   data.data.episodesList.slice(24 * 48, 24 * 49).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}
@@ -950,12 +1011,13 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 49 && (
 
                   data.data.episodesList.slice(24 * 49, 24 * 50).map((item: any, key: any) => (
-                    <div id={item.episodeId} key={item.episodeId} className={videoId === item.episodeId ? 'episode active' : 'episode'}>
-
-                      <button onClick={() => getStreamingLink(item.episodeId)}>
-                        <h3>Episode {item.episodeNum}</h3>
-                      </button>
-                    </div>
+                    <EpisodesGoGoAnime
+                      key={item.episodeId}
+                      id={item.episodeId}
+                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
+                      data={item}
+                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                    />
                   ))
 
                 )}

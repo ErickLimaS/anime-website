@@ -16,15 +16,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
 import { Link } from 'react-router-dom'
+import EpisodesAniList from '../../EpisodesAniList/EpisodesAniList'
 
 export default function AnimePageContent(data: any) {
 
   const [mainCastCharacters, setMainCastCharacters] = useState([])
   const [supportingCastCharacters, setSupportingCastCharacters] = useState([])
 
-  const [moreDetails, setMoreDetails] = useState<boolean>(false)
+  const [moreDetails, setMoreDetails] = useState<boolean>(false) //media description
 
-  const [indexPageInfo, setIndexPageInfo] = useState(0)
+  const [indexPageInfo, setIndexPageInfo] = useState(0) //pagination aux
 
   const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
   const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
@@ -32,6 +33,7 @@ export default function AnimePageContent(data: any) {
   const [alreadyWatched, setAlreadyWatched] = useState<any>()
   const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
 
+  //state
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
   const addMediaToUserAccounts = useSelector((state: any) => state.addMediaToUserAccount)
@@ -235,7 +237,12 @@ export default function AnimePageContent(data: any) {
   }
 
   return (
-    <C.Container data={data.data} indexHeading={indexPageInfo} isAlreadyAdded={isAlreadyAdded}>
+    <C.Container
+      data={data.data}
+      indexHeading={indexPageInfo}
+      isAlreadyAdded={isAlreadyAdded}
+      alreadyWatched={alreadyWatched}
+    >
 
       <div className='search-mobile'>
         <SearchInnerPage />
@@ -317,14 +324,7 @@ export default function AnimePageContent(data: any) {
                   {indexEpisodesPagination === 0 && (
 
                     data.data.streamingEpisodes.slice(0, 24).map((item: any, key: any) => (
-                      <div key={key} className='episode'>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                        </a>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <h3>{item.title}</h3>
-                        </a>
-                      </div>
+                      <EpisodesAniList key={key} data={item} />
                     ))
 
                   )}
@@ -332,84 +332,42 @@ export default function AnimePageContent(data: any) {
                   {indexEpisodesPagination === 1 && (
 
                     data.data.streamingEpisodes.slice(24, 24 * 2).map((item: any, key: any) => (
-                      <div key={key} className='episode'>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                        </a>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <h3>{item.title}</h3>
-                        </a>
-                      </div>
+                      <EpisodesAniList key={key} data={item} />
                     ))
 
                   )}
                   {indexEpisodesPagination === 2 && (
 
                     data.data.streamingEpisodes.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
-                      <div key={key} className='episode'>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                        </a>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <h3>{item.title}</h3>
-                        </a>
-                      </div>
+                      <EpisodesAniList key={key} data={item} />
                     ))
 
                   )}
                   {indexEpisodesPagination === 3 && (
 
                     data.data.streamingEpisodes.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
-                      <div key={key} className='episode'>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                        </a>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <h3>{item.title}</h3>
-                        </a>
-                      </div>
+                      <EpisodesAniList key={key} data={item} />
                     ))
 
                   )}
                   {indexEpisodesPagination === 4 && (
 
                     data.data.streamingEpisodes.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
-                      <div key={key} className='episode'>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                        </a>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <h3>{item.title}</h3>
-                        </a>
-                      </div>
+                      <EpisodesAniList key={key} data={item} />
                     ))
 
                   )}
                   {indexEpisodesPagination === 5 && (
 
                     data.data.streamingEpisodes.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
-                      <div key={key} className='episode'>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                        </a>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <h3>{item.title}</h3>
-                        </a>
-                      </div>
+                      <EpisodesAniList key={key} data={item} />
                     ))
 
                   )}
                   {indexEpisodesPagination === 6 && (
 
                     data.data.streamingEpisodes.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
-                      <div key={key} className='episode'>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <img src={`${item.thumbnail}`} alt={`${item.title}`}></img>
-                        </a>
-                        <a href={`${item.url}`} target='_blank' rel='noreferrer'>
-                          <h3>{item.title}</h3>
-                        </a>
-                      </div>
+                      <EpisodesAniList key={key} data={item} />
                     ))
 
                   )}

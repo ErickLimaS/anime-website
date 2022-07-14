@@ -291,6 +291,51 @@ export const Container = styled.div<Props>`
         }
     }
 
+    div.warning{
+
+        display: flex;
+        flex-direction: column;
+
+        border: 2px solid #ff9412;
+        border-radius: 4px;
+
+        padding: 1rem;
+        margin-bottom: 2rem;
+
+        >*{
+            margin: 0.5rem 0;
+        }
+        span{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            svg{
+                fill: #f58805;
+                width: auto;
+                height: 4rem;
+
+                margin: 0 1rem;
+            }
+        }
+
+        h1{
+            color: #f58805;
+            font-size: 3rem;
+            font-weight: 600;
+        }
+        p{
+            font-size: 2rem;
+            font-weight: 400;
+        }
+        h2{
+            color: #f58805;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+    }
+
     .anime-episodes{
 
         display: grid;
@@ -313,81 +358,6 @@ export const Container = styled.div<Props>`
             justify-items: center;
         }
 
-        .episode{
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            background-color: #ff5ebc33;
-
-            border: 2px solid #ff5ebc;
-            border-radius: 4px;
-
-            width: 120px;
-            height: 40px;
-
-            button{
-                cursor: pointer;
-
-                width: -webkit-fill-available;
-                height: -webkit-fill-available;
-
-                background-color: transparent;
-                border: 0;
-            }
-
-            img{
-                width: 180px;
-                height: auto;
-
-                border-radius: 4px;
-
-                @media(max-width: 430px){
-                    width: 160px;
-                }
-
-                @media(max-width: 360px){
-                    width: 140px;
-                }
-
-            }
-
-            a{
-                display: flex;
-                height: inherit;
-                width: inherit;
-                justify-content: center;
-                align-items: center;
-            }
-
-            h3{
-                color: #444444;
-
-                font-size: 1.6rem;
-            }
-
-            :hover{
-
-                img{
-                    transition: all ease-in-out 100ms;
-                    transform: scale(1.1);
-                }
-                h3{
-                    transition: all ease-in-out 100ms;
-                    color: #ff0095;
-                }
-            }
-        }
-
-        .episode.active{
-            background-color: #f92f7f;
-            border-color: #f92f7f;
-
-            h3{
-                color: #fff;
-            }
-        }
     }
 
     div.pagination-buttons{

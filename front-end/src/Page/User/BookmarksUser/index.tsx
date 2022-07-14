@@ -1,10 +1,12 @@
 import * as C from './styles'
 import React, { MutableRefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import AsideNavLinks from '../../../Components/AsideNavLinks'
 import { Link } from 'react-router-dom'
 import Axios from 'axios'
+import Swal from 'sweetalert2'
+import { logoutUser } from '../../../redux/actions/userActions'
 
 
 export default function BookmarkUser() {
@@ -23,7 +25,10 @@ export default function BookmarkUser() {
     const { userInfo } = userLogin
 
     const navigate = useNavigate()
+    const dispatch: any = useDispatch()
 
+    //store current media url to redirect if user is not logged in
+    const redirect = window.location.pathname ? `${window.location.pathname}` : ''
 
     useEffect(() => {
 
@@ -40,32 +45,53 @@ export default function BookmarkUser() {
         //request all media added from users account
         const load = async () => {
 
-            const data: any = await Axios({
-                url: `https://cors-anywhere.herokuapp.com/https://animes-website-db.herokuapp.com/users/media`,
-                headers: { Authorization: `Bearer ${userInfo.token}` }
-            })
-            setAllTypes(data.data.mediaAdded)
+            try {
 
-            const animesType = data.data.mediaAdded.filter((item: any) => {
-                return item.type === "ANIME" && item.format !== "MOVIE"
-            })
-            setAnimesTypeItems(animesType)
-            console.log('then')
+                const data: any = await Axios({
+                    url: `https://cors-anywhere.herokuapp.com/https://animes-website-db.herokuapp.com/users/media`,
+                    headers: { Authorization: `Bearer ${userInfo.token}` }
+                })
+                setAllTypes(data.data.mediaAdded)
 
-            const mangasType = data.data.mediaAdded.filter((item: any) => {
-                return item.type === "MANGA"
-            })
+                const animesType = data.data.mediaAdded.filter((item: any) => {
+                    return item.type === "ANIME" && item.format !== "MOVIE"
+                })
+                setAnimesTypeItems(animesType)
+                console.log('then')
 
-            setMangasTypeItems(mangasType)
-            const moviesType = data.data.mediaAdded.filter((item: any) => {
-                return item.format === "MOVIE"
-            })
+                const mangasType = data.data.mediaAdded.filter((item: any) => {
+                    return item.type === "MANGA"
+                })
 
-            setMoviesTypeItems(moviesType)
-            const otherType = data.data.mediaAdded.filter((item: any) => {
-                return item.type !== "MANGA" && item.type !== "ANIME"
-            })
-            setOtherTypeItems(otherType)
+                setMangasTypeItems(mangasType)
+                const moviesType = data.data.mediaAdded.filter((item: any) => {
+                    return item.format === "MOVIE"
+                })
+
+                setMoviesTypeItems(moviesType)
+                const otherType = data.data.mediaAdded.filter((item: any) => {
+                    return item.type !== "MANGA" && item.type !== "ANIME"
+                })
+                setOtherTypeItems(otherType)
+            }
+            catch (error: any) {
+                //TOKEN VALIDATION/EXPIRATION
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Security First!',
+                    titleText: `${error.response.status}: Security First!`,
+                    text: 'You Will Need To Login Again So We Will Make Your Account Secure!',
+                    allowOutsideClick: false,
+                    didClose: () => {
+
+                        dispatch(logoutUser())
+                        window.location.href = redirect !== '' ? `/login?redirect=${redirect.slice(1, redirect.length)}` : '/login'
+
+                    }
+                })
+
+            }
+
         }
         load()
 
