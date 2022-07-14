@@ -366,9 +366,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24, 24 * 2).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -379,9 +379,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -392,9 +392,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -405,9 +405,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -418,9 +418,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -431,9 +431,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -444,9 +444,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 7, 24 * 8).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -457,9 +457,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 8, 24 * 9).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -470,9 +470,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 9, 24 * 10).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -483,9 +483,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 10, 24 * 11).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -496,9 +496,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 11, 24 * 12).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -509,9 +509,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 12, 24 * 13).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -523,9 +523,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 13, 24 * 14).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -537,9 +537,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 14, 24 * 15).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -550,9 +550,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 15, 24 * 16).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -563,9 +563,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 16, 24 * 17).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -576,9 +576,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 17, 24 * 18).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -590,9 +590,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 18, 24 * 19).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -604,9 +604,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 19, 24 * 20).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -618,9 +618,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 20, 24 * 21).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -632,9 +632,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 21, 24 * 22).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -645,9 +645,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 22, 24 * 23).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -659,9 +659,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 23, 24 * 24).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -673,9 +673,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 24, 24 * 25).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -686,9 +686,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 25, 24 * 26).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -699,9 +699,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 26, 24 * 27).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -712,9 +712,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 27, 24 * 28).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -726,9 +726,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 28, 24 * 29).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -740,9 +740,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 29, 24 * 30).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -754,9 +754,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 30, 24 * 31).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -768,9 +768,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 31, 24 * 32).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -781,9 +781,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 32, 24 * 33).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -795,9 +795,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 33, 24 * 34).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -809,9 +809,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 34, 24 * 35).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -822,9 +822,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 35, 24 * 36).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -835,9 +835,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 36, 24 * 37).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -848,9 +848,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 37, 24 * 38).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -862,9 +862,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 38, 24 * 39).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -876,9 +876,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 39, 24 * 40).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -890,9 +890,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 40, 24 * 41).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -904,9 +904,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 41, 24 * 42).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -917,9 +917,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 42, 24 * 43).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -931,9 +931,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 43, 24 * 44).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -945,9 +945,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 44, 24 * 45).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -958,9 +958,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 45, 24 * 46).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -971,9 +971,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 46, 24 * 47).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -984,9 +984,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 47, 24 * 48).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -998,9 +998,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 48, 24 * 49).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))
@@ -1012,9 +1012,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(24 * 49, 24 * 50).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))

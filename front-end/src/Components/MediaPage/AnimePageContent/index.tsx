@@ -249,9 +249,6 @@ export default function AnimePageContent(data: any) {
       </div>
 
       <div className='banner-img'>
-        {
-          /* <img src={`${data.data.bannerImage}`} alt={`${data.data.title.romaji} Cover Art`} /> */
-        }
       </div>
 
       <div className='name-and-description'>
@@ -324,7 +321,11 @@ export default function AnimePageContent(data: any) {
                   {indexEpisodesPagination === 0 && (
 
                     data.data.streamingEpisodes.slice(0, 24).map((item: any, key: any) => (
-                      <EpisodesAniList key={key} data={item} />
+                      <EpisodesAniList
+                        key={key}
+                        data={item}
+                        media={data.data}
+                      />
                     ))
 
                   )}
@@ -332,42 +333,66 @@ export default function AnimePageContent(data: any) {
                   {indexEpisodesPagination === 1 && (
 
                     data.data.streamingEpisodes.slice(24, 24 * 2).map((item: any, key: any) => (
-                      <EpisodesAniList key={key} data={item} />
+                      <EpisodesAniList
+                        key={key}
+                        data={item}
+                        media={data.data}
+                      />
                     ))
 
                   )}
                   {indexEpisodesPagination === 2 && (
 
                     data.data.streamingEpisodes.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
-                      <EpisodesAniList key={key} data={item} />
+                      <EpisodesAniList
+                        key={key}
+                        data={item}
+                        media={data.data}
+                      />
                     ))
 
                   )}
                   {indexEpisodesPagination === 3 && (
 
                     data.data.streamingEpisodes.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
-                      <EpisodesAniList key={key} data={item} />
+                      <EpisodesAniList
+                        key={key}
+                        data={item}
+                        media={data.data}
+                      />
                     ))
 
                   )}
                   {indexEpisodesPagination === 4 && (
 
                     data.data.streamingEpisodes.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
-                      <EpisodesAniList key={key} data={item} />
+                      <EpisodesAniList
+                        key={key}
+                        data={item}
+                        media={data.data}
+                      />
                     ))
 
                   )}
                   {indexEpisodesPagination === 5 && (
 
                     data.data.streamingEpisodes.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
-                      <EpisodesAniList key={key} data={item} />
+                      <EpisodesAniList
+                        key={key}
+                        data={item}
+                        media={data.data}
+                      />
                     ))
 
                   )}
                   {indexEpisodesPagination === 6 && (
 
                     data.data.streamingEpisodes.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
-                      <EpisodesAniList key={key} data={item} />
+                      <EpisodesAniList
+                        key={key}
+                        data={item}
+                        media={data.data}
+                      />
                     ))
 
                   )}

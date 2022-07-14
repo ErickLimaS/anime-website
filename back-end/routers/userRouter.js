@@ -745,7 +745,7 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
                 }
                 else {
 
-                    user.episodesAlreadyWatched.find(item => {
+                    user.episodesBookmarked.find(item => {
                         if (item.id === req.body.media.id) {
                             item.episodes.push(req.body.media.episodes)
                         }
@@ -769,7 +769,7 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
                 }
             }
             else {
-                user.episodesAlreadyWatched.push(req.body.media)
+                user.episodesBookmarked.push(req.body.media)
 
                 await user.save()
 

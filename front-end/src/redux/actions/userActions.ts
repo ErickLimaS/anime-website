@@ -269,8 +269,6 @@ export const removeFromAlreadyWatched = (media: any) => async (dispatch: Dispatc
 // ADD, REMOVE ALREADY WATCHED MEDIA
 export const addEpisodeToAlreadyWatched = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
-    console.log(media)
-
     dispatch({
         type: USER_EPISODE_ALREADY_WATCHED_ADD_REQUEST,
         payload: media

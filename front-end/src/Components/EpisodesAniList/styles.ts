@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 interface Props {
     isWatched: boolean,
-    onWatchList: boolean
+    onBookmarks: boolean
 }
 
 export const Container = styled.div`
@@ -75,20 +75,20 @@ export const Buttons = styled.div<Props>`
 
     }
 
-    button.onWatchList{
+    button.onBookmarks{
         cursor: pointer;
 
-        color: ${props => props.isWatched === false ? '#ff5ebc' : '#fff'};
-        border: 1px solid ${props => props.isWatched === false ? '#ff5ebc' : '#fff'};
+        color: ${props => props.onBookmarks === false ? '#ff5ebc' : '#fff'};
+        border: 1px solid ${props => props.onBookmarks === false ? '#ff5ebc' : '#fff'};
 
-        background-color: ${props => props.isWatched === false ? 'transparent' : '#ff5ebc'};
+        background-color: ${props => props.onBookmarks === false ? 'transparent' : '#ff5ebc'};
 
         outline: 0;
         border-radius: 4px;
 
         svg{
 
-            fill: ${props => props.isWatched === false ? '#ff5ebc' : '#fff'};
+            fill: ${props => props.onBookmarks === false ? '#ff5ebc' : '#fff'};
 
             padding: 0.5rem;
         }

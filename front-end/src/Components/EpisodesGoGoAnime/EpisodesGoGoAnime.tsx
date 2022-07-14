@@ -110,6 +110,60 @@ export default function EpisodesGoGoAnime(props: any) {
 
     }
 
+    const handleBookmarkEpisode = () => {
+
+        //CHECKS if dont has on user account
+        if (isWatched === false) {
+
+            if (userInfo) {
+
+                dispatch(addEpisodeToAlreadyWatched({
+                    'addedAt': new Date(),
+                    'idGoGoAnime': props.media.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
+                    'fullTitle': props.media.animeTitle,
+                    'nativeTitle': props.media.otherNames && props.data.otherNames,
+                    'coverImg': props.media.animeImg && props.media.animeImg,
+                    'type': props.media.type,
+                    'status': props.media.status,
+                    'fromGoGoAnime': Boolean(true),
+                    'episodes': {
+                        'episodeId': props.data.episodeId,
+                        'episodeName': props.data.episodeNum,
+                        'originSite': 'GoGoAnime',
+                        'thumbnail': 'none',
+                        'title': 'none',
+                    }
+                }))
+
+                setIsWatched(true)
+
+            }
+            else {
+
+                navigate(`/login?redirect=${currentUrlToRedirect.slice(1, currentUrlToRedirect.length)}`)
+
+            }
+
+        }
+        else {
+
+            //remove dispatch 
+            dispatch(removeEpisodeFromAlreadyWatched({
+
+                'idGoGoAnime': props.media.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
+                'fromGoGoAnime': Boolean(true),
+                'episodes': {
+                    'episodeId': props.data.episodeId,
+                }
+
+            }))
+
+            setIsWatched(false)
+
+        }
+
+    }
+
     return (
         <C.Container
             episodeActive={episodeActive}
@@ -124,14 +178,14 @@ export default function EpisodesGoGoAnime(props: any) {
 
             <C.Buttons isWatched={isWatched} onBookmarks={onBookmarks}>
                 {isWatched ? (
-                    <button type='button' className='onBookmarks' onClick={() => handleEpisodeWatched()}><EyeSvg /></button>
+                    <button type='button' className='isWatched' onClick={() => handleEpisodeWatched()}><EyeSvg /></button>
                 ) : (
-                    <button type='button' className='onBookmarks' onClick={() => handleEpisodeWatched()}><EyeSlashSvg /></button>
+                    <button type='button' className='isWatched' onClick={() => handleEpisodeWatched()}><EyeSlashSvg /></button>
                 )}
                 {onBookmarks ? (
-                    <button type='button' className='onBookmarks' onClick={() => console.log(`s`)}><BookMarkFillEpisodeSvg /></button>
+                    <button type='button' className='onBookmarks' onClick={() => handleBookmarkEpisode()}><BookMarkFillEpisodeSvg /></button>
                 ) : (
-                    <button type='button' className='onBookmarks' onClick={() => console.log(`s`)}><BookMarkEpisodeSvg /></button>
+                    <button type='button' className='onBookmarks' onClick={() => handleBookmarkEpisode()}><BookMarkEpisodeSvg /></button>
                 )}
             </C.Buttons>
 
