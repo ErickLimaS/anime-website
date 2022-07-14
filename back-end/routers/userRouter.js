@@ -36,6 +36,8 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
             avatarImg: user.avatarImg,
             mediaAdded: [],
             alreadyWatched: [],
+            episodesAlreadyWatched: [],
+            episodesBookmarked: [],
             token: generateToken(user)
 
         })
@@ -70,6 +72,8 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
                 alreadyWatched: user.alreadyWatched,
+                episodesAlreadyWatched: user.episodesAlreadyWatched,
+                episodesBookmarked: user.episodesBookmarked,
                 token: generateToken(user)
 
             })
@@ -105,8 +109,9 @@ userRouter.get('/media', isAuth, expressAsyncHandler(async (req, res) => {
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
+            episodesAlreadyWatched: user.episodesAlreadyWatched,
+            episodesBookmarked: user.episodesBookmarked,
             token: generateToken(user)
-
         })
 
     }
@@ -139,6 +144,8 @@ userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
+            episodesAlreadyWatched: user.episodesAlreadyWatched,
+            episodesBookmarked: user.episodesBookmarked,
             token: generateToken(user)
 
         })
@@ -178,6 +185,8 @@ userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) =>
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
+            episodesAlreadyWatched: user.episodesAlreadyWatched,
+            episodesBookmarked: user.episodesBookmarked,
             token: generateToken(user)
 
         })
@@ -234,6 +243,8 @@ userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, r
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
                 alreadyWatched: user.alreadyWatched,
+                episodesAlreadyWatched: user.episodesAlreadyWatched,
+                episodesBookmarked: user.episodesBookmarked,
                 token: generateToken(user)
             })
 
@@ -247,7 +258,7 @@ userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, r
 
 }))
 
-//ADD TO ALREADY WATCHED
+//ADD TO MEDIA ALREADY WATCHED
 userRouter.post('/add-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id, '-password -email')
@@ -291,6 +302,8 @@ userRouter.post('/add-already-watched', isAuth, expressAsyncHandler(async (req, 
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
+            episodesAlreadyWatched: user.episodesAlreadyWatched,
+            episodesBookmarked: user.episodesBookmarked,
             token: generateToken(user)
         })
 
@@ -303,7 +316,7 @@ userRouter.post('/add-already-watched', isAuth, expressAsyncHandler(async (req, 
 
 }))
 
-//REMOVE FROM ALREADY WATCHED
+//REMOVE MEDIA FROM ALREADY WATCHED
 userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id, '-password -email')
@@ -329,6 +342,8 @@ userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
                 alreadyWatched: user.alreadyWatched,
+                episodesAlreadyWatched: user.episodesAlreadyWatched,
+                episodesBookmarked: user.episodesBookmarked,
                 token: generateToken(user)
             })
 
@@ -347,8 +362,556 @@ userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
                 alreadyWatched: user.alreadyWatched,
+                episodesAlreadyWatched: user.episodesAlreadyWatched,
+                episodesBookmarked: user.episodesBookmarked,
                 token: generateToken(user)
             })
+
+        }
+
+    }
+    catch (error) {
+
+        return res.status(500).send(error)
+
+    }
+
+}))
+
+//ADD TO EPISODES ALREADY WATCHED
+userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.user.id, '-password -email')
+
+    if (!user) {
+        return res.status(404).send({ msg: 'User Not Found / Dont Exist' })
+    }
+
+    try {
+
+        // CHECKS MEDIA ORIGIN
+        if (req.body.media.fromGoGoAnime === true) {
+
+            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            const alreadyExist = user.episodesAlreadyWatched.find(
+                item => item.idGoGoAnime === req.body.media.idGoGoAnime
+            )
+
+            if (alreadyExist) {
+
+                // CHECKS IF EPISODE WAS PREVEOUSLY ADDED
+                const episodeAlreadyWatched = alreadyExist.episodes.find(
+                    item => item.episodeId === req.body.media.episodes.episodeId
+                )
+
+                if (episodeAlreadyWatched) {
+                    return res.status(409).send({ msg: 'Already Added' })
+                }
+                else {
+
+                    user.episodesAlreadyWatched.find(item => {
+                        if (item.idGoGoAnime === req.body.media.idGoGoAnime) {
+                            item.episodes.push(req.body.media.episodes)
+                        }
+                    })
+
+                    await user.save()
+
+                    return res.status(201).send({
+
+                        id: user._id,
+                        name: user.name,
+                        avatarImg: user.avatarImg,
+                        mediaAdded: user.mediaAdded,
+                        alreadyWatched: user.alreadyWatched,
+                        episodesAlreadyWatched: user.episodesAlreadyWatched,
+                        episodesBookmarked: user.episodesBookmarked,
+                        token: generateToken(user)
+
+                    })
+
+                }
+
+            }
+            else {
+                user.episodesAlreadyWatched.push(req.body.media[{}])
+
+                await user.save()
+
+                return res.status(201).send({
+
+                    id: user._id,
+                    name: user.name,
+                    avatarImg: user.avatarImg,
+                    mediaAdded: user.mediaAdded,
+                    alreadyWatched: user.alreadyWatched,
+                    episodesAlreadyWatched: user.episodesAlreadyWatched,
+                    episodesBookmarked: user.episodesBookmarked,
+                    token: generateToken(user)
+
+                })
+            }
+
+        }
+        else {
+
+            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            const alreadyExist = user.episodesAlreadyWatched.find(
+                item => item.id === req.body.media.id
+            )
+
+            if (alreadyExist) {
+
+                // CHECKS IF EPISODE WAS PREVEOUSLY ADDED
+                const episodeAlreadyWatched = alreadyExist.episodes.find(
+                    item => item.episodeId === req.body.media.episodes.episodeId
+                )
+
+                if (episodeAlreadyWatched) {
+                    return res.status(409).send({ msg: 'Already Added' })
+                }
+                else {
+
+                    user.episodesAlreadyWatched.find(item => {
+                        if (item.id === req.body.media.id) {
+                            item.episodes.push(req.body.media.episodes)
+                        }
+                    })
+
+                    await user.save()
+
+                    return res.status(201).send({
+
+                        id: user._id,
+                        name: user.name,
+                        avatarImg: user.avatarImg,
+                        mediaAdded: user.mediaAdded,
+                        alreadyWatched: user.alreadyWatched,
+                        episodesAlreadyWatched: user.episodesAlreadyWatched,
+                        episodesBookmarked: user.episodesBookmarked,
+                        token: generateToken(user)
+
+                    })
+
+                }
+            }
+            else {
+                user.episodesAlreadyWatched.push(req.body.media)
+
+                await user.save()
+
+                return res.status(201).send({
+
+                    id: user._id,
+                    name: user.name,
+                    avatarImg: user.avatarImg,
+                    mediaAdded: user.mediaAdded,
+                    alreadyWatched: user.alreadyWatched,
+                    episodesAlreadyWatched: user.episodesAlreadyWatched,
+                    episodesBookmarked: user.episodesBookmarked,
+                    token: generateToken(user)
+
+                })
+            }
+
+        }
+
+    }
+    catch (error) {
+
+        return res.status(500).send(error)
+
+    }
+
+}))
+
+//REMOVE EPISODES FROM ALREADY WATCHED
+userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.user.id, '-password -email')
+
+    if (!user) {
+        return res.status(404).send({ msg: 'User Not Found / Dont Exist' })
+    }
+
+    try {
+
+        // CHECKS MEDIA ORIGIN
+        if (req.body.media.fromGoGoAnime === true) {
+
+            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            const alreadyExist = user.episodesAlreadyWatched.find(
+                item => item.idGoGoAnime === req.body.media.idGoGoAnime
+            )
+
+            if (alreadyExist) {
+
+                // CHECKS IF EPISODE WAS PREVEOUSLY ADDED
+                const episodeAlreadyWatched = alreadyExist.episodes.find(
+                    item => item.episodeId === req.body.media.episodes.episodeId
+                )
+
+                if (episodeAlreadyWatched) {
+
+                    user.episodesAlreadyWatched.find(item => {
+                        if (item.idGoGoAnime === req.body.media.idGoGoAnime) {
+                            item.episodes.filter(item2 => item2.episodeId != req.body.media.episodes.episodeId)
+                        }
+                    })
+
+                    await user.save()
+
+                    return res.status(201).send({
+
+                        id: user._id,
+                        name: user.name,
+                        avatarImg: user.avatarImg,
+                        mediaAdded: user.mediaAdded,
+                        alreadyWatched: user.alreadyWatched,
+                        episodesAlreadyWatched: user.episodesAlreadyWatched,
+                        episodesBookmarked: user.episodesBookmarked,
+                        token: generateToken(user)
+
+                    })
+
+                }
+                else {
+
+                    return res.status(404).send({ msg: 'Episode Not Found' })
+
+                }
+
+            }
+            else {
+
+                return res.status(404).send({ msg: 'Media From This Episode Not Found' })
+
+            }
+
+        }
+        else {
+
+            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            const alreadyExist = user.episodesAlreadyWatched.find(
+                item => item.id === req.body.media.id
+            )
+
+            if (alreadyExist) {
+
+                // CHECKS IF EPISODE WAS PREVEOUSLY ADDED
+                const episodeAlreadyWatched = alreadyExist.episodes.find(
+                    item => item.episodeId === req.body.media.episodes.episodeId
+                )
+
+                if (episodeAlreadyWatched) {
+
+                    user.episodesAlreadyWatched.find(item => {
+                        if (item.id === req.body.media.id) {
+                            item.episodes.filter(item2 => item2.episodeId != req.body.media.episodes.episodeId)
+                        }
+                    })
+
+                    await user.save()
+
+                    return res.status(201).send({
+
+                        id: user._id,
+                        name: user.name,
+                        avatarImg: user.avatarImg,
+                        mediaAdded: user.mediaAdded,
+                        alreadyWatched: user.alreadyWatched,
+                        episodesAlreadyWatched: user.episodesAlreadyWatched,
+                        episodesBookmarked: user.episodesBookmarked,
+                        token: generateToken(user)
+
+                    })
+
+                }
+                else {
+
+                    return res.status(404).send({ msg: 'Episode Not Found' })
+
+                }
+
+            }
+            else {
+
+                return res.status(404).send({ msg: 'Media From This Episode Not Found' })
+
+            }
+
+        }
+
+    }
+    catch (error) {
+
+        return res.status(500).send(error)
+
+    }
+
+}))
+
+//ADD TO BOOKMARKED EPISODES 
+userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.user.id, '-password -email')
+
+    if (!user) {
+        return res.status(404).send({ msg: 'User Not Found / Dont Exist' })
+    }
+
+    try {
+
+        // CHECKS MEDIA ORIGIN
+        if (req.body.media.fromGoGoAnime === true) {
+
+            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO BOOKMARKS
+            const alreadyExist = user.episodesBookmarked.find(
+                item => item.idGoGoAnime === req.body.media.idGoGoAnime
+            )
+
+            if (alreadyExist) {
+
+                // CHECKS IF EPISODE WAS PREVEOUSLY ADDED
+                const episodeAlreadyBookmarked = alreadyExist.episodes.find(
+                    item => item.episodeId === req.body.media.episodes.episodeId
+                )
+
+                if (episodeAlreadyBookmarked) {
+                    return res.status(409).send({ msg: 'Already Added' })
+                }
+                else {
+
+                    user.episodesBookmarked.find(item => {
+                        if (item.idGoGoAnime === req.body.media.idGoGoAnime) {
+                            item.episodes.push(req.body.media.episode)
+                        }
+                    })
+
+                    await user.save()
+
+                    return res.status(201).send({
+
+                        id: user._id,
+                        name: user.name,
+                        avatarImg: user.avatarImg,
+                        mediaAdded: user.mediaAdded,
+                        alreadyWatched: user.alreadyWatched,
+                        episodesAlreadyWatched: user.episodesAlreadyWatched,
+                        episodesBookmarked: user.episodesBookmarked,
+                        token: generateToken(user)
+
+                    })
+
+                }
+
+            }
+            else {
+                user.episodesBookmarked.push(req.body.media)
+
+                await user.save()
+
+                return res.status(201).send({
+
+                    id: user._id,
+                    name: user.name,
+                    avatarImg: user.avatarImg,
+                    mediaAdded: user.mediaAdded,
+                    alreadyWatched: user.alreadyWatched,
+                    episodesAlreadyWatched: user.episodesAlreadyWatched,
+                    episodesBookmarked: user.episodesBookmarked,
+                    token: generateToken(user)
+
+                })
+            }
+
+        }
+        else {
+
+            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            const alreadyExist = user.episodesAlreadyWatched.find(
+                item => item.id === req.body.media.id
+            )
+
+            if (alreadyExist) {
+
+                // CHECKS IF EPISODE WAS PREVEOUSLY ADDED
+                const episodeAlreadyWatched = alreadyExist.episodes.find(
+                    item => item.episodeId === req.body.media.episodes.episodeId
+                )
+
+                if (episodeAlreadyWatched) {
+                    return res.status(409).send({ msg: 'Already Added' })
+                }
+                else {
+
+                    user.episodesAlreadyWatched.find(item => {
+                        if (item.id === req.body.media.id) {
+                            item.episodes.push(req.body.media.episodes)
+                        }
+                    })
+
+                    await user.save()
+
+                    return res.status(201).send({
+
+                        id: user._id,
+                        name: user.name,
+                        avatarImg: user.avatarImg,
+                        mediaAdded: user.mediaAdded,
+                        alreadyWatched: user.alreadyWatched,
+                        episodesAlreadyWatched: user.episodesAlreadyWatched,
+                        episodesBookmarked: user.episodesBookmarked,
+                        token: generateToken(user)
+
+                    })
+
+                }
+            }
+            else {
+                user.episodesAlreadyWatched.push(req.body.media)
+
+                await user.save()
+
+                return res.status(201).send({
+
+                    id: user._id,
+                    name: user.name,
+                    avatarImg: user.avatarImg,
+                    mediaAdded: user.mediaAdded,
+                    alreadyWatched: user.alreadyWatched,
+                    episodesAlreadyWatched: user.episodesAlreadyWatched,
+                    episodesBookmarked: user.episodesBookmarked,
+                    token: generateToken(user)
+
+                })
+            }
+
+        }
+
+    }
+    catch (error) {
+
+        return res.status(500).send(error)
+
+    }
+
+}))
+
+//REMOVE FROM BOOKMARKED EPISODES
+userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.user.id, '-password -email')
+
+    if (!user) {
+        return res.status(404).send({ msg: 'User Not Found / Dont Exist' })
+    }
+
+    try {
+
+        // CHECKS MEDIA ORIGIN
+        if (req.body.media.fromGoGoAnime === true) {
+
+            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            const alreadyExist = user.episodesBookmarked.find(
+                item => item.idGoGoAnime === req.body.media.idGoGoAnime
+            )
+
+            if (alreadyExist) {
+
+                // CHECKS IF EPISODE WAS PREVEOUSLY ADDED
+                const episodeAlreadyWatched = alreadyExist.episodes.find(
+                    item => item.episodeId === req.body.media.episodes.episodeId
+                )
+
+                if (episodeAlreadyWatched) {
+
+                    user.episodesBookmarked.find(item => {
+                        if (item.idGoGoAnime === req.body.media.idGoGoAnime) {
+                            item.episodes.filter(item2 => item2.episodeId != req.body.media.episodes.episodeId)
+                        }
+                    })
+
+                    await user.save()
+
+                    return res.status(201).send({
+
+                        id: user._id,
+                        name: user.name,
+                        avatarImg: user.avatarImg,
+                        mediaAdded: user.mediaAdded,
+                        alreadyWatched: user.alreadyWatched,
+                        episodesAlreadyWatched: user.episodesAlreadyWatched,
+                        episodesBookmarked: user.episodesBookmarked,
+                        token: generateToken(user)
+
+                    })
+
+                }
+                else {
+
+                    return res.status(404).send({ msg: 'Episode Not Found' })
+
+                }
+
+            }
+            else {
+
+                return res.status(404).send({ msg: 'Media From This Episode Not Found' })
+
+            }
+
+        }
+        else {
+
+            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            const alreadyExist = user.episodesBookmarked.find(
+                item => item.id === req.body.media.id
+            )
+
+            if (alreadyExist) {
+
+                // CHECKS IF EPISODE WAS PREVEOUSLY ADDED
+                const episodeAlreadyWatched = alreadyExist.episodes.find(
+                    item => item.episodeId === req.body.media.episodes.episodeId
+                )
+
+                if (episodeAlreadyWatched) {
+
+                    user.episodesBookmarked.find(item => {
+                        if (item.id === req.body.media.id) {
+                            item.episodes.filter(item2 => item2.episodeId != req.body.media.episodes.episodeId)
+                        }
+                    })
+
+                    await user.save()
+
+                    return res.status(201).send({
+
+                        id: user._id,
+                        name: user.name,
+                        avatarImg: user.avatarImg,
+                        mediaAdded: user.mediaAdded,
+                        alreadyWatched: user.alreadyWatched,
+                        episodesAlreadyWatched: user.episodesAlreadyWatched,
+                        episodesBookmarked: user.episodesBookmarked,
+                        token: generateToken(user)
+
+                    })
+
+                }
+                else {
+
+                    return res.status(404).send({ msg: 'Episode Not Found' })
+
+                }
+
+            }
+            else {
+
+                return res.status(404).send({ msg: 'Media From This Episode Not Found' })
+
+            }
 
         }
 
@@ -382,6 +945,8 @@ userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (r
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
+            episodesAlreadyWatched: user.episodesAlreadyWatched,
+            episodesBookmarked: user.episodesBookmarked,
             token: generateToken(user)
         })
 
@@ -413,6 +978,8 @@ userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
+            episodesAlreadyWatched: user.episodesAlreadyWatched,
+            episodesBookmarked: user.episodesBookmarked,
             token: generateToken(user)
         })
 
