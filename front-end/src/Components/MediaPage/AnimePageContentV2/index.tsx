@@ -10,7 +10,6 @@ import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
 import { ReactComponent as WarningSvg } from '../../../imgs/svg/exclamation-triangle.svg'
 import SearchInnerPage from '../../SearchInnerPage'
-import CharacterAndActor from '../../CharacterAndActor'
 import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
@@ -22,7 +21,7 @@ export default function AnimePageContentV2(data: any) {
 
   const [moreDetails, setMoreDetails] = useState<boolean>(false)
 
-  const [animeTitleWithoutSpace, setAnimeTitleWithoutSpace] = useState(data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`))
+  const [animeTitleWithoutSpace] = useState(data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`))
 
   const [videoReady, setVideoReady] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -336,7 +335,7 @@ export default function AnimePageContentV2(data: any) {
           <WarningSvg /><h1> Attention</h1>
         </span>
         <p>
-          The player being use to stream these episode bellow is being shown as a pontential threat of data leaking by some antivirus.
+          The video player being use to stream these episodes bellow is being shown as a pontential threat of data leaking by some antivirus.
         </p>
         <h2>Watch It By Your Own Risk.</h2>
       </div>
@@ -353,9 +352,9 @@ export default function AnimePageContentV2(data: any) {
                   data.data.episodesList.slice(0, 24).map((item: any, key: any) => (
                     <EpisodesGoGoAnime
                       key={item.episodeId}
-                      id={item.episodeId}
-                      className={videoId === item.episodeId ? 'episode active' : 'episode'}
                       data={item}
+                      media={data.data}
+                      mediaTitle={animeTitleWithoutSpace}
                       streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                     />
                   ))

@@ -21,6 +21,8 @@ export default function RegisterUser() {
     const redirect = window.location.search ? `/${window.location.search.split(`=`)[1]}` : "/"
     const navigate = useNavigate()
 
+    window.scrollTo(0, 0);
+    
     useEffect(() => {
 
         document.title = 'Register | AniProject'

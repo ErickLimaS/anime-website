@@ -434,7 +434,7 @@ userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(asyn
 
             }
             else {
-                user.episodesAlreadyWatched.push(req.body.media[{}])
+                user.episodesAlreadyWatched.push(req.body.media)
 
                 await user.save()
 
