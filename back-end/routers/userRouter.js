@@ -392,7 +392,7 @@ userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(asyn
         // CHECKS MEDIA ORIGIN
         if (req.body.media.fromGoGoAnime === true) {
 
-            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            // CHECKS IF EPISODE'S ANIME TITLE WAS PREVIOUSLY ADDED TO WATCHED
             const alreadyExist = user.episodesAlreadyWatched.find(
                 item => item.idGoGoAnime === req.body.media.idGoGoAnime
             )
@@ -455,7 +455,7 @@ userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(asyn
         }
         else {
 
-            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            // CHECKS IF EPISODE'S ANIME TITLE WAS PREVIOUSLY ADDED TO WATCHED
             const alreadyExist = user.episodesAlreadyWatched.find(
                 item => item.id === req.body.media.id
             )
@@ -539,7 +539,7 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
         // CHECKS MEDIA ORIGIN
         if (req.body.media.fromGoGoAnime === true) {
 
-            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            // CHECKS IF EPISODE'S ANIME TITLE WAS PREVIOUSLY ADDED TO WATCHED
             const alreadyExist = user.episodesAlreadyWatched.find(
                 item => item.idGoGoAnime === req.body.media.idGoGoAnime
             )
@@ -565,7 +565,7 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
 
                     await user.save()
 
-                    return res.status(201).send({
+                    return res.status(200).send({
 
                         id: user._id,
                         name: user.name,
@@ -595,7 +595,7 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
         }
         else {
 
-            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            // CHECKS IF EPISODE'S ANIME TITLE WAS PREVIOUSLY ADDED TO WATCHED
             const alreadyExist = user.episodesAlreadyWatched.find(
                 item => item.id === req.body.media.id
             )
@@ -621,7 +621,7 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
 
                     await user.save()
 
-                    return res.status(201).send({
+                    return res.status(200).send({
 
                         id: user._id,
                         name: user.name,
@@ -673,7 +673,7 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
         // CHECKS MEDIA ORIGIN
         if (req.body.media.fromGoGoAnime === true) {
 
-            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO BOOKMARKS
+            // CHECKS IF EPISODE'S ANIME TITLE WAS PREVIOUSLY ADDED TO BOOKMARKS
             const alreadyExist = user.episodesBookmarked.find(
                 item => item.idGoGoAnime === req.body.media.idGoGoAnime
             )
@@ -736,8 +736,8 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
         }
         else {
 
-            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
-            const alreadyExist = user.episodesAlreadyWatched.find(
+            // CHECKS IF EPISODE'S ANIME TITLE WAS PREVIOUSLY ADDED TO BOOKMARKS
+            const alreadyExist = user.episodesBookmarked.find(
                 item => item.id === req.body.media.id
             )
 
@@ -820,7 +820,7 @@ userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(asy
         // CHECKS MEDIA ORIGIN
         if (req.body.media.fromGoGoAnime === true) {
 
-            // CHECKS IF MEDIA WAS PREVIOUSLY ADDED TO WATCHED
+            // CHECKS IF EPISODE'S ANIME TITLE WAS PREVIOUSLY ADDED TO BOOKMARKS
             const alreadyExist = user.episodesBookmarked.find(
                 item => item.idGoGoAnime === req.body.media.idGoGoAnime
             )
@@ -846,7 +846,7 @@ userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(asy
 
                     await user.save()
 
-                    return res.status(201).send({
+                    return res.status(200).send({
 
                         id: user._id,
                         name: user.name,
@@ -901,7 +901,7 @@ userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(asy
                     })
                     await user.save()
 
-                    return res.status(201).send({
+                    return res.status(200).send({
 
                         id: user._id,
                         name: user.name,
