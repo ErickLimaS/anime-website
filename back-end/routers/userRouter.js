@@ -553,9 +553,13 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
 
                 if (episodeAlreadyWatched) {
 
+                    const newEpisodeList = alreadyExist.episodes.filter(item =>
+                        item.episodeId !== req.body.media.episodes.episodeId
+                    )
+
                     user.episodesAlreadyWatched.find(item => {
                         if (item.idGoGoAnime === req.body.media.idGoGoAnime) {
-                            item.episodes.filter(item2 => item2.episodeId != req.body.media.episodes.episodeId)
+                            item.episodes = newEpisodeList
                         }
                     })
 
@@ -605,9 +609,13 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
 
                 if (episodeAlreadyWatched) {
 
+                    const newEpisodeList = alreadyExist.episodes.filter(item =>
+                        item.episodeId !== req.body.media.episodes.episodeId
+                    )
+
                     user.episodesAlreadyWatched.find(item => {
                         if (item.id === req.body.media.id) {
-                            item.episodes.filter(item2 => item2.episodeId != req.body.media.episodes.episodeId)
+                            item.episodes = newEpisodeList
                         }
                     })
 
@@ -826,9 +834,13 @@ userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(asy
 
                 if (episodeAlreadyWatched) {
 
-                    user.episodesBookmarked.find(item => {
+                    const newEpisodeList = alreadyExist.episodes.filter(item =>
+                        item.episodeId !== req.body.media.episodes.episodeId
+                    )
+
+                    user.episodesAlreadyWatched.find(item => {
                         if (item.idGoGoAnime === req.body.media.idGoGoAnime) {
-                            item.episodes.filter(item2 => item2.episodeId != req.body.media.episodes.episodeId)
+                            item.episodes = newEpisodeList
                         }
                     })
 
@@ -878,12 +890,15 @@ userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(asy
 
                 if (episodeAlreadyWatched) {
 
-                    user.episodesBookmarked.find(item => {
+                    const newEpisodeList = alreadyExist.episodes.filter(item =>
+                        item.episodeId !== req.body.media.episodes.episodeId
+                    )
+
+                    user.episodesAlreadyWatched.find(item => {
                         if (item.id === req.body.media.id) {
-                            item.episodes.filter(item2 => item2.episodeId != req.body.media.episodes.episodeId)
+                            item.episodes = newEpisodeList
                         }
                     })
-
                     await user.save()
 
                     return res.status(201).send({

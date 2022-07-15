@@ -3,7 +3,8 @@ import styled from "styled-components";
 interface Props {
     data: any;
     format: any;
-    genre: any
+    genre: any;
+    showUserList: any;
 }
 
 export const Container = styled.nav<Props>`
@@ -53,6 +54,137 @@ export const Container = styled.nav<Props>`
             :hover{
                 border: 1px solid #ff1a75;
             }
+        }
+
+        .settings{
+
+            li.user-li:hover{
+                border-right: 0;
+            }
+
+            div.user{
+                width: inherit;
+
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+
+                border: 2px solid transparent;
+
+                border-radius: 2px;
+                
+                border-right: 4px solid transparent;
+
+                >div{
+
+                    width: inherit;
+                    height: inherit;
+
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    button {
+                        cursor: pointer;
+                        width: 4rem;
+                        height: inherit;
+                        
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        background-color: transparent;
+                        border: none;
+
+                        svg{
+                            fill: #757474;
+                            width: 55%;
+                            height: inherit;
+
+                            :hover{
+                                fill: #ff1a75 ;
+                            }
+
+                            transition: all ease 300ms;
+                            transform: ${props => props.showUserList ? 'rotate(180deg)' : ''};
+                        }
+                    }
+                }
+
+                img{
+                    width: 3.5rem;        
+                    height: 3.5rem;
+
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+
+                    border: 1px solid transparent;
+                    border-radius: 50%;
+                }
+
+                h2{
+                    font-size: 1.8rem;
+                    font-weight: 600;
+
+                    color: #333333;
+                }
+
+                :hover{
+
+                    border-right: 4px solid #ff1a75;
+
+                }
+            }
+
+            .user-list-on-click{
+                display: ${props => props.showUserList ? 'flex' : 'none'};
+                flex-direction: column;
+
+                position: relative;
+                left: -10rem;
+
+                background-color: #e9e9e9;
+
+                border: ${props => props.showUserList ? '2px solid #c0c0c0' : ''};
+                border-radius: 4px;
+
+                >*{
+                    margin-left: 1rem;
+                    a, svg{
+                        fill: #555;
+                        color: #555;
+                    }
+                }
+
+                animation: opacity-change ${props => props.showUserList ? 'forwards' : 'backwards'} 400ms;
+
+                @keyframes opacity-change {
+                    0%{
+                        left: -10rem;
+                        opacity: 0;
+                    }
+                    100%{
+                        left: 0rem;
+                        opacity: 1;
+                    }
+                }
+
+                li{
+                    
+                    :hover{
+                        svg{
+                            fill: #ff1a75;
+                        }
+                        a{
+                            color: #ff1a75;
+                        }
+                    }
+                }
+            }
+
         }
 
         h3{
@@ -228,102 +360,6 @@ export const Container = styled.nav<Props>`
                     }
                 }
                 
-            }
-        }
-
-        .settings{
-
-            li.user-li:hover{
-                border-right: 0;
-            }
-
-            div.user{
-                width: inherit;
-
-                display: flex;
-                flex-direction: row;
-                justify-content: space-around;
-                align-items: center;
-
-                border: 2px solid transparent;
-
-                border-bottom: 2px solid #c0c0c0;
-                border-radius: 4px;
-
-                >div{
-
-                    width: inherit;
-                    height: inherit;
-
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-
-                    a {
-                        width: 4rem;
-                        height: auto;
-                        
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-
-                        svg#engine-svg{
-                            cursor: pointer;
-
-                            fill: #757474;
-                            width: 55%;
-                            height: 55%;
-
-                            :hover{
-                                fill: #ff1a75 ;
-                            }
-                        }
-                    }
-                }
-
-                img{
-                    width: auto;
-                    height: 3.5rem;
-
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: center;
-                    align-items: center;
-
-                    border: 1px solid transparent;
-                    border-radius: 50%;
-                }
-
-                h2{
-                    font-size: 1.8rem;
-                    font-weight: 600;
-
-                    color: #333333;
-                }
-
-                :hover{
-
-                    border: 2px solid #ff1a75;
-
-                    img{
-                        border: 1px solid #ff1a75;
-                    }
-
-                }
-            }
-            li:last-child{
-                    
-                :hover{
-                    border-right: 4px solid #e62517;
-
-                    >a{
-                        color: #e62517;
-
-                        >svg{
-                            fill: #e62517;
-                        }
-                    }
-                }
             }
         }
 

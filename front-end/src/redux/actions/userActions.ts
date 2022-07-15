@@ -266,7 +266,7 @@ export const removeFromAlreadyWatched = (media: any) => async (dispatch: Dispatc
 
 }
 
-// ADD, REMOVE ALREADY WATCHED MEDIA
+// ADD, REMOVE EPISODE ALREADY WATCHED
 export const addEpisodeToAlreadyWatched = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
@@ -349,7 +349,7 @@ export const removeEpisodeFromAlreadyWatched = (media: any) => async (dispatch: 
 
 }
 
-// ADD, REMOVE ALREADY WATCHED MEDIA
+// ADD, REMOVE EPISODE BOOKMARKED
 export const addEpisodeToBookmarks = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({

@@ -239,7 +239,7 @@ export const Container = styled.div<Props>`
                 cursor: pointer;
 
                 width: 20rem;
-                height: auto;
+                height: 20rem;
                 border-radius: 50%;
                 backface-visibility: hidden;
                 opacity: 1;

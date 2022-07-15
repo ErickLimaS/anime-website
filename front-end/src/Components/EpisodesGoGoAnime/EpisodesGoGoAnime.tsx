@@ -6,7 +6,7 @@ import { ReactComponent as EyeSlashSvg } from '../../imgs/svg//eye-slash-fill.sv
 import { ReactComponent as BookMarkEpisodeSvg } from '../../imgs/svg/bookmark-plus.svg'
 import { ReactComponent as BookMarkFillEpisodeSvg } from '../../imgs/svg/bookmark-check-fill-2.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { addEpisodeToAlreadyWatched, removeEpisodeFromAlreadyWatched } from '../../redux/actions/userActions'
+import { addEpisodeToAlreadyWatched, addEpisodeToBookmarks, removeEpisodeFromAlreadyWatched, removeEpisodeFromBookmarks } from '../../redux/actions/userActions'
 import { useNavigate } from 'react-router'
 
 export default function EpisodesGoGoAnime(props: any) {
@@ -117,7 +117,7 @@ export default function EpisodesGoGoAnime(props: any) {
 
             if (userInfo) {
 
-                dispatch(addEpisodeToAlreadyWatched({
+                dispatch(addEpisodeToBookmarks({
                     'addedAt': new Date(),
                     'idGoGoAnime': props.media.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
                     'fullTitle': props.media.animeTitle,
@@ -148,7 +148,7 @@ export default function EpisodesGoGoAnime(props: any) {
         else {
 
             //remove dispatch 
-            dispatch(removeEpisodeFromAlreadyWatched({
+            dispatch(removeEpisodeFromBookmarks({
 
                 'idGoGoAnime': props.media.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
                 'fromGoGoAnime': Boolean(true),

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import AsideNavLinks from '../../../Components/AsideNavLinks'
 import Swal from 'sweetalert2'
+import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
 import { removeDataFromUserMedia, updateAvatarImg, updateUserInfo } from '../../../redux/actions/userActions'
 
 
@@ -17,6 +18,7 @@ export default function SettingsUser() {
 
   const updateAvatarImgRedux = useSelector((state: any) => state.updateAvatarImg)
   const errorUpdateAvatarImg = updateAvatarImgRedux.error
+  const loadingUpdateAvatarImg = updateAvatarImgRedux.loading
 
   const deleteUserMediaRedux = useSelector((state: any) => state.deleteUserMedia)
   const errorDeleteUserMedia = deleteUserMediaRedux.error
@@ -212,6 +214,10 @@ export default function SettingsUser() {
               Close Panel
             </button>
 
+            {loadingUpdateAvatarImg && (
+              <LoadingSvg />
+            )}
+
             <div className='imgs'>
 
               <div onClick={() => setNewAvatarImg('https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg')}>
@@ -242,8 +248,8 @@ export default function SettingsUser() {
                 <img src='https://i0.wp.com/www.jbox.com.br/wp/wp-content/uploads/2021/08/todoroki-my-hero-academia-s5-destacada.jpg?w=774&quality=99&strip=all&ssl=1' alt='User Avatar'></img>
                 <small>Shoto Todoroki</small>
               </div>
-              <div onClick={() => setNewAvatarImg('https://quizience.com/wp-content/uploads/2021/08/which-naruto-character-are-you.jpg')}>
-                <img src='https://quizience.com/wp-content/uploads/2021/08/which-naruto-character-are-you.jpg' alt='User Avatar'></img>
+              <div onClick={() => setNewAvatarImg('https://i.pinimg.com/originals/75/b2/68/75b26876181a4fd49c56b93e021c9e3c.jpg')}>
+                <img src='https://i.pinimg.com/originals/75/b2/68/75b26876181a4fd49c56b93e021c9e3c.jpg' alt='User Avatar'></img>
                 <small>Naruto</small>
               </div>
               <div onClick={() => setNewAvatarImg('https://aniyuki.com/wp-content/uploads/2022/04/aniyuki-sasuke-uchiha-avatar-29-986x1024.jpg')}>
@@ -265,10 +271,6 @@ export default function SettingsUser() {
               <div onClick={() => setNewAvatarImg('https://avatars.githubusercontent.com/u/24864574?v=4')}>
                 <img src='https://avatars.githubusercontent.com/u/24864574?v=4' alt='User Avatar'></img>
                 <small>Madara</small>
-              </div>
-              <div onClick={() => setNewAvatarImg('https://i.pinimg.com/originals/77/1a/b8/771ab8ffb6fd38af0b2b975756a60231.png')}>
-                <img src='https://i.pinimg.com/originals/77/1a/b8/771ab8ffb6fd38af0b2b975756a60231.png' alt='User Avatar'></img>
-                <small>Tanjiro</small>
               </div>
             </div>
 

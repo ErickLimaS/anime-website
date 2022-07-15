@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import * as C from './styles'
+import { ReactComponent as CaretDownSvg } from '../../imgs/svg/caret-down-fill.svg'
 import { ReactComponent as ShurikenSvg } from '../../imgs/svg/shuriken-svgrepo.svg'
 import { ReactComponent as HeartsSvg } from '../../imgs/svg/hearts-svgrepo.svg'
 import { ReactComponent as SwordsSvg } from '../../imgs/svg/swords-in-cross-svgrepo.svg'
@@ -25,7 +26,8 @@ export default function AsideNavLinks(data: any) {
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
 
-  const [userName, setUserName] = useState<String>()
+  const [userName, setUserName] = useState<String>('')
+  const [showUserList, setShowUserList] = useState<boolean>(false)
 
   const dispatch: any = useDispatch()
 
@@ -43,15 +45,68 @@ export default function AsideNavLinks(data: any) {
       setUserName(userInfo.name)
 
     }
-  }, [userInfo])
+  }, [userLogin, userInfo])
 
   //gets params to set styles on which nav link is clicked or been viewed
   const { format, genre } = useParams()
 
   return (
-    <C.Container data={data.data} format={format} genre={genre}>
+    <C.Container
+      data={data.data}
+      format={format}
+      genre={genre}
+      showUserList={showUserList}
+    >
 
       <a href='/'><img src={logo} alt='AniProject Logo' id='logo'></img></a>
+
+      {
+        userInfo ? (
+          <>
+            <h3>User</h3>
+
+            <ul className='settings'>
+              <li className='user-li'>
+                <div className='user'>
+                  <div>
+                    <img src={userInfo.avatarImg} alt='User Avatar'></img>
+                  </div>
+                  <div>
+                    {userName?.length > 7 ? (
+                      <h2>{userName?.slice(0, 7)}...</h2>
+                    ) : (
+                      <h2>{userName}</h2>
+                    )}
+                  </div>
+                  <div>
+                    <button type='button' onClick={() => setShowUserList(!showUserList)}>
+                      <CaretDownSvg />
+                    </button>
+                  </div>
+                </div>
+                <ul className='user-list-on-click'>
+                  <li><a href={`/bookmarks`}><BookmarkSvg /> Bookmarks</a></li>
+                  <li><a href={`/settings`}><SettingsSvg id='engine-svg' />Settings</a></li>
+                  <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
+
+                </ul>
+              </li>
+            </ul>
+          </>
+        ) : (
+          <>
+
+            <h3>User</h3>
+
+            <ul className='settings'>
+
+              <li><Link to={`/login`}>Log In</Link></li>
+              <li><Link to={`/register`}>Sign Up</Link></li>
+
+            </ul>
+          </>
+        )
+      }
 
       <h3>Category</h3>
 
@@ -78,47 +133,6 @@ export default function AsideNavLinks(data: any) {
         <li id='ova'><Link to={`/format/ova`}><OpenBookSvg /> OVA</Link></li>
 
       </ul>
-
-
-      {
-        userInfo ? (
-          <>
-            <h3>User</h3>
-
-            <ul className='settings'>
-              <li className='user-li'>
-                <div className='user'>
-                  <div>
-                    <img src={userInfo.avatarImg} alt='User Avatar'></img>
-                  </div>
-                  <div>
-                    <h2>{userName?.slice(0, 7)}</h2>
-                  </div>
-                  <div>
-                    <Link to={`/settings`}><SettingsSvg id='engine-svg'/></Link>
-                  </div>
-                </div>
-              </li>
-
-              <li><a href={`/bookmarks`}><BookmarkSvg /> Bookmarks</a></li>
-              <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
-
-            </ul>
-          </>
-        ) : (
-          <>
-
-            <h3>User</h3>
-
-            <ul className='settings'>
-
-              <li><Link to={`/login`}>Log In</Link></li>
-              <li><Link to={`/register`}>Sign Up</Link></li>
-
-            </ul>
-          </>
-        )
-      }
 
     </C.Container >
   )

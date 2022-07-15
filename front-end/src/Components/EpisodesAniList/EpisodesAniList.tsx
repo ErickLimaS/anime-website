@@ -7,7 +7,7 @@ import { ReactComponent as BookMarkEpisodeSvg } from '../../imgs/svg/bookmark-pl
 import { ReactComponent as BookMarkFillEpisodeSvg } from '../../imgs/svg/bookmark-check-fill-2.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
-import { addEpisodeToAlreadyWatched, removeEpisodeFromAlreadyWatched } from '../../redux/actions/userActions'
+import { addEpisodeToAlreadyWatched, addEpisodeToBookmarks, removeEpisodeFromAlreadyWatched, removeEpisodeFromBookmarks } from '../../redux/actions/userActions'
 
 export default function EpisodesAniList(props: any) {
 
@@ -17,8 +17,6 @@ export default function EpisodesAniList(props: any) {
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
 
-
-    console.log(props)
     useEffect(() => {
 
         //check if the current media is currently added to user account
@@ -96,7 +94,7 @@ export default function EpisodesAniList(props: any) {
                 'id': props.media.id,
                 'fromGoGoAnime': Boolean(false),
                 'episodes': {
-                    'episodeId': props.data.title,
+                    'episodeId': props.data.title.replace(/!|#|,/g, ``).replace(/ /g, `-`),
                 }
 
             }))
@@ -114,7 +112,7 @@ export default function EpisodesAniList(props: any) {
 
             if (userInfo) {
 
-                dispatch(addEpisodeToAlreadyWatched({
+                dispatch(addEpisodeToBookmarks({
                     'addedAt': new Date(),
                     'id': props.media.id,
                     'fullTitle': props.media.title.romaji,
@@ -145,12 +143,12 @@ export default function EpisodesAniList(props: any) {
         else {
 
             //remove dispatch 
-            dispatch(removeEpisodeFromAlreadyWatched({
+            dispatch(removeEpisodeFromBookmarks({
 
                 'id': props.media.id,
                 'fromGoGoAnime': Boolean(false),
                 'episodes': {
-                    'episodeId': props.data.title,
+                    'episodeId': props.data.title.replace(/!|#|,/g, ``).replace(/ /g, `-`),
                 }
 
             }))
