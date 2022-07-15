@@ -108,7 +108,7 @@ export default function EpisodesAniList(props: any) {
     const handleBookmarkEpisode = () => {
 
         //CHECKS if dont has on user account
-        if (isWatched === false) {
+        if (onBookmarks === false) {
 
             if (userInfo) {
 
