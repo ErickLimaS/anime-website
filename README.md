@@ -14,9 +14,10 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 
 ## :pushpin: Em Planejamento
 
+- [ ] `Fix: Problemas/Conflitos com outros Navegadores`: Sem Previsão 
+- [ ] `Fix: Misspelled English Words/Corrigir Palavras em Inglês`: Sem Previsão
 - [ ] `Seja Alertado de Novos Episódios Lançados`: Sem Previsão 
 - [ ] `Modo Noturno`: Sem Previsão 
-- [ ] `Fix: Misspelled English Words/Corrigir Palavras em Inglês`: Sem Previsão
 - [ ] `Aumentar Responsividade do Layout`: Sem Previsão 
 
 ## :heavy_check_mark: Tecnologias Utilizadas
