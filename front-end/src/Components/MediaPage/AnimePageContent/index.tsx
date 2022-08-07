@@ -23,9 +23,10 @@ export default function AnimePageContent(data: any) {
   const [mainCastCharacters, setMainCastCharacters] = useState([])
   const [supportingCastCharacters, setSupportingCastCharacters] = useState([])
 
-  const [moreDetails, setMoreDetails] = useState<boolean>(false) //media description
+  //media description toggle more/less info
+  const [moreDetails, setMoreDetails] = useState<boolean>(false)
 
-  const [indexPageInfo, setIndexPageInfo] = useState(0) //pagination aux
+  const [indexPageInfo, setIndexPageInfo] = useState(0) //tab aux index
 
   const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
   const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
@@ -76,8 +77,13 @@ export default function AnimePageContent(data: any) {
       setSupportingCastCharacters(supChar)
     }
 
-    //check if the current media is currently added to user account
+    //check if the current media is bookmarked or watched
     if (userInfo) {
+      userInfo.alreadyWatched.find((item: any) => {
+        if (item.id === data.data.id) {
+          setAlreadyWatched(true)
+        }
+      })
       userInfo.mediaAdded.find((item: any) => {
         if (item.id === data.data.id) {
           setIsAlreadyAdded(true)
@@ -86,7 +92,7 @@ export default function AnimePageContent(data: any) {
     }
 
 
-  }, [data.data.characters.edges, data.data.streamingEpisodes.length])
+  }, [])
 
   //store current media url to redirect if user is not logged in
   const currentUrlToRedirect = window.location.pathname
@@ -96,8 +102,8 @@ export default function AnimePageContent(data: any) {
 
   const handleAlreadyWatched = () => {
 
-    //CHECKS if dont has on user account
-    if (isAlreadyAdded == null || undefined) {
+    //CHECKS if this media was not watched yet
+    if (alreadyWatched == null || undefined) {
 
       if (userInfo) {
 
@@ -117,8 +123,9 @@ export default function AnimePageContent(data: any) {
           'fromGoGoAnime': Boolean(false)
         }))
 
-        setIsAlreadyAdded(true)
+        setAlreadyWatched(true)
 
+        //handle errors with Adding Function
         if (!addLoading && !addError) {
           Swal.fire({
             icon: "success",
@@ -140,7 +147,6 @@ export default function AnimePageContent(data: any) {
     }
     else {
 
-      //remove dispatch 
       dispatch(removeFromAlreadyWatched({
 
         'id': Number(data.data.id),
@@ -148,7 +154,7 @@ export default function AnimePageContent(data: any) {
 
       }))
 
-      setIsAlreadyAdded(null)
+      setAlreadyWatched(null)
 
       if (!remLoading && !remError) {
         Swal.fire({
@@ -168,7 +174,7 @@ export default function AnimePageContent(data: any) {
 
   const handleMediaToAccount = () => {
 
-    //CHECKS if dont has on user account
+    //CHECKS if this media was not added on user account
     if (isAlreadyAdded == null || undefined) {
 
       if (userInfo) {
@@ -183,6 +189,7 @@ export default function AnimePageContent(data: any) {
           'coverImg': data.data.coverImage.large ? data.data.coverImage.large : data.data.coverImage.extraLarge || data.data.coverImage.medium,
           'format': data.data.format,
           'type': data.data.type,
+          'totalEpisodes': data.data.streamingEpisodes.length,
           'status': data.data.status,
           'isAdult': Boolean(data.data.isAdult),
           'fromGoGoAnime': Boolean(false)
@@ -190,6 +197,7 @@ export default function AnimePageContent(data: any) {
 
         setIsAlreadyAdded(true)
 
+        //handle errors with Adding Function
         if (!addLoading && !addError) {
           Swal.fire({
             icon: "success",
@@ -211,7 +219,6 @@ export default function AnimePageContent(data: any) {
     }
     else {
 
-      //remove dispatch 
       dispatch(removeMediaFromUserAccount({
 
         'id': Number(data.data.id)
@@ -248,31 +255,41 @@ export default function AnimePageContent(data: any) {
         <SearchInnerPage />
       </div>
 
-      <div className='banner-img'>
-      </div>
+      {/* div to hold the banner img as background image */}
+      <div className='banner-img'></div>
 
       <div className='name-and-description'>
+
         <div className='title-and-add-media-button'>
 
           <h1>{data.data.title.romaji}</h1>
 
           <div className='buttons'>
+
             {alreadyWatched == null && (
-              <button onClick={() => handleAlreadyWatched()} className='watched'><EyeSlashSvg />  Not Watched</button>
+              <button onClick={() => handleAlreadyWatched()} className='watched'>
+                <EyeSlashSvg />  Not Watched</button>
             )}
 
             {alreadyWatched && (
-              <button onClick={() => handleAlreadyWatched()} className='watched'><EyeSvg />  Watched</button>
+              <button onClick={() => handleAlreadyWatched()} className='watched'>
+                <EyeSvg />  Watched</button>
             )}
+
             {isAlreadyAdded == null && (
-              <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
+              <button onClick={() => handleMediaToAccount()} className='bookmarked'>
+                <PlusSvg /> Add To Bookmarks
+              </button>
             )}
 
             {isAlreadyAdded && (
-              <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
+              <button onClick={() => handleMediaToAccount()} className='bookmarked'>
+                <CheckSvg /> Added on Bookmarks
+              </button>
             )}
 
           </div>
+
         </div>
 
         <div className='description' onClick={() => setMoreDetails(!moreDetails)}>
@@ -296,6 +313,7 @@ export default function AnimePageContent(data: any) {
         </div>
       </div>
 
+      {/* tab buttons */}
       <div className='heading'>
 
         <div className='nav'>
@@ -310,6 +328,8 @@ export default function AnimePageContent(data: any) {
         </div>
       </div>
 
+
+      {/* show episodes listed to this anime, redirecting to crunchroll */}
       {
         data.data.streamingEpisodes.length > 0 ? (
           <>
@@ -561,6 +581,7 @@ export default function AnimePageContent(data: any) {
         )
       }
 
+      {/* medias related to this anime */}
       {
         data.data.relations.nodes.length > 0 && (
           <div className='from-same-franchise'>
@@ -579,6 +600,7 @@ export default function AnimePageContent(data: any) {
         )
       }
 
+      {/* recommendations based on this anime */}
       {
         data.data.recommendations.edges.length > 0 && (
           <div className='similar-animes'>

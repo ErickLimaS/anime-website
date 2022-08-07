@@ -18,7 +18,6 @@ export const Container = styled.div<Props>`
 
         @media(max-width: 1080px){
             flex-wrap: wrap;
-            /* width: 80%; */
         }
 
         @media(max-width: 620px){

@@ -38,8 +38,6 @@ export default function SearchInnerPage() {
         setResultsWasFetched(false)
     }
 
-    // console.log(aniListSearchResults)
-    // console.log(gogoSearchResults)
     return (
         <>
             <C.Search hasText={searchInput}>

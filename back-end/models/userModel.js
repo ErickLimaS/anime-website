@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
         password: { type: String, required: true },
         avatarImg: { type: String, required: true },
         createdAt: { type: Date },
+        updatedAt: {type: Date},
         mediaAdded: [{
 
             addedAt: { type: Date },

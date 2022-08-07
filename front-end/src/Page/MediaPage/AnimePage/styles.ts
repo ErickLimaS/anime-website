@@ -9,6 +9,10 @@ export const Container = styled.div<Props>`
     display: flex;
     flex-direction: row;
 
+    @media(max-width: 1080px){
+        justify-content: space-evenly;
+    }
+
     .main{
         display: flex;
         flex-direction: row;
@@ -18,7 +22,12 @@ export const Container = styled.div<Props>`
 
         @media(max-width: 1080px){
             flex-wrap: wrap;
-            /* width: 80%; */
+            width: 70%;
+        }
+
+        @media(max-width: 768px){
+            flex-wrap: wrap;
+            width: 100%;
         }
 
         @media(max-width: 620px){
@@ -27,18 +36,11 @@ export const Container = styled.div<Props>`
         }
     }
 
-
-    @media(max-width: 1080px){
-        /* flex-wrap: wrap; */
-    }
-
     @media(max-width: 620px){
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
     }
-
-    /* width: 100%; */
 
     background-color: #fafafa;
 
@@ -143,10 +145,6 @@ export const Container = styled.div<Props>`
         }
         
     }
-
-    /* >div:last-child{
-        width: 10vh;
-    } */
 
 
 `

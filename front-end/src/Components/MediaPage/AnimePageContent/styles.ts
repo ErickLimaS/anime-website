@@ -15,7 +15,10 @@ export const Container = styled.div<Props>`
     border-right: 2px solid #e6e6e6;
 
     padding: 2rem;
-
+    @media(max-width: 768px){
+        border-left: 0;
+        border-right: 0;
+    }
     @media(max-width: 1020px){
         width: -webkit-fill-available;
         padding: 1rem ;
@@ -95,60 +98,76 @@ export const Container = styled.div<Props>`
 
             .buttons{
 
-            display: flex;
-
-            button{
-                cursor: pointer;
-                margin: 0 1rem;
-
                 display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
 
-                padding: 0.7rem;
+                button{
+                    cursor: pointer;
+                    margin: 0 1rem;
 
-                font-size: 1.6rem;
-                color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
 
-                border: 2px solid #ff5ebc;
-                border-radius: 4px;
+                    padding: 0.7rem;
 
-                background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
+                    font-size: 1.6rem;
+                    color: #fff;
 
-                svg{
+                    border: 2px solid #ff5ebc;
+                    border-radius: 4px;
 
-                    width: 1.5rem;
-                    transform: scale(2);
-                    height: auto;
+                    background-color:transparent;
 
-                    fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+                    svg{
 
-                    margin: 0.5rem 1rem;
+                        width: 1.5rem;
+                        transform: scale(2);
+                        height: auto;
+
+                        fill: #ff5ebc;
+
+                        margin: 0.5rem 1rem;
+
+                    }
+
+                    :hover{
+                        opacity: 0.75;
+                    }
 
                 }
 
-                :hover{
-                    opacity: 0.75;
+                button.bookmarked{
+
+                    color: ${props => props.isAlreadyAdded == null ? '#333333' : '#fff'};
+
+                    background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : '#ff5ebc'};
+
+                    svg{
+
+                        fill: ${props => props.isAlreadyAdded == null ? '#ff5ebc' : '#fff'};
+
+                        padding-right: 0.4rem;
+                        padding-left: 0.1rem;
+                    }
+
                 }
 
-            }
+                button.watched{
 
-            button.watched{
+                    color: ${props => props.alreadyWatched == null ? '#333333' : '#fff'};
 
-                color: ${props => props.alreadyWatched == null ? '#333333' : '#fff'};
+                    background-color: ${props => props.alreadyWatched == null ? 'transparent' : '#ff5ebc'};
 
-                background-color: ${props => props.alreadyWatched == null ? 'transparent' : '#ff5ebc'};
+                    svg{
 
-                svg{
+                        fill: ${props => props.alreadyWatched == null ? '#ff5ebc' : '#fff'};
 
-                    fill: ${props => props.alreadyWatched == null ? '#ff5ebc' : '#fff'};
+                        padding-right: 0.4rem;
+                        padding-left: 0.1rem;
+                    }
 
-                    padding-right: 0.4rem;
-                    padding-left: 0.1rem;
                 }
-
-            }
 
             }
         }

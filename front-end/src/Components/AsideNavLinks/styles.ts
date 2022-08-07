@@ -56,6 +56,23 @@ export const Container = styled.nav<Props>`
             }
         }
 
+        .search{
+            display: none;
+
+            @media(max-width: 1080px){
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start
+            }
+
+            >svg{
+                width: 20%;
+            }
+            input{
+                width: 70%;
+            }
+        }
+
         .settings{
 
             li.user-li:hover{

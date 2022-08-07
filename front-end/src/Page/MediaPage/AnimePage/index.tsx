@@ -28,7 +28,6 @@ export default function AnimePage() {
 
       const data = await API.getInfoFromThisMedia(id, type);
       setAnimeInfo(data)
-      console.log(data)
 
       setLoading(false)
 

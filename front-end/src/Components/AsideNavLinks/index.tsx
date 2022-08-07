@@ -20,6 +20,8 @@ import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fil
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../../redux/actions/userActions'
 import logo from '../../imgs/logo.png'
+import { Search } from '../SearchInnerPage/styles'
+import SearchInnerPage from '../SearchInnerPage'
 
 export default function AsideNavLinks(data: any) {
 
@@ -66,6 +68,11 @@ export default function AsideNavLinks(data: any) {
             <h3>User</h3>
 
             <ul className='settings'>
+
+              <span className='search'>
+                <SearchInnerPage />
+              </span>
+
               <li className='user-li'>
                 <div className='user'>
                   <div>

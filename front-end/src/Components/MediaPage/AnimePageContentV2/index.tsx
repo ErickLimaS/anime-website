@@ -87,7 +87,7 @@ export default function AnimePageContentV2(data: any) {
 
   const dispatch: any = useDispatch()
   const navigate: any = useNavigate()
-
+  
   // add media to user
   const handleMediaToAccount = () => {
 
@@ -104,6 +104,7 @@ export default function AnimePageContentV2(data: any) {
           'coverImg': data.data.animeImg && data.data.animeImg,
           'type': data.data.type,
           'status': data.data.status,
+          'totalEpisodes': data.data.episodesList.length,
           'isAdult': Boolean(data.data.isAdult),
           'fromGoGoAnime': Boolean(true)
         }))
