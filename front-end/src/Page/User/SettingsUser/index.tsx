@@ -102,14 +102,18 @@ export default function SettingsUser() {
   }
 
   //form new config for search results
-  const handleConfigSearch = (e: React.FormEvent) => {
+  const adultsOnlyConfigChange = (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (currentPasswordRef.current.value.length >= 8) {
+    const form: any = document.getElementById("adult-content")
+
+    console.log(form.elements["adult-content"].value)
+
+    if (form.elements["adult-content"].value) { //FIX check if selected is different than the one already saved 
 
       if (newPasswordRef.current.value === confirmNewPassowrdRef.current.value) {
 
-        dispatch(updateUserInfo(nameRef.current.value, emailRef.current.value, currentPasswordRef.current.value, newPasswordRef.current.value))
+        //dsa
 
       }
       else {
@@ -126,19 +130,10 @@ export default function SettingsUser() {
       }
 
     }
-    else {
-
-      Swal.fire({
-
-        icon: 'error',
-        title: 'Error',
-        titleText: `Current Password is Not Correct!`,
-        text: 'Try Typing Again!'
-
-      })
-
+    else{
+      
     }
-
+    
   }
 
   //removes all data from book
@@ -348,17 +343,30 @@ export default function SettingsUser() {
         {/*TAB INDEX 3 */}
         <div className='user-info' id='index-3'>
 
-          <h1>Search Results Configuration</h1>
+          <h1>Search Results Settings</h1>
 
-          <form onSubmit={(e) => handleConfigSearch(e)}>
+          <form id='adult-content' onSubmit={(e) => adultsOnlyConfigChange(e)}>
 
-            <div>
-              <label htmlFor='placeholder'>placeholder</label>
-              <input type='text' id='placeholder' placeholder='placeholder' ref={nameRef}></input>
+            <h2><span>+18</span> Adult Content </h2>
+
+            <div className='radio-inputs'>
+              <div>
+
+                <label htmlFor='adult-content-yes'>
+                  <input type='radio' value='true' id='adult-content-yes' name='adult-content'></input> Show Adult Content
+                </label>
+              </div>
+              <div>
+                <label htmlFor='adult-content-no'>
+                  <input type='radio' value='false' id='adult-content-no' name='adult-content' checked></input>Do Not Show Adult Content
+                </label>
+              </div>
             </div>
 
+            <small>If you are 18+, checking this box will allow you to see search results and other contents for ADULTS ONLY.</small>
+
             <div>
-              <button type='submit'>Submit Changes</button>
+              <button type='submit'>Save Changes</button>
             </div>
 
           </form>

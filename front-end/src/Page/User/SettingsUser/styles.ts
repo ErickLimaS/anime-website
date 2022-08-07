@@ -80,6 +80,11 @@ export const Container = styled.div<Props>`
             
             background-color: ${props => props.tabIndex === 2 ? '#ff1a75' : '#ffd0e3'};
             color:  ${props => props.tabIndex === 2 ? '#fff' : '#444444'};
+        }
+        #tab-3{
+            
+            background-color: ${props => props.tabIndex === 3 ? '#ff1a75' : '#ffd0e3'};
+            color:  ${props => props.tabIndex === 3 ? '#fff' : '#444444'};
             border-radius: 0 0 4px 4px;
         }
         
@@ -128,8 +133,8 @@ export const Container = styled.div<Props>`
 
                 :hover{
 
-                    background-color: #ff1a75;
-                    color: #fff;
+                    background-color: #ff1a75!important;
+                    color: #fff!important;
 
                 }
 
@@ -161,18 +166,6 @@ export const Container = styled.div<Props>`
 
     }
 
-    div#index-0{
-        display: ${props => props.tabIndex === 0 ? `flex` : 'none'};
-    }
-    div#index-1{
-        display: ${props => props.tabIndex === 1 ? `flex` : 'none'};
-    }
-    div#index-2{
-        display: ${props => props.tabIndex === 2 ? `flex` : 'none'};
-    }
-    div#index-3{
-        display: ${props => props.tabIndex === 3 ? `flex` : 'none'};
-    }
 
     div#index-0, div#index-1, div#index-2, div#index-3{
 
@@ -185,8 +178,7 @@ export const Container = styled.div<Props>`
         width: 60%;
         height: 50vh;
     }
-    
-
+                                                                                            
     .user-info{
 
         display: flex;
@@ -447,7 +439,12 @@ export const Container = styled.div<Props>`
 
     }
 
+    div#index-0{
+        display: ${props => props.tabIndex === 0 ? `flex` : 'none'};
+    }
     #index-1{
+
+        display: ${props => props.tabIndex === 1 ? `flex` : 'none'};
 
         @media(max-width: 768px){
 
@@ -522,6 +519,8 @@ export const Container = styled.div<Props>`
 
     #index-2{
 
+        display: ${props => props.tabIndex === 2 ? `flex` : 'none'};
+
         @media(max-width: 768px){
 
             margin-top: 2rem;
@@ -566,6 +565,8 @@ export const Container = styled.div<Props>`
 
     #index-3{
 
+        display: ${props => props.tabIndex === 3 ? `flex` : 'none'};
+
         @media(max-width: 768px){
 
             margin-top: 2rem;
@@ -587,15 +588,19 @@ export const Container = styled.div<Props>`
         h2{
             font-size: 2rem;
             font-weight: 400;
+
+            span{
+                color: rgb(255, 51, 51);
+            }
         }
         button{
             cursor: pointer;
 
-            background-color: #ff3333;
+            background-color: #f92f7f;
 
             padding: 1rem 2rem;
 
-            border: 1px solid #ff1a1a;
+            border: 1px solid #f92f7f;
             border-radius: 4px;
 
             font-size: 1.6rem;
@@ -604,6 +609,33 @@ export const Container = styled.div<Props>`
             :hover{
                 opacity: 0.9;
             }
+        }
+
+        form{
+            width: 80%;
+        }
+
+        .radio-inputs{
+            background-color: #ffdcea;
+
+            padding: 1rem;
+
+            border-radius: 4px;
+
+            label{
+                color: #222222;
+            }
+        }
+
+        input[type=radio]{
+            margin-right: 2rem;
+
+            transform: scale(1.4);
+
+        }
+
+        small{
+            font-size: 1.4rem;
         }
 
     }
