@@ -43,7 +43,7 @@ export default {
 
     },
 
-    //LINK streaming episodes
+    //get link to stream episodes
     getStreamingVideoUrlVIDCDN: async (id: String) => {
 
         try {
@@ -61,6 +61,7 @@ export default {
         }
 
     },
+
     getStreamingVideoUrlStreamSB: async (id: String) => {
 
         try {

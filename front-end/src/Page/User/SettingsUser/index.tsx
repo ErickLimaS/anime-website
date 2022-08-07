@@ -228,10 +228,6 @@ export default function SettingsUser() {
                 <img src='https://pm1.narvii.com/6445/d9dff8ed0332a39b97195b55fa6f597c82d9c1b6_hq.jpg' alt='User Avatar'></img>
                 <small>Pain</small>
               </div>
-              <div onClick={() => setNewAvatarImg('https://sm.ign.com/t/ign_br/screenshot/default/tanjiro_ef6a.1080.jpg')}>
-                <img src='https://sm.ign.com/t/ign_br/screenshot/default/tanjiro_ef6a.1080.jpg' alt='User Avatar'></img>
-                <small>Tanjiro</small>
-              </div>
               <div onClick={() => setNewAvatarImg('https://sm.ign.com/t/ign_br/screenshot/default/nezuko_vw8x.1080.jpg')}>
                 <img src='https://sm.ign.com/t/ign_br/screenshot/default/nezuko_vw8x.1080.jpg' alt='User Avatar'></img>
                 <small>Nezuko</small>

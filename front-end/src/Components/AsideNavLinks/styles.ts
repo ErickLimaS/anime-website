@@ -115,7 +115,7 @@ export const Container = styled.nav<Props>`
                         border: none;
 
                         svg{
-                            fill: #757474;
+                            fill: ${props => props.showUserList ? '#ff1a75' : '#757474'};
                             width: 55%;
                             height: inherit;
 
@@ -163,9 +163,8 @@ export const Container = styled.nav<Props>`
                 position: relative;
                 left: -10rem;
 
-                background-color: #e9e9e9;
+                background-color: #fafafa;
 
-                border: ${props => props.showUserList ? '2px solid #c0c0c0' : ''};
                 border-radius: 4px;
 
                 >*{

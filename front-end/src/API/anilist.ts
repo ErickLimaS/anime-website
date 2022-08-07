@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import Swal from 'sweetalert2';
 
 const BASE_URL: String = 'https://graphql.anilist.co/'
 
@@ -587,9 +588,42 @@ export default {
 
             return data.data.Media;
         }
-        catch (error) {
+        catch (error: any) {
 
-            return console.log(error)
+            switch (error.response.status) {
+
+                case 404:
+                    return Swal.fire({
+
+                        icon: 'error',
+                        title: 'Error',
+                        titleText: `404: Not Found!`,
+                        text: 'It seems the API doesnt have any information about this media!',
+                        allowOutsideClick: false,
+                        confirmButtonText: 'Return To Home',
+                        didClose: () => {
+                            window.location.replace("/");
+                        }
+
+                    })
+
+                default:
+                    return Swal.fire({
+
+                        icon: 'error',
+                        title: 'Error',
+                        titleText: `${error.response.status}: What Happened?`,
+                        text: 'This is a standart error alert when we dont know what happened! Please, return to Home and try again later. ',
+                        allowOutsideClick: false,
+                        confirmButtonText: 'Return To Home',
+                        didClose: () => {
+                            window.location.replace("/");
+                        }
+
+                    })
+
+            }
+
         }
 
 
