@@ -23,6 +23,7 @@ import OnaPage from './Page/MediaPage/OnaPage';
 import TvShortPage from './Page/MediaPage/TvShortPage';
 import { logoutUser } from './redux/actions/userActions';
 import Swal from 'sweetalert2';
+import ErrorPage from './Page/ErrorPage';
 
 function App() {
 
@@ -63,7 +64,7 @@ function App() {
           icon: 'info',
           title: 'Error',
           titleText: `${userError || addError || remError || updateAvatarError || updateUserError || deleteMediaError || addWatchedError || removeWatchedError}: Before Doing It!`,
-          text: 'We need you to activy what makes our DataBase works. Enter on The Link below and Try Again!',
+          text: 'First, we need you to activate what makes our DataBase works. Enter on The Link below and Try Again!',
           allowOutsideClick: false,
           footer: 'https://cors-anywhere.herokuapp.com/',
           didClose: () => {
@@ -141,6 +142,9 @@ function App() {
 
           {/* HOME */}
           <Route path='/' element={<Home />} />
+
+          {/* 404 ERROR */}
+          <Route path='*' element={<ErrorPage />} />
 
         </Routes>
 
