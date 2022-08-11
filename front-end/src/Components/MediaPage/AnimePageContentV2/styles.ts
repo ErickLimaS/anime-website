@@ -6,7 +6,8 @@ interface Props {
     isAlreadyAdded: any,
     alreadyWatched: any,
     videoReady: any,
-    videoId: any
+    videoId: any,
+    loadingVideoplayer: boolean
 }
 
 export const Container = styled.div<Props>`
@@ -192,7 +193,6 @@ export const Container = styled.div<Props>`
             overflow: auto;
 
             h2{
-                cursor: pointer;
 
                 height: min-content;
 
@@ -251,7 +251,7 @@ export const Container = styled.div<Props>`
         margin: 2rem 0;
 
         width: inherit;
-        height: inherit;
+        height: ${props => props.loadingVideoplayer === true ? '25%' : 'inherit'};
 
         svg{
             width: 20%;

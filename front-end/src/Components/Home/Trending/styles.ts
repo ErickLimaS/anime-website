@@ -60,11 +60,13 @@ export const AnimeToBeListed = styled.div<itemData>`
                 flex-wrap: wrap;
                 
                 li{
+                    font-size: 1.1rem;
                     color: #b0b0b0;
                 }
 
                 li::after{
                     content: ', ';
+                    white-space: pre;
                 }
                 li:last-child::after{
                     content: '';

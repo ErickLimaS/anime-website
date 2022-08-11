@@ -43,7 +43,7 @@ export const Container = styled.div<Props>`
     .banner-img{
         height: 40vh;
         width: auto;
-        background-image: url(${(props) => props.data.bannerImage ? props.data.bannerImage : 'https://www.seekpng.com/png/full/132-1326686_creepy-yuno-anime-banners-de-youtube.png'});
+        background-image: url(${(props) => props.data.bannerImage ? props.data.bannerImage : 'https://jornalismorio.espm.br/wp-content/uploads/2021/12/confira-agora-os-25-melhores-animes-que-ja-foram-criados-1.jpg'});
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;

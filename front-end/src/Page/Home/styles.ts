@@ -199,9 +199,6 @@ export const Container = styled.div<ContainerProps>`
                                 fill: #c0c0c0!important;
                             }
 
-                            :hover{
-                                border: 1px solid #c0c0c0;
-                            }
                         }
                         
                     }

@@ -487,7 +487,6 @@ export default function Home() {
                 {trending.slice(0, 3).map((item: any, key) => (
                   <Trending key={key} data={item} />
                 ))}
-                <Link to={`/animes/trending`} className='button-see-more'>See More</Link>
               </div>
 
             </>

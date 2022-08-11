@@ -23,11 +23,14 @@ export default function AnimePageContentV2(data: any) {
 
   const [animeTitleWithoutSpace] = useState(data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`))
 
+  const [idGoGoAnime] = useState<String>(window.location.pathname.split('v2/')[1]) // id to be saved when user adds to bookmark or already watched
+
   const [videoReady, setVideoReady] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loadingVideoplayer, setLoadingVideoplayer] = useState(false)
   const [videoURL, setVideoURL] = useState()
 
   const [videoId, setVideoId] = useState<String>()
+  const [episodeChosed, setEpisodeChosed] = useState<String>()
 
   const [indexPageInfo, setIndexPageInfo] = useState(0)
 
@@ -39,8 +42,10 @@ export default function AnimePageContentV2(data: any) {
 
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+
   const addMediaToUserAccounts = useSelector((state: any) => state.addMediaToUserAccount)
   const removeMediaFromUserAccounts = useSelector((state: any) => state.removeMediaFromUserAccount)
+
   const addLoading = addMediaToUserAccounts.loading
   const addError = addMediaToUserAccounts.error
   const remLoading = removeMediaFromUserAccounts.loading
@@ -53,8 +58,8 @@ export default function AnimePageContentV2(data: any) {
 
     window.scrollTo(0, 0);
 
+    //manages how much pages must be displayed to show all episodes 
     let howManyPages: number = 0;
-    let howMuchEpisodes: number = data.data.episodesList.length;
 
     if (data.data.episodesList.length <= 24) {
       setHowManyPagesPagination(1);
@@ -64,7 +69,6 @@ export default function AnimePageContentV2(data: any) {
     while (episodesLeft > 0) {
       episodesLeft = episodesLeft - 24;
       howManyPages = howManyPages + 1;
-      howMuchEpisodes = episodesLeft;
     }
 
     setHowManyPagesPagination(howManyPages - 1)
@@ -72,22 +76,22 @@ export default function AnimePageContentV2(data: any) {
     //find if the current media was already added to user account
     if (userInfo) {
       userInfo.alreadyWatched.find((item: any) => {
-        if (item.idGoGoAnime === data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
+        if (item.idGoGoAnime === idGoGoAnime) {
           setAlreadyWatched(true)
         }
       })
       userInfo.mediaAdded.find((item: any) => {
-        if (item.idGoGoAnime === data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
+        if (item.idGoGoAnime === idGoGoAnime) {
           setIsAlreadyAdded(true)
         }
       })
     }
 
-  }, [data.data.episodesList[0].length])
+  }, [])
 
   const dispatch: any = useDispatch()
   const navigate: any = useNavigate()
-  
+
   // add media to user
   const handleMediaToAccount = () => {
 
@@ -98,7 +102,8 @@ export default function AnimePageContentV2(data: any) {
 
         dispatch(addMediaToUserAccount({
           'addedAt': new Date(),
-          'idGoGoAnime': data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
+          // 'idGoGoAnime': data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
+          'idGoGoAnime': idGoGoAnime ? idGoGoAnime : window.location.pathname.split('v2/')[1],
           'fullTitle': data.data.animeTitle,
           'nativeTitle': data.data.otherNames && data.data.otherNames,
           'coverImg': data.data.animeImg && data.data.animeImg,
@@ -170,7 +175,7 @@ export default function AnimePageContentV2(data: any) {
         dispatch(addToAlreadyWatched({
           'addedAt': new Date(),
           'updatedAt': new Date(),
-          'idGoGoAnime': data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`),
+          'idGoGoAnime': idGoGoAnime ? idGoGoAnime : window.location.pathname.split('v2/')[1],
           'fullTitle': data.data.animeTitle,
           'nativeTitle': data.data.otherNames && data.data.otherNames,
           'coverImg': data.data.animeImg && data.data.animeImg,
@@ -231,10 +236,10 @@ export default function AnimePageContentV2(data: any) {
 
   }
 
-  //gets the streaming url of choose episode
+  //gets the streaming url of chosed episode
   const getStreamingLink = async (id: String) => {
 
-    setLoading(true)
+    setLoadingVideoplayer(true)
     setVideoReady(false)
 
     setVideoId(id)
@@ -243,7 +248,7 @@ export default function AnimePageContentV2(data: any) {
 
     setVideoURL(data.Referer)
 
-    setLoading(false)
+    setLoadingVideoplayer(false)
     setVideoReady(true)
 
   }
@@ -256,6 +261,7 @@ export default function AnimePageContentV2(data: any) {
       alreadyWatched={alreadyWatched}
       videoReady={videoReady}
       videoId={videoId}
+      loadingVideoplayer={loadingVideoplayer}
     >
 
       <div className='search-mobile'>
@@ -309,10 +315,12 @@ export default function AnimePageContentV2(data: any) {
         </div>
       </div>
 
-      <div className='heading'>
+      <div className='heading' id='player-heading'>
 
         <div className='nav'>
-          <h2 id='h2-0' onClick={() => setIndexPageInfo(0)}>Episode{videoId ? ` - ${videoId}` : 's'}</h2>
+          <h2 id='h2-0' onClick={() => setIndexPageInfo(0)}>
+            Episode{episodeChosed ? ` ${episodeChosed}` : 's'}
+          </h2>
         </div>
 
         <div className='svg-dots'>
@@ -323,7 +331,7 @@ export default function AnimePageContentV2(data: any) {
 
       <div className='video'>
 
-        {loading && (
+        {loadingVideoplayer && (
           <LoadingSvg />
         )}
 
@@ -351,13 +359,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 0 && (
 
                   data.data.episodesList.slice(0, 24).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -365,156 +377,204 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 1 && (
 
                   data.data.episodesList.slice(24, 24 * 2).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 2 && (
 
                   data.data.episodesList.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 3 && (
 
                   data.data.episodesList.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 4 && (
 
                   data.data.episodesList.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 5 && (
 
                   data.data.episodesList.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 6 && (
 
                   data.data.episodesList.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 7 && (
 
                   data.data.episodesList.slice(24 * 7, 24 * 8).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 8 && (
 
                   data.data.episodesList.slice(24 * 8, 24 * 9).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 9 && (
 
                   data.data.episodesList.slice(24 * 9, 24 * 10).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 10 && (
 
                   data.data.episodesList.slice(24 * 10, 24 * 11).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 11 && (
 
                   data.data.episodesList.slice(24 * 11, 24 * 12).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 12 && (
 
                   data.data.episodesList.slice(24 * 12, 24 * 13).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -522,13 +582,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 13 && (
 
                   data.data.episodesList.slice(24 * 13, 24 * 14).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -536,52 +600,68 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 14 && (
 
                   data.data.episodesList.slice(24 * 14, 24 * 15).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 15 && (
 
                   data.data.episodesList.slice(24 * 15, 24 * 16).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 16 && (
 
                   data.data.episodesList.slice(24 * 16, 24 * 17).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 17 && (
 
                   data.data.episodesList.slice(24 * 17, 24 * 18).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -589,13 +669,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 18 && (
 
                   data.data.episodesList.slice(24 * 18, 24 * 19).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -603,13 +687,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 19 && (
 
                   data.data.episodesList.slice(24 * 19, 24 * 20).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -617,13 +705,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 20 && (
 
                   data.data.episodesList.slice(24 * 20, 24 * 21).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -631,26 +723,34 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 21 && (
 
                   data.data.episodesList.slice(24 * 21, 24 * 22).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 22 && (
 
                   data.data.episodesList.slice(24 * 22, 24 * 23).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -658,13 +758,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 23 && (
 
                   data.data.episodesList.slice(24 * 23, 24 * 24).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -672,52 +776,68 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 24 && (
 
                   data.data.episodesList.slice(24 * 24, 24 * 25).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 25 && (
 
                   data.data.episodesList.slice(24 * 25, 24 * 26).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 26 && (
 
                   data.data.episodesList.slice(24 * 26, 24 * 27).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 27 && (
 
                   data.data.episodesList.slice(24 * 27, 24 * 28).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -725,13 +845,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 28 && (
 
                   data.data.episodesList.slice(24 * 28, 24 * 29).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -739,13 +863,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 29 && (
 
                   data.data.episodesList.slice(24 * 29, 24 * 30).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -753,13 +881,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 30 && (
 
                   data.data.episodesList.slice(24 * 30, 24 * 31).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -767,26 +899,34 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 31 && (
 
                   data.data.episodesList.slice(24 * 31, 24 * 32).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 32 && (
 
                   data.data.episodesList.slice(24 * 32, 24 * 33).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -794,13 +934,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 33 && (
 
                   data.data.episodesList.slice(24 * 33, 24 * 34).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -808,52 +952,68 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 34 && (
 
                   data.data.episodesList.slice(24 * 34, 24 * 35).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 35 && (
 
                   data.data.episodesList.slice(24 * 35, 24 * 36).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 36 && (
 
                   data.data.episodesList.slice(24 * 36, 24 * 37).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 37 && (
 
                   data.data.episodesList.slice(24 * 37, 24 * 38).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -861,13 +1021,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 38 && (
 
                   data.data.episodesList.slice(24 * 38, 24 * 39).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -875,13 +1039,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 39 && (
 
                   data.data.episodesList.slice(24 * 39, 24 * 40).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -889,13 +1057,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 40 && (
 
                   data.data.episodesList.slice(24 * 40, 24 * 41).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -903,26 +1075,34 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 41 && (
 
                   data.data.episodesList.slice(24 * 41, 24 * 42).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 42 && (
 
                   data.data.episodesList.slice(24 * 42, 24 * 43).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -930,13 +1110,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 43 && (
 
                   data.data.episodesList.slice(24 * 43, 24 * 44).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -944,52 +1128,68 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 44 && (
 
                   data.data.episodesList.slice(24 * 44, 24 * 45).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 45 && (
 
                   data.data.episodesList.slice(24 * 45, 24 * 46).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 46 && (
 
                   data.data.episodesList.slice(24 * 46, 24 * 47).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
                 {indexEpisodesPagination === 47 && (
 
                   data.data.episodesList.slice(24 * 47, 24 * 48).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -997,13 +1197,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 48 && (
 
                   data.data.episodesList.slice(24 * 48, 24 * 49).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
@@ -1011,13 +1215,17 @@ export default function AnimePageContentV2(data: any) {
                 {indexEpisodesPagination === 49 && (
 
                   data.data.episodesList.slice(24 * 49, 24 * 50).map((item: any, key: any) => (
-                    <EpisodesGoGoAnime
+                    <a href='#player-heading'
                       key={item.episodeId}
-                      data={item}
-                      media={data.data}
-                      mediaTitle={animeTitleWithoutSpace}
-                      streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
-                    />
+                      onClick={() => setEpisodeChosed(item.episodeNum)}
+                    >
+                      <EpisodesGoGoAnime
+                        data={item}
+                        media={data.data}
+                        mediaTitle={animeTitleWithoutSpace}
+                        streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
+                      />
+                    </a>
                   ))
 
                 )}
