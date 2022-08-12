@@ -56,6 +56,10 @@ export default {
 
         try {
 
+            //gets all user info so the request will tell if must be shown adult content
+            const userInfo = localStorage.getItem('userInfo') ?
+                JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
+
             const { data } = await Axios({
                 url: `${BASE_URL}`,
                 method: 'POST',
@@ -64,9 +68,9 @@ export default {
                 },
                 data: JSON.stringify({
 
-                    query: `query($type: MediaType, $format: MediaFormat, $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int) {
+                    query: `query($type: MediaType, $format: MediaFormat, $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int, $showAdultContent: Boolean) {
                         Page(page: $page, perPage: $perPage){
-                            media (season: $season, seasonYear: $seasonYear, type: $type, format: $format, isAdult: false){
+                            media (season: $season, seasonYear: $seasonYear, type: $type, format: $format, isAdult: $showAdultContent){
                                 title{
                                     romaji
                                     native
@@ -103,7 +107,8 @@ export default {
                         'page': 1,
                         'perPage': 10,
                         'season': `${season}`,
-                        'seasonYear': `${seasonYear}`
+                        'seasonYear': `${seasonYear}`,
+                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
                     }
 
                 })
@@ -126,15 +131,20 @@ export default {
 
         try {
 
+            //gets all user info so the request will tell if must be shown adult content
+            const userInfo = localStorage.getItem('userInfo') ?
+                JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
+
+
             const { data } = await Axios({
                 url: `${BASE_URL}`,
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $format: MediaFormat, $perPage: Int, $page: Int){
+                        query($type: MediaType, $format: MediaFormat, $perPage: Int, $page: Int, $showAdultContent: Boolean){
                             Page(page: $page, perPage: $perPage){
-                                media(status: RELEASING, type: $type, format: $format, isAdult: false, sort: UPDATED_AT_DESC){
+                                media(status: RELEASING, type: $type, format: $format, sort: UPDATED_AT_DESC, isAdult: $showAdultContent){
                                     title{
                                         romaji
                                         native
@@ -183,6 +193,7 @@ export default {
                         'page': page ? page : 1,
                         'perPage': 4,
                         'year': new Date().getFullYear(),
+                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
                     }
                 })
             })
@@ -204,15 +215,20 @@ export default {
 
         try {
 
+            //gets all user info so the request will tell if must be shown adult content
+            const userInfo = localStorage.getItem('userInfo') ?
+                JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
+
+
             const { data } = await Axios({
                 url: `${BASE_URL}`,
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $perPage: Int, $page: Int, ${format && '$format: MediaFormat,'}${tag && '$tag: String'}){
+                        query($type: MediaType, $perPage: Int, $page: Int, $showAdultContent: Boolean, ${format && '$format: MediaFormat,'}${tag && '$tag: String'}){
                             Page(page: $page, perPage: $perPage){
-                                media(type: $type, isAdult: false, sort: TRENDING_DESC, ${format && 'format: $format,'} ${tag && 'tag: $tag'}  ){
+                                media(type: $type, isAdult: $showAdultContent, sort: TRENDING_DESC, ${format && 'format: $format,'} ${tag && 'tag: $tag'}  ){
                                     title{
                                         romaji
                                         native
@@ -263,7 +279,8 @@ export default {
                         'page': 1,
                         'perPage': 10,
                         'year': new Date().getFullYear(),
-                        'tag': `${(tag ? `${tag}` : ``)}`
+                        'tag': `${(tag ? `${tag}` : ``)}`,
+                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
                     }
                 })
             })
@@ -285,15 +302,20 @@ export default {
 
         try {
 
+            //gets all user info so the request will tell if must be shown adult content
+            const userInfo = localStorage.getItem('userInfo') ?
+                JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
+
+
             const { data } = await Axios({
                 url: `${BASE_URL}`,
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $perPage: Int, $page: Int){
+                        query($type: MediaType, $perPage: Int, $page: Int, $showAdultContent: Boolean){
                             Page(page: $page, perPage: $perPage){
-                                media(type: $type, isAdult: false, sort: SCORE_DESC){
+                                media(type: $type, isAdult: $showAdultContent, sort: SCORE_DESC){
                                     title{
                                         romaji
                                         native
@@ -331,6 +353,7 @@ export default {
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': page ? page : 1,
                         'perPage': 3,
+                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
                     }
                 })
             })
@@ -353,6 +376,11 @@ export default {
 
         try {
 
+            //gets all user info so the request will tell if must be shown adult content
+            const userInfo = localStorage.getItem('userInfo') ?
+                JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
+
+
             const { data } = await Axios({
                 url: `${BASE_URL}`,
                 method: 'POST',
@@ -360,8 +388,8 @@ export default {
                 data: JSON.stringify({
                     query: `
                         query($perPage: Int, $page: Int, $type: MediaType, $search: String){
-                            Page(page: $page, perPage: $perPage){
-                                media(type: $type, isAdult: false, search: $search){
+                            Page(page: $page, perPage: $perPage, $showAdultContent: Boolean){
+                                media(type: $type, isAdult: $showAdultContent, search: $search){
                                     title{
                                         romaji
                                         native
@@ -391,6 +419,7 @@ export default {
                         'search': `${searchThis}`,
                         'page': 1,
                         'perPage': 3,
+                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
                     }
                 })
             })
