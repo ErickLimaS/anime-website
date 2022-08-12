@@ -18,6 +18,10 @@ Content-Type: application/json
 }
 
 ###
+PUT http://localhost:9000/users/change-adult-content-option
+Content-Type: application/json
+
+###
 GET http://localhost:9000/users/media
 Content-Type: application/json
 

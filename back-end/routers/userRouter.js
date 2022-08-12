@@ -24,6 +24,7 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: hashedPassword,
+            showAdultContent: false,
             avatarImg: 'https://i.pinimg.com/originals/8e/de/53/8ede538fcf75a0a1bd812810edb50cb7.jpg', // temporary
             createdAt: new Date(),
             updatedAt: new Date()
@@ -36,6 +37,7 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
             id: user._id,
             name: user.name,
             avatarImg: user.avatarImg,
+            showAdultContent: user.showAdultContent,
             mediaAdded: [],
             alreadyWatched: [],
             episodesAlreadyWatched: [],
@@ -73,6 +75,7 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
                 name: user.name,
                 avatarImg: user.avatarImg,
                 mediaAdded: user.mediaAdded,
+                showAdultContent: user.showAdultContent,
                 alreadyWatched: user.alreadyWatched,
                 episodesAlreadyWatched: user.episodesAlreadyWatched,
                 episodesBookmarked: user.episodesBookmarked,
@@ -94,6 +97,43 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
 
 }))
 
+//ENABLE/DISABLE ADULT CONTENT ON RESULTS
+userRouter.put('/change-adult-content-option', isAuth, expressAsyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.user.id)
+
+    if (!user) {
+        return res.status(404).send('User Not Found')
+    }
+
+    try {
+        user.showAdultContent = !user.showAdultContent
+
+        user.save()
+
+        return res.status(200).send({
+
+            id: user._id,
+            name: user.name,
+            avatarImg: user.avatarImg,
+            mediaAdded: user.mediaAdded,
+            showAdultContent: user.showAdultContent,
+            alreadyWatched: user.alreadyWatched,
+            episodesAlreadyWatched: user.episodesAlreadyWatched,
+            episodesBookmarked: user.episodesBookmarked,
+            updatedAt: user.updatedAt,
+            token: generateToken(user)
+            
+        })
+    }
+    catch (error) {
+
+        return res.status(500).send('Internal Error')
+
+    }
+
+}))
+
 //GET USER'S BOOKMARKED MEDIA
 userRouter.get('/media', isAuth, expressAsyncHandler(async (req, res) => {
 
@@ -111,6 +151,7 @@ userRouter.get('/media', isAuth, expressAsyncHandler(async (req, res) => {
             name: user.name,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
+            showAdultContent: user.showAdultContent,
             alreadyWatched: user.alreadyWatched,
             episodesAlreadyWatched: user.episodesAlreadyWatched,
             episodesBookmarked: user.episodesBookmarked,
@@ -147,6 +188,7 @@ userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
             name: user.name,
             avatarImg: user.avatarImg,
             mediaAdded: user.mediaAdded,
+            showAdultContent: user.showAdultContent,
             alreadyWatched: user.alreadyWatched,
             episodesAlreadyWatched: user.episodesAlreadyWatched,
             episodesBookmarked: user.episodesBookmarked,
@@ -164,7 +206,7 @@ userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
 }))
 
 //REMOVE MEDIA FROM USER 
-//CHANGE TO PUT
+// **** CHANGE TO PUT
 userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
@@ -188,6 +230,7 @@ userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) =>
             id: user._id,
             name: user.name,
             avatarImg: user.avatarImg,
+            showAdultContent: user.showAdultContent,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
             episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -247,6 +290,7 @@ userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, r
                 id: user._id,
                 name: user.name,
                 avatarImg: user.avatarImg,
+                showAdultContent: user.showAdultContent,
                 mediaAdded: user.mediaAdded,
                 alreadyWatched: user.alreadyWatched,
                 episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -307,6 +351,7 @@ userRouter.post('/add-already-watched', isAuth, expressAsyncHandler(async (req, 
             id: user._id,
             name: user.name,
             avatarImg: user.avatarImg,
+            showAdultContent: user.showAdultContent,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
             episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -348,6 +393,7 @@ userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req
                 id: user._id,
                 name: user.name,
                 avatarImg: user.avatarImg,
+                showAdultContent: user.showAdultContent,
                 mediaAdded: user.mediaAdded,
                 alreadyWatched: user.alreadyWatched,
                 episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -431,6 +477,7 @@ userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(asyn
                         id: user._id,
                         name: user.name,
                         avatarImg: user.avatarImg,
+                        showAdultContent: user.showAdultContent,
                         mediaAdded: user.mediaAdded,
                         alreadyWatched: user.alreadyWatched,
                         episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -453,6 +500,7 @@ userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(asyn
                     id: user._id,
                     name: user.name,
                     avatarImg: user.avatarImg,
+                    showAdultContent: user.showAdultContent,
                     mediaAdded: user.mediaAdded,
                     alreadyWatched: user.alreadyWatched,
                     episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -495,6 +543,7 @@ userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(asyn
                         id: user._id,
                         name: user.name,
                         avatarImg: user.avatarImg,
+                        showAdultContent: user.showAdultContent,
                         mediaAdded: user.mediaAdded,
                         alreadyWatched: user.alreadyWatched,
                         episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -515,6 +564,7 @@ userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(asyn
                     id: user._id,
                     name: user.name,
                     avatarImg: user.avatarImg,
+                    showAdultContent: user.showAdultContent,
                     mediaAdded: user.mediaAdded,
                     alreadyWatched: user.alreadyWatched,
                     episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -580,6 +630,7 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
                         id: user._id,
                         name: user.name,
                         avatarImg: user.avatarImg,
+                        showAdultContent: user.showAdultContent,
                         mediaAdded: user.mediaAdded,
                         alreadyWatched: user.alreadyWatched,
                         episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -637,6 +688,7 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
                         id: user._id,
                         name: user.name,
                         avatarImg: user.avatarImg,
+                        showAdultContent: user.showAdultContent,
                         mediaAdded: user.mediaAdded,
                         alreadyWatched: user.alreadyWatched,
                         episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -714,6 +766,7 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
                         id: user._id,
                         name: user.name,
                         avatarImg: user.avatarImg,
+                        showAdultContent: user.showAdultContent,
                         mediaAdded: user.mediaAdded,
                         alreadyWatched: user.alreadyWatched,
                         episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -736,6 +789,7 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
                     id: user._id,
                     name: user.name,
                     avatarImg: user.avatarImg,
+                    showAdultContent: user.showAdultContent,
                     mediaAdded: user.mediaAdded,
                     alreadyWatched: user.alreadyWatched,
                     episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -778,6 +832,7 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
                         id: user._id,
                         name: user.name,
                         avatarImg: user.avatarImg,
+                        showAdultContent: user.showAdultContent,
                         mediaAdded: user.mediaAdded,
                         alreadyWatched: user.alreadyWatched,
                         episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -798,6 +853,7 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
                     id: user._id,
                     name: user.name,
                     avatarImg: user.avatarImg,
+                    showAdultContent: user.showAdultContent,
                     mediaAdded: user.mediaAdded,
                     alreadyWatched: user.alreadyWatched,
                     episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -863,6 +919,7 @@ userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(asy
                         id: user._id,
                         name: user.name,
                         avatarImg: user.avatarImg,
+                        showAdultContent: user.showAdultContent,
                         mediaAdded: user.mediaAdded,
                         alreadyWatched: user.alreadyWatched,
                         episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -919,6 +976,7 @@ userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(asy
                         id: user._id,
                         name: user.name,
                         avatarImg: user.avatarImg,
+                        showAdultContent: user.showAdultContent,
                         mediaAdded: user.mediaAdded,
                         alreadyWatched: user.alreadyWatched,
                         episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -971,6 +1029,7 @@ userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (r
             id: user._id,
             name: user.name,
             avatarImg: user.avatarImg,
+            showAdultContent: user.showAdultContent,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
             episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -1005,6 +1064,7 @@ userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req
             id: user._id,
             name: user.name,
             avatarImg: user.avatarImg,
+            showAdultContent: user.showAdultContent,
             mediaAdded: user.mediaAdded,
             alreadyWatched: user.alreadyWatched,
             episodesAlreadyWatched: user.episodesAlreadyWatched,
@@ -1020,7 +1080,7 @@ userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req
 
 }))
 
-//UPADATE ANIMES EPISODES INFO OF USER/ GETS UPDATE TIME AND CHECK IF THERES NEW EPISODES
+// ** STILL WORKING ON IT ** - UPADATE ANIMES EPISODES INFO OF USER/ GETS UPDATE TIME AND CHECK IF THERES NEW EPISODES
 userRouter.get('/update-media-info', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)

@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
         avatarImg: { type: String, required: true },
         createdAt: { type: Date },
         updatedAt: {type: Date},
+        showAdultContent: {type: Boolean},
         mediaAdded: [{
 
             addedAt: { type: Date },
