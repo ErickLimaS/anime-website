@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 import AsideNavLinks from '../../../Components/AsideNavLinks'
 import Swal from 'sweetalert2'
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
-import { removeDataFromUserMedia, updateAvatarImg, updateUserInfo } from '../../../redux/actions/userActions'
+import { changeAdultContentOption, removeDataFromUserMedia, updateAvatarImg, updateUserInfo } from '../../../redux/actions/userActions'
 
 
 export default function SettingsUser() {
@@ -22,7 +22,6 @@ export default function SettingsUser() {
 
   const deleteUserMediaRedux = useSelector((state: any) => state.deleteUserMedia)
   const errorDeleteUserMedia = deleteUserMediaRedux.error
-
 
   const [tabIndex, setTabIndex] = useState<number>(0)
 
@@ -54,14 +53,14 @@ export default function SettingsUser() {
 
   }, [navigate, userInfo])
 
+  // set new Image to User Profile
   const setNewAvatarImg = (urlNewImg: String) => {
 
-    // dispatch(updateAvatarImg(userInfo.id, imgUrl))
-    dispatch(updateAvatarImg(urlNewImg)) //test
+    dispatch(updateAvatarImg(urlNewImg))
 
   }
 
-  //form submit
+  //form Change User Info 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -101,42 +100,38 @@ export default function SettingsUser() {
 
   }
 
-  //form new config for search results
+  //form change adult Content config for all results
   const adultsOnlyConfigChange = (e: React.FormEvent) => {
     e.preventDefault()
 
     const form: any = document.getElementById("adult-content")
 
-    console.log(form.elements["adult-content"].value)
+    //parsing to Boolean
+    const formValue: Boolean = (form.elements["adult-content"].value === 'true')
+    const userConfigValue: Boolean = userInfo.showAdultContent
 
-    if (form.elements["adult-content"].value) { //FIX check if selected is different than the one already saved 
+    if (formValue !== userConfigValue) {
 
-      if (newPasswordRef.current.value === confirmNewPassowrdRef.current.value) {
+      dispatch(changeAdultContentOption())
 
-        //dsa
-
-      }
-      else {
-
-        Swal.fire({
-
-          icon: 'warning',
-          title: 'Error',
-          titleText: `New Password Don't Match with Confirm New Password!`,
-          text: 'Try Typing Again!'
-
-        })
-
-      }
+      Swal.fire({
+        icon: "success",
+        title: 'Changes Saved!',
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true,
+        didClose: () => {
+          window.location.reload()
+        }
+      })
 
     }
-    else{
-      
-    }
-    
+
   }
 
-  //removes all data from book
+  //removes all data from bookmarks
   const handleEraseData = () => {
 
     dispatch(removeDataFromUserMedia())
@@ -313,7 +308,7 @@ export default function SettingsUser() {
 
             {handleChangeVisibility ? (
               <>
-                <h2 id='user-id'>{userInfo.id}</h2>
+                <span id='user-id'>{userInfo.id}</span>
 
                 <button type='button' onClick={() => setHandleChangeVisibility(!handleChangeVisibility)}>Hide ID</button>
               </>
@@ -347,20 +342,22 @@ export default function SettingsUser() {
 
           <form id='adult-content' onSubmit={(e) => adultsOnlyConfigChange(e)}>
 
-            <h2><span>+18</span> Adult Content </h2>
+            <h2><span>+18</span> Adult Content ({userInfo.showAdultContent ? `Currently Showing` : 'Currently NOT Showing'})</h2>
 
             <div className='radio-inputs'>
-              <div>
 
+              <div>
                 <label htmlFor='adult-content-yes'>
                   <input type='radio' value='true' id='adult-content-yes' name='adult-content'></input> Show Adult Content
                 </label>
               </div>
+
               <div>
                 <label htmlFor='adult-content-no'>
                   <input type='radio' value='false' id='adult-content-no' name='adult-content' checked></input>Do Not Show Adult Content
                 </label>
               </div>
+
             </div>
 
             <small>If you are 18+, checking this box will allow you to see search results and other contents for ADULTS ONLY.</small>

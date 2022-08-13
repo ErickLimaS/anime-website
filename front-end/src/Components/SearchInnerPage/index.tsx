@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import * as C from './styles'
 import { ReactComponent as SearchSvg } from '../../imgs/svg/search.svg'
 import { ReactComponent as LoadingSvg } from '../../imgs/svg/Spinner-1s-200px.svg'
+import { ReactComponent as CancelSvg } from '../../imgs/svg/x-circle.svg'
 import API from '../../API/anilist'
 import gogoAnime from '../../API/gogo-anime'
 import { Link } from 'react-router-dom'
@@ -58,8 +59,13 @@ export default function SearchInnerPage() {
                 <C.SearchResults>
 
                     <div className='heading-search-results'>
+
                         <h1>Results For {searchInput.current.value}</h1>
-                        <button type='button' onClick={() => clearSearchResults()}>Clear</button>
+
+                        <button type='button' onClick={() => clearSearchResults()}>
+                            <CancelSvg />
+                        </button>
+
                     </div>
 
                     {aniListSearchResults[0] != null && (
@@ -76,7 +82,11 @@ export default function SearchInnerPage() {
                                             <div className='item-info'>
                                                 {item.title.romaji && (
                                                     <h2>
-                                                        {item.title.romaji.slice(0, 20)}
+                                                        {item.title.romaji.length > 20 ? (
+                                                            item.title.romaji.slice(0, 20) + '...'
+                                                        ) : (
+                                                            item.title.romaji
+                                                        )}
                                                     </h2>
                                                 )}
                                                 {item.title.native && (
@@ -119,12 +129,16 @@ export default function SearchInnerPage() {
                                             <div className='item-info'>
                                                 {item.animeTitle && (
                                                     <h2>
-                                                        {item.animeTitle.slice(0, 20)}
+                                                        {item.animeTitle.length > 20 ? (
+                                                            item.animeTitle.slice(0, 20) + '...'
+                                                        ) : (
+                                                            item.animeTitle
+                                                        )}
                                                     </h2>
                                                 )}
                                                 <h3>GogoAnime</h3>
                                                 {item.status && (
-                                                    <p>{item.status}</p>
+                                                    <p>{item.status.slice(10, item.status.lentgh)}</p>
                                                 )}
                                             </div>
                                         </Link>

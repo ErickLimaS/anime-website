@@ -1,6 +1,6 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunk from "redux-thunk";
-import { addEpisodeToAlreadyWatchedReducer, addEpisodeToBookmarksReducer, addMediaReducer, addToAlreadyWatchedReducer, removeEpisodeFromAlreadyWatchedReducer, removeEpisodeFromBookmarksReducer, removeFromAlreadyWatchedReducer, removeMediaFromUserReducer, removeMediaReducer, updateAvatarImgReducer, updateUserInfoReducer, userLoginReducer, userLogoutReducer, userRegisterReducer } from "./reducers/userReducers";
+import { addEpisodeToAlreadyWatchedReducer, addEpisodeToBookmarksReducer, addMediaReducer, addToAlreadyWatchedReducer, changeAdultContentOptionReducer, removeEpisodeFromAlreadyWatchedReducer, removeEpisodeFromBookmarksReducer, removeFromAlreadyWatchedReducer, removeMediaFromUserReducer, removeMediaReducer, updateAvatarImgReducer, updateUserInfoReducer, userLoginReducer, userLogoutReducer, userRegisterReducer } from "./reducers/userReducers";
 
 
 const initialState = {
@@ -25,7 +25,8 @@ const reducer = combineReducers({
     addEpisodeToAlreadyWatched: addEpisodeToAlreadyWatchedReducer,
     removeEpisodeFromAlereadyWatched: removeEpisodeFromAlreadyWatchedReducer,
     addEpisodeToBookmarks: addEpisodeToBookmarksReducer,
-    removeEpisodeFromBookmarks: removeEpisodeFromBookmarksReducer
+    removeEpisodeFromBookmarks: removeEpisodeFromBookmarksReducer,
+    changeAdultContentOption: changeAdultContentOptionReducer
 })
 
 const composeEnhancer = typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;

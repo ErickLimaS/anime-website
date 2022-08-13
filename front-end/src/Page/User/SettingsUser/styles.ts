@@ -19,12 +19,14 @@ export const Container = styled.div<Props>`
         /* width: -webkit-fill-available; */
         width: 80%;
 
+        margin-right: 2rem;
+        padding: 2rem 0;
+
         @media(max-width: 768px){
+            margin-right: 0;
             width: -webkit-fill-available; 
         } 
 
-        margin-right: 2rem;
-        padding: 2rem 0;
 
         @media(max-width: 620px){
             margin: 0 2rem;
@@ -441,6 +443,8 @@ export const Container = styled.div<Props>`
 
     div#index-0{
         display: ${props => props.tabIndex === 0 ? `flex` : 'none'};
+
+        border: 2px solid transparent;
     }
     #index-1{
 
@@ -463,10 +467,17 @@ export const Container = styled.div<Props>`
 
         h1{
             font-size: 4rem;
+
+            @media(max-width: 425px){
+
+                font-size: 2.6rem;
+                font-weight: 600;
+
+            }
         }
 
         >div{
-            width: min-content;
+            width: inherit;
 
             padding: 1rem 2rem;
             
@@ -490,12 +501,16 @@ export const Container = styled.div<Props>`
                 font-size: 2.6rem;
                 color: #111;
             }
-            h2{
+            span{
                 font-size: 2.2rem;
                 color: #222222;
 
                 @media(max-width: 620px){
                     font-size: 1.6rem;
+                }
+
+                @media(max-width: 375px){
+                    font-size: 1.2rem;
                 }
             }
             button{
@@ -538,10 +553,19 @@ export const Container = styled.div<Props>`
 
         h1{
             font-size: 4rem;
+
+            @media(max-width: 425px){
+
+                font-size: 2.6rem;
+                font-weight: 600;
+
+            }
+
         }
         h2{
             font-size: 2rem;
             font-weight: 400;
+
         }
         button{
             cursor: pointer;
@@ -573,7 +597,15 @@ export const Container = styled.div<Props>`
 
             padding: 2rem;
 
-            width: 80%!important;
+            width: 85%!important;
+
+        }
+
+        @media(max-width: 425px){
+
+            padding: 1rem;
+
+            width: 90%!important;
 
         }
 
@@ -584,6 +616,14 @@ export const Container = styled.div<Props>`
 
         h1{
             font-size: 4rem;
+
+            @media(max-width: 425px){
+
+                font-size: 2.6rem;
+                font-weight: 600;
+
+            }
+
         }
         h2{
             font-size: 2rem;
@@ -613,6 +653,15 @@ export const Container = styled.div<Props>`
 
         form{
             width: 80%;
+            
+            @media(max-width: 768px){
+
+                width: 95%;
+
+                margin: 2rem 0;
+
+            }
+
         }
 
         .radio-inputs{
@@ -621,6 +670,12 @@ export const Container = styled.div<Props>`
             padding: 1rem;
 
             border-radius: 4px;
+
+            @media(max-width: 425px){
+
+                margin: 2rem 0;
+
+            }
 
             label{
                 color: #222222;

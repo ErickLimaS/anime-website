@@ -130,9 +130,6 @@ export const Search = styled.div<Props>`
         font-size: 1.4rem;
     }
     
-
-
-
 `
 
 export const SearchResults = styled.div`
@@ -148,6 +145,13 @@ export const SearchResults = styled.div`
 
     border-radius: 4px;
 
+    @media(min-width: 620px) and (max-width: 768px){
+
+        display: grid;
+        grid-template-columns: auto auto;
+
+    }
+
     div.heading-search-results{
 
         display: flex;
@@ -155,27 +159,39 @@ export const SearchResults = styled.div`
         justify-content: space-between;
         align-items: center;
 
+        @media(min-width: 620px) and (max-width: 768px){
+
+            justify-content: space-evenly;
+
+        }
+
         h1{
             font-size: 1.8rem;
             font-weight: 400;
             color: #fff;
         }
         button{
-            cursor: pointer;
-            padding: 0.5rem 1rem;
+            cursor: pointer;            
             outline: 0;
-            border: 1px solid #c0c0c0;
-            
-            background-color: #fafafa;
-            border-radius: 4px;
+            border: 0px solid #c0c0c0;
+
+            background-color: transparent;
 
             color: #777777;
 
-            :hover{
-                border: 1px solid #666666;
+            svg{
+                padding: 0.5rem;
+                transform: scale(1.5);
+                fill: #fff;
 
-                color: #333333;
+                :hover{
+                    transition: all ease-in-out 350ms;
+                    fill: #ff1a75;
+                }
+
             }
+
+            
         }
 
     }
@@ -212,7 +228,7 @@ export const SearchResults = styled.div`
 
             }
 
-            .item-info{
+            div.item-info{
                 width: 70%;
                 height: 100px;
 
@@ -222,10 +238,23 @@ export const SearchResults = styled.div`
 
                 margin: 1rem;
 
+                @media(max-width: 425px){
+
+                    height: 90%;
+
+                }
+
                 h2{
                     font-size: 1.6rem;
                     font-weight: 600;
                     color: #ff1a75;
+
+                    @media(max-width: 425px){
+
+                        font-size: 1.4rem;
+                        
+                    }
+
                 }
                 h3{
                     font-size: 1.1rem;
@@ -244,7 +273,14 @@ export const SearchResults = styled.div`
                     font-weight: 600;
                     color: #555555;
 
+                    @media(max-width: 425px){
+
+                        margin: 1rem 0;
+
+                    }
+
                     li:after{
+                        white-space: pre;
                         content: ', ';
                     }
 
