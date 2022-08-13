@@ -1,6 +1,5 @@
 import express from "express";
 import bcrypt from 'bcrypt'
-import Axios from "axios"
 import expressAsyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import { generateToken, isAuth } from "../utils.js";
