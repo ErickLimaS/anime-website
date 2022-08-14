@@ -68,9 +68,9 @@ export default {
                 },
                 data: JSON.stringify({
 
-                    query: `query($type: MediaType, $format: MediaFormat, $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int ${userInfo.showAdultContent ? '' : ', $showAdultContent: Boolean'}) {
+                    query: `query($type: MediaType, $format: MediaFormat, $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}) {
                         Page(page: $page, perPage: $perPage){
-                            media (season: $season, seasonYear: $seasonYear, type: $type, format: $format ${userInfo.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                            media (season: $season, seasonYear: $seasonYear, type: $type, format: $format ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
                                 title{
                                     romaji
                                     native
@@ -109,7 +109,8 @@ export default {
                         'season': `${season}`,
                         'seasonYear': `${seasonYear}`,
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
-                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
+                        // 'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
+                        'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                     }
 
                 })
@@ -143,9 +144,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $format: MediaFormat, $perPage: Int, $page: Int ${userInfo.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
+                        query($type: MediaType, $format: MediaFormat, $perPage: Int, $page: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
                             Page(page: $page, perPage: $perPage){
-                                media(status: RELEASING, type: $type, format: $format, sort: UPDATED_AT_DESC ${userInfo.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                                media(status: RELEASING, type: $type, format: $format, sort: UPDATED_AT_DESC ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
                                     title{
                                         romaji
                                         native
@@ -195,7 +196,7 @@ export default {
                         'perPage': 4,
                         'year': new Date().getFullYear(),
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
-                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
+                        'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                     }
                 })
             })
@@ -228,9 +229,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $perPage: Int, $page: Int, ${format && '$format: MediaFormat,'}${tag && '$tag: String'} ${userInfo.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
+                        query($type: MediaType, $perPage: Int, $page: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'} ${format && ', $format: MediaFormat,'}${tag && '$tag: String'}){
                             Page(page: $page, perPage: $perPage){
-                                media(type: $type, sort: TRENDING_DESC, ${format && 'format: $format,'} ${tag && 'tag: $tag'} ${userInfo.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                                media(type: $type, sort: TRENDING_DESC ${format && ', format: $format'} ${tag && ', tag: $tag'} ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
                                     title{
                                         romaji
                                         native
@@ -283,7 +284,7 @@ export default {
                         'year': new Date().getFullYear(),
                         'tag': `${(tag ? `${tag}` : ``)}`,
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
-                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
+                        'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                     }
                 })
             })
@@ -316,9 +317,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $perPage: Int, $page: Int ${userInfo.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
+                        query($type: MediaType, $perPage: Int, $page: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
                             Page(page: $page, perPage: $perPage){
-                                media(type: $type, sort: SCORE_DESC ${userInfo.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                                media(type: $type, sort: SCORE_DESC ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
                                     title{
                                         romaji
                                         native
@@ -357,7 +358,7 @@ export default {
                         'page': page ? page : 1,
                         'perPage': 3,
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
-                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
+                        'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                     }
                 })
             })
@@ -391,9 +392,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($perPage: Int, $page: Int, $type: MediaType, $search: String ${userInfo.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
+                        query($perPage: Int, $page: Int, $type: MediaType, $search: String${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
                             Page(page: $page, perPage: $perPage){
-                                media(type: $type, search: $search ${userInfo.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                                media(type: $type, search: $search ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
                                     title{
                                         romaji
                                         native
@@ -424,7 +425,7 @@ export default {
                         'page': 1,
                         'perPage': 3,
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
-                        'showAdultContent': Boolean(userInfo.showAdultContent || false)
+                        'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                     }
                 })
             })
