@@ -27,7 +27,7 @@ export default function AnimesReleasingThisWeek(data: any) {
     let format;
     let IconSvg: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 
-    //helps adding kind of media`s format to a format used on urls
+    //helps adding the right media's format on URL
     switch (data.data.format) {
         case 'TV':
             format = 'anime';

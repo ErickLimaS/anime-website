@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface Props {
     hasText: any;
+    loading: boolean
 }
 
 export const Search = styled.div<Props>`
@@ -49,14 +50,12 @@ export const Search = styled.div<Props>`
         border-right: none;
         border-radius: 18px 0 0 18px;
 
-        margin-right: 1rem;
+        /* padding-right: 1rem!important; */
 
         color: #ff5ebc;
 
         height: 20px;
         width: auto;
-
-        /* padding: 0.9rem 1rem; */
 
         *{
             color: #ff5ebc;
@@ -64,18 +63,23 @@ export const Search = styled.div<Props>`
     }
        
     input{
+        transition: all ease-in-out 150ms;
         background-color: #f3f2ff;
         outline: 0;
         border: none;
         border-left: none;
         border-radius: 0 0 0 0;
 
-        padding: 0.5rem 1rem;
+        padding: ${props => props.loading ? `0.5rem 1rem 0.5rem 3rem` : `0.5rem 1rem`};
 
         height: 30px;
 
         font-size: 1.6rem;
         font-weight: 400;
+
+        @media(max-width: 620px){
+            width: 50vw;
+        }
 
         :-webkit-autofill,
         :-webkit-autofill:hover, 
@@ -249,6 +253,32 @@ export const SearchResults = styled.div`
                     font-weight: 600;
                     color: #ff1a75;
 
+                    margin-bottom: 0.5rem;
+
+                    span.adult-result{
+                        font-size: 1.3rem;
+                        font-weight: 200;
+                        color: #fff;
+
+                        margin-right: 0.5rem;
+
+                        border-radius: 50%;
+
+                        padding: 0.3rem!important;
+                        
+                        height: inherit;
+
+                        background-color: #262626;
+
+                    }
+
+                    span.launch-year{
+                        margin-left: 0.5rem;
+
+                        font-size: 1.4rem;
+                        color: #777777;
+                    }
+
                     @media(max-width: 425px){
 
                         font-size: 1.4rem;
@@ -262,6 +292,12 @@ export const SearchResults = styled.div`
                     color: #444444;
 
                     margin-bottom: 1rem ;
+                }
+                h3.gogoanime{
+                    
+                    font-size: 1.3rem;
+                    font-weight: 600;
+
                 }
 
                 ul{

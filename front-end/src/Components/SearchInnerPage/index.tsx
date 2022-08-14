@@ -16,7 +16,7 @@ export default function SearchInnerPage() {
     const [resultsWasFetched, setResultsWasFetched] = useState<boolean>(false)
 
     const [loading, setLoading] = useState<boolean>(false)
-
+    
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault()
 
@@ -35,13 +35,52 @@ export default function SearchInnerPage() {
 
     }
 
+    //helps adding the right media's format on URL
+    let format;
+    const getMediaFormat = (item: any) => {
+
+        switch (item.format) {
+            case 'TV':
+                format = 'anime';
+                return format;
+            case 'MANGA':
+                format = 'manga';
+                return format;
+            case 'MOVIE':
+                format = 'movie';
+                return format;
+            case 'NOVEL':
+                format = 'novel';
+                return format;
+            case 'SPECIAL':
+                format = 'special';
+                return format;
+            case 'ONE_SHOT':
+                format = 'one-shot';
+                return format;
+            case 'OVA':
+                format = 'ova';
+                return format;
+            case 'ONA':
+                format = 'ona';
+                return format;
+            case 'TV_SHORT':
+                format = 'tv-short';
+                return format;
+            default:
+                format = 'anime'; //exception
+                return format;
+        }
+
+    }
+
     const clearSearchResults = () => {
         setResultsWasFetched(false)
     }
 
     return (
         <>
-            <C.Search hasText={searchInput}>
+            <C.Search hasText={searchInput} loading={loading}>
 
                 <form onSubmit={(e) => handleSearch(e)}>
                     <div>
@@ -74,7 +113,7 @@ export default function SearchInnerPage() {
                                 aniListSearchResults.map((item: any, key) => (
 
                                     <div key={key} className='result-item'>
-                                        <Link to={`/anime/${item.id}`}>
+                                        <Link to={`/${getMediaFormat(item)}/${item.id}`}>
                                             {item.coverImage && (
                                                 <img src={item.coverImage.medium} alt={`${item.title.romaji} Cover`}>
                                                 </img>
@@ -82,11 +121,15 @@ export default function SearchInnerPage() {
                                             <div className='item-info'>
                                                 {item.title.romaji && (
                                                     <h2>
-                                                        {item.title.romaji.length > 20 ? (
-                                                            item.title.romaji.slice(0, 20) + '...'
-                                                        ) : (
-                                                            item.title.romaji
-                                                        )}
+                                                        {item.isAdult && (<span className='adult-result'>+18</span>)}
+                                                        {
+                                                            item.title.romaji.length > 20 ? (
+                                                                item.title.romaji.slice(0, 20) + '...' 
+                                                            ) : (
+                                                                item.title.romaji 
+                                                            )
+                                                        }
+                                                        <span className='launch-year'>({item.startDate.year})</span>
                                                     </h2>
                                                 )}
                                                 {item.title.native && (
@@ -94,9 +137,9 @@ export default function SearchInnerPage() {
                                                         {item.title.native.slice(0, 20)}
                                                     </h3>
                                                 )}
-                                                {item.startDate.year && (
+                                                {/* {item.startDate.year && (
                                                     <p>{item.startDate.year}</p>
-                                                )}
+                                                )} */}
                                                 {item.genres && (
                                                     <ul>
                                                         {item.genres.slice(0, 3).map((genre: any) => (
@@ -136,7 +179,7 @@ export default function SearchInnerPage() {
                                                         )}
                                                     </h2>
                                                 )}
-                                                <h3>GogoAnime</h3>
+                                                <h3 className='gogoanime'>From GogoAnime</h3>
                                                 {item.status && (
                                                     <p>{item.status.slice(10, item.status.lentgh)}</p>
                                                 )}
