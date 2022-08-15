@@ -13,12 +13,10 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 - [x] `Marque Animes ou Episódios já vistos`: Mantenha o progresso de quais você terminou ou que precisa terminar.
 
 ## :pushpin: Em Planejamento
-
-- [ ] `Fix: Problemas/Conflitos com outros Navegadores`: Sem Previsão 
+ 
 - [ ] `Fix: Misspelled English Words/Corrigir Palavras em Inglês`: Sem Previsão
 - [ ] `Seja Alertado de Novos Episódios Lançados`: Sem Previsão 
-- [ ] `Modo Noturno`: Sem Previsão 
-- [ ] `Aumentar Responsividade do Layout`: Sem Previsão 
+- [ ] `Modo Noturno`: Sem Previsão
 
 ## :heavy_check_mark: Tecnologias Utilizadas
 
