@@ -22,7 +22,15 @@ PUT http://localhost:9000/users/change-adult-content-option
 Content-Type: application/json
 
 ###
-GET http://localhost:9000/users/media
+GET http://localhost:9000/users/bookmarked-media
+Content-Type: application/json
+
+{
+
+}
+
+###
+GET http://localhost:9000/users/already-watched-media
 Content-Type: application/json
 
 {

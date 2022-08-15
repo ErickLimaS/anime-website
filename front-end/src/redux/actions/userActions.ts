@@ -108,7 +108,7 @@ export const logoutUser = () => async (dispatch: Dispatch<AnyAction>) => {
 
 }
 
-// ADD, REMOVE MEDIA FROM BOOKMARKS
+// ADD MEDIA FROM BOOKMARKS
 export const addMediaToUserAccount = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({ type: USER_MEDIA_ADD_REQUEST, payload: media })
@@ -145,7 +145,7 @@ export const addMediaToUserAccount = (media: any) => async (dispatch: Dispatch<A
     }
 
 }
-
+// REMOVE MEDIA FROM BOOKMARKS
 export const removeMediaFromUserAccount = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({ type: USER_MEDIA_REMOVE_REQUEST, payload: media })
@@ -183,7 +183,7 @@ export const removeMediaFromUserAccount = (media: any) => async (dispatch: Dispa
 
 }
 
-// ADD, REMOVE ALREADY WATCHED MEDIA
+// ADD ALREADY WATCHED MEDIA
 export const addToAlreadyWatched = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
@@ -225,6 +225,7 @@ export const addToAlreadyWatched = (media: any) => async (dispatch: Dispatch<Any
 
 }
 
+// REMOVE ALREADY WATCHED MEDIA
 export const removeFromAlreadyWatched = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
@@ -266,7 +267,7 @@ export const removeFromAlreadyWatched = (media: any) => async (dispatch: Dispatc
 
 }
 
-// ADD, REMOVE EPISODE ALREADY WATCHED
+// ADD EPISODE ALREADY WATCHED
 export const addEpisodeToAlreadyWatched = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
@@ -308,6 +309,7 @@ export const addEpisodeToAlreadyWatched = (media: any) => async (dispatch: Dispa
 
 }
 
+// REMOVE EPISODE ALREADY WATCHED
 export const removeEpisodeFromAlreadyWatched = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
@@ -349,7 +351,7 @@ export const removeEpisodeFromAlreadyWatched = (media: any) => async (dispatch: 
 
 }
 
-// ADD, REMOVE EPISODE BOOKMARKED
+// ADD EPISODE BOOKMARKED
 export const addEpisodeToBookmarks = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({
@@ -391,6 +393,7 @@ export const addEpisodeToBookmarks = (media: any) => async (dispatch: Dispatch<A
 
 }
 
+// REMOVE EPISODE BOOKMARKED
 export const removeEpisodeFromBookmarks = (media: any) => async (dispatch: Dispatch<AnyAction>, getState: any) => {
 
     dispatch({

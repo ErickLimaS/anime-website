@@ -238,7 +238,7 @@ export const SearchResults = styled.div`
 
                 display: flex;
                 flex-direction: column;
-                justify-content: space-around;
+                justify-content: space-between;
 
                 margin: 1rem;
 
@@ -262,9 +262,9 @@ export const SearchResults = styled.div`
 
                         margin-right: 0.5rem;
 
-                        border-radius: 50%;
+                        border-radius: 8px;
 
-                        padding: 0.3rem!important;
+                        padding: 0.2rem 0.1rem!important;
                         
                         height: inherit;
 
@@ -291,7 +291,7 @@ export const SearchResults = styled.div`
                     font-weight: 300;
                     color: #444444;
 
-                    margin-bottom: 1rem ;
+                    /* margin-bottom: 1rem; */
                 }
                 h3.gogoanime{
                     

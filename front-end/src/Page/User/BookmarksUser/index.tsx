@@ -48,7 +48,7 @@ export default function BookmarkUser() {
             try {
 
                 const data: any = await Axios({
-                    url: `https://cors-anywhere.herokuapp.com/https://animes-website-db.herokuapp.com/users/media`,
+                    url: `https://cors-anywhere.herokuapp.com/https://animes-website-db.herokuapp.com/users/bookmarked-media`,
                     headers: { Authorization: `Bearer ${userInfo.token}` }
                 })
                 setAllTypes(data.data.mediaAdded)
