@@ -53,12 +53,15 @@ export default function AsideNavLinks(data: any) {
   //gets params to set styles on which nav link is clicked or been viewed
   const { format, genre } = useParams()
 
+  console.log(window.location.pathname.slice(1))
+
   return (
     <C.Container
       data={data.data}
       format={format}
       genre={genre}
       showUserList={showUserList}
+      pathname={window.location.pathname.slice(1)}
     >
 
       <a href='/'><img src={logo} alt='AniProject Logo' id='logo'></img></a>
@@ -94,9 +97,9 @@ export default function AsideNavLinks(data: any) {
                   </div>
                 </div>
                 <ul className='user-list-on-click'>
-                  <li><a href={`/bookmarks`}><BookmarkSvg /> Bookmarks</a></li>
-                  <li><a href={`/history`}><ClockSvg /> History</a></li>
-                  <li><a href={`/settings`}><SettingsSvg id='engine-svg' />Settings</a></li>
+                  <li id='bookmarks'><a href={`/bookmarks`}><BookmarkSvg /> Bookmarks</a></li>
+                  <li id='history'><a href={`/history`}><ClockSvg /> History</a></li>
+                  <li id='settings'><a href={`/settings`}><SettingsSvg id='engine-svg' />Settings</a></li>
                   <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
 
                 </ul>

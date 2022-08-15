@@ -5,6 +5,7 @@ interface Props {
     format: any;
     genre: any;
     showUserList: any;
+    pathname: string;
 }
 
 export const Container = styled.nav<Props>`
@@ -170,8 +171,8 @@ export const Container = styled.nav<Props>`
                 >*{
                     margin-left: 1rem;
                     a, svg{
-                        fill: #555;
-                        color: #555;
+                        fill: #757474;
+                        color: #757474;
                     }
                 }
 
@@ -210,6 +211,39 @@ export const Container = styled.nav<Props>`
             font-weight: 600;
         }
 
+        li#bookmarks{
+            border-right: ${props => props.pathname === 'bookmarks' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.pathname === 'bookmarks' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.pathname === 'bookmarks' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#history{
+            border-right: ${props => props.pathname === 'history' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.pathname === 'history' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.pathname === 'history' ? '#ff1a75' : ''};
+                }
+            }
+        }
+        li#settings{
+            border-right: ${props => props.pathname === 'settings' ? '4px solid #ff1a75' : ''};
+
+            >a{
+                color: ${props => props.pathname === 'settings' ? '#ff1a75' : ''};
+
+                >svg{
+                    fill: ${props => props.pathname === 'settings' ? '#ff1a75' : ''};
+                }
+            }
+        }
         li#shounen{
             border-right: ${props => props.genre === 'Shounen' ? '4px solid #ff1a75' : ''};
 
