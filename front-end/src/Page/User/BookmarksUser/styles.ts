@@ -96,7 +96,6 @@ export const Container = styled.div<Props>`
 
         width: 80%;    
 
-        /* border-right: 2px solid #e6e6e6; */
         border-left: 2px solid #e6e6e6;
         padding: 1rem 3rem 3rem 3rem;
 

@@ -17,6 +17,7 @@ import { ReactComponent as OpenBookSvg } from '../../imgs/svg/open-book-svgrepo.
 import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.svg'
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
 import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fill.svg'
+import { ReactComponent as ClockSvg } from '../../imgs/svg/clock-history.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../../redux/actions/userActions'
 import logo from '../../imgs/logo.png'
@@ -74,6 +75,7 @@ export default function AsideNavLinks(data: any) {
               </span>
 
               <li className='user-li'>
+
                 <div className='user'>
                   <div>
                     <img src={userInfo.avatarImg} alt='User Avatar'></img>
@@ -93,11 +95,13 @@ export default function AsideNavLinks(data: any) {
                 </div>
                 <ul className='user-list-on-click'>
                   <li><a href={`/bookmarks`}><BookmarkSvg /> Bookmarks</a></li>
+                  <li><a href={`/history`}><ClockSvg /> History</a></li>
                   <li><a href={`/settings`}><SettingsSvg id='engine-svg' />Settings</a></li>
                   <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
 
                 </ul>
               </li>
+
             </ul>
           </>
         ) : (

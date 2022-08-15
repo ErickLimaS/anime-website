@@ -1,5 +1,5 @@
 import * as C from './styles'
-import React, { MutableRefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import AsideNavLinks from '../../../Components/AsideNavLinks'

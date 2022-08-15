@@ -17,6 +17,7 @@ import { ReactComponent as StarSvg } from '../../imgs/svg/star-fill.svg'
 import { ReactComponent as OpenBookSvg } from '../../imgs/svg/open-book-svgrepo.svg'
 import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.svg'
 import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fill.svg'
+import { ReactComponent as ClockSvg } from '../../imgs/svg/clock-history.svg'
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../../redux/actions/userActions'
@@ -34,7 +35,6 @@ export default function Header() {
 
     const handleLogOut = (e: React.MouseEvent) => {
         e.preventDefault()
-        //make logout system with redux after making the sign up
 
         dispatch(logoutUser())
 
@@ -76,6 +76,7 @@ export default function Header() {
 
                                 <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
                                 <li><a href={`/bookmarks`}><BookmarkSvg /> Bookmarks</a></li>
+                                <li><a href={`/history`}><ClockSvg /> History</a></li>
                                 <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
 
                             </ul>
@@ -120,14 +121,6 @@ export default function Header() {
 
                     </ul>
 
-                    {/* <h3>General</h3> */}
-
-                    {/* <ul className='settings'>
-
-                        <li><Link to={`/settings`}><SettingsSvg /> Settings</Link></li>
-                        <li><Link to={``} onClick={(e) => handleLogOut(e)}><LogOutSvg /> Log Out</Link></li>
-
-                    </ul> */}
                 </nav>
 
             </div>

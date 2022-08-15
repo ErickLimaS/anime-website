@@ -24,6 +24,7 @@ import TvShortPage from './Page/MediaPage/TvShortPage';
 import { logoutUser } from './redux/actions/userActions';
 import Swal from 'sweetalert2';
 import ErrorPage from './Page/ErrorPage';
+import HistoryMediaAdded from './Page/User/HistoryMediaWatched';
 
 function App() {
 
@@ -121,6 +122,7 @@ function App() {
 
           {/* USER CATEGORY */}
           <Route path='/bookmarks' element={userInfo ? < BookmarkUser /> : <Navigate to='/' />} />
+          <Route path='/history' element={userInfo ? < HistoryMediaAdded /> : <Navigate to='/' />} />
           <Route path='/settings' element={userInfo ? <SettingsUser /> : <Navigate to='/' />} />
 
           {/* MEDIA CATEGORY */}
