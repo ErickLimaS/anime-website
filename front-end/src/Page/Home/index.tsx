@@ -18,9 +18,6 @@ export default function Home() {
 
   const [indexInnerPageLink, setIndexInnerPageLink] = useState(0) //aux to show inner page
 
-  // const [increaseIdNumberFromMap, setIncreaseIdNumberFromMape] = useState(0)
-  // setIncreaseIdNumberFromMape((increaseIdNumberFromMap) + 1)
-
   const [loading, setLoading] = useState(true)
   const [loadingSectionTopRated, setLoadingSectionTopRated] = useState(false)
   const [loadingSectionReleasingThisWeek, setLoadingSectionReleasingThisWeek] = useState(false)
@@ -41,6 +38,8 @@ export default function Home() {
   useEffect(() => {
 
     window.scrollTo(0, 0);
+
+    document.title = 'Home | AniProject'
 
     document.title = 'Loading... | AniProject'
 
@@ -124,8 +123,6 @@ export default function Home() {
 
     }
     loadData()
-
-    document.title = 'Home | AniProject'
 
   }, [indexInnerPageLink])
 

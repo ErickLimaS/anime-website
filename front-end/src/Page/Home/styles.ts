@@ -27,7 +27,7 @@ export const Container = styled.div<ContainerProps>`
 
     background-color: #fafafa;
     
-    //LOADING effect
+    // loading effect
     .div-skeleton{
         height: 40vh;
         margin: 2rem 0;
@@ -51,6 +51,7 @@ export const Container = styled.div<ContainerProps>`
 
     }
 
+    // content
     div.main-content{
 
         width: 55%;

@@ -86,7 +86,7 @@ export default function AlreadyWatchedHistoryPage({ data }: any) {
                 </div>
                 <ul>
                     {data.addedAt && (
-                        <li>Completed on <span>{convertDate(data.addedAt)}</span></li>
+                        <li>Done Watching on <span>{convertDate(data.addedAt)}</span></li>
                     )}
                     <li>
                         <span>

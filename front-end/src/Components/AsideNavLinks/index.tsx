@@ -53,8 +53,6 @@ export default function AsideNavLinks(data: any) {
   //gets params to set styles on which nav link is clicked or been viewed
   const { format, genre } = useParams()
 
-  console.log(window.location.pathname.slice(1))
-
   return (
     <C.Container
       data={data.data}

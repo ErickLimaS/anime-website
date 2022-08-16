@@ -499,14 +499,25 @@ export default function BookmarkUser() {
                                     <div className='sort'>
 
                                         <div className='media-type'>
-                                            <h1>Type</h1>
 
-                                            <div>
-                                                <p onClick={() => setTabIndex(0)}>All ({userInfo.mediaAdded.length})</p>
-                                                <p onClick={() => setTabIndex(1)}>Animes ({animesTypeItems?.length})</p>
-                                                <p onClick={() => setTabIndex(2)}>Mangas ({mangasTypeItems?.length})</p>
-                                                <p onClick={() => setTabIndex(3)}>Movies ({moviesTypeItems?.length})</p>
-                                                <p onClick={() => setTabIndex(4)}>Others ({otherTypeItems?.length})</p>
+                                            <div className='sort-buttons'>
+
+                                                <button type='button' onClick={() => setTabIndex(0)} id='button-tab-0'>
+                                                    All ({allTypes.length})
+                                                </button>
+                                                <button type='button' onClick={() => setTabIndex(1)} id='button-tab-1'>
+                                                    Animes ({animesTypeItems.length})
+                                                </button>
+                                                <button type='button' onClick={() => setTabIndex(2)} id='button-tab-2'>
+                                                    Mangas ({mangasTypeItems.length})
+                                                </button>
+                                                <button type='button' onClick={() => setTabIndex(3)} id='button-tab-3'>
+                                                    Movies ({moviesTypeItems.length})
+                                                </button>
+                                                <button type='button' onClick={() => setTabIndex(4)} id='button-tab-4'>
+                                                    Others ({otherTypeItems.length})
+                                                </button>
+
                                             </div>
                                         </div>
 

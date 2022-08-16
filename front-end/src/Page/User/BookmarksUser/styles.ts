@@ -101,7 +101,7 @@ export const Container = styled.div<Props>`
 
         @media(max-width: 768px){
 
-            width: auto;    
+            width: 99%;    
 
             padding: 1rem 0rem;
 
@@ -162,7 +162,8 @@ export const Container = styled.div<Props>`
         }
 
         .sort{
-            width: 20%;
+            min-width: 13%;
+            max-width: 13%;
 
             display: flex;
             flex-direction: column;
@@ -171,19 +172,28 @@ export const Container = styled.div<Props>`
             margin-left: 1rem;
             padding: 0 1rem;
 
-            /* background-color: #ff1a7512; */
             border-left: 2px solid #ff1a7512;
             border-radius: 4px;
             
             @media(max-width: 620px){
 
                 width: 100%;
+                
+                min-width: initial;
+                max-width: initial;
 
                 margin: 0;
                 padding: 0;
 
                 border-left: 0;
                 justify-content: center;
+            }
+
+            @media(max-width: 462px){
+
+                min-width: auto;
+                max-width: auto;
+
             }
 
             div.media-type{
@@ -194,43 +204,136 @@ export const Container = styled.div<Props>`
 
                 margin: 0 1rem;
 
-                h1{
-                    margin-top: 0rem;
-                    margin-bottom: 2rem;
-                    font-size: 2rem;
+                
+                @media(min-width: 620px) and (max-width: 768px){
 
-                    @media(max-width: 620px){
-                        font-size: 2.6rem;
-                    }
+                    margin: 0;
+                    
                 }
 
-                >div{
-
-                    @media(max-width: 620px){
+                @media(max-width: 620px){
                         margin-top: 1rem;
                         margin-bottom: 2rem;
                         display: flex;
                         flex-wrap: wrap;
+                }
+
+                div.sort-buttons{
+
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    @media(max-width: 768px){
+
+                        margin: 2rem 0;
+                        justify-content: space-evenly;  
+
                     }
 
-                    p{
+                    @media(min-width: 620px){
+
+                        flex-direction: column;
+                                            
+                        
+                    }
+
+                    @media(max-width: 462px){
+
+                        flex-wrap: wrap;
+
+                    }
+
+                    >button{
                         cursor: pointer;
-                        font-size: 1.6rem;
+                        
+                        margin: 0.5rem 1rem;
+
+                        max-height: 6rem;
+                        max-width: inherit;
+
+                        min-height: 3rem;
+                        min-width: 100%;
+
                         padding: 1rem;
-                        margin: 1rem 0;
-                        border: 1px solid #ff1a75;
+
                         border-radius: 4px;
 
-                        @media(max-width: 620px){
-                            font-size: 1.8rem;
-                            margin: 1rem;
+                        font-size: 1.5rem;
+                        font-weight: 500;
+                        
+                        @media(min-width: 768px)and(max-width: 1020px){
+
+                            padding: 0.2rem;
+                            margin: 0rem 0.2rem;
+
                         }
 
-                        :hover{
-                            color: #999999;
+                        @media(max-width: 768px){
+
+                            margin: 0.5rem 0;
+
                         }
+
+                        @media(max-width: 620px){
+
+                            
+                            max-height: 6rem;
+                            max-width: inherit;
+
+                            min-height: 3rem;
+                            min-width: auto;
+
+                            margin-top: 0.5rem;
+                            margin-bottom: 0.5rem;
+
+                        }
+
+                    }
+
+                    button#button-tab-0{
+                            
+                        background-color: ${props => props.tabIndex === 0 ? '#ff1a75' : '#fafafa'};
+
+                        border: ${props => props.tabIndex === 0 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
+
+                        color: ${props => props.tabIndex === 0 ? '#fff' : '#ff1a75'};
+                        
+                    }
+                    button#button-tab-1{
+                            
+                        background-color: ${props => props.tabIndex === 1 ? '#ff1a75' : '#fafafa'};
+
+                        border: ${props => props.tabIndex === 1 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
+
+                        color: ${props => props.tabIndex === 1 ? '#fff' : '#ff1a75'};
+                    }
+                    button#button-tab-2{
+                            
+                        background-color: ${props => props.tabIndex === 2 ? '#ff1a75' : '#fafafa'};
+
+                        border: ${props => props.tabIndex === 2 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
+                        
+                        color: ${props => props.tabIndex === 2 ? '#fff' : '#ff1a75'};
+                    }
+                    button#button-tab-3{
+                            
+                        background-color: ${props => props.tabIndex === 3 ? '#ff1a75' : '#fafafa'};
+
+                        border: ${props => props.tabIndex === 3 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
+                        
+                        color: ${props => props.tabIndex === 3 ? '#fff' : '#ff1a75'};
+                    }
+                    button#button-tab-4{
+                            
+                        background-color: ${props => props.tabIndex === 4 ? '#ff1a75' : '#fafafa'};
+
+                        border: ${props => props.tabIndex === 4 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
+                        
+                        color: ${props => props.tabIndex === 4 ? '#fff' : '#ff1a75'};
                     }
                 }
+                
             }
         }
 
@@ -246,6 +349,8 @@ export const Container = styled.div<Props>`
             }
 
             @media(max-width: 768px){
+
+                min-height: 70vh;
 
                 grid-template-columns: auto auto;
 

@@ -1,10 +1,12 @@
 import Axios from 'axios'
 import { userInfo } from 'os'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import AlreadyWatchedHistoryPage from '../../../Components/AlreadyWatchedHistotyPage'
 import AsideNavLinks from '../../../Components/AsideNavLinks'
+import { logoutUser } from '../../../redux/actions/userActions'
 import * as C from './styles'
 
 export default function HistoryMediaAdded() {
@@ -55,6 +57,18 @@ export default function HistoryMediaAdded() {
 
             switch (target) {
                 case '30 Days':
+
+                    for (let i = 0; i < last30Days.length; i++) {
+                        console.log(last30Days)
+
+                        if (last30Days[i].fullTitle === item.fullTitle) {
+                            return last30Days
+                        }
+
+
+                    }
+
+
                     return setLast30Days(oldArray => [...oldArray, item])
                 case '3 Months':
                     return setLast3Months(oldArray => [...oldArray, item])
@@ -69,37 +83,98 @@ export default function HistoryMediaAdded() {
         }
     }
 
+    const dispatch: any = useDispatch()
+
     useEffect(() => {
 
+        window.scrollTo(0, 0);
         document.title = 'History | AniProject'
 
         const load = async () => {
 
             setLoading(true)
 
-            const URL = 'https://cors-anywhere.herokuapp.com/https://animes-website-db.herokuapp.com/users/already-watched-media'
+            try {
 
-            const { data } = await Axios({
-                url: `${URL}`,
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${userInfo.token}`
+                const URL = 'https://cors-anywhere.herokuapp.com/https://animes-website-db.herokuapp.com/users/already-watched-media'
+
+                const { data } = await Axios({
+                    url: `${URL}`,
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${userInfo.token}`
+                    }
+                })
+
+                // all data, no sorting
+                setAlreadyWatchedMedia(data)
+
+                // sorting date 
+                data.forEach((item: any) => {
+
+                    sortedDateRange(item, '30 Days')
+                    sortedDateRange(item, '3 Months')
+                    sortedDateRange(item, '6 Months')
+                    sortedDateRange(item, '1 Year')
+
+                })
+
+
+                setLoading(false)
+
+            }
+            catch (error: any) {
+
+                //store current media url to redirect if user is not logged in
+                const redirect = window.location.pathname ? `${window.location.pathname}` : ''
+
+                switch (error.response.status) {
+                    case 403: //CORS
+                        Swal.fire({
+
+                            icon: 'info',
+                            title: 'Error',
+                            titleText: `${error.response.status}: Before Doing It!`,
+                            text: 'First, we need you to activate what makes our DataBase works. Enter on The Link below and Try Again!',
+                            allowOutsideClick: false,
+                            footer: 'https://cors-anywhere.herokuapp.com/',
+                            didClose: () => {
+                                window.location.reload()
+                            }
+                        })
+                        break
+                    case 401: //TOKEN VALIDATION/EXPIRATION
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Security First!',
+                            titleText: `${error.response.status}: Security First!`,
+                            text: 'You Will Need To Login Again So We Will Make Your Account Secure!',
+                            allowOutsideClick: false,
+                            didClose: () => {
+
+                                dispatch(logoutUser())
+                                window.location.href = redirect !== '' ? `/login?redirect=${redirect.slice(1, redirect.length)}` : '/login'
+
+                            }
+                        })
+                        break
+                    default:
+                        Swal.fire({
+
+                            icon: 'error',
+                            title: 'Error',
+                            titleText: `${error.response.status}: Something Happen!`,
+                            text: "We Don't Know What Happen. But Try Again!",
+                            footer: 'Or report this on My GitHub: www.github.com/ErickLimaS',
+                            didClose: () => {
+                                window.location.reload()
+                            }
+
+                        })
+                        break
                 }
-            })
 
-            setAlreadyWatchedMedia(data)
-
-            // sorting date 
-            data.forEach((item: any) => {
-                
-                sortedDateRange(item, '30 Days')
-                sortedDateRange(item, '3 Months')
-                sortedDateRange(item, '6 Months')
-                sortedDateRange(item, '1 Year')
-
-            })
-
-            setLoading(false)
+            }
 
         }
         load()
@@ -117,7 +192,15 @@ export default function HistoryMediaAdded() {
 
                 {loading ? (
 
-                    <>loading</>
+                    <>
+
+                        <div className='loading-skeleton-heading '></div>
+
+                        <div className='loading-skeleton'></div>
+                        <div className='loading-skeleton'></div>
+                        <div className='loading-skeleton'></div>
+
+                    </>
 
                 ) : (
                     <>
@@ -129,19 +212,19 @@ export default function HistoryMediaAdded() {
                             <div className='sort-buttons'>
 
                                 <button type='button' onClick={() => setTabIndex(0)} id='button-tab-0'>
-                                    All Time
+                                    All Time ({alreadyWatchedMedia.length})
                                 </button>
                                 <button type='button' onClick={() => setTabIndex(1)} id='button-tab-1'>
-                                    Last 30 Days
+                                    Last 30 Days ({last30Days.length})
                                 </button>
                                 <button type='button' onClick={() => setTabIndex(2)} id='button-tab-2'>
-                                    Last 3 Months
+                                    Last 3 Months ({last3Months.length})
                                 </button>
                                 <button type='button' onClick={() => setTabIndex(3)} id='button-tab-3'>
-                                    Last 6 Months
+                                    Last 6 Months ({last6Months.length})
                                 </button>
                                 <button type='button' onClick={() => setTabIndex(4)} id='button-tab-4'>
-                                    Last 1 Year
+                                    Last 1 Year ({last1Year.length})
                                 </button>
 
                             </div>
@@ -346,11 +429,11 @@ export default function HistoryMediaAdded() {
 
                                 <div className='no-items-bookmarked'>
 
-                                    <h2>There's Nothing Marked on Your Bookmarks</h2>
+                                    <h2>There's Nothing Marked on Your History</h2>
 
                                     <p>
 
-                                        When on a anime, manga or movie is shown, a ICON must be show to indicate you can add it to bookmarks.
+                                        When on a anime, manga or movie is shown, a ICON must be show to indicate you can add it as already watched.
 
                                     </p>
 

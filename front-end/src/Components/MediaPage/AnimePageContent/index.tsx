@@ -115,7 +115,7 @@ export default function AnimePageContent(data: any) {
           'fullTitle': data.data.title.romaji,
           'nativeTitle': data.data.title.native,
           'bannerImg': data.data.bannerImage ? data.data.bannerImage : '',
-          'coverImg': data.data.coverImage.large ? data.data.coverImage.large : data.data.coverImage.extraLarge || data.data.coverImage.medium,
+          'coverImg': data.data.coverImage.large || data.data.coverImage.extraLarge || data.data.coverImage.medium,
           'format': data.data.format,
           'type': data.data.type,
           'status': data.data.status,

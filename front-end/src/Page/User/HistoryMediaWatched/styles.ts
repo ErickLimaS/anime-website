@@ -4,11 +4,75 @@ interface Props {
     tabIndex: number
 }
 
-export const Container = styled.div`
+export const Container = styled.div<Props>`
 
     display: flex;
     flex-direction: row;
 
+    // loading
+    .loading-skeleton-heading{
+
+        height: 10vh;
+        margin: 2rem 0;
+
+        border-radius: 4px;
+
+        animation: skeleton-loading 1s linear infinite alternate;
+
+        .heading{
+            display: none!important;;
+        }
+
+        @keyframes skeleton-loading{
+            0%{
+                background-color: #c0c0c0;
+            }
+            100%{
+                background-color: #999999;
+            }
+        }
+
+        @media(max-width: 768px){
+
+            margin-left: 1rem;
+            margin-right: 1rem;
+
+        }
+
+    }
+
+    .loading-skeleton{
+
+        height: 40vh;
+        margin: 0.5rem 0;
+
+        border-radius: 4px;
+
+        animation: skeleton-loading 1s linear infinite alternate;
+
+        .heading{
+            display: none!important;;
+        }
+
+        @keyframes skeleton-loading{
+            0%{
+                background-color: #c0c0c0;
+            }
+            100%{
+                background-color: #999999;
+            }
+        }
+
+        @media(max-width: 768px){
+
+            margin-left: 1rem;
+            margin-right: 1rem;
+
+        }
+
+    }
+
+    // content
     div.history{
 
         display: flex;
@@ -85,7 +149,7 @@ export const Container = styled.div`
                     
                     margin: 0 1rem;
 
-                    max-height: 6rem;
+                    max-height: 7rem;
                     min-height: 3rem;
 
                     padding: 1rem;
@@ -94,6 +158,13 @@ export const Container = styled.div`
 
                     font-size: 1.5rem;
                     font-weight: 500;
+
+                    @media (min-width: 768px) and (max-width: 1020px){
+
+                        padding: 0.2rem;
+                        margin: 0rem 0.2rem;
+
+                    }
 
                     @media(max-width: 462px){
 
@@ -163,6 +234,8 @@ export const Container = styled.div`
 
             @media(max-width: 768px){
 
+                min-height: 70vh;
+                
                 grid-template-columns: auto auto;
 
             }
