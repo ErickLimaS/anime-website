@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import Axios from 'axios'
 import Swal from 'sweetalert2'
 import { logoutUser } from '../../../redux/actions/userActions'
+import BookmarkedItemPage from '../../../Components/BookmarkedItemPage'
 
 
 export default function BookmarkUser() {
@@ -57,7 +58,6 @@ export default function BookmarkUser() {
                     return item.type === "ANIME" && item.format !== "MOVIE"
                 })
                 setAnimesTypeItems(animesType)
-                console.log('then')
 
                 const mangasType = data.data.mediaAdded.filter((item: any) => {
                     return item.type === "MANGA"
@@ -133,7 +133,7 @@ export default function BookmarkUser() {
                         </h1>
 
                         <div className='content'>
-                            {allTypes != null || undefined ? (
+                            {allTypes != null  ? (
                                 <>
                                     <div id='tab-0'>
                                         <div className='grid'>
@@ -141,62 +141,8 @@ export default function BookmarkUser() {
                                             <>
                                                 {
                                                     allTypes.map((item: any, key: any) => (
-                                                        <Link
-                                                            key={item.id ? item.id : item.idGoGoAnime}
-                                                            className='button-link'
-                                                            to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                        >
-                                                            <div className='grid-item' key={item.id}>
 
-                                                                <div className='item-img'>
-                                                                    <img src={`${item.coverImg}`} alt={`${item.fullTitle}`}>
-
-                                                                    </img>
-                                                                </div>
-
-                                                                <div className='item-info'>
-
-                                                                    {item.fullTitle && (
-                                                                        <Link
-                                                                            to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                                        >
-                                                                            <h1>
-                                                                                {item.fullTitle.length > 15 ? (
-                                                                                    `${item.fullTitle.slice(0, 15)}...`
-                                                                                ) : (
-                                                                                    item.fullTitle
-                                                                                )}
-                                                                            </h1>
-                                                                        </Link>
-                                                                    )}
-
-                                                                    <div className='info'>
-                                                                        {item.nativeTitle && (
-                                                                            <small>{item.nativeTitle}</small>
-                                                                        )}
-
-                                                                        {item.idGoGoAnime && (
-                                                                            <span><strong>From GoGoAnime</strong></span>
-                                                                        )}
-                                                                    </div>
-
-                                                                    <ul>
-                                                                        {item.status && (
-                                                                            <li>Status: <span>{item.status}</span></li>
-                                                                        )}
-                                                                        <li>
-                                                                            <span>
-                                                                                {item.type}{item.format && (<>
-                                                                                    , {item.format}
-                                                                                </>)}
-                                                                            </span>
-                                                                        </li>
-                                                                    </ul>
-
-                                                                </div>
-
-                                                            </div>
-                                                        </Link>
+                                                        <BookmarkedItemPage key={key} data={item} />
 
                                                     ))
                                                 }
@@ -212,62 +158,8 @@ export default function BookmarkUser() {
                                                 <>
                                                     {
                                                         animesTypeItems.map((item: any, key: any) => (
-                                                            <Link
-                                                                key={item.id ? item.id : item.idGoGoAnime}
-                                                                className='button-link'
-                                                                to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                            >
-                                                                <div className='grid-item' key={item.id}>
 
-                                                                    <div className='item-img'>
-                                                                        <img src={`${item.coverImg}`} alt={`${item.fullTitle}`}>
-
-                                                                        </img>
-                                                                    </div>
-
-                                                                    <div className='item-info'>
-
-                                                                        {item.fullTitle && (
-                                                                            <Link
-                                                                                to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                                            >
-                                                                                <h1>
-                                                                                    {item.fullTitle.length > 15 ? (
-                                                                                        `${item.fullTitle.slice(0, 15)}...`
-                                                                                    ) : (
-                                                                                        item.fullTitle
-                                                                                    )}
-                                                                                </h1>
-                                                                            </Link>
-                                                                        )}
-
-                                                                        <div className='info'>
-                                                                            {item.nativeTitle && (
-                                                                                <small>{item.nativeTitle}</small>
-                                                                            )}
-
-                                                                            {item.idGoGoAnime && (
-                                                                                <span><strong>From GoGoAnime</strong></span>
-                                                                            )}
-                                                                        </div>
-
-                                                                        <ul>
-                                                                            {item.status && (
-                                                                                <li>Status: <span>{item.status}</span></li>
-                                                                            )}
-                                                                            {item.format && (
-                                                                                <li><span>
-                                                                                    {item.type}{item.format && (<>
-                                                                                        , {item.format}
-                                                                                    </>)}
-                                                                                </span></li>
-                                                                            )}
-                                                                        </ul>
-
-                                                                    </div>
-
-                                                                </div>
-                                                            </Link>
+                                                            <BookmarkedItemPage key={key} data={item} />
 
                                                         ))
                                                     }
@@ -285,62 +177,8 @@ export default function BookmarkUser() {
                                                 <>
                                                     {
                                                         mangasTypeItems.map((item: any, key: any) => (
-                                                            <Link
-                                                                key={item.id ? item.id : item.idGoGoAnime}
-                                                                className='button-link'
-                                                                to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                            >
-                                                                <div className='grid-item' key={item.id}>
-
-                                                                    <div className='item-img'>
-                                                                        <img src={`${item.coverImg}`} alt={`${item.fullTitle}`}>
-
-                                                                        </img>
-                                                                    </div>
-
-                                                                    <div className='item-info'>
-
-                                                                        {item.fullTitle && (
-                                                                            <Link
-                                                                                to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                                            >
-                                                                                <h1>
-                                                                                    {item.fullTitle.length > 15 ? (
-                                                                                        `${item.fullTitle.slice(0, 15)}...`
-                                                                                    ) : (
-                                                                                        item.fullTitle
-                                                                                    )}
-                                                                                </h1>
-                                                                            </Link>
-                                                                        )}
-
-                                                                        <div className='info'>
-                                                                            {item.nativeTitle && (
-                                                                                <small>{item.nativeTitle}</small>
-                                                                            )}
-
-                                                                            {item.idGoGoAnime && (
-                                                                                <span><strong>From GoGoAnime</strong></span>
-                                                                            )}
-                                                                        </div>
-
-                                                                        <ul>
-                                                                            {item.status && (
-                                                                                <li>Status: <span>{item.status}</span></li>
-                                                                            )}
-                                                                            {item.type && (
-                                                                                <li><span>
-                                                                                    {item.type}{item.format && (<>
-                                                                                        , {item.format}
-                                                                                    </>)}
-                                                                                </span></li>
-                                                                            )}
-                                                                        </ul>
-
-                                                                    </div>
-
-                                                                </div>
-                                                            </Link>
+                                                           
+                                                            <BookmarkedItemPage key={key} data={item} />
 
                                                         ))
                                                     }
@@ -358,62 +196,8 @@ export default function BookmarkUser() {
                                                 <>
                                                     {
                                                         moviesTypeItems.map((item: any, key: any) => (
-                                                            <Link
-                                                                key={item.id ? item.id : item.idGoGoAnime}
-                                                                className='button-link'
-                                                                to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                            >
-                                                                <div className='grid-item' key={item.id}>
-
-                                                                    <div className='item-img'>
-                                                                        <img src={`${item.coverImg}`} alt={`${item.fullTitle}`}>
-
-                                                                        </img>
-                                                                    </div>
-
-                                                                    <div className='item-info'>
-
-                                                                        {item.fullTitle && (
-                                                                            <Link
-                                                                                to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                                            >
-                                                                                <h1>
-                                                                                    {item.fullTitle.length > 15 ? (
-                                                                                        `${item.fullTitle.slice(0, 15)}...`
-                                                                                    ) : (
-                                                                                        item.fullTitle
-                                                                                    )}
-                                                                                </h1>
-                                                                            </Link>
-                                                                        )}
-
-                                                                        <div className='info'>
-                                                                            {item.nativeTitle && (
-                                                                                <small>{item.nativeTitle}</small>
-                                                                            )}
-
-                                                                            {item.idGoGoAnime && (
-                                                                                <span><strong>From GoGoAnime</strong></span>
-                                                                            )}
-                                                                        </div>
-
-                                                                        <ul>
-                                                                            {item.status && (
-                                                                                <li>Status: <span>{item.status}</span></li>
-                                                                            )}
-                                                                            {item.type && (
-                                                                                <li><span>
-                                                                                    {item.type}{item.format && (<>
-                                                                                        , {item.format}
-                                                                                    </>)}
-                                                                                </span></li>
-                                                                            )}
-                                                                        </ul>
-
-                                                                    </div>
-
-                                                                </div>
-                                                            </Link>
+                                                           
+                                                            <BookmarkedItemPage key={key} data={item} />
 
                                                         ))
                                                     }
@@ -431,62 +215,8 @@ export default function BookmarkUser() {
                                                 <>
                                                     {
                                                         otherTypeItems.map((item: any, key: any) => (
-                                                            <Link
-                                                                key={item.id ? item.id : item.idGoGoAnime}
-                                                                className='button-link'
-                                                                to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                            >
-                                                                <div className='grid-item' key={item.id}>
-
-                                                                    <div className='item-img'>
-                                                                        <img src={`${item.coverImg}`} alt={`${item.fullTitle}`}>
-
-                                                                        </img>
-                                                                    </div>
-
-                                                                    <div className='item-info'>
-
-                                                                        {item.fullTitle && (
-                                                                            <Link
-                                                                                to={`/${(item.fromGoGoAnime === true && 'anime/v2') || (item.format === 'MOVIE' && 'movie') || (item.type === `ANIME` && `anime`) || (item.type === `MANGA` && `manga`)}/${item.id ? item.id : item.idGoGoAnime}`}
-                                                                            >
-                                                                                <h1>
-                                                                                    {item.fullTitle.length > 15 ? (
-                                                                                        `${item.fullTitle.slice(0, 15)}...`
-                                                                                    ) : (
-                                                                                        item.fullTitle
-                                                                                    )}
-                                                                                </h1>
-                                                                            </Link>
-                                                                        )}
-
-                                                                        <div className='info'>
-                                                                            {item.nativeTitle && (
-                                                                                <small>{item.nativeTitle}</small>
-                                                                            )}
-
-                                                                            {item.idGoGoAnime && (
-                                                                                <span><strong>From GoGoAnime</strong></span>
-                                                                            )}
-                                                                        </div>
-
-                                                                        <ul>
-                                                                            {item.status && (
-                                                                                <li>Status: <span>{item.status}</span></li>
-                                                                            )}
-                                                                            {item.type && (
-                                                                                <li><span>
-                                                                                    {item.type}{item.format && (<>
-                                                                                        , {item.format}
-                                                                                    </>)}
-                                                                                </span></li>
-                                                                            )}
-                                                                        </ul>
-
-                                                                    </div>
-
-                                                                </div>
-                                                            </Link>
+                                                            
+                                                            <BookmarkedItemPage key={key} data={item} />
 
                                                         ))
                                                     }

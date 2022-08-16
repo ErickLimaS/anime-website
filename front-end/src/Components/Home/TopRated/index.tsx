@@ -48,7 +48,7 @@ export default function TopRated(data: any) {
         <C.TopRatedAnime info={data.data} >
             <Link to={`/${format}/${data.data.id}`}>
                 <div className='anime-name'>
-                    <h5>{data.data.title.romaji} <span>({data.data.startDate.year})</span></h5>
+                    <h2>{data.data.title.romaji} <span>({data.data.startDate.year})</span></h2>
                 </div>
             </Link>
         </C.TopRatedAnime>

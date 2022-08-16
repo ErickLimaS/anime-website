@@ -182,6 +182,8 @@ export const Container = styled.div<Props>`
                     border: ${props => props.tabIndex === 0 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
 
                     color: ${props => props.tabIndex === 0 ? '#fff' : '#ff1a75'};
+                        
+                    font-weight: ${props => props.tabIndex === 0 ? '600' : '300'};
                     
                 }
                 button#button-tab-1{
@@ -191,6 +193,8 @@ export const Container = styled.div<Props>`
                     border: ${props => props.tabIndex === 1 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
 
                     color: ${props => props.tabIndex === 1 ? '#fff' : '#ff1a75'};
+                        
+                    font-weight: ${props => props.tabIndex === 1 ? '600' : '300'};
                 }
                 button#button-tab-2{
                         
@@ -199,6 +203,8 @@ export const Container = styled.div<Props>`
                     border: ${props => props.tabIndex === 2 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
                     
                     color: ${props => props.tabIndex === 2 ? '#fff' : '#ff1a75'};
+                        
+                    font-weight: ${props => props.tabIndex === 2 ? '600' : '300'};
                 }
                 button#button-tab-3{
                         
@@ -207,6 +213,8 @@ export const Container = styled.div<Props>`
                     border: ${props => props.tabIndex === 3 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
                     
                     color: ${props => props.tabIndex === 3 ? '#fff' : '#ff1a75'};
+                        
+                    font-weight: ${props => props.tabIndex === 3 ? '600' : '300'};
                 }
                 button#button-tab-4{
                         
@@ -215,6 +223,8 @@ export const Container = styled.div<Props>`
                     border: ${props => props.tabIndex === 4 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
                     
                     color: ${props => props.tabIndex === 4 ? '#fff' : '#ff1a75'};
+                        
+                    font-weight: ${props => props.tabIndex === 4 ? '600' : '300'};
                 }
             }
         }

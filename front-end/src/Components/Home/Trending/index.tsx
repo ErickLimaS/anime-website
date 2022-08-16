@@ -62,9 +62,16 @@ export default function Trending(data: any) {
 
                 <div className='info'>
                     {data.data.fromGoGoAnime ? (
-                        <Link to={`/${format}/v2/${data.data.idGoGoAnime}`}><h3>{data.data.fullTitle}</h3></Link>
+                        <Link to={`/${format}/v2/${data.data.idGoGoAnime}`}>
+                            <h2>{data.data.fullTitle}</h2>
+                        </Link>
                     ) : (
-                        <Link to={`/${format}/${data.data.id}`}><h3>{data.data.title ? data.data.title.romaji : data.data.fullTitle}</h3></Link>
+                        <Link to={`/${format}/${data.data.id}`}>
+                            <h2>
+                                {data.data.title && data.data.title.romaji.slice(0, 28)}
+                                {data.data.fullTitle && data.data.fullTitle.slice(0, 28)}
+                            </h2>
+                        </Link>
                     )}
                     {data.data.genres && (
                         <div className='genre'>

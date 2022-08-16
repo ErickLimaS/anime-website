@@ -73,7 +73,7 @@ export const TopRatedAnime = styled.div<itemData>`
 
         background-image: linear-gradient(to top, rgba(0,0,0,.8) 5%, transparent);
 
-        h5{
+        h2{
             margin: 1rem;
             
             font-size: 1.2rem;

@@ -43,7 +43,7 @@ export const AnimeToBeListed = styled.div<itemData>`
             }
         }
 
-        h3{
+        h2{
             margin: 0.5rem 0;
 
             font-size: 1.3em;

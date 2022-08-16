@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import * as C from './styles'
 
-export default function AlreadyWatchedHistoryPage({ data }: any) {
+export default function BookmarkedItemPage({ data }: any) {
 
     // helps adding the right media's format on URL
     let format;
@@ -43,15 +43,6 @@ export default function AlreadyWatchedHistoryPage({ data }: any) {
 
     }
 
-    // get Completed Date Converted
-    const convertDate = (item: any) => {
-
-        const date = new Date(item)
-
-        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
-
-    }
-
     return (
         // Tag A - link
         <C.Container href={`/${(data.fromGoGoAnime === true && 'anime/v2') || (getMediaFormat(data))}/${data.fromGoGoAnime === true ? data.idGoGoAnime : data.id}`}
@@ -85,8 +76,8 @@ export default function AlreadyWatchedHistoryPage({ data }: any) {
                     )}
                 </div>
                 <ul>
-                    {data.addedAt && (
-                        <li>Done Watching on <span>{convertDate(data.addedAt)}</span></li>
+                    {data.status && (
+                        <li>Currently <span>{data.status === 'FINISHED' ? 'Finished' : 'Releasing'}</span></li>
                     )}
                     <li>
                         <span>
