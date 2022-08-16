@@ -10,11 +10,11 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 - [x] `Assista`: Achando o anime que procurava, será possivel ver grande parte dos episódios disponibilizados pela Crunchyroll através da API.
 - [x] `Crie sua Conta`: Usando MongoDB e Express, criei um banco de dados para salvar os dados dos usuários que se registrarem no site.
 - [x] `Marque seus Animes e Mangas Favoritos`: Apos criar uma conta, você podera marcar animes e mangas, para ter um rápido acesso da próxima vez que usar o site.
+- [x] `Tenha o histórico registrado do que já assitiu até agora`
 - [x] `Marque Animes ou Episódios já vistos`: Mantenha o progresso de quais você terminou ou que precisa terminar.
 
 ## :pushpin: Em Planejamento
  
-- [ ] `Tenha o histórico registrado do que já assitiu até agora`: Em Andamento
 - [ ] `Fix: Misspelled English Words/Corrigir Palavras em Inglês`: Sem Previsão
 - [ ] `Seja Alertado de Novos Episódios Lançados`: Sem Previsão 
 - [ ] `Modo Noturno`: Sem Previsão
