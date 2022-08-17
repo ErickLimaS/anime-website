@@ -42,7 +42,7 @@ export const Container = styled.div<Props>`
         align-items: center;
     }
 
-    background-color: #fafafa;
+    /* background-color: #fafafa; */
 
     div.skeleton{
         display: flex;

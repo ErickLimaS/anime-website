@@ -19,6 +19,10 @@ export default function EpisodesGoGoAnime(props: any) {
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
 
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
+
     useEffect(() => {
 
         //check if the current media is currently added to user account
@@ -167,6 +171,7 @@ export default function EpisodesGoGoAnime(props: any) {
     return (
         <C.Container
             episodeActive={episodeActive}
+            darkMode={darkMode}
         >
 
             <button

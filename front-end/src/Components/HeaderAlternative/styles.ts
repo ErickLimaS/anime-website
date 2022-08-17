@@ -1,12 +1,15 @@
 import styled from "styled-components";
 
+interface Props {
+    darkMode: boolean
+}
 
-export const Container = styled.header`
+export const Container = styled.header<Props>`
 
     height: 9vh;
     width: auto;
 
-    background-color: #fafafa;
+    background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' : 'var(--bcg-light-mode)'};
 
     display: flex;
     flex-direction: row;

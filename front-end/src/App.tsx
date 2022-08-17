@@ -30,6 +30,11 @@ function App() {
 
   //Checks if user is Logged In
   const userLogin = useSelector((state: any) => state.userLogin)
+
+  // dark mode
+  const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitch
+
   const addMediaToUserAccount = useSelector((state: any) => state.addMediaToUserAccount)
   const removeMediaFromUserAccount = useSelector((state: any) => state.removeMediaFromUserAccount)
   const updateAvatarImg = useSelector((state: any) => state.updateAvatarImg)
@@ -110,7 +115,9 @@ function App() {
 
   return (
     <BrowserRouter >
-      <C.Container>
+      <C.Container
+        darkMode={darkMode}
+      >
 
         <Header />
 

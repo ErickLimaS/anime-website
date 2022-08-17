@@ -1,3 +1,22 @@
+:root{
+
+  --bcg-light-mode: #fafafa;
+  --bcg-dark-mode: #181818;
+
+  --brand-color: #ff1a75;
+  --brand-light-mode-color: #ff1a75;
+  /* --brand-dark-mode-color: #ff1a75; */
+  
+  --pink-variant-1: #ff5ebc;
+  --pink-variant-2: #ff0095;
+  --pink-variant-3: #ffa2c8;
+
+  --text-grey-variant: #a3a3a3;
+
+  --white: #fff;
+
+}
+
 html {
 
   font-size: 62.5%;
@@ -18,7 +37,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: #fafafa;
 }
 
 a {

@@ -40,8 +40,13 @@ export default function AnimePageContentV2(data: any) {
   const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
   const [alreadyWatched, setAlreadyWatched] = useState<any>()
 
+  // state
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+  
+  // dark mode
+  const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitch
 
   const addMediaToUserAccounts = useSelector((state: any) => state.addMediaToUserAccount)
   const removeMediaFromUserAccounts = useSelector((state: any) => state.removeMediaFromUserAccount)
@@ -262,6 +267,7 @@ export default function AnimePageContentV2(data: any) {
       videoReady={videoReady}
       videoId={videoId}
       loadingVideoplayer={loadingVideoplayer}
+      darkMode={darkMode}
     >
 
       <div className='search-mobile'>
@@ -287,11 +293,11 @@ export default function AnimePageContentV2(data: any) {
             )}
 
             {isAlreadyAdded == null && (
-              <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
+              <button onClick={() => handleMediaToAccount()} className='bookmarked'><PlusSvg /> Add To Bookmarks</button>
             )}
 
             {isAlreadyAdded && (
-              <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
+              <button onClick={() => handleMediaToAccount()} className='bookmarked'><CheckSvg /> Added on Bookmarks</button>
             )}
           </div>
         </div>

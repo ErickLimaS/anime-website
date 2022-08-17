@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface PropsContainer {
     episodeActive: boolean,
+    darkMode: boolean
 }
 
 interface PropsButtons {
@@ -61,7 +62,11 @@ export const Container = styled.div<PropsContainer>`
         }
 
         h3{
-                color: ${props => props.episodeActive ? '#fff' : '#444444'};
+                color:${props => props.darkMode === true && props.episodeActive === false && 'var(--text-grey-variant)'};
+                color:${props => props.darkMode === true && props.episodeActive && '#fff'};
+                
+                color:${props => props.darkMode === false && props.episodeActive && '#fff'};
+                color:${props => props.darkMode === false && props.episodeActive === false &&'#444444'};
 
                 font-size: 1.6rem;
         }

@@ -18,8 +18,10 @@ import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.s
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
 import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fill.svg'
 import { ReactComponent as ClockSvg } from '../../imgs/svg/clock-history.svg'
+import { ReactComponent as SunSvg } from '../../imgs/svg/sun-fill.svg'
+import { ReactComponent as MoonSvg } from '../../imgs/svg/moon-fill.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { logoutUser } from '../../redux/actions/userActions'
+import { darkModeSwitch, logoutUser } from '../../redux/actions/userActions'
 import logo from '../../imgs/logo.png'
 import { Search } from '../SearchInnerPage/styles'
 import SearchInnerPage from '../SearchInnerPage'
@@ -28,6 +30,10 @@ export default function AsideNavLinks(data: any) {
 
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+
+  // dark mode
+  const darkModeSwitchConst = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitchConst
 
   const [userName, setUserName] = useState<String>('')
   const [showUserList, setShowUserList] = useState<boolean>(false)
@@ -42,6 +48,11 @@ export default function AsideNavLinks(data: any) {
 
   }
 
+  const darkModeSwitcher = () => {
+
+    dispatch(darkModeSwitch())
+
+  }
   useEffect(() => {
 
     if (userInfo) {
@@ -60,9 +71,21 @@ export default function AsideNavLinks(data: any) {
       genre={genre}
       showUserList={showUserList}
       pathname={window.location.pathname.slice(1)}
+      darkMode={darkMode}
     >
 
       <a href='/'><img src={logo} alt='AniProject Logo' id='logo'></img></a>
+
+
+      <ul className='settings'>
+
+        <li onClick={() => darkModeSwitcher()} className='dark-theme'>
+          {darkMode === true ?
+            (<><SunSvg /> Light Mode </>) : (<><MoonSvg /> Dark Mode</>)
+          }
+        </li>
+
+      </ul>
 
       {
         userInfo ? (

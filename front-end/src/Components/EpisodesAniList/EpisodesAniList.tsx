@@ -17,6 +17,10 @@ export default function EpisodesAniList(props: any) {
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
 
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
+
     useEffect(() => {
 
         //check if the current media is currently added to user account
@@ -160,7 +164,9 @@ export default function EpisodesAniList(props: any) {
     }
 
     return (
-        <C.Container>
+        <C.Container
+            darkMode={darkMode}
+        >
 
             <a href={`${props.data.url}`} target='_blank' rel='noreferrer'>
                 <img src={`${props.data.thumbnail}`} alt={`${props.data.title}`}></img>

@@ -104,7 +104,6 @@ export const AnimeToBeListed = styled.div<itemData>`
                 font-size: 1.4rem;
                 font-weight: 600;
                 color: #c0c0c0;
-                /* color:  ${props => props.info.coverImage.color}; */
 
             }
         }

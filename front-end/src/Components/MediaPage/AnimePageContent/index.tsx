@@ -37,6 +37,11 @@ export default function AnimePageContent(data: any) {
   //state
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+  
+  // dark mode
+  const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitch
+
   const addMediaToUserAccounts = useSelector((state: any) => state.addMediaToUserAccount)
   const removeMediaFromUserAccounts = useSelector((state: any) => state.removeMediaFromUserAccount)
   const addLoading = addMediaToUserAccounts.loading
@@ -249,6 +254,7 @@ export default function AnimePageContent(data: any) {
       indexHeading={indexPageInfo}
       isAlreadyAdded={isAlreadyAdded}
       alreadyWatched={alreadyWatched}
+      darkMode={darkMode}
     >
 
       <div className='search-mobile'>

@@ -19,10 +19,11 @@ import { ReactComponent as SettingsSvg } from '../../imgs/svg/settings-svgrepo.s
 import { ReactComponent as BookmarkSvg } from '../../imgs/svg/bookmark-check-fill.svg'
 import { ReactComponent as ClockSvg } from '../../imgs/svg/clock-history.svg'
 import { ReactComponent as LogOutSvg } from '../../imgs/svg/arrow-right-from-bracket-solid.svg'
+import { ReactComponent as SunSvg } from '../../imgs/svg/sun-fill.svg'
+import { ReactComponent as MoonSvg } from '../../imgs/svg/moon-fill.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { logoutUser } from '../../redux/actions/userActions'
+import { darkModeSwitch, logoutUser } from '../../redux/actions/userActions'
 import logo from '../../imgs/logo.png'
-
 
 export default function Header() {
 
@@ -31,7 +32,18 @@ export default function Header() {
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
 
+    // dark mode
+    const darkModeSwitchConst = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitchConst
+
     const dispatch: any = useDispatch()
+
+    // switch dark mode
+    const darkModeSwitcher = () => {
+
+        dispatch(darkModeSwitch())
+
+    }
 
     const handleLogOut = (e: React.MouseEvent) => {
         e.preventDefault()
@@ -41,7 +53,10 @@ export default function Header() {
     }
 
     return (
-        <C.Container display={menuMobile}>
+        <C.Container
+            display={menuMobile}
+            darkMode={darkMode}
+        >
 
             <div className='logo'>
                 <a href='/'><img src={logo} alt='AniProject Logo' id='logo'></img></a>
@@ -57,6 +72,16 @@ export default function Header() {
                 </button>
 
                 <nav className='mobile-display-menu-dropdown'>
+
+                    <ul className='settings'>
+
+                        <li onClick={() => darkModeSwitcher()} className='dark-theme'>
+                            {darkMode === true ?
+                                (<><SunSvg /> Light Mode </>) : (<><MoonSvg /> Dark Mode</>)
+                            }
+                        </li>
+
+                    </ul>
 
                     {userInfo ? (
                         <>

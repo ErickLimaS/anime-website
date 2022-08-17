@@ -39,7 +39,7 @@ export const Container = styled.div<Props>`
 
     /* width: 100%; */
 
-    background-color: #fafafa;
+    /* background-color: #fafafa; */
 
     div.skeleton{
         display: flex;

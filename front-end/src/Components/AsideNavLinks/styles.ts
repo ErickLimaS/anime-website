@@ -6,6 +6,7 @@ interface Props {
     genre: any;
     showUserList: any;
     pathname: string;
+    darkMode: boolean
 }
 
 export const Container = styled.nav<Props>`
@@ -15,6 +16,8 @@ export const Container = styled.nav<Props>`
         
         height: max-content;
         width: 25vh;
+        
+        background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' : 'var(--bcg-light-mode)'};    
 
         @media(max-width: 1080px){
             
@@ -75,6 +78,25 @@ export const Container = styled.nav<Props>`
         }
 
         .settings{
+
+            
+            li.dark-theme{
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                padding: 1rem;
+
+                color: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
+
+                svg{
+                    margin-right: 1rem;
+                    height: 2.4rem;
+                    width: auto;
+                    fill: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
+                }
+            }
 
             li.user-li:hover{
                 border-right: 0;
@@ -152,7 +174,7 @@ export const Container = styled.nav<Props>`
 
                 :hover{
 
-                    border-right: 4px solid #ff1a75;
+                    border-right: 4px solid var(--brand-light-mode-color);
 
                 }
             }
@@ -164,7 +186,7 @@ export const Container = styled.nav<Props>`
                 position: relative;
                 left: -10rem;
 
-                background-color: #fafafa;
+                background-color: var(--bcg-light-mode);
 
                 border-radius: 4px;
 

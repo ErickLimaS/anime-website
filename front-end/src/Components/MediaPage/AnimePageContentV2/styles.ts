@@ -7,7 +7,8 @@ interface Props {
     alreadyWatched: any,
     videoReady: any,
     videoId: any,
-    loadingVideoplayer: boolean
+    loadingVideoplayer: boolean,
+    darkMode: boolean
 }
 
 export const Container = styled.div<Props>`
@@ -93,8 +94,7 @@ export const Container = styled.div<Props>`
 
                 font-size: 3rem;
                 font-weight: 600;
-                /* color: #ff5ebc; */
-                color: #333333;
+                color: ${props => props.darkMode ? 'var(--brand-color)' : '#333333'};
             }
 
             .buttons{
@@ -140,13 +140,45 @@ export const Container = styled.div<Props>`
 
                 button.watched{
 
-                    color: ${props => props.alreadyWatched == null ? '#333333' : '#fff'};
+                    color: ${props => props.darkMode === true && props.alreadyWatched == null && 'var(--white)'};
+                    color: ${props => props.darkMode === true && props.alreadyWatched != null && 'var(--white)'};
 
-                    background-color: ${props => props.alreadyWatched == null ? 'transparent' : '#ff5ebc'};
+                    color: ${props => props.darkMode === false && props.alreadyWatched == null && '#333333'};
+                    color: ${props => props.darkMode === false && props.alreadyWatched != null && 'var(--white)'};
+
+                    background-color: ${props => props.alreadyWatched == null ? 'transparent' : 'var(--pink-variant-1)'};
+
+                        svg{
+
+                            fill: ${props => props.darkMode === true && props.alreadyWatched == null && 'var(--white)'};
+                            fill: ${props => props.darkMode === true && props.alreadyWatched != null && 'var(--white)'};
+
+                            fill: ${props => props.darkMode === false && props.alreadyWatched == null && 'var(--pink-variant-1)'};
+                            fill: ${props => props.darkMode === false && props.alreadyWatched != null && 'var(--white)'};
+                            
+                            padding-right: 0.4rem;
+                            padding-left: 0.1rem;
+                        }
+
+                    }
+
+                button.bookmarked{
+
+                    color: ${props => props.darkMode === true && props.isAlreadyAdded == null && 'var(--white)'};
+                    color: ${props => props.darkMode === true && props.isAlreadyAdded != null && 'var(--white)'};
+
+                    color: ${props => props.darkMode === false && props.isAlreadyAdded == null && '#333333'};
+                    color: ${props => props.darkMode === false && props.isAlreadyAdded != null && 'var(--white)'};
+
+                    background-color: ${props => props.isAlreadyAdded == null ? 'transparent' : 'var(--pink-variant-1)'};
 
                     svg{
 
-                        fill: ${props => props.alreadyWatched == null ? '#ff5ebc' : '#fff'};
+                        fill: ${props => props.darkMode === true && props.isAlreadyAdded == null && 'var(--white)'};
+                        fill: ${props => props.darkMode === true && props.isAlreadyAdded != null && 'var(--white)'};
+
+                        fill: ${props => props.darkMode === false && props.isAlreadyAdded == null && 'var(--pink-variant-1)'};
+                        fill: ${props => props.darkMode === false && props.isAlreadyAdded != null && 'var(--white)'};
 
                         padding-right: 0.4rem;
                         padding-left: 0.1rem;
@@ -160,6 +192,7 @@ export const Container = styled.div<Props>`
         p{
             margin-top: 2rem;
             
+            color: ${props => props.darkMode && 'var(--text-grey-variant)'};
             font-size: 1.6rem;
             font-weight: 400;
 
@@ -234,7 +267,14 @@ export const Container = styled.div<Props>`
             background-color: ${props => props.indexHeading === 2 ? '#ff5ebc!important' : '#fafafa'};
             color: ${props => props.indexHeading === 2 ? '#fff' : '#ff5ebc'};
         }
-        
+
+        .svg-dots{
+
+            *{
+                fill: ${props => props.darkMode && 'var(--text-grey-variant)'};
+            }
+        }
+
         @media(max-width: 620px){
             .svg-dots{
                 display: none;
@@ -296,6 +336,8 @@ export const Container = styled.div<Props>`
         display: flex;
         flex-direction: column;
 
+        background-color: ${props => props.darkMode && '#212121'};;
+
         border: 2px solid #ff9412;
         border-radius: 4px;
 
@@ -325,6 +367,7 @@ export const Container = styled.div<Props>`
             font-weight: 600;
         }
         p{
+            color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#f58805'};
             font-size: 2rem;
             font-weight: 400;
         }
@@ -373,11 +416,11 @@ export const Container = styled.div<Props>`
         span{
             font-size: 2rem;
             font-weight: 600;
-            color: #ff0095;
+            color: var(--pink-variant-2);
 
             padding: 0 1rem;
 
-            border-bottom: 2px solid #ff0095;
+            border-bottom: 2px solid var(--pink-variant-2);
         }
 
         button[disabled]{
@@ -400,10 +443,11 @@ export const Container = styled.div<Props>`
             border-radius: 20%;
             
             :hover{
-                background-color: #e1e1e1;
+                background-color: ${props => props.darkMode ? 'rgba(0,0,0,0.4)' : '#e1e1e1'};
             }
 
             svg{
+                fill: ${props => props.darkMode && 'var(--pink-variant-2)'};
                 width: 0.7rem;
                 height: auto;
             }

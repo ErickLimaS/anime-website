@@ -5,7 +5,12 @@ interface Props {
     onBookmarks: boolean
 }
 
-export const Container = styled.div`
+interface Props2 {
+
+    darkMode: boolean
+}
+
+export const Container = styled.div<Props2>`
 
     width: min-content;
 
@@ -30,7 +35,7 @@ export const Container = styled.div`
     }
 
     h3{
-        color: #444444;
+        color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#444'};
     }
 
     :hover{
@@ -41,7 +46,7 @@ export const Container = styled.div`
         }
         h3{
             transition: all ease-in-out 100ms;
-            color: #ff0095;
+            color: var(--brand-color);
         }
     }
     
@@ -78,17 +83,17 @@ export const Buttons = styled.div<Props>`
     button.onBookmarks{
         cursor: pointer;
 
-        color: ${props => props.onBookmarks === false ? '#ff5ebc' : '#fff'};
-        border: 1px solid ${props => props.onBookmarks === false ? '#ff5ebc' : '#fff'};
+        color: ${props => props.onBookmarks === false ? 'var(--pink-variant-1)' : 'var(--white)'};
+        border: 1px solid ${props => props.onBookmarks === false ? 'var(--pink-variant-1)' : 'var(--white)'};
 
-        background-color: ${props => props.onBookmarks === false ? 'transparent' : '#ff5ebc'};
+        background-color: ${props => props.onBookmarks === false ? 'transparent' : 'var(--pink-variant-1)'};
 
         outline: 0;
         border-radius: 4px;
 
         svg{
 
-            fill: ${props => props.onBookmarks === false ? '#ff5ebc' : '#fff'};
+            fill: ${props => props.onBookmarks === false ? 'var(--pink-variant-1)' : 'var(--white)'};
 
             padding: 0.5rem;
         }

@@ -2,7 +2,12 @@ import styled from "styled-components";
 
 interface Props {
     hasText: any;
-    loading: boolean
+    loading: boolean;
+    darkMode: boolean;
+}
+
+interface Props2{
+    darkMode: boolean;
 }
 
 export const Search = styled.div<Props>`
@@ -23,7 +28,7 @@ export const Search = styled.div<Props>`
     }
 
     svg#input-svg{
-        background-color: #f3f2ff;
+        background-color: ${props => props.darkMode ? '#212121' : '#f3f2ff'};
         border: none;
         border-right: none;
         border-radius: 18px 0 0 18px;
@@ -44,7 +49,7 @@ export const Search = styled.div<Props>`
         
         transform: scale(2);
 
-        background-color: #f3f2ff!important;
+        background-color: ${props => props.darkMode ? '#212121!important' : '#f3f2ff!important'};
 
         border: none;
         border-right: none;
@@ -64,7 +69,7 @@ export const Search = styled.div<Props>`
        
     input{
         transition: all ease-in-out 150ms;
-        background-color: #f3f2ff;
+        background-color: ${props => props.darkMode ? '#212121' : '#f3f2ff'};
         outline: 0;
         border: none;
         border-left: none;
@@ -74,6 +79,7 @@ export const Search = styled.div<Props>`
 
         height: 30px;
 
+        color: ${props => props.darkMode ? '#fff' : 'initial'};
         font-size: 1.6rem;
         font-weight: 400;
 
@@ -85,16 +91,24 @@ export const Search = styled.div<Props>`
         :-webkit-autofill:hover, 
         :-webkit-autofill:focus, 
         :-webkit-autofill:active{
-            -webkit-box-shadow: 0 0 0 30px #f3f2ff inset !important;
+            color: ${props => props.darkMode ? '#fff!important' : 'initial'};
+
+            -webkit-box-shadow: 0 0 0 30px ${props => props.darkMode ? '#212121' : '#f3f2ff'} inset !important;
         }
 
         :active{
             
-            background-color: #f3f2ff;
+            color: ${props => props.darkMode ? '#fff' : 'initial'};
+
+            background-color: ${props => props.darkMode ? '#212121' : '#f3f2ff'};
         }
 
         :focus{
-            background-color: #f3f2ff;
+
+            color: ${props => props.darkMode ? '#fff' : 'initial'};
+
+            background-color: ${props => props.darkMode ? '#212121' : '#f3f2ff'};
+
             ~button{
                 cursor: pointer;
                 padding: 1.1rem;
@@ -127,7 +141,8 @@ export const Search = styled.div<Props>`
 
         height: 40px;
 
-        background-color: #f3f2ff;
+        background-color: ${props => props.darkMode ? '#212121' : '#f3f2ff'};
+
         padding: 1.1rem;
         border: none;
         border-radius: 0 18px 18px 0;
@@ -136,7 +151,7 @@ export const Search = styled.div<Props>`
     
 `
 
-export const SearchResults = styled.div`
+export const SearchResults = styled.div<Props2>`
 
     z-index: 1000;
 
@@ -145,7 +160,7 @@ export const SearchResults = styled.div`
     margin: 1rem 0;
     padding: 1rem;
 
-    background-color: #ffa2c8;
+    background-color: ${props => props.darkMode ? '#181818' : 'var(--pink-variant-3)'};
 
     border-radius: 4px;
 
@@ -223,6 +238,7 @@ export const SearchResults = styled.div`
             justify-content: space-around;
             align-items: center;
 
+            background-color: ${props => props.darkMode ? '#212121!important' : '#f3f2ff!important'};
             border-radius: 4px;
 
             img{
@@ -268,7 +284,7 @@ export const SearchResults = styled.div`
                         
                         height: inherit;
 
-                        background-color: #262626;
+                        background-color: ${props => props.darkMode ? '#3d3d3d' : '#777777'};
 
                     }
 
@@ -276,7 +292,7 @@ export const SearchResults = styled.div`
                         margin-left: 0.5rem;
 
                         font-size: 1.4rem;
-                        color: #777777;
+                        color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#777777'};
                     }
 
                     @media(max-width: 425px){
@@ -289,7 +305,7 @@ export const SearchResults = styled.div`
                 h3{
                     font-size: 1.1rem;
                     font-weight: 300;
-                    color: #444444;
+                    color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#444444'};
 
                     /* margin-bottom: 1rem; */
                 }
@@ -307,7 +323,7 @@ export const SearchResults = styled.div`
 
                     font-size: 1.2rem;
                     font-weight: 600;
-                    color: #555555;
+                    color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#555555'};
 
                     @media(max-width: 425px){
 

@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface ContainerProps {
     display?: boolean;
+    darkMode: boolean;
 }
 
 export const Container = styled.header<ContainerProps>`
@@ -12,7 +13,7 @@ export const Container = styled.header<ContainerProps>`
     position: ${props => props.display === true ? 'sticky' : 'initial' };
     top: ${props => props.display === true ? '0' : 'initial' };
 
-    background-color: #fafafa;
+    background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' : 'var(--bcg-light-mode)'};
 
     z-index: 10000;
 
@@ -75,6 +76,27 @@ export const Container = styled.header<ContainerProps>`
             }
 
             .settings{
+
+                li.dark-theme{
+
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    border-top: 2px solid ${props => props.darkMode ? 'var(--brand-color)' : ''};
+                    border-bottom: 2px solid ${props => props.darkMode ? 'var(--brand-color)' : ''};
+
+                    padding: 1rem;
+
+                    color: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
+
+                    svg{
+                        margin-right: 1rem;
+                        height: 2.4rem;
+                        width: auto;
+                        fill: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
+                    }
+                }
 
                 li.user-li:hover{
                     border-right: 0;
@@ -149,7 +171,7 @@ export const Container = styled.header<ContainerProps>`
                         font-size: 2.4rem;
                         font-weight: 400;
 
-                        color: #333333;
+                        color: ${props => props.darkMode ? 'var(--white)' : '#333333'};
                     }
 
                     :hover{
@@ -172,7 +194,7 @@ export const Container = styled.header<ContainerProps>`
 
             border: 0;
 
-            background-color: ${props => props.display === true ? '#ff1a75' : 'transparent'};
+            background-color: ${props => props.display === true ? 'var(--brand-color)' : 'transparent'};
             
             padding: 0.5rem;
 
@@ -182,7 +204,7 @@ export const Container = styled.header<ContainerProps>`
                 transition: all ease-in-out 300ms;
                 width: 25px;
                 height: auto;
-                fill: ${props => props.display === true ? '#fff' : '#ff1a75'};
+                fill: ${props => props.display === true ? '#fff' : 'var(--brand-color)'};
             }
 
         }
@@ -199,7 +221,7 @@ export const Container = styled.header<ContainerProps>`
                 justify-content: flex-start;
                 flex-wrap: nowrap;
 
-                background-color: #fafafa;
+                background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' :'var(--bcg-light-mode)'};
                 
                 height: 100%!important;
                 width: 80%;
@@ -258,7 +280,7 @@ export const Container = styled.header<ContainerProps>`
             h3{
                 display: flex;
                 justify-content: center;
-                color: #ff1a75;
+                color: var(--brand-color);
             }
             ul{
                 /* padding-left: 1rem; */
@@ -286,7 +308,7 @@ export const Container = styled.header<ContainerProps>`
                         width: 100%;
 
                         font-weight: 600;
-                        color: #757474; 
+                        color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#757474'}; 
 
                         >svg{
                             padding-left: 1rem;
@@ -295,18 +317,18 @@ export const Container = styled.header<ContainerProps>`
 
                             margin-right: 1rem;
 
-                            fill: #757474;
+                            fill: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#757474'}; 
                         }
                     }
 
                     :hover{
-                        border-right: 4px solid #ff1a75;
+                        border-right: 4px solid var(--brand-color);
 
                         >a{
-                            color: #ff1a75;
+                            color: var(--brand-color);
 
                             >svg{
-                                fill: #ff1a75;
+                                fill: var(--brand-color);
                             }
                         }
                         
@@ -315,6 +337,10 @@ export const Container = styled.header<ContainerProps>`
 
         
         .settings{
+
+            li.dark-theme{
+                border: 2px solid black;
+            }
 
             li.user-li:hover{
                 border-right: 0;
@@ -355,7 +381,7 @@ export const Container = styled.header<ContainerProps>`
                 :hover{
 
                     img{
-                        border: 2px solid #ff1a75;
+                        border: 2px solid var(--brand-color);
                     }
 
                 }

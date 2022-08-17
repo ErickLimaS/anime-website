@@ -24,8 +24,8 @@ export const Container = styled.div<ContainerProps>`
     }
 
     width: 100%;
-
-    background-color: #fafafa;
+/* 
+    background-color: #fafafa; */
     
     // loading effect
     .div-skeleton{

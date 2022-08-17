@@ -1,6 +1,6 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunk from "redux-thunk";
-import { addEpisodeToAlreadyWatchedReducer, addEpisodeToBookmarksReducer, addMediaReducer, addToAlreadyWatchedReducer, changeAdultContentOptionReducer, removeEpisodeFromAlreadyWatchedReducer, removeEpisodeFromBookmarksReducer, removeFromAlreadyWatchedReducer, removeMediaFromUserReducer, removeMediaReducer, updateAvatarImgReducer, updateUserInfoReducer, userLoginReducer, userLogoutReducer, userRegisterReducer } from "./reducers/userReducers";
+import { addEpisodeToAlreadyWatchedReducer, addEpisodeToBookmarksReducer, addMediaReducer, addToAlreadyWatchedReducer, changeAdultContentOptionReducer, darkModeSwitchReducer, removeEpisodeFromAlreadyWatchedReducer, removeEpisodeFromBookmarksReducer, removeFromAlreadyWatchedReducer, removeMediaFromUserReducer, removeMediaReducer, updateAvatarImgReducer, updateUserInfoReducer, userLoginReducer, userLogoutReducer, userRegisterReducer } from "./reducers/userReducers";
 
 
 const initialState = {
@@ -8,6 +8,10 @@ const initialState = {
         userInfo: localStorage.getItem('userInfo') ?
             JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
         // JSON.stringify(localStorage.getItem('userInfo')) : null
+    },
+    darkModeSwitch: {
+        darkMode: localStorage.getItem('darkMode') ?
+            JSON.parse(localStorage.getItem('darkMode') || `{}`) : null
     }
 }
 
@@ -26,7 +30,8 @@ const reducer = combineReducers({
     removeEpisodeFromAlereadyWatched: removeEpisodeFromAlreadyWatchedReducer,
     addEpisodeToBookmarks: addEpisodeToBookmarksReducer,
     removeEpisodeFromBookmarks: removeEpisodeFromBookmarksReducer,
-    changeAdultContentOption: changeAdultContentOptionReducer
+    changeAdultContentOption: changeAdultContentOptionReducer,
+    darkModeSwitch: darkModeSwitchReducer
 })
 
 const composeEnhancer = typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;

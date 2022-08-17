@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface Props {
     data: any;
+    darkMode: boolean;
 }
 
 export const Container = styled.div<Props>`
@@ -68,6 +69,8 @@ div.skeleton{
 
         h1{
             width: 60%;
+            
+            color: ${props => props.darkMode && 'var(--text-grey-variant)'};
             font-size: 1.6rem;
         }
     }
@@ -89,14 +92,15 @@ div.skeleton{
         h2{
             font-size: 1.6rem;
             font-weight: 900;
-            color: #ff5ebc;
-            border-bottom: 2px solid #ff5ebc;
+            color: var(--pink-variant-1);
+                border-bottom: 2px solid var(--pink-variant-1);
         }
     }
 
     ul.general-info{
 
         li{
+            color: ${props => props.darkMode && 'var(--text-grey-variant)'};
             font-size: 1.5rem;
             font-weight: 400;
             margin: 1rem 0;
@@ -109,6 +113,7 @@ div.skeleton{
             }
 
             svg{
+                fill: ${props => props.darkMode && '#c0c0c0'};
                 margin-right: 0.5rem;
             }
 
@@ -140,8 +145,8 @@ div.skeleton{
         h2{
             font-size: 1.6rem;
             font-weight: 900;
-            color: #ff5ebc;
-            border-bottom: 2px solid #ff5ebc;
+            color: var(--pink-variant-1);
+            border-bottom: 2px solid var(--pink-variant-1);
             
             margin: 1rem 0;
         }
@@ -170,8 +175,8 @@ div.skeleton{
         h2{
             font-size: 1.6rem;
             font-weight: 900;
-            color: #ff5ebc;
-            border-bottom: 2px solid #ff5ebc;
+            color: var(--pink-variant-1);
+            border-bottom: 2px solid var(--pink-variant-1);
             
             margin: 1rem 0;
         }
@@ -183,25 +188,26 @@ div.skeleton{
             justify-content: center;
             align-items: center;
 
-            li{
-            font-size: 1.5rem;
-            font-weight: 400;
-            margin: 1rem 0;
+                li{
+                    color: ${props => props.darkMode && 'var(--text-grey-variant)'};
+                    font-size: 1.5rem;
+                    font-weight: 400;
+                    margin: 1rem 0;
 
-                a{
-                    color: inherit;
-                    text-decoration: underline;
+                    a{
+                        color: inherit;
+                        text-decoration: underline;
+                    }
                 }
-            }
 
-            li:after{
-                content: ', ';
-                white-space: pre;
-            }
+                li:after{
+                    content: ', ';
+                    white-space: pre;
+                }
 
-            li:last-child:after{
-                content: '';
-            }
+                li:last-child:after{
+                    content: '';
+                }
         }
     }
 
@@ -216,8 +222,8 @@ div.skeleton{
         h2{
             font-size: 1.6rem;
             font-weight: 900;
-            color: #ff5ebc;
-            border-bottom: 2px solid #ff5ebc;
+            color: var(--pink-variant-1);
+            border-bottom: 2px solid var(--pink-variant-1);
             
             margin: 1rem 0;
         }
@@ -263,6 +269,7 @@ div.skeleton{
                 }
 
                 h3{
+                    color: ${props => props.darkMode && 'var(--text-grey-variant)'};
                     font-size: 1.4rem;
                     font-weight: 400;
                 }

@@ -6,6 +6,7 @@ import { ReactComponent as CancelSvg } from '../../imgs/svg/x-circle.svg'
 import API from '../../API/anilist'
 import gogoAnime from '../../API/gogo-anime'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 export default function SearchInnerPage() {
 
@@ -16,7 +17,11 @@ export default function SearchInnerPage() {
     const [resultsWasFetched, setResultsWasFetched] = useState<boolean>(false)
 
     const [loading, setLoading] = useState<boolean>(false)
-    
+
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
+
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault()
 
@@ -80,7 +85,11 @@ export default function SearchInnerPage() {
 
     return (
         <>
-            <C.Search hasText={searchInput} loading={loading}>
+            <C.Search
+                hasText={searchInput}
+                loading={loading}
+                darkMode={darkMode}
+            >
 
                 <form onSubmit={(e) => handleSearch(e)}>
                     <div>
@@ -95,7 +104,7 @@ export default function SearchInnerPage() {
             </C.Search >
 
             {resultsWasFetched === true && (
-                <C.SearchResults>
+                <C.SearchResults darkMode={darkMode}>
 
                     <div className='heading-search-results'>
 
@@ -124,9 +133,9 @@ export default function SearchInnerPage() {
                                                         {item.isAdult && (<span className='adult-result'>+18</span>)}
                                                         {
                                                             item.title.romaji.length > 20 ? (
-                                                                item.title.romaji.slice(0, 20) + '...' 
+                                                                item.title.romaji.slice(0, 20) + '...'
                                                             ) : (
-                                                                item.title.romaji 
+                                                                item.title.romaji
                                                             )
                                                         }
                                                         <span className='launch-year'>({item.startDate.year})</span>
@@ -193,7 +202,8 @@ export default function SearchInnerPage() {
                     }
 
                 </C.SearchResults >
-            )}
+            )
+            }
         </>
     )
 }

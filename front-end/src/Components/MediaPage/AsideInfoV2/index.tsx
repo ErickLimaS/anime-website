@@ -7,13 +7,21 @@ import { ReactComponent as BookSvg } from '../../../imgs/svg/book.svg'
 import { ReactComponent as PlayCaretSvg } from '../../../imgs/svg/caret-right-square.svg'
 import { ReactComponent as BrodcastSvg } from '../../../imgs/svg/broadcast-pin.svg'
 import { ReactComponent as CollectionEpisodesSvg } from '../../../imgs/svg/collection-play.svg'
+import { useSelector } from 'react-redux';
 
 export default function AsideInfoV2(data: any) {
 
   const [nextEpisodeDate, setNextEpisodeDate] = useState<any>(data.data.nextAiringEpisode && new Date(data.data.nextAiringEpisode.airingAt * 1000));
 
+  // dark mode
+  const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitch
+
   return (
-    <C.Container data={data.data}>
+    <C.Container
+      data={data.data}
+      darkMode={darkMode}
+    >
 
       {data.data.length === 0 ? (
 
@@ -80,7 +88,7 @@ export default function AsideInfoV2(data: any) {
                 </ul>
               </div>
             )}
-            
+
           </div>
         </>
       )
