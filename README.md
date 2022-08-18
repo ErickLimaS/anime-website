@@ -12,12 +12,12 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 - [x] `Marque seus Animes e Mangas Favoritos`: Apos criar uma conta, você podera marcar animes e mangas, para ter um rápido acesso da próxima vez que usar o site.
 - [x] `Tenha o histórico registrado do que já assitiu até agora`
 - [x] `Marque Animes ou Episódios já vistos`: Mantenha o progresso de quais você terminou ou que precisa terminar.
+- [x] `Modo Noturno`: Escolha o modo que te deixa mais confortável! Experimente o modo noturno!
 
 ## :pushpin: Em Planejamento
  
 - [ ] `Fix: Misspelled English Words/Corrigir Palavras em Inglês`: Sem Previsão
 - [ ] `Seja Alertado de Novos Episódios Lançados`: Sem Previsão 
-- [ ] `Modo Noturno`: Sem Previsão
 
 ## :heavy_check_mark: Tecnologias Utilizadas
 
