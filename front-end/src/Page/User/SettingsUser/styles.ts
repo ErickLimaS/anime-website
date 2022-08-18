@@ -4,6 +4,7 @@ interface Props {
 
     tabIndex: number,
     handleAvatarImgPanel: boolean
+    darkMode: boolean
 
 }
 
@@ -12,11 +13,10 @@ export const Container = styled.div<Props>`
     display: flex;
     flex-direction: row;
 
-    background-color: #fafafa;
+    background-color: ${props => props.darkMode ? 'var(bcg-dark-mode)' : 'var(--bcg-light-mode)'};
 
     div.content{
 
-        /* width: -webkit-fill-available; */
         width: 80%;
 
         margin-right: 2rem;
@@ -57,7 +57,7 @@ export const Container = styled.div<Props>`
         }
     }
 
-    .menu-profile{
+    div.menu{
         
         width: 20%;
 
@@ -69,25 +69,64 @@ export const Container = styled.div<Props>`
 
         #tab-0{
             
-            background-color: ${props => props.tabIndex === 0 ? '#ff1a75' : '#ffd0e3'};
-            color:  ${props => props.tabIndex === 0 ? '#fff' : '#444444'};
-            border-radius: 4px 4px 0 0;
+            background-color: ${props => props.darkMode === true && props.tabIndex === 0 && 'var(--brand-color)'};
+            background-color: ${props => props.darkMode === true && props.tabIndex !== 0 && 'var(--brand-dark-mode-color)'};
+
+            background-color: ${props => props.darkMode === false && props.tabIndex === 0 && 'var(--brand-color)'};
+            background-color: ${props => props.darkMode === false && props.tabIndex !== 0 && 'var(--bcg-light-mode)'};
+
+            color: ${props => props.darkMode === true && props.tabIndex === 0 && '#fff'};
+            color: ${props => props.darkMode === true && props.tabIndex !== 0 && 'var(--brand-color)'};
+
+            color: ${props => props.darkMode === false && props.tabIndex === 0 && '#fff'};
+            color: ${props => props.darkMode === false && props.tabIndex !== 0 && 'var(--brand-color)'};
+
         }
         #tab-1{
             
-            background-color: ${props => props.tabIndex === 1 ? '#ff1a75' : '#ffd0e3'};
-            color:  ${props => props.tabIndex === 1 ? '#fff' : '#444444'};
+            background-color: ${props => props.darkMode === true && props.tabIndex === 1 && 'var(--brand-color)'};
+                        background-color: ${props => props.darkMode === true && props.tabIndex !== 1 && 'var(--brand-dark-mode-color)'};
+
+
+                        background-color: ${props => props.darkMode === false && props.tabIndex === 1 && 'var(--brand-color)'};
+                        background-color: ${props => props.darkMode === false && props.tabIndex !== 1 && 'var(--bcg-light-mode)'};
+
+                        color: ${props => props.darkMode === true && props.tabIndex === 1 && '#fff'};
+                        color: ${props => props.darkMode === true && props.tabIndex !== 1 && 'var(--brand-color)'};
+
+                        color: ${props => props.darkMode === false && props.tabIndex === 1 && '#fff'};
+                        color: ${props => props.darkMode === false && props.tabIndex !== 1 && 'var(--brand-color)'};
+            
         }
         #tab-2{
             
-            background-color: ${props => props.tabIndex === 2 ? '#ff1a75' : '#ffd0e3'};
-            color:  ${props => props.tabIndex === 2 ? '#fff' : '#444444'};
+            background-color: ${props => props.darkMode === true && props.tabIndex === 2 && 'var(--brand-color)'};
+                        background-color: ${props => props.darkMode === true && props.tabIndex !== 2 && 'var(--brand-dark-mode-color)'};
+
+                        background-color: ${props => props.darkMode === false && props.tabIndex === 2 && 'var(--brand-color)'};
+                        background-color: ${props => props.darkMode === false && props.tabIndex !== 2 && 'var(--bcg-light-mode)'};
+
+                        color: ${props => props.darkMode === true && props.tabIndex === 2 && '#fff'};
+                        color: ${props => props.darkMode === true && props.tabIndex !== 2 && 'var(--brand-color)'};
+
+                        color: ${props => props.darkMode === false && props.tabIndex === 2 && '#fff'};
+                        color: ${props => props.darkMode === false && props.tabIndex !== 2 && 'var(--brand-color)'};
         }
         #tab-3{
             
-            background-color: ${props => props.tabIndex === 3 ? '#ff1a75' : '#ffd0e3'};
-            color:  ${props => props.tabIndex === 3 ? '#fff' : '#444444'};
-            border-radius: 0 0 4px 4px;
+            background-color: ${props => props.darkMode === true && props.tabIndex === 3 && 'var(--brand-color)'};
+                        background-color: ${props => props.darkMode === true && props.tabIndex !== 3 && 'var(--brand-dark-mode-color)'};
+
+
+                        background-color: ${props => props.darkMode === false && props.tabIndex === 3 && 'var(--brand-color)'};
+                        background-color: ${props => props.darkMode === false && props.tabIndex !== 3 && 'var(--bcg-light-mode)'};
+
+                        color: ${props => props.darkMode === true && props.tabIndex === 3 && '#fff'};
+                        color: ${props => props.darkMode === true && props.tabIndex !== 3 && 'var(--brand-color)'};
+
+                        color: ${props => props.darkMode === false && props.tabIndex === 3 && '#fff'};
+                        color: ${props => props.darkMode === false && props.tabIndex !== 3 && 'var(--brand-color)'};
+
         }
         
         @media(max-width: 768px){
@@ -116,7 +155,10 @@ export const Container = styled.div<Props>`
             justify-content: center;
             align-items: flex-start;
 
-            background-color: #ffd0e3;
+            background-color: inherit;
+
+            border: ${props => props.darkMode === false ? '2px solid var(--brand-color)' : 'initial'};
+            
             border-radius: 4px;
 
             li{
@@ -131,22 +173,19 @@ export const Container = styled.div<Props>`
                 font-weight: 600;
                 color: #444444;
 
-                border-bottom: 2px solid #ff1a75;
+                border-bottom: 2px solid var(--brand-color);
 
                 :hover{
 
-                    background-color: #ff1a75!important;
+                    background-color: var(--brand-color)!important;
                     color: #fff!important;
 
                 }
 
                 :first-child{
 
-                    :hover{
+                    border-radius: ${props => props.darkMode === true ? '4px 4px 0 0' : 'initial'};
 
-                        border-radius: 4px 4px 0 0;
-
-                    }
                 }
 
 
@@ -154,10 +193,7 @@ export const Container = styled.div<Props>`
 
                     border-bottom: 0;
 
-                    :hover{
-                        
-                        border-radius: 0 0 4px 4px;
-                    }
+                    border-radius: ${props => props.darkMode === true ? '0 0 4px 4px' : 'initial'};
                     
                 }
 
@@ -167,7 +203,6 @@ export const Container = styled.div<Props>`
 
 
     }
-
 
     div#index-0, div#index-1, div#index-2, div#index-3{
 
@@ -197,6 +232,7 @@ export const Container = styled.div<Props>`
         h1{
             margin: 1rem 0;
 
+            color: ${props => props.darkMode ? 'var(--text-grey-variant2)' : 'initial'};
             font-size: 3rem;
             font-weight: 400;
         }
@@ -260,7 +296,7 @@ export const Container = styled.div<Props>`
                 span{
 
                     font-size: 1.8rem;
-                    color: #ff1a75;
+                    color: var(--brand-color);
 
                 }
 
@@ -321,7 +357,7 @@ export const Container = styled.div<Props>`
                 margin: 2rem 0;
                 padding: 1rem;
 
-                background-color: #ff1a75;
+                background-color: var(--brand-color);
                 border: 0;
                 border-radius: 4px;
                 
@@ -376,7 +412,7 @@ export const Container = styled.div<Props>`
                     }
 
                     :hover{
-                        border: 2px solid #ff1a75;
+                        border: 2px solid var(--brand-color);
                         border-radius: 4px;
                     }
                 }
@@ -400,6 +436,7 @@ export const Container = styled.div<Props>`
                 flex-direction: column;
 
                 label{
+                    color: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
                     font-size: 1.8rem;
                     font-weight: 400;
                 }
@@ -486,7 +523,7 @@ export const Container = styled.div<Props>`
             align-items: center;
             flex-wrap: wrap;
 
-            background-color: #ffd0e3;
+            background-color: ${props => props.darkMode ? 'var(--black-variant)' : '#ffd0e3'};
             border-radius: 4px;
 
             *{
@@ -499,11 +536,17 @@ export const Container = styled.div<Props>`
 
             label{
                 font-size: 2.6rem;
-                color: #111;
+                color: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#111'};
+            }
+            h2{
+                
+                color: ${props => props.darkMode ? 'var(--text-grey-variant2)' : 'initial'}; 
+                font-size: 2rem;
+
             }
             span{
                 font-size: 2.2rem;
-                color: #222222;
+                color: var(--white);
 
                 @media(max-width: 620px){
                     font-size: 1.6rem;
@@ -521,7 +564,7 @@ export const Container = styled.div<Props>`
                 border: 0;
                 border-radius: 4px;
 
-                background-color: #ff1a75;
+                background-color: var(--brand-color);
 
                 color: #fff;
 
@@ -562,7 +605,8 @@ export const Container = styled.div<Props>`
             }
 
         }
-        h2{
+        h2{ 
+            color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#ffd0e3'};
             font-size: 2rem;
             font-weight: 400;
 
@@ -626,12 +670,14 @@ export const Container = styled.div<Props>`
 
         }
         h2{
+            color: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#ffd0e3'};
             font-size: 2rem;
             font-weight: 400;
 
             span{
                 color: rgb(255, 51, 51);
             }
+
         }
         button{
             cursor: pointer;
@@ -665,7 +711,7 @@ export const Container = styled.div<Props>`
         }
 
         .radio-inputs{
-            background-color: #ffdcea;
+            background-color: ${props => props.darkMode ? 'var(--black-variant)' : '#ffdcea'};
 
             padding: 1rem;
 
@@ -678,7 +724,7 @@ export const Container = styled.div<Props>`
             }
 
             label{
-                color: #222222;
+                color: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#222222'};
             }
         }
 
@@ -690,6 +736,7 @@ export const Container = styled.div<Props>`
         }
 
         small{
+            color: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
             font-size: 1.4rem;
         }
 

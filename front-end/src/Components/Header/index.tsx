@@ -75,11 +75,11 @@ export default function Header() {
 
                     <ul className='settings'>
 
-                        <li onClick={() => darkModeSwitcher()} className='dark-theme'>
+                        <button onClick={() => darkModeSwitcher()} className='dark-theme'>
                             {darkMode === true ?
                                 (<><SunSvg /> Light Mode </>) : (<><MoonSvg /> Dark Mode</>)
                             }
-                        </li>
+                        </button>
 
                     </ul>
 

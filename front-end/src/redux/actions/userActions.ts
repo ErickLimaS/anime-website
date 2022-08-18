@@ -605,9 +605,6 @@ export const darkModeSwitch = () => async (dispatch: Dispatch<AnyAction>, getSta
 
     const { darkModeSwitch: { darkMode } } = getState()
 
-    console.log(darkMode)
-    console.log(localStorage.getItem('darkMode'))
-
     try {
         if (darkMode === false) {
 

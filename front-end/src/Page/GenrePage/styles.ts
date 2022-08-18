@@ -1,6 +1,12 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface Props {
+
+    darkMode: boolean
+
+}
+
+export const Container = styled.div<Props>`
 
     display: flex;
     flex-direction: row;
@@ -39,7 +45,6 @@ export const Container = styled.div`
     .content{
         width: 80%;    
 
-        /* border-right: 2px solid #e6e6e6; */
         border-left: 2px solid #e6e6e6;
         padding: 1rem 3rem 3rem 3rem;
 
@@ -56,7 +61,7 @@ export const Container = styled.div`
 
             font-size: 4rem;
             font-weight: 600;
-            color: #ff1a75;
+            color: var(--brand-color);
         }
 
         div.heading{
@@ -71,10 +76,10 @@ export const Container = styled.div`
             h2{
                 font-size: 1.6rem;
                 font-weight: 600;
-                color: #625e5e;
+                color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#625e5e'};
 
                 span{
-                    color: #ff1a75;
+                    color: var(--brand-color);
                 }
             }
 
@@ -86,51 +91,49 @@ export const Container = styled.div`
                 justify-content: center;
 
                 button{
-                    cursor: pointer;
+                            cursor: pointer;
 
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    justify-content: center;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
 
-                    margin: 0 0.5rem;
+                            margin: 0 0.5rem;
 
-                    width: 4rem;
-                    height: 4rem;
+                            width: 4rem;
+                            height: 4rem;
 
-                    background-color: transparent;
-                    border-radius: 4000px;
+                            background-color: transparent;
+                            border-radius: 4000px;
 
-                    outline: 0;
-                    border: 1px solid #c0c0c0;
+                            outline: 0;
+                            border: ${props => props.darkMode ? '1px solid var(--text-grey-variant2)' : '1px solid #c0c0c0'};
 
-                    svg{
-                        width: 0.7rem;
-                        height: auto;
+                            svg{
+                                width: 0.7rem;
+                                height: auto;
 
-                        fill: #444;
-                    }
+                                fill: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#444'};
+                            }
 
-                    :hover{
-                        border: 1px solid #999999;
-                    }
+                            :hover{
+                                border: 1px solid #999999;
+                            }
 
-                }
-                button[disabled]{
-                    cursor: default;
+                        }
 
-                    background-color: rgb(84 84 84 / 10%);
+                        button[disabled]{
+                            cursor: default;
 
-                    border-color: #dddddd;
+                            opacity: 0.5;
                             
-                    svg{
-                        fill: #c0c0c0!important;
-                    }
+                            border-color: #dddddd;
 
-                    :hover{
-                        border: 1px solid #c0c0c0;
-                    }
-                }
+                            svg{
+                                ${props => props.darkMode ? 'var(--text-grey-variant)!important' : '#444!important'};
+                            }
+
+                        }                
 
             }
 
@@ -205,7 +208,7 @@ export const Container = styled.div`
                 }
 
                 >div{
-                    background-color: rgb(255 222 245 / 0.44);
+                    /* background-color: rgb(255 222 245 / 0.44); */
                     border-radius: 4px;
                     
                     

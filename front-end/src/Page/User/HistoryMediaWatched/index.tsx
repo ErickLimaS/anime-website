@@ -14,6 +14,10 @@ export default function HistoryMediaAdded() {
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
 
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
+
     const [loading, setLoading] = useState<boolean>(true)
     const [tabIndex, setTabIndex] = useState<number>(0)
 
@@ -184,7 +188,10 @@ export default function HistoryMediaAdded() {
 
     return (
 
-        <C.Container tabIndex={tabIndex}>
+        <C.Container
+            tabIndex={tabIndex}
+            darkMode={darkMode}
+        >
 
             <AsideNavLinks />
 

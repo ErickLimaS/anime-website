@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
 import * as C from './styles'
 
@@ -52,9 +53,16 @@ export default function AlreadyWatchedHistoryPage({ data }: any) {
 
     }
 
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
+
+
     return (
         // Tag A - link
-        <C.Container href={`/${(data.fromGoGoAnime === true && 'anime/v2') || (getMediaFormat(data))}/${data.fromGoGoAnime === true ? data.idGoGoAnime : data.id}`}
+        <C.Container
+            darkMode={darkMode}
+            href={`/${(data.fromGoGoAnime === true && 'anime/v2') || (getMediaFormat(data))}/${data.fromGoGoAnime === true ? data.idGoGoAnime : data.id}`}
         >
 
             <div className='item-img'>

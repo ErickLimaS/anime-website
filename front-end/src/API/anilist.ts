@@ -201,7 +201,7 @@ export default {
                 })
             })
 
-            console.log(data.data.Page.media)
+            // console.log(data.data.Page.media)
 
             return data.data.Page.media
 

@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface Props {
+
+    darkMode: boolean
+
+}
+export const Container = styled.div<Props>`
 
     display: flex;
     flex-direction: row;
@@ -58,7 +63,7 @@ export const Container = styled.div`
 
             font-size: 4rem;
             font-weight: 600;
-            color: #ff1a75;
+            color: var(--brand-color);
         }
 
         div.heading{
@@ -76,7 +81,7 @@ export const Container = styled.div`
                 color: #625e5e;
 
                 span{
-                    color: #ff1a75;
+                    color: var(--brand-color);
                 }
             }
 
@@ -104,36 +109,35 @@ export const Container = styled.div`
                     border-radius: 4000px;
 
                     outline: 0;
-                    border: 1px solid #c0c0c0;
+                    border: ${props => props.darkMode ? '1px solid var(--text-grey-variant2)' : '1px solid #c0c0c0'};
 
                     svg{
                         width: 0.7rem;
                         height: auto;
 
-                        fill: #444;
+                        fill: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#444'};
                     }
 
                     :hover{
                         border: 1px solid #999999;
                     }
 
-                }
+                    }
+
                 button[disabled]{
+                    
                     cursor: default;
 
-                    background-color: rgb(84 84 84 / 10%);
-                            
+                    opacity: 0.5;
+
                     border-color: #dddddd;
 
                     svg{
-                        fill: #c0c0c0!important;
+                        ${props => props.darkMode ? 'var(--text-grey-variant)!important' : '#444!important'};
                     }
 
-                    :hover{
-                        border: 1px solid #c0c0c0;
-                    }
-                }             
-                
+                }                
+
             }
 
         }
@@ -209,7 +213,7 @@ export const Container = styled.div`
                 }
 
                 >div{
-                    background-color: rgb(255 222 245 / 0.44);
+                    /* background-color: rgb(255 222 245 / 0.44); */
                     border-radius: 4px;
                     
                     

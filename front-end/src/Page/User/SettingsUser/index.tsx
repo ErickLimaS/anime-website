@@ -10,8 +10,13 @@ import { changeAdultContentOption, removeDataFromUserMedia, updateAvatarImg, upd
 
 export default function SettingsUser() {
 
+  // user state
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+
+  // dark mode
+  const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitch
 
   const updateUserInfoRedux = useSelector((state: any) => state.updateUserInfo)
   const errorUpdateUser = updateUserInfoRedux.error
@@ -167,13 +172,17 @@ export default function SettingsUser() {
   }
 
   return (
-    <C.Container tabIndex={tabIndex} handleAvatarImgPanel={handleAvatarImgPanel}>
+    <C.Container
+      tabIndex={tabIndex}
+      handleAvatarImgPanel={handleAvatarImgPanel}
+      darkMode={darkMode}
+    >
 
       <AsideNavLinks />
 
       <div className='content'>
 
-        <div className='menu-profile'>
+        <div className='menu'>
 
           <ul>
             <li onClick={() => setTabIndex(0)} id='tab-0'>User Profile</li>

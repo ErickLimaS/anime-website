@@ -103,8 +103,6 @@ export const Container = styled.nav<Props>`
                     width: auto;
                     fill: ${props => props.darkMode ? '#FDB813' : '#C4C3BE'};
 
-                    :hover{
-                    }
                 }
 
                 :hover{

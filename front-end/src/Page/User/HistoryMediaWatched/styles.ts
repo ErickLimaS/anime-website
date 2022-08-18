@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 interface Props {
-    tabIndex: number
+    tabIndex: number,
+    darkMode: boolean
 }
 
 export const Container = styled.div<Props>`
@@ -80,7 +81,8 @@ export const Container = styled.div<Props>`
 
         width: 80%;    
 
-        border-left: 2px solid #e6e6e6;
+        border-left: ${props => props.darkMode ? '2px solid var(--text-grey-variant3)' : '2px solid #ff1a7512'};
+        
         margin: 1rem 3rem 3rem 3rem;
 
         margin-left: 0;
@@ -176,56 +178,100 @@ export const Container = styled.div<Props>`
                 }
 
                 button#button-tab-0{
-                        
-                    background-color: ${props => props.tabIndex === 0 ? '#ff1a75' : '#fafafa'};
-
-                    border: ${props => props.tabIndex === 0 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
-
-                    color: ${props => props.tabIndex === 0 ? '#fff' : '#ff1a75'};
-                        
-                    font-weight: ${props => props.tabIndex === 0 ? '600' : '300'};
-                    
-                }
-                button#button-tab-1{
-                        
-                    background-color: ${props => props.tabIndex === 1 ? '#ff1a75' : '#fafafa'};
-
-                    border: ${props => props.tabIndex === 1 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
-
-                    color: ${props => props.tabIndex === 1 ? '#fff' : '#ff1a75'};
-                        
-                    font-weight: ${props => props.tabIndex === 1 ? '600' : '300'};
-                }
-                button#button-tab-2{
-                        
-                    background-color: ${props => props.tabIndex === 2 ? '#ff1a75' : '#fafafa'};
-
-                    border: ${props => props.tabIndex === 2 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
-                    
-                    color: ${props => props.tabIndex === 2 ? '#fff' : '#ff1a75'};
-                        
-                    font-weight: ${props => props.tabIndex === 2 ? '600' : '300'};
-                }
-                button#button-tab-3{
-                        
-                    background-color: ${props => props.tabIndex === 3 ? '#ff1a75' : '#fafafa'};
-
-                    border: ${props => props.tabIndex === 3 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
-                    
-                    color: ${props => props.tabIndex === 3 ? '#fff' : '#ff1a75'};
-                        
-                    font-weight: ${props => props.tabIndex === 3 ? '600' : '300'};
-                }
-                button#button-tab-4{
-                        
-                    background-color: ${props => props.tabIndex === 4 ? '#ff1a75' : '#fafafa'};
-
-                    border: ${props => props.tabIndex === 4 ? '2px solid #ff1a75' : '2px solid #ff1a75'};
-                    
-                    color: ${props => props.tabIndex === 4 ? '#fff' : '#ff1a75'};
-                        
-                    font-weight: ${props => props.tabIndex === 4 ? '600' : '300'};
-                }
+                            
+                            background-color: ${props => props.darkMode === true && props.tabIndex === 0 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === true && props.tabIndex !== 0 && 'var(--brand-dark-mode-color)'};
+    
+    
+                            background-color: ${props => props.darkMode === false && props.tabIndex === 0 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === false && props.tabIndex !== 0 && 'var(--bcg-light-mode)'};
+    
+                            border: ${props => props.tabIndex === 0 ? '2px solid var(--brand-color)' : '2px solid var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === true && props.tabIndex === 0 && '#fff'};
+                            color: ${props => props.darkMode === true && props.tabIndex !== 0 && 'var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === false && props.tabIndex === 0 && '#fff'};
+                            color: ${props => props.darkMode === false && props.tabIndex !== 0 && 'var(--brand-color)'};
+    
+                            font-weight: ${props => props.tabIndex === 0 ? '600' : '300'};
+                            
+                        }
+                        button#button-tab-1{
+                                
+                            background-color: ${props => props.darkMode === true && props.tabIndex === 1 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === true && props.tabIndex !== 1 && 'var(--brand-dark-mode-color)'};
+    
+    
+                            background-color: ${props => props.darkMode === false && props.tabIndex === 1 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === false && props.tabIndex !== 1 && 'var(--bcg-light-mode)'};
+    
+                            border: ${props => props.tabIndex === 1 ? '2px solid var(--brand-color)' : '2px solid var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === true && props.tabIndex === 1 && '#fff'};
+                            color: ${props => props.darkMode === true && props.tabIndex !== 1 && 'var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === false && props.tabIndex === 1 && '#fff'};
+                            color: ${props => props.darkMode === false && props.tabIndex !== 1 && 'var(--brand-color)'};
+                            font-weight: ${props => props.tabIndex === 1 ? '600' : '300'};
+                        }
+                        button#button-tab-2{
+                                
+                            background-color: ${props => props.darkMode === true && props.tabIndex === 2 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === true && props.tabIndex !== 2 && 'var(--brand-dark-mode-color)'};
+    
+    
+                            background-color: ${props => props.darkMode === false && props.tabIndex === 2 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === false && props.tabIndex !== 2 && 'var(--bcg-light-mode)'};
+    
+                            border: ${props => props.tabIndex === 2 ? '2px solid var(--brand-color)' : '2px solid var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === true && props.tabIndex === 2 && '#fff'};
+                            color: ${props => props.darkMode === true && props.tabIndex !== 2 && 'var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === false && props.tabIndex === 2 && '#fff'};
+                            color: ${props => props.darkMode === false && props.tabIndex !== 2 && 'var(--brand-color)'};
+                            
+                            font-weight: ${props => props.tabIndex === 2 ? '600' : '300'};
+                        }
+                        button#button-tab-3{
+                                
+                            background-color: ${props => props.darkMode === true && props.tabIndex === 3 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === true && props.tabIndex !== 3 && 'var(--brand-dark-mode-color)'};
+    
+    
+                            background-color: ${props => props.darkMode === false && props.tabIndex === 3 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === false && props.tabIndex !== 3 && 'var(--bcg-light-mode)'};
+    
+                            border: ${props => props.tabIndex === 0 ? '2px solid var(--brand-color)' : '2px solid var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === true && props.tabIndex === 3 && '#fff'};
+                            color: ${props => props.darkMode === true && props.tabIndex !== 3 && 'var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === false && props.tabIndex === 3 && '#fff'};
+                            color: ${props => props.darkMode === false && props.tabIndex !== 3 && 'var(--brand-color)'};
+    
+                            font-weight: ${props => props.tabIndex === 3 ? '600' : '300'};
+                        }
+                        button#button-tab-4{
+                                
+                            background-color: ${props => props.darkMode === true && props.tabIndex === 4 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === true && props.tabIndex !== 4 && 'var(--brand-dark-mode-color)'};
+    
+    
+                            background-color: ${props => props.darkMode === false && props.tabIndex === 4 && 'var(--brand-color)'};
+                            background-color: ${props => props.darkMode === false && props.tabIndex !== 4 && 'var(--bcg-light-mode)'};
+    
+                            border: ${props => props.tabIndex === 4 ? '2px solid var(--brand-color)' : '2px solid var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === true && props.tabIndex === 4 && '#fff'};
+                            color: ${props => props.darkMode === true && props.tabIndex !== 4 && 'var(--brand-color)'};
+    
+                            color: ${props => props.darkMode === false && props.tabIndex === 4 && '#fff'};
+                            color: ${props => props.darkMode === false && props.tabIndex !== 4 && 'var(--brand-color)'};
+    
+                            font-weight: ${props => props.tabIndex === 4 ? '600' : '300'};
+                        }
             }
         }
 

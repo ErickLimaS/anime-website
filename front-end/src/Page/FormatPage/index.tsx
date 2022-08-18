@@ -8,6 +8,7 @@ import TopRated from '../../Components/Home/TopRated'
 import { ReactComponent as AngleLeftSolidSvg } from '../../imgs/svg/angle-left-solid.svg'
 import { ReactComponent as AngleRightSolidSvg } from '../../imgs/svg/angle-right-solid.svg'
 import Trending from '../../Components/Home/Trending'
+import { useSelector } from 'react-redux'
 
 export default function FormatPage() {
 
@@ -57,6 +58,10 @@ export default function FormatPage() {
 
     }, [format])
 
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
+
     //handles button navigation through results to topRated and Releasing sections
     const handleSectionPreviousPage = async (section: String) => {
 
@@ -93,7 +98,7 @@ export default function FormatPage() {
     }
 
     return (
-        <C.Container>
+        <C.Container darkMode={darkMode}>
 
             {loading === true ? (
                 <>

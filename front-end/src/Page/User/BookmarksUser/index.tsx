@@ -25,6 +25,10 @@ export default function BookmarkUser() {
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
 
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
+
     const navigate = useNavigate()
     const dispatch: any = useDispatch()
 
@@ -101,8 +105,12 @@ export default function BookmarkUser() {
 
     }, [])
 
+
     return (
-        <C.Container tabIndex={tabIndex}>
+        <C.Container
+            tabIndex={tabIndex}
+            darkMode={darkMode}
+        >
 
             {loading ? (
                 <>
@@ -133,7 +141,7 @@ export default function BookmarkUser() {
                         </h1>
 
                         <div className='content'>
-                            {allTypes != null  ? (
+                            {allTypes != null ? (
                                 <>
                                     <div id='tab-0'>
                                         <div className='grid'>
@@ -177,7 +185,7 @@ export default function BookmarkUser() {
                                                 <>
                                                     {
                                                         mangasTypeItems.map((item: any, key: any) => (
-                                                           
+
                                                             <BookmarkedItemPage key={key} data={item} />
 
                                                         ))
@@ -196,7 +204,7 @@ export default function BookmarkUser() {
                                                 <>
                                                     {
                                                         moviesTypeItems.map((item: any, key: any) => (
-                                                           
+
                                                             <BookmarkedItemPage key={key} data={item} />
 
                                                         ))
@@ -215,7 +223,7 @@ export default function BookmarkUser() {
                                                 <>
                                                     {
                                                         otherTypeItems.map((item: any, key: any) => (
-                                                            
+
                                                             <BookmarkedItemPage key={key} data={item} />
 
                                                         ))

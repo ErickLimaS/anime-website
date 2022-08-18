@@ -11,6 +11,8 @@ export const AnimeToBeListed = styled.div<itemData>`
     background-repeat: no-repeat;
     background-size: cover;
 
+    background-color: ${props => props.darkMode ? 'var(--black-variant)' : 'rgb(255 222 245 / 0.44)'};
+
     display: flex;
     flex-direction: row;
     align-items: center;

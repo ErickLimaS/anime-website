@@ -77,24 +77,39 @@ export const Container = styled.header<ContainerProps>`
 
             .settings{
 
-                li.dark-theme{
+                button.dark-theme{
+
+                    width: 100%;
 
                     display: flex;
                     flex-direction: row;
                     align-items: center;
 
-                    border-top: 2px solid ${props => props.darkMode ? 'var(--brand-color)' : ''};
-                    border-bottom: 2px solid ${props => props.darkMode ? 'var(--brand-color)' : ''};
-
                     padding: 1rem;
 
+                    background-color: rgba(0,0,0,.05);
+
+                    border: 0;
+                    border-radius: 2px 0 0 2px;
+
+                    font-size: 1.8rem;
                     color: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
 
                     svg{
                         margin-right: 1rem;
                         height: 2.4rem;
                         width: auto;
-                        fill: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
+                        fill: ${props => props.darkMode ? '#FDB813' : '#C4C3BE'};
+
+                    }
+
+                    :hover{
+                        transition: all ease-in-out 150ms;
+                        background-color: rgba(0,0,0,.15);
+
+                        svg{
+                            fill: ${props => props.darkMode === false && '#F5F3CE'};
+                        }
                     }
                 }
 
@@ -106,7 +121,7 @@ export const Container = styled.header<ContainerProps>`
                     width: auto;
                 }
 
-                li{
+                li, button{
                     width: auto;
                     padding-left: 1rem;
                 }
@@ -174,13 +189,6 @@ export const Container = styled.header<ContainerProps>`
                         color: ${props => props.darkMode ? 'var(--white)' : '#333333'};
                     }
 
-                    :hover{
-
-                        img{
-                            border: 2px solid #ff1a75;
-                        }
-
-                    }
                 }
             }
 
@@ -248,14 +256,6 @@ export const Container = styled.header<ContainerProps>`
                 }
 
                 display: ${props => props.display === false && 'none!important' };
-                /* @keyframes drawer-animation-close{
-                    0% {
-                        left: 0;
-                    }
-                    100%{
-                        left: -52rem;
-                    }
-                } */
 
                 >*{
                     width: -webkit-fill-available;
@@ -298,7 +298,7 @@ export const Container = styled.header<ContainerProps>`
                     }
                 }
 
-                li{
+                li, button.dark-theme{
                     margin: 2rem 0;
 
                     >a{
@@ -338,7 +338,7 @@ export const Container = styled.header<ContainerProps>`
         
         .settings{
 
-            li.dark-theme{
+            button.dark-theme{
                 border: 2px solid black;
             }
 
