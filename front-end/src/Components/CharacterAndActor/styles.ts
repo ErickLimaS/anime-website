@@ -1,7 +1,10 @@
 import styled from "styled-components";
 
+interface Props{
+    darkMode: boolean
+}
 
-export const Container = styled.div`
+export const Container = styled.div<Props>`
 
     width: 80%;
     height: 100%;
@@ -14,8 +17,8 @@ export const Container = styled.div`
         width: 95%;
     }
 
-    .imgs{
-        background-image: linear-gradient(to right, #fff 10%, #ff5ebc33 50%, #fff 90%);
+    div.char-actor{
+        background-image: ${props => props.darkMode ? 'linear-gradient(to right, #181818 10%, #2c1e24 50%, #181818 90%)' : 'linear-gradient(to right, #fff 10%, #ff5ebc33 50%, #fff 90%)'};
     }
 
     >div{
@@ -53,12 +56,12 @@ export const Container = styled.div`
                 }
 
                 h2{
-                    color: #222222;
+                    color: ${props => props.darkMode ? 'var(--text-grey-variant2)':'#222222'};
                     font-size: 1.6rem;
                     font-weight: 600;
                 }
                 h2:last-child{
-                    color: #666666;
+                    color: ${props => props.darkMode ? 'var(--text-grey-variant2)':'#666666'};
                     font-size: 1.4rem;
                     font-weight: 400;
                 }

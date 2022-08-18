@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
 interface itemData {
-    info: any
+    info: any;
+    darkMode: boolean
 }
 
 export const AnimeToBeListed = styled.div<itemData>`
@@ -21,7 +22,6 @@ export const AnimeToBeListed = styled.div<itemData>`
         img{
             height: 11rem;
             width:  8rem;
-            /* width: 8rem; */
 
             border: 2px solid transparent;
         }
@@ -35,11 +35,11 @@ export const AnimeToBeListed = styled.div<itemData>`
         justify-content: space-evenly;
 
         a{
-            color: #333333;
+            color:${props => props.darkMode ? 'var(--text-grey-variant2)' : '#333333'};
 
             :hover{
                 transition: all ease-in-out 100ms;
-                color: #ff1a75;
+                color: var(--pink-variant-1);
             }
         }
 
@@ -61,7 +61,7 @@ export const AnimeToBeListed = styled.div<itemData>`
                 
                 li{
                     font-size: 1.1rem;
-                    color: #b0b0b0;
+                    color: var(--text-grey-variant);
                 }
 
                 li::after{
@@ -106,7 +106,7 @@ export const AnimeToBeListed = styled.div<itemData>`
         .cover{
 
             img{
-                border: 2px solid #ff1a75;
+                border: 2px solid var(--pink-variant-1);
             }
 
 

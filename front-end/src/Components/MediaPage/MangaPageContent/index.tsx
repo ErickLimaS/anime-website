@@ -228,6 +228,7 @@ export default function MangaPageContent(data: any) {
       data={data.data}
       isAlreadyAdded={isAlreadyAdded}
       alreadyWatched={alreadyWatched}
+      darkMode={darkMode}
     >
 
       <div className='search-mobile'>
@@ -252,11 +253,11 @@ export default function MangaPageContent(data: any) {
             )}
 
             {isAlreadyAdded == null && (
-              <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
+              <button onClick={() => handleMediaToAccount()} className='bookmarked'><PlusSvg /> Add To Bookmarks</button>
             )}
 
             {isAlreadyAdded && (
-              <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
+              <button onClick={() => handleMediaToAccount()} className='bookmarked'><CheckSvg /> Added on Bookmarks</button>
             )}
           </div>
 

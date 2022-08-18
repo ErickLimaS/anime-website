@@ -247,6 +247,7 @@ export const Container = styled.div<Props>`
 
             padding: 0.5rem 1rem;
 
+            color: ${props => props.darkMode && 'var(--text-grey-variant)'};
             font-size: 2rem;
             font-weight: 600;
 
@@ -382,6 +383,8 @@ export const Container = styled.div<Props>`
         justify-content: center;
 
         h1{
+            color: ${props => props.darkMode && 'var(--text-grey-variant)'};
+            border-bottom: ${props => props.darkMode && '2px solid var(--text-grey-variant)'};
             margin: 2rem 0;
         }
     }
@@ -395,6 +398,7 @@ export const Container = styled.div<Props>`
         flex-direction: column;
 
         li{
+            color: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
             font-size: 1.8rem;
             font-weight: 400;
 
@@ -403,6 +407,7 @@ export const Container = styled.div<Props>`
             border-bottom: 2px solid #c0c0c0;
 
             span{
+                color: ${props => props.darkMode ? 'var(--text-grey-variant2)':'initial'};
                 font-weight: 600;
             }
         }
@@ -413,7 +418,7 @@ export const Container = styled.div<Props>`
             flex-wrap: wrap;
 
             a{
-                color: #444444;
+                color: ${props => props.darkMode ? 'var(--text-grey-variant2)':'#'};
                 text-decoration: underline;
 
                 :hover{

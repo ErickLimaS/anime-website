@@ -113,7 +113,7 @@ div.skeleton{
             }
 
             svg{
-                fill: ${props => props.darkMode && '#c0c0c0'};
+                fill: ${props => props.darkMode && 'var(--text-grey-variant2)'};
                 margin-right: 0.5rem;
             }
 

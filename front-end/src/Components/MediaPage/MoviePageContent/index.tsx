@@ -246,6 +246,7 @@ export default function MoviePageContent(data: any) {
       indexHeading={indexPageInfo}
       isAlreadyAdded={isAlreadyAdded}
       alreadyWatched={alreadyWatched}
+      darkMode={darkMode}
     >
 
       <div className='search-mobile'>
@@ -270,11 +271,11 @@ export default function MoviePageContent(data: any) {
             )}
 
             {isAlreadyAdded == null && (
-              <button onClick={() => handleMediaToAccount()}><PlusSvg /> Add To Bookmarks</button>
+              <button onClick={() => handleMediaToAccount()} className='bookmarked'><PlusSvg /> Add To Bookmarks</button>
             )}
 
             {isAlreadyAdded && (
-              <button onClick={() => handleMediaToAccount()}><CheckSvg /> Added on Bookmarks</button>
+              <button onClick={() => handleMediaToAccount()} className='bookmarked'><CheckSvg /> Added on Bookmarks</button>
             )}
           </div>
 

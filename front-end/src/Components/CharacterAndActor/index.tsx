@@ -1,13 +1,17 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import * as C from './styles'
-import { Link } from 'react-router-dom'
 
 export default function CharacterAndActor(data: any) {
+  
+  // dark mode
+  const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitch
 
   return (
-    <C.Container>
+    <C.Container darkMode={darkMode}>
 
-      <div className='imgs'>
+      <div className='char-actor'>
         <div className='img-character'>
           {data.data.node.image && (
             <img src={`${data.data.node.image.large}`} alt={`${data.data.node.name.full}`} />
@@ -40,30 +44,6 @@ export default function CharacterAndActor(data: any) {
         </div>
 
       </div>
-
-      {/* <div>
-
-        <div className='character'>
-          {data.data.node.gender && (
-            <p>{data.data.node.gender}</p>
-          )}
-          {data.data.node.age && (
-            <p>Age: {data.data.node.age}</p>
-          )}
-        </div>
-
-        {data.data.voiceActors[0] && (
-          <div className='actor'>
-            {data.data.voiceActors[0].gender && (
-              <p>{data.data.voiceActors[0].gender}</p>
-            )}
-
-            {data.data.voiceActors[0].age && (
-              <p>Age: {data.data.voiceActors[0].age}</p>
-            )}
-          </div>
-        )}
-      </div> */}
 
     </C.Container>
   )

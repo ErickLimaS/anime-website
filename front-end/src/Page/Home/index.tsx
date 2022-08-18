@@ -32,8 +32,13 @@ export default function Home() {
   const [indexPageTopRated, setIndexPageTopRated] = useState<number>(1)
   const [indexPageReleasingThisWeek, setIndexPageReleasingThisWeek] = useState<number>(1)
 
+  // user state
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
+
+  // dark mode
+  const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitch
 
   useEffect(() => {
 
@@ -211,7 +216,10 @@ export default function Home() {
   }
 
   return (
-    <C.Container innerPageLink={indexInnerPageLink}>
+    <C.Container
+      innerPageLink={indexInnerPageLink}
+      darkMode={darkMode}
+    >
 
       <AsideNavLinks />
 
@@ -510,7 +518,9 @@ export default function Home() {
           )}
 
         </div>
+
       </aside>
+
     </C.Container >
 
   )

@@ -37,7 +37,7 @@ export default function AnimePageContent(data: any) {
   //state
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
-  
+
   // dark mode
   const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
   const { darkMode } = darkModeSwitch
@@ -614,9 +614,14 @@ export default function AnimePageContent(data: any) {
 
             <ul>
               {data.data.recommendations.edges.slice(0, 8).map((item: any, key: any) => (
-                <li key={item.node.id}><AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} /></li>
+
+                <li key={item.node.id}>
+                  <AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} />
+                </li>
+
               ))}
             </ul>
+            
           </div>
         )
       }

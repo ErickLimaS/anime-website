@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import * as C from './styles'
-import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 import Score from '../../Score'
+import { useSelector } from 'react-redux'
 
 
 export default function Trending(data: any) {
 
-    // console.log(data.data)
-
     let format;
-
     switch (data.data.format) {
         case 'TV':
             format = 'anime';
@@ -44,9 +41,16 @@ export default function Trending(data: any) {
             break;
     }
 
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
+
     return (
         <>
-            <C.AnimeToBeListed info={data.data} >
+            <C.AnimeToBeListed
+                info={data.data}
+                darkMode={darkMode}
+            >
 
                 <div className='cover'>
                     {data.data.fromGoGoAnime ? (

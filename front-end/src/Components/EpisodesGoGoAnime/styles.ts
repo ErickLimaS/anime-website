@@ -62,7 +62,7 @@ export const Container = styled.div<PropsContainer>`
         }
 
         h3{
-                color:${props => props.darkMode === true && props.episodeActive === false && 'var(--text-grey-variant)'};
+                color:${props => props.darkMode === true && props.episodeActive === false && 'var(--text-grey-variant2)'};
                 color:${props => props.darkMode === true && props.episodeActive && '#fff'};
                 
                 color:${props => props.darkMode === false && props.episodeActive && '#fff'};

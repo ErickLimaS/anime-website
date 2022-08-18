@@ -56,7 +56,7 @@ export const Container = styled.nav<Props>`
             }
 
             :hover{
-                border: 1px solid #ff1a75;
+                border: 1px solid var(--brand-color);
             }
         }
 
@@ -78,9 +78,11 @@ export const Container = styled.nav<Props>`
         }
 
         .settings{
-
             
-            li.dark-theme{
+            button.dark-theme{
+                cursor: pointer;
+
+                width: 100%;
 
                 display: flex;
                 flex-direction: row;
@@ -88,13 +90,30 @@ export const Container = styled.nav<Props>`
 
                 padding: 1rem;
 
+                background-color: rgba(0,0,0,.05);
+
+                border: 0;
+                border-radius: 2px 0 0 2px;
+
                 color: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
 
                 svg{
                     margin-right: 1rem;
                     height: 2.4rem;
                     width: auto;
-                    fill: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'initial'};
+                    fill: ${props => props.darkMode ? '#FDB813' : '#C4C3BE'};
+
+                    :hover{
+                    }
+                }
+
+                :hover{
+                    transition: all ease-in-out 150ms;
+                    background-color: rgba(0,0,0,.15);
+
+                    svg{
+                        fill: ${props => props.darkMode === false && '#F5F3CE'};
+                    }
                 }
             }
 
@@ -138,12 +157,12 @@ export const Container = styled.nav<Props>`
                         border: none;
 
                         svg{
-                            fill: ${props => props.showUserList ? '#ff1a75' : '#757474'};
+                            fill: ${props => props.showUserList ? 'var(--brand-color)' : 'var(--text-grey-variant3)'};
                             width: 55%;
                             height: inherit;
 
                             :hover{
-                                fill: #ff1a75 ;
+                                fill: var(--brand-color) ;
                             }
 
                             transition: all ease 300ms;
@@ -169,12 +188,13 @@ export const Container = styled.nav<Props>`
                     font-size: 1.8rem;
                     font-weight: 600;
 
-                    color: #333333;
+                    color: ${props => props.darkMode === true ? 'var(--text-grey-variant2)' : `#333333`};
+                    
                 }
 
                 :hover{
 
-                    border-right: 4px solid var(--brand-light-mode-color);
+                    border-right: 4px solid var(--brand-color);
 
                 }
             }
@@ -186,16 +206,19 @@ export const Container = styled.nav<Props>`
                 position: relative;
                 left: -10rem;
 
-                background-color: var(--bcg-light-mode);
+                background-color: ${props => props.darkMode === true ? 'var(--bcg-dark-mode)' : `var(--bcg-light-mode)`};
 
                 border-radius: 4px;
 
                 >*{
+
                     margin-left: 1rem;
+
                     a, svg{
-                        fill: #757474;
-                        color: #757474;
+                        fill: ${props => props.darkMode === true ? 'var(--text-grey-variant)' : 'var(--text-grey-variant3)'};
+                        color: ${props => props.darkMode === true ? 'var(--text-grey-variant)' : 'var(--text-grey-variant3)'};
                     }
+
                 }
 
                 animation: opacity-change ${props => props.showUserList ? 'forwards' : 'backwards'} 400ms;
@@ -215,10 +238,10 @@ export const Container = styled.nav<Props>`
                     
                     :hover{
                         svg{
-                            fill: #ff1a75;
+                            fill: var(--brand-color);
                         }
                         a{
-                            color: #ff1a75;
+                            color: var(--brand-color);
                         }
                     }
                 }
@@ -229,177 +252,177 @@ export const Container = styled.nav<Props>`
         h3{
             margin: 1rem 0;
             
-            color: #999999;
+            color: ${props => props.darkMode === true ? 'var(--text-grey-variant)' : '#999999'};
             font-weight: 600;
         }
 
         li#bookmarks{
-            border-right: ${props => props.pathname === 'bookmarks' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.pathname === 'bookmarks' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.pathname === 'bookmarks' ? '#ff1a75' : ''};
+                color: ${props => props.pathname === 'bookmarks' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.pathname === 'bookmarks' ? '#ff1a75' : ''};
+                    fill: ${props => props.pathname === 'bookmarks' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#history{
-            border-right: ${props => props.pathname === 'history' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.pathname === 'history' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.pathname === 'history' ? '#ff1a75' : ''};
+                color: ${props => props.pathname === 'history' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.pathname === 'history' ? '#ff1a75' : ''};
+                    fill: ${props => props.pathname === 'history' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#settings{
-            border-right: ${props => props.pathname === 'settings' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.pathname === 'settings' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.pathname === 'settings' ? '#ff1a75' : ''};
+                color: ${props => props.pathname === 'settings' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.pathname === 'settings' ? '#ff1a75' : ''};
+                    fill: ${props => props.pathname === 'settings' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#shounen{
-            border-right: ${props => props.genre === 'Shounen' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.genre === 'Shounen' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.genre === 'Shounen' ? '#ff1a75' : ''};
+                color: ${props => props.genre === 'Shounen' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.genre === 'Shounen' ? '#ff1a75' : ''};
+                    fill: ${props => props.genre === 'Shounen' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#shoujo{
-            border-right: ${props => props.genre === 'Shoujo' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.genre === 'Shoujo' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.genre === 'Shoujo' ? '#ff1a75' : ''};
+                color: ${props => props.genre === 'Shoujo' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.genre === 'Shoujo' ? '#ff1a75' : ''};
+                    fill: ${props => props.genre === 'Shoujo' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#seinen{
-            border-right: ${props => props.genre === 'seinen' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.genre === 'seinen' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.genre === 'Seinen' ? '#ff1a75' : ''};
+                color: ${props => props.genre === 'Seinen' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.genre === 'Seinen' ? '#ff1a75' : ''};
+                    fill: ${props => props.genre === 'Seinen' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#superpower{
-            border-right: ${props => props.genre === 'Super Power' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.genre === 'Super Power' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.genre === 'Super Power' ? '#ff1a75' : ''};
+                color: ${props => props.genre === 'Super Power' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.genre === 'Super Power' ? '#ff1a75' : ''};
+                    fill: ${props => props.genre === 'Super Power' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#school{
-            border-right: ${props => props.genre === 'School' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.genre === 'School' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.genre === 'School' ? '#ff1a75' : ''};
+                color: ${props => props.genre === 'School' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.genre === 'School' ? '#ff1a75' : ''};
+                    fill: ${props => props.genre === 'School' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#tv{
-            border-right: ${props => props.format === 'tv' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.format === 'tv' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.format === 'tv' ? '#ff1a75' : ''};
+                color: ${props => props.format === 'tv' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.format === 'tv' ? '#ff1a75' : ''};
+                    fill: ${props => props.format === 'tv' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#manga{
-            border-right: ${props => props.format === 'manga' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.format === 'manga' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.format === 'manga' ? '#ff1a75' : ''};
+                color: ${props => props.format === 'manga' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.format === 'manga' ? '#ff1a75' : ''};
+                    fill: ${props => props.format === 'manga' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#one_shot{
-            border-right: ${props => props.format === 'one_shot' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.format === 'one_shot' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.format === 'one_shot' ? '#ff1a75' : ''};
+                color: ${props => props.format === 'one_shot' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.format === 'one_shot' ? '#ff1a75' : ''};
+                    fill: ${props => props.format === 'one_shot' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#novel{
-            border-right: ${props => props.format === 'novel' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.format === 'novel' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.format === 'novel' ? '#ff1a75' : ''};
+                color: ${props => props.format === 'novel' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.format === 'novel' ? '#ff1a75' : ''};
+                    fill: ${props => props.format === 'novel' ? 'var(--brand-color)' : ''};
                 }
             }
         } 
         li#movie{
-            border-right: ${props => props.format === 'movie' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.format === 'movie' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.format === 'movie' ? '#ff1a75' : ''};
+                color: ${props => props.format === 'movie' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.format === 'movie' ? '#ff1a75' : ''};
+                    fill: ${props => props.format === 'movie' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#special{
-            border-right: ${props => props.format === 'special' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.format === 'special' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.format === 'special' ? '#ff1a75' : ''};
+                color: ${props => props.format === 'special' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.format === 'special' ? '#ff1a75' : ''};
+                    fill: ${props => props.format === 'special' ? 'var(--brand-color)' : ''};
                 }
             }
         }
         li#ova{
-            border-right: ${props => props.format === 'ova' ? '4px solid #ff1a75' : ''};
+            border-right: ${props => props.format === 'ova' ? '4px solid var(--brand-color)' : ''};
 
             >a{
-                color: ${props => props.format === 'ova' ? '#ff1a75' : ''};
+                color: ${props => props.format === 'ova' ? 'var(--brand-color)' : ''};
 
                 >svg{
-                    fill: ${props => props.format === 'ova' ? '#ff1a75' : ''};
+                    fill: ${props => props.format === 'ova' ? 'var(--brand-color)' : ''};
                 }
             }
         }
 
-        li{
+        li, button.dark-theme{
             margin: 1rem 0;
 
             >a{
@@ -409,7 +432,7 @@ export const Container = styled.nav<Props>`
                 width: 100%;
 
                 font-weight: 600;
-                color: #757474;
+                color: ${props => props.darkMode ? 'var(--text-grey-variant)' : 'var(--text-grey-variant3)'};
 
                 >svg{
                     height: 2.4rem;
@@ -417,18 +440,18 @@ export const Container = styled.nav<Props>`
 
                     margin-right: 1rem;
 
-                    fill: #757474;
+                    fill: var(--text-grey-variant3);
                 }
             }
 
             :hover{
-                border-right: 4px solid #ff1a75;
+                border-right: 4px solid var(--brand-color);
 
                 >a{
-                    color: #ff1a75;
+                    color: var(--brand-color);
 
                     >svg{
-                        fill: #ff1a75;
+                        fill: var(--brand-color);
                     }
                 }
                 

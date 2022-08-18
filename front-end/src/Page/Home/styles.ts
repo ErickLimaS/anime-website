@@ -3,6 +3,7 @@ import styled from "styled-components";
 interface ContainerProps {
 
     innerPageLink: number; //aux to show which inner page must be shown
+    darkMode: boolean
 
 }
 
@@ -24,8 +25,6 @@ export const Container = styled.div<ContainerProps>`
     }
 
     width: 100%;
-/* 
-    background-color: #fafafa; */
     
     // loading effect
     .div-skeleton{
@@ -62,8 +61,6 @@ export const Container = styled.div<ContainerProps>`
         padding: 3rem 3rem 3rem 3rem;
 
         @media(max-width: 1080px){
-
-            /* padding: 3rem 2rem!important; */
 
             width: 70%;
             padding: 0 1rem ;
@@ -106,13 +103,19 @@ export const Container = styled.div<ContainerProps>`
                 color: #888888;
             }
             a.anime{
-                color: ${props => props.innerPageLink === 0 && `#01066b`};
+                color: ${props => props.darkMode === true && props.innerPageLink === 0 && `var(--brand-color)`};
+
+                color: ${props => props.darkMode === false && props.innerPageLink === 0 && `var(--brand-color)`};
             } 
             a.manga{
-                color: ${props => props.innerPageLink === 1 && `#01066b`};
+                color: ${props => props.darkMode === true && props.innerPageLink === 1 && `var(--brand-color)`};
+
+                color: ${props => props.darkMode === false && props.innerPageLink === 1 && `var(--brand-color)`};
             }
             a.movie{
-                color: ${props => props.innerPageLink === 2 && `#01066b`};
+                color: ${props => props.darkMode === true && props.innerPageLink === 2 && `var(--brand-color)`};
+
+                color: ${props => props.darkMode === false && props.innerPageLink === 2 && `var(--brand-color)`};
             }
 
         }
@@ -121,15 +124,6 @@ export const Container = styled.div<ContainerProps>`
             display: flex;
             flex-direction: column;
         }
-
-        //component AnimesReleasing Tweak
-        /* div.media-type{
-            margin-top: -2.5rem!important;
-
-            @media(max-width: 620px){
-                margin-top: -4rem!important;
-            }
-        } */
 
         // gets link clicked on Home and shows which section is correspondent
         section#anime, section#manga, section#movie {
@@ -147,7 +141,7 @@ export const Container = styled.div<ContainerProps>`
                     h2{
                         font-size: 1.6rem;
                         font-weight: 600;
-                        color: #625e5e;
+                        color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#625e5e'};
                     }
 
                     >div{
@@ -174,13 +168,13 @@ export const Container = styled.div<ContainerProps>`
                             border-radius: 4000px;
 
                             outline: 0;
-                            border: 1px solid #c0c0c0;
+                            border: ${props => props.darkMode ? '1px solid var(--text-grey-variant2)' : '1px solid #c0c0c0'};
 
                             svg{
                                 width: 0.7rem;
                                 height: auto;
 
-                                fill: #444;
+                                fill: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#444'};
                             }
 
                             :hover{
@@ -192,12 +186,12 @@ export const Container = styled.div<ContainerProps>`
                         button[disabled]{
                             cursor: default;
 
-                            background-color: rgb(84 84 84 / 10%);
+                            opacity: 0.5;
                             
                             border-color: #dddddd;
 
                             svg{
-                                fill: #c0c0c0!important;
+                                ${props => props.darkMode ? 'var(--text-grey-variant)!important' : '#444!important'};
                             }
 
                         }
@@ -233,13 +227,15 @@ export const Container = styled.div<ContainerProps>`
         }
 
         section#manga {
-            display: ${props => props.innerPageLink === 1 ? `flex` : `none`};
 
+            display: ${props => props.innerPageLink === 1 ? `flex` : `none`};
             
         }
 
         section#movie {
+
             display: ${props => props.innerPageLink === 2 ? `flex` : `none`};
+
         }
 
     }
@@ -277,15 +273,15 @@ export const Container = styled.div<ContainerProps>`
                 margin: 2rem 0;
 
                 h3{
+                    color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#625e5e'};
                     font-size: 1.6rem;
                     font-weight: 600;
-                    color: #625e5e;
                 }
 
                 svg{
+                    color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#625e5e'};
                     width: 15px;
                     height: auto;
-                    color: #625e5e;
                 }
 
             }
@@ -303,7 +299,7 @@ export const Container = styled.div<ContainerProps>`
 
                     font-size: 1.4rem;
                     font-weight: 600;
-                    color: #ff1a75;
+                    color: ${props => props.darkMode ? 'var(--brand-color)' : 'var(--pink-variant-1)'};
 
                     border-radius: 2px;
                     background-color: #ffd0e3;
