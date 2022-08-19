@@ -7,28 +7,31 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-padding: 2rem 1.5rem;
+    padding: 2rem 1.5rem;
 
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 
-@media(max-width: 1020px){
-    width: 100%;
-}
-
-@media(max-width: 1080px){
-    padding: 0 1rem;
-
-}
-
-.search-desktop{
-    
-    @media(max-width: 1080px){
-        display: none;
+    @media(max-width: 1020px){
+        width: 100%;
     }
-}
+
+    @media(max-width: 1080px){
+        padding: 0 1rem;
+    }
+
+    @media(max-width: 768px){
+        padding: 0rem;
+    }
+
+    .search-desktop{
+        
+        @media(max-width: 1080px){
+            display: none;
+        }
+    }
 
     div.skeleton{
         height: 40vh;
@@ -46,7 +49,12 @@ justify-content: flex-start;
     }
 
     .info-aside{
-        /* width: 100%; */
+
+        @media(max-width: 768px){
+
+            width: 100%;
+
+        }
 
         .info-heading{
 

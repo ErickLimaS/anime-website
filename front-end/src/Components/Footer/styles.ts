@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const Container = styled.footer`
+interface Props {
+    darkMode: boolean
+}
+
+export const Container = styled.footer<Props>`
 
     display: flex;
     flex-direction: column;
@@ -9,7 +13,7 @@ export const Container = styled.footer`
 
     font-size: 1.8rem;
 
-    background-color: #f92f7f;
+    background-color: ${props => props.darkMode ? 'var(--black-variant)' : '#f92f7f'};
 
     div.footer-info{
         width: 80%;
@@ -104,6 +108,7 @@ export const Container = styled.footer`
     }
 
     small {
+
         display: flex;
         flex-direction: row;
         justify-content: center;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import * as C from './styles'
 import anilist from '../../API/anilist'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 export default function Footer() {
 
@@ -15,12 +16,14 @@ export default function Footer() {
       setTrending(data)
     }
     load()
-  }, []
+  }, [])
 
-  )
+  // dark mode
+  const darkModeSwitchConst = useSelector((state: any) => state.darkModeSwitch)
+  const { darkMode } = darkModeSwitchConst
 
   return (
-    <C.Container>
+    <C.Container darkMode={darkMode}>
 
       <div className='footer-info'>
 
@@ -90,8 +93,8 @@ export default function Footer() {
         </div>
 
       </div>
-
       <small>Site feito para apenas para <a href='https://erick-lima.netlify.app/' target='_blank' rel='noreferrer'>meu portfólio.</a> Non-Commercial Use.</small>
+
 
     </C.Container>
   )

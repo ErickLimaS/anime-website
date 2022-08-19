@@ -44,8 +44,6 @@ export default function Home() {
 
     window.scrollTo(0, 0);
 
-    document.title = 'Home | AniProject'
-
     document.title = 'Loading... | AniProject'
 
     const loadData = async () => {
@@ -129,6 +127,8 @@ export default function Home() {
     }
     loadData()
 
+    document.title = 'Home | AniProject'
+    
   }, [indexInnerPageLink])
 
   //handles button navigation through results to topRated and Releasing sections

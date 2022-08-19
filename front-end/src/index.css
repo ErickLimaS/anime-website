@@ -4,22 +4,19 @@
   --bcg-dark-mode: #181818;
 
   --brand-color: #ff1a75;
-  /* --brand-light-mode-color: #ff1a75; */
   --brand-dark-mode-color: #3b0018;
 
   --pink-variant-1: #ff5ebc;
   --pink-variant-2: #ff0095;
   --pink-variant-3: #ffa2c8;
 
+  --white: #fff;
   --black-variant: #212121;
-
-  /* --blue-home-nav-color: #01066b; */
 
   --text-grey-variant: #a3a3a3;
   --text-grey-variant2: #cfcfcf;
   --text-grey-variant3: #757474;
 
-  --white: #fff;
 
 }
 

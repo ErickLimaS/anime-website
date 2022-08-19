@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface Props {
+    darkMode: boolean
+}
 
-    background-color: #ff5297;
+export const Container = styled.div<Props>`
+
+background-color: ${props => props.darkMode ? 'var(--black-variant)' : '#ff5297'};
 
     height: 91vh;
 
@@ -94,13 +98,13 @@ export const Container = styled.div`
         align-items: center;
 
         h1{
-            color: #fff;
+            color: var(--white);
             font-size: 5.4rem;
             font-weight: 600;
         }
 
         ul{
-            color: #fff;
+            color: var(--white);
 
             margin-top: 2rem;
             margin-left: 2rem;

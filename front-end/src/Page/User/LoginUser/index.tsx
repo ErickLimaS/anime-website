@@ -14,8 +14,11 @@ export default function LoginUser() {
     const password = React.useRef() as React.MutableRefObject<HTMLInputElement>
 
     const userLogin = useSelector((state: any) => state.userLogin)
-
     const { userInfo, loading, error } = userLogin
+
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
 
     const dispatch: any = useDispatch()
 
@@ -121,7 +124,8 @@ export default function LoginUser() {
     return (
         <>
             <HeaderAlternative />
-            <C.Container>
+
+            <C.Container darkMode={darkMode}>
                 <div className='text'>
 
                     <h1>Create Your Account and Stay Up to Date With New Animes!</h1>

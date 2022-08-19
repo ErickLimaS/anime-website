@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
 import { Link, useNavigate } from 'react-router-dom';
-import { AnyAction, Dispatch } from 'redux';
 import Swal from 'sweetalert2';
 import HeaderAlternative from '../../../Components/HeaderAlternative';
 import { registerUser } from '../../../redux/actions/userActions';
@@ -17,6 +16,10 @@ export default function RegisterUser() {
 
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
+
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
 
     const redirect = window.location.search ? `/${window.location.search.split(`=`)[1]}` : "/"
     const navigate = useNavigate()
@@ -124,7 +127,7 @@ export default function RegisterUser() {
     return (
         <>
             <HeaderAlternative />
-            <C.Container>
+            <C.Container darkMode={darkMode}>
 
                 <div className='text'>
 

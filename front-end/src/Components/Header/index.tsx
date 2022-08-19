@@ -23,7 +23,7 @@ import { ReactComponent as SunSvg } from '../../imgs/svg/sun-fill.svg'
 import { ReactComponent as MoonSvg } from '../../imgs/svg/moon-fill.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { darkModeSwitch, logoutUser } from '../../redux/actions/userActions'
-import logo from '../../imgs/logo.png'
+import logo from '../../imgs/logo2.png'
 
 export default function Header() {
 

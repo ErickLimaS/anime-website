@@ -1,7 +1,7 @@
 import React from 'react'
 import * as C from './styles'
 import {  useSelector } from 'react-redux'
-import logo from '../../imgs/logo.png'
+import logo from '../../imgs/logo2.png'
 
 export default function HeaderAlternative() {
 

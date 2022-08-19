@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface Props {
+    darkMode: boolean
+}
 
-    background-color: #ff5297;
+export const Container = styled.div<Props>`
+
+    background-color: ${props => props.darkMode ? 'var(--black-variant)' : '#ff5297'};
 
     height: 91vh;
 
@@ -89,13 +93,13 @@ export const Container = styled.div`
         align-items: center;
 
         h1{
-            color: #fff;
+            color: var(--white);
             font-size: 5.4rem;
             font-weight: 600;
         }
 
         ul{
-            color: #fff;
+            color: var(--white);
 
             margin-top: 2rem;
             margin-left: 2rem;
@@ -122,7 +126,7 @@ export const Container = styled.div`
 
         padding: 1rem 4rem;
 
-        background-color: #fafafa;
+        background-color: var(--bcg-light-mode);
 
         border-radius: 4px;
 
@@ -203,7 +207,7 @@ export const Container = styled.div`
                 font-size: 1.8rem;
                 font-weight: 400;
 
-                background-color: #fafafa;
+                background-color: var(--bcg-light-mode);
                 
                 border-radius: 4px;
                 border: 2px solid #ff5297;

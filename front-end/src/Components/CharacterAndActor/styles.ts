@@ -71,12 +71,10 @@ export const Container = styled.div<Props>`
                         width: fit-content;
                     }
                     h2{
-                        color: #222222;
                         font-size: 1.4rem;
                         font-weight: 600;
                     }
                     h2:last-child{
-                        color: #666666;
                         font-size: 1.2rem;
                         font-weight: 400;
                     }
