@@ -21,15 +21,20 @@ Projeto de um site de animes, mangas e filmes relacionados para desenvolver minh
 
 ## :heavy_check_mark: Tecnologias Utilizadas
 
+No front-end (hospedado na Netlify):
+
 - ``React``
 - ``TypeScript``
+- ``Styled-Components``
+- ``SweetAlert2``
 - ``Redux``
+- ``Axios``
+- ``GraphQL``
+
+No Back-End (hospedado na Heroku):
+
 - ``Node.js``
 - ``MongoDB``
 - ``Express``
 - ``Bcrypt``
-- ``Json Web Token``
-- ``Styled-Components``
-- ``SweetAlert2``
-- ``Axios``
-- ``GraphQL``
+- ``JSON Web Token``
