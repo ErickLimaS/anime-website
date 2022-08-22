@@ -30,7 +30,7 @@ export default function MoviePageContent(data: any) {
   // state
   const userLogin = useSelector((state: any) => state.userLogin)
   const { userInfo } = userLogin
-  
+
   // dark mode
   const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
   const { darkMode } = darkModeSwitch
@@ -239,6 +239,72 @@ export default function MoviePageContent(data: any) {
     }
 
   }
+  
+  // drag overflowing elements instead of using scrollbar
+  function dragMouseEvent1() {
+    const slider: any = document.querySelector('.list-from-same-franchise');
+    let isDown = false;
+    let startX: any;
+    let scrollLeft: any;
+
+    slider.addEventListener('mousedown', (e: any) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+      slider.style.cursor = 'grab'
+    });
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+      slider.style.cursor = 'default'
+    });
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+      slider.style.cursor = 'default'
+    });
+    slider.addEventListener('mousemove', (e: any) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 3; //scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+      console.log(walk);
+    });
+  }
+  function dragMouseEvent2() {
+    const slider: any = document.querySelector('.list-similar-movies');
+    let isDown = false;
+    let startX: any;
+    let scrollLeft: any;
+
+    slider.addEventListener('mousedown', (e: any) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+      slider.style.cursor = 'grab'
+    });
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+      slider.style.cursor = 'default'
+    });
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+      slider.style.cursor = 'default'
+    });
+    slider.addEventListener('mousemove', (e: any) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 3; //scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+      console.log(walk);
+    });
+  }
 
   return (
     <C.Container
@@ -359,7 +425,7 @@ export default function MoviePageContent(data: any) {
 
           <h2>From Same Franchise</h2>
 
-          <ul>
+          <ul onDrag={() => dragMouseEvent1()} className='list-from-same-franchise'>
             {data.data.relations.nodes.map((item: any) => (
               <li>
                 <AnimesReleasingThisWeek key={item.id} data={item} />
@@ -374,7 +440,7 @@ export default function MoviePageContent(data: any) {
         <div className='similar-animes'>
           <h2>Similar to <span>{data.data.title.romaji}</span></h2>
 
-          <ul>
+          <ul onDrag={() => dragMouseEvent2()} className='list-similar-movies'>
             {data.data.recommendations.edges.slice(0, 8).map((item: any) => (
               <li key={item.node.id}><AnimesReleasingThisWeek data={item.node.mediaRecommendation} /></li>
             ))}

@@ -3,13 +3,20 @@ import * as C from './styles'
 import { ReactComponent as StarSvg } from '../../imgs/svg/star.svg'
 import { ReactComponent as StarFillSvg } from '../../imgs/svg/star-fill.svg'
 import { ReactComponent as StarHalfSvg } from '../../imgs/svg/star-half.svg'
+import { useSelector } from 'react-redux'
 
 export default function Score(data: any) {
 
-    const score = data.data / 2
+    const score: number = data.data / 2
+
+    // dark mode
+    const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
+    const { darkMode } = darkModeSwitch
 
     return (
-        <C.Container>
+        <C.Container
+            darkMode={darkMode}
+        >
             {score >= 49 && (
                 <>
                     <StarFillSvg />
@@ -17,6 +24,7 @@ export default function Score(data: any) {
                     <StarFillSvg />
                     <StarFillSvg />
                     <StarFillSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 45 && score < 49 && (
@@ -26,6 +34,7 @@ export default function Score(data: any) {
                     <StarFillSvg />
                     <StarFillSvg />
                     <StarHalfSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 40 && score < 45 && (
@@ -35,6 +44,7 @@ export default function Score(data: any) {
                     <StarFillSvg />
                     <StarFillSvg />
                     <StarSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 35 && score < 40 && (
@@ -44,6 +54,7 @@ export default function Score(data: any) {
                     <StarFillSvg />
                     <StarHalfSvg />
                     <StarSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 30 && score < 35 && (
@@ -53,6 +64,7 @@ export default function Score(data: any) {
                     <StarFillSvg />
                     <StarSvg />
                     <StarSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 25 && score < 30 && (
@@ -62,6 +74,7 @@ export default function Score(data: any) {
                     <StarHalfSvg />
                     <StarSvg />
                     <StarSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 20 && score < 25 && (
@@ -71,6 +84,7 @@ export default function Score(data: any) {
                     <StarSvg />
                     <StarSvg />
                     <StarSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 15 && score < 20 && (
@@ -80,6 +94,7 @@ export default function Score(data: any) {
                     <StarSvg />
                     <StarSvg />
                     <StarSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 10 && score < 15 && (
@@ -89,6 +104,7 @@ export default function Score(data: any) {
                     <StarSvg />
                     <StarSvg />
                     <StarSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score < 10 && (
@@ -98,6 +114,7 @@ export default function Score(data: any) {
                     <StarSvg />
                     <StarSvg />
                     <StarSvg />
+                    <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
 

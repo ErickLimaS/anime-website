@@ -55,8 +55,6 @@ export const Search = styled.div<Props>`
         border-right: none;
         border-radius: 18px 0 0 18px;
 
-        /* padding-right: 1rem!important; */
-
         color: #ff5ebc;
 
         height: 20px;
@@ -158,9 +156,9 @@ export const SearchResults = styled.div<Props2>`
     position: relative;
     
     margin: 1rem 0;
-    padding: 1rem;
+    padding: 1rem 0rem;
 
-    background-color: ${props => props.darkMode ? '#181818' : 'var(--pink-variant-3)'};
+    background-color: ${props => props.darkMode ? '#181818' : 'transparent'};
 
     border-radius: 4px;
 
@@ -187,7 +185,7 @@ export const SearchResults = styled.div<Props2>`
         h1{
             font-size: 1.8rem;
             font-weight: 400;
-            color: #fff;
+            color: ${props => props.darkMode ? '#fff' : '#000'};
         }
         button{
             cursor: pointer;            
@@ -218,7 +216,7 @@ export const SearchResults = styled.div<Props2>`
     .result-item{
         background-color: #fafafa;
 
-        width: 300px;
+        width: 293px;
 
         border-radius: 4px;
 

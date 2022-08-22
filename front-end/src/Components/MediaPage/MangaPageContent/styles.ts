@@ -89,8 +89,9 @@ export const Container = styled.div<Props>`
 
                 font-size: 3rem;
                 font-weight: 600;
-                /* color: var(--pink-variant-1); */
-                color: ${props => props.data.coverImage.color};
+                color: ${props => props.darkMode === true && "var(--text-grey-variant2)"};
+                color: ${props => props.darkMode === false && "var(--black-variant)"};
+                color: ${props => props.data.coverImage.color && props.data.coverImage.color};
             }
 
             .buttons{
@@ -244,7 +245,7 @@ export const Container = styled.div<Props>`
            
             @media(min-width: 1080px){
                 ::-webkit-scrollbar {
-                    height: 8px;
+                    height: 0px;
                 }
 
                 ::-webkit-scrollbar-track {
@@ -295,7 +296,7 @@ export const Container = styled.div<Props>`
 
             @media(min-width: 1080px){
                 ::-webkit-scrollbar {
-                    height: 8px;
+                    height: 0px;
                 }
 
                 ::-webkit-scrollbar-track {

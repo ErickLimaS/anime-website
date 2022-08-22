@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface Props{
+    darkMode: boolean
+}
+
+export const Container = styled.div<Props>`
 
 
             display: flex;
@@ -15,6 +19,11 @@ export const Container = styled.div`
                 margin: 0 0.5rem;
 
                 fill: #ff9130;
+            }
+
+            small{
+                font-size: 1rem;
+                color: ${props => props.darkMode ? 'var(--text-grey-variant3)' : 'var(--text-grey-variant)'};
             }
 
 

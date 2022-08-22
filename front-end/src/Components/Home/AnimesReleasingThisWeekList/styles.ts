@@ -21,7 +21,7 @@ export const AnimeToBeListed = styled.div<itemData>`
     background-repeat: no-repeat;
     background-size: cover;
     
-    border-radius: 2px;
+    border-radius: 6px;
 
     div.add-button{
 
@@ -33,6 +33,8 @@ export const AnimeToBeListed = styled.div<itemData>`
         align-items: flex-start;
 
         overflow: hidden;
+
+        border-radius: 6px;
         
         div.media-type{
             background-color: rgba(0,0,0,.75);
