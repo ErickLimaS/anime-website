@@ -166,10 +166,6 @@ export default function AsideInfo(data: any) {
               <div className='trailer'>
                 <h2>Trailer</h2>
 
-                {/* //   <a href={`http://youtu.be/${data.data.trailer.id}`} target='_blank' rel='noreferrer'>
-              //     <img src={data.data.trailer.thumbnail} alt={`Trailer of ${data.data.title.romaji}`}></img>
-              //   </a> */}
-
                 <iframe width='100%' height='240px' title='Trailer' src={`https://www.youtube.com/embed/${data.data.trailer.id}`}>
 
                 </iframe>

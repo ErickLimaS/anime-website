@@ -91,7 +91,10 @@ export const Search = styled.div<Props>`
         :-webkit-autofill:active{
             color: ${props => props.darkMode ? '#fff!important' : 'initial'};
 
+            box-shadow: none;
             -webkit-box-shadow: 0 0 0 30px ${props => props.darkMode ? '#212121' : '#f3f2ff'} inset !important;
+            
+            -webkit-text-fill-color: ${props => props.darkMode ? 'var(--text-grey-variant2)' : 'var(--black-variant)'}  !important;
         }
 
         :active{
@@ -166,6 +169,8 @@ export const SearchResults = styled.div<Props2>`
 
         display: grid;
         grid-template-columns: auto auto;
+        justify-items: center;
+        align-items: center;
 
     }
 
@@ -179,6 +184,7 @@ export const SearchResults = styled.div<Props2>`
         @media(min-width: 620px) and (max-width: 768px){
 
             justify-content: space-evenly;
+            flex-direction: column-reverse;
 
         }
 
@@ -223,7 +229,7 @@ export const SearchResults = styled.div<Props2>`
         border: 1px solid #ffa2c8;
 
         @media(max-width: 620px){
-            width: -webkit-fill-available;
+            width: initial;
         }
 
         :hover{

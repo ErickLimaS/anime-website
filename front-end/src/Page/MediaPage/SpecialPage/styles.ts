@@ -9,18 +9,35 @@ export const Container = styled.div<Props>`
     display: flex;
     flex-direction: row;
 
+    @media(max-width: 1080px){
+        /* justify-content: space-evenly; */
+    }
+    
+    @media(max-width: 768px){
+        justify-content: center;
+
+        padding: 0;
+    }
+    
     .main{
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
+        /* justify-content: space-evenly; */
+        justify-content: flex-start;
 
-        width: 100%;
+        /* width: 100%; */
+        /* width: 70vw; */
 
         @media(max-width: 1080px){
             flex-wrap: wrap;
-            /* width: 80%; */
+            /* width: 70%; */
+            width: 75%;
         }
 
+        @media(max-width: 768px){
+            flex-wrap: wrap;
+            width: 95%;
+        }
         @media(max-width: 620px){
             flex-wrap: wrap;
             width: 90%;

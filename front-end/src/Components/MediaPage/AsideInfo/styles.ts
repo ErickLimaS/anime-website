@@ -7,23 +7,42 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-    padding: 2rem 1.5rem;
+    /* padding: 2rem 1.5rem; */
+    /* margin: 2rem 1.5rem; */
+    margin: 2rem 0;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
 
+    @media(min-width: 1020px){
+        .search-desktop{
+                width: 90%;
+            input#search-input{
+                width: 60%;
+            }
+        }
+        .info-aside{
+            
+            width: 90%;
+
+        }
+    }
+
     @media(max-width: 1020px){
         width: 100%;
     }
 
     @media(max-width: 1080px){
-        padding: 0 1rem;
+        /* padding: 0 1rem; */
+        margin: 0 1rem;
+        width: 100%;
     }
 
     @media(max-width: 768px){
-        padding: 0rem;
+        /* padding: 0rem; */
+        margin: 0rem;
     }
 
     .search-desktop{
@@ -265,10 +284,15 @@ export const Container = styled.div<Props>`
 
                         border-radius: 1000px;
 
+                        overflow: hidden;
+
                         height: 100px;
                         width: 100px;
-                        
-                        overflow: hidden;
+
+                        @media(max-width: 1280px){
+                            height: 70px;
+                            width: 70px;
+                        }
 
                         @media(max-width: 620px){
                             height: 90px;

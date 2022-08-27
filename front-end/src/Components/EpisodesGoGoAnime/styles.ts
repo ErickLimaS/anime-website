@@ -32,8 +32,8 @@ export const Container = styled.div<PropsContainer>`
 
                 padding: 1rem 0.5rem;
 
-                width: -webkit-fill-available;
-                height: -webkit-fill-available;
+                width: inherit;
+                height: inherit;
 
         }
 

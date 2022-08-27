@@ -258,8 +258,7 @@ export const Container = styled.header<ContainerProps>`
                 display: ${props => props.display === false && 'none!important' };
 
                 >*{
-                    width: -webkit-fill-available;
-                    width: -moz-available;
+                    width: 100%;
                 }
                 
 

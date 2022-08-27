@@ -89,8 +89,9 @@ export const AnimeToBeListed = styled.div<itemData>`
     :hover{
             
             
-            .see-more-button{
+        .see-more-button{
                 background-image: linear-gradient(rgba(0,0,0,.01) , rgba(0,0,0,.8) 20%);
+                border-radius: 0 0 6px 6px;
 
             .name-fade{
                 opacity: 1;

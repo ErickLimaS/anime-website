@@ -207,7 +207,7 @@ export const Container = styled.div<ContainerProps>`
                 align-items: center;
 
                 @media(max-width: 768px){
-                    display: -webkit-box;
+                    display: flex;
                     justify-content: center;
 
                     overflow-y: auto;

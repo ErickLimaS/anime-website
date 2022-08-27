@@ -9,19 +9,33 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-    width: 100%;
+    /* width: 100%; */
+    width: 56vw;
 
     border-left: 2px solid #e6e6e6;
     border-right: 2px solid #e6e6e6;
 
     padding: 2rem;
+    
+    @media(max-width: 1280px){
+        width: 50vw;
+    }
+    
+    @media(max-width: 1080px){
+        width: 100%;
+        border-right: 0;
+        padding: 1rem;
+    }
 
-    @media(max-width: 1020px){
-        width: -webkit-fill-available;
-        padding: 1rem ;
+    @media(max-width: 768px){
+        border-left: 0;
+        border-right: 0;
+        
+        padding: 0;
     }
 
     @media(max-width: 620px){
+        width: 100%;
         border-left: 0;
         border-right: 0;
         padding: 0;
@@ -30,7 +44,7 @@ export const Container = styled.div<Props>`
     .search-mobile{
         display: none;
     
-        @media(max-width: 620px){
+        @media(max-width: 768px){
             display: block;
 
             padding: 1rem 0;
@@ -39,12 +53,18 @@ export const Container = styled.div<Props>`
 
     .banner-img{
         height: 40vh;
-        width: auto;
-        background-image: url(${(props) => props.data.bannerImage ? props.data.bannerImage : 'https://www.seekpng.com/png/full/132-1326686_creepy-yuno-anime-banners-de-youtube.png'});
+        width: 56vw;
+        background-image: url(${(props) => props.data.bannerImage ? props.data.bannerImage : 'https://jornalismorio.espm.br/wp-content/uploads/2021/12/confira-agora-os-25-melhores-animes-que-ja-foram-criados-1.jpg'});
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
 
+        @media(max-width: 1280px){
+
+            width: auto;
+
+        }
+        
         @media(max-width: 620px){
 
             height: 25vh;
@@ -235,7 +255,7 @@ export const Container = styled.div<Props>`
 
         ul{
             overflow: auto;
-            width: 110vh;
+            /* width: 110vh; */
             display: flex;
             flex-direction: row;
 
@@ -286,7 +306,7 @@ export const Container = styled.div<Props>`
 
         ul{
             overflow: auto;
-            width: 110vh;
+            /* width: 110vh; */
             display: flex;
             flex-direction: row;
 

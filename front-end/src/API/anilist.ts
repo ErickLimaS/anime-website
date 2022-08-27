@@ -10,8 +10,9 @@ export default {
     getNewReleases: async (type: String, format?: String) => {
 
         const seasonYear = new Date().getFullYear()
-        let season;
 
+        // gets the currently month and convert it to a season string 
+        let season;
         switch (new Date().getMonth()) {
             case 0:
                 season = 'WINTER'
