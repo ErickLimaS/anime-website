@@ -208,9 +208,15 @@ export const Container = styled.div<ContainerProps>`
 
                 @media(max-width: 768px){
                     display: flex;
-                    justify-content: center;
+                    justify-content: flex-start;
 
                     overflow-y: auto;
+
+                    >div{
+
+                        min-width: 18rem;
+
+                    }
                 }
 
             }

@@ -98,7 +98,7 @@ export default function AsideInfo(data: any) {
               )}
 
               {data.data.nextAiringEpisode && (
-                <li className='releasing'><PlayCaretSvg /> Next Episode on <span>{nextEpisodeDate.getDate()}/{nextEpisodeDate.getMonth() + 1}/{nextEpisodeDate.getYear()}</span></li>
+                <li className='releasing'><PlayCaretSvg /> Next Episode on <span>{nextEpisodeDate.getDate()}/{nextEpisodeDate.getMonth() + 1}/{nextEpisodeDate.getYear() === 122 ? "2022" : nextEpisodeDate.getYear()}</span></li>
               )}
 
               {(data.data.format === 'MOVIE' && (

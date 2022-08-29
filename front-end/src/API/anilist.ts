@@ -69,9 +69,9 @@ export default {
                 },
                 data: JSON.stringify({
 
-                    query: `query($type: MediaType, $format: MediaFormat, $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}) {
+                    query: `query($type: MediaType, $format: MediaFormat, ${format !== 'MOVIE' ? '$status: MediaStatus, ' : ''} $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}) {
                         Page(page: $page, perPage: $perPage){
-                            media (season: $season, seasonYear: $seasonYear, type: $type, format: $format ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                            media (${format !== 'MOVIE' ? 'status: $status, ' : ''} season: $season, seasonYear: $seasonYear, type: $type, format: $format ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
                                 title{
                                     romaji
                                     native
@@ -106,11 +106,11 @@ export default {
                         'type': `${type}`,
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
+                        'status': 'RELEASING',
                         'perPage': 10,
                         'season': `${season}`,
                         'seasonYear': `${seasonYear}`,
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
-                        // 'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                         'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                     }
 
@@ -134,10 +134,14 @@ export default {
 
         try {
 
+            const yyyy = new Date().getFullYear()
+            const mm = new Date().getMonth() >= 0 && new Date().getMonth() <= 9 ?
+                `0${new Date().getMonth()}` : `${new Date().getMonth()}`
+            const dd = '00'
+
             //gets all user info so the request will tell if must be shown adult content
             const userInfo = localStorage.getItem('userInfo') ?
                 JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
-
 
             const { data } = await Axios({
                 url: `${BASE_URL}`,
@@ -145,9 +149,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $format: MediaFormat, $perPage: Int, $page: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
+                        query($type: MediaType, $format: MediaFormat, $sort: [MediaSort], $perPage: Int, $page: Int, $startDate_greater: FuzzyDateInt ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
                             Page(page: $page, perPage: $perPage){
-                                media(status: RELEASING, type: $type, format: $format, sort: UPDATED_AT_DESC ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                                media(status: RELEASING, startDate_greater: $startDate_greater, type: $type, format: $format, sort: $sort, ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
                                     title{
                                         romaji
                                         native
@@ -192,10 +196,11 @@ export default {
                     `,
                     variables: {
                         'type': `${type}`,
+                        'sort': ['UPDATED_AT_DESC', 'TRENDING_DESC'],
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': page ? page : 1,
                         'perPage': 4,
-                        'year': new Date().getFullYear(),
+                        'startDate_greater': `${yyyy}${mm}${dd}`,
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
                         'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                     }
