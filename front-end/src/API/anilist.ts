@@ -11,9 +11,12 @@ export default {
 
         const seasonYear = new Date().getFullYear()
 
+        const mm = new Date().getMonth()
+        const dd = new Date().getDate()
+
         // gets the currently month and convert it to a season string 
         let season;
-        switch (new Date().getMonth()) {
+        switch (mm) {
             case 0:
                 season = 'WINTER'
                 break;
@@ -21,7 +24,12 @@ export default {
                 season = 'WINTER'
                 break;
             case 2:
-                season = 'SPRING'
+                if (dd > 20) {
+                    season = 'SPRING'
+                }
+                else {
+                    season = 'WINTER'
+                }
                 break;
             case 3:
                 season = 'SPRING'
@@ -30,7 +38,12 @@ export default {
                 season = 'SPRING'
                 break;
             case 5:
-                season = 'SUMMER'
+                if (dd > 21) {
+                    season = 'SUMMER'
+                }
+                else {
+                    season = 'SPRING'
+                }
                 break;
             case 6:
                 season = 'SUMMER'
@@ -39,7 +52,12 @@ export default {
                 season = 'SUMMER'
                 break;
             case 8:
-                season = 'AUTUMN'
+                if (dd > 22) {
+                    season = 'AUTUMN'
+                }
+                else {
+                    season = 'SUMMER'
+                }
                 break;
             case 9:
                 season = 'AUTUMN'
@@ -48,7 +66,12 @@ export default {
                 season = 'AUTUMN'
                 break;
             case 11:
-                season = 'WINTER'
+                if (dd > 21) {
+                    season = 'WINTER'
+                }
+                else {
+                    season = 'AUTUMN'
+                }
                 break;
             default: // exception/error
                 season = 'SUMMER'
