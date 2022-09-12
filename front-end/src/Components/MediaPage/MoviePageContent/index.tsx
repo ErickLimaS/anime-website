@@ -13,13 +13,12 @@ import CharacterAndActor from '../../CharacterAndActor'
 import { useDispatch, useSelector } from 'react-redux'
 import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import Swal from 'sweetalert2'
+import FromSameFranchise from '../../FromSameFranchise'
+import AnimeRecommendations from '../../AnimeRecommendations'
 
 export default function MoviePageContent(data: any) {
 
   const [indexPageInfo, setIndexPageInfo] = useState(0)
-
-  const [indexEpisodesPagination, setIndexEpisodePagination] = useState<number>(0)
-  const [howManyPagesPagination, setHowManyPagesPagination] = useState<number>(0)
 
   const [mainCastCharacters, setMainCastCharacters] = useState([])
   const [supportingCastCharacters, setSupportingCastCharacters] = useState([])
@@ -45,22 +44,6 @@ export default function MoviePageContent(data: any) {
   useEffect(() => {
 
     window.scrollTo(0, 0);
-
-    let howManyPages: number = 0;
-    let howMuchEpisodes: number = data.data.streamingEpisodes.length;
-
-    if (data.data.streamingEpisodes.length <= 24) {
-      setHowManyPagesPagination(1);
-    }
-
-    let episodesLeft = data.data.streamingEpisodes.length;
-    while (episodesLeft > 0) {
-      episodesLeft = episodesLeft - 24;
-      howManyPages = howManyPages + 1;
-      howMuchEpisodes = episodesLeft;
-    }
-
-    setHowManyPagesPagination(howManyPages - 1)
 
     //gets the main and support characters
     const mainChar = data.data.characters.edges.filter((item: any) => {
@@ -239,72 +222,6 @@ export default function MoviePageContent(data: any) {
     }
 
   }
-  
-  // drag overflowing elements instead of using scrollbar
-  function dragMouseEvent1() {
-    const slider: any = document.querySelector('.list-from-same-franchise');
-    let isDown = false;
-    let startX: any;
-    let scrollLeft: any;
-
-    slider.addEventListener('mousedown', (e: any) => {
-      isDown = true;
-      slider.classList.add('active');
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-      slider.style.cursor = 'grab'
-    });
-    slider.addEventListener('mouseleave', () => {
-      isDown = false;
-      slider.classList.remove('active');
-      slider.style.cursor = 'default'
-    });
-    slider.addEventListener('mouseup', () => {
-      isDown = false;
-      slider.classList.remove('active');
-      slider.style.cursor = 'default'
-    });
-    slider.addEventListener('mousemove', (e: any) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 3; //scroll-fast
-      slider.scrollLeft = scrollLeft - walk;
-      console.log(walk);
-    });
-  }
-  function dragMouseEvent2() {
-    const slider: any = document.querySelector('.list-similar-movies');
-    let isDown = false;
-    let startX: any;
-    let scrollLeft: any;
-
-    slider.addEventListener('mousedown', (e: any) => {
-      isDown = true;
-      slider.classList.add('active');
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-      slider.style.cursor = 'grab'
-    });
-    slider.addEventListener('mouseleave', () => {
-      isDown = false;
-      slider.classList.remove('active');
-      slider.style.cursor = 'default'
-    });
-    slider.addEventListener('mouseup', () => {
-      isDown = false;
-      slider.classList.remove('active');
-      slider.style.cursor = 'default'
-    });
-    slider.addEventListener('mousemove', (e: any) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 3; //scroll-fast
-      slider.scrollLeft = scrollLeft - walk;
-      console.log(walk);
-    });
-  }
 
   return (
     <C.Container
@@ -420,33 +337,20 @@ export default function MoviePageContent(data: any) {
         </ul>
       )}
 
-      {data.data.relations.nodes.length > 0 && (
-        <div className='from-same-franchise'>
+      {/* medias related to this anime */}
+      {
+        data.data.relations.nodes.length > 0 && (
+          <FromSameFranchise data={data.data.relations.nodes} />
+        )
+      }
 
-          <h2>From Same Franchise</h2>
+      {/* recommendations based on this anime */}
+      {
+        data.data.recommendations.edges.length > 0 && (
 
-          <ul onDrag={() => dragMouseEvent1()} className='list-from-same-franchise'>
-            {data.data.relations.nodes.map((item: any) => (
-              <li>
-                <AnimesReleasingThisWeek key={item.id} data={item} />
-              </li>
-            ))}
-          </ul>
-
-        </div>
-      )}
-
-      {data.data.recommendations.edges.length > 0 && (
-        <div className='similar-animes'>
-          <h2>Similar to <span>{data.data.title.romaji}</span></h2>
-
-          <ul onDrag={() => dragMouseEvent2()} className='list-similar-movies'>
-            {data.data.recommendations.edges.slice(0, 8).map((item: any) => (
-              <li key={item.node.id}><AnimesReleasingThisWeek data={item.node.mediaRecommendation} /></li>
-            ))}
-          </ul>
-        </div>
-      )}
+          <AnimeRecommendations titleName={data.data.title.romaji} data={data.data.recommendations.edges} />
+        )
+      }
 
     </C.Container >
   )

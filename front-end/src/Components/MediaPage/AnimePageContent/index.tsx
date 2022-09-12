@@ -17,6 +17,9 @@ import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
 import { Link } from 'react-router-dom'
 import EpisodesAniList from '../../EpisodesAniList/EpisodesAniList'
+import AnimeRecommendations from '../../AnimeRecommendations'
+import FromSameFranchise from '../../FromSameFranchise'
+import CrunchyrollEpisodesGrid from '../../CrunchyrollEpisodesGrid'
 
 export default function AnimePageContent(data: any) {
 
@@ -97,7 +100,7 @@ export default function AnimePageContent(data: any) {
     }
 
 
-  }, [])
+  }, [indexEpisodesPagination])
 
   //store current media url to redirect if user is not logged in
   const currentUrlToRedirect = window.location.pathname
@@ -248,73 +251,6 @@ export default function AnimePageContent(data: any) {
 
   }
 
-  // drag overflowing elements instead of using scrollbar
-  function dragMouseEvent1() {
-    const slider: any = document.querySelector('.list-from-same-franchise');
-    let isDown = false;
-    let startX: any;
-    let scrollLeft: any;
-
-    slider.addEventListener('mousedown', (e: any) => {
-      isDown = true;
-      slider.classList.add('active');
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-      slider.style.cursor = 'grab'
-    });
-    slider.addEventListener('mouseleave', () => {
-      isDown = false;
-      slider.classList.remove('active');
-      slider.style.cursor = 'default'
-    });
-    slider.addEventListener('mouseup', () => {
-      isDown = false;
-      slider.classList.remove('active');
-      slider.style.cursor = 'default'
-    });
-    slider.addEventListener('mousemove', (e: any) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 3; //scroll-fast
-      slider.scrollLeft = scrollLeft - walk;
-      console.log(walk);
-    });
-  }
-
-  function dragMouseEvent2() {
-    const slider: any = document.querySelector('.list-similar-animes');
-    let isDown = false;
-    let startX: any;
-    let scrollLeft: any;
-
-    slider.addEventListener('mousedown', (e: any) => {
-      isDown = true;
-      slider.classList.add('active');
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-      slider.style.cursor = 'grab'
-    });
-    slider.addEventListener('mouseleave', () => {
-      isDown = false;
-      slider.classList.remove('active');
-      slider.style.cursor = 'default'
-    });
-    slider.addEventListener('mouseup', () => {
-      isDown = false;
-      slider.classList.remove('active');
-      slider.style.cursor = 'default'
-    });
-    slider.addEventListener('mousemove', (e: any) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 3; //scroll-fast
-      slider.scrollLeft = scrollLeft - walk;
-      console.log(walk);
-    });
-  }
-
   return (
     <C.Container
       data={data.data}
@@ -411,84 +347,10 @@ export default function AnimePageContent(data: any) {
               <>
                 <div className='anime-episodes' >
 
-                  {indexEpisodesPagination === 0 && (
-
-                    data.data.streamingEpisodes.slice(0, 24).map((item: any, key: any) => (
-                      <EpisodesAniList
-                        key={key}
-                        data={item}
-                        media={data.data}
-                      />
-                    ))
-
-                  )}
-
-                  {indexEpisodesPagination === 1 && (
-
-                    data.data.streamingEpisodes.slice(24, 24 * 2).map((item: any, key: any) => (
-                      <EpisodesAniList
-                        key={key}
-                        data={item}
-                        media={data.data}
-                      />
-                    ))
-
-                  )}
-                  {indexEpisodesPagination === 2 && (
-
-                    data.data.streamingEpisodes.slice(24 * 2, 24 * 3).map((item: any, key: any) => (
-                      <EpisodesAniList
-                        key={key}
-                        data={item}
-                        media={data.data}
-                      />
-                    ))
-
-                  )}
-                  {indexEpisodesPagination === 3 && (
-
-                    data.data.streamingEpisodes.slice(24 * 3, 24 * 4).map((item: any, key: any) => (
-                      <EpisodesAniList
-                        key={key}
-                        data={item}
-                        media={data.data}
-                      />
-                    ))
-
-                  )}
-                  {indexEpisodesPagination === 4 && (
-
-                    data.data.streamingEpisodes.slice(24 * 4, 24 * 5).map((item: any, key: any) => (
-                      <EpisodesAniList
-                        key={key}
-                        data={item}
-                        media={data.data}
-                      />
-                    ))
-
-                  )}
-                  {indexEpisodesPagination === 5 && (
-
-                    data.data.streamingEpisodes.slice(24 * 5, 24 * 6).map((item: any, key: any) => (
-                      <EpisodesAniList
-                        key={key}
-                        data={item}
-                        media={data.data}
-                      />
-                    ))
-
-                  )}
-                  {indexEpisodesPagination === 6 && (
-
-                    data.data.streamingEpisodes.slice(24 * 6, 24 * 7).map((item: any, key: any) => (
-                      <EpisodesAniList
-                        key={key}
-                        data={item}
-                        media={data.data}
-                      />
-                    ))
-
-                  )}
+                  {/* Shows Episodes Available to Watch */}
+                  <CrunchyrollEpisodesGrid
+                    indexEpisodesPagination={indexEpisodesPagination}
+                    data={data.data.streamingEpisodes} />
 
                 </div>
 
@@ -657,39 +519,15 @@ export default function AnimePageContent(data: any) {
       {/* medias related to this anime */}
       {
         data.data.relations.nodes.length > 0 && (
-          <div className='from-same-franchise'>
-
-            <h2>From Same Franchise</h2>
-
-            <ul onDrag={() => dragMouseEvent1()} className='list-from-same-franchise'>
-              {data.data.relations.nodes.map((item: any) => (
-                <li>
-                  <AnimesReleasingThisWeek key={item.id} data={item} />
-                </li>
-              ))}
-            </ul>
-
-          </div>
+          <FromSameFranchise data={data.data.relations.nodes} />
         )
       }
 
       {/* recommendations based on this anime */}
       {
         data.data.recommendations.edges.length > 0 && (
-          <div className='similar-animes'>
-            <h2>Similar to <span>{data.data.title.romaji}</span></h2>
 
-            <ul onDrag={() => dragMouseEvent2()} className='list-similar-animes'>
-              {data.data.recommendations.edges.slice(0, 8).map((item: any, key: any) => (
-
-                <li key={item.node.id}>
-                  <AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} />
-                </li>
-
-              ))}
-            </ul>
-
-          </div>
+          <AnimeRecommendations titleName={data.data.title.romaji} data={data.data.recommendations.edges} />
         )
       }
 
