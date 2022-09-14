@@ -13,7 +13,8 @@ export const Container = styled.div<Props>`
         border-top: 4px solid var(--pink-variant-1);
 
         .heading-section{
-
+            
+            margin-bottom: 1rem;
 
             display: flex;
             flex-direction: row;

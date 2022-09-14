@@ -13,6 +13,7 @@ import SearchInnerPage from '../../Components/SearchInnerPage'
 import TopRated from '../../Components/Home/TopRated'
 import AsideNavLinks from '../../Components/AsideNavLinks'
 import { useSelector } from 'react-redux'
+import NavButtons from '../../Components/Home/NavButtons'
 
 export default function Home() {
 
@@ -128,7 +129,7 @@ export default function Home() {
     loadData()
 
     document.title = 'Home | AniProject'
-    
+
   }, [indexInnerPageLink])
 
   //handles button navigation through results to topRated and Releasing sections
@@ -249,22 +250,19 @@ export default function Home() {
 
               <h2>Releasing This Week</h2>
 
-              <div className='nav-buttons'>
-                <button
-                  type='button'
-                  disabled={indexPageReleasingThisWeek === 1 ? true : false}
-                  onClick={() => handleSectionPreviousPage('releasing-this-week', 'ANIME')}
-                >
-                  <AngleLeftSolidSvg />
-                </button>
-
-                <button
-                  type='button'
-                  onClick={() => handleSectionNextPage('releasing-this-week', 'ANIME')}
-                >
-                  <AngleRightSolidSvg />
-                </button>
-              </div>
+              <NavButtons
+                param='releasing-this-week'
+                section='ANIME'
+                releasingThisWeek={releasingThisWeek}
+                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                indexPageTopRated={indexPageTopRated}
+                setIndexPageTopRated={setIndexPageTopRated}
+                setLoadingSectionTopRated={setLoadingSectionTopRated}
+                setTopRated={setTopRated}
+                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                setReleasingThisWeek={setReleasingThisWeek}
+                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+              />
 
             </div>
 
@@ -285,26 +283,19 @@ export default function Home() {
 
               <h2>Top Rated Animes</h2>
 
-
-              <div className='nav-buttons'>
-
-                <button
-                  type='button'
-                  disabled={indexPageTopRated === 1 ? true : false}
-                  onClick={() => handleSectionPreviousPage('top-rated', 'ANIME')}
-                >
-                  <AngleLeftSolidSvg />
-                </button>
-
-                <button
-                  type='button'
-                  onClick={() => handleSectionNextPage('top-rated', 'ANIME')}
-                >
-                  <AngleRightSolidSvg />
-                </button>
-
-              </div>
-
+              <NavButtons
+                param='top-rated'
+                section='ANIME'
+                topRated={topRated}
+                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                indexPageTopRated={indexPageTopRated}
+                setIndexPageTopRated={setIndexPageTopRated}
+                setLoadingSectionTopRated={setLoadingSectionTopRated}
+                setTopRated={setTopRated}
+                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                setReleasingThisWeek={setReleasingThisWeek}
+                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+              />
 
             </div>
 
@@ -329,22 +320,20 @@ export default function Home() {
 
               <h2>Releasing This Week</h2>
 
-              <div className='nav-buttons'>
-                <button
-                  type='button'
-                  disabled={indexPageReleasingThisWeek === 1 ? true : false}
-                  onClick={() => handleSectionPreviousPage('releasing-this-week', 'MANGA')}
-                >
-                  <AngleLeftSolidSvg />
-                </button>
 
-                <button
-                  type='button'
-                  onClick={() => handleSectionNextPage('releasing-this-week', 'MANGA')}
-                >
-                  <AngleRightSolidSvg />
-                </button>
-              </div>
+              <NavButtons
+                param='releasing-this-week'
+                section='MANGA'
+                releasingThisWeek={releasingThisWeek}
+                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                indexPageTopRated={indexPageTopRated}
+                setIndexPageTopRated={setIndexPageTopRated}
+                setLoadingSectionTopRated={setLoadingSectionTopRated}
+                setTopRated={setTopRated}
+                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                setReleasingThisWeek={setReleasingThisWeek}
+                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+              />
 
             </div>
 
@@ -363,22 +352,20 @@ export default function Home() {
 
               <h2>Top Rated Mangas</h2>
 
-              <div className='nav-buttons'>
-                <button
-                  type='button'
-                  disabled={indexPageTopRated === 1 ? true : false}
-                  onClick={() => handleSectionPreviousPage('top-rated', 'MANGA')}
-                >
-                  <AngleLeftSolidSvg />
-                </button>
+              <NavButtons
+                param='top-rated'
+                section='MANGA'
+                releasingThisWeek={releasingThisWeek}
+                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                indexPageTopRated={indexPageTopRated}
+                setIndexPageTopRated={setIndexPageTopRated}
+                setLoadingSectionTopRated={setLoadingSectionTopRated}
+                setTopRated={setTopRated}
+                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                setReleasingThisWeek={setReleasingThisWeek}
+                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+              />
 
-                <button
-                  type='button'
-                  onClick={() => handleSectionNextPage('top-rated', 'MANGA')}
-                >
-                  <AngleRightSolidSvg />
-                </button>
-              </div>
 
             </div>
 
@@ -406,22 +393,20 @@ export default function Home() {
 
               <h2>Releasing This Week</h2>
 
-              <div className='nav-buttons'>
-                <button
-                  type='button'
-                  disabled={indexPageTopRated === 1 ? true : false}
-                  onClick={() => handleSectionPreviousPage('releasing-this-week', 'ANIME', 'MOVIE')}
-                >
-                  <AngleLeftSolidSvg />
-                </button>
-
-                <button
-                  type='button'
-                  onClick={() => handleSectionNextPage('releasing-this-week', 'ANIME', 'MOVIE')}
-                >
-                  <AngleRightSolidSvg />
-                </button>
-              </div>
+              <NavButtons
+                param='releasing-this-week'
+                section='ANIME'
+                mediaFormat='MOVIE'
+                releasingThisWeek={releasingThisWeek}
+                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                indexPageTopRated={indexPageTopRated}
+                setIndexPageTopRated={setIndexPageTopRated}
+                setLoadingSectionTopRated={setLoadingSectionTopRated}
+                setTopRated={setTopRated}
+                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                setReleasingThisWeek={setReleasingThisWeek}
+                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+              />
 
             </div>
 
@@ -440,22 +425,21 @@ export default function Home() {
 
               <h2>Top Rated Movies</h2>
 
-              <div className='nav-buttons'>
-                <button
-                  type='button'
-                  disabled={indexPageTopRated === 1 ? true : false}
-                  onClick={() => handleSectionPreviousPage('top-rated', 'ANIME', 'MOVIE')}
-                >
-                  <AngleLeftSolidSvg />
-                </button>
+              <NavButtons
+                param='top-rated'
+                section='ANIME'
+                mediaFormat='MOVIE'
+                releasingThisWeek={releasingThisWeek}
+                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                indexPageTopRated={indexPageTopRated}
+                setIndexPageTopRated={setIndexPageTopRated}
+                setLoadingSectionTopRated={setLoadingSectionTopRated}
+                setTopRated={setTopRated}
+                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                setReleasingThisWeek={setReleasingThisWeek}
+                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+              />
 
-                <button
-                  type='button'
-                  onClick={() => handleSectionNextPage('top-rated', 'ANIME', 'MOVIE')}
-                >
-                  <AngleRightSolidSvg />
-                </button>
-              </div>
 
             </div>
 

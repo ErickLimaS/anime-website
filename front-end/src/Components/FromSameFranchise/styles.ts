@@ -18,6 +18,8 @@ border-top: 4px solid var(--pink-variant-1);
 
     @media(max-width: 768px){
 
+        margin-bottom: 1rem;
+
         display: flex;
         flex-direction: column;
         align-items: center;

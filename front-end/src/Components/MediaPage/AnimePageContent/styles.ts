@@ -318,27 +318,40 @@ export const Container = styled.div<Props>`
                 display: none;
             }
         }
+        @media(max-width: 425px){
+            div.nav{
+
+                flex-direction: column;
+                    width: 100%;
+                
+                > * {
+
+                    margin: 0.2rem 0;
+
+                }
+            }
+        }
         
     }
 
     .anime-episodes{
 
         display: grid;
-        grid-template-columns: auto auto auto auto;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         gap: 2rem 1rem;
 
         @media(max-width: 1080px){
-            grid-template-columns: auto auto auto;
+            grid-template-columns: 1fr 1fr 1fr;
             justify-items: center;
         }
 
         @media(max-width: 730px){
-            grid-template-columns: auto auto;
+            grid-template-columns: 1fr 1fr;
             justify-items: center;
         }
 
         @media(max-width: 430px){
-            grid-template-columns: auto auto;
+            grid-template-columns: 1fr 1fr;
             justify-items: center;
         }
 
@@ -426,7 +439,7 @@ export const Container = styled.div<Props>`
             border-bottom: 2px solid #c0c0c0;
 
             span{
-                color: ${props => props.darkMode ? 'var(--text-grey-variant2)':'initial'};
+                color: ${props => props.darkMode ? 'var(--text-grey-variant2)' : 'initial'};
                 font-weight: 600;
             }
         }
@@ -437,7 +450,7 @@ export const Container = styled.div<Props>`
             flex-wrap: wrap;
 
             a{
-                color: ${props => props.darkMode ? 'var(--text-grey-variant2)':'#'};
+                color: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#'};
                 text-decoration: underline;
 
                 :hover{

@@ -402,22 +402,22 @@ export const Container = styled.div<Props>`
     .anime-episodes{
 
         display: grid;
-        grid-template-columns: auto auto auto auto;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         justify-items: center;
         gap: 2rem 1rem;
 
         @media(max-width: 1200px){
-            grid-template-columns: auto auto auto;
+            grid-template-columns: 1fr 1fr 1fr;
             justify-items: center;
         }
 
         @media(max-width: 730px){
-            grid-template-columns: auto auto;
+            grid-template-columns: 1fr 1fr;
             justify-items: center;
         }
 
         @media(max-width: 430px){
-            grid-template-columns: auto auto;
+            grid-template-columns: 1fr 1fr;
             justify-items: center;
         }
 

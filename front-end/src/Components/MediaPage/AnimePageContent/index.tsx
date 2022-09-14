@@ -100,7 +100,7 @@ export default function AnimePageContent(data: any) {
     }
 
 
-  }, [indexEpisodesPagination])
+  }, [])
 
   //store current media url to redirect if user is not logged in
   const currentUrlToRedirect = window.location.pathname

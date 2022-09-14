@@ -259,7 +259,8 @@ export const Container = styled.div<Props>`
 
                 display: grid;
                 grid-template-columns: auto auto auto;
-                gap: 1rem 0;
+                justify-items: center;
+                gap: 1rem;
 
                 @media(max-width: 1080px){
                     justify-items: center;
@@ -280,23 +281,23 @@ export const Container = styled.div<Props>`
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
-                        align-items: center;
+                        align-items: stretch;
 
                         border-radius: 1000px;
 
                         overflow: hidden;
 
-                        height: 100px;
-                        width: 100px;
+                        height: 80px;
+                        width: 80px;
 
                         @media(max-width: 1280px){
-                            height: 70px;
-                            width: 70px;
+                            height: 100px;
+                            width: 100px;
                         }
 
-                        @media(max-width: 620px){
-                            height: 90px;
-                            width: 90px;
+                        @media(max-width: 425px){
+                            height: 80px;
+                            width: 80px;
                         }
 
                     }
