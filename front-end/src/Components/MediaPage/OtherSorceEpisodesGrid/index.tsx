@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import EpisodesGoGoAnime from '../EpisodesGoGoAnime/EpisodesGoGoAnime'
-import gogoAnime from '../../API/gogo-anime'
+import gogoAnime from '../../../API/gogo-anime'
 
 function EpisodesGrid({ data, animeTitleWithoutSpace, indexEpisodesPagination, setVideoURL, setVideoReady, setLoadingVideoplayer, setChoseEpisoded }: any) {
 

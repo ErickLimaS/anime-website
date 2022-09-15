@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import * as C from './styles'
-
 import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
-import { ReactComponent as HeartsSvg } from '../../../imgs/svg/hearts-svgrepo.svg'
-import { ReactComponent as SwordsSvg } from '../../../imgs/svg/swords-in-cross-svgrepo.svg'
-import { ReactComponent as SuperPowerSvg } from '../../../imgs/svg/burst-solid.svg'
-import { ReactComponent as SchoolBusSvg } from '../../../imgs/svg/school-bus-svgrepo1.svg'
 import { ReactComponent as TvSvg } from '../../../imgs/svg/tv-solid.svg'
 import { ReactComponent as BallonSvg } from '../../../imgs/svg/speech-balloon-svgrepo.svg'
-import { ReactComponent as OneShotSvg } from '../../../imgs/svg/magazines-svgrepo.svg'
-import { ReactComponent as RomanceBookSvg } from '../../../imgs/svg/picture-love-and-romance-svgrepo.svg'
 import { ReactComponent as MovieSvg } from '../../../imgs/svg/movie-player-svgrepo.svg'
-import { ReactComponent as StarSvg } from '../../../imgs/svg/star-fill.svg'
-import { ReactComponent as OpenBookSvg } from '../../../imgs/svg/open-book-svgrepo.svg'
-import { ReactComponent as BookmarkSvg } from '../../../imgs/svg/bookmark-check-fill.svg'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
@@ -86,13 +76,10 @@ export default function AnimesReleasingThisWeek(data: any) {
 
     }, [data.data.id, isAlreadyAdded, userInfo])
 
-    // add media to user
     const dispatch: any = useDispatch()
     const navigate: any = useNavigate()
 
     const handleMediaToAccount = () => {
-
-        // console.log(userInfo.name)
 
         //CHECKS if dont has on user account
         if (isAlreadyAdded == null || undefined) {

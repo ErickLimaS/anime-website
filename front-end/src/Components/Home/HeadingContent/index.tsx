@@ -6,14 +6,7 @@ import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { addMediaToUserAccount, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 
-interface props {
-    data: any
-    item?: any
-}
-
 export default function HeadingContent(data: any) {
-
-    // console.log(data)
 
     const [isAlreadyAdded, setIsAlreadyAdded] = useState<any>()
 
@@ -67,7 +60,6 @@ export default function HeadingContent(data: any) {
 
     }, [isAlreadyAdded, userInfo])
 
-    // add media to user
     const dispatch: any = useDispatch()
     const navigate: any = useNavigate()
 
@@ -114,7 +106,6 @@ export default function HeadingContent(data: any) {
 
             setIsAlreadyAdded(null)
 
-
         }
 
     }
@@ -126,9 +117,13 @@ export default function HeadingContent(data: any) {
             <div className='item-about'>
                 <div className='item-info'>
                     {data.data.title.romaji.length > 35 ? (
-                        <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji.slice(0, 35)}...</h1></Link>
+                        <Link to={`/${format}/${data.data.id}`}>
+                            <h1>{data.data.title.romaji.slice(0, 35)}...</h1>
+                        </Link>
                     ) : (
-                        <Link to={`/${format}/${data.data.id}`}><h1>{data.data.title.romaji}</h1></Link>
+                        <Link to={`/${format}/${data.data.id}`}>
+                            <h1>{data.data.title.romaji}
+                            </h1></Link>
                     )}
                     <h2>{data.data.title.native}</h2>
                 </div>

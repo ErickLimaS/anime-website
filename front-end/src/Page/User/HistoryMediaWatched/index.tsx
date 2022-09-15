@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import AlreadyWatchedHistoryPage from '../../../Components/AlreadyWatchedHistotyPage'
-import AsideNavLinks from '../../../Components/AsideNavLinks'
+import AlreadyWatchedHistoryPage from '../../../Components/MediaPage/AlreadyWatchedHistotyPage'
+import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import { logoutUser } from '../../../redux/actions/userActions'
 import * as C from './styles'
 
@@ -213,7 +213,7 @@ export default function HistoryMediaAdded() {
                     <>
                         <div className='heading'>
                             <h1>
-                                History
+                                Watched History
                             </h1>
 
                             <div className='sort-buttons'>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import AsideNavLinks from '../../../Components/AsideNavLinks'
+import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import AsideInfo from '../../../Components/MediaPage/AsideInfo'
 import * as C from './styles'
 import API from '../../../API/anilist'
@@ -10,10 +10,11 @@ export default function MoviePage() {
 
   const { id } = useParams();
   const type = 'ANIME'
-  const format = 'MOVIE' //Only thi page who declares what format it is. Others has a exception on API file to redirect to the right format for their page
+
+  //ONLY this page declares what kind of format it is used. Others has a exception on API file to redirect to the right format for their respective page.
+  const format = 'MOVIE' 
 
   const [animeInfo, setAnimeInfo] = useState([] as any[])
-  // const [animeEpisodes, setAnimeEpisodes] = useState([] as any[])
 
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -28,7 +29,6 @@ export default function MoviePage() {
 
       const data = await API.getInfoFromThisMedia(id, type, format);
       setAnimeInfo(data)
-      console.log(data)
 
       setLoading(false)
 
@@ -46,20 +46,21 @@ export default function MoviePage() {
 
       <div className={loading === true ? 'skeleton' : 'main'}>
 
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
+        {loading === true ? (
+          <>
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
 
-        </div>
-
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>
-
-        {loading === false && (
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
+          </>
+        ) : (
           <>
             <MoviePageContent data={animeInfo} />
 

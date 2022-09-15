@@ -8,18 +8,16 @@ import { ReactComponent as AngleLeftSolidSvg } from '../../../imgs/svg/angle-lef
 import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-right-solid.svg'
 import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
 import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
-import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
-import CharacterAndActor from '../../CharacterAndActor'
+import CharacterAndActor from '../CharacterAndActor'
 import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
 import { Link } from 'react-router-dom'
-import EpisodesAniList from '../../EpisodesAniList/EpisodesAniList'
-import AnimeRecommendations from '../../AnimeRecommendations'
-import FromSameFranchise from '../../FromSameFranchise'
-import CrunchyrollEpisodesGrid from '../../CrunchyrollEpisodesGrid'
+import AnimeRecommendations from '../AnimeRecommendations'
+import FromSameFranchise from '../FromSameFranchise'
+import CrunchyrollEpisodesGrid from '../CrunchyrollEpisodesGrid'
 
 export default function AnimePageContent(data: any) {
 

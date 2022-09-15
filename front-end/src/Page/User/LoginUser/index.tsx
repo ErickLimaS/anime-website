@@ -4,7 +4,7 @@ import { Link, Route, useNavigate } from 'react-router-dom';
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
 import { AnyAction, Dispatch } from 'redux';
 import Swal from 'sweetalert2';
-import HeaderAlternative from '../../../Components/HeaderAlternative';
+import HeaderAlternative from '../../../Components/Layout/HeaderAlternative';
 import { loginUser, registerUser } from '../../../redux/actions/userActions';
 import * as C from './styles'
 

@@ -14,69 +14,57 @@ export default {
         const mm = new Date().getMonth()
         const dd = new Date().getDate()
 
-        // gets the currently month and convert it to a season string 
-        let season;
-        switch (mm) {
-            case 0:
-                season = 'WINTER'
-                break;
-            case 1:
-                season = 'WINTER'
-                break;
-            case 2:
-                if (dd > 20) {
-                    season = 'SPRING'
-                }
-                else {
-                    season = 'WINTER'
-                }
-                break;
-            case 3:
-                season = 'SPRING'
-                break;
-            case 4:
-                season = 'SPRING'
-                break;
-            case 5:
-                if (dd > 21) {
-                    season = 'SUMMER'
-                }
-                else {
-                    season = 'SPRING'
-                }
-                break;
-            case 6:
-                season = 'SUMMER'
-                break;
-            case 7:
-                season = 'SUMMER'
-                break;
-            case 8:
-                if (dd > 22) {
-                    season = 'AUTUMN'
-                }
-                else {
-                    season = 'SUMMER'
-                }
-                break;
-            case 9:
-                season = 'AUTUMN'
-                break;
-            case 10:
-                season = 'AUTUMN'
-                break;
-            case 11:
-                if (dd > 21) {
-                    season = 'WINTER'
-                }
-                else {
-                    season = 'AUTUMN'
-                }
-                break;
-            default: // exception/error
-                season = 'SUMMER'
-                break;
-        }
+        // self invoking function
+        const season: string = (() => {
+            switch (mm) {
+                case 0:
+                    return 'WINTER'
+                case 1:
+                    return 'WINTER'
+                case 2:
+                    if (dd > 20) {
+                        return 'SPRING'
+                    }
+                    else {
+                        return 'WINTER'
+                    }
+                case 3:
+                    return 'SPRING'
+                case 4:
+                    return 'SPRING'
+                case 5:
+                    if (dd > 21) {
+                        return 'SUMMER'
+                    }
+                    else {
+                        return 'SPRING'
+                    }
+                case 6:
+                    return 'SUMMER'
+                case 7:
+                    return 'SUMMER'
+                case 8:
+                    if (dd > 22) {
+                        return 'AUTUMN'
+                    }
+                    else {
+                        return 'SUMMER'
+                    }
+                case 9:
+                    return 'AUTUMN'
+                case 10:
+                    return 'AUTUMN'
+                case 11:
+                    if (dd > 21) {
+                        return 'WINTER'
+                    }
+                    else {
+                        return 'AUTUMN'
+                    }
+                default: // exception/error
+                    return 'SUMMER'
+            }
+        })()
 
         try {
 
@@ -140,8 +128,6 @@ export default {
                 })
 
             })
-
-            // console.log(data.data.Page.media)
 
             return data.data.Page.media
 
@@ -229,8 +215,6 @@ export default {
                     }
                 })
             })
-
-            // console.log(data.data.Page.media)
 
             return data.data.Page.media
 

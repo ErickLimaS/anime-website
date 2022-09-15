@@ -2,12 +2,12 @@ import * as C from './styles'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import AsideNavLinks from '../../../Components/AsideNavLinks'
+import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import { Link } from 'react-router-dom'
 import Axios from 'axios'
 import Swal from 'sweetalert2'
 import { logoutUser } from '../../../redux/actions/userActions'
-import BookmarkedItemPage from '../../../Components/BookmarkedItemPage'
+import BookmarkedItemPage from '../../../Components/MediaPage/BookmarkedItemPage'
 
 
 export default function BookmarkUser() {
@@ -39,8 +39,6 @@ export default function BookmarkUser() {
 
         document.title = 'Loading... | AniProject'
 
-        setLoading(true)
-
         if (!userInfo || !userLogin) {
 
             navigate('/')
@@ -49,6 +47,8 @@ export default function BookmarkUser() {
 
         //request all media added from users account
         const load = async () => {
+
+            setLoading(true)
 
             try {
 
@@ -77,6 +77,9 @@ export default function BookmarkUser() {
                     return item.type !== "MANGA" && item.type !== "ANIME"
                 })
                 setOtherTypeItems(otherType)
+
+
+                setLoading(false)
             }
             catch (error: any) {
                 //TOKEN VALIDATION/EXPIRATION
@@ -98,8 +101,6 @@ export default function BookmarkUser() {
 
         }
         load()
-
-        setLoading(false)
 
         document.title = 'Bookmarks | AniProject'
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import * as C from './styles'
-import anilist from '../../API/anilist'
+import anilist from '../../../API/anilist'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 

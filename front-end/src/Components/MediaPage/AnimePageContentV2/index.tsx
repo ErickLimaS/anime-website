@@ -14,7 +14,7 @@ import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, r
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
-import OtherSorceEpisodesGrid from '../../OtherSorceEpisodesGrid'
+import OtherSorceEpisodesGrid from '../OtherSorceEpisodesGrid'
 
 export default function AnimePageContentV2(data: any) {
 

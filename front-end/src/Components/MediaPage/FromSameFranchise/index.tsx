@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import * as C from './styles'
 import { useSelector } from 'react-redux'
-import AnimesReleasingThisWeek from '../Home/AnimesReleasingThisWeekList'
+import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 
-export default function AnimeRecommendations({ titleName, data }: any) {
+export default function FromSameFranchise({ data }: any) {
 
   // dark mode
   const darkModeSwitchConst = useSelector((state: any) => state.darkModeSwitch)
   const { darkMode } = darkModeSwitchConst
 
   // drag overflowing elements instead of using scrollbar
-  function dragMouseEvent2() {
-    const slider: any = document.querySelector('.list-similar-animes');
+  function dragMouseEvent() {
+    const slider: any = document.querySelector('.list-from-same-franchise');
     let isDown = false;
     let startX: any;
     let scrollLeft: any;
@@ -46,18 +46,18 @@ export default function AnimeRecommendations({ titleName, data }: any) {
   return (
     <C.Container darkMode={darkMode}>
       <div className='heading-section'>
-        <h2>Similar to <span>{titleName}</span></h2>
+        <h2>From Same Franchise</h2>
         <span>Drag to Scroll</span>
       </div>
-      <ul onDrag={() => dragMouseEvent2()} className='list-similar-animes'>
-        {data.slice(0, 8).map((item: any, key: any) => (
 
-          <li key={item.node.id}>
-            <AnimesReleasingThisWeek key={key} data={item.node.mediaRecommendation} />
+      <ul onDrag={() => dragMouseEvent()} className='list-from-same-franchise'>
+        {data.map((item: any) => (
+          <li key={item.id}>
+            <AnimesReleasingThisWeek data={item} />
           </li>
-
         ))}
       </ul>
+
 
     </C.Container>
   )

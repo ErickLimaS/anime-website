@@ -6,15 +6,14 @@ import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
 import { ReactComponent as DotSvg } from '../../../imgs/svg/dot.svg'
 import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
 import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
-import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
 import { Link, useNavigate } from 'react-router-dom'
-import CharacterAndActor from '../../CharacterAndActor'
+import CharacterAndActor from '../CharacterAndActor'
 import { useDispatch, useSelector } from 'react-redux'
 import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import Swal from 'sweetalert2'
-import FromSameFranchise from '../../FromSameFranchise'
-import AnimeRecommendations from '../../AnimeRecommendations'
+import FromSameFranchise from '../FromSameFranchise'
+import AnimeRecommendations from '../AnimeRecommendations'
 
 export default function MoviePageContent(data: any) {
 

@@ -71,7 +71,7 @@ export const Container = styled.div<Props>`
 
         border-left: 2px solid #e6e6e6;
         
-        @media(max-width: 620px){        
+        @media(max-width: 768px){        
             border-left: 0;
         }
 

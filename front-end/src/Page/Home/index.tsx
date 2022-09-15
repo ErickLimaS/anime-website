@@ -4,16 +4,13 @@ import * as C from './styles'
 import API from '../../API/anilist'
 import HeadingContent from '../../Components/Home/HeadingContent'
 import AnimesReleasingThisWeek from '../../Components/Home/AnimesReleasingThisWeekList'
-import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.svg'
 import { ReactComponent as DotSvg } from '../../imgs/svg/dot.svg'
-import { ReactComponent as AngleLeftSolidSvg } from '../../imgs/svg/angle-left-solid.svg'
-import { ReactComponent as AngleRightSolidSvg } from '../../imgs/svg/angle-right-solid.svg'
-import Trending from '../../Components/Home/Trending'
+import Trending from '../../Components/Trending'
 import SearchInnerPage from '../../Components/SearchInnerPage'
-import TopRated from '../../Components/Home/TopRated'
-import AsideNavLinks from '../../Components/AsideNavLinks'
+import TopRated from '../../Components/TopRated'
+import AsideNavLinks from '../../Components/Layout/AsideNavLinks'
 import { useSelector } from 'react-redux'
-import NavButtons from '../../Components/Home/NavButtons'
+import NavButtons from '../../Components/Layout/NavButtons'
 
 export default function Home() {
 
@@ -47,6 +44,13 @@ export default function Home() {
 
     document.title = 'Loading... | AniProject'
 
+    // gets animes with banner img
+    function hasBcgImg(item: any) {
+      if (item.bannerImage != null) {
+        return item
+      }
+    }
+
     const loadData = async () => {
 
       setLoading(true)
@@ -58,8 +62,11 @@ export default function Home() {
         case 0: //ANIME
           //stores the heading content, which is the releases of the season
           data1 = await API.getNewReleases('ANIME')
-          setReleasingThisSeason(data1)
 
+          // gets animes with banner img
+          data1 = data1.filter((item: any) => hasBcgImg(item))
+
+          setReleasingThisSeason(data1)
           setRandomIndex(Math.floor(Math.random() * data1.length))
 
           //stores releases of this week
@@ -79,12 +86,6 @@ export default function Home() {
           break;
 
         case 1: //MANGA
-          //stores the heading content, which is the releases of the season
-          // data1 = await API.getNewReleases('MANGA')
-          // setReleasingThisSeason(data1)
-
-          // setRandomIndex(Math.floor(Math.random() * data1.length))
-
           //stores releases of this week
           data2 = await API.getReleasingThisWeek('MANGA')
           setReleasingThisWeek(data2)
@@ -104,6 +105,10 @@ export default function Home() {
         case 2: //MOVIE
           //stores the heading content, which is the releases of the season
           data1 = await API.getNewReleases('ANIME', 'MOVIE')
+
+          // gets animes with banner img
+          data1 = data1.filter((item: any) => hasBcgImg(item))
+
           setReleasingThisSeason(data1)
 
           setRandomIndex(Math.floor(Math.random() * data1.length))
@@ -131,90 +136,6 @@ export default function Home() {
     document.title = 'Home | AniProject'
 
   }, [indexInnerPageLink])
-
-  //handles button navigation through results to topRated and Releasing sections
-  const handleSectionPreviousPage = async (section: String, mediaType: String, mediaFormat?: String) => {
-
-    switch (section) {
-
-      case 'top-rated':
-        setLoadingSectionTopRated(true)
-
-        let page;
-
-        if (indexPageTopRated <= 1) {
-          page = 1
-          setIndexPageTopRated(1)
-          console.log(page)
-        }
-        else {
-          page = indexPageTopRated - 1
-          setIndexPageTopRated(indexPageTopRated - 1)
-          console.log(page)
-        }
-
-        const data = await API.getTopRated(mediaType, mediaFormat && mediaFormat, page);
-        setTopRated(data)
-
-        setLoadingSectionTopRated(false)
-        break;
-
-      case 'releasing-this-week':
-        setLoadingSectionReleasingThisWeek(true)
-
-        let page1
-
-        if (indexPageReleasingThisWeek <= 1) {
-          page1 = 1
-          setIndexPageReleasingThisWeek(1)
-        }
-        else {
-          page1 = indexPageReleasingThisWeek - 1
-          setIndexPageReleasingThisWeek(indexPageReleasingThisWeek - 1)
-        }
-
-        const data1 = await API.getReleasingThisWeek(mediaType, mediaFormat && mediaFormat, page1);
-        setReleasingThisWeek(data1)
-
-        setLoadingSectionReleasingThisWeek(false)
-        break;
-
-    }
-
-  }
-
-  //handles button navigation through results to topRated and Releasing sections
-  const handleSectionNextPage = async (section: String, mediaType: String, mediaFormat?: String) => {
-
-    switch (section) {
-
-      case 'top-rated':
-        setLoadingSectionTopRated(true)
-
-        const page = indexPageTopRated + 1
-        setIndexPageTopRated(indexPageTopRated + 1)
-
-        const data = await API.getTopRated(mediaType, mediaFormat && mediaFormat, page);
-        setTopRated(data)
-
-        setLoadingSectionTopRated(false)
-        break;
-
-      case 'releasing-this-week':
-        setLoadingSectionReleasingThisWeek(true)
-
-        const page1 = indexPageReleasingThisWeek + 1
-        setIndexPageReleasingThisWeek(indexPageReleasingThisWeek + 1)
-
-        const data1 = await API.getReleasingThisWeek(mediaType, mediaFormat && mediaFormat, page1);
-        setReleasingThisWeek(data1)
-
-        setLoadingSectionReleasingThisWeek(false)
-        break;
-
-    }
-
-  }
 
   return (
     <C.Container

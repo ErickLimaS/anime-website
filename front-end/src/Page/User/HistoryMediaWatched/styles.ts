@@ -83,9 +83,9 @@ export const Container = styled.div<Props>`
 
         border-left: ${props => props.darkMode ? '2px solid var(--text-grey-variant3)' : '2px solid #ff1a7512'};
         
-        margin: 1rem 3rem 3rem 3rem;
+        margin: 0rem;
 
-        margin-left: 0;
+        margin-right: 1rem;
 
         padding-left: 3rem;
 
@@ -101,9 +101,11 @@ export const Container = styled.div<Props>`
         }
 
         .heading{
+            margin-top: 1rem;
 
             display: flex;
             flex-direction: row;
+            flex-wrap: wrap;
             justify-content: space-between;
 
             @media(max-width: 768px){
@@ -133,6 +135,12 @@ export const Container = styled.div<Props>`
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+
+                @media(max-width: 1024px){
+
+                    margin-bottom: 1rem;
+
+                }
 
                 @media(max-width: 768px){
 
@@ -275,16 +283,22 @@ export const Container = styled.div<Props>`
             }
         }
 
+        .content{
+            
+            margin-bottom: 1rem;
+
+        }
+
         .grid{
             display: grid;
-            grid-template-columns: auto auto auto;
+            grid-template-columns: 1fr 1fr 1fr;
             align-items: center;
             justify-items: center;
             gap: 2rem;
 
             @media(max-width: 1080px){
 
-                grid-template-columns: auto auto;
+                grid-template-columns: 1fr 1fr;
 
             }
 
@@ -292,13 +306,13 @@ export const Container = styled.div<Props>`
 
                 min-height: 70vh;
                 
-                grid-template-columns: auto auto;
+                grid-template-columns: 1fr 1fr;
 
             }
 
             @media(max-width: 720px){
 
-                grid-template-columns: auto;
+                grid-template-columns: 1fr;
                 justify-items: center;
 
             }

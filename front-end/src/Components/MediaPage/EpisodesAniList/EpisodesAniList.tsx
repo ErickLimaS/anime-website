@@ -1,13 +1,13 @@
 /* eslint-disable array-callback-return */
 import React, { useEffect, useState } from 'react'
 import * as C from './styles'
-import { ReactComponent as EyeSvg } from '../../imgs/svg/eye-fill.svg'
-import { ReactComponent as EyeSlashSvg } from '../../imgs/svg//eye-slash-fill.svg'
-import { ReactComponent as BookMarkEpisodeSvg } from '../../imgs/svg/bookmark-plus.svg'
-import { ReactComponent as BookMarkFillEpisodeSvg } from '../../imgs/svg/bookmark-check-fill-2.svg'
+import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
+import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
+import { ReactComponent as BookMarkEpisodeSvg } from '../../../imgs/svg/bookmark-plus.svg'
+import { ReactComponent as BookMarkFillEpisodeSvg } from '../../../imgs/svg/bookmark-check-fill-2.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
-import { addEpisodeToAlreadyWatched, addEpisodeToBookmarks, removeEpisodeFromAlreadyWatched, removeEpisodeFromBookmarks } from '../../redux/actions/userActions'
+import { addEpisodeToAlreadyWatched, addEpisodeToBookmarks, removeEpisodeFromAlreadyWatched, removeEpisodeFromBookmarks } from '../../../redux/actions/userActions'
 
 export default function EpisodesAniList(props: any) {
 

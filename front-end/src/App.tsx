@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import Footer from './Components/Footer';
-import Header from './Components/Header';
+import Footer from './Components/Layout/Footer';
+import Header from './Components/Layout/Header';
 import AnimePage from './Page/MediaPage/AnimePage';
 import Home from './Page/Home';
 import MangaPage from './Page/MediaPage/MangaPage';

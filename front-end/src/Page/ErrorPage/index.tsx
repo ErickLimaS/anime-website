@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import AsideNavLinks from '../../Components/AsideNavLinks'
+import AsideNavLinks from '../../Components/Layout/AsideNavLinks'
 import * as C from './styles'
 import img from '../../imgs/error/sad-luffy.png'
 import { Link } from 'react-router-dom'

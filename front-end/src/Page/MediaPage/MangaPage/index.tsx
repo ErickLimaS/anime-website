@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import AsideNavLinks from '../../../Components/AsideNavLinks'
+import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import AsideInfo from '../../../Components/MediaPage/AsideInfo'
 import * as C from './styles'
 import API from '../../../API/anilist'
@@ -12,7 +12,6 @@ export default function MangaPage() {
   const type = 'MANGA'
 
   const [animeInfo, setAnimeInfo] = useState([] as any[])
-  // const [animeEpisodes, setAnimeEpisodes] = useState([] as any[])
 
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -27,7 +26,6 @@ export default function MangaPage() {
 
       const data = await API.getInfoFromThisMedia(id, type);
       setAnimeInfo(data)
-      console.log(data)
 
       setLoading(false)
 
@@ -45,19 +43,21 @@ export default function MangaPage() {
 
       <div className={loading === true ? 'skeleton' : 'main'}>
 
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>
+        {loading === true ? (
+          <>
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
 
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>
-        
-        {loading === false && (
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
+          </>
+        ) : (
           <>
             <MangaPageContent data={animeInfo} />
 

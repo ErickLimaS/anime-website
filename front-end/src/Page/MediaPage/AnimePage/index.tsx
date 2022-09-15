@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import AsideNavLinks from '../../../Components/AsideNavLinks'
+import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import AsideInfo from '../../../Components/MediaPage/AsideInfo'
 import * as C from './styles'
 import API from '../../../API/anilist'
@@ -12,7 +12,6 @@ export default function AnimePage() {
   const type = 'ANIME'
 
   const [animeInfo, setAnimeInfo] = useState([] as any[])
-  // const [animeEpisodes, setAnimeEpisodes] = useState([] as any[])
 
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -21,7 +20,7 @@ export default function AnimePage() {
     const load = async (id: any, type: String) => {
 
       document.title = 'Loading | AniProject'
-      
+
       window.scrollTo(0, 0);
 
       setLoading(true)
@@ -46,19 +45,21 @@ export default function AnimePage() {
 
       <div className={loading === true ? 'skeleton' : 'main'}>
 
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>
+        {loading === true ? (
+          <>
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
 
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>
-
-        {loading === false && (
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
+          </>
+        ) : (
           <>
             <AnimePageContent data={animeInfo} />
 

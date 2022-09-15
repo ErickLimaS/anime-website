@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import HeaderAlternative from '../../../Components/HeaderAlternative';
+import HeaderAlternative from '../../../Components/Layout/HeaderAlternative';
 import { registerUser } from '../../../redux/actions/userActions';
 import * as C from './styles'
 

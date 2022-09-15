@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import AsideNavLinks from '../../../Components/AsideNavLinks'
-import AsideInfo from '../../../Components/MediaPage/AsideInfo'
+import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import * as C from './styles'
-import API from '../../../API/anilist'
 import gogoAnime from '../../../API/gogo-anime'
-import AnimePageContent from '../../../Components/MediaPage/AnimePageContent'
 import AnimePageContentV2 from '../../../Components/MediaPage/AnimePageContentV2'
 import AsideInfoV2 from '../../../Components/MediaPage/AsideInfoV2'
 
 export default function AnimePageV2() {
 
   const { id } = useParams();
-  const type = 'ANIME'
 
   const [animeInfo, setAnimeInfo] = useState([] as any[])
-  // const [animeEpisodes, setAnimeEpisodes] = useState([] as any[])
 
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -47,19 +42,22 @@ export default function AnimePageV2() {
 
       <div className={loading === true ? 'skeleton' : 'main'}>
 
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>
+        {loading === true ? (
+          <>
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
 
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>
-        
-        {loading === false && (
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
+          </>
+        ) : (
+
           <>
 
             <AnimePageContentV2 data={animeInfo} />
@@ -67,6 +65,7 @@ export default function AnimePageV2() {
             <AsideInfoV2 data={animeInfo} />
 
           </>
+
         )}
 
       </div>

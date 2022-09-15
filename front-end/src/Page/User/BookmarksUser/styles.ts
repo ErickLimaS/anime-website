@@ -393,12 +393,12 @@ export const Container = styled.div<Props>`
 
         .grid{
             display: grid;
-            grid-template-columns: auto auto auto;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 2rem;
 
             @media(max-width: 1080px){
 
-                grid-template-columns: auto auto;
+                grid-template-columns: 1fr 1fr;
 
             }
 
@@ -406,13 +406,13 @@ export const Container = styled.div<Props>`
 
                 min-height: 70vh;
 
-                grid-template-columns: auto auto;
+                grid-template-columns: 1fr 1fr;
 
             }
 
             @media(max-width: 720px){
 
-                grid-template-columns: auto;
+                grid-template-columns: 1fr;
                 justify-items: center;
 
             }

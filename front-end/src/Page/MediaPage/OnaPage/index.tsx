@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import AsideNavLinks from '../../../Components/AsideNavLinks'
+import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import AsideInfo from '../../../Components/MediaPage/AsideInfo'
 import * as C from './styles'
 import API from '../../../API/anilist'
-import MangaPageContent from '../../../Components/MediaPage/MangaPageContent'
 import AnimePageContent from '../../../Components/MediaPage/AnimePageContent'
 
 export default function OnaPage() {
@@ -29,7 +28,6 @@ export default function OnaPage() {
 
       const data = await API.getInfoFromThisMedia(id, type, format);
       setAnimeInfo(data)
-      console.log(data)
 
       setLoading(false)
 
@@ -46,20 +44,22 @@ export default function OnaPage() {
       <AsideNavLinks />
 
       <div className={loading === true ? 'skeleton' : 'main'}>
-
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>
-
-        <div>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-          <span className={loading === true ? 'skeleton' : ''}></span>
-        </div>                                  
         
-        {loading === false && (
+        {loading === true ? (
+          <>
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
+
+            <div>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+              <span className={loading === true ? 'skeleton' : ''}></span>
+            </div>
+          </>
+        ) : (
           <>
             <AnimePageContent data={animeInfo} />
 

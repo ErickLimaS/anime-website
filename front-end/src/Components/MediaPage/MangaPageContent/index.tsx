@@ -5,14 +5,13 @@ import { ReactComponent as PlusSvg } from '../../../imgs/svg/plus.svg'
 import { ReactComponent as CheckSvg } from '../../../imgs/svg/check.svg'
 import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
 import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
-import AnimesReleasingThisWeek from '../../Home/AnimesReleasingThisWeekList'
 import SearchInnerPage from '../../SearchInnerPage'
 import { useNavigate } from 'react-router-dom'
 import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
-import FromSameFranchise from '../../FromSameFranchise'
-import AnimeRecommendations from '../../AnimeRecommendations'
+import FromSameFranchise from '../FromSameFranchise'
+import AnimeRecommendations from '../AnimeRecommendations'
 
 export default function MangaPageContent(data: any) {
 

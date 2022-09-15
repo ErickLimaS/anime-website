@@ -73,7 +73,7 @@ export const Search = styled.div<Props>`
         border-left: none;
         border-radius: 0 0 0 0;
 
-        padding: ${props => props.loading ? `0.5rem 1rem 0.5rem 3rem` : `0.5rem 1rem`};
+        padding: ${props => props.loading === true ? `0.5rem 1rem 0.5rem 3rem` : `0.5rem 1rem`};
 
         height: 30px;
 

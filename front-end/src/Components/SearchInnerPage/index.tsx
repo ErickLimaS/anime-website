@@ -94,8 +94,8 @@ export default function SearchInnerPage() {
                 <form onSubmit={(e) => handleSearch(e)}>
                     <div>
                         <label htmlFor='search-input' />
-                        {loading === false && <SearchSvg id='input-svg' />}
-                        {loading === true && <LoadingSvg id='input-loading-svg' />}
+                        {loading === false && (<SearchSvg id='input-svg' />)}
+                        {loading === true && (<LoadingSvg id='input-loading-svg' />)}
                         <input id='search-input' type='text' placeholder='Search' ref={searchInput}></input>
                         <button type='submit'>{' '}<SearchSvg /></button>
                     </div>
