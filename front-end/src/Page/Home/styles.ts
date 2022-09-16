@@ -261,6 +261,16 @@ export const Container = styled.div<ContainerProps>`
                     border-radius: 2px;
                     background-color: #ffd0e3;
 
+                    :hover{
+
+                        transition: all ease-in-out 200ms;
+
+                        background-color: var(--brand-color);
+
+                        color: var(--white);
+
+                    }
+
                 }
 
             }

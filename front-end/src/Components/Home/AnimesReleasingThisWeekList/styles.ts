@@ -21,7 +21,7 @@ export const AnimeToBeListed = styled.div<itemData>`
     background-repeat: no-repeat;
     background-size: cover;
     
-    border-radius: 6px;
+    border-radius: 4px;
 
     div.add-button{
 
@@ -34,7 +34,7 @@ export const AnimeToBeListed = styled.div<itemData>`
 
         overflow: hidden;
 
-        border-radius: 6px;
+        border-radius: 3px;
         
         div.media-type{
             background-color: rgba(0,0,0,.75);
@@ -88,10 +88,9 @@ export const AnimeToBeListed = styled.div<itemData>`
 
     :hover{
             
-            
         .see-more-button{
                 background-image: linear-gradient(rgba(0,0,0,.01) , rgba(0,0,0,.8) 20%);
-                border-radius: 0 0 6px 6px;
+                border-radius: 0 0 3px 3px;
 
             .name-fade{
                 opacity: 1;

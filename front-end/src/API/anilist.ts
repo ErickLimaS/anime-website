@@ -9,10 +9,9 @@ export default {
     // HOME PAGE
     getNewReleases: async (type: String, format?: String) => {
 
-        const seasonYear = new Date().getFullYear()
-
         const mm = new Date().getMonth()
         const dd = new Date().getDate()
+        const seasonYear = new Date().getFullYear()
 
         // self invoking function
         const season: string = (() => {
@@ -80,9 +79,9 @@ export default {
                 },
                 data: JSON.stringify({
 
-                    query: `query($type: MediaType, $format: MediaFormat, ${format !== 'MOVIE' ? '$status: MediaStatus, ' : ''} $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}) {
+                    query: `query($type: MediaType, $format: MediaFormat, $sort: [MediaSort], ${format !== 'MOVIE' ? '$status: MediaStatus, ' : ''} $season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}) {
                         Page(page: $page, perPage: $perPage){
-                            media (${format !== 'MOVIE' ? 'status: $status, ' : ''} season: $season, seasonYear: $seasonYear, type: $type, format: $format ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                            media (${format !== 'MOVIE' ? 'status: $status, ' : ''} season: $season, seasonYear: $seasonYear, sort: $sort, type: $type, format: $format ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
                                 title{
                                     romaji
                                     native
@@ -118,7 +117,8 @@ export default {
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': 1,
                         'status': 'RELEASING',
-                        'perPage': 10,
+                        'sort': 'TRENDING_DESC',
+                        'perPage': 25,
                         'season': `${season}`,
                         'seasonYear': `${seasonYear}`,
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
