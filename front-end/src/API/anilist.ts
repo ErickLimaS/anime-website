@@ -44,21 +44,21 @@ export default {
                     return 'SUMMER'
                 case 8:
                     if (dd > 22) {
-                        return 'AUTUMN'
+                        return 'FALL'
                     }
                     else {
                         return 'SUMMER'
                     }
                 case 9:
-                    return 'AUTUMN'
+                    return 'FALL'
                 case 10:
-                    return 'AUTUMN'
+                    return 'FALL'
                 case 11:
                     if (dd > 21) {
                         return 'WINTER'
                     }
                     else {
-                        return 'AUTUMN'
+                        return 'FALL'
                     }
                 default: // exception/error
                     return 'SUMMER'

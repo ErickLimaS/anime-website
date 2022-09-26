@@ -10,8 +10,8 @@ export const Container = styled.header<ContainerProps>`
     height: 9vh;
     width: auto;
 
-    position: ${props => props.display === true ? 'sticky' : 'initial' };
-    top: ${props => props.display === true ? '0' : 'initial' };
+    position: ${props => props.display === true ? 'sticky' : 'initial'};
+    top: ${props => props.display === true ? '0' : 'initial'};
 
     background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' : 'var(--bcg-light-mode)'};
 
@@ -229,7 +229,7 @@ export const Container = styled.header<ContainerProps>`
                 justify-content: flex-start;
                 flex-wrap: nowrap;
 
-                background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' :'var(--bcg-light-mode)'};
+                background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' : 'var(--bcg-light-mode)'};
                 
                 height: 100%!important;
                 width: 80%;
@@ -255,7 +255,7 @@ export const Container = styled.header<ContainerProps>`
                     }
                 }
 
-                display: ${props => props.display === false && 'none!important' };
+                display: ${props => props.display === false ? 'none!important' : 'initial'};
 
                 >*{
                     width: 100%;

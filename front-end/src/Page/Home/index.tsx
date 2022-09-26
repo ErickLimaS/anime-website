@@ -63,11 +63,17 @@ export default function Home() {
           //stores the heading content, which is the releases of the season
           data1 = await API.getNewReleases('ANIME')
 
-          // gets animes with banner img
-          data1 = data1.filter((item: any) => hasBcgImg(item))
-
           setReleasingThisSeason(data1)
-          setRandomIndex(Math.floor(Math.random() * data1.length))
+
+          if (data1.length > 0) {
+            // gets animes with banner img
+            data1 = data1.filter((item: any) => hasBcgImg(item))
+
+            setRandomIndex(Math.floor(Math.random() * data1.length))
+          }
+          else {
+            setRandomIndex(0)
+          }
 
           //stores releases of this week
           data2 = await API.getReleasingThisWeek('ANIME')
@@ -105,9 +111,16 @@ export default function Home() {
         case 2: //MOVIE
           //stores the heading content, which is the releases of the season
           data1 = await API.getNewReleases('ANIME', 'MOVIE')
+          
+          if (data1.length > 0) {
+            // gets animes with banner img
+            data1 = data1.filter((item: any) => hasBcgImg(item))
 
-          // gets animes with banner img
-          data1 = data1.filter((item: any) => hasBcgImg(item))
+            setRandomIndex(Math.floor(Math.random() * data1.length))
+          }
+          else {
+            setRandomIndex(0)
+          }
 
           setReleasingThisSeason(data1)
 

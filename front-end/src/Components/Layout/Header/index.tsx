@@ -27,7 +27,7 @@ import logo from '../../../imgs/logo2.png'
 
 export default function Header() {
 
-    const [menuMobile, setMenuMobile] = useState(false)
+    const [menuMobile, setMenuMobile] = useState<boolean>(false)
 
     const userLogin = useSelector((state: any) => state.userLogin)
     const { userInfo } = userLogin
