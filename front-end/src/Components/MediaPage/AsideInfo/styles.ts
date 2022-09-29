@@ -7,16 +7,31 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-    /* padding: 2rem 1.5rem; */
-    /* margin: 2rem 1.5rem; */
     margin: 2rem 0;
+    
+    border-left: 2px solid #e6e6e6;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
 
+    @media(max-width: 1180px){
+
+        border-left: 0;
+    
+    }
+
+    @media(max-width: 1080px){
+
+        border-left: 0;
+        width: 100%;
+
+    }
+
     @media(min-width: 1020px){
+        
+
         .search-desktop{
                 width: 90%;
             input#search-input{
@@ -31,17 +46,15 @@ export const Container = styled.div<Props>`
     }
 
     @media(max-width: 1020px){
-        width: 100%;
-    }
 
-    @media(max-width: 1080px){
-        /* padding: 0 1rem; */
-        margin: 0 1rem;
-        width: 100%;
+        .info-aside{
+            
+            width: 90%;
+
+        }
     }
 
     @media(max-width: 768px){
-        /* padding: 0rem; */
         margin: 0rem;
     }
 
@@ -69,9 +82,9 @@ export const Container = styled.div<Props>`
 
     .info-aside{
 
-        @media(max-width: 768px){
-
-            width: 100%;
+        @media(max-width: 1020px){
+            
+            width: 90%;
 
         }
 
@@ -290,7 +303,7 @@ export const Container = styled.div<Props>`
                         height: 80px;
                         width: 80px;
 
-                        @media(max-width: 1280px){
+                        @media(max-width: 1180px){
                             height: 100px;
                             width: 100px;
                         }

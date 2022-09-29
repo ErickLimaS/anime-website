@@ -7,6 +7,8 @@ interface itemData {
 
 export const AnimeToBeListed = styled.div<itemData>`
 
+    width: 90%;
+
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -30,6 +32,9 @@ export const AnimeToBeListed = styled.div<itemData>`
     }
 
     .info{
+
+        width: inherit;
+
         margin: 0 1rem;
 
         display: flex;

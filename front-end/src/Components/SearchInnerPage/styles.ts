@@ -66,6 +66,9 @@ export const Search = styled.div<Props>`
     }
        
     input{
+        
+        width: 55%;
+        
         transition: all ease-in-out 150ms;
         background-color: ${props => props.darkMode ? '#212121' : '#f3f2ff'};
         outline: 0;

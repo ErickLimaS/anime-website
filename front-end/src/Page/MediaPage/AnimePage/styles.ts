@@ -6,52 +6,32 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-    display: flex;
-    flex-direction: row;
-
-    @media(max-width: 1080px){
-        /* justify-content: space-evenly; */
-    }
-    
-    @media(max-width: 768px){
-        justify-content: center;
-
-        padding: 0;
-    }
-
     .main{
-        display: flex;
-        flex-direction: row;
-        /* justify-content: space-evenly; */
+
+        width: 100%;
         justify-content: flex-start;
 
-        /* width: 100%; */
-        /* width: 70vw; */
+        display: grid;
+        grid-template-columns: 70% 30%;
+        gap: 0 1rem;
+
+        @media(max-width: 1180px){
+            grid-template-columns: 100%;
+        }
 
         @media(max-width: 1080px){
             flex-wrap: wrap;
-            /* width: 70%; */
-            width: 75%;
         }
 
-        @media(max-width: 768px){
-            flex-wrap: wrap;
-            width: 95%;
-        }
 
         @media(max-width: 620px){
-            flex-wrap: wrap;
-            width: 90%;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
     }
-
-    @media(max-width: 620px){
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* background-color: #fafafa; */
 
     div.skeleton{
         display: flex;
@@ -61,8 +41,6 @@ export const Container = styled.div<Props>`
         width: 80vw;
         height: 100vh;
         padding: 0 2rem;
-
-        border-left: 2px solid #e6e6e6;
 
         @media(max-width: 768px){        
             border-left: 0;

@@ -11,6 +11,13 @@ export const Container = styled.div<Props>`
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
+            flex-wrap: wrap;
+
+            span{
+
+                display: flex;
+
+            }
 
             svg{
                 height: 22px;

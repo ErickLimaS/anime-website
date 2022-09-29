@@ -25,6 +25,7 @@ import { logoutUser } from './redux/actions/userActions';
 import Swal from 'sweetalert2';
 import ErrorPage from './Page/ErrorPage';
 import HistoryMediaAdded from './Page/User/HistoryMediaWatched';
+import Layout from './Components/Layout/Layout';
 
 function App() {
 
@@ -145,12 +146,12 @@ function App() {
           <Route path='/special/:id' element={<SpecialPage />} />
           <Route path='/one-shot/:id' element={<OneShotPage />} />
           <Route path='/novel/:id' element={<NovelPage />} />
-          <Route path='/anime/:id' element={<AnimePage />} />
+          <Route path='/anime/:id' element={<Layout children={<AnimePage />} />} />
           <Route path='/movie/:id' element={<MoviePage />} />
           <Route path='/manga/:id' element={<MangaPage />} />
 
           {/* HOME */}
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Layout children={<Home />} />} />
 
           {/* 404 ERROR */}
           <Route path='*' element={<ErrorPage />} />

@@ -19,106 +19,139 @@ export default function Score(data: any) {
         >
             {score >= 49 && (
                 <>
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
+                    <span>
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarFillSvg />
+                    </span>
                     <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 45 && score < 49 && (
                 <>
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarHalfSvg />
+                    <span>
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarHalfSvg />
+                    </span>
                     <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 40 && score < 45 && (
                 <>
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarSvg />
+                    <span>
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarSvg />
+                    </span>
                     <small>({(score / 10).toFixed(2)})</small>
                 </>
             )}
             {score >= 35 && score < 40 && (
                 <>
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarHalfSvg />
-                    <StarSvg />
+                    <span>
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarFillSvg />
+                        <StarHalfSvg />
+                        <StarSvg />
+                    </span>
                     <small>({(score / 10).toFixed(2)})</small>
                 </>
-            )}
-            {score >= 30 && score < 35 && (
-                <>
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <small>({(score / 10).toFixed(2)})</small>
-                </>
-            )}
-            {score >= 25 && score < 30 && (
-                <>
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarHalfSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <small>({(score / 10).toFixed(2)})</small>
-                </>
-            )}
-            {score >= 20 && score < 25 && (
-                <>
-                    <StarFillSvg />
-                    <StarFillSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <small>({(score / 10).toFixed(2)})</small>
-                </>
-            )}
-            {score >= 15 && score < 20 && (
-                <>
-                    <StarFillSvg />
-                    <StarHalfSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <small>({(score / 10).toFixed(2)})</small>
-                </>
-            )}
-            {score >= 10 && score < 15 && (
-                <>
-                    <StarFillSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <small>({(score / 10).toFixed(2)})</small>
-                </>
-            )}
-            {score < 10 && (
-                <>
-                    <StarHalfSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <StarSvg />
-                    <small>({(score / 10).toFixed(2)})</small>
-                </>
-            )}
+            )
+            }
+            {
+                score >= 30 && score < 35 && (
+                    <>
+                        <span>
+                            <StarFillSvg />
+                            <StarFillSvg />
+                            <StarFillSvg />
+                            <StarSvg />
+                            <StarSvg />
+                        </span>
+                        <small>({(score / 10).toFixed(2)})</small>
+                    </>
+                )
+            }
+            {
+                score >= 25 && score < 30 && (
+                    <>
+                        <span>
+                            <StarFillSvg />
+                            <StarFillSvg />
+                            <StarHalfSvg />
+                            <StarSvg />
+                            <StarSvg />
+                        </span>
+                        <small>({(score / 10).toFixed(2)})</small>
+                    </>
+                )
+            }
+            {
+                score >= 20 && score < 25 && (
+                    <>
+                        <span>
+                            <StarFillSvg />
+                            <StarFillSvg />
+                            <StarSvg />
+                            <StarSvg />
+                            <StarSvg />
+                        </span>
+                        <small>({(score / 10).toFixed(2)})</small>
+                    </>
+                )
+            }
+            {
+                score >= 15 && score < 20 && (
+                    <>
+                        <span>
+                            <StarFillSvg />
+                            <StarHalfSvg />
+                            <StarSvg />
+                            <StarSvg />
+                            <StarSvg />
+                        </span>
+                        <small>({(score / 10).toFixed(2)})</small>
+                    </>
+                )
+            }
+            {
+                score >= 10 && score < 15 && (
+                    <>
+                        <span>
+                            <StarFillSvg />
+                            <StarSvg />
+                            <StarSvg />
+                            <StarSvg />
+                            <StarSvg />
+                        </span>
+                        <small>({(score / 10).toFixed(2)})</small>
+                    </>
+                )
+            }
+            {
+                score < 10 && (
+                    <>
+                        <span>
+                            <StarHalfSvg />
+                            <StarSvg />
+                            <StarSvg />
+                            <StarSvg />
+                            <StarSvg />
+                        </span>
+                        <small>({(score / 10).toFixed(2)})</small>
+                    </>
+                )
+            }
 
 
-        </C.Container>
+        </C.Container >
     )
 }

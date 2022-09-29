@@ -13,19 +13,23 @@ export const Container = styled.nav<Props>`
 
         position: sticky;
         top: 0;
+        left: 0;
         
         height: max-content;
-        width: 25vh;
+        min-width: 15vw;
+        max-width: 20vw;
+
+        border-right: 2px solid #e6e6e6; 
         
         background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' : 'var(--bcg-light-mode)'};    
 
-        @media(max-width: 1080px){
+        /* @media(max-width: 1080px){
             
             position: initial;
 
             width: 20%;
             padding-left: 2rem;
-        }
+        } */
 
         @media(max-width: 768px){
             display: none;
@@ -37,33 +41,56 @@ export const Container = styled.nav<Props>`
 
         font-size: 1.4rem;
 
-        padding-left: 4rem;
+        /* margin-left: 4rem; */
         margin-bottom: 3rem;
 
-        img#logo{
-            margin: 1rem 0;
+        >*{
+            
+            margin-left: 4rem!important;
 
-            position: relative;
-            left: -10%;
-            width: 25vh;
-            height: auto;
-
-            border: 1px solid transparent;
-            border-radius: 4px;
-
+            
             @media(max-width: 1080px){
-                width: 20vw;
+
+                margin-left: 2rem!important;
+
             }
 
-            :hover{
-                border: 1px solid var(--brand-color);
+        }
+
+        a.anchor-logo{
+            
+            margin-left: 0rem!important;
+
+            display: inline-flex;
+            justify-content: center;
+
+            img#logo{
+            
+                max-width: 90%;
+
+                margin: 1rem 0;
+
+                position: relative;
+                height: auto;
+
+                border: 1px solid transparent;
+                border-radius: 4px;
+
+                /* @media(max-width: 1080px){
+                    width: 20vw;
+                } */
+
+                :hover{
+                    border: 1px solid var(--brand-color);
+                }
             }
+            
         }
 
         .search{
             display: none;
 
-            @media(max-width: 1080px){
+            /* @media(max-width: 1080px){
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start
@@ -73,8 +100,8 @@ export const Container = styled.nav<Props>`
                 width: 20%;
             }
             input{
-                width: 70%;
-            }
+                width: 40%;
+            } */
         }
 
         .settings{

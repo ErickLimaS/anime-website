@@ -41,8 +41,6 @@ export default function AnimePage() {
   return (
     <C.Container loading={loading}>
 
-      <AsideNavLinks />
-
       <div className={loading === true ? 'skeleton' : 'main'}>
 
         {loading === true ? (

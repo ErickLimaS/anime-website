@@ -10,33 +10,19 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-    /* width: 100%; */
     width: 56vw;
 
-    border-left: 2px solid #e6e6e6;
-    border-right: 2px solid #e6e6e6;
-
-    padding: 2rem;
+    margin: 2rem;
     
-    @media(max-width: 1280px){
-        width: 50vw;
-    }
-    
-    @media(max-width: 1080px){
-        width: 100%;
+    @media(max-width: 1180px){
+        width: initial;
         border-right: 0;
         padding: 1rem;
     }
 
-    @media(max-width: 768px){
-        border-left: 0;
-        border-right: 0;
-        
-        padding: 0;
-    }
-
     @media(max-width: 620px){
-        width: 100%;
+
+        width: 95%;
         border-left: 0;
         border-right: 0;
         padding: 0;
@@ -69,8 +55,7 @@ export const Container = styled.div<Props>`
         @media(max-width: 620px){
 
             height: 25vh;
-
-            margin: 0 -0.9rem;
+            width: 100%;
 
             background-size: cover;
 
@@ -340,19 +325,25 @@ export const Container = styled.div<Props>`
         grid-template-columns: 1fr 1fr 1fr 1fr;
         gap: 2rem 1rem;
 
-        @media(max-width: 1080px){
+        @media(max-width: 1280px){
             grid-template-columns: 1fr 1fr 1fr;
             justify-items: center;
         }
 
+        @media(max-width: 1180px){
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        @media(max-width: 980px){
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
         @media(max-width: 730px){
             grid-template-columns: 1fr 1fr;
-            justify-items: center;
         }
 
         @media(max-width: 430px){
             grid-template-columns: 1fr 1fr;
-            justify-items: center;
         }
 
     }

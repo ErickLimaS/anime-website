@@ -73,7 +73,9 @@ export default function AsideNavLinks(data: any) {
       darkMode={darkMode}
     >
 
-      <a href='/'><img src={logo} alt='AniProject Logo' id='logo'></img></a>
+      <a href='/' className='anchor-logo'>
+        <img src={logo} alt='AniProject Logo' id='logo'></img>
+      </a>
 
 
       <ul className='settings'>

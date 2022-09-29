@@ -9,9 +9,12 @@ interface ContainerProps {
 
 export const Container = styled.div<ContainerProps>`
 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 70% 30%;
+
+    @media(max-width: 1180px){
+        grid-template-columns: 100%;
+    }
 
     @media(max-width: 1080px){
         flex-wrap: wrap;
@@ -50,43 +53,56 @@ export const Container = styled.div<ContainerProps>`
 
     }
 
+    
+    div.trending.div-skeleton{
+
+        width: 90%;
+
+    }
+
     // content
     div.main-content{
 
-        width: 55%;
-
-        border-left: 2px solid #e6e6e6;
-        border-right: 2px solid #e6e6e6;
-
-        padding: 3rem 3rem 3rem 3rem;
-
-        @media(max-width: 1080px){
-
-            width: 70%;
-            padding: 0 1rem ;
-            border-right: none;
-        }
-
-        @media(max-width: 768px){
-            width: 95%;
-            border-left: none;
-        }
+        margin: 2rem;
 
         @media(max-width: 620px){
-            padding: 1rem 0!important;
+            
+            margin: 1rem;
 
-            width: 95%;
-            border-left: none;
         }
 
         .search-mobile{
 
             display: none;
             
-            @media(max-width: 768px){
+            /* @media(max-width: 768px){
                 display: block;
 
                 padding: 1rem 0 2rem 0;
+            } */
+
+        }
+
+
+        div.nav-and-mobile-search{
+
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 2rem;
+
+            div.search{
+
+                display: none;
+
+                @media((min-width: 620px) and ( max-width: 1180px)){
+
+                    display: block;
+
+                }
+
             }
 
         }
@@ -95,8 +111,6 @@ export const Container = styled.div<ContainerProps>`
 
             font-size: 2rem;
             font-weight: 600;
-
-            margin-bottom: 2rem;
 
             a{
                 margin-right: 2rem;
@@ -198,18 +212,26 @@ export const Container = styled.div<ContainerProps>`
     }
 
     aside{
-        width: 25%;
+        /* width: 25%; */
 
-        padding: 2rem;
+        margin: 2rem 0;
 
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
 
+        border-left: 2px solid #e6e6e6;
+
+        @media(max-width: 1180px){
+
+            border-left: 0;
+
+        }
+
         @media(max-width: 1080px){
-            padding: 0 1rem;
-            width: 100%;
+            /* padding: 0 1rem;
+            width: 100%; */
 
             .search{
                 display: none;
@@ -219,8 +241,15 @@ export const Container = styled.div<ContainerProps>`
         
         .trending{
             width: 100%;
+                
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
 
             .trending-heading{
+
+                width: 90%;
 
                 display: flex;
                 flex-direction: row;
@@ -245,8 +274,15 @@ export const Container = styled.div<ContainerProps>`
 
             div.trending-items{
 
+                width: 100%;
+                
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
                 a.button-see-more{
-                    width: 100%;
+                    width: 90%;
 
                     display: flex;
                     justify-content: center;

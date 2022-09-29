@@ -111,7 +111,7 @@ export default function Home() {
         case 2: //MOVIE
           //stores the heading content, which is the releases of the season
           data1 = await API.getNewReleases('ANIME', 'MOVIE')
-          
+
           if (data1.length > 0) {
             // gets animes with banner img
             data1 = data1.filter((item: any) => hasBcgImg(item))
@@ -156,19 +156,23 @@ export default function Home() {
       darkMode={darkMode}
     >
 
-      <AsideNavLinks />
-
       <div className='main-content'>
 
         <div className='search-mobile'>
           <SearchInnerPage />
         </div>
 
-        <nav className='links-inner-page'>
-          <Link to={`/`} onClick={() => setIndexInnerPageLink(0)} className='anime'>Anime</Link>
-          <Link to={`/`} onClick={() => setIndexInnerPageLink(1)} className='manga'>Manga</Link>
-          <Link to={`/`} onClick={() => setIndexInnerPageLink(2)} className='movie'>Movie</Link>
-        </nav>
+        <div className='nav-and-mobile-search'>
+          <nav className='links-inner-page'>
+            <Link to={`/`} onClick={() => setIndexInnerPageLink(0)} className='anime'>Anime</Link>
+            <Link to={`/`} onClick={() => setIndexInnerPageLink(1)} className='manga'>Manga</Link>
+            <Link to={`/`} onClick={() => setIndexInnerPageLink(2)} className='movie'>Movie</Link>
+          </nav>
+
+          <div className='search'>
+            <SearchInnerPage />
+          </div>
+        </div>
 
         <section id='anime'>
           <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
