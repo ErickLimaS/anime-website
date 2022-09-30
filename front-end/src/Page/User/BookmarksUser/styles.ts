@@ -14,6 +14,8 @@ export const Container = styled.div<Props>`
 
     .main.skeleton{
 
+        margin: 20px;
+
         .skeleton-name{
             
             height: 10vh;
@@ -95,16 +97,24 @@ export const Container = styled.div<Props>`
 
     div.main{
 
-        width: 80%;    
+        width: 100%;    
 
-        border-left: ${props => props.darkMode ? '2px solid var(--text-grey-variant3)' : '2px solid #e6e6e6'};
-        padding: 1rem 3rem 3rem 3rem;
+        padding-left: 20px;
+
+        margin-bottom: 20px;
+
+        
+        @media(max-width: 1024px){
+
+            padding: 0 20px;
+
+        }
 
         @media(max-width: 768px){
 
             width: 99%;    
 
-            padding: 1rem 0rem;
+            padding: 0px 20px;
 
             border-left: 0;
         }
@@ -121,7 +131,7 @@ export const Container = styled.div<Props>`
             }
                 
 
-            @media(max-width: 620px){
+            @media(max-width: 1024px){
                 flex-direction: column-reverse;
             }
 
@@ -175,7 +185,7 @@ export const Container = styled.div<Props>`
 
             border-left: ${props => props.darkMode ? '2px solid var(--text-grey-variant3)' : '2px solid #ff1a7512'};
             
-            @media(max-width: 620px){
+            @media(max-width: 1024px){
 
                 width: 100%;
                 
@@ -211,7 +221,7 @@ export const Container = styled.div<Props>`
                     
                 }
 
-                @media(max-width: 620px){
+                @media(max-width: 1024px){
                         margin-top: 1rem;
                         margin-bottom: 2rem;
                         display: flex;
@@ -231,7 +241,7 @@ export const Container = styled.div<Props>`
 
                     }
 
-                    @media(min-width: 620px){
+                    @media(min-width: 1024px){
 
                         flex-direction: column;
                                             
@@ -262,20 +272,7 @@ export const Container = styled.div<Props>`
                         font-size: 1.5rem;
                         font-weight: 500;
                         
-                        @media(min-width: 768px)and(max-width: 1020px){
-
-                            padding: 0.2rem;
-                            margin: 0rem 0.2rem;
-
-                        }
-
-                        @media(max-width: 768px){
-
-                            margin: 0.5rem 0;
-
-                        }
-
-                        @media(max-width: 620px){
+                        @media(max-width: 1024px){
 
                             
                             max-height: 6rem;
@@ -286,6 +283,19 @@ export const Container = styled.div<Props>`
 
                             margin-top: 0.5rem;
                             margin-bottom: 0.5rem;
+
+                        }
+
+                        @media(min-width: 768px)and(max-width: 1020px){
+
+                            padding: 0.2rem;
+                            margin: 0rem 0.2rem;
+
+                        }
+
+                        @media(max-width: 768px){
+
+                            margin: 0.5rem 0;
 
                         }
 
@@ -396,6 +406,12 @@ export const Container = styled.div<Props>`
             grid-template-columns: 1fr 1fr 1fr;
             gap: 2rem;
 
+            @media(max-width: 1280px){
+
+                grid-template-columns: 1fr 1fr;
+
+            }
+
             @media(max-width: 1080px){
 
                 grid-template-columns: 1fr 1fr;
@@ -410,7 +426,7 @@ export const Container = styled.div<Props>`
 
             }
 
-            @media(max-width: 720px){
+            @media(max-width: 590px){
 
                 grid-template-columns: 1fr;
                 justify-items: center;
@@ -424,22 +440,10 @@ export const Container = styled.div<Props>`
                 justify-content: space-evenly;
                 align-items: center;
 
-                height: 20rem;
-                width: 28rem;
-            
-                @media(min-width: 620px) and (max-width: 720px){
+                min-height: 20rem;
 
-                    width: 60vw;
-
-                }
-
-                @media(min-width: 320px) and (max-width: 620px){
-                    width: 80vw;
-                }
-                
                 padding: 0.2rem;
 
-                /* background-color: #fff; */
                 border: 1px solid var(--brand-color);
                 border-radius: 4px;
 

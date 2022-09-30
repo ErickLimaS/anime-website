@@ -212,9 +212,8 @@ export const Container = styled.div<ContainerProps>`
     }
 
     aside{
-        /* width: 25%; */
 
-        margin: 2rem 0;
+        padding: 2rem 0;
 
         display: flex;
         flex-direction: column;
@@ -230,8 +229,6 @@ export const Container = styled.div<ContainerProps>`
         }
 
         @media(max-width: 1080px){
-            /* padding: 0 1rem;
-            width: 100%; */
 
             .search{
                 display: none;

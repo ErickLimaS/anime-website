@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
-import * as C from './styles'
+import * as C from '../styles'
 import gogoAnime from '../../../API/gogo-anime'
 import AnimePageContentV2 from '../../../Components/MediaPage/AnimePageContentV2'
 import AsideInfoV2 from '../../../Components/MediaPage/AsideInfoV2'
@@ -37,8 +36,6 @@ export default function AnimePageV2() {
 
   return (
     <C.Container loading={loading}>
-
-      <AsideNavLinks />
 
       <div className={loading === true ? 'skeleton' : 'main'}>
 

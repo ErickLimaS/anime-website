@@ -5,48 +5,45 @@ interface Props {
     darkMode: boolean
 
 }
-
 export const Container = styled.div<Props>`
 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+        .skeleton{
 
-    .skeleton{
+            .skeleton-name{
+                
+                height: 10vh;
+                width: 50%;
+            }
 
-        .skeleton-name{
-            
-            height: 10vh;
-            width: 50%;
-        }
+            >div{
+                background-color: #c0c0c0;
+                border-radius: 2px;
 
-        >div{
-            background-color: #c0c0c0;
-            border-radius: 2px;
+                height: 50vh;
 
-            height: 50vh;
+                margin: 1rem 0;
 
-            margin: 1rem 0;
+                animation: skeleton-loading 1s linear infinite alternate;
 
-            animation: skeleton-loading 1s linear infinite alternate;
-
-            @keyframes skeleton-loading{
-                0%{
-                    background-color: #c0c0c0;
-                }
-                100%{
-                    background-color: #999999;
+                @keyframes skeleton-loading{
+                    0%{
+                        background-color: #c0c0c0;
+                    }
+                    100%{
+                        background-color: #999999;
+                    }
                 }
             }
+
         }
 
-    }
-    
-    .content{
-        width: 80%;    
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
-        border-left: 2px solid #e6e6e6;
-        padding: 1rem 3rem 3rem 3rem;
+        border-radius: 4px;
+
+        margin-left: 20px;
 
         @media(max-width: 1080px){
             width: 95%;
@@ -54,6 +51,20 @@ export const Container = styled.div<Props>`
             border-left: 0;
 
             padding: 0;
+        }
+
+        
+        @media(max-width: 768px){
+
+            width: auto;
+
+            margin-left: 0px;
+
+            margin: 0 20px;
+
+            justify-self: center;
+
+
         }
 
         h1{
@@ -76,7 +87,7 @@ export const Container = styled.div<Props>`
             h2{
                 font-size: 1.6rem;
                 font-weight: 600;
-                color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#625e5e'};
+                color: #625e5e;
 
                 span{
                     color: var(--brand-color);
@@ -91,62 +102,65 @@ export const Container = styled.div<Props>`
                 justify-content: center;
 
                 button{
-                            cursor: pointer;
+                    cursor: pointer;
 
-                            display: flex;
-                            flex-direction: row;
-                            align-items: center;
-                            justify-content: center;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
 
-                            margin: 0 0.5rem;
+                    margin: 0 0.5rem;
 
-                            width: 4rem;
-                            height: 4rem;
+                    width: 4rem;
+                    height: 4rem;
 
-                            background-color: transparent;
-                            border-radius: 4000px;
+                    background-color: transparent;
+                    border-radius: 4000px;
 
-                            outline: 0;
-                            border: ${props => props.darkMode ? '1px solid var(--text-grey-variant2)' : '1px solid #c0c0c0'};
+                    outline: 0;
+                    border: ${props => props.darkMode ? '1px solid var(--text-grey-variant2)' : '1px solid #c0c0c0'};
 
-                            svg{
-                                width: 0.7rem;
-                                height: auto;
+                    svg{
+                        width: 0.7rem;
+                        height: auto;
 
-                                fill: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#444'};
-                            }
+                        fill: ${props => props.darkMode ? 'var(--text-grey-variant2)' : '#444'};
+                    }
 
-                            :hover{
-                                border: 1px solid #999999;
-                            }
+                    :hover{
+                        border: 1px solid #999999;
+                    }
 
-                        }
+                    }
 
-                        button[disabled]{
-                            cursor: default;
+                button[disabled]{
+                    
+                    cursor: default;
 
-                            opacity: 0.5;
-                            
-                            border-color: #dddddd;
+                    opacity: 0.5;
 
-                            svg{
-                                ${props => props.darkMode ? 'var(--text-grey-variant)!important' : '#444!important'};
-                            }
+                    border-color: #dddddd;
 
-                        }                
+                    svg{
+                        ${props => props.darkMode ? 'var(--text-grey-variant)!important' : '#444!important'};
+                    }
+
+                }                
 
             }
 
         }
 
         .top-rated-manga, .top-rated-anime{
+
             .list{
                 padding: 0.5rem 0;
-                
+
                 overflow: auto;
-            
+                
                 display: flex;
                 flex-direction: row;
+
 
                 ::-webkit-scrollbar {
                     height: 8px;
@@ -189,35 +203,12 @@ export const Container = styled.div<Props>`
                 margin: 0 2rem;
             }
 
-            .trending-anime, .trending-manga{
+            .trending-manga{
 
-                width: 40%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
 
-                @media(max-width: 620px){
-                    
-                    width: 100%;
-
-                }
-
-                .heading{
-                    background-color: initial;
-                }
-
-                div.description-hover{
-                        display: none!important;;
-                }
-
-                >div{
-                    /* background-color: rgb(255 222 245 / 0.44); */
-                    border-radius: 4px;
-                    
-                    
-                    margin: 1rem 0;
-                }
-
-            }
-
-            .trending-anime{
 
                 .heading h2{
                     flex-direction: row!important;
@@ -236,6 +227,7 @@ export const Container = styled.div<Props>`
                         align-items: flex-end;
 
                     }
+                    
 
                     @media(max-width: 620px){
 
@@ -252,9 +244,47 @@ export const Container = styled.div<Props>`
 
             }
 
+            .trending-anime{
+
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .trending-anime, .trending-manga{
+
+                width: 40%;
+
+                div.description-hover{
+                    display: none!important;;
+                }
+
+                .heading{
+                    background-color: initial;
+                }
+
+                >div{
+                    border-radius: 4px;
+                    
+                    margin: 1rem 0;
+                }
+
+                @media(max-width: 768px){
+                    
+                    width: 50%;
+
+                }
+
+                @media(max-width: 620px){
+                    
+                    width: 100%;
+
+                    align-items: center;
+
+                }
+
+            }
+
         }
-    }
-
-
 
 `

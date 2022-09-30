@@ -178,8 +178,6 @@ export default function SettingsUser() {
       darkMode={darkMode}
     >
 
-      <AsideNavLinks />
-
       <div className='content'>
 
         <div className='menu'>

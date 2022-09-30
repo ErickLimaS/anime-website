@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import Axios from 'axios'
 import Swal from 'sweetalert2'
 import { logoutUser } from '../../../redux/actions/userActions'
-import BookmarkedItemPage from '../../../Components/MediaPage/BookmarkedItemPage'
+import BookmarkedItemPage from '../../../Components/BookmarkedItemPage'
 
 
 export default function BookmarkUser() {
@@ -115,7 +115,6 @@ export default function BookmarkUser() {
 
             {loading ? (
                 <>
-                    <AsideNavLinks />
 
                     <div className='main skeleton'>
                         <div className='skeleton-name'></div>
@@ -131,7 +130,6 @@ export default function BookmarkUser() {
                 </>
             ) : (
                 <>
-                    <AsideNavLinks />
 
                     <div className='main'>
                         <h1>

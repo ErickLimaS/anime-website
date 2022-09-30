@@ -17,26 +17,27 @@ export const Container = styled.div<Props>`
 
     div.content{
 
-        width: 80%;
+        width: 100%;
+        min-height: 100vh;
 
         margin-right: 2rem;
-        padding: 2rem 0;
+        padding: 2rem;
 
-        @media(max-width: 768px){
-            margin-right: 0;
-            width: -webkit-fill-available; 
-        } 
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 0 20px;
 
+        @media(max-width: 1080px){
 
-        @media(max-width: 620px){
-            margin: 0 2rem;
-        } 
+            margin: 20px 0;
+            padding: 0rem;
 
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
 
-        border-left: 2px solid #e6e6e6;
+        }
 
         @media(max-width: 768px){
 
@@ -44,11 +45,11 @@ export const Container = styled.div<Props>`
             justify-content: center;
             align-items: center;
 
+            margin-right: 0;
+
         }
 
         @media(max-width: 620px){
-
-            border-left: 0;
 
             flex-direction: column;
             justify-content: center;
@@ -59,8 +60,6 @@ export const Container = styled.div<Props>`
 
     div.menu{
         
-        width: 20%;
-
         height: min-content;
         background-color: transparent;
 
@@ -128,19 +127,17 @@ export const Container = styled.div<Props>`
                         color: ${props => props.darkMode === false && props.tabIndex !== 3 && 'var(--brand-color)'};
 
         }
-        
-        @media(max-width: 768px){
+
+        @media(max-width: 1080px){
             
             position: initial;
 
-            width: 80%;
+            max-width: 100%;
 
         }
 
-        @media(max-width: 620px){
+        @media(max-width: 625px){
             
-            position: initial;
-
             width: 100%;
 
             margin-bottom: 2rem;
@@ -161,19 +158,54 @@ export const Container = styled.div<Props>`
             
             border-radius: 4px;
 
+            
+            @media(max-width: 1080px){
+                
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+
+            }
+
+            @media(max-width: 625px){
+                
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+            }
+
             li{
                 cursor: pointer;
 
-                width: -webkit-fill-available;
-                height: 100%;
+                width: 80%;
 
-                padding: 2rem;
+                padding: 20px;
 
                 font-size: 1.6rem;
                 font-weight: 600;
                 color: #444444;
 
                 border-bottom: 2px solid var(--brand-color);
+
+                @media(max-width: 1080px){
+                    
+                    padding: 16px;
+                    font-size: 1.4rem;
+
+                    width: 120px;
+
+                    border: none;
+                    border-radius: none;
+
+                }
+
+                @media(max-width: 625px){
+                    
+                    padding: 20px;
+                    border-bottom: 2px solid var(--brand-color);
+                    width: 80%;
+
+                }
 
                 :hover{
 
@@ -186,6 +218,17 @@ export const Container = styled.div<Props>`
 
                     border-radius: ${props => props.darkMode === true ? '4px 4px 0 0' : 'initial'};
 
+                    @media(max-width: 1080px){
+                    
+                        border-radius: 4px 0px 0px 4px;
+
+                    }
+
+                    @media(max-width: 625px){
+                    
+                        border-radius: ${props => props.darkMode === true ? '4px 4px 0 0' : 'initial'};
+
+                    }
                 }
 
 
@@ -194,6 +237,18 @@ export const Container = styled.div<Props>`
                     border-bottom: 0;
 
                     border-radius: ${props => props.darkMode === true ? '0 0 4px 4px' : 'initial'};
+
+                    @media(max-width: 1080px){
+                    
+                        border-radius: 0px 4px 4px 0px;
+
+                    }
+
+                    @media(max-width: 625px){
+                    
+                        border-radius: ${props => props.darkMode === true ? '0 0 4px 4px' : 'initial'};
+
+                    }
                     
                 }
 
@@ -203,17 +258,11 @@ export const Container = styled.div<Props>`
 
 
     }
-
-    div#index-0, div#index-1, div#index-2, div#index-3{
-
-        width: 60%;
-
-    }
-
+    
     div#index-1, div#index-2{
 
-        width: 60%;
-        height: 50vh;
+        min-height: 50vh;
+        max-height: 70vh;
     }
                                                                                             
     .user-info{
@@ -222,6 +271,13 @@ export const Container = styled.div<Props>`
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
+        
+        @media(max-width: 1080px){
+
+            width: 100%;
+
+        }
 
         @media(max-width: 768px){
 
@@ -386,8 +442,6 @@ export const Container = styled.div<Props>`
                     flex-direction: column;
                     align-items: center;
                     
-                    border: 2px solid transparent;
-
                     img{
                         margin: 1rem;
 
@@ -481,7 +535,6 @@ export const Container = styled.div<Props>`
     div#index-0{
         display: ${props => props.tabIndex === 0 ? `flex` : 'none'};
 
-        border: 2px solid transparent;
     }
     #index-1{
 

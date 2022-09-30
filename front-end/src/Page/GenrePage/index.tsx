@@ -5,7 +5,6 @@ import { useParams } from 'react-router'
 import AsideNavLinks from '../../Components/Layout/AsideNavLinks'
 import HeadingContent from '../../Components/Home/HeadingContent'
 import TopRated from '../../Components/TopRated'
-import { ReactComponent as ArrowLeftSvg } from '../../imgs/svg/arrow-left-short.svg'
 import { ReactComponent as AngleLeftSolidSvg } from '../../imgs/svg/angle-left-solid.svg'
 import { ReactComponent as AngleRightSolidSvg } from '../../imgs/svg/angle-right-solid.svg'
 import Trending from '../../Components/Trending'
@@ -26,8 +25,6 @@ export default function GenrePage() {
     const [randomIndex, setRandomIndex] = useState<number>(0)
 
     const [loading, setLoading] = useState(true)
-    const [loadingSectionTopRated, setLoadingSectionTopRated] = useState(false)
-    const [loadingSectionReleasingThisWeek, setLoadingSectionReleasingThisWeek] = useState(false)
 
     useEffect(() => {
 
@@ -143,7 +140,6 @@ export default function GenrePage() {
 
             {loading === true ? (
                 <>
-                    <AsideNavLinks data={genre} />
 
                     <div className='content skeleton'>
                         <div className='skeleton-name'></div>
@@ -151,11 +147,11 @@ export default function GenrePage() {
                         <div className='skeleton-section'></div>
                         <div className='skeleton-section'></div>
                     </div>
+                    
                 </>
             ) : (
 
                 <>
-                    <AsideNavLinks data={genre} />
 
                     <div className='content'>
 
@@ -187,9 +183,9 @@ export default function GenrePage() {
                             </div>
 
                             <div className='list'>
-                                {animesGenreList.map((item: any, key) => (
+                                {animesGenreList.map((item: any, key: any) => (
 
-                                    <TopRated data={item} />
+                                    <TopRated data={item} key={key}/>
                                 ))}
                             </div>
                         </div>
@@ -218,16 +214,16 @@ export default function GenrePage() {
                             </div>
 
                             <div className='list'>
-                                {mangasGenreList.map((item: any, key) => (
+                                {mangasGenreList.map((item: any, key: any) => (
 
-                                    <TopRated data={item} />
+                                    <TopRated data={item} key={key}/>
                                 ))}
                             </div>
                         </div>
 
                         <div className='trending'>
 
-                            <div className='trending-anime'>
+                            <div className='trending-manga'>
 
                                 <div className='heading'>
 
@@ -236,15 +232,15 @@ export default function GenrePage() {
                                 </div>
 
 
-                                {mangasTrending.map((item: any, key) => (
+                                {mangasTrending.map((item: any, key: any) => (
 
-                                    <Trending data={item} />
+                                    <Trending data={item} key={key}/>
 
                                 ))}
 
                             </div>
 
-                            <div className='trending-manga'>
+                            <div className='trending-anime'>
 
                                 <div className='heading'>
 
@@ -252,9 +248,9 @@ export default function GenrePage() {
 
                                 </div>
 
-                                {animesTrending.map((item: any, key) => (
+                                {animesTrending.map((item: any, key: any) => (
 
-                                    <Trending data={item} />
+                                    <Trending data={item} key={key}/>
 
                                 ))}
 

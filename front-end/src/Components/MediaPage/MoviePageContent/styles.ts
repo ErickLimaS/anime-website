@@ -10,35 +10,19 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-    /* width: 100%; */
     width: 56vw;
 
-    border-left: 2px solid #e6e6e6;
-    border-right: 2px solid #e6e6e6;
+    margin: 2rem;
 
-    padding: 2rem;
-
-    @media(max-width: 1280px){
-        width: 50vw;
-    }
-
-    @media(max-width: 1080px){
-        width: 100%;
-        border-right: 0;
+    @media(max-width: 1180px){
+        width: initial;
         padding: 1rem;
-    }
-
-    @media(max-width: 768px){
-        border-left: 0;
-        border-right: 0;
-        
-        padding: 0;
+        margin: 0rem;
     }
 
     @media(max-width: 620px){
-        width: 100%;
-        border-left: 0;
-        border-right: 0;
+
+        width: 95%;
         padding: 0;
     }
 

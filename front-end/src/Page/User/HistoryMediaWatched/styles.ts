@@ -13,8 +13,9 @@ export const Container = styled.div<Props>`
     // loading
     .loading-skeleton-heading{
 
+        margin: 20px 20px;
+
         height: 10vh;
-        margin: 2rem 0;
 
         border-radius: 4px;
 
@@ -44,8 +45,9 @@ export const Container = styled.div<Props>`
 
     .loading-skeleton{
 
+        margin: 10px 20px;
+
         height: 40vh;
-        margin: 0.5rem 0;
 
         border-radius: 4px;
 
@@ -79,15 +81,9 @@ export const Container = styled.div<Props>`
         display: flex;
         flex-direction: column;
 
-        width: 80%;    
+        width: 100%;    
 
-        border-left: ${props => props.darkMode ? '2px solid var(--text-grey-variant3)' : '2px solid #ff1a7512'};
-        
         margin: 0rem;
-
-        margin-right: 1rem;
-
-        padding-left: 3rem;
 
         @media(max-width: 768px){
 
@@ -101,7 +97,8 @@ export const Container = styled.div<Props>`
         }
 
         .heading{
-            margin-top: 1rem;
+            margin: 10px 0;
+            margin-left: 20px;
 
             display: flex;
             flex-direction: row;
@@ -109,6 +106,8 @@ export const Container = styled.div<Props>`
             justify-content: space-between;
 
             @media(max-width: 768px){
+
+                margin: 0 20px;
 
                 flex-direction: column;
                 justify-content: center;
@@ -118,49 +117,48 @@ export const Container = styled.div<Props>`
 
             h1{
                 margin: 2rem 0;
-                margin-left: 2rem;
 
                 font-size: 3rem;
                 font-weight: 600;
                 color: #ff1a75;
 
-                
-                @media(max-width: 462px){
-                    margin-left: 0;
-                }
             }
 
             div.sort-buttons{
 
-                display: flex;
-                flex-direction: row;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
                 align-items: center;
+                gap: 0 10px;
 
+                
                 @media(max-width: 1024px){
 
-                    margin-bottom: 1rem;
+                    gap: 0 10px 10px 10px;
 
                 }
 
                 @media(max-width: 768px){
 
-                    margin: 2rem 0;
+                    margin: 20px 0;
 
                 }
+                
+                @media(max-width: 640px){
 
-                @media(max-width: 462px){
+                    width: 100%;
 
-                    flex-wrap: wrap;
+                    grid-template-columns: repeat(2, 1fr);
+
+                    gap: 10px;
 
                 }
 
                 >button{
                     cursor: pointer;
-                    
-                    margin: 0 1rem;
-
-                    max-height: 7rem;
-                    min-height: 3rem;
+                                                            
+                    max-height: 50px;
+                    min-height: 30px;
 
                     padding: 1rem;
 
@@ -171,7 +169,8 @@ export const Container = styled.div<Props>`
 
                     @media (min-width: 768px) and (max-width: 1020px){
 
-                        padding: 0.2rem;
+                        height: 100%;
+
                         margin: 0rem 0.2rem;
 
                     }
@@ -180,6 +179,12 @@ export const Container = styled.div<Props>`
 
                         margin-top: 0.5rem;
                         margin-bottom: 0.5rem;
+
+                    }
+
+                    @media(max-width: 462px){
+
+                        font-size: 1.4rem;
 
                     }
 
@@ -296,7 +301,7 @@ export const Container = styled.div<Props>`
             justify-items: center;
             gap: 2rem;
 
-            @media(max-width: 1080px){
+            @media(max-width: 1180px){
 
                 grid-template-columns: 1fr 1fr;
 

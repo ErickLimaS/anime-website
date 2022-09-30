@@ -26,6 +26,24 @@ export const Container = styled.div<Props>`
                 margin: 0 0.5rem;
 
                 fill: #ff9130;
+
+                @media(max-width: 1024px){
+
+                    height: 14px;
+
+                }
+
+                @media(max-width: 620px){
+
+                    height: 22px;
+
+                }
+
+                @media(max-width: 375px){
+
+                    height: 18px;
+
+                }
             }
 
             small{

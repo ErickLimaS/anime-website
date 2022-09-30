@@ -13,13 +13,14 @@ import { useSelector } from 'react-redux'
 export default function FormatPage() {
 
     const { format } = useParams()
+
     function formatName(format: any) {
         return format.slice(0, 1).toUpperCase() + format.slice(1)
     }
+
     const name = formatName(format)
 
     const [animesGenreList, setAnimesGenreList] = useState([])
-    const [mangasGenreList, setMangasGenreList] = useState([])
     const [animesTrending, setAnimesTrending] = useState([])
     const [mangasTrending, setMangasTrending] = useState([])
 
@@ -65,8 +66,7 @@ export default function FormatPage() {
     //handles button navigation through results to topRated and Releasing sections
     const handleSectionPreviousPage = async (section: String) => {
 
-
-        let page;
+        let page: number;
 
         if (indexPage <= 1) {
             page = 1
@@ -94,7 +94,6 @@ export default function FormatPage() {
         const data = await API.getMediaForThisFormat(format, page);
         setAnimesGenreList(data)
 
-
     }
 
     return (
@@ -102,7 +101,6 @@ export default function FormatPage() {
 
             {loading === true ? (
                 <>
-                    <AsideNavLinks data={format} />
 
                     <div className='content skeleton'>
                         <div className='skeleton-name'></div>
@@ -110,85 +108,82 @@ export default function FormatPage() {
                         <div className='skeleton-section'></div>
                         <div className='skeleton-section'></div>
                     </div>
+
                 </>
             ) : (
 
                 <>
-                    <AsideNavLinks data={format} />
 
-                    <div className='content'>
+                    <h1>{name} Format</h1>
 
-                        <h1>{name} Format</h1>
+                    <HeadingContent data={animesGenreList[randomIndex]} />
 
-                        <HeadingContent data={animesGenreList[randomIndex]} />
+                    <div className='top-rated-anime'>
 
-                        <div className='top-rated-anime'>
+                        <div className='heading'>
+                            <h2>Top Rated <span>{name}'s</span></h2>
+
+                            <div className='nav-buttons'>
+                                <button
+                                    type='button'
+                                    disabled={indexPage === 1 ? true : false}
+                                    onClick={() => handleSectionPreviousPage('anime')}
+                                >
+                                    <AngleLeftSolidSvg />
+                                </button>
+
+                                <button
+                                    type='button'
+                                    onClick={() => handleSectionNextPage('anime')}
+                                >
+                                    <AngleRightSolidSvg />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className='list'>
+                            {animesGenreList.map((item: any, key) => (
+
+                                <TopRated data={item} />
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className='trending'>
+
+                        <div className='trending-manga'>
 
                             <div className='heading'>
-                                <h2>Top Rated <span>{name}'s</span></h2>
 
-                                <div className='nav-buttons'>
-                                    <button
-                                        type='button'
-                                        disabled={indexPage === 1 ? true : false}
-                                        onClick={() => handleSectionPreviousPage('anime')}
-                                    >
-                                        <AngleLeftSolidSvg />
-                                    </button>
+                                <h2>Trending <span> Mangas</span></h2>
 
-                                    <button
-                                        type='button'
-                                        onClick={() => handleSectionNextPage('anime')}
-                                    >
-                                        <AngleRightSolidSvg />
-                                    </button>
-                                </div>
                             </div>
 
-                            <div className='list'>
-                                {animesGenreList.map((item: any, key) => (
 
-                                    <TopRated data={item} />
-                                ))}
-                            </div>
+                            {mangasTrending.map((item: any, key: any) => (
+
+                                <Trending data={item} key={key}/>
+
+                            ))}
+
                         </div>
 
-                        <div className='trending'>
+                        <div className='trending-anime'>
 
-                            <div className='trending-anime'>
+                            <div className='heading'>
 
-                                <div className='heading'>
-
-                                    <h2>Trending <span> Mangas</span></h2>
-
-                                </div>
-
-
-                                {mangasTrending.map((item: any, key) => (
-
-                                    <Trending data={item} />
-
-                                ))}
+                                <h2>Trending <span> Animes</span></h2>
 
                             </div>
 
-                            <div className='trending-manga'>
+                            {animesTrending.map((item: any, key: any) => (
 
-                                <div className='heading'>
+                                <Trending data={item} key={key}/>
 
-                                    <h2>Trending <span> Animes</span></h2>
-
-                                </div>
-
-                                {animesTrending.map((item: any, key) => (
-
-                                    <Trending data={item} />
-
-                                ))}
-
-                            </div>
+                            ))}
 
                         </div>
+
                     </div>
                 </>
             )

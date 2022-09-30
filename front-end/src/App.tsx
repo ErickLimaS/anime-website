@@ -129,32 +129,32 @@ function App() {
           <Route path='/register' element={<RegisterUser />} />
 
           {/* USER CATEGORY */}
-          <Route path='/bookmarks' element={userInfo ? < BookmarkUser /> : <Navigate to='/' />} />
-          <Route path='/history' element={userInfo ? < HistoryMediaAdded /> : <Navigate to='/' />} />
-          <Route path='/settings' element={userInfo ? <SettingsUser /> : <Navigate to='/' />} />
+          <Route path='/bookmarks' element={userInfo ? <Layout children={< BookmarkUser />} /> : <Navigate to='/' />} />
+          <Route path='/history' element={userInfo ? <Layout children={< HistoryMediaAdded />} /> : <Navigate to='/' />} />
+          <Route path='/settings' element={userInfo ? <Layout children={<SettingsUser />} /> : <Navigate to='/' />} />
 
           {/* MEDIA CATEGORY */}
-          <Route path='/format/:format' element={<FormatPage />} />
-          <Route path='/genre/:genre' element={<GenrePage />} />
+          <Route path='/format/:format' element={<Layout children={<FormatPage />} />} />
+          <Route path='/genre/:genre' element={<Layout children={<GenrePage />} />} />
 
-          <Route path='/anime/v2/:id' element={<AnimePageV2 />} />
 
           {/* MEDIA Page */}
-          <Route path='/tv-short/:id' element={<TvShortPage />} />
-          <Route path='/ona/:id' element={<OnaPage />} />
-          <Route path='/ova/:id' element={<OvaPage />} />
-          <Route path='/special/:id' element={<SpecialPage />} />
-          <Route path='/one-shot/:id' element={<OneShotPage />} />
-          <Route path='/novel/:id' element={<NovelPage />} />
+          <Route path='/tv-short/:id' element={<Layout children={<TvShortPage />} />} />
+          <Route path='/ona/:id' element={<Layout children={<OnaPage />} />} />
+          <Route path='/ova/:id' element={<Layout children={<OvaPage />} />} />
+          <Route path='/special/:id' element={<Layout children={<SpecialPage />} />} />
+          <Route path='/one-shot/:id' element={<Layout children={<OneShotPage />} />} />
+          <Route path='/novel/:id' element={<Layout children={<NovelPage />} />} />
           <Route path='/anime/:id' element={<Layout children={<AnimePage />} />} />
-          <Route path='/movie/:id' element={<MoviePage />} />
-          <Route path='/manga/:id' element={<MangaPage />} />
+          <Route path='/anime/v2/:id' element={<Layout children={<AnimePageV2 />} />} />
+          <Route path='/movie/:id' element={<Layout children={<MoviePage />} />} />
+          <Route path='/manga/:id' element={<Layout children={<MangaPage />} />} />
 
           {/* HOME */}
           <Route path='/' element={<Layout children={<Home />} />} />
 
           {/* 404 ERROR */}
-          <Route path='*' element={<ErrorPage />} />
+          <Route path='*' element={<Layout children={<ErrorPage />} />} />
 
         </Routes>
 

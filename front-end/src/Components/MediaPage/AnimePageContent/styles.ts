@@ -16,15 +16,13 @@ export const Container = styled.div<Props>`
     
     @media(max-width: 1180px){
         width: initial;
-        border-right: 0;
         padding: 1rem;
+        margin: 0rem;
     }
 
     @media(max-width: 620px){
 
         width: 95%;
-        border-left: 0;
-        border-right: 0;
         padding: 0;
     }
 

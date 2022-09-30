@@ -11,17 +11,11 @@ export const Container = styled.a<Props>`
     justify-content: space-evenly;
     align-items: center;
 
-    height: 20rem;
-    width: 28rem;
 
-    @media(min-width: 620px) and (max-width: 720px){
+    @media(max-width: 590px){
 
-        width: 60vw;
+        width: 100%;
 
-    }
-
-    @media(min-width: 320px) and (max-width: 620px){
-        width: 80vw;
     }
 
     padding: 0.2rem;

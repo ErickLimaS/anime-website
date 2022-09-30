@@ -7,7 +7,7 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-    margin: 2rem 0;
+    padding: 2rem 0;
     
     border-left: 2px solid #e6e6e6;
 

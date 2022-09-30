@@ -7,48 +7,43 @@ interface Props {
 }
 export const Container = styled.div<Props>`
 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+        .skeleton{
 
-    border-radius: 4px;
+            .skeleton-name{
+                
+                height: 10vh;
+                width: 50%;
+            }
 
-    .skeleton{
+            >div{
+                background-color: #c0c0c0;
+                border-radius: 2px;
 
-        .skeleton-name{
-            
-            height: 10vh;
-            width: 50%;
-        }
+                height: 50vh;
 
-        >div{
-            background-color: #c0c0c0;
-            border-radius: 2px;
+                margin: 1rem 0;
 
-            height: 50vh;
+                animation: skeleton-loading 1s linear infinite alternate;
 
-            margin: 1rem 0;
-
-            animation: skeleton-loading 1s linear infinite alternate;
-
-            @keyframes skeleton-loading{
-                0%{
-                    background-color: #c0c0c0;
-                }
-                100%{
-                    background-color: #999999;
+                @keyframes skeleton-loading{
+                    0%{
+                        background-color: #c0c0c0;
+                    }
+                    100%{
+                        background-color: #999999;
+                    }
                 }
             }
+
         }
 
-    }
-    
-    .content{
-        width: 80%;    
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
-        /* border-right: 2px solid #e6e6e6; */
-        border-left: 2px solid #e6e6e6;
-        padding: 1rem 3rem 3rem 3rem;
+        border-radius: 4px;
+
+        margin-left: 20px;
 
         @media(max-width: 1080px){
             width: 95%;
@@ -56,6 +51,20 @@ export const Container = styled.div<Props>`
             border-left: 0;
 
             padding: 0;
+        }
+
+        
+        @media(max-width: 768px){
+
+            width: auto;
+
+            margin-left: 0px;
+
+            margin: 0 20px;
+
+            justify-self: center;
+
+
         }
 
         h1{
@@ -194,35 +203,12 @@ export const Container = styled.div<Props>`
                 margin: 0 2rem;
             }
 
-            .trending-anime, .trending-manga{
+            .trending-manga{
 
-                width: 40%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
 
-                @media(max-width: 620px){
-                    
-                    width: 100%;
-
-                }
-
-                div.description-hover{
-                        display: none!important;;
-                }
-
-                .heading{
-                    background-color: initial;
-                }
-
-                >div{
-                    /* background-color: rgb(255 222 245 / 0.44); */
-                    border-radius: 4px;
-                    
-                    
-                    margin: 1rem 0;
-                }
-
-            }
-
-            .trending-anime{
 
                 .heading h2{
                     flex-direction: row!important;
@@ -258,9 +244,48 @@ export const Container = styled.div<Props>`
 
             }
 
-        }
-    }
+            .trending-anime{
 
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .trending-anime, .trending-manga{
+
+                width: 40%;
+
+                div.description-hover{
+                    display: none!important;;
+                }
+
+                .heading{
+                    background-color: initial;
+                }
+
+                >div{
+                    border-radius: 4px;
+                    
+                    margin: 1rem 0;
+                }
+
+                @media(max-width: 768px){
+                    
+                    width: 50%;
+
+                }
+
+                @media(max-width: 620px){
+                    
+                    width: 100%;
+
+                    align-items: center;
+
+                }
+
+            }
+
+        }
 
 
 `

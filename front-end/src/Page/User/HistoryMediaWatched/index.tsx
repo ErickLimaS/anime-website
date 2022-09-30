@@ -1,11 +1,8 @@
 import Axios from 'axios'
-import { userInfo } from 'os'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import AlreadyWatchedHistoryPage from '../../../Components/MediaPage/AlreadyWatchedHistotyPage'
-import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import { logoutUser } from '../../../redux/actions/userActions'
 import * as C from './styles'
 
@@ -123,7 +120,6 @@ export default function HistoryMediaAdded() {
 
                 })
 
-
                 setLoading(false)
 
             }
@@ -193,8 +189,6 @@ export default function HistoryMediaAdded() {
             darkMode={darkMode}
         >
 
-            <AsideNavLinks />
-
             <div className='history'>
 
                 {loading ? (
@@ -213,7 +207,7 @@ export default function HistoryMediaAdded() {
                     <>
                         <div className='heading'>
                             <h1>
-                                Watched History
+                                History
                             </h1>
 
                             <div className='sort-buttons'>

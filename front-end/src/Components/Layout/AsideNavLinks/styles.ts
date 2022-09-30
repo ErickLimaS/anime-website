@@ -11,25 +11,18 @@ interface Props {
 
 export const Container = styled.nav<Props>`
 
+        height: 120vh;
+
         position: sticky;
         top: 0;
         left: 0;
         
-        height: max-content;
         min-width: 15vw;
         max-width: 20vw;
 
         border-right: 2px solid #e6e6e6; 
         
         background-color: ${props => props.darkMode ? 'var(--bcg-dark-mode)' : 'var(--bcg-light-mode)'};    
-
-        /* @media(max-width: 1080px){
-            
-            position: initial;
-
-            width: 20%;
-            padding-left: 2rem;
-        } */
 
         @media(max-width: 768px){
             display: none;
@@ -40,9 +33,6 @@ export const Container = styled.nav<Props>`
         justify-content: flex-start;
 
         font-size: 1.4rem;
-
-        /* margin-left: 4rem; */
-        margin-bottom: 3rem;
 
         >*{
             

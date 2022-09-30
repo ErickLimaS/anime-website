@@ -51,7 +51,6 @@ export const Layout = styled.div<Props>`
 
     }
 
-
 `
 
 export const MainContent = styled.main<Props>`

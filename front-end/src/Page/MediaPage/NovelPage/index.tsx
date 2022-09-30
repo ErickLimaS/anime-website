@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import AsideInfo from '../../../Components/MediaPage/AsideInfo'
-import * as C from './styles'
+import * as C from '../styles'
 import API from '../../../API/anilist'
 import MangaPageContent from '../../../Components/MediaPage/MangaPageContent'
 
@@ -39,8 +38,6 @@ export default function NovelPage() {
 
   return (
     <C.Container loading={loading}>
-
-      <AsideNavLinks />
 
       <div className={loading === true ? 'skeleton' : 'main'}>
 
