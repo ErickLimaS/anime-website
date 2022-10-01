@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import AsideNavLinks from '../../Components/Layout/AsideNavLinks'
+import React, {  useState } from 'react'
 import * as C from './styles'
 import img from '../../imgs/error/sad-luffy.png'
 import { Link } from 'react-router-dom'
@@ -12,8 +11,6 @@ export default function ErrorPage() {
 
     return (
         <C.Container>
-
-            <AsideNavLinks />
 
             <div className='error'>
 

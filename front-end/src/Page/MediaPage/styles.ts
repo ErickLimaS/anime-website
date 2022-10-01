@@ -34,51 +34,42 @@ export const Container = styled.div<Props>`
     }
 
     div.skeleton{
+
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
 
-        width: 80vw;
         height: 100vh;
-        padding: 0 2rem;
 
-        @media(max-width: 768px){        
-            border-left: 0;
-        }
+        margin: 0 20px;
 
-        div:first-child{
-            
-            display: flex;
-            flex-direction: column;
-
-            span.skeleton{
+        span.skeleton{
                 display: ${props => props.loading === true ? 'block' : 'none'};
 
-                :first-child{
-                    width: 40vw;
-                    height: 20vh;
+                margin: 1rem 0;
 
-                    @media(max-width: 1310px){
-                        width: 50vw;
-                        height: 20vh;
-                    }
-                }
+                align-self: center;
+
+                width: 100%;
+                height: 50vh;
 
                 border-radius: 4px;
 
-                width: 55vw;
-                height: 50vh;
-                
-                @media(max-width: 1310px){
-                    width: 75vw;
-                    height: 50vh;
-                }
-                @media(max-width: 620px){
-                    width: 80vw;
-                    height: 50vh;
+                :first-child{
+                    width: 40vw;
+                    height: 40vh;
+
+                    align-self: flex-start;
+
+                    @media(max-width: 1310px){
+                        width: 50vw;
+                        height: 40vh;
+                    }
                 }
 
-                margin: 1rem 0;
+                @media(max-width: 1310px){
+                    height: 50vh;
+                }
 
                 animation: loading 1s linear infinite alternate;
 
@@ -93,7 +84,6 @@ export const Container = styled.div<Props>`
                     }
 
                 }
-            }
         }
 
         div:last-child{

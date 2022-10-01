@@ -38,112 +38,113 @@ export default function Home() {
   const darkModeSwitch = useSelector((state: any) => state.darkModeSwitch)
   const { darkMode } = darkModeSwitch
 
+  // gets animes with banner img
+  function hasBcgImg(item: any) {
+    if (item.bannerImage != null) {
+      return item
+    }
+  }
+
+  const loadData = async () => {
+
+    setLoading(true)
+
+    let data1, data2, data3, data4;
+
+    switch (indexInnerPageLink) {
+
+      case 0: //ANIME
+        //stores the heading content, which is the releases of the season
+        data1 = await API.getNewReleases('ANIME')
+
+        setReleasingThisSeason(data1)
+
+        if (data1.length > 0) {
+          // gets animes with banner img
+          data1 = data1.filter((item: any) => hasBcgImg(item))
+
+          setRandomIndex(Math.floor(Math.random() * data1.length))
+        }
+        else {
+          setRandomIndex(0)
+        }
+
+        //stores releases of this week
+        data2 = await API.getReleasingThisWeek('ANIME')
+        setReleasingThisWeek(data2)
+
+        //stores what is trending 
+        data3 = await API.getTrending('ANIME', '', '')
+        setTrending(data3)
+
+        //stores top rated animes
+        data4 = await API.getTopRated('ANIME');
+        setTopRated(data4)
+
+        setLoading(false)
+
+        break;
+
+      case 1: //MANGA
+        //stores releases of this week
+        data2 = await API.getReleasingThisWeek('MANGA')
+        setReleasingThisWeek(data2)
+
+        //stores what is trending 
+        data3 = await API.getTrending('MANGA', '', '')
+        setTrending(data3)
+
+        //stores top rated animes
+        data4 = await API.getTopRated('MANGA');
+        setTopRated(data4)
+
+        setLoading(false)
+
+        break;
+
+      case 2: //MOVIE
+        //stores the heading content, which is the releases of the season
+        data1 = await API.getNewReleases('ANIME', 'MOVIE')
+
+        if (data1.length > 0) {
+          // gets animes with banner img
+          data1 = data1.filter((item: any) => hasBcgImg(item))
+
+          setRandomIndex(Math.floor(Math.random() * data1.length))
+        }
+        else {
+          setRandomIndex(0)
+        }
+
+        setReleasingThisSeason(data1)
+
+        setRandomIndex(Math.floor(Math.random() * data1.length))
+
+        //stores releases of this week
+        data2 = await API.getReleasingThisWeek('ANIME', 'MOVIE')
+        setReleasingThisWeek(data2)
+
+        //stores what is trending 
+        data3 = await API.getTrending('ANIME', 'MOVIE', '')
+        setTrending(data3)
+
+        //stores top rated animes
+        data4 = await API.getTopRated('ANIME', 'MOVIE');
+        setTopRated(data4)
+
+        setLoading(false)
+
+        break;
+    }
+
+  }
+
   useEffect(() => {
 
     window.scrollTo(0, 0);
 
     document.title = 'Loading... | AniProject'
 
-    // gets animes with banner img
-    function hasBcgImg(item: any) {
-      if (item.bannerImage != null) {
-        return item
-      }
-    }
-
-    const loadData = async () => {
-
-      setLoading(true)
-
-      let data1, data2, data3, data4;
-
-      switch (indexInnerPageLink) {
-
-        case 0: //ANIME
-          //stores the heading content, which is the releases of the season
-          data1 = await API.getNewReleases('ANIME')
-
-          setReleasingThisSeason(data1)
-
-          if (data1.length > 0) {
-            // gets animes with banner img
-            data1 = data1.filter((item: any) => hasBcgImg(item))
-
-            setRandomIndex(Math.floor(Math.random() * data1.length))
-          }
-          else {
-            setRandomIndex(0)
-          }
-
-          //stores releases of this week
-          data2 = await API.getReleasingThisWeek('ANIME')
-          setReleasingThisWeek(data2)
-
-          //stores what is trending 
-          data3 = await API.getTrending('ANIME', '', '')
-          setTrending(data3)
-
-          //stores top rated animes
-          data4 = await API.getTopRated('ANIME');
-          setTopRated(data4)
-
-          setLoading(false)
-
-          break;
-
-        case 1: //MANGA
-          //stores releases of this week
-          data2 = await API.getReleasingThisWeek('MANGA')
-          setReleasingThisWeek(data2)
-
-          //stores what is trending 
-          data3 = await API.getTrending('MANGA', '', '')
-          setTrending(data3)
-
-          //stores top rated animes
-          data4 = await API.getTopRated('MANGA');
-          setTopRated(data4)
-
-          setLoading(false)
-
-          break;
-
-        case 2: //MOVIE
-          //stores the heading content, which is the releases of the season
-          data1 = await API.getNewReleases('ANIME', 'MOVIE')
-
-          if (data1.length > 0) {
-            // gets animes with banner img
-            data1 = data1.filter((item: any) => hasBcgImg(item))
-
-            setRandomIndex(Math.floor(Math.random() * data1.length))
-          }
-          else {
-            setRandomIndex(0)
-          }
-
-          setReleasingThisSeason(data1)
-
-          setRandomIndex(Math.floor(Math.random() * data1.length))
-
-          //stores releases of this week
-          data2 = await API.getReleasingThisWeek('ANIME', 'MOVIE')
-          setReleasingThisWeek(data2)
-
-          //stores what is trending 
-          data3 = await API.getTrending('ANIME', 'MOVIE', '')
-          setTrending(data3)
-
-          //stores top rated animes
-          data4 = await API.getTopRated('ANIME', 'MOVIE');
-          setTopRated(data4)
-
-          setLoading(false)
-
-          break;
-      }
-
-    }
     loadData()
 
     document.title = 'Home | AniProject'
@@ -184,25 +185,28 @@ export default function Home() {
           </div>
 
           <div className={loading === true ? 'new-episodes div-skeleton' : 'new-episodes'}>
-            <div className='heading'>
 
-              <h2>Releasing This Week</h2>
+            {releasingThisWeek.length > 0 && (
+              <div className='heading'>
 
-              <NavButtons
-                param='releasing-this-week'
-                section='ANIME'
-                releasingThisWeek={releasingThisWeek}
-                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
-                indexPageTopRated={indexPageTopRated}
-                setIndexPageTopRated={setIndexPageTopRated}
-                setLoadingSectionTopRated={setLoadingSectionTopRated}
-                setTopRated={setTopRated}
-                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
-                setReleasingThisWeek={setReleasingThisWeek}
-                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
-              />
+                <h2>Releasing This Week</h2>
 
-            </div>
+                <NavButtons
+                  param='releasing-this-week'
+                  section='ANIME'
+                  releasingThisWeek={releasingThisWeek}
+                  indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                  indexPageTopRated={indexPageTopRated}
+                  setIndexPageTopRated={setIndexPageTopRated}
+                  setLoadingSectionTopRated={setLoadingSectionTopRated}
+                  setTopRated={setTopRated}
+                  setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                  setReleasingThisWeek={setReleasingThisWeek}
+                  setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+                />
+
+              </div>
+            )}
 
             <div className='releasing-this-week'>
 
@@ -217,25 +221,28 @@ export default function Home() {
           </div>
 
           <div className={loading === true ? 'best-rated div-skeleton' : 'best-rated'}>
-            <div className='heading'>
 
-              <h2>Top Rated Animes</h2>
+            {topRated.length > 0 && (
+              <div className='heading'>
 
-              <NavButtons
-                param='top-rated'
-                section='ANIME'
-                topRated={topRated}
-                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
-                indexPageTopRated={indexPageTopRated}
-                setIndexPageTopRated={setIndexPageTopRated}
-                setLoadingSectionTopRated={setLoadingSectionTopRated}
-                setTopRated={setTopRated}
-                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
-                setReleasingThisWeek={setReleasingThisWeek}
-                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
-              />
+                <h2>Top Rated Animes</h2>
 
-            </div>
+                <NavButtons
+                  param='top-rated'
+                  section='ANIME'
+                  topRated={topRated}
+                  indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                  indexPageTopRated={indexPageTopRated}
+                  setIndexPageTopRated={setIndexPageTopRated}
+                  setLoadingSectionTopRated={setLoadingSectionTopRated}
+                  setTopRated={setTopRated}
+                  setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                  setReleasingThisWeek={setReleasingThisWeek}
+                  setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+                />
+
+              </div>
+            )}
 
             <div className='top-rated-animes'>
               {loading === false && (
@@ -254,26 +261,28 @@ export default function Home() {
           </div>
 
           <div className={loading === true ? 'new-episodes div-skeleton' : 'new-episodes'}>
-            <div className='heading'>
 
-              <h2>Releasing This Week</h2>
+            {releasingThisWeek.length > 0 && (
+              <div className='heading'>
 
+                <h2>Releasing This Week</h2>
 
-              <NavButtons
-                param='releasing-this-week'
-                section='MANGA'
-                releasingThisWeek={releasingThisWeek}
-                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
-                indexPageTopRated={indexPageTopRated}
-                setIndexPageTopRated={setIndexPageTopRated}
-                setLoadingSectionTopRated={setLoadingSectionTopRated}
-                setTopRated={setTopRated}
-                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
-                setReleasingThisWeek={setReleasingThisWeek}
-                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
-              />
+                <NavButtons
+                  param='releasing-this-week'
+                  section='MANGA'
+                  releasingThisWeek={releasingThisWeek}
+                  indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                  indexPageTopRated={indexPageTopRated}
+                  setIndexPageTopRated={setIndexPageTopRated}
+                  setLoadingSectionTopRated={setLoadingSectionTopRated}
+                  setTopRated={setTopRated}
+                  setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                  setReleasingThisWeek={setReleasingThisWeek}
+                  setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+                />
 
-            </div>
+              </div>
+            )}
 
             <div className='releasing-this-week'>
               {loading === false && (
@@ -286,26 +295,28 @@ export default function Home() {
           </div>
 
           <div className={loading === true ? 'best-rated div-skeleton' : 'best-rated'}>
-            <div className='heading'>
 
-              <h2>Top Rated Mangas</h2>
+            {topRated.length > 0 && (
+              <div className='heading'>
 
-              <NavButtons
-                param='top-rated'
-                section='MANGA'
-                releasingThisWeek={releasingThisWeek}
-                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
-                indexPageTopRated={indexPageTopRated}
-                setIndexPageTopRated={setIndexPageTopRated}
-                setLoadingSectionTopRated={setLoadingSectionTopRated}
-                setTopRated={setTopRated}
-                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
-                setReleasingThisWeek={setReleasingThisWeek}
-                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
-              />
+                <h2>Top Rated Mangas</h2>
 
+                <NavButtons
+                  param='top-rated'
+                  section='MANGA'
+                  releasingThisWeek={releasingThisWeek}
+                  indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                  indexPageTopRated={indexPageTopRated}
+                  setIndexPageTopRated={setIndexPageTopRated}
+                  setLoadingSectionTopRated={setLoadingSectionTopRated}
+                  setTopRated={setTopRated}
+                  setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                  setReleasingThisWeek={setReleasingThisWeek}
+                  setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+                />
 
-            </div>
+              </div>
+            )}
 
             <div className='top-rated-animes'>
               {loading === false && (
@@ -327,26 +338,29 @@ export default function Home() {
           </div>
 
           <div className={loading === true ? 'new-episodes div-skeleton' : 'new-episodes'}>
-            <div className='heading'>
 
-              <h2>Releasing This Week</h2>
+            {releasingThisWeek.length > 0 && (
+              <div className='heading'>
 
-              <NavButtons
-                param='releasing-this-week'
-                section='ANIME'
-                mediaFormat='MOVIE'
-                releasingThisWeek={releasingThisWeek}
-                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
-                indexPageTopRated={indexPageTopRated}
-                setIndexPageTopRated={setIndexPageTopRated}
-                setLoadingSectionTopRated={setLoadingSectionTopRated}
-                setTopRated={setTopRated}
-                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
-                setReleasingThisWeek={setReleasingThisWeek}
-                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
-              />
+                <h2>Releasing This Week</h2>
 
-            </div>
+                <NavButtons
+                  param='releasing-this-week'
+                  section='ANIME'
+                  mediaFormat='MOVIE'
+                  releasingThisWeek={releasingThisWeek}
+                  indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                  indexPageTopRated={indexPageTopRated}
+                  setIndexPageTopRated={setIndexPageTopRated}
+                  setLoadingSectionTopRated={setLoadingSectionTopRated}
+                  setTopRated={setTopRated}
+                  setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                  setReleasingThisWeek={setReleasingThisWeek}
+                  setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+                />
+
+              </div>
+            )}
 
             <div className='releasing-this-week'>
               {loading === false && (
@@ -359,27 +373,29 @@ export default function Home() {
           </div>
 
           <div className={loading === true ? 'best-rated div-skeleton' : 'best-rated'}>
-            <div className='heading'>
 
-              <h2>Top Rated Movies</h2>
+            {topRated.length > 0 && (
+              <div className='heading'>
 
-              <NavButtons
-                param='top-rated'
-                section='ANIME'
-                mediaFormat='MOVIE'
-                releasingThisWeek={releasingThisWeek}
-                indexPageReleasingThisWeek={indexPageReleasingThisWeek}
-                indexPageTopRated={indexPageTopRated}
-                setIndexPageTopRated={setIndexPageTopRated}
-                setLoadingSectionTopRated={setLoadingSectionTopRated}
-                setTopRated={setTopRated}
-                setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
-                setReleasingThisWeek={setReleasingThisWeek}
-                setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
-              />
+                <h2>Top Rated Movies</h2>
 
+                <NavButtons
+                  param='top-rated'
+                  section='ANIME'
+                  mediaFormat='MOVIE'
+                  releasingThisWeek={releasingThisWeek}
+                  indexPageReleasingThisWeek={indexPageReleasingThisWeek}
+                  indexPageTopRated={indexPageTopRated}
+                  setIndexPageTopRated={setIndexPageTopRated}
+                  setLoadingSectionTopRated={setLoadingSectionTopRated}
+                  setTopRated={setTopRated}
+                  setLoadingSectionReleasingThisWeek={setLoadingSectionReleasingThisWeek}
+                  setReleasingThisWeek={setReleasingThisWeek}
+                  setIndexPageReleasingThisWeek={setIndexPageReleasingThisWeek}
+                />
 
-            </div>
+              </div>
+            )}
 
             <div className='top-rated-animes'>
               {loading === false && (

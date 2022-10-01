@@ -12,7 +12,7 @@ export default function MoviePage() {
   const type = 'ANIME'
 
   //ONLY this page declares what kind of format it is used. Others has a exception on API file to redirect to the right format for their respective page.
-  const format = 'MOVIE' 
+  const format = 'MOVIE'
 
   const [animeInfo, setAnimeInfo] = useState([] as any[])
 
@@ -46,17 +46,12 @@ export default function MoviePage() {
 
         {loading === true ? (
           <>
-            <div>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-            </div>
-
-            <div>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-            </div>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
           </>
         ) : (
           <>

@@ -55,7 +55,6 @@ export default function AnimePageContent(data: any) {
     window.scrollTo(0, 0);
 
     let howManyPages: number = 0;
-    let howMuchEpisodes: number = data.data.streamingEpisodes.length;
 
     if (data.data.streamingEpisodes.length <= 24) {
       setHowManyPagesPagination(1);
@@ -65,7 +64,6 @@ export default function AnimePageContent(data: any) {
     while (episodesLeft > 0) {
       episodesLeft = episodesLeft - 24;
       howManyPages = howManyPages + 1;
-      howMuchEpisodes = episodesLeft;
     }
 
     setHowManyPagesPagination(howManyPages - 1)
@@ -96,7 +94,6 @@ export default function AnimePageContent(data: any) {
         }
       })
     }
-
 
   }, [])
 

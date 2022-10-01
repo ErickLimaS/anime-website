@@ -26,7 +26,9 @@ export default function SearchInnerPage() {
         e.preventDefault()
 
         if (searchInput.current.value.length > 0) {
+
             setLoading(true)
+
             setResultsWasFetched(false)
 
             const dataAni = await API.getSeachResults(searchInput.current.value)
@@ -35,6 +37,7 @@ export default function SearchInnerPage() {
             setGogoSearchResults(dataGogo)
 
             setResultsWasFetched(true)
+
             setLoading(false)
         }
 
@@ -95,7 +98,7 @@ export default function SearchInnerPage() {
                     <div>
                         <label htmlFor='search-input' />
                         {loading === false && (<SearchSvg id='input-svg' />)}
-                        {loading === true && (<LoadingSvg id='input-loading-svg' />)}
+                        {loading === true && (<LoadingSvg id='input-loading-svg'/>)}
                         <input id='search-input' type='text' placeholder='Search' ref={searchInput}></input>
                         <button type='submit'>{' '}<SearchSvg /></button>
                     </div>

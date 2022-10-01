@@ -36,7 +36,6 @@ export default function AnimePage() {
 
   }, [id])
 
-
   return (
     <C.Container loading={loading}>
 
@@ -44,17 +43,12 @@ export default function AnimePage() {
 
         {loading === true ? (
           <>
-            <div>
               <span className={loading === true ? 'skeleton' : ''}></span>
               <span className={loading === true ? 'skeleton' : ''}></span>
               <span className={loading === true ? 'skeleton' : ''}></span>
               <span className={loading === true ? 'skeleton' : ''}></span>
-            </div>
-
-            <div>
               <span className={loading === true ? 'skeleton' : ''}></span>
               <span className={loading === true ? 'skeleton' : ''}></span>
-            </div>
           </>
         ) : (
           <>

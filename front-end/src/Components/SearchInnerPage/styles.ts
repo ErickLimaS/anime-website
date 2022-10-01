@@ -49,6 +49,7 @@ export const Search = styled.div<Props>`
         
         transform: scale(2);
 
+
         background-color: ${props => props.darkMode ? '#212121!important' : '#f3f2ff!important'};
 
         border: none;
@@ -64,7 +65,7 @@ export const Search = styled.div<Props>`
             color: #ff5ebc;
         }
     }
-       
+
     input{
         
         width: 55%;
@@ -161,12 +162,18 @@ export const SearchResults = styled.div<Props2>`
 
     position: relative;
     
-    margin: 1rem 0;
-    padding: 1rem 0rem;
+    margin: 10px 0;
+    padding: 10px 0rem;
 
-    background-color: ${props => props.darkMode ? '#181818' : 'transparent'};
+    background-color: ${props => props.darkMode ? '#181818' : 'var(--bcg-light-mode)'};
 
     border-radius: 4px;
+
+    @media((min-width: 769px) and ( max-width: 1180px)){
+
+        padding: 10px;
+
+    }
 
     @media(min-width: 620px) and (max-width: 768px){
 
@@ -208,7 +215,7 @@ export const SearchResults = styled.div<Props2>`
             svg{
                 padding: 0.5rem;
                 transform: scale(1.5);
-                fill: #fff;
+                fill: ${props => props.darkMode ? '#fff' : 'var(--black-variant)'};
 
                 :hover{
                     transition: all ease-in-out 350ms;

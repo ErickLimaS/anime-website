@@ -22,6 +22,13 @@ export const AnimeToBeListed = styled.div<itemData>`
     border-radius: 2px;
 
     div.cover{
+
+        
+        >a{
+
+            display: flex;
+
+        }
         
         img{
             height: 11rem;
@@ -132,15 +139,25 @@ export const AnimeToBeListed = styled.div<itemData>`
             
             position: absolute!important;
 
-            right: 34rem;
+            min-width: 15%;
+            max-width: 25%;
 
-            width: 24%;
+            @media(max-width: 1080px){
+                
+                max-width: 20%;
+
+            }
 
             @media(max-width: 768px){
                 
-                right: initial;
+                max-width: 30%;
 
-                width: initial;
+            }
+
+            @media(max-width: 620px){
+                
+                max-width: 60%;
+
             }
 
             padding: 1rem;

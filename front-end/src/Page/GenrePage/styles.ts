@@ -223,7 +223,7 @@ export const Container = styled.div<Props>`
                     >*{
                         display: flex;
                         flex-direction: column;
-                        justify-content: flex-end;
+                        justify-content: center;
                         align-items: flex-end;
 
                     }
@@ -254,10 +254,10 @@ export const Container = styled.div<Props>`
             .trending-anime, .trending-manga{
 
                 width: 40%;
-
+/* 
                 div.description-hover{
                     display: none!important;;
-                }
+                } */
 
                 .heading{
                     background-color: initial;

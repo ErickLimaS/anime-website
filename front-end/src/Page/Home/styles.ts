@@ -74,15 +74,14 @@ export const Container = styled.div<ContainerProps>`
         .search-mobile{
 
             display: none;
-            
-            /* @media(max-width: 768px){
+
+             @media(max-width: 768px){
                 display: block;
 
                 padding: 1rem 0 2rem 0;
-            } */
-
+            }
+            
         }
-
 
         div.nav-and-mobile-search{
 
@@ -97,9 +96,13 @@ export const Container = styled.div<ContainerProps>`
 
                 display: none;
 
-                @media((min-width: 620px) and ( max-width: 1180px)){
+                @media((min-width: 769px) and ( max-width: 1180px)){
 
                     display: block;
+                    
+                    position: absolute;
+                    right: 2vw;
+                    top: 20px;
 
                 }
 
@@ -190,10 +193,32 @@ export const Container = styled.div<ContainerProps>`
                 display: flex;
                 flex-direction: row;
 
-                @media(max-width: 768px){
+                @media(min-width: 621px) and (max-width: 768px){
 
                     overflow-y: auto;
+
                 }
+
+                @media(max-width: 620px){
+
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+
+                    >div{
+
+                        width: 90%;
+
+                        :not(:first-child){
+
+                            margin-top: 10px;
+
+                        }
+
+                    }
+
+                }
+
             }
         }
 
@@ -206,6 +231,12 @@ export const Container = styled.div<ContainerProps>`
         section#movie {
 
             display: ${props => props.innerPageLink === 2 ? `flex` : `none`};
+
+        }
+
+        section div.best-rated div.top-rated-animes{
+
+            
 
         }
 

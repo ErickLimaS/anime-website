@@ -42,17 +42,12 @@ export default function MangaPage() {
 
         {loading === true ? (
           <>
-            <div>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-            </div>
-
-            <div>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-              <span className={loading === true ? 'skeleton' : ''}></span>
-            </div>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
+            <span className={loading === true ? 'skeleton' : ''}></span>
           </>
         ) : (
           <>
