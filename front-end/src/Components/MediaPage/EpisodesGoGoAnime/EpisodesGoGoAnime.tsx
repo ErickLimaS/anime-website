@@ -177,20 +177,21 @@ export default function EpisodesGoGoAnime(props: any) {
             <button
                 className='episode-button'
                 onClick={() => props.streamingLink(props.data.episodeId) && setVideoId(props.data.episodeNum)}
+                name={`Episode ${props.data.episodeNum}`}
             >
                 <h3>Episode {props.data.episodeNum}</h3>
             </button>
 
             <C.Buttons isWatched={isWatched} onBookmarks={onBookmarks}>
                 {isWatched ? (
-                    <button type='button' className='isWatched' onClick={() => handleEpisodeWatched()}><EyeSvg /></button>
+                    <button type='button' className='isWatched' onClick={() => handleEpisodeWatched()} name='Was Watched'><EyeSvg /></button>
                 ) : (
-                    <button type='button' className='isWatched' onClick={() => handleEpisodeWatched()}><EyeSlashSvg /></button>
+                    <button type='button' className='isWatched' onClick={() => handleEpisodeWatched()} name='Not Watched'><EyeSlashSvg /></button>
                 )}
                 {onBookmarks ? (
-                    <button type='button' className='onBookmarks' onClick={() => handleBookmarkEpisode()}><BookMarkFillEpisodeSvg /></button>
+                    <button type='button' className='onBookmarks' onClick={() => handleBookmarkEpisode()} name='Bookmarked'><BookMarkFillEpisodeSvg /></button>
                 ) : (
-                    <button type='button' className='onBookmarks' onClick={() => handleBookmarkEpisode()}><BookMarkEpisodeSvg /></button>
+                    <button type='button' className='onBookmarks' onClick={() => handleBookmarkEpisode()} name='Not Bookmarked'><BookMarkEpisodeSvg /></button>
                 )}
             </C.Buttons>
 

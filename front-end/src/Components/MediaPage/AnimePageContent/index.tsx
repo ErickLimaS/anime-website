@@ -8,6 +8,7 @@ import { ReactComponent as AngleLeftSolidSvg } from '../../../imgs/svg/angle-lef
 import { ReactComponent as AngleRightSolidSvg } from '../../../imgs/svg/angle-right-solid.svg'
 import { ReactComponent as EyeSvg } from '../../../imgs/svg/eye-fill.svg'
 import { ReactComponent as EyeSlashSvg } from '../../../imgs/svg//eye-slash-fill.svg'
+import { ReactComponent as ExternalLinkSvg } from '../../../imgs/svg/box-arrow-up-right.svg'
 import SearchInnerPage from '../../SearchInnerPage'
 import CharacterAndActor from '../CharacterAndActor'
 import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, removeMediaFromUserAccount } from '../../../redux/actions/userActions'
@@ -18,11 +19,16 @@ import { Link } from 'react-router-dom'
 import AnimeRecommendations from '../AnimeRecommendations'
 import FromSameFranchise from '../FromSameFranchise'
 import CrunchyrollEpisodesGrid from '../CrunchyrollEpisodesGrid'
+import GoGoAPI from '../../../API/gogo-anime'
 
 export default function AnimePageContent(data: any) {
 
+  // characters
   const [mainCastCharacters, setMainCastCharacters] = useState([])
   const [supportingCastCharacters, setSupportingCastCharacters] = useState([])
+
+  // info of this media from other sources
+  const [otherSourcesInfo, setOtherSourcesInfo] = useState<any>([null])
 
   //media description toggle more/less info
   const [moreDetails, setMoreDetails] = useState<boolean>(false)
@@ -49,6 +55,12 @@ export default function AnimePageContent(data: any) {
   const addError = addMediaToUserAccounts.error
   const remLoading = removeMediaFromUserAccounts.loading
   const remError = removeMediaFromUserAccounts.error
+
+  const titleWithoutInvalidChars = (title: string) => {
+
+    return title.replace(/!|#|,|:|@|$/g, '').replace(/ /g, '-')
+
+  }
 
   useEffect(() => {
 
@@ -94,6 +106,25 @@ export default function AnimePageContent(data: any) {
         }
       })
     }
+
+    // checks if there is a page of this media on other sources
+    (async () => {
+
+      const goGoAnimeThisMediaInfo = await GoGoAPI.getInfoFromThisMedia(titleWithoutInvalidChars(data.data.title.romaji))
+
+      if (goGoAnimeThisMediaInfo.error.status !== 404) {
+
+        setOtherSourcesInfo(goGoAnimeThisMediaInfo)
+
+      }
+      else {
+
+        setOtherSourcesInfo(null)
+
+      }
+
+    }
+    )()
 
   }, [])
 
@@ -300,13 +331,13 @@ export default function AnimePageContent(data: any) {
           {data.data.description.length >= 420 ? (
             moreDetails === false ? (
               <>
-                {ReactHtmlParser(data.data.description.slice(0, 420))}
-                <span onClick={() => setMoreDetails(!moreDetails)}> ...more details.</span>
+                {ReactHtmlParser(data.data.description.slice(0, 420) + '...')}
+                <span className='more-details' onClick={() => setMoreDetails(!moreDetails)}> ...show more.</span>
               </>
             ) : (
               <>
                 {ReactHtmlParser(data.data.description)}
-                <span onClick={() => setMoreDetails(!moreDetails)}> ...less details.</span>
+                <span className='more-details' onClick={() => setMoreDetails(!moreDetails)}> ...show less.</span>
               </>
             )
           ) : (
@@ -327,6 +358,11 @@ export default function AnimePageContent(data: any) {
         </div>
 
         <div className='svg-dots'>
+          {otherSourcesInfo !== null && (
+            <Link className='other-source-link' to={`/anime/v2/${titleWithoutInvalidChars(data.data.title.romaji)}`}>
+              <ExternalLinkSvg /> See On Other Source
+            </Link>
+          )}
           <DotSvg />
           <DotSvg />
         </div>

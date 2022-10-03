@@ -22,7 +22,10 @@ export default function AnimePageContentV2(data: any) {
 
   const [animeTitleWithoutSpace] = useState(data.data.animeTitle.replace(/!|#|,/g, ``).replace(/ /g, `-`))
 
-  const [idGoGoAnime] = useState<String>(window.location.pathname.split('v2/')[1]) // id to be saved when user adds to bookmark or already watched
+  const [episodesSorted, setEpisodesSorted] = useState<any>([])
+
+  // ID to be saved when user adds to bookmark or already watched
+  const [idGoGoAnime] = useState<String>(window.location.pathname.split('v2/')[1])
 
   const [videoReady, setVideoReady] = useState(false)
   const [loadingVideoplayer, setLoadingVideoplayer] = useState(false)
@@ -61,6 +64,15 @@ export default function AnimePageContentV2(data: any) {
   useEffect(() => {
 
     window.scrollTo(0, 0);
+
+    // sort episodes in numerical order
+    const sortEpisodes = data.data.episodesList.sort(function (a: any, b: any) {
+
+      return a?.episodeNum - b?.episodeNum;
+
+    })
+
+    setEpisodesSorted(sortEpisodes)
 
     //manages how much pages must be displayed to show all episodes 
     let howManyPages: number = 0;
@@ -288,13 +300,13 @@ export default function AnimePageContentV2(data: any) {
           {data.data.synopsis.length >= 420 ? (
             moreDetails === false ? (
               <p>
-                {data.data.synopsis.slice(0, 420)}
-                <span onClick={() => setMoreDetails(!moreDetails)}> ...more details.</span>
+                {data.data.synopsis.slice(0, 420)  + '...'}
+                <span className='more-details' onClick={() => setMoreDetails(!moreDetails)}>...show more.</span>
               </p>
             ) : (
               <p>
                 {data.data.synopsis}
-                <span onClick={() => setMoreDetails(!moreDetails)}> less details.</span>
+                <span className='more-details' onClick={() => setMoreDetails(!moreDetails)}> ...show less.</span>
               </p>
             )
           ) : (
@@ -347,7 +359,7 @@ export default function AnimePageContentV2(data: any) {
                 <OtherSorceEpisodesGrid
                   animeTitleWithoutSpace={animeTitleWithoutSpace}
                   indexEpisodesPagination={indexEpisodesPagination}
-                  data={data.data.episodesList}
+                  data={episodesSorted}
                   setVideoURL={setVideoURL}
                   setVideoReady={setVideoReady}
                   setLoadingVideoplayer={setLoadingVideoplayer}
@@ -356,7 +368,7 @@ export default function AnimePageContentV2(data: any) {
 
               </div>
 
-              {data.data.episodesList.length > 24 && (
+              {episodesSorted.length > 24 && (
                 <div className='pagination-buttons'>
                   <button type='button'
                     disabled={indexEpisodesPagination === 0 ? true : false}

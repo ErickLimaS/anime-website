@@ -42,7 +42,6 @@ export const Container = styled.div<Props>`
     .banner-img{
         height: 40vh;
         width: 56vw;
-        /* background-color: #555; */
         background-image: url('https://shisui23.files.wordpress.com/2013/10/anime1.jpg');
         background-position: center;
         background-repeat: no-repeat;
@@ -200,13 +199,16 @@ export const Container = styled.div<Props>`
             font-size: 1.6rem;
             font-weight: 400;
 
-            span{
+            span.more-details{
+
+                display: flex;
+                justify-content: flex-end;
+
                 cursor: pointer;
-                color: #ff5ebc;
+
+                color: var(--pink-variant-1);
                 text-decoration: underline;
 
-                :hover{
-                }
             }
         }
     }
@@ -387,11 +389,11 @@ export const Container = styled.div<Props>`
 
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
+        justify-items: center;
         gap: 2rem 1rem;
 
         @media(max-width: 1280px){
             grid-template-columns: 1fr 1fr 1fr;
-            justify-items: center;
         }
 
         @media(max-width: 1180px){

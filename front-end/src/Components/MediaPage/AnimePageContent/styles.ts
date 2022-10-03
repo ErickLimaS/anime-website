@@ -197,13 +197,16 @@ export const Container = styled.div<Props>`
             font-size: 1.6rem;
             font-weight: 400;
 
-            span{
+            span.more-details{
+
+                display: flex;
+                justify-content: flex-end;
+
                 cursor: pointer;
+
                 color: var(--pink-variant-1);
                 text-decoration: underline;
 
-                :hover{
-                }
             }
         }
     }
@@ -291,16 +294,72 @@ export const Container = styled.div<Props>`
         
         .svg-dots{
 
-            *{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            a.other-source-link{
+
+                display: flex;
+                align-items: stretch;
+
+                margin: 0 10px;
+                padding: 10px;
+
+                border-radius: 2px;
+
+                text-decoration: underline;
+
+                color: ${props => props.darkMode ? 'var(--pink-variant-2)' : 'var(--pink-variant-2)'};
+                font-size: 1.4rem;
+                font-weight: 400;
+                
+                svg{
+
+                    margin-right: 10px;
+
+                }
+
+                :hover{
+
+                    transition: all ease-in 150ms;
+
+                    color: ${props => props.darkMode ? 'var(--pink-variant-1)' : 'var(--pink-variant-1)'};
+
+                }
+                
+                @media((min-width: 769px) and (max-width: 880px)){
+
+                    margin: 0px;
+
+                }
+
+                @media(max-width: 768px){
+
+                    margin: 10px;
+
+                }
+
+            }
+
+            >*{
                 fill: ${props => props.darkMode && 'var(--text-grey-variant)'};
             }
+
+            @media(max-width: 880px){
+                >svg{
+                    display: none;
+                }
+            }
+
         }
 
-        @media(max-width: 620px){
-            .svg-dots{
-                display: none;
-            }
+        @media(max-width: 768px){
+
+            flex-direction: column;
+
         }
+        
         @media(max-width: 425px){
             div.nav{
 
@@ -335,12 +394,12 @@ export const Container = styled.div<Props>`
         @media(max-width: 980px){
             grid-template-columns: 1fr 1fr 1fr;
         }
-
-        @media(max-width: 730px){
-            grid-template-columns: 1fr 1fr;
+                                                                                                
+        @media(max-width: 620px){
+            grid-template-columns: 1fr 1fr 1fr;
         }
 
-        @media(max-width: 430px){
+        @media(max-width: 520px){
             grid-template-columns: 1fr 1fr;
         }
 
