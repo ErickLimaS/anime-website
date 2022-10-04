@@ -112,7 +112,7 @@ export default function AnimePageContent(data: any) {
 
       const goGoAnimeThisMediaInfo = await GoGoAPI.getInfoFromThisMedia(titleWithoutInvalidChars(data.data.title.romaji))
 
-      if (goGoAnimeThisMediaInfo.error.status !== 404) {
+      if (goGoAnimeThisMediaInfo.error?.status !== 404) {
 
         setOtherSourcesInfo(goGoAnimeThisMediaInfo)
 
@@ -352,9 +352,9 @@ export default function AnimePageContent(data: any) {
       <div className='heading'>
 
         <div className='nav'>
-          <h2 id='h2-0' onClick={() => setIndexPageInfo(0)}>Episodes</h2>
-          <h2 id='h2-1' onClick={() => setIndexPageInfo(1)}>Cast</h2>
-          <h2 id='h2-2' onClick={() => setIndexPageInfo(2)}>More Info</h2>
+          <h2 data-tab="0" onClick={() => setIndexPageInfo(0)}>Episodes</h2>
+          <h2 data-tab="1" onClick={() => setIndexPageInfo(1)}>Cast</h2>
+          <h2 data-tab="2" onClick={() => setIndexPageInfo(2)}>More Info</h2>
         </div>
 
         <div className='svg-dots'>

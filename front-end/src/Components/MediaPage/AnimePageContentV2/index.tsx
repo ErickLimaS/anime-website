@@ -318,7 +318,7 @@ export default function AnimePageContentV2(data: any) {
       <div className='heading' id='player-heading'>
 
         <div className='nav'>
-          <h2 id='h2-0' onClick={() => setIndexPageInfo(0)}>
+          <h2 data-tab="0" onClick={() => setIndexPageInfo(0)}>
             Episode{choseEpisoded ? ` ${choseEpisoded}` : 's'}
           </h2>
         </div>

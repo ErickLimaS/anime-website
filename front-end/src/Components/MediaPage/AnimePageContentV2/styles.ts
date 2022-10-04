@@ -258,17 +258,17 @@ export const Container = styled.div<Props>`
         }
         
 
-        #h2-0{
+        h2[data-tab="0"]{
             border: ${props => props.indexHeading === 0 ? '1px solid transparent' : '1px solid #ff5ebc'};
             background-color: ${props => props.indexHeading === 0 ? '#ff5ebc!important' : '#fafafa'};
             color: ${props => props.indexHeading === 0 ? '#fff' : '#ff5ebc'};
         }
-        #h2-1{
+        h2[data-tab="1"]{
             border: ${props => props.indexHeading === 1 ? '1px solid transparent' : '1px solid #ff5ebc'};
             background-color: ${props => props.indexHeading === 1 ? '#ff5ebc!important' : '#fafafa'};
             color: ${props => props.indexHeading === 1 ? '#fff' : '#ff5ebc'};
         }
-        #h2-2{
+        h2[data-tab="2"]{
             border: ${props => props.indexHeading === 2 ? '1px solid transparent' : '1px solid #ff5ebc'};
             background-color: ${props => props.indexHeading === 2 ? '#ff5ebc!important' : '#fafafa'};
             color: ${props => props.indexHeading === 2 ? '#fff' : '#ff5ebc'};
@@ -294,8 +294,17 @@ export const Container = styled.div<Props>`
         position: relative;
         overflow: hidden;
         width: 100%;
-        padding-top: ${props => props.videoReady ? '56.25%' : 'none'};;
+        padding-top: ${props => props.videoReady ? '56.25%' : 'none'};
         margin-bottom: 20px;
+
+        @media(max-width: 480px){
+
+            padding-top: ${props => props.videoReady ? '0%' : 'none'};
+
+            width: ${props => props.videoReady ? '100%;' : 'none'};
+            height: ${props => props.videoReady ? '260px' : 'none'};
+
+        }
 
         svg{
             width: 100px;
@@ -314,14 +323,6 @@ export const Container = styled.div<Props>`
             }
         }
         
-        @media(max-width: 480px){
-
-            padding-top: 0%;
-
-            width: 100%;
-            height: 260px;
-
-        }
         
         iframe{
             display: ${props => props.videoReady ? 'block' : 'none'};

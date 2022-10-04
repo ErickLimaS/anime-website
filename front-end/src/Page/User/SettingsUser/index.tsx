@@ -2,7 +2,6 @@ import * as C from './styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
-import AsideNavLinks from '../../../Components/Layout/AsideNavLinks'
 import Swal from 'sweetalert2'
 import { ReactComponent as LoadingSvg } from '../../../imgs/svg/Spinner-1s-200px.svg'
 import { changeAdultContentOption, removeDataFromUserMedia, updateAvatarImg, updateUserInfo } from '../../../redux/actions/userActions'
@@ -183,16 +182,15 @@ export default function SettingsUser() {
         <div className='menu'>
 
           <ul>
-            <li onClick={() => setTabIndex(0)} id='tab-0'>User Profile</li>
-            <li onClick={() => setTabIndex(1)} id='tab-1'>User ID</li>
-            <li onClick={() => setTabIndex(2)} id='tab-2'>Bookmark Data</li>
-            <li onClick={() => setTabIndex(3)} id='tab-3'>Search Results</li>
+            <li onClick={() => setTabIndex(0)} data-tab="0" >User Profile</li>
+            <li onClick={() => setTabIndex(1)} data-tab="1" >User ID</li>
+            <li onClick={() => setTabIndex(2)} data-tab="2" >Bookmark Data</li>
+            <li onClick={() => setTabIndex(3)} data-tab="3" >Search Results</li>
           </ul>
 
         </div>
 
-        {/*TAB INDEX 0 */}
-        <div className='user-info' id='index-0'>
+        <div className='user-info' data-index="0">
 
           {userInfo && (
             <h1>{userInfo.name}'s Profile</h1>
@@ -304,9 +302,7 @@ export default function SettingsUser() {
 
         </div>
 
-
-        {/*TAB INDEX 1 */}
-        <div className='user-info' id='index-1'>
+        <div className='user-info' data-index="1" >
 
           <h1>This is Your ID</h1>
 
@@ -330,9 +326,7 @@ export default function SettingsUser() {
 
         </div>
 
-
-        {/*TAB INDEX 2 */}
-        <div className='user-info' id='index-2'>
+        <div className='user-info' data-index="2" >
 
           <h1>Bookmark Data</h1>
 
@@ -342,8 +336,7 @@ export default function SettingsUser() {
 
         </div>
 
-        {/*TAB INDEX 3 */}
-        <div className='user-info' id='index-3'>
+        <div className='user-info' data-index="3" >
 
           <h1>Search Results Settings</h1>
 

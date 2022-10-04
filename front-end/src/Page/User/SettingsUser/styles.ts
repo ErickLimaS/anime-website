@@ -66,7 +66,7 @@ export const Container = styled.div<Props>`
         position: sticky;
         top: 5vh;
 
-        #tab-0{
+        li[data-tab="0"]{
             
             background-color: ${props => props.darkMode === true && props.tabIndex === 0 && 'var(--brand-color)'};
             background-color: ${props => props.darkMode === true && props.tabIndex !== 0 && 'var(--brand-dark-mode-color)'};
@@ -81,7 +81,7 @@ export const Container = styled.div<Props>`
             color: ${props => props.darkMode === false && props.tabIndex !== 0 && 'var(--brand-color)'};
 
         }
-        #tab-1{
+        li[data-tab="1"]{
             
             background-color: ${props => props.darkMode === true && props.tabIndex === 1 && 'var(--brand-color)'};
                         background-color: ${props => props.darkMode === true && props.tabIndex !== 1 && 'var(--brand-dark-mode-color)'};
@@ -97,7 +97,7 @@ export const Container = styled.div<Props>`
                         color: ${props => props.darkMode === false && props.tabIndex !== 1 && 'var(--brand-color)'};
             
         }
-        #tab-2{
+        li[data-tab="2"]{
             
             background-color: ${props => props.darkMode === true && props.tabIndex === 2 && 'var(--brand-color)'};
                         background-color: ${props => props.darkMode === true && props.tabIndex !== 2 && 'var(--brand-dark-mode-color)'};
@@ -111,7 +111,7 @@ export const Container = styled.div<Props>`
                         color: ${props => props.darkMode === false && props.tabIndex === 2 && '#fff'};
                         color: ${props => props.darkMode === false && props.tabIndex !== 2 && 'var(--brand-color)'};
         }
-        #tab-3{
+        li[data-tab="3"]{
             
             background-color: ${props => props.darkMode === true && props.tabIndex === 3 && 'var(--brand-color)'};
                         background-color: ${props => props.darkMode === true && props.tabIndex !== 3 && 'var(--brand-dark-mode-color)'};
@@ -259,7 +259,7 @@ export const Container = styled.div<Props>`
 
     }
     
-    div#index-1, div#index-2{
+    div[data-index="1"], div[data-index="2"]{
 
         min-height: 50vh;
         max-height: 70vh;
@@ -367,28 +367,31 @@ export const Container = styled.div<Props>`
             align-items: center;
 
             position: absolute;
+            top: 10vh;
 
-            width: inherit;
-            height: 100vh;
+            padding: 10px 20px;
+            height: 85vh;
 
             overflow: auto;
 
+            border: 2px solid var(--text-grey-variant);
+
             ::-webkit-scrollbar {
-                    width: 8px;
+                width: 8px;
             }
 
             ::-webkit-scrollbar-track {
-                    background: #f1f1f1; 
+                background: #f1f1f1; 
             }
                 
             ::-webkit-scrollbar-thumb {
-                    background: #888;
+                background: #888;
 
-                    border-radius: 2px;
+                border-radius: 2px;
             }
 
             ::-webkit-scrollbar-thumb:hover {
-                    background: #555; 
+                background: #555; 
             } 
 
             @media(max-width: 380px){
@@ -427,12 +430,12 @@ export const Container = styled.div<Props>`
 
             .imgs{
                 display: grid;
-                grid-template-columns: auto auto auto;
+                grid-template-columns: 1fr 1fr 1fr;
                 justify-content: center;
                 gap: 1rem;
 
-                @media(max-width: 620px){
-                    grid-template-columns: auto auto;
+                @media(max-width: 530px){
+                    grid-template-columns: 1fr 1fr;
                 }
 
                 >div{
@@ -441,23 +444,28 @@ export const Container = styled.div<Props>`
                     display: flex;
                     flex-direction: column;
                     align-items: center;
+
+                    border: 2px solid transparent;
                     
                     img{
                         margin: 1rem;
 
-                        width: 14rem;
-                        height: 14rem;
+                        width: 140px;
+                        height: 140px;
 
                         border-radius: 50%;
 
                         @media(max-width: 1120px){
-                            width: 15rem;
+                            width: 150px;
+                            height: 150px;
                         }
                         @media(max-width: 880px){
-                            width: 12rem;
+                            width: 120px;
+                            height: 120px;
                         }
                         @media(max-width: 620px){
-                            width: 12rem;
+                            width: 100px;
+                            height: 100px;
                         }
                     }
                     small{
@@ -532,11 +540,11 @@ export const Container = styled.div<Props>`
 
     }
 
-    div#index-0{
+    div[data-index="0"]{
         display: ${props => props.tabIndex === 0 ? `flex` : 'none'};
 
     }
-    #index-1{
+    div[data-index="1"]{
 
         display: ${props => props.tabIndex === 1 ? `flex` : 'none'};
 
@@ -628,7 +636,7 @@ export const Container = styled.div<Props>`
         }
     }
 
-    #index-2{
+    div[data-index="2"]{
 
         display: ${props => props.tabIndex === 2 ? `flex` : 'none'};
 
@@ -684,7 +692,7 @@ export const Container = styled.div<Props>`
 
     }
 
-    #index-3{
+    div[data-index="3"]{
 
         display: ${props => props.tabIndex === 3 ? `flex` : 'none'};
 

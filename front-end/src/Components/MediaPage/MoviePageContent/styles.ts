@@ -247,7 +247,7 @@ export const Container = styled.div<Props>`
             }
         }
 
-        #h2-0{
+        h2[data-tab="0"]{
             border: ${props => props.indexHeading === 0 ? '1px solid transparent' : '1px solid var(--pink-variant-1)'};
 
             background-color: ${props => props.darkMode === true && props.indexHeading === 0 && 'var(--pink-variant-1)!important'};
@@ -257,7 +257,7 @@ export const Container = styled.div<Props>`
 
             color: ${props => props.indexHeading === 0 ? '#fff': 'var(--pink-variant-1)'};
         }
-        #h2-1{
+        h2[data-tab="1"]{
             border: ${props => props.indexHeading === 1 ? '1px solid transparent' : '1px solid var(--pink-variant-1)'};
 
             background-color: ${props => props.darkMode === true && props.indexHeading === 1 && 'var(--pink-variant-1)!important'};

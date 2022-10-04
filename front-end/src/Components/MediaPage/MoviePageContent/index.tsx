@@ -270,8 +270,8 @@ export default function MoviePageContent(data: any) {
       <div className='heading'>
 
         <div className='nav'>
-          <h2 id='h2-0' onClick={() => setIndexPageInfo(0)}>Cast</h2>
-          <h2 id='h2-1' onClick={() => setIndexPageInfo(1)}>More Info</h2>
+          <h2 data-tab="0" onClick={() => setIndexPageInfo(0)}>Cast</h2>
+          <h2 data-tab="1" onClick={() => setIndexPageInfo(1)}>More Info</h2>
         </div>
 
         <div className='svg-dots'>
