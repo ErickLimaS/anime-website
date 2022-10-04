@@ -3,7 +3,6 @@ import { AnyAction, Dispatch } from "redux";
 import { CHANGE_SHOW_ADULT_CONTENT_FAIL, CHANGE_SHOW_ADULT_CONTENT_REQUEST, CHANGE_SHOW_ADULT_CONTENT_SUCCESS, DARK_MODE_OFF, DARK_MODE_ON, DELETE_USER_MEDIA_FAIL, DELETE_USER_MEDIA_REQUEST, DELETE_USER_MEDIA_SUCCESS, UPDATE_USER_AVATAR_IMAGE_FAIL, UPDATE_USER_AVATAR_IMAGE_REQUEST, UPDATE_USER_AVATAR_IMAGE_SUCCESS, USER_ADD_EPISODE_BOOKMARK_FAIL, USER_ADD_EPISODE_BOOKMARK_REQUEST, USER_ADD_EPISODE_BOOKMARK_SUCCESS, USER_ALREADY_WATCHED_ADD_FAIL, USER_ALREADY_WATCHED_ADD_REQUEST, USER_ALREADY_WATCHED_ADD_SUCCESS, USER_ALREADY_WATCHED_REMOVE_FAIL, USER_ALREADY_WATCHED_REMOVE_REQUEST, USER_ALREADY_WATCHED_REMOVE_SUCCESS, USER_EPISODE_ALREADY_WATCHED_ADD_FAIL, USER_EPISODE_ALREADY_WATCHED_ADD_REQUEST, USER_EPISODE_ALREADY_WATCHED_ADD_SUCCESS, USER_EPISODE_ALREADY_WATCHED_REMOVE_FAIL, USER_EPISODE_ALREADY_WATCHED_REMOVE_REQUEST, USER_EPISODE_ALREADY_WATCHED_REMOVE_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_MEDIA_ADD_FAIL, USER_MEDIA_ADD_REQUEST, USER_MEDIA_ADD_SUCCESS, USER_MEDIA_REMOVE_FAIL, USER_MEDIA_REMOVE_REQUEST, USER_MEDIA_REMOVE_SUCCESS, USER_PROFILE_UPDATE_FAIL, USER_PROFILE_UPDATE_REQUEST, USER_PROFILE_UPDATE_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REMOVE_EPISODE_BOOKMARK_FAIL, USER_REMOVE_EPISODE_BOOKMARK_REQUEST, USER_REMOVE_EPISODE_BOOKMARK_SUCCESS } from "../constants/userConstants";
 
 const MONGODB_USER_URL = "https://animes-website-db.herokuapp.com/users"
-const CORS_ANYWHERE = ''
 
 export const registerUser = (name: String, email: String, password: String) => async (dispatch: Dispatch<AnyAction>) => {
 
@@ -12,7 +11,7 @@ export const registerUser = (name: String, email: String, password: String) => a
     try {
 
         const { data } = await Axios({
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/register`,
+            url: `${MONGODB_USER_URL}/register`,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/Json'
@@ -33,7 +32,7 @@ export const registerUser = (name: String, email: String, password: String) => a
     catch (error: any) {
 
         if (error.response.status === 403) {
-            console.log(`Go get the Cors ${CORS_ANYWHERE}`)
+            console.log(`Go get the Cors `)
         }
 
         dispatch({
@@ -52,7 +51,7 @@ export const loginUser = (email: String, password: String) => async (dispatch: D
     try {
 
         const { data } = await Axios({
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/login`,
+            url: `${MONGODB_USER_URL}/login`,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/JSON'
@@ -118,7 +117,7 @@ export const addMediaToUserAccount = (media: any) => async (dispatch: Dispatch<A
         const { userLogin: { userInfo } } = getState()
 
         const { data } = await Axios({
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/add-media`,
+            url: `${MONGODB_USER_URL}/add-media`,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/JSON',
@@ -155,7 +154,7 @@ export const removeMediaFromUserAccount = (media: any) => async (dispatch: Dispa
         const { userLogin: { userInfo } } = getState()
 
         const { data } = await Axios({
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/remove-media`,
+            url: `${MONGODB_USER_URL}/remove-media`,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/JSON',
@@ -197,7 +196,7 @@ export const addToAlreadyWatched = (media: any) => async (dispatch: Dispatch<Any
 
         const { data } = await Axios({
             method: 'POST',
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/add-already-watched`,
+            url: `${MONGODB_USER_URL}/add-already-watched`,
             headers: {
                 Authorization: `Bearer ${userInfo.token}`
             },
@@ -239,7 +238,7 @@ export const removeFromAlreadyWatched = (media: any) => async (dispatch: Dispatc
 
         const { data } = await Axios({
             method: 'PUT',
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/remove-already-watched`,
+            url: `${MONGODB_USER_URL}/remove-already-watched`,
             headers: {
                 Authorization: `Bearer ${userInfo.token}`
             },
@@ -281,7 +280,7 @@ export const addEpisodeToAlreadyWatched = (media: any) => async (dispatch: Dispa
 
         const { data } = await Axios({
             method: 'POST',
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/add-episode-already-watched`,
+            url: `${MONGODB_USER_URL}/add-episode-already-watched`,
             headers: {
                 Authorization: `Bearer ${userInfo.token}`
             },
@@ -323,7 +322,7 @@ export const removeEpisodeFromAlreadyWatched = (media: any) => async (dispatch: 
 
         const { data } = await Axios({
             method: 'PUT',
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/remove-episode-already-watched`,
+            url: `${MONGODB_USER_URL}/remove-episode-already-watched`,
             headers: {
                 Authorization: `Bearer ${userInfo.token}`
             },
@@ -365,7 +364,7 @@ export const addEpisodeToBookmarks = (media: any) => async (dispatch: Dispatch<A
 
         const { data } = await Axios({
             method: 'POST',
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/add-episode-to-bookmarks`,
+            url: `${MONGODB_USER_URL}/add-episode-to-bookmarks`,
             headers: {
                 Authorization: `Bearer ${userInfo.token}`
             },
@@ -407,7 +406,7 @@ export const removeEpisodeFromBookmarks = (media: any) => async (dispatch: Dispa
 
         const { data } = await Axios({
             method: 'PUT',
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/remove-episode-from-bookmarks`,
+            url: `${MONGODB_USER_URL}/remove-episode-from-bookmarks`,
             headers: {
                 Authorization: `Bearer ${userInfo.token}`
             },
@@ -448,7 +447,7 @@ export const updateUserInfo = (name: String, email: String, currentPassword: Str
         const { userLogin: { userInfo } } = getState()
 
         const { data } = await Axios({
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/update-user-profile`,
+            url: `${MONGODB_USER_URL}/update-user-profile`,
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/JSON',
@@ -493,7 +492,7 @@ export const updateAvatarImg = (imgUrl: String) => async (dispatch: Dispatch<Any
         const { userLogin: { userInfo } } = getState()
 
         const { data } = await Axios({
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/change-user-avatar-image`,
+            url: `${MONGODB_USER_URL}/change-user-avatar-image`,
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/JSON',
@@ -534,7 +533,7 @@ export const removeDataFromUserMedia = () => async (dispatch: Dispatch<AnyAction
         const { userLogin: { userInfo } } = getState()
 
         const { data } = await Axios({
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/erase-media-added-data`,
+            url: `${MONGODB_USER_URL}/erase-media-added-data`,
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/JSON',
@@ -573,7 +572,7 @@ export const changeAdultContentOption = () => async (dispatch: Dispatch<AnyActio
         const { userLogin: { userInfo } } = getState()
 
         const { data } = await Axios({
-            url: `${CORS_ANYWHERE}${MONGODB_USER_URL}/change-adult-content-option`,
+            url: `${MONGODB_USER_URL}/change-adult-content-option`,
             method: 'PUT',
             headers: {
                 'Content-Type': 'Application/JSON',

@@ -26,7 +26,6 @@ export default function TvShortPage() {
 
       const data = await API.getInfoFromThisMedia(id, type, format);
       setAnimeInfo(data)
-      console.log(data)
 
       setLoading(false)
 
