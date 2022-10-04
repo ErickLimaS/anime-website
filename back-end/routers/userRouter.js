@@ -2,12 +2,12 @@ import express from "express";
 import bcrypt from 'bcrypt'
 import expressAsyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
-import { generateToken, isAuth, corsHeadersAllowed } from "../utils.js";
+import { generateToken, isAuth } from "../utils.js";
 
 const userRouter = express.Router()
 
 //REGISTER
-userRouter.post('/register', corsHeadersAllowed, expressAsyncHandler(async (req, res) => {
+userRouter.post('/register', expressAsyncHandler(async (req, res) => {
 
     const emailExist = await User.findOne({ email: req.body.email })
 
@@ -53,7 +53,7 @@ userRouter.post('/register', corsHeadersAllowed, expressAsyncHandler(async (req,
 }))
 
 //LOGIN
-userRouter.post('/login', corsHeadersAllowed, expressAsyncHandler(async (req, res) => {
+userRouter.post('/login', expressAsyncHandler(async (req, res) => {
 
     const user = await User.findOne({ email: req.body.email })
 
@@ -96,7 +96,7 @@ userRouter.post('/login', corsHeadersAllowed, expressAsyncHandler(async (req, re
 }))
 
 //ENABLE/DISABLE ADULT CONTENT ON RESULTS
-userRouter.put('/change-adult-content-option', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.put('/change-adult-content-option', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
 
@@ -133,7 +133,7 @@ userRouter.put('/change-adult-content-option', corsHeadersAllowed, isAuth, expre
 }))
 
 //GET USER'S BOOKMARKED MEDIA
-userRouter.get('/bookmarked-media', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.get('/bookmarked-media', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
 
@@ -165,7 +165,7 @@ userRouter.get('/bookmarked-media', corsHeadersAllowed, isAuth, expressAsyncHand
 
 }))
 
-userRouter.get('/already-watched-media', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.get('/already-watched-media', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
 
@@ -185,7 +185,7 @@ userRouter.get('/already-watched-media', corsHeadersAllowed, isAuth, expressAsyn
 }))
 
 //ADD MEDIA TO USER
-userRouter.post('/add-media', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
 
@@ -224,7 +224,7 @@ userRouter.post('/add-media', corsHeadersAllowed, isAuth, expressAsyncHandler(as
 
 //REMOVE MEDIA FROM USER 
 // **** CHANGE TO PUT
-userRouter.post('/remove-media', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
 
@@ -267,7 +267,7 @@ userRouter.post('/remove-media', corsHeadersAllowed, isAuth, expressAsyncHandler
 }))
 
 //UPDATE USER PROFILE
-userRouter.put('/update-user-profile', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
 
@@ -327,7 +327,7 @@ userRouter.put('/update-user-profile', corsHeadersAllowed, isAuth, expressAsyncH
 }))
 
 //ADD TO MEDIA ALREADY WATCHED
-userRouter.post('/add-already-watched', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.post('/add-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -387,7 +387,7 @@ userRouter.post('/add-already-watched', corsHeadersAllowed, isAuth, expressAsync
 }))
 
 //REMOVE MEDIA FROM ALREADY WATCHED
-userRouter.put('/remove-already-watched', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -451,7 +451,7 @@ userRouter.put('/remove-already-watched', corsHeadersAllowed, isAuth, expressAsy
 }))
 
 //ADD TO EPISODES ALREADY WATCHED
-userRouter.post('/add-episode-already-watched', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -603,7 +603,7 @@ userRouter.post('/add-episode-already-watched', corsHeadersAllowed, isAuth, expr
 }))
 
 //REMOVE EPISODES FROM ALREADY WATCHED
-userRouter.put('/remove-episode-already-watched', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -740,7 +740,7 @@ userRouter.put('/remove-episode-already-watched', corsHeadersAllowed, isAuth, ex
 }))
 
 //ADD TO BOOKMARKED EPISODES 
-userRouter.post('/add-episode-to-bookmarks', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -892,7 +892,7 @@ userRouter.post('/add-episode-to-bookmarks', corsHeadersAllowed, isAuth, express
 }))
 
 //REMOVE FROM BOOKMARKED EPISODES
-userRouter.put('/remove-episode-from-bookmarks', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -1028,7 +1028,7 @@ userRouter.put('/remove-episode-from-bookmarks', corsHeadersAllowed, isAuth, exp
 }))
 
 //CHANGE USER AVATAR IMAGE
-userRouter.put('/change-user-avatar-image', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
 
@@ -1063,7 +1063,7 @@ userRouter.put('/change-user-avatar-image', corsHeadersAllowed, isAuth, expressA
 }))
 
 //ERASE MEDIA DATA
-userRouter.put('/erase-media-added-data', corsHeadersAllowed, isAuth, expressAsyncHandler(async (req, res) => {
+userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById(req.user.id)
 

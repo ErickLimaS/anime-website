@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import userRouters from './routers/userRouter.js'
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv'
+import cors from 'cors'
 
 const app = express();
 
@@ -16,7 +17,7 @@ const port = process.env.PORT || 4000
 
 app.use(bodyParser.json())
 
-// app.use('*', (req, res))
+app.use(cors())
 
 app.use('/users', userRouters)
 
