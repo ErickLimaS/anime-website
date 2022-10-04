@@ -12,63 +12,93 @@ interface PropsButtons {
 
 export const Container = styled.div<PropsContainer>`
 
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        cursor: default;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
 
-            width: 120px;
-            height: auto;
+        width: 120px;
+        height: auto;
 
         button.episode-button{
-                cursor: pointer;
+            width: 100%;
+            position: relative;
+            cursor: pointer;
 
-                background-color: ${props => props.episodeActive ? '#f92f7f' : '#ff5ebc33'};
-
-                border: 2px solid ${props => props.episodeActive ? '#f92f7f' : '#ff5ebc'};
-
-                border-radius: 4px;
-
-                padding: 1rem 0.5rem;
-
-                width: inherit;
-                height: inherit;
+            background-color: transparent;
+            border: none;
+                
+            border-radius: 4px;
 
         }
 
-        img{
-                width: 180px;
-                height: auto;
+        div.episode-banner{
 
-                border-radius: 4px;
+            width: 100%;
+            height: 10vh;
 
-                @media(max-width: 430px){
-                    width: 160px;
-                }
-
-                @media(max-width: 360px){
-                    width: 140px;
-                }
+            margin-bottom: 10px;
 
         }
 
-        a{
-                display: flex;
-                height: inherit;
-                width: inherit;
-                justify-content: center;
-                align-items: center;
+        div.episode-banner span{
+
+            font-size: 3rem;
+            font-weight: 600;
+            font-family: 'Poppins', 'Courier New', Courier, monospace;
+
+            width: 100%;
+            height: 100%;
+
+            color:${props => props.darkMode === true && props.episodeActive === false && 'var(--white)'};
+            color:${props => props.darkMode === true && props.episodeActive && 'var(--brand-color)'};
+                
+            color:${props => props.darkMode === false && props.episodeActive && 'var(--brand-color)'};
+            color:${props => props.darkMode === false && props.episodeActive === false &&'var(--black-variant)'};
+
+            position: relative;
+            z-index: 10;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        div.episode-banner::before{
+
+            content: '';
+
+            filter: blur(2px);
+
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: 1;
+
+            background-image: url(/img/logo2.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+
+            width: inherit!important;
+            height: inherit!important;
+
+            background-color: ${props => props.darkMode ? 'rgba(0,0,0,.5)' : 'rgba(0,0,0,.15)'};
+            border-radius: 4px;
+
         }
 
         h3{
-                color:${props => props.darkMode === true && props.episodeActive === false && 'var(--text-grey-variant2)'};
-                color:${props => props.darkMode === true && props.episodeActive && '#fff'};
+            color:${props => props.darkMode === true && props.episodeActive === false && 'var(--text-grey-variant2)'};
+            color:${props => props.darkMode === true && props.episodeActive && 'var(--brand-color)'};
                 
-                color:${props => props.darkMode === false && props.episodeActive && '#fff'};
-                color:${props => props.darkMode === false && props.episodeActive === false &&'#444444'};
+            color:${props => props.darkMode === false && props.episodeActive && 'var(--brand-color)'};
+            color:${props => props.darkMode === false && props.episodeActive === false &&'#444444'};
 
-                font-size: 1.6rem;
+            font-size: 1.2rem;
         }
 
         :hover{
@@ -79,7 +109,7 @@ export const Container = styled.div<PropsContainer>`
                 }
                 h3{
                     transition: all ease-in-out 100ms;
-                    color: ${props => props.episodeActive ? '#fff' : '#ff0095'};
+                    color: ${props => props.episodeActive ? '#787878' : '#ff0095'};
                 }
         }
           
@@ -87,7 +117,7 @@ export const Container = styled.div<PropsContainer>`
 `
 export const Buttons = styled.div<PropsButtons>`
 
-    margin: 0.5rem 0;
+    margin-top: 15px;
 
     width: inherit;
 

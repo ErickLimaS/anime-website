@@ -8,6 +8,7 @@ import { ReactComponent as BookMarkFillEpisodeSvg } from '../../../imgs/svg/book
 import { useDispatch, useSelector } from 'react-redux'
 import { addEpisodeToAlreadyWatched, addEpisodeToBookmarks, removeEpisodeFromAlreadyWatched, removeEpisodeFromBookmarks } from '../../../redux/actions/userActions'
 import { useNavigate } from 'react-router'
+import PlaceholderImg from '../../../imgs/logo2.png'
 
 export default function EpisodesGoGoAnime(props: any) {
 
@@ -179,6 +180,7 @@ export default function EpisodesGoGoAnime(props: any) {
                 onClick={() => props.streamingLink(props.data.episodeId) && setVideoId(props.data.episodeNum)}
                 name={`Episode ${props.data.episodeNum}`}
             >
+                <div className='episode-banner'><span>{props.data.episodeNum}</span></div>
                 <h3>Episode {props.data.episodeNum}</h3>
             </button>
 

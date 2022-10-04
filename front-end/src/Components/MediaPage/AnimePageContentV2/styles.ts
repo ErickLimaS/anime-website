@@ -225,67 +225,70 @@ export const Container = styled.div<Props>`
             display: flex;
             flex-direction: row;
 
-            >*{
-                margin: 0 1rem;
-            }
-            
-            overflow: auto;
+            width: 100%;
+        
+            overflow: hidden;
 
-            h2{
-
-                height: min-content;
-
-                padding: 0.5rem 1rem;
-
-                border-radius: 4px;
-
-                font-size: 2rem;
-                font-weight: 600;
-
-                :hover{
-                    background-color: #ff5ebc33!important;
-                }
-            }
         }
 
-        h2{
+        h2[data-tab="0"]{
+            
+            height: min-content;
 
-            padding: 0.5rem 1rem;
+            position: relative;
+            left: 0%;
+
+            margin: ${props => props.videoReady ? '' : '0 1rem'};
+            padding: ${props => props.videoReady ? '' : '0.5rem 1rem'};
 
             font-size: 2rem;
             font-weight: 600;
 
+            border: 1px solid transparent;
+            border-radius: 4px;
+
+            background-color: #ff5ebc;
+            color: #fff;
+
+            @keyframes center-name-bcg-color-change {
+                from{
+                    padding: 0.5rem 1rem;
+                    margin: 0 1rem;
+
+                    left: 0%;
+                    background-color: #ff5ebc;
+                    color: ${props => props.darkMode ? '#fff' : 'var(--brand-color)'};
+                    transform: scale(1);
+                }
+                to{
+                    padding: 0!important;
+                    margin: 0!important;
+
+                    left: calc(50% - 4.5rem);
+                    background-color: transparent;
+                    color: ${props => props.darkMode ? '#fff' : 'var(--brand-color)'};
+                    transform: scale(1.2);
+                }
+                
+            }
+
+            animation: ${props => props.videoReady ? 'center-name-bcg-color-change 2.5s forwards' : ''};
+
         }
         
-
-        h2[data-tab="0"]{
-            border: ${props => props.indexHeading === 0 ? '1px solid transparent' : '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 0 ? '#ff5ebc!important' : '#fafafa'};
-            color: ${props => props.indexHeading === 0 ? '#fff' : '#ff5ebc'};
-        }
-        h2[data-tab="1"]{
-            border: ${props => props.indexHeading === 1 ? '1px solid transparent' : '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 1 ? '#ff5ebc!important' : '#fafafa'};
-            color: ${props => props.indexHeading === 1 ? '#fff' : '#ff5ebc'};
-        }
-        h2[data-tab="2"]{
-            border: ${props => props.indexHeading === 2 ? '1px solid transparent' : '1px solid #ff5ebc'};
-            background-color: ${props => props.indexHeading === 2 ? '#ff5ebc!important' : '#fafafa'};
-            color: ${props => props.indexHeading === 2 ? '#fff' : '#ff5ebc'};
-        }
-
         .svg-dots{
+                display: none;
 
-            *{
+            /* *{
                 fill: ${props => props.darkMode && 'var(--text-grey-variant)'};
-            }
+            } */
         }
 
-        @media(max-width: 620px){
+        /* @media(max-width: 620px){
             .svg-dots{
                 display: none;
             }
-        }
+        } */
         
     }
 

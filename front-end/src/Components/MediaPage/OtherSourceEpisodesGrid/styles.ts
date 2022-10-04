@@ -7,4 +7,8 @@ interface PropsContainer {
 
 export const Container = styled.div<PropsContainer>`
 
+    >a{
+        cursor: default;
+    }
+
 `
