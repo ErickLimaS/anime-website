@@ -9,6 +9,11 @@ const userRouter = express.Router()
 //REGISTER
 userRouter.post('/register', expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+
     const emailExist = await User.findOne({ email: req.body.email })
 
     if (emailExist) {
@@ -55,6 +60,11 @@ userRouter.post('/register', expressAsyncHandler(async (req, res) => {
 //LOGIN
 userRouter.post('/login', expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+
     const user = await User.findOne({ email: req.body.email })
 
     if (!user) {
@@ -98,6 +108,11 @@ userRouter.post('/login', expressAsyncHandler(async (req, res) => {
 //ENABLE/DISABLE ADULT CONTENT ON RESULTS
 userRouter.put('/change-adult-content-option', isAuth, expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+    
     const user = await User.findById(req.user.id)
 
     if (!user) {
@@ -135,6 +150,11 @@ userRouter.put('/change-adult-content-option', isAuth, expressAsyncHandler(async
 //GET USER'S BOOKMARKED MEDIA
 userRouter.get('/bookmarked-media', isAuth, expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+
     const user = await User.findById(req.user.id)
 
     if (!user) {
@@ -167,6 +187,11 @@ userRouter.get('/bookmarked-media', isAuth, expressAsyncHandler(async (req, res)
 
 userRouter.get('/already-watched-media', isAuth, expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+
     const user = await User.findById(req.user.id)
 
     if(!user){
@@ -186,6 +211,11 @@ userRouter.get('/already-watched-media', isAuth, expressAsyncHandler(async (req,
 
 //ADD MEDIA TO USER
 userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
+
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
 
     const user = await User.findById(req.user.id)
 
@@ -225,6 +255,11 @@ userRouter.post('/add-media', isAuth, expressAsyncHandler(async (req, res) => {
 //REMOVE MEDIA FROM USER 
 // **** CHANGE TO PUT
 userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) => {
+
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
 
     const user = await User.findById(req.user.id)
 
@@ -268,6 +303,11 @@ userRouter.post('/remove-media', isAuth, expressAsyncHandler(async (req, res) =>
 
 //UPDATE USER PROFILE
 userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, res) => {
+
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
 
     const user = await User.findById(req.user.id)
 
@@ -329,6 +369,11 @@ userRouter.put('/update-user-profile', isAuth, expressAsyncHandler(async (req, r
 //ADD TO MEDIA ALREADY WATCHED
 userRouter.post('/add-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+
     const user = await User.findById(req.user.id, '-password -email')
 
     if (!user) {
@@ -388,6 +433,11 @@ userRouter.post('/add-already-watched', isAuth, expressAsyncHandler(async (req, 
 
 //REMOVE MEDIA FROM ALREADY WATCHED
 userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
+
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -452,6 +502,11 @@ userRouter.put('/remove-already-watched', isAuth, expressAsyncHandler(async (req
 
 //ADD TO EPISODES ALREADY WATCHED
 userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
+
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -605,6 +660,11 @@ userRouter.post('/add-episode-already-watched', isAuth, expressAsyncHandler(asyn
 //REMOVE EPISODES FROM ALREADY WATCHED
 userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+
     const user = await User.findById(req.user.id, '-password -email')
 
     if (!user) {
@@ -741,6 +801,11 @@ userRouter.put('/remove-episode-already-watched', isAuth, expressAsyncHandler(as
 
 //ADD TO BOOKMARKED EPISODES 
 userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (req, res) => {
+
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
 
     const user = await User.findById(req.user.id, '-password -email')
 
@@ -894,6 +959,11 @@ userRouter.post('/add-episode-to-bookmarks', isAuth, expressAsyncHandler(async (
 //REMOVE FROM BOOKMARKED EPISODES
 userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+
     const user = await User.findById(req.user.id, '-password -email')
 
     if (!user) {
@@ -1030,6 +1100,11 @@ userRouter.put('/remove-episode-from-bookmarks', isAuth, expressAsyncHandler(asy
 //CHANGE USER AVATAR IMAGE
 userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (req, res) => {
 
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
+
     const user = await User.findById(req.user.id)
 
     if (!user) {
@@ -1064,6 +1139,11 @@ userRouter.put('/change-user-avatar-image', isAuth, expressAsyncHandler(async (r
 
 //ERASE MEDIA DATA
 userRouter.put('/erase-media-added-data', isAuth, expressAsyncHandler(async (req, res) => {
+
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Credentials', true);
 
     const user = await User.findById(req.user.id)
 

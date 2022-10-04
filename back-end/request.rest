@@ -13,8 +13,8 @@ POST http://localhost:9000/users/login
 Content-Type: application/json
 
 {
-    "email":"email",
-    "password":"password"
+    "email":"email01@gmail",
+    "password":"email01@gmail"
 }
 
 ###

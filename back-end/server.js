@@ -16,6 +16,8 @@ const port = process.env.PORT || 4000
 
 app.use(bodyParser.json())
 
+// app.use('*', (req, res))
+
 app.use('/users', userRouters)
 
 app.listen(port, () => {
