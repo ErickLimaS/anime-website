@@ -14,7 +14,7 @@ import { addMediaToUserAccount, addToAlreadyWatched, removeFromAlreadyWatched, r
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
-import OtherSorceEpisodesGrid from '../OtherSorceEpisodesGrid'
+import OtherSourceEpisodesGrid from '../OtherSourceEpisodesGrid'
 
 export default function AnimePageContentV2(data: any) {
 
@@ -300,7 +300,7 @@ export default function AnimePageContentV2(data: any) {
           {data.data.synopsis.length >= 420 ? (
             moreDetails === false ? (
               <p>
-                {data.data.synopsis.slice(0, 420)  + '...'}
+                {data.data.synopsis.slice(0, 420) + '...'}
                 <span className='more-details' onClick={() => setMoreDetails(!moreDetails)}>...show more.</span>
               </p>
             ) : (
@@ -335,7 +335,8 @@ export default function AnimePageContentV2(data: any) {
           <LoadingSvg />
         )}
 
-        <iframe src={videoURL} title={data.data.animeTitle} allowFullScreen={true} frameBorder="0" marginWidth={0} marginHeight={0} scrolling="no">
+        <iframe src={videoURL} title={data.data.animeTitle} allowFullScreen={true}
+          frameBorder="0" marginWidth={0} marginHeight={0} scrolling="no">
         </iframe>
       </div>
 
@@ -356,7 +357,7 @@ export default function AnimePageContentV2(data: any) {
             <>
               <div className='anime-episodes' >
 
-                <OtherSorceEpisodesGrid
+                <OtherSourceEpisodesGrid
                   animeTitleWithoutSpace={animeTitleWithoutSpace}
                   indexEpisodesPagination={indexEpisodesPagination}
                   data={episodesSorted}

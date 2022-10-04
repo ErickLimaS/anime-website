@@ -57,8 +57,6 @@ export const Container = styled.div<Props>`
 
             height: 25vh;
 
-            margin: 0 -0.9rem;
-
             background-size: cover;
 
             overflow: hidden;
@@ -68,7 +66,7 @@ export const Container = styled.div<Props>`
 
     .name-and-description{
 
-        margin: 2rem 0;
+        margin-top: 20px;
 
         border-bottom: 4px solid #ff5ebc;
 
@@ -219,7 +217,9 @@ export const Container = styled.div<Props>`
         justify-content: space-between;
         align-items: center;
 
-        margin: 2rem 0;
+        margin-top: 4px;
+        padding-top: 20px;
+        padding-bottom: 10px;
 
         div.nav{
             display: flex;
@@ -290,50 +290,50 @@ export const Container = styled.div<Props>`
     }
 
     .video{
-        display: flex;
-        justify-content: center;
-        align-items: center;
 
-        margin: 2rem 0;
-
-        width: inherit;
-        height: ${props => props.loadingVideoplayer === true ? '25%' : 'inherit'};
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding-top: ${props => props.videoReady ? '56.25%' : 'none'};;
+        margin-bottom: 20px;
 
         svg{
-            width: 20%;
-            height: auto;
+            width: 100px;
+            height: 100px;
+
+            position: relative;
+            top: 50%;
+            left: calc( 50% - 40px);
+
+            margin: 20% 0;
+            
+            @media(max-width: 480px){
+
+                top: calc( 50% - 120px)!important;
+
+            }
         }
+        
+        @media(max-width: 480px){
 
+            padding-top: 0%;
+
+            width: 100%;
+            height: 260px;
+
+        }
+        
         iframe{
-                display: ${props => props.videoReady ? `flex` : 'none'};
-                width: 100%;
-                height: 48rem;
+            display: ${props => props.videoReady ? 'block' : 'none'};
 
-                @media(min-width: 1440px){
-                    
-                    width: 100%;
-                    height: 720px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
 
-                }
-
-                @media(max-width: 1080px){
-                    
-                    width: 48rem;
-                    height: 32rem;
-
-                }
-                @media(max-width: 620px){
-                    
-                    width: 48rem;
-                    height: 32rem;
-
-                }
-                @media(max-width: 440px){
-                    
-                    width: 32rem;
-                    height: 26rem;
-
-                }
         }
     }
 

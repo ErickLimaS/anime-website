@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import EpisodesGoGoAnime from '../EpisodesGoGoAnime/EpisodesGoGoAnime'
 import gogoAnime from '../../../API/gogo-anime'
 
-function EpisodesGrid({ data, animeTitleWithoutSpace, indexEpisodesPagination, setVideoURL, setVideoReady, setLoadingVideoplayer, setChoseEpisoded }: any) {
+function OtherSourceEpisodesGrid({ data, animeTitleWithoutSpace, indexEpisodesPagination, setVideoURL, setVideoReady, setLoadingVideoplayer, setChoseEpisoded }: any) {
 
     // Gets the index of the current page and shows which episodes within the range in a total
     // of 24 its available
@@ -46,4 +46,4 @@ function EpisodesGrid({ data, animeTitleWithoutSpace, indexEpisodesPagination, s
     )
 }
 
-export default EpisodesGrid
+export default OtherSourceEpisodesGrid
