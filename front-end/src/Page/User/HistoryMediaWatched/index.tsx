@@ -2,7 +2,7 @@ import Axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
-import AlreadyWatchedHistoryPage from '../../../Components/MediaPage/AlreadyWatchedHistotyPage'
+import AlreadyWatchedHistoryPage from '../../../Components/AlreadyWatchedHistotyPage'
 import { logoutUser } from '../../../redux/actions/userActions'
 import * as C from './styles'
 
@@ -97,7 +97,7 @@ export default function HistoryMediaAdded() {
 
             try {
 
-                const URL = 'https://cors-anywhere.herokuapp.com/https://animes-website-db.herokuapp.com/users/already-watched-media'
+                const URL = 'https://animes-website-db.herokuapp.com/users/already-watched-media'
 
                 const { data } = await Axios({
                     url: `${URL}`,
@@ -212,19 +212,44 @@ export default function HistoryMediaAdded() {
 
                             <div className='sort-buttons'>
 
-                                <button type='button' onClick={() => setTabIndex(0)} id='button-tab-0'>
+                                <button type='button'
+                                    name={`All Time (${alreadyWatchedMedia.length}`}
+                                    onClick={() => setTabIndex(0)} 
+                                    data-btn-tab="0"
+                                >
                                     All Time ({alreadyWatchedMedia.length})
                                 </button>
-                                <button type='button' onClick={() => setTabIndex(1)} id='button-tab-1'>
+
+                                <button type='button'
+                                    name={`Last 30 Days (${last30Days.length}`}
+                                    onClick={() => setTabIndex(1)}
+                                    data-btn-tab="1"
+                                >
                                     Last 30 Days ({last30Days.length})
                                 </button>
-                                <button type='button' onClick={() => setTabIndex(2)} id='button-tab-2'>
+
+                                <button type='button'
+                                    name={`Last 3 Months (${last3Months.length}`}
+                                    onClick={() => setTabIndex(2)}
+                                    data-btn-tab="2"
+                                >
                                     Last 3 Months ({last3Months.length})
                                 </button>
-                                <button type='button' onClick={() => setTabIndex(3)} id='button-tab-3'>
+
+                                <button type='button'
+                                    name={`Last 6 Months (${last6Months.length}`}
+                                    onClick={() => setTabIndex(3)}
+                                    data-btn-tab="3"
+                                >
                                     Last 6 Months ({last6Months.length})
                                 </button>
-                                <button type='button' onClick={() => setTabIndex(4)} id='button-tab-4'>
+
+                                <button
+                                    type='button'
+                                    name={`Last 1 Year (${last1Year.length}`}
+                                    onClick={() => setTabIndex(4)}
+                                    data-btn-tab="4"
+                                >
                                     Last 1 Year ({last1Year.length})
                                 </button>
 
@@ -235,7 +260,7 @@ export default function HistoryMediaAdded() {
                             {alreadyWatchedMedia != null || undefined ? (
                                 <>
 
-                                    <div id='div-tab-0'>
+                                    <div data-tab="0" >
                                         <div className='grid'>
 
                                             {alreadyWatchedMedia.length > 0 ? (
@@ -273,7 +298,7 @@ export default function HistoryMediaAdded() {
                                         </div>
                                     </div>
 
-                                    <div id='div-tab-1'>
+                                    <div data-tab="1">
                                         { }
                                         <div className='grid'>
 
@@ -312,7 +337,7 @@ export default function HistoryMediaAdded() {
                                         </div>
                                     </div>
 
-                                    <div id='div-tab-2'>
+                                    <div data-tab="2">
                                         <div className='grid'>
 
                                             {last3Months.length > 0 ? (
@@ -350,7 +375,7 @@ export default function HistoryMediaAdded() {
                                         </div>
                                     </div>
 
-                                    <div id='div-tab-3'>
+                                    <div data-tab="3">
                                         <div className='grid'>
 
                                             {last6Months.length > 0 ? (
@@ -388,7 +413,7 @@ export default function HistoryMediaAdded() {
                                         </div>
                                     </div>
 
-                                    <div id='div-tab-4'>
+                                    <div data-tab="4">
                                         <div className='grid'>
 
                                             {last1Year.length > 0 ? (

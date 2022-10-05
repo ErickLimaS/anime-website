@@ -8,7 +8,6 @@ import { ReactComponent as DotSvg } from '../../imgs/svg/dot.svg'
 import Trending from '../../Components/Trending'
 import SearchInnerPage from '../../Components/SearchInnerPage'
 import TopRated from '../../Components/TopRated'
-import AsideNavLinks from '../../Components/Layout/AsideNavLinks'
 import { useSelector } from 'react-redux'
 import NavButtons from '../../Components/Layout/NavButtons'
 
@@ -175,7 +174,7 @@ export default function Home() {
           </div>
         </div>
 
-        <section id='anime'>
+        <section data-section="anime">
           <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
             {loading === false && (
 
@@ -189,7 +188,7 @@ export default function Home() {
             {releasingThisWeek.length > 0 && (
               <div className='heading'>
 
-                <h2>Releasing This Week</h2>
+                <h2>Upcoming Releases</h2>
 
                 <NavButtons
                   param='releasing-this-week'
@@ -255,17 +254,14 @@ export default function Home() {
           </div>
         </section>
 
-        <section id='manga'>
-          <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
-
-          </div>
+        <section data-section="manga">
 
           <div className={loading === true ? 'new-episodes div-skeleton' : 'new-episodes'}>
 
             {releasingThisWeek.length > 0 && (
               <div className='heading'>
 
-                <h2>Releasing This Week</h2>
+                <h2>Upcoming Releases</h2>
 
                 <NavButtons
                   param='releasing-this-week'
@@ -328,7 +324,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id='movie'>
+        <section data-section="movie">
           <div className={loading === true ? 'banne-most-watch div-skeleton' : 'banne-most-watch'}>
             {loading === false && (
 
@@ -342,7 +338,7 @@ export default function Home() {
             {releasingThisWeek.length > 0 && (
               <div className='heading'>
 
-                <h2>Releasing This Week</h2>
+                <h2>Upcoming Releases</h2>
 
                 <NavButtons
                   param='releasing-this-week'

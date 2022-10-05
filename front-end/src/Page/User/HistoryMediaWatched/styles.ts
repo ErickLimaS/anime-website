@@ -190,7 +190,7 @@ export const Container = styled.div<Props>`
 
                 }
 
-                button#button-tab-0{
+                button[data-btn-tab="0"]{
                             
                             background-color: ${props => props.darkMode === true && props.tabIndex === 0 && 'var(--brand-color)'};
                             background-color: ${props => props.darkMode === true && props.tabIndex !== 0 && 'var(--brand-dark-mode-color)'};
@@ -209,8 +209,8 @@ export const Container = styled.div<Props>`
     
                             font-weight: ${props => props.tabIndex === 0 ? '600' : '300'};
                             
-                        }
-                        button#button-tab-1{
+                }
+                button[data-btn-tab="1"]{
                                 
                             background-color: ${props => props.darkMode === true && props.tabIndex === 1 && 'var(--brand-color)'};
                             background-color: ${props => props.darkMode === true && props.tabIndex !== 1 && 'var(--brand-dark-mode-color)'};
@@ -227,8 +227,8 @@ export const Container = styled.div<Props>`
                             color: ${props => props.darkMode === false && props.tabIndex === 1 && '#fff'};
                             color: ${props => props.darkMode === false && props.tabIndex !== 1 && 'var(--brand-color)'};
                             font-weight: ${props => props.tabIndex === 1 ? '600' : '300'};
-                        }
-                        button#button-tab-2{
+                }
+                button[data-btn-tab="2"]{
                                 
                             background-color: ${props => props.darkMode === true && props.tabIndex === 2 && 'var(--brand-color)'};
                             background-color: ${props => props.darkMode === true && props.tabIndex !== 2 && 'var(--brand-dark-mode-color)'};
@@ -246,8 +246,8 @@ export const Container = styled.div<Props>`
                             color: ${props => props.darkMode === false && props.tabIndex !== 2 && 'var(--brand-color)'};
                             
                             font-weight: ${props => props.tabIndex === 2 ? '600' : '300'};
-                        }
-                        button#button-tab-3{
+                }
+                button[data-btn-tab="3"]{
                                 
                             background-color: ${props => props.darkMode === true && props.tabIndex === 3 && 'var(--brand-color)'};
                             background-color: ${props => props.darkMode === true && props.tabIndex !== 3 && 'var(--brand-dark-mode-color)'};
@@ -265,8 +265,8 @@ export const Container = styled.div<Props>`
                             color: ${props => props.darkMode === false && props.tabIndex !== 3 && 'var(--brand-color)'};
     
                             font-weight: ${props => props.tabIndex === 3 ? '600' : '300'};
-                        }
-                        button#button-tab-4{
+                }
+                button[data-btn-tab="4"]{
                                 
                             background-color: ${props => props.darkMode === true && props.tabIndex === 4 && 'var(--brand-color)'};
                             background-color: ${props => props.darkMode === true && props.tabIndex !== 4 && 'var(--brand-dark-mode-color)'};
@@ -284,7 +284,7 @@ export const Container = styled.div<Props>`
                             color: ${props => props.darkMode === false && props.tabIndex !== 4 && 'var(--brand-color)'};
     
                             font-weight: ${props => props.tabIndex === 4 ? '600' : '300'};
-                        }
+                }
             }
         }
 
@@ -324,31 +324,31 @@ export const Container = styled.div<Props>`
 
         }
 
-        div#div-tab-0{
+        div[data-tab="0"]{
 
             display: ${props => props.tabIndex === 0 ? 'block' : 'none'};
 
         }
 
-        div#div-tab-1{
+        div[data-tab="1"]{
 
             display: ${props => props.tabIndex === 1 ? 'block' : 'none'};
 
         }
 
-        div#div-tab-2{
+        div[data-tab="2"]{
 
             display: ${props => props.tabIndex === 2 ? 'block' : 'none'};
 
         }
 
-        div#div-tab-3{
+        div[data-tab="3"]{
 
             display: ${props => props.tabIndex === 3 ? 'block' : 'none'};
 
         }
 
-        div#div-tab-4{
+        div[data-tab="4"]{
 
             display: ${props => props.tabIndex === 4 ? 'block' : 'none'};
 

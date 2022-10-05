@@ -142,7 +142,7 @@ export default function BookmarkUser() {
                         <div className='content'>
                             {allTypes != null ? (
                                 <>
-                                    <div id='tab-0'>
+                                    <div data-tab="0">
                                         <div className='grid'>
 
                                             <>
@@ -158,7 +158,7 @@ export default function BookmarkUser() {
                                         </div>
                                     </div>
 
-                                    <div id='tab-1'>
+                                    <div data-tab="1">
                                         <div className='grid'>
 
                                             {animesTypeItems &&
@@ -176,7 +176,7 @@ export default function BookmarkUser() {
                                         </div>
                                     </div>
 
-                                    <div id='tab-2'>
+                                    <div data-tab="2">
                                         <div className='grid'>
 
                                             {mangasTypeItems &&
@@ -195,7 +195,7 @@ export default function BookmarkUser() {
                                         </div>
                                     </div>
 
-                                    <div id='tab-3'>
+                                    <div data-tab="3" >
                                         <div className='grid'>
 
                                             {moviesTypeItems &&
@@ -214,7 +214,7 @@ export default function BookmarkUser() {
                                         </div>
                                     </div>
 
-                                    <div id='tab-4'>
+                                    <div data-tab="4" >
                                         <div className='grid'>
 
                                             {otherTypeItems &&

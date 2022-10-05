@@ -135,27 +135,27 @@ export const Container = styled.div<Props>`
                 flex-direction: column-reverse;
             }
 
-            div#tab-0{
+            div[data-tab="0"]{
                 display: ${props => props.tabIndex === 0 ? `block` : 'none'};
                 width: -webkit-fill-available;
                 height: -webkit-fill-available;
             }
-            div#tab-1{
+            div[data-tab="1"]{
                 display: ${props => props.tabIndex === 1 ? `block` : 'none'};
                 width: -webkit-fill-available;
                 height: -webkit-fill-available;
             }
-            div#tab-2{
+            div[data-tab="2"]{
                 display: ${props => props.tabIndex === 2 ? `block` : 'none'};
                 width: -webkit-fill-available;
                 height: -webkit-fill-available;
             }
-            div#tab-3{
+            div[data-tab="3"]{
                 display: ${props => props.tabIndex === 3 ? `block` : 'none'};
                 width: -webkit-fill-available;
                 height: -webkit-fill-available;
             }
-            div#tab-4{
+            div[data-tab="4"]{
                 display: ${props => props.tabIndex === 4 ? `block` : 'none'};
                 width: -webkit-fill-available;
                 height: -webkit-fill-available;

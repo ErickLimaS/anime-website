@@ -144,9 +144,9 @@ export default {
         try {
 
             const yyyy = new Date().getFullYear()
-            const mm = new Date().getMonth() >= 0 && new Date().getMonth() <= 9 ?
-                `0${new Date().getMonth()}` : `${new Date().getMonth()}`
-            const dd = '00'
+            // const mm = new Date().getMonth() >= 0 && new Date().getMonth() <= 9 ?
+            //     `0${new Date().getMonth()}` : `${new Date().getMonth()}`
+            // const dd = '00'
 
             //gets all user info so the request will tell if must be shown adult content
             const userInfo = localStorage.getItem('userInfo') ?
@@ -158,9 +158,27 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 data: JSON.stringify({
                     query: `
-                        query($type: MediaType, $format: MediaFormat, $sort: [MediaSort], $perPage: Int, $page: Int, $startDate_greater: FuzzyDateInt ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
-                            Page(page: $page, perPage: $perPage){
-                                media(status: RELEASING, startDate_greater: $startDate_greater, type: $type, format: $format, sort: $sort, ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}){
+                        query(
+                            $type: MediaType, 
+                            $format: MediaFormat, 
+                            $sort: [MediaSort], $perPage: Int, 
+                            $page: Int, 
+                            ${(format !== 'MANGA' && type !== 'MANGA') ? `$season: MediaSeason,` : ''}
+                            ${(format !== 'MANGA' && type !== 'MANGA') ? `$seasonYear: Int,` : ''}  
+                            ${(format !== 'MOVIE') ? `$status: MediaStatus` : ''} 
+                            ${userInfo?.showAdultContent ? '' : ', $showAdultContent: Boolean'}){
+                            Page(
+                                page: $page, 
+                                perPage: $perPage
+                            ){
+                                media(
+                                    ${(format !== 'MOVIE') ? `status: $status,` : ''}  
+                                    type: $type, 
+                                    ${(format !== 'MANGA' && type !== 'MANGA') ? `season: $season,` : ''}
+                                    ${(format !== 'MANGA' && type !== 'MANGA') ? `seasonYear: $seasonYear,` : ''} 
+                                    format: $format,
+                                    sort: $sort ${userInfo?.showAdultContent ? '' : ', isAdult: $showAdultContent '}
+                                    ){
                                     title{
                                         romaji
                                         native
@@ -204,12 +222,15 @@ export default {
                         }
                     `,
                     variables: {
+                        'status': 'RELEASING',
                         'type': `${type}`,
-                        'sort': ['UPDATED_AT_DESC', 'TRENDING_DESC'],
+                        'sort': (format === 'MOVIE' && 'ID_DESC') || (type === "MANGA" && "POPULARITY_DESC") || (['EPISODES_DESC', 'TRENDING_DESC']),
                         'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                         'page': page ? page : 1,
                         'perPage': 4,
-                        'startDate_greater': `${yyyy}${mm}${dd}`,
+                        'season': 'FALL',
+                        'seasonYear': yyyy,
+                        // 'startDate_greater': `${yyyy}${mm}${dd}`,
                         //if TRUE, it will NOT be used on the query. if FALSE, it WILL be used.
                         'showAdultContent': userInfo?.showAdultContent ? userInfo.showAdultContent : false
                     }

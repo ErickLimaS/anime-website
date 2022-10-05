@@ -143,7 +143,7 @@ export const Container = styled.div<ContainerProps>`
         }
 
         // gets link clicked on Home and shows which section is correspondent
-        section#anime, section#manga, section#movie {
+        section[data-section="anime"], section[data-section="manga"], section[data-section="movie"]{
             display: ${props => props.innerPageLink === 0 ? `flex` : `none`};
 
             div.heading{
@@ -153,7 +153,7 @@ export const Container = styled.div<ContainerProps>`
                     justify-content: space-between;
                     align-items: center;
 
-                    margin: 2.6rem 0;
+                    margin: 20px 0;
 
                     h2{
                         font-size: 1.6rem;
@@ -222,23 +222,24 @@ export const Container = styled.div<ContainerProps>`
             }
         }
 
-        section#manga {
+        section[data-section="manga"] {
 
             display: ${props => props.innerPageLink === 1 ? `flex` : `none`};
             
+            div.new-episodes .heading{
+
+                margin-top: 0;
+
+            }
+
         }
 
-        section#movie {
+        section[data-section="movie"] {
 
             display: ${props => props.innerPageLink === 2 ? `flex` : `none`};
 
         }
 
-        section div.best-rated div.top-rated-animes{
-
-            
-
-        }
 
     }
 

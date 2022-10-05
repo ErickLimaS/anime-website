@@ -83,6 +83,8 @@ export const Container = styled.div<PropsContainer>`
             background-repeat: no-repeat;
             background-size: contain;
 
+            border: 2px solid #4e002d;
+
             width: inherit!important;
             height: inherit!important;
 
