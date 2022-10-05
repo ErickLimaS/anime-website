@@ -1,7 +1,7 @@
 import React from 'react'
 import EpisodesAniList from '../EpisodesAniList/EpisodesAniList'
 
-function EpisodesGrid({ indexEpisodesPagination, data }: any) {
+function EpisodesGrid({ indexEpisodesPagination, episodes, mediaInfo }: any) {
 
     // Gets the index of the current page and shows which episodes within the range in a total
     // of 24 its available
@@ -10,11 +10,12 @@ function EpisodesGrid({ indexEpisodesPagination, data }: any) {
 
     return (
 
-        data.slice(startSlice, endSlice).map((item: any, key: any) => (
+        episodes.slice(startSlice, endSlice).map((item: any, key: any) => (
             <EpisodesAniList
                 key={key}
                 data={item}
-                media={data}
+                episodes={episodes}
+                media={mediaInfo}
             />
         ))
     )

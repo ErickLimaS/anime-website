@@ -360,7 +360,8 @@ export default function AnimePageContentV2(data: any) {
                 <OtherSourceEpisodesGrid
                   animeTitleWithoutSpace={animeTitleWithoutSpace}
                   indexEpisodesPagination={indexEpisodesPagination}
-                  data={episodesSorted}
+                  episodes={episodesSorted}
+                  mediaInfo={data.data}
                   setVideoURL={setVideoURL}
                   setVideoReady={setVideoReady}
                   setLoadingVideoplayer={setLoadingVideoplayer}

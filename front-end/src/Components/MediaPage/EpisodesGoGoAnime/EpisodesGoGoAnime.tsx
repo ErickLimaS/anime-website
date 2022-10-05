@@ -8,7 +8,6 @@ import { ReactComponent as BookMarkFillEpisodeSvg } from '../../../imgs/svg/book
 import { useDispatch, useSelector } from 'react-redux'
 import { addEpisodeToAlreadyWatched, addEpisodeToBookmarks, removeEpisodeFromAlreadyWatched, removeEpisodeFromBookmarks } from '../../../redux/actions/userActions'
 import { useNavigate } from 'react-router'
-import PlaceholderImg from '../../../imgs/logo2.png'
 
 export default function EpisodesGoGoAnime(props: any) {
 
@@ -26,12 +25,14 @@ export default function EpisodesGoGoAnime(props: any) {
 
     useEffect(() => {
 
+        console.log(props)
         //check if the current media is currently added to user account
         if (userInfo) {
             userInfo.episodesAlreadyWatched.find((item: any) => {
                 if (item.idGoGoAnime === props.mediaTitle) {
                     item.episodes.find((item2: any) => {
-                        if (item2.episodeId === props.data.episodeId) {
+                        
+                        if (item2?.episodeId === props.data.episodeId) {
                             setIsWatched(true)
                         }
                     })
@@ -40,7 +41,8 @@ export default function EpisodesGoGoAnime(props: any) {
             userInfo.episodesBookmarked.find((item: any) => {
                 if (item.idGoGoAnime === props.mediaTitle) {
                     item.episodes.find((item2: any) => {
-                        if (item2.episodeId === props.data.episodeId) {
+
+                        if (item2?.episodeId === props.data.episodeId) {
                             setOnBookmarks(true)
                         }
                     })
@@ -140,7 +142,7 @@ export default function EpisodesGoGoAnime(props: any) {
                     }
                 }))
 
-                setIsWatched(true)
+                setOnBookmarks(true)
 
             }
             else {
@@ -163,7 +165,7 @@ export default function EpisodesGoGoAnime(props: any) {
 
             }))
 
-            setIsWatched(false)
+            setOnBookmarks(false)
 
         }
 
@@ -200,3 +202,4 @@ export default function EpisodesGoGoAnime(props: any) {
         </C.Container>
     )
 }
+// 

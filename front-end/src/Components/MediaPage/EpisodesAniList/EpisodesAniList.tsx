@@ -28,7 +28,7 @@ export default function EpisodesAniList(props: any) {
             userInfo.episodesAlreadyWatched.find((item: any) => {
                 if (item.id === props.media.id) {
                     item.episodes.find((item2: any) => {
-                        if (item2.episodeId === props.data.title.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
+                        if (item2?.episodeId === props.data.title.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
                             setIsWatched(true)
                         }
                     })
@@ -37,7 +37,7 @@ export default function EpisodesAniList(props: any) {
             userInfo.episodesBookmarked.find((item: any) => {
                 if (item.id === props.media.id) {
                     item.episodes.find((item2: any) => {
-                        if (item2.episodeId === props.data.title.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
+                        if (item2?.episodeId === props.data.title.replace(/!|#|,/g, ``).replace(/ /g, `-`)) {
                             setOnBookmarks(true)
                         }
                     })
@@ -80,7 +80,6 @@ export default function EpisodesAniList(props: any) {
                 }))
 
                 setIsWatched(true)
-
 
             }
             else {

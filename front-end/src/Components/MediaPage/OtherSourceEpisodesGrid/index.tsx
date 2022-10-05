@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import EpisodesGoGoAnime from '../EpisodesGoGoAnime/EpisodesGoGoAnime'
 import gogoAnime from '../../../API/gogo-anime'
 
-function OtherSourceEpisodesGrid({ data, animeTitleWithoutSpace, indexEpisodesPagination, setVideoURL, setVideoReady, setLoadingVideoplayer, setChoseEpisoded }: any) {
+function OtherSourceEpisodesGrid({ episodes, mediaInfo, animeTitleWithoutSpace, indexEpisodesPagination, setVideoURL, setVideoReady, setLoadingVideoplayer, setChoseEpisoded }: any) {
 
     // Gets the index of the current page and shows which episodes within the range in a total
     // of 24 its available
@@ -30,14 +30,14 @@ function OtherSourceEpisodesGrid({ data, animeTitleWithoutSpace, indexEpisodesPa
 
     return (
 
-        data.slice(startSlice, endSlice).map((item: any) => (
+        episodes.slice(startSlice, endSlice).map((item: any) => (
             <a href='#player-heading'
                 key={item.episodeId}
                 onClick={() => setChoseEpisoded(item.episodeNum)}
             >
                 <EpisodesGoGoAnime
                     data={item}
-                    media={data}
+                    media={mediaInfo}
                     mediaTitle={animeTitleWithoutSpace}
                     streamingLink={(episodeId: any) => getStreamingLink(episodeId)}
                 />

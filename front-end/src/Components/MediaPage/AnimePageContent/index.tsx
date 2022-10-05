@@ -370,58 +370,37 @@ export default function AnimePageContent(data: any) {
 
 
       {/* show episodes listed to this anime, redirecting to crunchroll */}
-      {
-        data.data.streamingEpisodes.length > 0 ? (
-          <>
 
-            {indexPageInfo === 0 && (
+      <>
+
+        {indexPageInfo === 0 && (
+
+          data.data.streamingEpisodes.length <= 0  ? (
+
+            <div className='heading'>
+
+              <h2>Theres no Episodes to Display Here!</h2>
+
+            </div>
+
+          ) : (
+            <div className='anime-episodes' >
+
+              {/* Shows Episodes Available to Watch */}
+              <CrunchyrollEpisodesGrid
+                indexEpisodesPagination={indexEpisodesPagination}
+                mediaInfo={data.data}
+                episodes={data.data.streamingEpisodes} 
+                />
+
+            </div>
+          )
+        )}
+
+        {indexPageInfo === 1 && (
+          <div className='cast'>
+            {data.data.characters.edges.length > 0 ? (
               <>
-                <div className='anime-episodes' >
-
-                  {/* Shows Episodes Available to Watch */}
-                  <CrunchyrollEpisodesGrid
-                    indexEpisodesPagination={indexEpisodesPagination}
-                    data={data.data.streamingEpisodes} />
-
-                </div>
-
-                {data.data.streamingEpisodes.length > 24 && (
-                  <div className='pagination-buttons'>
-                    <button type='button'
-                      disabled={indexEpisodesPagination === 0 ? true : false}
-                      onClick={() => {
-                        if (indexEpisodesPagination === 0) {
-                          setIndexEpisodePagination(0)
-                        } else {
-                          setIndexEpisodePagination(indexEpisodesPagination - 1)
-                        }
-                      }}>
-                      <AngleLeftSolidSvg />
-                    </button>
-
-                    <span>
-                      {indexEpisodesPagination + 1}
-                    </span>
-
-                    <button type='button'
-                      disabled={indexEpisodesPagination === howManyPagesPagination ? true : false}
-                      onClick={() => {
-                        if (indexEpisodesPagination === howManyPagesPagination) {
-                          setIndexEpisodePagination(0)
-                        } else {
-                          setIndexEpisodePagination(indexEpisodesPagination + 1)
-                        }
-                      }}>
-                      <AngleRightSolidSvg />
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-
-            {indexPageInfo === 1 && (
-              <div className='cast'>
-
                 <h1>Main Cast</h1>
 
                 {mainCastCharacters.map((item: any, key: any) => (
@@ -433,119 +412,52 @@ export default function AnimePageContent(data: any) {
                 {supportingCastCharacters.map((item: any, key: any) => (
                   <CharacterAndActor data={item} key={key} />
                 ))}
-              </div>
+              </>
+            ) : (
+              <h2>Theres no info about the cast.</h2>
             )}
+          </div>
+        )}
 
-            {indexPageInfo === 2 && (
-              <ul className='more-info'>
-                {data.data.source && (
-                  <li>Source: <span>{data.data.source}</span></li>
-                )}
-                {data.data.countryOfOrigin && (
-                  <li>From <span>{data.data.countryOfOrigin}</span></li>
-                )}
-                {data.data.favourites && (
-                  <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
-                )}
-                {data.data.studios.edges && (
-                  <li><span>Studios</span>:
-                    <ul className='studios'>
-                      {data.data.studios.edges.map((item: any) => (
-                        <li>
-                          <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
-                            {item.node.name}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                )}
-                {data.data.tags && (
-
-                  <li><span>Tags</span>:
-                    <ul className='tags'>
-                      {data.data.tags.map((item: any) => (
-                        <li><Link to={`/genre/${item.name}`}>{item.name}</Link></li>
-                      ))}
-                    </ul>
-                  </li>
-
-                )}
-              </ul>
+        {indexPageInfo === 2 && (
+          <ul className='more-info'>
+            {data.data.source && (
+              <li>Source: <span>{data.data.source}</span></li>
             )}
-          </>
-        ) : (
-          <>
-            <div className='heading'>
-
-              {indexPageInfo === 0 && (
-                <h2>Theres no Episodes to Display Here!</h2>
-              )}
-
-
-            </div>
-            {indexPageInfo === 1 && (
-              <div className='cast'>
-                {data.data.characters.edges.length > 0 ? (
-                  <>
-                    <h1>Main Cast</h1>
-
-                    {mainCastCharacters.map((item: any, key: any) => (
-                      <CharacterAndActor data={item} key={key} />
-                    ))}
-
-                    <h1>Supporting Cast</h1>
-
-                    {supportingCastCharacters.map((item: any, key: any) => (
-                      <CharacterAndActor data={item} key={key} />
-                    ))}
-                  </>
-                ) : (
-                  <h2>Theres no info about the cast.</h2>
-                )}
-              </div>
+            {data.data.countryOfOrigin && (
+              <li>From <span>{data.data.countryOfOrigin}</span></li>
             )}
-
-            {indexPageInfo === 2 && (
-              <ul className='more-info'>
-                {data.data.source && (
-                  <li>Source: <span>{data.data.source}</span></li>
-                )}
-                {data.data.countryOfOrigin && (
-                  <li>From <span>{data.data.countryOfOrigin}</span></li>
-                )}
-                {data.data.favourites && (
-                  <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
-                )}
-                {data.data.studios.edges && (
-                  <li><span>Studios</span>:
-                    <ul className='studios'>
-                      {data.data.studios.edges.map((item: any) => (
-                        <li>
-                          <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
-                            {item.node.name}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                )}
-                {data.data.tags && (
-
-                  <li><span>Tags</span>:
-                    <ul className='tags'>
-                      {data.data.tags.map((item: any) => (
-                        <li><Link to={`/genre/${item.name}`}>{item.name}</Link></li>
-                      ))}
-                    </ul>
-                  </li>
-
-                )}
-              </ul>
+            {data.data.favourites && (
+              <li><span>{data.data.favourites}</span> Marked as One of Their Favorite </li>
             )}
-          </>
-        )
-      }
+            {data.data.studios.edges && (
+              <li><span>Studios</span>:
+                <ul className='studios'>
+                  {data.data.studios.edges.map((item: any) => (
+                    <li>
+                      <a href={`${item.node.siteUrl}`} target='_blank' rel='noreferrer' >
+                        {item.node.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            )}
+            {data.data.tags && (
+
+              <li><span>Tags</span>:
+                <ul className='tags'>
+                  {data.data.tags.map((item: any) => (
+                    <li><Link to={`/genre/${item.name}`}>{item.name}</Link></li>
+                  ))}
+                </ul>
+              </li>
+
+            )}
+          </ul>
+        )}
+      </>
+
 
       {/* medias related to this anime */}
       {
