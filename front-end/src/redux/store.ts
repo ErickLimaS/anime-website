@@ -6,12 +6,12 @@ import { addEpisodeToAlreadyWatchedReducer, addEpisodeToBookmarksReducer, addMed
 const initialState = {
     userLogin: {
         userInfo: localStorage.getItem('userInfo') ?
-            JSON.parse(localStorage.getItem('userInfo') || `{}`) : null
-        // JSON.stringify(localStorage.getItem('userInfo')) : null
+            JSON.parse(localStorage.getItem('userInfo') || '{}') : null
     },
+    // sets dark mode = true as default value
     darkModeSwitch: {
         darkMode: localStorage.getItem('darkMode') ?
-            JSON.parse(localStorage.getItem('darkMode') || `{}`) : null
+            JSON.parse(localStorage.getItem('darkMode') || '{}') : true
     }
 }
 
@@ -35,7 +35,6 @@ const reducer = combineReducers({
 })
 
 const composeEnhancer = typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
-// const composeEnhancer =  compose;
 
 const store = createStore(
     reducer,

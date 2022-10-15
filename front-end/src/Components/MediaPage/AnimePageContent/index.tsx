@@ -28,7 +28,7 @@ export default function AnimePageContent(data: any) {
   const [supportingCastCharacters, setSupportingCastCharacters] = useState([])
 
   // info of this media from other sources
-  const [otherSourcesInfo, setOtherSourcesInfo] = useState<any>([null])
+  const [otherSourcesInfo, setOtherSourcesInfo] = useState<any>(null)
 
   //media description toggle more/less info
   const [moreDetails, setMoreDetails] = useState<boolean>(false)
@@ -56,9 +56,10 @@ export default function AnimePageContent(data: any) {
   const remLoading = removeMediaFromUserAccounts.loading
   const remError = removeMediaFromUserAccounts.error
 
+  // removes any invalid chars to be use on a request of the same media on another source 
   const titleWithoutInvalidChars = (title: string) => {
 
-    return title.replace(/!|#|,|:|@|$/g, '').replace(/ /g, '-')
+    return title.replace(/[^0-9a-zA-Z]/gi, '-')
 
   }
 
@@ -358,8 +359,11 @@ export default function AnimePageContent(data: any) {
         </div>
 
         <div className='svg-dots'>
-          {otherSourcesInfo !== null && (
-            <Link className='other-source-link' to={`/anime/v2/${titleWithoutInvalidChars(data.data.title.romaji)}`}>
+          {otherSourcesInfo && (
+            <Link
+              className='other-source-link'
+              to={`/anime/v2/${titleWithoutInvalidChars(data.data.title.romaji)}`}
+            >
               <ExternalLinkSvg /> See On Other Source
             </Link>
           )}
@@ -375,7 +379,7 @@ export default function AnimePageContent(data: any) {
 
         {indexPageInfo === 0 && (
 
-          data.data.streamingEpisodes.length <= 0  ? (
+          data.data.streamingEpisodes.length <= 0 ? (
 
             <div className='heading'>
 
@@ -384,16 +388,50 @@ export default function AnimePageContent(data: any) {
             </div>
 
           ) : (
-            <div className='anime-episodes' >
+            <>
+              <div className='anime-episodes' >
 
-              {/* Shows Episodes Available to Watch */}
-              <CrunchyrollEpisodesGrid
-                indexEpisodesPagination={indexEpisodesPagination}
-                mediaInfo={data.data}
-                episodes={data.data.streamingEpisodes} 
+                {/* Shows Episodes Available to Watch */}
+                <CrunchyrollEpisodesGrid
+                  indexEpisodesPagination={indexEpisodesPagination}
+                  mediaInfo={data.data}
+                  episodes={data.data.streamingEpisodes}
                 />
 
-            </div>
+              </div>
+
+              {data.data.streamingEpisodes.length > 24 && (
+                <div className='pagination-buttons'>
+                  <button type='button'
+                    disabled={indexEpisodesPagination === 0 ? true : false}
+                    onClick={() => {
+                      if (indexEpisodesPagination === 0) {
+                        setIndexEpisodePagination(0)
+                      } else {
+                        setIndexEpisodePagination(indexEpisodesPagination - 1)
+                      }
+                    }}>
+                    <AngleLeftSolidSvg />
+                  </button>
+
+                  <span>
+                    {indexEpisodesPagination + 1}
+                  </span>
+
+                  <button type='button'
+                    disabled={indexEpisodesPagination === howManyPagesPagination ? true : false}
+                    onClick={() => {
+                      if (indexEpisodesPagination === howManyPagesPagination) {
+                        setIndexEpisodePagination(0)
+                      } else {
+                        setIndexEpisodePagination(indexEpisodesPagination + 1)
+                      }
+                    }}>
+                    <AngleRightSolidSvg />
+                  </button>
+                </div>
+              )}
+            </>
           )
         )}
 
