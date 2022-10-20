@@ -9,12 +9,12 @@ export const Container = styled.div<Props>`
         display: flex;
         flex-direction: column;
 
-        margin: 2rem 0;
+        margin: 20px 0;
         border-top: 4px solid var(--pink-variant-1);
 
         .heading-section{
             
-            margin-bottom: 1rem;
+            margin-bottom: 10px;
 
             display: flex;
             flex-direction: row;
@@ -32,8 +32,9 @@ export const Container = styled.div<Props>`
 
             h2{
                 font-size: 2rem;
+                text-align: center;
                 font-weight: 600;
-                margin: 2rem 0;
+                margin: 20px 0;
                 color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#222222'};
                
                 span{

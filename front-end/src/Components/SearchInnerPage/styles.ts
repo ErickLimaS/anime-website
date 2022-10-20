@@ -38,7 +38,7 @@ export const Search = styled.div<Props>`
         height: 22px;
         width: auto;
 
-        padding: 0.9rem 1rem;
+        padding: 9px 10px;
 
         *{
             color: #ff5ebc;
@@ -116,7 +116,7 @@ export const Search = styled.div<Props>`
 
             ~button{
                 cursor: pointer;
-                padding: 1.1rem;
+                padding: 11px;
                 background-color: #ff5ebc;
 
                 svg{
@@ -148,7 +148,7 @@ export const Search = styled.div<Props>`
 
         background-color: ${props => props.darkMode ? '#212121' : '#f3f2ff'};
 
-        padding: 1.1rem;
+        padding: 11px;
         border: none;
         border-radius: 0 18px 18px 0;
         font-size: 1.4rem;
@@ -268,9 +268,10 @@ export const SearchResults = styled.div<Props2>`
 
                 display: flex;
                 flex-direction: column;
+                gap: 10px;
                 justify-content: space-between;
 
-                margin: 1rem;
+                margin: 0 1rem;
 
                 @media(max-width: 425px){
 
@@ -279,11 +280,11 @@ export const SearchResults = styled.div<Props2>`
                 }
 
                 h2{
-                    font-size: 1.6rem;
+                    font-size: 1.5rem;
                     font-weight: 600;
                     color: #ff1a75;
 
-                    margin-bottom: 0.5rem;
+                    /* margin-bottom: 5px; */
 
                     span.adult-result{
                         font-size: 1.3rem;

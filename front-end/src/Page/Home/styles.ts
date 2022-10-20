@@ -180,11 +180,6 @@ export const Container = styled.div<ContainerProps>`
 
                     overflow-y: auto;
 
-                    >div{
-
-                        min-width: 18rem;
-
-                    }
                 }
 
             }

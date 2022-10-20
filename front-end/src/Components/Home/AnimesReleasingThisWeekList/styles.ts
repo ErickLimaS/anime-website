@@ -7,13 +7,25 @@ interface itemData {
 
 export const AnimeToBeListed = styled.div<itemData>`
 
-    height: 26rem;
-    width: 20rem;
+    height: 260px;
+    width: 200px;
 
-    margin: 0 0.7rem;
+    margin: 0 6px;
+
+    @media(max-width: 768px){
+
+        height: calc(260px - 5vh);
+        width: calc(200px - 5vh);
+
+        margin: 0 4px;
+
+    }
 
     @media(max-width: 520px){
-        margin: 0 0.3rem;
+
+        min-height: 200px;
+        min-width: 160px;
+
     }
 
     background-image: ${(props) => props.info.coverImage && `url("${props.info.coverImage.large}")`};
@@ -89,8 +101,9 @@ export const AnimeToBeListed = styled.div<itemData>`
     :hover{
             
         .see-more-button{
-                background-image: linear-gradient(rgba(0,0,0,.01) , rgba(0,0,0,.8) 20%);
-                border-radius: 0 0 3px 3px;
+            
+            background-image: linear-gradient(rgba(0,0,0,.01) , rgba(16 2 7 / 72%) 17%);
+            border-radius: 0 0 3px 3px;
 
             .name-fade{
                 opacity: 1;
@@ -104,6 +117,7 @@ export const AnimeToBeListed = styled.div<itemData>`
                 transition: all ease-in-out 200ms;
                 
                 font-size: 1.4rem;
+                text-align: center;
                 font-weight: 600;
                 color: #c0c0c0;
 

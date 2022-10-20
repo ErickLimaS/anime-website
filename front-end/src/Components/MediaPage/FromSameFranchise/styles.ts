@@ -6,7 +6,7 @@ interface Props {
 
 export const Container = styled.div<Props>`
 
-margin-top: 1rem;
+margin-top: 10px;
 border-top: 4px solid var(--pink-variant-1);
 
 .heading-section{
@@ -18,7 +18,7 @@ border-top: 4px solid var(--pink-variant-1);
 
     @media(max-width: 768px){
 
-        margin-bottom: 1rem;
+        margin-bottom: 10px;
 
         display: flex;
         flex-direction: column;
@@ -29,8 +29,9 @@ border-top: 4px solid var(--pink-variant-1);
 
     h2{
         font-size: 2rem;
+        text-align: center;
         font-weight: 600;
-        margin: 2rem 0;
+        margin: 20px 0;
         color: ${props => props.darkMode ? 'var(--text-grey-variant)' : '#222222'};
     
         span{

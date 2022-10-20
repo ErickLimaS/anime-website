@@ -144,11 +144,11 @@ export default function SearchInnerPage() {
                                                         <span className='launch-year'>({item.startDate.year})</span>
                                                     </h2>
                                                 )}
-                                                {item.title.native && (
+                                                {/* {item.title.native && (
                                                     <h3>
                                                         {item.title.native.slice(0, 20)}
                                                     </h3>
-                                                )}
+                                                )} */}
                                                 {/* {item.startDate.year && (
                                                     <p>{item.startDate.year}</p>
                                                 )} */}

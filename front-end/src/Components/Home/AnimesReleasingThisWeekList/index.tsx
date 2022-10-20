@@ -144,7 +144,7 @@ export default function AnimesReleasingThisWeek(data: any) {
             <div className='see-more-button'>
                 {data.data.title.romaji.length > 25 ? (
                     <div className='name-fade'>
-                        <h1>{data.data.title.romaji.slice(0, 25)}... </h1>
+                        <h1>{data.data.title.romaji.slice(0, 36)}... </h1>
                         {/* <Score data={data.data.averageScore} /> */}
                     </div>
 
