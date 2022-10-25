@@ -13,9 +13,9 @@ export const AnimeToBeListed = styled.div<itemData>`
     margin: 0 6px;
 
     @media(max-width: 768px){
-
+/* 
         height: calc(260px - 5vh);
-        width: calc(200px - 5vh);
+        width: calc(200px - 5vh); */
 
         margin: 0 4px;
 
@@ -23,8 +23,8 @@ export const AnimeToBeListed = styled.div<itemData>`
 
     @media(max-width: 520px){
 
-        min-height: 200px;
-        min-width: 160px;
+        min-height: 220px;
+        min-width: 180px;
 
     }
 
