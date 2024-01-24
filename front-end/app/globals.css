@@ -1,0 +1,166 @@
+:root {
+  --max-width: 1380px;
+
+  --btn-border-radius: 12px;
+
+  /* breakpoints */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1440px;
+
+  /* font, scale 1.25, 16px - 20px */
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --font-size--small-2: clamp(0.64rem, 0.5943rem + 0.2286vw, 0.8rem);
+  --font-size--small-1: clamp(0.8rem, 0.7429rem + 0.2857vw, 1rem);
+  --font-size--p: clamp(1rem, 0.9286rem + 0.3571vw, 1.25rem);
+  --font-size--h5: clamp(1.25rem, 1.1607rem + 0.4464vw, 1.5625rem);
+  --font-size--h4: clamp(1.5625rem, 1.4509rem + 0.558vw, 1.9531rem);
+  --font-size--h3: clamp(1.9531rem, 1.8137rem + 0.6973vw, 2.4413rem);
+  --font-size--h2: clamp(2.4413rem, 2.2668rem + 0.8723vw, 3.0519rem);
+  --font-size--h1: clamp(3.0519rem, 2.8338rem + 1.0902vw, 3.815rem);
+
+  /* colors */
+  --background: #181818;
+
+  --white-100: #fff;
+  --white-75: rgba(255, 255, 255, 0.75);
+  --white-50: rgba(255, 255, 255, 0.5);
+  --white-25: rgba(255, 255, 255, 0.25);
+
+  --black-100: #000000;
+  --black-75: rgba(0, 0, 0, 0.75);
+  --black-50: rgba(0, 0, 0, 0.5);
+  --black-25: rgba(0, 0, 0, 0.25);
+
+  --brand-color: #ff1a75;
+  --brand-dark-color: #3b0018;
+
+  --pink-variant-1: #ff5ebc;
+  --pink-variant-2: #ff0095;
+  --pink-variant-3: #ffa2c8;
+
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+}
+
+/* *:focus{
+
+  outline: solid;
+  outline-width: 1px;
+  outline-color: var(--brand-color);
+
+} */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+a,
+button,
+li,
+small,
+option,
+input {
+  font-family: var(--font-family-sans-serif);
+}
+
+h1 {
+  font-size: var(--font-size--h1);
+}
+
+h2 {
+  font-size: var(--font-size--h2);
+}
+
+h3 {
+  font-size: var(--font-size--h3);
+}
+
+h4 {
+  font-size: var(--font-size--h4);
+}
+
+h5 {
+  font-size: var(--font-size--h5);
+}
+
+p,
+a,
+button,
+li,
+input,
+option {
+  font-size: var(--font-size--p);
+}
+
+small {
+  font-size: var(--font-size--small-1);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+li {
+  list-style-type: none;
+}
+
+.padding_16px {
+  padding: 0 16px;
+}
+
+.display_align_justify_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display_flex_row {
+  display: flex;
+  flex-direction: row;
+}
+
+.align_items_center {
+  align-items: center;
+}
+
+.display_grid {
+  display: grid;
+}
+
+.space_beetween {
+  justify-content: space-between;
+}
+
+.center {
+  margin: 0 auto;
+}
+
+.gap_8px {
+  gap: 8px;
+}
+
+.gap_16px {
+  gap: 16px;
+}

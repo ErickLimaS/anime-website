@@ -1,6 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-### NextJS ###
 # dependencies
 /node_modules
 /.pnp
@@ -9,31 +8,16 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
 
 # misc
 .DS_Store
-*.pem
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-
-# local env files
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# End of https://www.toptal.com/developers/gitignore/api/nextjs

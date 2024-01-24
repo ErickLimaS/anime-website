@@ -1,0 +1,114 @@
+import React from 'react'
+import styles from "./footerComponent.module.css"
+import Link from 'next/link'
+import Image from 'next/image'
+import Facebook from "../../../public/assets/facebook.svg"
+import Instagram from "../../../public/assets/instagram.svg"
+import Youtube from "../../../public/assets/youtube.svg"
+import Twitter from "../../../public/assets/twitter-x.svg"
+
+function Footer() {
+    return (
+        <footer id={styles.footer}>
+
+            <section id={styles.info_container}>
+
+                <div id={styles.social_links_container} className='display_flex_row'>
+
+                    <Link href="/">
+                        <Image src='/logo.png' alt="Aniproject Site Logo" width={140} height={40}></Image>
+                    </Link>
+
+                    <div id={styles.social_media_container}>
+
+                        <ul className='display_flex_row'>
+                            <li><Link href="#"><Facebook width={16} height={16} /> Facebook</Link></li>
+                            <li><Link href="#"><Twitter width={16} height={16} /> Twitter</Link></li>
+                            <li><Link href="#"><Instagram width={16} height={16} /> Instagram</Link></li>
+                            <li><Link href="#"><Youtube width={16} height={16} /> YouTube</Link></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <span id={styles.span_border1}></span>
+
+                <div id={styles.nav_links_container} className='display_flex_row space_beetween'>
+                    <div className={styles.list_container}>
+                        <h5>Categories</h5>
+
+                        <ul className={`${styles.grid_template} display_grid`}>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                        </ul>
+
+                    </div>
+
+                    <div className={styles.list_container}>
+                        <h5>Airing This Week</h5>
+
+                        <ul className={`${styles.grid_template} display_grid`}>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                            <li><Link href="#">test</Link></li>
+                        </ul>
+
+                    </div>
+
+
+                    <div className='display_flex_row'>
+
+                        <span id={styles.span_border2}></span>
+
+                        <div id={styles.div_custom_margin} className={styles.list_container}>
+                            <h5>Support</h5>
+
+                            <ul>
+                                <li><Link href="#">test</Link></li>
+                                <li><Link href="#">test</Link></li>
+                                <li><Link href="#">test</Link></li>
+                                <li><Link href="#">test</Link></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section id={styles.copyright_section} className=''>
+
+                <div className='center display_flex_row'>
+                    <div>
+                        <small>Copyright © 2024, AniProject. All Rights Reserved</small>
+                    </div>
+
+                    <div>
+                        <Link href="#"><small>Privacy Police</small></Link>
+                    </div>
+                </div>
+
+            </section>
+
+        </footer>
+    )
+}
+
+export default Footer
