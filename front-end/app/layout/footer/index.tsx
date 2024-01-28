@@ -6,8 +6,13 @@ import Facebook from "../../../public/assets/facebook.svg"
 import Instagram from "../../../public/assets/instagram.svg"
 import Youtube from "../../../public/assets/youtube.svg"
 import Twitter from "../../../public/assets/twitter-x.svg"
+import API from '../../../api/anilistApi'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
 
-function Footer() {
+async function Footer() {
+
+    const data = await API.getReleasingThisWeek("ANIME")
+
     return (
         <footer id={styles.footer}>
 
@@ -39,16 +44,16 @@ function Footer() {
                         <h5>Categories</h5>
 
                         <ul className={`${styles.grid_template} display_grid`}>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
+                            <li><Link href="/genre/action">Action</Link></li>
+                            <li><Link href="/genre/adventure">Adventure</Link></li>
+                            <li><Link href="/genre/drama">Drama</Link></li>
+                            <li><Link href="/genre/sci-fi">Sci-fi</Link></li>
+                            <li><Link href="/genre/comedy">Comedy</Link></li>
+                            <li><Link href="/genre/slice-of-life">Slice of Life</Link></li>
+                            <li><Link href="/genre/mistery">Mistery</Link></li>
+                            <li><Link href="/genre/supernatural">Supernatural</Link></li>
+                            <li><Link href="/genre/romance">Romance</Link></li>
+                            <li><Link href="/genre/sports">Sports</Link></li>
                         </ul>
 
                     </div>
@@ -57,16 +62,11 @@ function Footer() {
                         <h5>Airing This Week</h5>
 
                         <ul className={`${styles.grid_template} display_grid`}>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
-                            <li><Link href="#">test</Link></li>
+                            {data != undefined && (
+                                data.slice(0, 10).map((item: ApiDefaultResult, key: number) => (
+                                    <li key={key}><Link href={`/midia/${item.id}`}>{item.title.romaji}</Link></li>
+                                )))
+                            }
                         </ul>
 
                     </div>
@@ -77,13 +77,13 @@ function Footer() {
                         <span id={styles.span_border2}></span>
 
                         <div id={styles.div_custom_margin} className={styles.list_container}>
-                            <h5>Support</h5>
+                            <h5>About</h5>
 
                             <ul>
-                                <li><Link href="#">test</Link></li>
-                                <li><Link href="#">test</Link></li>
-                                <li><Link href="#">test</Link></li>
-                                <li><Link href="#">test</Link></li>
+                                <li><Link href="https://github.com/ErickLimaS/anime-website" target='_blank'>This Project</Link></li>
+                                <li><Link href="https://anilist.gitbook.io/anilist-apiv2-docs/" target='_blank'>AniList API</Link></li>
+                                <li><Link href="#" target='_blank'>Inspiration 1</Link></li>
+                                <li><Link href="#" target='_blank'>Inspiration 2</Link></li>
                             </ul>
                         </div>
 

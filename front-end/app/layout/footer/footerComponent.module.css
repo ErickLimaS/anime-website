@@ -54,6 +54,7 @@ footer#footer {
 #info_container a {
 
     color: var(--white-75);
+    font-size: var(--font-size--small-1);
 
 }
 
@@ -155,6 +156,13 @@ div.list_container h5 {
 
 }
 
+#nav_links_container a {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+
 @media(max-width: 768px) {
     #nav_links_container {
 
@@ -173,7 +181,7 @@ div.list_container h5 {
 div.list_container .grid_template {
 
     grid-template-columns: 1fr 1fr;
-    gap: 24px 0;
+    gap: 16px 8px;
 
 }
 
@@ -192,7 +200,7 @@ div.list_container .grid_template {
 
 #div_custom_margin ul {
     display: grid;
-    gap: 24px 0;
+    gap: 16px 0;
 }
 
 /* SECONDE SECTION */

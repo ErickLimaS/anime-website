@@ -1,12 +1,16 @@
 "use client"
-import React, { useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import styles from './headerComponent.module.css'
 import Image from 'next/image'
 import MenuList from '../../../public/assets/list.svg'
 import SearchIcon from '../../../public/assets/search.svg'
 import PersonIcon from '../../../public/assets/person-circle.svg'
 import ChevronDownIcon from '../../../public/assets/chevron-down.svg'
+import LoadingIcon from '../../../public/assets/ripple-1s-200px.svg'
 import Link from 'next/link'
+import API from '../../../api/anilistApi'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
+import SearchResultItemCard from '@/app/components/SearchResultItemCard'
 
 function Header() {
 
@@ -14,7 +18,34 @@ function Header() {
     const [isMobileSearchBarOpen, setIsMobileSearchBarOpen] = useState<boolean>(false)
     const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false)
 
-    function searchValue() {
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const [searchResults, setSearchResults] = useState<ApiDefaultResult[] | null>(null)
+
+    async function searchValue(e: FormEvent<HTMLFormElement>) {
+
+        e.preventDefault()
+
+        const query = (e.target["0"] as HTMLInputElement).value
+
+        if (query.length == 0) return
+
+        setIsLoading(true)
+
+        const result = await API.getSeachResults(query)
+
+        setSearchResults(result)
+
+        setIsLoading(false)
+
+    }
+
+    // when clicked, shows serch bar and results, 
+    // if clicked again, hide both and erase search results
+    function toggleSearchBarMobile() {
+
+        setIsMobileSearchBarOpen(!isMobileSearchBarOpen)
+        setSearchResults(null)
 
     }
 
@@ -51,15 +82,15 @@ function Header() {
                     </div>
 
                     <Link href="/">
-                        <Image id={styles.logo} src={'/logo.png'} alt='Aniproject Website Logo' width={120} height={40} />
+                        <Image id={styles.logo} src={'/logo.png'} alt='AniProject Website Logo' width={120} height={40} />
                     </Link>
                 </div>
 
                 <div id={styles.navbar_container} className={`align_items_center`}>
                     <ul className='display_grid'>
-                        <li>Animes <ChevronDownIcon alt="Open List" width={16} height={16} /></li>
-                        <li>Mangas <ChevronDownIcon alt="Open List" width={16} height={16} /></li>
-                        <li>Movies <ChevronDownIcon alt="Open List" width={16} height={16} /></li>
+                        <li className='display_flex_row align_items_center'>Animes <ChevronDownIcon alt="Open Animes List" width={16} height={16} /></li>
+                        <li className='display_flex_row align_items_center'>Mangas <ChevronDownIcon alt="Open Mangas List" width={16} height={16} /></li>
+                        <li className='display_flex_row align_items_center'>Movies <ChevronDownIcon alt="Open Movies List" width={16} height={16} /></li>
                     </ul>
                 </div>
 
@@ -69,7 +100,7 @@ function Header() {
 
                         <button
                             id={styles.btn_open_search_form_mobile}
-                            onClick={() => setIsMobileSearchBarOpen(!isMobileSearchBarOpen)}
+                            onClick={() => toggleSearchBarMobile()}
                             aria-controls={styles.input_search_bar}
                             aria-label={isMobileSearchBarOpen ? 'Click to Hide Search Bar' : 'Click to Show Search Bar'}
                             className={styles.heading_btn}
@@ -80,10 +111,13 @@ function Header() {
                         {/* TABLET AND DESKTOP */}
                         <div id={styles.form_search}>
 
-                            <form onSubmit={() => searchValue()} className={`${styles.search_form} display_flex_row`}>
-                                <input type="text" placeholder='Search...' name='searchField'></input>
-                                <button type='submit'>
-                                    <SearchIcon alt="Search Icon" width={16} height={16} />
+                            <form onSubmit={(e) => searchValue(e)} className={`${styles.search_form} display_flex_row`}>
+                                <input type="text" placeholder='Search...' name='searchField' disabled={isLoading}></input>
+                                <button type='submit' disabled={isLoading}>
+                                    {isLoading ?
+                                        (<LoadingIcon alt="Loading Icon" width={16} height={16} />) :
+                                        (<SearchIcon alt="Search Icon" width={16} height={16} />)
+                                    }
                                 </button>
                             </form>
 
@@ -92,10 +126,13 @@ function Header() {
                         {/* MOBILE */}
                         <div id={styles.form_mobile_search} aria-expanded={isMobileSearchBarOpen} className='display_align_justify_center'>
 
-                            <form onSubmit={() => searchValue()} className={`${styles.search_form} display_flex_row`}>
-                                <input type="text" placeholder='Search...' name='searchField'></input>
-                                <button type='submit'>
-                                    <SearchIcon alt="Search Icon" width={16} height={16} />
+                            <form onSubmit={(e) => searchValue(e)} className={`${styles.search_form} display_flex_row`}>
+                                <input type="text" placeholder='Search...' name='searchField' disabled={isLoading}></input>
+                                <button type='submit' disabled={isLoading}>
+                                    {isLoading ?
+                                        (<LoadingIcon alt="Loading Icon" width={16} height={16} />) :
+                                        (<SearchIcon alt="Search Icon" width={16} height={16} />)
+                                    }
                                 </button>
                             </form>
 
@@ -103,6 +140,22 @@ function Header() {
 
                     </div>
 
+                    {/* SEARCH RESULTS */}
+                    {searchResults != null && (
+                        <div id={styles.search_results_container}>
+
+                            <button onClick={() => setSearchResults(null)}>Clear Search</button>
+
+                            <ul>
+                                {searchResults.slice(0,6).map((item: ApiDefaultResult, key: number) => (
+                                    <SearchResultItemCard key={key} item={item} />
+                                ))}
+                            </ul>
+
+                        </div>
+                    )}
+
+                    {/* USER -- RIGHT SIDE OF SCREEN */}
                     <div id={styles.user_container}>
 
                         <button
@@ -129,7 +182,7 @@ function Header() {
 
                 </div>
             </div>
-        </header>
+        </header >
     )
 }
 

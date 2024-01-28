@@ -10,19 +10,19 @@
   --breakpoint-xl: 1200px;
   --breakpoint-xxl: 1440px;
 
-  /* font, scale 1.25, 16px - 20px */
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-  --font-size--small-2: clamp(0.64rem, 0.5943rem + 0.2286vw, 0.8rem);
-  --font-size--small-1: clamp(0.8rem, 0.7429rem + 0.2857vw, 1rem);
-  --font-size--p: clamp(1rem, 0.9286rem + 0.3571vw, 1.25rem);
-  --font-size--h5: clamp(1.25rem, 1.1607rem + 0.4464vw, 1.5625rem);
-  --font-size--h4: clamp(1.5625rem, 1.4509rem + 0.558vw, 1.9531rem);
-  --font-size--h3: clamp(1.9531rem, 1.8137rem + 0.6973vw, 2.4413rem);
-  --font-size--h2: clamp(2.4413rem, 2.2668rem + 0.8723vw, 3.0519rem);
-  --font-size--h1: clamp(3.0519rem, 2.8338rem + 1.0902vw, 3.815rem);
+  /* fs -- 16px - 18px.. 1.25scl - 1.25scl */
+  --font-size--small-2: clamp(0.72rem, 0.81rem + -0.1vi, 0.79rem);
+  --font-size--small-1: clamp(0.889rem, 0.886rem + 0.016vi, 0.9rem);
+  --font-size--p: clamp(1rem, 0.964rem + 0.179vi, 1.125rem);
+  --font-size--h5: clamp(1.125rem, 1.045rem + 0.402vi, 1.406rem);
+  --font-size--h4: clamp(1.266rem, 1.125rem + 0.703vi, 1.758rem);
+  --font-size--h3: clamp(1.424rem, 1.203rem + 1.105vi, 2.197rem);
+  --font-size--h2: clamp(1.602rem, 1.275rem + 1.635vi, 2.747rem);
+  --font-size--h1: clamp(1.802rem, 1.336rem + 2.33vi, 3.433rem);
 
   /* colors */
   --background: #181818;
@@ -31,11 +31,13 @@
   --white-75: rgba(255, 255, 255, 0.75);
   --white-50: rgba(255, 255, 255, 0.5);
   --white-25: rgba(255, 255, 255, 0.25);
+  --white-05: rgba(255, 255, 255, 0.05);
 
-  --black-100: #000000;
-  --black-75: rgba(0, 0, 0, 0.75);
-  --black-50: rgba(0, 0, 0, 0.5);
-  --black-25: rgba(0, 0, 0, 0.25);
+  --black-100: #18020b;
+  --black-75: rgba(24, 2, 11, 0.75);
+  --black-50: rgba(24, 2, 11, 0.5);
+  --black-25: rgba(24, 2, 11, 0.25);
+  --black-05: rgba(24, 2, 11, 0.05);
 
   --brand-color: #ff1a75;
   --brand-dark-color: #3b0018;
@@ -69,7 +71,12 @@ h1,
 h2,
 h3,
 h4,
-h5,
+h5 {
+  font-family: montserrat,
+    open sans,
+    sans-serif;
+}
+
 p,
 a,
 button,
@@ -77,7 +84,7 @@ li,
 small,
 option,
 input {
-  font-family: var(--font-family-sans-serif);
+  font-size: var(--font-size--p);
 }
 
 h1 {
@@ -100,15 +107,6 @@ h5 {
   font-size: var(--font-size--h5);
 }
 
-p,
-a,
-button,
-li,
-input,
-option {
-  font-size: var(--font-size--p);
-}
-
 small {
   font-size: var(--font-size--small-1);
 }
@@ -116,6 +114,13 @@ small {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--white-100) inset !important;
 }
 
 button {
@@ -163,4 +168,13 @@ li {
 
 .gap_16px {
   gap: 16px;
+}
+
+.text_center {
+  text-align: center;
+}
+
+.yt_embed_video {
+  aspect-ratio: 16 / 9;
+  width: 100%;
 }

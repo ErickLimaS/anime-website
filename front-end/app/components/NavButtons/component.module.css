@@ -1,0 +1,29 @@
+.nav_button_container {
+    display: flex;
+    gap: 0 8px;
+}
+
+.nav_button_container>button {
+
+    background-color: transparent;
+    border: none;
+
+    color: var(--white-50);
+
+    font-size: var(--font-size--small-1);
+
+    font-weight: 600;
+
+}
+
+.nav_button_container>button[data-active=false]:hover {
+    
+    color: var(--white-75);
+
+}
+
+.nav_button_container>button[data-active=true] {
+
+    color: var(--brand-color);
+
+}
