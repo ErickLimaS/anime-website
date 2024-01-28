@@ -6,7 +6,7 @@ import Facebook from "../../../public/assets/facebook.svg"
 import Instagram from "../../../public/assets/instagram.svg"
 import Youtube from "../../../public/assets/youtube.svg"
 import Twitter from "../../../public/assets/twitter-x.svg"
-import API from '../../../api/anilistApi'
+import API from '../../../api/anilist'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
 
 async function Footer() {
@@ -80,7 +80,7 @@ async function Footer() {
                             <h5>About</h5>
 
                             <ul>
-                                <li><Link href="https://github.com/ErickLimaS/anime-website" target='_blank'>This Project</Link></li>
+                                <li><Link href="https://github.com/ErickLimaS/anime-website/tree/dev" target='_blank'>This Project</Link></li>
                                 <li><Link href="https://anilist.gitbook.io/anilist-apiv2-docs/" target='_blank'>AniList API</Link></li>
                                 <li><Link href="#" target='_blank'>Inspiration 1</Link></li>
                                 <li><Link href="#" target='_blank'>Inspiration 2</Link></li>

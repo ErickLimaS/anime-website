@@ -1,5 +1,5 @@
 "use client"
-import React, { FormEvent, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import styles from './headerComponent.module.css'
 import Image from 'next/image'
 import MenuList from '../../../public/assets/list.svg'
@@ -8,7 +8,7 @@ import PersonIcon from '../../../public/assets/person-circle.svg'
 import ChevronDownIcon from '../../../public/assets/chevron-down.svg'
 import LoadingIcon from '../../../public/assets/ripple-1s-200px.svg'
 import Link from 'next/link'
-import API from '../../../api/anilistApi'
+import API from '../../../api/anilist'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
 import SearchResultItemCard from '@/app/components/SearchResultItemCard'
 
@@ -20,13 +20,15 @@ function Header() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [searchResults, setSearchResults] = useState<ApiDefaultResult[] | null>(null)
+    const [searchResults, setSearchResults] = useState<ApiDefaultResult[] | null>()
 
-    async function searchValue(e: FormEvent<HTMLFormElement>) {
+    const [searchInput, setSearchInput] = useState<string>("")
+    
+    async function searchValue(e: React.ChangeEvent<HTMLFormElement> | HTMLFormElement) {
 
         e.preventDefault()
 
-        const query = (e.target["0"] as HTMLInputElement).value
+        const query = searchInput
 
         if (query.length == 0) return
 
@@ -34,7 +36,7 @@ function Header() {
 
         const result = await API.getSeachResults(query)
 
-        setSearchResults(result)
+        setSearchResults(result as ApiDefaultResult[])
 
         setIsLoading(false)
 
@@ -111,8 +113,8 @@ function Header() {
                         {/* TABLET AND DESKTOP */}
                         <div id={styles.form_search}>
 
-                            <form onSubmit={(e) => searchValue(e)} className={`${styles.search_form} display_flex_row`}>
-                                <input type="text" placeholder='Search...' name='searchField' disabled={isLoading}></input>
+                            <form onSubmit={(e) => searchValue(e as HTMLFormElement | ChangeEvent<HTMLFormElement>)} className={`${styles.search_form} display_flex_row`}>
+                                <input type="text" placeholder='Search...' name='searchField' disabled={isLoading} onChange={(e) => setSearchInput(e.target.value)}></input>
                                 <button type='submit' disabled={isLoading}>
                                     {isLoading ?
                                         (<LoadingIcon alt="Loading Icon" width={16} height={16} />) :
@@ -126,8 +128,8 @@ function Header() {
                         {/* MOBILE */}
                         <div id={styles.form_mobile_search} aria-expanded={isMobileSearchBarOpen} className='display_align_justify_center'>
 
-                            <form onSubmit={(e) => searchValue(e)} className={`${styles.search_form} display_flex_row`}>
-                                <input type="text" placeholder='Search...' name='searchField' disabled={isLoading}></input>
+                            <form onSubmit={(e) => searchValue(e as HTMLFormElement | ChangeEvent<HTMLFormElement>)} className={`${styles.search_form} display_flex_row`}>
+                                <input type="text" placeholder='Search...' name='searchField' disabled={isLoading} onChange={(e) => setSearchInput(e.target.value)}></input>
                                 <button type='submit' disabled={isLoading}>
                                     {isLoading ?
                                         (<LoadingIcon alt="Loading Icon" width={16} height={16} />) :
@@ -147,7 +149,7 @@ function Header() {
                             <button onClick={() => setSearchResults(null)}>Clear Search</button>
 
                             <ul>
-                                {searchResults.slice(0,6).map((item: ApiDefaultResult, key: number) => (
+                                {searchResults.slice(0, 6).map((item: ApiDefaultResult, key: number) => (
                                     <SearchResultItemCard key={key} item={item} />
                                 ))}
                             </ul>

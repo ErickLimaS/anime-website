@@ -471,7 +471,7 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.media as ApiDefaultResult
+            return data.data.Page.media as ApiDefaultResult[]
 
         }
         catch (error) {
@@ -507,7 +507,7 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.media as ApiDefaultResult
+            return data.data.Page.media as ApiDefaultResult[]
 
         }
         catch (error) {
@@ -543,7 +543,7 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.airingSchedules as ApiAiringMidiaResults
+            return data.data.Page.airingSchedules as ApiAiringMidiaResults[]
 
         }
         catch (error) {
@@ -615,7 +615,7 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.media;
+            return data.data.Page.media as ApiDefaultResult[]
         }
         catch (error) {
 

@@ -3,7 +3,7 @@ import React, { SetStateAction, useEffect, useState } from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
-import API from '@/api/anilistApi'
+import API from '@/api/anilist'
 import MidiaItemCoverInfo from '../MidiaItemFrontCover'
 import ChevronLeftIcon from '../../../public/assets/chevron-left.svg'
 import ChevronRightIcon from '../../../public/assets/chevron-right.svg'
@@ -24,7 +24,9 @@ function NavThoughMidiasByTimeRange() {
 
         if (days == daysRange) return
 
-        const response = await API.getReleasingByDaysRange("ANIME", convertToUnix(days)).then(res => res.filter((item) => item.media.isAdult == false));
+        const response = await API.getReleasingByDaysRange("ANIME", convertToUnix(days)).then(
+            res => (res as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
+        );
 
         setData(response)
 

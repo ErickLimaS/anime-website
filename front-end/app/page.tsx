@@ -4,27 +4,38 @@ import React from "react";
 import HeroCarousel from "./components/HeroCarouselHomePage";
 import MidiaItemCoverInfo from "./components/MidiaItemFrontCover";
 import ChevronRightIcon from '../public/assets/chevron-right.svg';
-import API from '../api/anilistApi';
+import API from '../api/anilist';
 import NavThoughMidiasByTimeRange from "./components/NavThoughMidiasByTimeRange";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/NewestMediaSection";
 import MediaRankingSection from "./components/MediaRankingSection";
 import { convertToUnix } from "./lib/format_date_unix";
+import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from "./ts/interfaces/apiDataInterface";
 
 export default async function Home() {
 
   // section 1
-  const popularData = await API.getTrendingMedia("ANIME", "DATE_DESC").then(res => res.filter((item) => item.media.bannerImage))
+  const popularData = await API.getTrendingMedia("ANIME", "DATE_DESC").then(
+    res => (res as ApiTrendingMidiaResults[]).filter((item) => item.media.bannerImage)
+  )
 
   // section 2
-  const trendingData = await API.getTrendingMedia("ANIME", "TRENDING_DESC").then(res => res.filter((item) => item.media.isAdult == false))
+  const trendingData = await API.getTrendingMedia("ANIME", "TRENDING_DESC").then(
+    res => (res as ApiTrendingMidiaResults[]).filter((item) => item.media.isAdult == false)
+  )
 
   // section 3
-  const mediaBannerData = await API.getMediaForThisFormat("ANIME", "SCORE_DESC").then(res => res.filter((item) => item.isAdult == false))
+  const mediaBannerData = await API.getMediaForThisFormat("ANIME", "SCORE_DESC").then(
+    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
+  )
 
   // section 4
-  const mediaRankingData = await API.getMediaForThisFormat("ANIME").then(res => res.filter((item) => item.isAdult == false))
-  const newestMediaData = await API.getReleasingByDaysRange("ANIME", convertToUnix(1)).then(res => (res.map((item: ApiAiringMidiaResults) => item.media).filter((item) => item.isAdult == false)))
+  const mediaRankingData = await API.getMediaForThisFormat("ANIME").then(
+    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
+  )
+  const newestMediaData = await API.getReleasingByDaysRange("ANIME", convertToUnix(1)).then(
+    res => (res as ApiAiringMidiaResults[]).map((item) => item.media).filter((item) => item.isAdult == false)
+  )
 
   // used on banner section
   const randomNumber = Math.floor(Math.random() * (mediaBannerData?.length || 10)) + 1

@@ -4,20 +4,22 @@ import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
 import Link from 'next/link'
 
-function SearchResultItemCard({ item }: ApiDefaultResult | any) {
+function SearchResultItemCard({ item }: {item: ApiDefaultResult}) {
 
     const id = useId()
 
     // change title color to the informed on Item Data when hovered
-    function addHoverEffect(e: any, isHovering: boolean) {
+    function addHoverEffect(e: React.MouseEvent<HTMLLIElement, MouseEvent>, isHovering: boolean) {
 
-        const el = document.getElementById(id)!.getElementsByTagName('a')[0]
+        const el = document.getElementById(id)!.getElementsByTagName('h5')[0].getElementsByTagName('a')[0]
 
         if (isHovering) {
-            return el!.style.color = item.coverImage.color || 'var(--white-100)';
+            el!.style.color = item.coverImage.color || 'var(--white-100)';
+            return 
         }
 
         el!.style.color = 'var(--white-100)';
+        return 
     }
 
     return (
@@ -35,7 +37,7 @@ function SearchResultItemCard({ item }: ApiDefaultResult | any) {
                 <div>
                     {item.genres != undefined && (
                         <ul className={`display_flex_row ${styles.genres_container}`}>
-                            {item.genres.slice(0, 3).map((item: String, key: number) => (
+                            {item.genres.slice(0, 3).map((item: string, key: number) => (
                                 <li key={key}><Link href={`/genre/${item.toLowerCase()}`}></Link>{item}</li>
                             ))}
                         </ul>

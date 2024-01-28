@@ -1,23 +1,23 @@
 "use client"
-import React, { SetStateAction, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from "./component.module.css"
 import MediaListCoverInfo from '../MediaListCoverInfo'
 import CardMediaCoverAndDescription from '../CardMediaCoverAndDescription'
 import NavButtons from '../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
-import API from "@/api/anilistApi"
+import API from "@/api/anilist"
 import { convertToUnix } from '@/app/lib/format_date_unix'
 
 type PropsTypes = {
 
-    data: void | ApiDefaultResult,
+    data: void | ApiDefaultResult[],
     currentQueryValue?: string
 
 }
 
 function NewestMediaSection(props: PropsTypes) {
 
-    const [mediaList, setMediaList] = useState<ApiAiringMidiaResults[] | ApiAiringMidiaResults | null>(null)
+    const [mediaList, setMediaList] = useState<ApiAiringMidiaResults[] | ApiDefaultResult[] | null>(null)
 
     let { data } = props
     let currentQueryValue = 1 //stands for 1 day (today)
@@ -32,17 +32,17 @@ function NewestMediaSection(props: PropsTypes) {
 
     }
 
-    // gets the range of days than parse it to unix, runs function to get any midia releasing in the selected range
+    // gets the range of days than parse it to unix, runs function to get any media releasing in the selected range
     async function getMidiaByDaysRange(days: number) {
 
-        let response: ApiAiringMidiaResults | void
+        let response: ApiAiringMidiaResults[] | void
 
-        response = await API.getReleasingByDaysRange("ANIME", convertToUnix(days)).then(res =>
-        (res.map(
-            (item: ApiAiringMidiaResults) => item.media).filter(
-                (item) => item.isAdult == false)
-        )
-        )
+        response = await API.getReleasingByDaysRange("ANIME", convertToUnix(days)).then(
+            res => ((res as ApiAiringMidiaResults[]).map(
+                (item: ApiAiringMidiaResults) => item.media).filter(
+                    (item) => item.isAdult == false)
+            )
+        ) as ApiAiringMidiaResults[]
 
         setMediaList(response)
 
@@ -56,7 +56,7 @@ function NewestMediaSection(props: PropsTypes) {
                 <h3>Newest Animes Episodes</h3>
 
                 <NavButtons
-                    functionReceived={loadMedia}
+                    functionReceived={loadMedia as (parameter: string | number) => void}
                     actualValue={currentQueryValue}
                     options={[
                         { name: "Today", value: 1 }, { name: "This week", value: 7 }, { name: "Last 30 days", value: 30 }
@@ -66,10 +66,10 @@ function NewestMediaSection(props: PropsTypes) {
 
             <ul>
                 <li>
-                    <CardMediaCoverAndDescription data={mediaList ? mediaList[0] : data[0]} />
+                    <CardMediaCoverAndDescription data={mediaList ? (mediaList as ApiDefaultResult[])[0] : (data as ApiDefaultResult[])[0]} />
                 </li>
 
-                {(mediaList || data).slice(1, 11).map((item: any, key: number) => (
+                {((mediaList || data) as ApiDefaultResult[]).slice(1, 11).map((item: any, key: number) => (
                     <MediaListCoverInfo key={key} positionIndex={key + 1} data={item} showCoverArt={true} alternativeBorder={true} />
                 ))}
 
