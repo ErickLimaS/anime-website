@@ -2,9 +2,9 @@
 import React, { SetStateAction, useEffect, useState } from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
-import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiAiringMidiaResults } from '@/app/ts/interfaces/apiDataInterface'
 import API from '@/api/anilist'
-import MidiaItemCoverInfo from '../MidiaItemFrontCover'
+import MediaItemCoverInfo from '../MediaItemCoverInfo'
 import ChevronLeftIcon from '../../../public/assets/chevron-left.svg'
 import ChevronRightIcon from '../../../public/assets/chevron-right.svg'
 import { convertToUnix } from '@/app/lib/format_date_unix'
@@ -51,7 +51,7 @@ function NavThoughMidiasByTimeRange() {
 
                 {data != null ? (
                     data.slice(0, 8).map((item: ApiAiringMidiaResults, key: number) => (
-                        <MidiaItemCoverInfo key={key} data={item.media} positionIndex={key + 1} />
+                        <MediaItemCoverInfo key={key} data={item.media} positionIndex={key + 1} />
                     ))
                 ) : (
                     <p className='display_align_justify_center'>Nothing Releasing Today</p>

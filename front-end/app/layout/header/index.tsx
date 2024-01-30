@@ -1,5 +1,5 @@
 "use client"
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useId, useState } from 'react'
 import styles from './headerComponent.module.css'
 import Image from 'next/image'
 import MenuList from '../../../public/assets/list.svg'
@@ -23,6 +23,8 @@ function Header() {
     const [searchResults, setSearchResults] = useState<ApiDefaultResult[] | null>()
 
     const [searchInput, setSearchInput] = useState<string>("")
+
+    const id = useId()
     
     async function searchValue(e: React.ChangeEvent<HTMLFormElement> | HTMLFormElement) {
 
@@ -52,7 +54,7 @@ function Header() {
     }
 
     return (
-        <header id={styles.background} >
+        <header id={styles.background} className={id}>
 
             <div id={styles.container} className='display_flex_row padding_16px'>
 

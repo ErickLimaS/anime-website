@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import React from "react";
 import HeroCarousel from "./components/HeroCarouselHomePage";
-import MidiaItemCoverInfo from "./components/MidiaItemFrontCover";
+import MediaItemCoverInfo from "./components/MediaItemCoverInfo";
 import ChevronRightIcon from '../public/assets/chevron-right.svg';
 import API from '../api/anilist';
 import NavThoughMidiasByTimeRange from "./components/NavThoughMidiasByTimeRange";
@@ -11,6 +11,12 @@ import NewestMediaSection from "./components/NewestMediaSection";
 import MediaRankingSection from "./components/MediaRankingSection";
 import { convertToUnix } from "./lib/format_date_unix";
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from "./ts/interfaces/apiDataInterface";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Home | AniProject',
+  description: 'A website which shows a variety of info about animes, mangas and movies.',
+}
 
 export default async function Home() {
 
@@ -68,7 +74,7 @@ export default async function Home() {
 
         {trendingData != undefined &&
           (trendingData.slice(0, 12).map((item, key: number) => (
-            <MidiaItemCoverInfo data={item.media} key={key} positionIndex={key + 1} darkMode={true} />
+            <MediaItemCoverInfo data={item.media} key={key} positionIndex={key + 1} darkMode={true} />
           )))
         }
 

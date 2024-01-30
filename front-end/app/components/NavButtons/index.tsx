@@ -1,11 +1,14 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
+import ChevronLeftSvg from "@/public/assets/chevron-left.svg"
+import ChevronRightSvg from "@/public/assets/chevron-right.svg"
 
 type PropsType = {
     functionReceived: (parameter: string | number) => void,
     options: OptionsType[],
-    actualValue?: string | number
+    actualValue?: string | number, 
+    previousAndNextButtons?: boolean
 }
 
 type OptionsType = {
@@ -38,6 +41,16 @@ function NavButtons(props: PropsType) {
 
     return (
         <div className={styles.nav_button_container}>
+
+            {/* MAINLY USED ON PAGINATION OF EPISODES CONTAINER */}
+            {props.previousAndNextButtons && (
+                <button
+                    onClick={() => toggleStateAndReturnValue((lastValueReceived as number) - 1)}
+                    disabled={(lastValueReceived as number) == props.options[0].value}>
+                    <ChevronLeftSvg alt="Icon to left side" width={16} height={16}/>
+                </button>
+            )}
+
             {props.options.map((item, key: number) => (
                 <button
                     key={key}
@@ -46,7 +59,18 @@ function NavButtons(props: PropsType) {
                 >
                     {item.name}
                 </button >
+
             ))}
+
+            {/* MAINLY USED ON PAGINATION OF EPISODES CONTAINER */}
+            {props.previousAndNextButtons && (
+                <button
+                    onClick={() => toggleStateAndReturnValue((lastValueReceived as number) + 1)}
+                    disabled={(lastValueReceived as number) == props.options[props.options.length - 1]?.value}
+                >
+                    <ChevronRightSvg alt="Icon to right side" width={16} height={16} />
+                </button>
+            )}
         </div>
     )
 

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
 import Link from 'next/link'
 
-function SearchResultItemCard({ item }: {item: ApiDefaultResult}) {
+function SearchResultItemCard({ item }: { item: ApiDefaultResult }) {
 
     const id = useId()
 
@@ -15,11 +15,11 @@ function SearchResultItemCard({ item }: {item: ApiDefaultResult}) {
 
         if (isHovering) {
             el!.style.color = item.coverImage.color || 'var(--white-100)';
-            return 
+            return
         }
 
         el!.style.color = 'var(--white-100)';
-        return 
+        return
     }
 
     return (
@@ -50,9 +50,13 @@ function SearchResultItemCard({ item }: {item: ApiDefaultResult}) {
                                 {item.type == 'ANIME' && 'First aired in '}
                                 {item.type == 'MANGA' && 'Published in '}
                                 {item.type == 'MOVIE' && 'First aired in '}
-                                {item.startDate.month.toString() + '/' || ''}
-                                {item.startDate.day.toString() + '/' || ''}
-                                {item.startDate.year.toString()}
+                                {item.startDate && (
+                                    <>
+                                        {item.startDate.month && item.startDate.month.toString() + '/' || ''}
+                                        {item.startDate.day && item.startDate.day.toString() + '/' || ''}
+                                        {item.startDate.year && item.startDate.year.toString()}
+                                    </>
+                                )}
                             </small>
                         ) : (
                             <small>No Date Available</small>

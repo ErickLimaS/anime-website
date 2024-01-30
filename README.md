@@ -1,5 +1,7 @@
 <h1 align="center">AniProject 2.0 - Under Development!</h1>
 
+<a href="https://anime-website-blue.vercel.app/" target="_blank" rel="noreferrer" align="center">Visit the New AniProject in Developement!</a>
+
 ![Logo Do Site AniProject.](https://user-images.githubusercontent.com/69987890/177884319-0678f842-f3ca-4f62-8d31-7638ca954057.png)
 
 Projeto de um site de animes, mangas e filmes relacionados. A API da <a href='https://anilist.gitbook.io/anilist-apiv2-docs/'>AniList</a> dispoe informações de animes e episodios sendo lançados atualmente, dados do elenco por trâs de tal mídia, e muito mais.
@@ -19,7 +21,7 @@ Projeto de um site de animes, mangas e filmes relacionados. A API da <a href='ht
 
 ## :heavy_check_mark: Tecnologias Utilizadas
 
-Front-end (on Netlify):
+Front-end (on Vercel.com):
 
 - ``React``
 - ``Next.js``

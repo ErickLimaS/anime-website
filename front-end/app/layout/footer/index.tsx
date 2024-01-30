@@ -64,7 +64,7 @@ async function Footer() {
                         <ul className={`${styles.grid_template} display_grid`}>
                             {data != undefined && (
                                 data.slice(0, 10).map((item: ApiDefaultResult, key: number) => (
-                                    <li key={key}><Link href={`/midia/${item.id}`}>{item.title.romaji}</Link></li>
+                                    <li key={key}><Link href={`/media/${item.id}`}>{item.title.romaji}</Link></li>
                                 )))
                             }
                         </ul>
@@ -82,8 +82,8 @@ async function Footer() {
                             <ul>
                                 <li><Link href="https://github.com/ErickLimaS/anime-website/tree/dev" target='_blank'>This Project</Link></li>
                                 <li><Link href="https://anilist.gitbook.io/anilist-apiv2-docs/" target='_blank'>AniList API</Link></li>
-                                <li><Link href="#" target='_blank'>Inspiration 1</Link></li>
-                                <li><Link href="#" target='_blank'>Inspiration 2</Link></li>
+                                <li><Link href="https://preview.themeforest.net/item/vodi-video-wordpress-theme-for-movies-tv-shows/full_screen_preview/23738703" target='_blank'>Inspiration 1</Link></li>
+                                <li><Link href="https://dribbble.com/shots/20333170-The-Trailers-Concept-Site-Part-2" target='_blank'>Inspiration 2</Link></li>
                             </ul>
                         </div>
 
