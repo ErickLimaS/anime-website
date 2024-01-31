@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import parse from "html-react-parser"
 
 function CardMediaCoverAndDescription({ data }: { data: ApiDefaultResult }) {

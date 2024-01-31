@@ -1,4 +1,4 @@
-import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Axios from 'axios'
 
 const BASE_URL: String = 'https://graphql.anilist.co/'

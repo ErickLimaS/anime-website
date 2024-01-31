@@ -19,7 +19,7 @@ footer#footer {
 
     footer>section#info_container,
     section#copyright_section>div {
-        width: var(--breakpoint-md);
+        /* width: var(--breakpoint-md); */
     }
 }
 

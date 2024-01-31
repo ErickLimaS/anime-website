@@ -14,6 +14,61 @@
     }
 }
 
+#container_heading {
+
+    margin: 32px 0;
+
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+
+    gap: 16px 0;
+
+}
+
+@media(min-width: 540px) {
+    #container_heading {
+
+        margin: 8px 0;
+
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+}
+
+#container_heading h3 {
+
+    font-size: var(--font-size--h5);
+    color: var(--white-75);
+
+}
+
+#container_heading #btn_other_sources {
+
+    border-radius: 4px;
+    padding: 8px;
+    background: transparent;
+    border: 2px solid var(--white-100);
+    color: var(--white-100);
+
+    gap: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#container_heading #btn_other_sources:hover {
+
+    border-color: var(--brand-color);
+    color: var(--brand-color);
+
+}
+
+#container_heading #btn_other_sources svg {
+    transform: scale(1.2);
+}
+
 #container li img {
     transition: all ease-in-out 100ms;
 }
@@ -52,6 +107,10 @@
 
 }
 
+#container li a.img_container>img {
+    background: linear-gradient(45deg, var(--brand-color), transparent);
+}
+
 #container li:hover a.img_container::after {
     content: "";
     position: absolute;
@@ -78,7 +137,7 @@
 
 }
 
-#pagination_buttons_container>div>button {
+#pagination_buttons_container>div button {
 
     transition: all ease-in-out 120ms;
 
@@ -86,25 +145,25 @@
     color: var(--white-75);
     border-radius: 50%;
 
-    padding: 8px 12px;
+    padding: 8px;
 
 }
 
-#pagination_buttons_container>div>button:first-child,
-#pagination_buttons_container>div>button:last-child {
+#pagination_buttons_container>div button:first-child,
+#pagination_buttons_container>div button:last-child {
 
     padding: 8px;
 
 }
 
-#pagination_buttons_container>div>button:first-child svg,
-#pagination_buttons_container>div>button:last-child svg {
+#pagination_buttons_container>div button:first-child svg,
+#pagination_buttons_container>div button:last-child svg {
 
     display: block;
 
 }
 
-#pagination_buttons_container>div>button[data-active=true] {
+#pagination_buttons_container>div button[data-active=true] {
 
     background-color: var(--brand-color);
     border-color: var(--brand-color);
@@ -112,8 +171,8 @@
 
 }
 
-#pagination_buttons_container>div>button[data-active=false]:hover,
-#pagination_buttons_container>div>button:hover {
+#pagination_buttons_container>div button[data-active=false]:hover,
+#pagination_buttons_container>div button:hover {
 
     border-color: var(--brand-color);
 

@@ -4,7 +4,7 @@ import styles from "./component.module.css"
 import MediaListCoverInfo from '../MediaListCoverInfo'
 import CardMediaCoverAndDescription from '../CardMediaCoverAndDescription'
 import NavButtons from '../NavButtons'
-import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import API from "@/api/anilist"
 import { convertToUnix } from '@/app/lib/format_date_unix'
 

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import styles from "./carouselComponent.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
-import { ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
 function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
 

@@ -1,7 +1,7 @@
 import React, { useId } from 'react'
 import styles from './component.module.css'
 import Image from 'next/image'
-import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Link from 'next/link'
 
 function SearchResultItemCard({ item }: { item: ApiDefaultResult }) {

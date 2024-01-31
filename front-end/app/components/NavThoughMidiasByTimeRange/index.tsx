@@ -2,7 +2,7 @@
 import React, { SetStateAction, useEffect, useState } from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
-import { ApiAiringMidiaResults } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiAiringMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import API from '@/api/anilist'
 import MediaItemCoverInfo from '../MediaItemCoverInfo'
 import ChevronLeftIcon from '../../../public/assets/chevron-left.svg'

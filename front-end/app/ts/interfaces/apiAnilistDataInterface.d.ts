@@ -43,7 +43,6 @@ export interface ApiAiringMidiaResults {
 
 }
 
-
 export interface ApiTrendingMidiaResults {
 
     date: number,
@@ -116,6 +115,5 @@ export interface ApiMediaResults extends ApiDefaultResult {
             }
         }]
     }
-
 
 }

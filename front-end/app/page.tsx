@@ -10,7 +10,7 @@ import parse from "html-react-parser"
 import NewestMediaSection from "./components/NewestMediaSection";
 import MediaRankingSection from "./components/MediaRankingSection";
 import { convertToUnix } from "./lib/format_date_unix";
-import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from "./ts/interfaces/apiDataInterface";
+import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

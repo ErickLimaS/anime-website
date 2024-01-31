@@ -7,7 +7,7 @@ import Instagram from "../../../public/assets/instagram.svg"
 import Youtube from "../../../public/assets/youtube.svg"
 import Twitter from "../../../public/assets/twitter-x.svg"
 import API from '../../../api/anilist'
-import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
 async function Footer() {
 
@@ -82,6 +82,7 @@ async function Footer() {
                             <ul>
                                 <li><Link href="https://github.com/ErickLimaS/anime-website/tree/dev" target='_blank'>This Project</Link></li>
                                 <li><Link href="https://anilist.gitbook.io/anilist-apiv2-docs/" target='_blank'>AniList API</Link></li>
+                                <li><Link href="https://docs.consumet.org/" target='_blank'>Consumet API</Link></li>
                                 <li><Link href="https://preview.themeforest.net/item/vodi-video-wordpress-theme-for-movies-tv-shows/full_screen_preview/23738703" target='_blank'>Inspiration 1</Link></li>
                                 <li><Link href="https://dribbble.com/shots/20333170-The-Trailers-Concept-Site-Part-2" target='_blank'>Inspiration 2</Link></li>
                             </ul>

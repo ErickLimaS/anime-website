@@ -9,7 +9,7 @@ import ChevronDownIcon from '../../../public/assets/chevron-down.svg'
 import LoadingIcon from '../../../public/assets/ripple-1s-200px.svg'
 import Link from 'next/link'
 import API from '../../../api/anilist'
-import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import SearchResultItemCard from '@/app/components/SearchResultItemCard'
 
 function Header() {

@@ -1,4 +1,4 @@
-import { ApiMediaResults } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import React from 'react'
 import API from "@/api/anilist"
 import styles from "./page.module.css"
@@ -12,7 +12,7 @@ import EpisodesContainer from '@/app/components/EpisodesContainer'
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
-  console.log(mediaData)
+
   return {
     title: `${mediaData.title.romaji || mediaData.title.native} | AniProject`,
     description: mediaData.description || `See more info about ${mediaData.title.romaji || mediaData.title.native}`,
@@ -243,13 +243,13 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </section>
             )}
 
-            {/* EPISODES ONLY IF ANIME */}
-            {((mediaData.type == "ANIME") && (mediaData.streamingEpisodes != null)) && (
+            {/* EPISODES ONLY IF ANIME && (mediaData.streamingEpisodes.length > 0)*/}
+            {((mediaData.type == "ANIME") ) && (
               <section id={styles.episodes_container}>
 
                 <h2 className={styles.heading_style}>EPISODES {mediaData.streamingEpisodes[0] && (`ON ${mediaData.streamingEpisodes[0].site}`).toUpperCase()}</h2>
 
-                <EpisodesContainer data={mediaData.streamingEpisodes} />
+                <EpisodesContainer data={mediaData.streamingEpisodes} mediaTitle={mediaData.title.romaji} />
 
               </section>
             )}

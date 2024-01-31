@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import MediaListCoverInfo from '../MediaListCoverInfo'
 import NavButtons from '../NavButtons'
-import { ApiDefaultResult } from '@/app/ts/interfaces/apiDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import API from "@/api/anilist"
 
 type PropsTypes = {
