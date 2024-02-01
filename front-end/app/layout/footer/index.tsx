@@ -39,7 +39,7 @@ async function Footer() {
 
                 <span id={styles.span_border1}></span>
 
-                <div id={styles.nav_links_container} className='display_flex_row space_beetween'>
+                <div id={styles.nav_links_container}>
                     <div className={styles.list_container}>
                         <h5>Categories</h5>
 
@@ -76,7 +76,7 @@ async function Footer() {
 
                         <span id={styles.span_border2}></span>
 
-                        <div id={styles.div_custom_margin} className={styles.list_container}>
+                        <div id={styles.div_custom_margin}>
                             <h5>About</h5>
 
                             <ul>
