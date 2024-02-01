@@ -14,8 +14,10 @@ import SearchResultItemCard from '@/app/components/SearchResultItemCard'
 
 function Header() {
 
+    {/* WILL BE USED WHEN A BACK-END IS SET UP, AND NEW ROUTES CREATED*/ }
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
     const [isMobileSearchBarOpen, setIsMobileSearchBarOpen] = useState<boolean>(false)
+    {/* WILL BE USED WHEN A BACK-END IS SET UP, AND NEW ROUTES CREATED*/ }
     const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -25,7 +27,7 @@ function Header() {
     const [searchInput, setSearchInput] = useState<string>("")
 
     const id = useId()
-    
+
     async function searchValue(e: React.ChangeEvent<HTMLFormElement> | HTMLFormElement) {
 
         e.preventDefault()
@@ -61,7 +63,8 @@ function Header() {
                 <div id={styles.menu_and_logo_container} className='display_flex_row align_items_center gap_16px'>
                     <div id={styles.menu_container}>
 
-                        <button
+                        {/* WILL BE USED WHEN A BACK-END IS SET UP, AND NEW ROUTES CREATED*/}
+                        {/* <button
                             id={styles.btn_open_menu}
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             aria-controls={styles.menu_list}
@@ -69,9 +72,9 @@ function Header() {
                             className={styles.heading_btn}
                         >
                             <MenuList alt="Menu Icon" width={16} height={16} />
-                        </button>
+                        </button> */}
 
-                        <div id={styles.menu_list} aria-expanded={isMenuOpen}>
+                        {/* <div id={styles.menu_list} aria-expanded={isMenuOpen}>
 
                             <ul role='menu'>
                                 <li role='menuitem'>Animes</li>
@@ -81,7 +84,7 @@ function Header() {
 
                         </div>
 
-                        <div id={styles.menu_overlay} onClick={() => setIsMenuOpen(!isMenuOpen)} />
+                        <div id={styles.menu_overlay} onClick={() => setIsMenuOpen(!isMenuOpen)} /> */}
 
                     </div>
 
@@ -90,13 +93,14 @@ function Header() {
                     </Link>
                 </div>
 
-                <div id={styles.navbar_container} className={`align_items_center`}>
+                {/* WILL BE USED WHEN A BACK-END IS SET UP, AND NEW ROUTES CREATED*/}
+                {/* <div id={styles.navbar_container} className={`align_items_center`}>
                     <ul className='display_grid'>
                         <li className='display_flex_row align_items_center'>Animes <ChevronDownIcon alt="Open Animes List" width={16} height={16} /></li>
                         <li className='display_flex_row align_items_center'>Mangas <ChevronDownIcon alt="Open Mangas List" width={16} height={16} /></li>
                         <li className='display_flex_row align_items_center'>Movies <ChevronDownIcon alt="Open Movies List" width={16} height={16} /></li>
                     </ul>
-                </div>
+                </div> */}
 
                 <div id={styles.user_and_search_container} className='display_flex_row align_items_center gap_16px'>
 
@@ -160,7 +164,8 @@ function Header() {
                     )}
 
                     {/* USER -- RIGHT SIDE OF SCREEN */}
-                    <div id={styles.user_container}>
+                    {/* WILL BE USED WHEN A BACK-END IS SET UP, AND NEW ROUTES CREATED*/}
+                    {/* <div id={styles.user_container}>
 
                         <button
                             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -182,7 +187,7 @@ function Header() {
 
                         <div id={styles.user_menu_overlay} onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} />
 
-                    </div>
+                    </div> */}
 
                 </div>
             </div>
