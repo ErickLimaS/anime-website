@@ -7,7 +7,8 @@ import Image from 'next/image'
 import parse from "html-react-parser"
 import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 import ChevonRightSvg from "@/public/assets/chevron-right.svg"
-import EpisodesContainer from '@/app/components/EpisodesContainer'
+import EpisodesContainer from '@/app/components/AnimeEpisodesContainer'
+import MangaChaptersContainer from '@/app/components/MangaChaptersContainer'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -243,13 +244,24 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </section>
             )}
 
-            {/* EPISODES ONLY IF ANIME && (mediaData.streamingEpisodes.length > 0)*/}
-            {((mediaData.type == "ANIME") ) && (
+            {/* EPISODES ONLY IF ANIME */}
+            {((mediaData.type == "ANIME")) && (
               <section id={styles.episodes_container}>
 
                 <h2 className={styles.heading_style}>EPISODES</h2>
 
                 <EpisodesContainer data={mediaData.streamingEpisodes} mediaTitle={mediaData.title.romaji} />
+
+              </section>
+            )}
+
+            {/* CHAPTERS ONLY IF MANGA */}
+            {mediaData.type == "MANGA" && (
+              <section>
+
+                <h2 className={styles.heading_style}>CHAPTERS</h2>
+
+                <MangaChaptersContainer mangaTitle={mediaData.title.romaji} />
 
               </section>
             )}

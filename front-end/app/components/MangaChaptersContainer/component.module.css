@@ -1,0 +1,190 @@
+#container {
+
+    margin-top: 24px;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px 0;
+
+}
+
+@media(min-width: 1193px) {
+    #container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* SECTION HEADING */
+#container_heading {
+
+    margin: 32px 0;
+
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+
+    gap: 16px 0;
+
+}
+
+@media(min-width: 540px) {
+    #container_heading {
+
+        margin: 8px 0;
+
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+}
+
+#container_heading h3 {
+
+    font-size: var(--font-size--h5);
+    color: var(--white-75);
+
+}
+
+#container_heading #btn_other_sources {
+
+    border-radius: 4px;
+    padding: 8px;
+    background: transparent;
+    border: 2px solid var(--white-100);
+    color: var(--white-100);
+
+    gap: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#container_heading #btn_other_sources:hover {
+
+    border-color: var(--brand-color);
+    color: var(--brand-color);
+
+}
+
+#container_heading #btn_other_sources svg {
+    transform: scale(1.2);
+}
+
+/* CHAPTER ITEM RESULT */
+.chapter_container {
+
+    background: linear-gradient(to right, var(--brand-color), var(--white-25));
+
+    display: grid;
+    grid-template-columns: 10% 90%;
+    align-items: center;
+    justify-items: start;
+
+}
+
+.chapter_container .icon_container {
+
+    margin: auto;
+
+}
+
+.chapter_container .icon_container svg {
+    display: block;
+    transform: scale(1.5);
+    fill: var(--white-100);
+}
+
+@media(min-width: 560px) {
+    .chapter_container .icon_container svg {
+        transform: scale(1.8);
+    }
+}
+
+.chapter_container .info_container {
+
+    border-left: 2px solid var(--white-25);
+
+    padding: 8px 0;
+    padding-left: 16px;
+
+}
+
+.chapter_container .info_container h3 {
+
+    font-size: var(--font-size--p);
+    display: block;
+    color: var(--white-100);
+
+}
+
+.chapter_container .info_container p {
+
+    margin-top: 8px;
+
+    font-size: var(--font-size--small-1);
+
+    color: var(--white-75) !important;
+
+}
+
+/* PAGINATION BUTTONS */
+#pagination_buttons_container {
+
+    margin: 32px 0;
+
+}
+
+#pagination_buttons_container>div {
+
+    justify-content: center;
+
+}
+
+#pagination_buttons_container>div button {
+
+    transition: all ease-in-out 120ms;
+
+    border: 2px solid var(--white-50);
+    color: var(--white-75);
+    border-radius: 50%;
+
+    padding: 8px;
+
+}
+
+#pagination_buttons_container>div button:first-child,
+#pagination_buttons_container>div button:last-child {
+
+    padding: 8px;
+
+}
+
+#pagination_buttons_container>div button:first-child svg,
+#pagination_buttons_container>div button:last-child svg {
+
+    display: block;
+
+}
+
+#pagination_buttons_container>div button[data-active=true] {
+
+    background-color: var(--brand-color);
+    border-color: var(--brand-color);
+    color: var(--white-100);
+
+}
+
+#pagination_buttons_container>div button[data-active=false]:hover,
+#pagination_buttons_container>div button:hover {
+
+    border-color: var(--brand-color);
+
+}
+
+#pagination_buttons_container>div>button:disabled {
+
+    border-color: var(--white-50);
+    cursor: default;
+    opacity: 0.2;
+
+}
