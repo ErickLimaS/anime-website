@@ -94,7 +94,7 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
         ).map((item, key: number) => (
 
           <li key={key} >
-            <Link href={`/read?id=${item.id}`} className={styles.chapter_container} target='_blank'>
+            <Link href={`http://www.mangahere.cc/manga/${item.id}/1.html`} className={styles.chapter_container} target='_blank'>
               <div className={styles.icon_container}>
                 <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
               </div>

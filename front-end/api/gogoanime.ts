@@ -9,7 +9,7 @@ export default {
     // SEARCH ANIME AND MANGA BY QUERY
     searchMedia: async (query: string, type: string, page?: number) => {
 
-        const serverSelected = type == "ANIME" ? "gogoanime" : "mangahere"
+        const serverSelected = type == "anime" ? "gogoanime" : "mangahere"
 
         try {
 
@@ -32,7 +32,7 @@ export default {
     // GET ANIME AND MANGA INFO
     getInfoFromThisMedia: async (id: string | number, type: string) => {
 
-        const route = type == "ANIME" ? `gogoanime/info/${id}` : `mangahere/info?id=${id}`
+        const route = type == "anime" ? `gogoanime/info/${id}` : `mangahere/info?id=${id}`
 
         try {
 
@@ -75,7 +75,7 @@ export default {
 
         try {
             const { data } = await Axios({
-                url: `${CONSUMET_API_URL}/manga/mangahere/read?chapterId=${chapterId}}`,
+                url: `${CONSUMET_API_URL}/manga/mangahere/read?chapterId=${chapterId}`,
                 method: 'GET'
             })
 
@@ -83,7 +83,7 @@ export default {
         }
         catch (error) {
 
-            console.log(error)
+            return error
 
         }
 

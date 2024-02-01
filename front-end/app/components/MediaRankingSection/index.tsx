@@ -26,7 +26,6 @@ function MediaRankingSection(props: PropsTypes) {
 
     // request new type of media then set them
     const loadMedia: (parameter: string) => void = async (parameter: string) => {
-        // console.log(`Received parameter: ${parameter}`);
 
         const response = await API.getMediaForThisFormat(parameter).then(res => ((res as ApiDefaultResult[]).filter((item) => item.isAdult == false)))
 

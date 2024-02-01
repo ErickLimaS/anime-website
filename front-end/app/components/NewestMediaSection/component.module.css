@@ -25,6 +25,11 @@
     }
 }
 
+.title_navbar_container button{
+    height: auto;
+    width: auto;
+}
+
 .title_navbar_container>h3 {
 
     font-size: var(--font-size--h5);
