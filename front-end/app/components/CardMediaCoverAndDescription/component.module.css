@@ -1,0 +1,163 @@
+.midia_item_container {
+
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr;
+
+}
+
+@media(min-width: 580px) {
+    .midia_item_container {
+
+        width: 100%;
+
+        grid-template-columns: minmax(120px, 1fr) 3fr;
+
+    }
+}
+
+.midia_item_container:hover #img_container {
+
+    filter: brightness(85%);
+
+}
+
+.midia_item_container #img_container {
+
+    background-color: var(--white-25);
+
+    margin: auto;
+
+    position: relative;
+    top: 0;
+
+    aspect-ratio: 46 / 65;
+
+    width: 70%;
+    /* height: 70%; */
+
+    /*width: calc(90% + 1vw);
+    max-width: 100%;
+
+    height: calc(380px + 30vw);
+    max-height: 520px; */
+
+    transition: all ease-in-out 190ms;
+}
+
+@media(min-width: 580px) {
+    .midia_item_container #img_container {
+
+        margin: initial;
+
+        width: inherit;
+        /* height: calc(180px + 6vw);
+        max-height: 266px; */
+    }
+}
+
+.item_info_container {
+
+    margin: 24px auto;
+
+}
+
+@media(min-width: 580px) {
+    .item_info_container {
+
+        margin: auto;
+        margin-left: 48px;
+
+    }
+}
+
+.item_info_container>small {
+    display: block;
+    font-size: var(--font-size--small-2);
+
+    color: var(--white-75);
+}
+
+.item_info_container>h4 {
+    color: var(--white-100);
+
+    margin-bottom: 16px;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+
+}
+
+.item_info_container>p,
+.item_info_container span.paragrath_container {
+
+    color: var(--white-100);
+
+    font-size: var(--font-size--small-1);
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+}
+
+.item_info_container .buttons_container {
+
+    justify-content: center;
+
+    margin: 24px 0;
+
+    gap: 0 16px;
+
+}
+
+@media(min-width: 580px) {
+    .item_info_container .buttons_container {
+        justify-content: initial;
+    }
+}
+
+.buttons_container>* {
+
+    transition: all ease-in-out 190ms;
+
+    padding: 16px 16px;
+
+    font-size: var(--font-size--small-2);
+    font-weight: 600;
+
+    border: none;
+    border-radius: 4px;
+
+
+}
+
+.buttons_container>a {
+
+    background-color: var(--brand-color);
+    color: var(--white-100);
+
+}
+
+.buttons_container>a:hover {
+
+    filter: brightness(85%);
+
+}
+
+.buttons_container>button {
+
+    background-color: transparent;
+    color: var(--white-100);
+
+}
+
+.buttons_container>button:hover {
+
+    background-color: var(--white-100);
+    color: var(--black-100);
+
+}
