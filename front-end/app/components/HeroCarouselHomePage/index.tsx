@@ -1,129 +1,115 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import styles from "./carouselComponent.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
 import { ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { wrap } from 'popmotion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
 
-    useEffect(() => {
+    const [[page, direction], setPage] = useState([0, 0]);
 
-        scrollHeroSection()
-
-    }, [])
-
-    function scrollHeroSection() {
-
-        if (typeof window !== "undefined") {
-            let isDragging = false;
-
-            let startPosition = 0;
-            let currentTranslate = 0;
-
-            let currentListIndex = 1
-
-            const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-            let wasDraggedMoreThanOneThirdScreen = false
-
-            const carousel = document.getElementById(`carousel`) as HTMLElement;
-
-            if (carousel) {
-
-                carousel.addEventListener('mousedown', (e) => {
-                    isDragging = true;
-                    startPosition = e.clientX - currentTranslate;
-                });
-
-                carousel.addEventListener('mouseup', (e) => {
-                    isDragging = false;
-                    currentTranslate = vw - (vw * (currentListIndex + 1))
-                    const newPosition = e.clientX - (startPosition - currentTranslate)
-
-                    currentTranslate = newPosition - vw;
-
-                    if (wasDraggedMoreThanOneThirdScreen) {
-                        transitionBeetweenItens()
-                    }
-
-                });
-
-                carousel.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-
-                    const newPosition = currentListIndex > 1 ? (e.clientX - (vw * currentListIndex)) : (e.clientX - startPosition)
-
-                    currentTranslate = newPosition;
-
-                    if ((currentListIndex + 1) == data.length) return
-
-                    updateCarousel();
-
-                    if (currentTranslate + (vw * 1.25)) {
-                        wasDraggedMoreThanOneThirdScreen = true
-                    }
-
-                });
-            }
-
-            const updateCarousel = () => {
-                carousel.style.transform = `translateX(${currentTranslate}px)`;
-            }
-
-            const transitionBeetweenItens = () => {
-
-                carousel.style.transform = `translateX(${(vw - (vw * (currentListIndex + 1)))}px)`;
-                currentListIndex++
-                currentTranslate = 0
-                wasDraggedMoreThanOneThirdScreen = false
-
-            }
-
+    const variants = {
+        enter: (direction: number) => {
+            return {
+                x: direction > 0 ? 1000 : -1000,
+                opacity: 0
+            };
+        },
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1
+        },
+        exit: (direction: number) => {
+            return {
+                zIndex: 0,
+                x: direction < 0 ? 1000 : -1000,
+                opacity: 0
+            };
         }
+    };
+
+    const swipeConfidenceThreshold = 10000;
+    const swipePower = (offset: number, velocity: number) => {
+        return Math.abs(offset) * velocity;
+    };
+
+    const imageIndex = wrap(0, data.length, page);
+
+    const paginate = (newDirection: number) => {
+        setPage([page + newDirection, newDirection]);
+    };
+
+    const styledList = {
+        background: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.10)), url(${data[imageIndex]?.media.bannerImage})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat"
     }
 
     return (
         <>
-            <ul id="carousel" className={`${styles.carousel_container} display_flex_row`}>
+            {data != undefined && (
+                <ul id="carousel" className={`${styles.carousel_container} display_flex_row`}>
 
-                {data != undefined && (
-                    data.map((item: ApiTrendingMidiaResults, key: number) => (
-                        <li
-                            key={key}
+                    <AnimatePresence initial={false} custom={direction}>
+
+                        <motion.li
+                            key={page}
                             className={styles.carousel_item}
-                            style={{
-                                background: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.10)), url(${item.media.bannerImage})`,
-                                backgroundPosition: "center",
-                                backgroundSize: "cover",
-                                backgroundRepeat: "no-repeat"
-                            }}>
+                            style={styledList}
+                            custom={direction}
+                            variants={variants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                                x: { type: "spring", stiffness: 300, damping: 30 },
+                                opacity: { duration: 0.2 }
+                            }}
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={1}
+                            onDragEnd={(e, { offset, velocity }) => {
+                                const swipe = swipePower(offset.x, velocity.x);
+
+                                if (swipe < -swipeConfidenceThreshold) {
+                                    paginate(1);
+                                } else if (swipe > swipeConfidenceThreshold) {
+                                    paginate(-1);
+                                }
+                            }}
+                        >
                             <div className={styles.item_info}>
 
-                                <h2><Link href={`/media/${item.media.id}`}>{item.media.title.romaji}</Link></h2>
+                                <h2><Link href={`/media/${data[imageIndex]?.media.id}`}>{data[imageIndex]?.media.title.romaji}</Link></h2>
 
                                 <div className={`${styles.item_info_inside} display_flex_row`}>
 
-                                    {item.media.seasonYear != undefined && (
-                                        <p>{item.media.seasonYear.toString()}</p>
+                                    {data[imageIndex]?.media.seasonYear != undefined && (
+                                        <p>{data[imageIndex].media.seasonYear.toString()}</p>
                                     )}
-                                    {((item.media.genres != undefined) && (item.media.seasonYear != undefined)) && (
+                                    {((data[imageIndex]?.media.genres != undefined) && (data[imageIndex]?.media.seasonYear != undefined)) && (
                                         <span>|</span>
                                     )}
-                                    {item.media.genres != undefined && (
-                                        <p><Link href={`/genre/${item.media.genres[0].toLowerCase()}`}>{item.media.genres[0]}</Link></p>
+                                    {data[imageIndex]?.media.genres != undefined && (
+                                        <p><Link href={`/genre/${data[imageIndex]?.media.genres[0].toLowerCase()}`}>{data[imageIndex]?.media.genres[0]}</Link></p>
                                     )}
-                                    {((item.media.seasonYear != undefined) && (item.media.episodes != undefined)) && (
+                                    {((data[imageIndex]?.media.seasonYear != undefined) && (data[imageIndex]?.media.episodes != undefined)) && (
                                         <span>|</span>
                                     )}
-                                    {item.media.episodes != undefined && (
-                                        <p>{item.media.episodes.toString()} Episodes</p>
+                                    {data[imageIndex]?.media.episodes != undefined && (
+                                        <p>{data[imageIndex].media.episodes.toString()} Episodes</p>
                                     )}
 
                                 </div>
 
                                 <div className={styles.item_buttons}>
 
-                                    <Link href={`/media/${item.media.id}`}>WATCH NOW</Link>
+                                    <Link href={`/media/${data[imageIndex]?.media.id}`}>WATCH NOW</Link>
 
                                     <button>+ PLAYLIST</button>
 
@@ -131,11 +117,12 @@ function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
 
                             </div>
 
-                        </li>
-                    ))
-                )}
+                        </motion.li>
 
-            </ul>
+                    </AnimatePresence>
+
+                </ul >
+            )}
 
             <div id={styles.recomendations_container}>
 
@@ -146,7 +133,10 @@ function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
                         data.slice(0, 6).map((item: ApiTrendingMidiaResults, key: number) => (
                             item.media.bannerImage && (
                                 <li key={key}>
-                                    <Image src={item.media.bannerImage} alt={`Cover for ${item.media.title.romaji}`} fill />
+                                    <Link href={`/media/${item.media.id}`}>
+                                        <Image src={item.media.bannerImage} alt={`Cover for ${item.media.title.romaji}`} fill />
+                                    </Link>
+                                    <span>{item.media.title.romaji}</span>
                                 </li>
                             ))
                         )
