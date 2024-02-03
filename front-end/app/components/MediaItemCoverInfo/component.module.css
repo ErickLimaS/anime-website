@@ -5,6 +5,31 @@
     display: flex;
     flex-direction: column;
 
+    transition: all ease-in-out 100ms;
+
+}
+
+#midia_item_cover[data-loading=true] {
+
+    animation: loading 1800ms infinite;
+
+}
+
+@keyframes loading {
+
+    0% {
+        opacity: 0.5;
+
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+
 }
 
 #midia_item_cover:hover #img_container {

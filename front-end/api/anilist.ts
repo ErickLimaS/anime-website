@@ -1,3 +1,4 @@
+import { lastHourOfTheDay } from '@/app/lib/format_date_unix'
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Axios from 'axios'
 
@@ -773,20 +774,24 @@ export default {
     },
 
     // RELEASING BY DAYS RANGE
-    getReleasingByDaysRange: async (type: string, timestamp: number) => {
+    getReleasingByDaysRange: async (type: string, timestamp: number, pageNumber?: number) => {
 
         try {
 
             const graphqlQuery = {
-                "query": mediaAiringApiQueryRequest(', $airingAt_greater: Int, $episode_in: [Int]', ', airingAt_greater: $airingAt_greater, episode_in: $episode_in'),
+                "query": mediaAiringApiQueryRequest(
+                    `, $airingAt_greater: Int, $airingAt_lesser: Int, $episode_in: [Int]`,
+                    `, airingAt_greater: $airingAt_greater, airingAt_lesser: $airingAt_lesser, episode_in: $episode_in`
+                ),
                 "variables": {
-                    'page': 1,
-                    'perPage': 16,
+                    'page': pageNumber || 1,
+                    'perPage': 8,
                     'type': type,
                     'sort': 'TIME',
                     "episode_in": 1,
                     'showAdultContent': false,
-                    'airingAt_greater': timestamp
+                    'airingAt_greater': timestamp,
+                    'airingAt_lesser': lastHourOfTheDay(1)
                 }
             }
 

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
-function MediaItemCoverInfo({ positionIndex, data, darkMode }: { data: ApiDefaultResult, positionIndex?: number, darkMode?: boolean }) {
+function MediaItemCoverInfo({ positionIndex, data, darkMode, loading }: { data: ApiDefaultResult, positionIndex?: number, darkMode?: boolean, loading?: boolean }) {
 
     return (
 
@@ -12,6 +12,7 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode }: { data: ApiDefaul
             id={styles.midia_item_cover}
             className={`${styles.midia_item_container} ${darkMode ? styles.darkMode : ''}`}
             style={{ gridArea: `item${positionIndex}` }}
+            data-loading={loading || false}
         >
             <Link id={styles.img_container} href={`/media/${data.id}`}>
                 <Image src={data.coverImage && data.coverImage.large} alt={`Cover Art for ${data.title && data.title.romaji || "dsa"}`} fill></Image>
