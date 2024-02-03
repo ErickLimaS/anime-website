@@ -148,7 +148,7 @@
     #nav_title_buttons_container>h3 {
 
         padding-top: 20px;
-        border-top: 1px solid var(--black-25);
+        border-top: 1px solid var(--black-05);
 
     }
 }
@@ -188,7 +188,13 @@
 
 }
 
-#nav_title_buttons_container #buttons_container button:hover {
+#nav_title_buttons_container #buttons_container button:disabled {
+    cursor: default;
+    opacity: 0.5;
+
+}
+
+#nav_title_buttons_container #buttons_container button:not(:disabled):hover {
 
     border-color: var(--black-50);
 
@@ -200,7 +206,7 @@
 
 }
 
-#nav_title_buttons_container #buttons_container button:hover svg {
+#nav_title_buttons_container #buttons_container button:not(:disabled):hover svg {
 
     fill: var(--black-50);
 
