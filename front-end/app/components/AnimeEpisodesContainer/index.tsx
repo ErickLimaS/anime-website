@@ -17,7 +17,7 @@ type EpisodesType = {
   title: string,
 }
 
-function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string }) {
+function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, mediaId: number }) {
 
   const { data } = props
 
@@ -148,7 +148,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string }) 
 
             {isFromOtherSource == true ? (
               <>
-                <Link href={item.url} className={styles.img_container} target='_blank'>
+                <Link href={`/watch/${props.mediaId}?q=${(item as MediaEpisodes).id}`} className={styles.img_container} target='_blank'>
                   <Image
                     src={placeholderImg}
                     data-other-source={true}
@@ -161,7 +161,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string }) 
 
                 <div>
                   <h3>
-                    <Link href={item.url} target='_blank'>
+                    <Link href={`/watch/${props.mediaId}?q=${(item as MediaEpisodes).id}`} target='_blank'>
                       {`Episode ${(item as MediaEpisodes).number}`}
                     </Link>
                   </h3>
@@ -193,7 +193,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string }) 
         ))}
 
       </ol>
-      
+
       {episodesDataFetched.length == 0 && (
         <p>No episodes available.</p>
       )}

@@ -132,19 +132,21 @@ function Header() {
                         </div>
 
                         {/* MOBILE */}
-                        <div id={styles.form_mobile_search} aria-expanded={isMobileSearchBarOpen} className='display_align_justify_center'>
+                        {isMobileSearchBarOpen && (
+                            <div id={styles.form_mobile_search} aria-expanded={isMobileSearchBarOpen} className='display_align_justify_center'>
 
-                            <form onSubmit={(e) => searchValue(e as HTMLFormElement | ChangeEvent<HTMLFormElement>)} className={`${styles.search_form} display_flex_row`}>
-                                <input type="text" placeholder='Search...' name='searchField' disabled={isLoading} onChange={(e) => setSearchInput(e.target.value)}></input>
-                                <button type='submit' disabled={isLoading}>
-                                    {isLoading ?
-                                        (<LoadingIcon alt="Loading Icon" width={16} height={16} />) :
-                                        (<SearchIcon alt="Search Icon" width={16} height={16} />)
-                                    }
-                                </button>
-                            </form>
+                                <form onSubmit={(e) => searchValue(e as HTMLFormElement | ChangeEvent<HTMLFormElement>)} className={`${styles.search_form} display_flex_row`}>
+                                    <input type="text" placeholder='Search...' name='searchField' disabled={isLoading} onChange={(e) => setSearchInput(e.target.value)}></input>
+                                    <button type='submit' disabled={isLoading}>
+                                        {isLoading ?
+                                            (<LoadingIcon alt="Loading Icon" width={16} height={16} />) :
+                                            (<SearchIcon alt="Search Icon" width={16} height={16} />)
+                                        }
+                                    </button>
+                                </form>
 
-                        </div>
+                            </div>
+                        )}
 
                     </div>
 

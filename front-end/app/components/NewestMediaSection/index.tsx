@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import styles from "./component.module.css"
 import MediaListCoverInfo from '../MediaListCoverInfo'
 import CardMediaCoverAndDescription from '../CardMediaCoverAndDescription'
@@ -10,14 +10,15 @@ import { convertToUnix } from '@/app/lib/format_date_unix'
 
 type PropsTypes = {
 
-    data: void | ApiDefaultResult[],
+    data: ApiDefaultResult[],
     currentQueryValue?: string
 
 }
 
 function NewestMediaSection(props: PropsTypes) {
 
-    const [mediaList, setMediaList] = useState<ApiAiringMidiaResults[] | ApiDefaultResult[] | null>(null)
+    const [mediaList, setMediaList] = useState<ApiAiringMidiaResults[] | ApiDefaultResult[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     let { data } = props
     let currentQueryValue = 1 //stands for 1 day (today)
@@ -28,12 +29,14 @@ function NewestMediaSection(props: PropsTypes) {
 
         getMidiaByDaysRange(parameter)
 
-        currentQueryValue = parameter
-
     }
 
     // gets the range of days than parse it to unix, runs function to get any media releasing in the selected range
     async function getMidiaByDaysRange(days: number) {
+
+        currentQueryValue = days
+
+        setIsLoading(true)
 
         let response: ApiAiringMidiaResults[] | void
 
@@ -45,8 +48,20 @@ function NewestMediaSection(props: PropsTypes) {
         ) as ApiAiringMidiaResults[]
 
         setMediaList(response)
+        
+        setIsLoading(false)
 
     }
+
+    useEffect(() => {
+        if (data[0] == null || data[0] == undefined) {
+            getMidiaByDaysRange(7)
+        }
+        else {
+            setMediaList(data)
+            setIsLoading(false)
+        }
+    }, [currentQueryValue])
 
     return (
         <div id={styles.newest_conteiner}>
@@ -65,19 +80,25 @@ function NewestMediaSection(props: PropsTypes) {
             </div>
 
             <ul>
-                <li>
-                    <CardMediaCoverAndDescription data={mediaList ? (mediaList as ApiDefaultResult[])[0] : (data as ApiDefaultResult[])[0]} />
-                </li>
+                {!isLoading && (
+                    <>
+                        <li>
+                            {(mediaList[0] != undefined) ? (
+                                <CardMediaCoverAndDescription data={(mediaList as ApiDefaultResult[])[0]} />
+                            ) : (
+                                <>No results for today</>
+                            )}
+                        </li>
 
-                {((mediaList || data) as ApiDefaultResult[]).slice(1, 11).map((item: any, key: number) => (
-                    <MediaListCoverInfo key={key} positionIndex={key + 1} data={item} showCoverArt={true} alternativeBorder={true} />
-                ))}
-
+                        {(mediaList as ApiDefaultResult[]).slice(1, 11).map((item, key: number) => (
+                            <MediaListCoverInfo key={key} positionIndex={key + 1} data={item} showCoverArt={true} alternativeBorder={true} />
+                        ))}
+                    </>
+                )}
             </ul>
 
         </div>
     )
-
 }
 
 export default NewestMediaSection

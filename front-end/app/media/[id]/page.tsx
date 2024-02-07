@@ -250,7 +250,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2 className={styles.heading_style}>EPISODES</h2>
 
-                <EpisodesContainer data={mediaData.streamingEpisodes} mediaTitle={mediaData.title.romaji} />
+                <EpisodesContainer
+                  data={mediaData.streamingEpisodes}
+                  mediaTitle={mediaData.title.romaji}
+                  mediaId={mediaData.id}
+                />
 
               </section>
             )}

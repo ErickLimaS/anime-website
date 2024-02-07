@@ -80,7 +80,7 @@ async function Footer() {
                             <h5>About</h5>
 
                             <ul>
-                                <li><Link href="https://github.com/ErickLimaS/anime-website/tree/dev" target='_blank'>This Project</Link></li>
+                                <li><Link href="https://github.com/ErickLimaS/anime-website/" target='_blank'>This Project</Link></li>
                                 <li><Link href="https://anilist.gitbook.io/anilist-apiv2-docs/" target='_blank'>AniList API</Link></li>
                                 <li><Link href="https://docs.consumet.org/" target='_blank'>Consumet API</Link></li>
                                 <li><Link href="https://preview.themeforest.net/item/vodi-video-wordpress-theme-for-movies-tv-shows/full_screen_preview/23738703" target='_blank'>Inspiration 1</Link></li>

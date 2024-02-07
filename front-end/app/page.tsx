@@ -109,7 +109,7 @@ export default async function Home() {
                 <h3><Link href={`/media/${mediaBannerData[randomNumber].id}`}>{mediaBannerData[randomNumber].title.romaji}</Link></h3>
               )}
 
-              {mediaBannerData[randomNumber].description && (
+              {mediaBannerData[randomNumber]?.description && (
                 <span>{parse(mediaBannerData[randomNumber].description)}</span>
               )}
 

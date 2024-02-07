@@ -5,8 +5,7 @@ import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import parse from "html-react-parser"
 
-function CardMediaCoverAndDescription({ data }: { data: ApiDefaultResult }) {
-
+function CardMediaCoverAndDescription({ data, showButtons }: { data: ApiDefaultResult, showButtons?: boolean }) {
     return (
 
         <div
@@ -27,15 +26,16 @@ function CardMediaCoverAndDescription({ data }: { data: ApiDefaultResult }) {
                 {data.description && (
                     <span className={styles.paragrath_container}>{parse(data.description)}</span>
                 )}
-               
 
-                <div className={`display_flex_row ${styles.buttons_container}`}>
+                {showButtons == undefined && (
+                    <div className={`display_flex_row ${styles.buttons_container}`}>
 
-                    <Link href={`/media/${data.id}`}>WATCH NOW</Link>
+                        <Link href={`/media/${data.id}`}>WATCH NOW</Link>
 
-                    <button>+ PLAYLIST</button>
+                        <button>+ PLAYLIST</button>
 
-                </div>
+                    </div>
+                )}
 
             </div>
 
