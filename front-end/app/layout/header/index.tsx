@@ -60,7 +60,7 @@ function Header() {
 
             <div id={styles.container} className='display_flex_row padding_16px'>
 
-                <div id={styles.menu_and_logo_container} className='display_flex_row align_items_center gap_16px'>
+                <div id={styles.menu_and_logo_container} className='display_flex_row align_items_center'>
                     <div id={styles.menu_container}>
 
                         {/* WILL BE USED WHEN A BACK-END IS SET UP, AND NEW ROUTES CREATED*/}

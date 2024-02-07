@@ -77,9 +77,11 @@ footer#footer {
 
 #info_container #social_links_container a#img_container {
 
+    max-width: fit-content;
+
     position: relative;
     top: 0;
-    aspect-ratio: 500 /131;
+    aspect-ratio: 1117/393;
     height: 32px;
 
 }
