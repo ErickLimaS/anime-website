@@ -88,8 +88,8 @@ function Header() {
 
                     </div>
 
-                    <Link href="/">
-                        <Image id={styles.logo} src={'/logo.png'} alt='AniProject Website Logo' width={120} height={40} />
+                    <Link href="/" id={styles.img_container}>
+                        <Image id={styles.logo} src={'/logo.png'} alt='AniProject Website Logo' fill />
                     </Link>
                 </div>
 

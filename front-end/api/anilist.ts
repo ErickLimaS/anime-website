@@ -667,7 +667,7 @@ export default {
     // HOME PAGE
     getNewReleases: async (type: string, format?: string) => {
 
-        const season: String = getCurrentSeason()
+        const season: string = getCurrentSeason()
 
         try {
 
@@ -677,8 +677,7 @@ export default {
                     'type': `${type}`,
                     'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                     'page': 1,
-                    'status': 'RELEASING',
-                    'sort': 'TRENDING_DESC',
+                    'sort': 'POPULARITY_DESC',
                     'perPage': 20,
                     'season': `${season}`,
                     'seasonYear': `${new Date().getFullYear()}`,
@@ -693,7 +692,7 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.media as ApiDefaultResult
+            return data.data.Page.media as ApiDefaultResult[]
 
         }
         catch (error) {

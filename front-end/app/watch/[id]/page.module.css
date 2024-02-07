@@ -89,12 +89,30 @@
 
 #media_info_container>h1 {
 
+    display: flex;
+    flex-wrap: wrap;
+
     margin-bottom: 24px;
 
     font-size: var(--font-size--h4);
     font-weight: 400;
 
     color: var(--brand-color);
+    white-space: break-spaces;
+    
+}
+
+#media_info_container>h1>span:first-child {
+    color: var(--white-50);
+    white-space: break-spaces;
+}
+
+#media_info_container>h1>span:last-child {
+
+    display: block;
+    white-space: break-spaces;
+    color: var(--white-50);
+    font-size: var(--font-size--p);
 
 }
 

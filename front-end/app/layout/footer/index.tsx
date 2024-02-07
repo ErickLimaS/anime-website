@@ -20,8 +20,8 @@ async function Footer() {
 
                 <div id={styles.social_links_container} className='display_flex_row'>
 
-                    <Link href="/">
-                        <Image src='/logo.png' alt="Aniproject Site Logo" width={140} height={40}></Image>
+                    <Link id={styles.img_container} href="/">
+                        <Image src='/logo.png' alt="Aniproject Site Logo" fill></Image>
                     </Link>
 
                     <div id={styles.social_media_container}>
@@ -63,7 +63,7 @@ async function Footer() {
 
                         <ul className={`${styles.grid_template} display_grid`}>
                             {data != undefined && (
-                                data.slice(0, 10).map((item: ApiDefaultResult, key: number) => (
+                                data.slice(0, 10).map((item, key: number) => (
                                     <li key={key}><Link href={`/media/${item.id}`}>{item.title.romaji}</Link></li>
                                 )))
                             }

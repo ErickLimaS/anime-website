@@ -26,8 +26,8 @@ export default async function Home() {
   )
 
   // section 2
-  const trendingData = await API.getTrendingMedia("ANIME", "TRENDING_DESC").then(
-    res => (res as ApiTrendingMidiaResults[]).filter((item) => item.media.isAdult == false)
+  const trendingData = await API.getNewReleases("ANIME").then(
+    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
   )
 
   // section 3
@@ -74,7 +74,7 @@ export default async function Home() {
 
         {trendingData != undefined &&
           (trendingData.slice(0, 12).map((item, key: number) => (
-            <MediaItemCoverInfo data={item.media} key={key} positionIndex={key + 1} darkMode={true} />
+            <MediaItemCoverInfo data={item} key={key} positionIndex={key + 1} darkMode={true} />
           )))
         }
 

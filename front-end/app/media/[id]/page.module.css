@@ -104,6 +104,21 @@
     font-size: var(--font-size--small-1);
 }
 
+#media_title_container #genres_and_type_container {
+    white-space: break-spaces;
+    flex-wrap: wrap;
+}
+
+#media_title_container #genres_and_type_container span{
+
+    margin-left: 16px;
+
+    color: var(--white-75);
+
+    font-weight: 500;
+
+}
+
 /* INFO LIST */
 #info_list_container {
     margin-top: 16px;

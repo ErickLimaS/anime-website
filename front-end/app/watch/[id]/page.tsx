@@ -29,7 +29,6 @@ async function WatchEpisode({ params, searchParams }: {
 
     const episodeData = await gogoanime.getLinksForThisEpisode(searchParams.q) as EpisodeLinks
 
-    console.log(episodeData)
     return (
         <main id={styles.container}>
 
@@ -50,8 +49,11 @@ async function WatchEpisode({ params, searchParams }: {
 
             <div id={styles.media_info_container}>
 
-                <h1>
-                    {searchParams?.q.replace(/-/g, ' ').split(" ").map((item) => item[0].toUpperCase() + item.slice(1)).join(" ")}
+                {/* SHOWS EPISODE ID SLICED FROM "EPISODE" WORD, AND ADD MEDIA NAME*/}
+                <h1 className='display_flex_row align_items_center'>
+                    {searchParams?.q.replace(/-/g, ' ').split(" ").map((item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/))}
+                    <span>{" "}-{" "}</span>
+                    <span>{mediaData.title.romaji || mediaData.title.native}</span>
                 </h1>
 
                 <div className={styles.grid}>

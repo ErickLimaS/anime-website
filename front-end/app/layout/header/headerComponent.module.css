@@ -5,9 +5,8 @@ header#background {
 }
 
 header#background a {
+
     display: block;
-
-
 
 }
 
@@ -54,6 +53,16 @@ header>div#container {
     header>div#container {
         width: var(--breakpoint-xxl);
     }
+}
+
+#menu_and_logo_container>a {
+
+    position: relative;
+    top: 0;
+    aspect-ratio: 500 /131;
+    width: 100%;
+    height: 32px;
+
 }
 
 /* BUTTON */
@@ -534,7 +543,7 @@ header#background button svg {
 
 }
 
-#navbar_container>ul>li >svg{
+#navbar_container>ul>li>svg {
 
     margin-left: 4px;
 

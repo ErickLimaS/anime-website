@@ -10,10 +10,11 @@ function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId
 
     const [mediaData, setMediaData] = useState<MediaInfo>()
     const [episodesList, setEpisodesList] = useState<MediaEpisodes[]>()
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     async function loadData() {
 
+        setIsLoading(true)
         const query = mediaTitle.replace(/[^a-z]+/i, ' ').split(" ").join("-").toLowerCase()
 
         let response = await gogoanime.getInfoFromThisMedia(query, "anime") as MediaInfo
@@ -27,26 +28,31 @@ function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId
         setMediaData(response)
         setEpisodesList(response.episodes)
 
+        setIsLoading(false)
+
     }
 
     useEffect(() => {
 
-        setIsLoading(true)
         loadData()
-        setIsLoading(false)
 
     }, [mediaTitle])
-
-    if (isLoading) {
-        return <p>sa</p>
-    }
 
     return (
         <div id={styles.episodes_list_container}>
 
             <h3>EPISODES</h3>
 
-            <ol id={styles.list_container}>
+            <ol id={styles.list_container} data-loading={isLoading}>
+
+                {isLoading && (
+                    <>
+                        <li className={styles.item_placeholder}></li>
+                        <li className={styles.item_placeholder}></li>
+                        <li className={styles.item_placeholder}></li>
+                        <li className={styles.item_placeholder}></li>
+                    </>
+                )}
                 {isLoading == false && (
 
                     episodesList?.map((item, key: number) => (
