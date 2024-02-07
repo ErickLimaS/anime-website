@@ -1,4 +1,4 @@
-import { MangaInfo, MangaPages, MangaSearchResult, MediaInfo, MediaSearchResult } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import { EpisodeLinks, MangaInfo, MangaPages, MangaSearchResult, MediaInfo, MediaSearchResult } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
 import Axios from "axios"
 
 const CONSUMET_API_URL = process.env.NEXT_PUBLIC_CONSUMET_API_URL
@@ -88,4 +88,23 @@ export default {
         }
 
     },
+
+    // GET LINKS FOR THIS EPISODE
+    getLinksForThisEpisode: async (episodeId: string) => {
+
+        try {
+            const { data } = await Axios({
+                url: `${CONSUMET_API_URL}/meta/anilist/watch/${episodeId}`,
+                method: 'GET'
+            })
+
+            return data as EpisodeLinks[];
+        }
+        catch (error) {
+
+            return error
+
+        }
+
+    }
 }

@@ -36,7 +36,7 @@ Back-End (planning):
 - Still Planning...
 
 
-## :heavy_check_mark: How Can I Run It? 
+## :computer: How Can I Run It? 
 
 Its simple!
 
@@ -45,12 +45,17 @@ Its simple!
   git clone https://github.com/ErickLimaS/anime-website.git
   ```
    
-3. From the ``front-end directory``, run ``npm install`` on your CMD to get all dependencies
+2. From the ``front-end directory``, run ``npm install`` on your CMD to get all dependencies
   ```javascript
   npm install
   ```
+3. Now you need to create a ``.env.local`` file inside the ``front-end directory`` with the url to where your Consumet API server is setted. You can do it by going in the <a href='https://github.com/consumet/api.consumet.org'>repository of Consumet API</a>.
+In this project, it is hosted on render.com. Your file should look like example:
+  ```javascript
+  NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api.com
+  ```
 
-3. From ``front-end directory``, run ``npm run dev`` to initialize the website
+4. From ``front-end directory``, run ``npm run dev`` to initialize the website
   ```javascript
   npm run dev
   ```

@@ -3,7 +3,8 @@
     width: 100%;
 
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(110px, 1fr) 3fr;
+    gap: 16px;
 
 }
 
@@ -11,8 +12,7 @@
     .midia_item_container {
 
         width: 100%;
-
-        grid-template-columns: minmax(120px, 1fr) 3fr;
+        gap: 0;
 
     }
 }
@@ -34,14 +34,7 @@
 
     aspect-ratio: 46 / 65;
 
-    width: 70%;
-    /* height: 70%; */
-
-    /*width: calc(90% + 1vw);
-    max-width: 100%;
-
-    height: calc(380px + 30vw);
-    max-height: 520px; */
+    width: 100%;
 
     transition: all ease-in-out 190ms;
 }
@@ -52,8 +45,6 @@
         margin: initial;
 
         width: inherit;
-        /* height: calc(180px + 6vw);
-        max-height: 266px; */
     }
 }
 

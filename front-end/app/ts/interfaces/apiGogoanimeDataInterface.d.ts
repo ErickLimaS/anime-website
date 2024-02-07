@@ -60,7 +60,7 @@ export interface MangaChapters {
     id: string,
     title: string,
     releasedDate: string
-    
+
 }
 
 export interface MangaPages {
@@ -71,4 +71,20 @@ export interface MangaPages {
         Referer: string
     }
 
+}
+
+export interface EpisodeLinks {
+
+    headers: {
+        Referer: string,
+    },
+    sources: Episode[],
+    download: string
+    
+}
+
+export interface Episode {
+    url: string,
+    isM3U8: boolean,
+    quality: string
 }
