@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default async function Home() {
 
   // section 1
-  const popularData = await API.getTrendingMedia("ANIME", "DATE_DESC").then(
+  const popularData = await API.getTrendingMedia("DATE_DESC").then(
     res => (res as ApiTrendingMidiaResults[]).filter((item) => item.media.bannerImage)
   )
 
