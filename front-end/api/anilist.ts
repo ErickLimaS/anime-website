@@ -813,7 +813,7 @@ export default {
     },
 
     // TRENDING
-    getTrendingMedia: async (type?: string, sort?: string) => {
+    getTrendingMedia: async (sort?: string) => {
 
         try {
 
@@ -827,8 +827,7 @@ export default {
                     'perPage': 20,
                     'showAdultContent': false,
                     'season': getCurrentSeason(),
-                    'year': thisYear,
-                    'type': type
+                    'year': thisYear
                 }
             }
 
@@ -851,7 +850,7 @@ export default {
     },
 
     // MEDIAS IN THIS FORMAT    
-    getMediaForThisFormat: async (format: string, sort?: string) => {
+    getMediaForThisFormat: async (type: string, sort?: string) => {
 
         try {
 
@@ -862,7 +861,7 @@ export default {
                     'sort': sort || 'TRENDING_DESC',
                     'perPage': 20,
                     'showAdultContent': false,
-                    'type': format
+                    'type': type
                 }
             }
 
