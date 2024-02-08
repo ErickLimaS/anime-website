@@ -48,6 +48,29 @@
 
 }
 
+#list_container[data-loading=true] li.item_placeholder {
+
+    height: 70px;
+    width: 100%;
+
+    animation: loading-pulse infinite 1700ms;
+
+}
+
+@keyframes loading-pulse {
+    0% {
+        background: var(--white-75);
+    }
+
+    50% {
+        background: var(--white-50);
+    }
+
+    100% {
+        background: var(--white-75);
+    }
+}
+
 #list_container::-webkit-scrollbar {
     width: 8px;
 }

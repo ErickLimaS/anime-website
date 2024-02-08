@@ -113,15 +113,20 @@ async function MediaPage({ params }: { params: { id: number } }) {
             <h1>{mediaData.title.native}</h1>
           )}
 
-          {mediaData.genres && (
-            <ul className='display_flex_row'>
-              {mediaData.genres.slice(0, 3).map((item, key: number) => (
-                <li key={key}>
-                  <Link href={item.toLowerCase()}>{item}</Link>
-                </li>
-              ))}
-            </ul>
-          )}
+          <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>
+            {mediaData.genres && (
+              <ul className='display_flex_row'>
+                {mediaData.genres.slice(0, 3).map((item, key: number) => (
+                  <li key={key}>
+                    <Link href={item.toLowerCase()}>{item}</Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {mediaData.type && (
+              <span>{mediaData.type.toUpperCase()}</span>
+            )}
+          </div>
 
         </section>
 

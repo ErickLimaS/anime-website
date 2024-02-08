@@ -667,7 +667,7 @@ export default {
     // HOME PAGE
     getNewReleases: async (type: string, format?: string) => {
 
-        const season: String = getCurrentSeason()
+        const season: string = getCurrentSeason()
 
         try {
 
@@ -677,8 +677,7 @@ export default {
                     'type': `${type}`,
                     'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
                     'page': 1,
-                    'status': 'RELEASING',
-                    'sort': 'TRENDING_DESC',
+                    'sort': 'POPULARITY_DESC',
                     'perPage': 20,
                     'season': `${season}`,
                     'seasonYear': `${new Date().getFullYear()}`,
@@ -693,7 +692,7 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.media as ApiDefaultResult
+            return data.data.Page.media as ApiDefaultResult[]
 
         }
         catch (error) {
@@ -814,7 +813,7 @@ export default {
     },
 
     // TRENDING
-    getTrendingMedia: async (type?: string, sort?: string) => {
+    getTrendingMedia: async (sort?: string) => {
 
         try {
 
@@ -828,8 +827,7 @@ export default {
                     'perPage': 20,
                     'showAdultContent': false,
                     'season': getCurrentSeason(),
-                    'year': thisYear,
-                    'type': type
+                    'year': thisYear
                 }
             }
 
@@ -852,7 +850,7 @@ export default {
     },
 
     // MEDIAS IN THIS FORMAT    
-    getMediaForThisFormat: async (format: string, sort?: string) => {
+    getMediaForThisFormat: async (type: string, sort?: string) => {
 
         try {
 
@@ -863,7 +861,7 @@ export default {
                     'sort': sort || 'TRENDING_DESC',
                     'perPage': 20,
                     'showAdultContent': false,
-                    'type': format
+                    'type': type
                 }
             }
 
