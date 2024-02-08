@@ -14,9 +14,11 @@ export async function generateMetadata({ params, searchParams }: {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
 
+    const episodeNumber = searchParams?.q.replace(/-/g, ' ').split(" ").map((item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/))
+
     return {
-        title: `Watching ${mediaData.title.romaji} | AniProject`,
-        description: `Watch ${mediaData.title.romaji}. ${mediaData.description && mediaData.description}}`,
+        title: `Watching ${episodeNumber} - ${mediaData.title.romaji} | AniProject`,
+        description: `Watch ${mediaData.title.romaji} ${episodeNumber}. ${mediaData.description && mediaData.description}}`,
     }
 }
 

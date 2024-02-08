@@ -4,27 +4,18 @@ import styles from "./component.module.css"
 import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
 import Link from 'next/link'
 import anilist from '@/api/anilist'
-import { ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 
 function AnimeNavListHover() {
 
-    const [animeData, setAnimeData] = useState<ApiTrendingMidiaResults[] | ApiDefaultResult[]>()
+    const [animeData, setAnimeData] = useState<ApiDefaultResult[]>()
 
     const loadData = async () => {
-        let data
 
-        data = await anilist.getTrendingMedia("TRENDING_DESC").then(
-            (res: any) => res.map((item: ApiTrendingMidiaResults) => item.media)
-        )
+        const data = await anilist.getMediaForThisFormat("ANIME") as ApiDefaultResult[]
 
-        if (data == null) {
-            data = await anilist.getMediaForThisFormat("ANIME") as ApiDefaultResult[]
-        }
-
-        setAnimeData(data.filter(
-            (item: ApiDefaultResult) => item.trailer.id
-        ))
+        setAnimeData(data)
 
     }
 
@@ -39,7 +30,7 @@ function AnimeNavListHover() {
                     <h5>Anime of the Day</h5>
 
                     {animeData ? (
-                        <CardMediaCoverAndDescription data={(animeData[0] as ApiTrendingMidiaResults).media || (animeData[0] as ApiDefaultResult)} />
+                        <CardMediaCoverAndDescription data={animeData[0]} />
                     ) : (
                         <LoadingSvg />
                     )}
@@ -65,10 +56,10 @@ function AnimeNavListHover() {
                 <div>
                     <h5>Anime Trailer You May Like</h5>
 
-                    {animeData ? (
+                    {animeData && (animeData[animeData.length - 1] as ApiDefaultResult)?.trailer?.id ? (
                         <iframe
                             className="yt_embed_video"
-                            src={`https://www.youtube.com/embed/${(animeData[animeData.length - 1] as ApiDefaultResult).trailer.id} `
+                            src={`https://www.youtube.com/embed/${animeData[animeData.length - 1].trailer.id} `
                             }
                             frameBorder={0}
                             allow="accelerometer; autoplay; encrypted-media; gyroscope;"
