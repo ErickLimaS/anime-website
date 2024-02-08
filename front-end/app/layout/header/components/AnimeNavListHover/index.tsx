@@ -14,18 +14,22 @@ function AnimeNavListHover() {
     const loadData = async () => {
         let data
 
-        data = await anilist.getTrendingMedia("TRENDING_DESC") as ApiTrendingMidiaResults[]
+        data = await anilist.getTrendingMedia("TRENDING_DESC").then(
+            (res: any) => res.map((item: ApiTrendingMidiaResults) => item.media)
+        )
 
-        if (!data) {
+        if (data == null) {
             data = await anilist.getMediaForThisFormat("ANIME") as ApiDefaultResult[]
         }
 
-        setAnimeData(data)
+        setAnimeData(data.filter(
+            (item: ApiDefaultResult) => item.trailer.id
+        ))
 
     }
 
     useLayoutEffect(() => {
-        animeData == null && loadData()
+        loadData()
     }, [])
 
     return (
@@ -64,7 +68,8 @@ function AnimeNavListHover() {
                     {animeData ? (
                         <iframe
                             className="yt_embed_video"
-                            src={`https://www.youtube.com/embed/${(animeData[animeData.length - 1] as ApiTrendingMidiaResults).media.trailer.id || (animeData[0] as ApiDefaultResult).trailer.id} `}
+                            src={`https://www.youtube.com/embed/${(animeData[animeData.length - 1] as ApiDefaultResult).trailer.id} `
+                            }
                             frameBorder={0}
                             allow="accelerometer; autoplay; encrypted-media; gyroscope;"
                             allowFullScreen>
