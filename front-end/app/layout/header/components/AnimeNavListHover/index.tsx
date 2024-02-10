@@ -62,6 +62,7 @@ function AnimeNavListHover() {
                             src={`https://www.youtube.com/embed/${animeData[animeData.length - 1].trailer.id} `
                             }
                             frameBorder={0}
+                            title={animeData[animeData.length - 1].title.romaji + " Trailer"}
                             allow="accelerometer; autoplay; encrypted-media; gyroscope;"
                             allowFullScreen>
                         </iframe>

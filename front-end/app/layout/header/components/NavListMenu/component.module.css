@@ -54,8 +54,10 @@ header#background #menu_container button#btn_open_menu {
 
 #menu_container>#menu_list h5 {
 
+    transition: all ease-in-out 100ms;
+
     font-size: var(--font-size--p);
-    font-weight: 500;
+    font-weight: 600;
 
     justify-content: space-between;
 
@@ -73,7 +75,8 @@ header#background #menu_container button#btn_open_menu {
 
 #menu_container>#menu_list h5[data-opened=true] {
 
-    background-color: var(--black-25);
+    background-color: var(--brand-color);
+    color: var(--white-100);
 
 }
 
@@ -81,6 +84,10 @@ header#background #menu_container button#btn_open_menu {
 
     display: none;
 
+}
+
+#menu_container>#menu_list>ul>li>ul {
+    box-shadow: 0px -7px 1px 1px var(--black-05);
 }
 
 #menu_container>#menu_list>ul>li {

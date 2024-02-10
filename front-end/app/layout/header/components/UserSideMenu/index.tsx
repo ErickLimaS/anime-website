@@ -13,6 +13,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { initFirebase } from "@/firebase/firebaseApp";
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
+import Link from 'next/link'
 
 function UserSideMenu() {
 
@@ -26,11 +27,8 @@ function UserSideMenu() {
 
     const [user, loading] = useAuthState(auth)
 
-    console.log(user)
-
     const signIn = async () => {
-        const result = await signInWithPopup(auth, provider)
-        console.log(result.user)
+        await signInWithPopup(auth, provider)
     }
 
     useEffect(() => {
@@ -100,19 +98,19 @@ function UserSideMenu() {
 
                             <ul role='menu'>
                                 <li role='menuitem'>
-                                    <button onClick={() => console.log()}>
+                                    <Link href={"/playlist"}>
                                         <BookmarkSvg width={16} height={16} alt={"Bookmarks Icon"} /> Playlist
-                                    </button>
+                                    </Link>
                                 </li>
                                 <li role='menuitem'>
-                                    <button onClick={() => console.log()}>
+                                    <Link href={"/history"}>
                                         <HistorySvg width={16} height={16} alt={"History Icon"} /> History
-                                    </button>
+                                    </Link>
                                 </li>
                                 <li role='menuitem'>
-                                    <button onClick={() => console.log()}>
+                                    <Link href={"/settings"}>
                                         <SettingsSvg width={16} height={16} alt={"Settings Icon"} /> Settings
-                                    </button>
+                                    </Link>
                                 </li>
                                 <li role='menuitem'>
                                     <button onClick={() => auth.signOut()}>

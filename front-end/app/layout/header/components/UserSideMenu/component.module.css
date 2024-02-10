@@ -47,7 +47,7 @@
     z-index: 100;
 
     position: absolute;
-    top: 61px;
+    top: 60px;
     right: 0;
     left: 0;
 
@@ -111,7 +111,8 @@
 
 }
 
-#user_container>#user_menu_list ul li button {
+#user_container>#user_menu_list ul li>button,
+#user_container>#user_menu_list ul li>a {
 
     display: flex;
     align-items: center;
@@ -134,13 +135,15 @@
 
 }
 
-#user_container>#user_menu_list ul li button:hover {
+#user_container>#user_menu_list ul li>button:hover,
+#user_container>#user_menu_list ul li>a:hover {
 
     border: 1px solid var(--white-50);
 
 }
 
-#user_container>#user_menu_list ul li button:hover svg {
+#user_container>#user_menu_list ul li button:hover svg,
+#user_container>#user_menu_list ul li>a:hover svg {
 
     fill: var(--brand-color);
 
