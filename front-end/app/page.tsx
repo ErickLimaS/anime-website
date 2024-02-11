@@ -12,6 +12,7 @@ import MediaRankingSection from "./components/MediaRankingSection";
 import { convertToUnix } from "./lib/format_date_unix";
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
+import AddToPlaylistButton from "./components/AddToPlaylistButton";
 
 export const metadata: Metadata = {
   title: 'Home | AniProject',
@@ -117,7 +118,7 @@ export default async function Home() {
 
                 <Link href={`/media/${mediaBannerData[randomNumber].id}`}>WATCH NOW</Link>
 
-                <button>+ PLAYLIST</button>
+                <AddToPlaylistButton data={mediaBannerData[randomNumber]} />
 
               </div>
             </div>
@@ -129,6 +130,7 @@ export default async function Home() {
                   className="yt_embed_video"
                   src={`https://www.youtube.com/embed/${mediaBannerData[randomNumber].trailer.id}`}
                   frameBorder={0}
+                  title={mediaBannerData[randomNumber].title.romaji + " Trailer"}
                   allow="accelerometer; autoplay; encrypted-media; gyroscope;"
                   allowFullScreen></iframe>
               )}

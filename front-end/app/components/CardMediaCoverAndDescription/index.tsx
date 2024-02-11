@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import parse from "html-react-parser"
+import AddToPlaylistButton from '../AddToPlaylistButton'
 
 function CardMediaCoverAndDescription({ data, showButtons }: { data: ApiDefaultResult, showButtons?: boolean }) {
     return (
@@ -28,11 +29,11 @@ function CardMediaCoverAndDescription({ data, showButtons }: { data: ApiDefaultR
                 )}
 
                 {showButtons == undefined && (
-                    <div className={`display_flex_row ${styles.buttons_container}`}>
+                    <div className={styles.buttons_container}>
 
                         <Link href={`/media/${data.id}`}>WATCH NOW</Link>
 
-                        <button>+ PLAYLIST</button>
+                        <AddToPlaylistButton data={data}/>
 
                     </div>
                 )}

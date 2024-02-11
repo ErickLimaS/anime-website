@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
+import AddToPlaylistButton from '../AddToPlaylistButton'
 
 function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
 
@@ -111,7 +112,7 @@ function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
 
                                     <Link href={`/media/${data[imageIndex]?.media.id}`}>WATCH NOW</Link>
 
-                                    <button>+ PLAYLIST</button>
+                                    <AddToPlaylistButton data={data[imageIndex]?.media} />
 
                                 </div>
 
