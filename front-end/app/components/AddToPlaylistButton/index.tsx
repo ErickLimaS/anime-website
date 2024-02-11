@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
-import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc, FieldPath } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc, FieldPath, setDoc, DocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { initFirebase } from "@/firebase/firebaseApp"
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
@@ -82,16 +82,21 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
 
         if (!user) return setWasAddedToPlaylist(false)
 
-        await getDoc(doc(db, 'users', user.uid)).then((doc) => {
+        let userDoc: DocumentSnapshot<DocumentData, DocumentData> = await getDoc(doc(db, 'users', user.uid))
 
-            const isMediaIdOnDoc = doc.get("bookmarks").find((item: { id: number }) => item.id == data.id)
+        // IF USER HAS NO DOC ON FIRESTORE, IT CREATES ONE
+        if (userDoc.exists() == false) {
 
-            if (isMediaIdOnDoc) {
-                setWasAddedToPlaylist(true)
-            }
+            userDoc = await setDoc(doc(db, 'users', user.uid), {}) as unknown as DocumentSnapshot<DocumentData, DocumentData>
 
-        })
+            return
+        }
 
+        const isMediaIdOnDoc = userDoc.get("bookmarks").find((item: { id: number }) => item.id == data.id)
+
+        if (isMediaIdOnDoc) {
+            setWasAddedToPlaylist(true)
+        }
     }
 
     useEffect(() => {
