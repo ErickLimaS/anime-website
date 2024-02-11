@@ -9,7 +9,7 @@ import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useRouter } from 'next/navigation';
 
-function AddToPlaylistButton({ data }: { data: ApiDefaultResult }) {
+function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, customText?: any[] }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [wasAddedToPlaylist, setWasAddedToPlaylist] = useState<boolean>(false)
@@ -110,7 +110,11 @@ function AddToPlaylistButton({ data }: { data: ApiDefaultResult }) {
             data-added={wasAddedToPlaylist}
             aria-label={wasAddedToPlaylist ? "Click To Remove from Playlist" : "Click To Add To Playlist"}
         >
-            {isLoading ? <LoadingSvg alt="Loading Icon" width={16} height={16} /> : wasAddedToPlaylist ? "ON PLAYLIST" : "+ PLAYLIST"}
+            {isLoading ?
+                <LoadingSvg alt="Loading Icon" width={16} height={16} />
+                :
+                (wasAddedToPlaylist ? (customText ? customText[0] : "ON PLAYLIST") : (customText ? customText[1] : "+ PLAYLIST"))
+            }
         </button>
     )
 }

@@ -15,7 +15,12 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading }: { data: 
             data-loading={loading || false}
         >
             <Link id={styles.img_container} href={`/media/${data.id}`}>
-                <Image src={data.coverImage && data.coverImage.large} alt={`Cover Art for ${data.title && data.title.romaji || "dsa"}`} fill></Image>
+                <Image
+                    src={data.coverImage && data.coverImage.large}
+                    alt={`Cover Art for ${data.title && data.title.romaji || "dsa"}`}
+                    fill
+                    sizes='100%'
+                ></Image>
             </Link>
 
             <small>{(data.seasonYear && (`${data.seasonYear}, `))} {data.genres && data.genres[0]}</small>

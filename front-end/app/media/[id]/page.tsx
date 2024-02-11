@@ -7,8 +7,11 @@ import Image from 'next/image'
 import parse from "html-react-parser"
 import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 import ChevonRightSvg from "@/public/assets/chevron-right.svg"
+import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
+import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import EpisodesContainer from '@/app/components/AnimeEpisodesContainer'
 import MangaChaptersContainer from '@/app/components/MangaChaptersContainer'
+import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -23,75 +26,6 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 async function MediaPage({ params }: { params: { id: number } }) {
 
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
-
-  // function scrollHeroSection() {
-
-  //   if (typeof window !== "undefined") {
-  //     let isDragging = false;
-
-  //     let startPosition = 0;
-  //     let currentTranslate = 0;
-
-  //     let currentListIndex = 1
-
-  //     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-  //     let wasDraggedMoreThanOneThirdScreen = false
-
-  //     const carousel = document.getElementById(`carousel`) as HTMLElement;
-
-  //     if (carousel) {
-
-  //       carousel.addEventListener('mousedown', (e) => {
-  //         isDragging = true;
-  //         startPosition = e.clientX - currentTranslate;
-  //       });
-
-  //       carousel.addEventListener('mouseup', (e) => {
-  //         isDragging = false;
-  //         currentTranslate = vw - (vw * (currentListIndex + 1))
-  //         const newPosition = e.clientX - (startPosition - currentTranslate)
-
-  //         currentTranslate = newPosition - vw;
-
-  //         if (wasDraggedMoreThanOneThirdScreen) {
-  //           transitionBeetweenItens()
-  //         }
-
-  //       });
-
-  //       carousel.addEventListener('mousemove', (e) => {
-  //         if (!isDragging) return;
-
-  //         const newPosition = currentListIndex > 1 ? (e.clientX - (vw * currentListIndex)) : (e.clientX - startPosition)
-
-  //         currentTranslate = newPosition;
-
-  //         if ((currentListIndex + 1) == data.length) return
-
-  //         updateCarousel();
-
-  //         if (currentTranslate + (vw * 1.25)) {
-  //           wasDraggedMoreThanOneThirdScreen = true
-  //         }
-
-  //       });
-  //     }
-
-  //     const updateCarousel = () => {
-  //       carousel.style.transform = `translateX(${currentTranslate}px)`;
-  //     }
-
-  //     const transitionBeetweenItens = () => {
-
-  //       carousel.style.transform = `translateX(${(vw - (vw * (currentListIndex + 1)))}px)`;
-  //       currentListIndex++
-  //       currentTranslate = 0
-  //       wasDraggedMoreThanOneThirdScreen = false
-
-  //     }
-
-  //   }
-  // }
 
   return (
     <div id={styles.container}>
@@ -118,7 +52,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
               <ul className='display_flex_row'>
                 {mediaData.genres.slice(0, 3).map((item, key: number) => (
                   <li key={key}>
-                    <Link href={item.toLowerCase()}>{item}</Link>
+                    <Link href={`/search?genre=${item.toLowerCase()}`}>{item}</Link>
                   </li>
                 ))}
               </ul>
@@ -133,7 +67,19 @@ async function MediaPage({ params }: { params: { id: number } }) {
         {/* GENERAL INFO */}
         <section id={styles.info_list_container}>
 
-          <ul >
+          <ul>
+
+            <li id={styles.playlist_btn} className={`${styles.info_item}`}>
+
+              <AddToPlaylistButton
+                data={mediaData}
+                customText={
+                  [<BookmarkFillSvg key={0} />, <BookmarkSvg key={1} />]
+                }
+              />
+
+            </li>
+
 
             <li className={`${styles.info_item}`}>
 
@@ -186,14 +132,6 @@ async function MediaPage({ params }: { params: { id: number } }) {
               )}
             </li>
 
-            <li className={`${styles.info_item}`}>
-
-              <h2>TRENDING</h2>
-
-              <p>{mediaData.trending || "Not Available"}</p>
-
-            </li>
-
           </ul>
 
         </section>
@@ -217,32 +155,56 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2 className={styles.heading_style}>CAST</h2>
 
-                <p>Hover over the image to show the actor behind its character</p>
+                {mediaData.type == "ANIME" && (
+                  <p>Hover over the image to show the actor behind its character</p>
+                )}
 
                 {/* MAKE HOVER, THAN FLIP IMAGE AND SHOW THE ACTOR */}
                 <div>
                   <ul className='display_flex_row'>
                     {mediaData.characters.edges.map((item, key: number) => (
-                      <li key={key}>
+
+                      <li key={key} data-mediatype={mediaData.type}>
+
                         <div className={styles.character_container}>
                           <div className={styles.img_container}>
-                            <Image src={item.node.image.large} alt={item.node.name.full} fill></Image>
+                            <Image
+                              src={item.node.image.large}
+                              alt={item.node.name.full}
+                              sizes='100%'
+                              fill
+                            ></Image>
                           </div>
-                          <h4><Link href={`/character/${item.id}`}>{item.node.name.full}</Link></h4>
+                          <h3>
+                            <Link href={`/character/${item.id}`}>
+                              {item.node.name.full}
+                            </Link>
+                          </h3>
                         </div>
 
-                        <div className={styles.actor_container}>
-                          <div className={styles.img_container}>
-                            <Image src={item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.image.large} alt={item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.name.full || "No name actor"} fill></Image>
+                        {/* SHOWS ONLY FOR ANIMES  */}
+                        {mediaData.type == "ANIME" && (
+
+                          <div className={styles.actor_container}>
+                            <div className={styles.img_container}>
+                              <Image
+                                src={item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.image.large}
+                                alt={(`${item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.name.full} voiceover for ${item.node.name.full}`) || "No Name Actor"}
+                                sizes='100%'
+                                fill
+                              ></Image>
+                            </div>
+                            <h3>
+                              <Link href={`/actor/${item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.id}`}>
+                                {item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.name.full}
+                              </Link>
+                            </h3>
                           </div>
-                          <h4>
-                            <Link href={`/actor/${item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.id}`}>
-                              {item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.name.full}
-                            </Link>
-                          </h4>
-                        </div>
+                        )}
+
                       </li>
                     ))}
+
                   </ul>
                 </div>
 
@@ -283,12 +245,14 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   <h2 className={styles.heading_style}>RELATED TO {(mediaData.title.romaji).toUpperCase()}</h2>
 
                   {mediaData.relations.nodes.length > 12 && (
-                    <Link href={`/related?id=${mediaData.id}`}>VIEW ALL <ChevonRightSvg width={16} height={16} alt="Icon to right" /></Link>
+                    <Link href={`/search?id=${mediaData.id}&related=true`}>VIEW ALL <ChevonRightSvg width={16} height={16} alt="Icon to right" /></Link>
                   )}
                 </div>
+
                 <ul>
 
                   {(mediaData).relations.nodes.slice(0, 12).map((item, key: number) => (
+
                     <li key={key}>
 
                       <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item} />
@@ -327,8 +291,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
           <div id={styles.hype_container}>
 
+            {/* WILL BE ADDED IF I FOUND A API TO IT */}
             {/* <div>
-              <h2 className={styles.heading_style}>HYPE</h2>
+              <h2 className={styles.heading_style}>
+                HYPE
+              </h2>
 
               <ul>
 
@@ -346,6 +313,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   className="yt_embed_video"
                   src={`https://www.youtube.com/embed/${mediaData.trailer.id}`}
                   frameBorder={0}
+                  title={mediaData.title.romaji + " Trailer"}
                   allow="accelerometer; autoplay; encrypted-media; gyroscope;"
                   allowFullScreen></iframe>
               </div>

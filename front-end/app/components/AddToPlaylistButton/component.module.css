@@ -10,6 +10,18 @@
     
 }
 
+#container svg{
+
+    transform: scale(3.5);
+
+}
+
+#container[data-added=false] svg {
+
+    fill: var(--brand-color);
+
+}
+
 #container[disabled] {
 
     background-color: var(--white-100);
