@@ -4,6 +4,7 @@ interface BookmarkItem {
         romaji: string
     },
     format: string,
+    description: string,
     coverImage: {
         extraLarge: string
     },

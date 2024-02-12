@@ -14,7 +14,7 @@ function PlaylistItemsResults({ params }: { params?: { format: string } }) {
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
-    const [userBookmarks, setUserBookmarks] = useState<BookmarkItem[] | null>()
+    const [userBookmarks, setUserBookmarks] = useState<BookmarkItem[]>([])
 
     const router = useRouter()
 
@@ -52,7 +52,7 @@ function PlaylistItemsResults({ params }: { params?: { format: string } }) {
     }, [loading, user, params?.format])
 
     return (
-        userBookmarks && (
+        userBookmarks?.length > 0 ? (
             <div id={styles.container}>
 
                 <ul>
@@ -66,6 +66,8 @@ function PlaylistItemsResults({ params }: { params?: { format: string } }) {
                 </ul>
 
             </div>
+        ) : (
+            <p>No Results.</p>
         )
     )
 }

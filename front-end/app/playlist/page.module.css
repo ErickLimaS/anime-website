@@ -118,5 +118,12 @@
     color: var(--white-100);
     font-weight: 600;
 
+}
+
+#main_content_container>p {
+
+    color: var(--white-100);
+
+    font-size: var(--font-size--h5);
 
 }

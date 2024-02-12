@@ -9,6 +9,7 @@ import LogoutSvg from '@/public/assets/logout.svg'
 import SettingsSvg from '@/public/assets/gear-fill.svg'
 import HistorySvg from '@/public/assets/clock-history.svg'
 import BookmarkSvg from '@/public/assets/bookmark-check-fill.svg'
+import GoogleSvg from '@/public/assets/google.svg'
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { initFirebase } from "@/firebase/firebaseApp";
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -59,14 +60,14 @@ function UserSideMenu() {
                         <div id={styles.user_menu_list} aria-expanded={isUserMenuOpen}>
 
                             <ul role='menu'>
-                                <li role='menuitem'>
+                                <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                     <button onClick={() => signIn()}>
-                                        <LoginSvg width={16} height={16} alt={"login icon"} /> Login
+                                        <GoogleSvg width={16} height={16} alt={"Login icon"} /> Login
                                     </button>
                                 </li>
-                                <li role='menuitem'>
-                                    <button onClick={() => auth.signOut()}>
-                                        Sign Up
+                                <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
+                                    <button onClick={() => signIn()}>
+                                        <GoogleSvg width={16} height={16} alt={"Sign Up icon"} /> Sign Up
                                     </button>
                                 </li>
                             </ul>
@@ -84,7 +85,12 @@ function UserSideMenu() {
                         id={styles.user_btn}
                     >
                         <span id={styles.img_container}>
-                            <Image src={user.photoURL as string} fill alt={user.displayName as string}></Image>
+                            <Image
+                                src={user.photoURL as string}
+                                fill
+                                sizes='100%'
+                                alt={user.displayName as string}>
+                            </Image>
                         </span>
                         <span>
                             {!isUserMenuOpen ?
@@ -97,22 +103,22 @@ function UserSideMenu() {
                         <div id={styles.user_menu_list} aria-expanded={isUserMenuOpen}>
 
                             <ul role='menu'>
-                                <li role='menuitem'>
+                                <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                     <Link href={"/playlist"}>
                                         <BookmarkSvg width={16} height={16} alt={"Bookmarks Icon"} /> Playlist
                                     </Link>
                                 </li>
-                                <li role='menuitem'>
+                                {/* <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                     <Link href={"/history"}>
                                         <HistorySvg width={16} height={16} alt={"History Icon"} /> History
                                     </Link>
-                                </li>
-                                <li role='menuitem'>
+                                </li> */}
+                                {/* <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                     <Link href={"/settings"}>
                                         <SettingsSvg width={16} height={16} alt={"Settings Icon"} /> Settings
                                     </Link>
-                                </li>
-                                <li role='menuitem'>
+                                </li> */}
+                                <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                     <button onClick={() => auth.signOut()}>
                                         <LogoutSvg width={16} height={16} alt={"Logout Icon"} /> Log Out
                                     </button>

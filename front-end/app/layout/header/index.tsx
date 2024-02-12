@@ -22,7 +22,7 @@ function Header() {
                     <NavListMenu />
 
                     <Link href="/" id={styles.img_container}>
-                        <Image id={styles.logo} src={'/logo.png'} alt='AniProject Website Logo' fill />
+                        <Image id={styles.logo} src={'/logo.png'} alt='AniProject Website Logo' fill sizes='100%'/>
                     </Link>
                 </div>
 
