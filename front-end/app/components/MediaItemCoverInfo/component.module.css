@@ -1,5 +1,7 @@
 #midia_item_cover {
 
+    position: relative;
+
     width: 100%;
 
     display: flex;
@@ -45,12 +47,35 @@
 
     width: inherit;
 
-    /* aspect-ratio: 9 / 16; */
     aspect-ratio: 46 / 65;
 
-    /* height: 250px; */
-
     transition: all ease-in-out 190ms;
+}
+
+#midia_item_cover .media_type_icon {
+
+    display: flex;
+    margin: auto;
+
+    position: absolute;
+    z-index: 1;
+
+    background-color: var(--black-75);
+
+    padding: 4px;
+
+    border-radius: 50%;
+
+
+    top: 4px;
+    left: 4px;
+
+}
+
+#midia_item_cover .media_type_icon svg {
+
+    fill: var(--brand-color);
+
 }
 
 .midia_item_container small {
