@@ -34,7 +34,7 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading }: { data: 
 
                 </span>
             </Link>
-            <p>{data.format}</p>
+            
             <small>{(data.seasonYear && (`${data.seasonYear}, `))} {data.genres && data.genres[0]}</small>
 
             <Link href={`/media/${data.id}`}>{data.title && data.title.romaji}</Link>
