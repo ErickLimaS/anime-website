@@ -118,7 +118,7 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
             disabled={isLoading}
             data-added={wasAddedToPlaylist}
             aria-label={wasAddedToPlaylist ? "Click To Remove from Playlist" : "Click To Add To Playlist"}
-            title={wasAddedToPlaylist ? `Remove ${data.title.romaji} from Playlist` : `Add ${data.title.romaji} To Playlist`}
+            title={wasAddedToPlaylist ? `Remove ${data.title && data.title?.romaji} from Playlist` : `Add ${data.title && data.title?.romaji} To Playlist`}
         >
             {isLoading ?
                 <LoadingSvg alt="Loading Icon" width={16} height={16} />

@@ -67,6 +67,8 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
     // if data props has 0 length, it is set to get data from gogoanime
     const chooseSource = source == "crunchyroll" && data.length == 0 ? "googanime" : source
 
+    if (chooseSource == episodeSource) return
+
     setLoading(true)
 
     // reiniciate the episodes page counter

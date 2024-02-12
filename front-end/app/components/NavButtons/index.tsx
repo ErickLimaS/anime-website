@@ -33,7 +33,6 @@ function NavButtons(props: PropsType) {
         // if user tries to make the same call, it just wont continue to do requests
         if (lastValueReceived == value) return
 
-
         // run the received function
         functionReceived(value)
 
