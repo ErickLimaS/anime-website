@@ -40,6 +40,8 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
                         title: {
                             romaji: data.title.romaji
                         },
+                        format: data.format,
+                        description: data.description,
                         coverImage: {
                             extraLarge: data.coverImage.extraLarge,
                             large: data.coverImage.large
@@ -61,6 +63,8 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
                         title: {
                             romaji: data.title.romaji
                         },
+                        format: data.format,
+                        description: data.description,
                         coverImage: {
                             extraLarge: data.coverImage.extraLarge,
                             large: data.coverImage.large

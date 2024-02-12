@@ -1,0 +1,39 @@
+#container ul {
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(296px, 1fr));
+    gap: 16px;
+    justify-items: center;
+
+}
+
+@media(min-width: 500px) {
+
+    #container ul {
+
+        grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+        justify-items: start;
+
+    }
+
+}
+
+#container ul li {
+
+    width: 100%;
+    padding: 8px;
+
+    background-color: var(--black-50);
+
+}
+
+/* AFFECTS THE CHILDREN COMPONENT */
+@media(max-width: 400px) {
+
+    #container ul li>* {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
