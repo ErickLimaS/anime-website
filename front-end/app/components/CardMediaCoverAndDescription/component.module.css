@@ -97,6 +97,9 @@
 
 .item_info_container .buttons_container {
 
+    display: grid;
+    grid-template-columns: 120px 120px;
+
     justify-content: center;
 
     margin: 24px 0;
@@ -130,6 +133,8 @@
 
     background-color: var(--brand-color);
     color: var(--white-100);
+
+    text-align: center;
 
 }
 

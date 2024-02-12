@@ -9,7 +9,8 @@ type PropsType = {
     options: OptionsType[],
     actualValue?: string | number,
     previousAndNextButtons?: boolean,
-    customForPagination?: boolean
+    customForPagination?: boolean,
+    sepateWithSpan?: boolean
 }
 
 type OptionsType = {
@@ -32,7 +33,6 @@ function NavButtons(props: PropsType) {
         // if user tries to make the same call, it just wont continue to do requests
         if (lastValueReceived == value) return
 
-
         // run the received function
         functionReceived(value)
 
@@ -48,20 +48,28 @@ function NavButtons(props: PropsType) {
             {props.previousAndNextButtons && (
                 <button
                     onClick={() => toggleStateAndReturnValue((lastValueReceived as number) - 1)}
-                    disabled={(lastValueReceived as number) == props.options[0].value}>
+                    disabled={(lastValueReceived as number) == props.options[0].value}
+                    aria-label='Go to Previous Page'
+                >
                     <ChevronLeftSvg alt="Icon to left side" width={16} height={16} />
                 </button>
             )}
 
             {props.options.length <= 4 && (
                 props.options.slice(0, 3).map((item, key: number) => (
-                    <button
-                        key={key}
-                        data-active={lastValueReceived == (item.value)}
-                        onClick={() => toggleStateAndReturnValue(item.value)}
-                    >
-                        {item.name}
-                    </button >
+                    <>
+                        <button
+                            key={key}
+                            data-active={lastValueReceived == (item.value)}
+                            onClick={() => toggleStateAndReturnValue(item.value)}
+                            aria-label={item.name}
+                        >
+                            {item.name}
+                        </button >
+                        {props.sepateWithSpan && (
+                            <span> | </span>
+                        )}
+                    </>
                 ))
             )}
 
@@ -74,6 +82,7 @@ function NavButtons(props: PropsType) {
                                 key={key}
                                 data-active={lastValueReceived == (Number(lastValueReceived) - (7 * key) <= 3 ? key + 1 : (Number(lastValueReceived) - (7 * key)))}
                                 onClick={() => toggleStateAndReturnValue(Number(lastValueReceived) - (7 * key) <= 3 ? key + 1 : (Number(lastValueReceived) - (7 * key)))}
+                                aria-label={`Go to Page ${Number(lastValueReceived) - (7 * key) <= 3 ? key + 1 : (Number(lastValueReceived) - (7 * key))}`}
                             >
                                 {Number(lastValueReceived) - (7 * key) <= 3 ? key + 1 : (Number(lastValueReceived) - (7 * key))}
                             </button >
@@ -88,6 +97,7 @@ function NavButtons(props: PropsType) {
                 <button
                     data-active={lastValueReceived == (props.options[props.options.length - 1].value)}
                     onClick={() => toggleStateAndReturnValue(props.options[props.options.length - 1].value)}
+                    aria-label={`Go to Page ${props.options[props.options.length - 1].name}`}
                 >
                     {props.options[props.options.length - 1].name}
                 </button >
@@ -96,6 +106,7 @@ function NavButtons(props: PropsType) {
             {/* MAINLY USED ON PAGINATION OF EPISODES CONTAINER */}
             {props.previousAndNextButtons && (
                 <button
+                    aria-label='Go to Next Page'
                     onClick={() => toggleStateAndReturnValue((lastValueReceived as number) + 1)}
                     disabled={(lastValueReceived as number) == props.options[props.options.length - 1]?.value}
                 >

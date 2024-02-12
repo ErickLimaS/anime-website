@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["s4.anilist.co", "img1.ak.crunchyroll.com", "gogocdn.net"],
+    domains: ["s4.anilist.co", "img1.ak.crunchyroll.com", "gogocdn.net", "lh3.googleusercontent.com"],
     remotePatterns: [
       {
         protocol: "https",
@@ -18,6 +18,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "gogocdn.net",
+        port: "",
+        pathname: "/**",
+      }, {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
         port: "",
         pathname: "/**",
       },

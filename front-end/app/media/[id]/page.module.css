@@ -135,6 +135,20 @@
 
 #info_list_container li {
 
+    height: 160px;
+
+}
+
+@media(min-width: 1080px) {
+    #info_list_container li {
+
+        height: 188px;
+
+    }
+}
+
+#info_list_container li:not(#playlist_btn) {
+
     display: grid;
     grid-template-columns: 20% 80%;
     justify-items: center;
@@ -145,6 +159,30 @@
 
     border-radius: 24px;
 }
+
+/* ADD TO PLAYLIST BUTTON */
+#info_list_container li#playlist_btn button {
+
+    border: 0;
+
+    text-align: center;
+
+    height: 100%;
+    width: 100%;
+
+    padding: 28px 16px;
+    background-color: var(--white-100);
+
+    border-radius: 24px;
+}
+
+#info_list_container li#playlist_btn button[data-added=true] {
+
+    background-color: var(--brand-color);
+
+}
+
+/*  */
 
 #info_list_container li h2 {
 
@@ -294,7 +332,7 @@
 
 }
 
-#cast_container ul li h4 {
+#cast_container ul li h3 {
 
     text-align: center;
 
@@ -315,13 +353,13 @@
     visibility: initial;
 }
 
-#cast_container ul li:hover .character_container {
+#cast_container ul li[data-mediatype="ANIME"]:hover .character_container {
 
     filter: brightness(20%);
 
 }
 
-#cast_container ul li:hover .character_container h4 {
+#cast_container ul li[data-mediatype="ANIME"]:hover .character_container h3 {
     visibility: hidden;
 }
 
@@ -358,6 +396,14 @@
 
 }
 
+/* GRID LIST */
+#related_container>div>h2,
+#similar_container>h2 {
+
+    margin-bottom: 16px;
+
+}
+
 #related_container>div>a {
 
     color: var(--white-75);
@@ -376,7 +422,7 @@
     overflow: auto;
 
     display: grid;
-    grid-template-columns: repeat(auto-fit, 135px);
+    grid-template-columns: repeat(auto-fill, minmax(141px, 1fr));
     justify-content: center;
     gap: 16px;
 

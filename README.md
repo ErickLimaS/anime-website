@@ -11,12 +11,12 @@ You can access it <a href='https://aniproject-dev.netlify.app/'>here</a>.
 - [x] `Search`: Get a list of animes and mangas you want to search.
 - [x] `Watch`: Watch any available episode.
 - [x] `Read`: Read any manga chapter available.
+- [x] `Log In`: You can log in with your Google Account (more options in the future).
+- [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.
       
 ## :pushpin: Under Development
  
-- [ ] `Create Your Acccount`
 - [ ] `Bookmark the episodes you watched`
-- [ ] `Bookmark your favourite animes e mangas`
 - [ ] `Keep track of what you watched last`
 - [ ] `Be notified when a new episode/chapter is released`
 
@@ -28,14 +28,15 @@ Front-end (on netlify.com):
 - ``Next.js``
 - ``TypeScript``
 - ``Axios``
+- ``Firebase``
 - ``GraphQL``
 - ``Framer Motion``
 - ``Anilist API``
 - ``Consumet API``
 
-Back-End (planning):
+Back-End (being made with MongoDB and Firebase (Backend as a Service)):
 
-- Still Planning...
+- On Development...
 
 
 ## :computer: How Can I Run It? 
@@ -51,10 +52,22 @@ Its simple!
   ```javascript
   npm install
   ```
-3. Now you need to create a ``.env.local`` file inside the ``front-end directory`` with the url to where your Consumet API server is setted. You can do it by going in the <a href='https://github.com/consumet/api.consumet.org'>repository of Consumet API</a>.
-In this project, it is hosted on render.com. Your file should look like example:
+  
+3. Now you need to create a ``.env.local`` file inside the ``front-end directory`` with the url to where your Consumet API server is setted and configs for your Firebase.
+   - Check the <a href='https://github.com/consumet/api.consumet.org'>repository of Consumet API</a>.
+   - On Firebase, get your config to use the Authentication and Firestore Database.
+      
+   Your file should look like example:
   ```javascript
   NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
+  NEXT_PUBLIC_FIREBASE_API_KEY=[YOUR-FIREBASE-SETTINGS]
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=[YOUR-FIREBASE-SETTINGS]
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID=[YOUR-FIREBASE-SETTINGS]
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=[YOUR-FIREBASE-SETTINGS]
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER=[YOUR-FIREBASE-SETTINGS]
+  NEXT_PUBLIC_FIREBASE_APP_ID=[YOUR-FIREBASE-SETTINGS]
+  NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=[YOUR-FIREBASE-SETTINGS]
+  NEXT_PUBLIC_FIREBASE_DATABASE_URL=[YOUR-FIREBASE-SETTINGS]
   ```
 
 4. From ``front-end directory``, run ``npm run dev`` to initialize the website
@@ -62,35 +75,30 @@ In this project, it is hosted on render.com. Your file should look like example:
   npm run dev
   ```
 
-
+5. That's it! It should be running.
+   
 ## :computer: Preview/Screenshots
 
 ### Home
 
-![Home page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/02f1637c-2cc1-4746-88a2-5e798e30c969)
-
-![Home page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/4bebb4f1-ad9c-492d-8f89-ec9b0b831d3d)
-
-![Home page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/749a64b1-bbae-450e-91c2-a7c11fedf6e1)
-
-![Home page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/fec4990f-9b66-4551-9240-bf10ed835a25)
-
-![Home page 5](https://github.com/ErickLimaS/anime-website/assets/69987890/d93b8283-ba58-4e6e-a79e-80a419460a1d)
-
-![Home page 6](https://github.com/ErickLimaS/anime-website/assets/69987890/63d34658-a28c-42e7-afa7-9d4cee6782a4)
+![Home page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/89a7ffe6-8bd0-4858-9dfe-6fc5daa39c94)
+![Home page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/b7250330-c279-4b07-b2c1-27947ad25033)
+![Home page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/2880596f-d1fa-4522-a55c-43ab3ba2908e)
+![Home page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/134d0040-13b7-491c-af6a-66646fb4437b)
+![Home page 5](https://github.com/ErickLimaS/anime-website/assets/69987890/9676c57f-86e3-418d-82e9-50521f8619ba)
 
 ### Anime/Manga Page
 
-![Anime/Manga Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/9fd9713a-67d3-4307-9952-38f81dd56dc4)
-
-![Anime/Manga Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/2dc533cf-61e1-4061-a6b2-a28ecb36c743)
-
-![Anime/Manga Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/879cfdc0-a6d5-4a05-98bc-b83810f27c6e)
-
-![Anime/Manga Page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/a2b4e2ba-e685-4e2b-bd56-bb12ba33de01)
+![Anime/Manga Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/d5d740c7-a0d9-4f91-b50f-d19b4fe05323)
+![Anime/Manga Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/fd8c115e-9d19-4b1f-8f7b-575985b297b8)
+![Anime/Manga Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/d4e38df1-7c06-4dc7-bdd5-2bf1705d44d7)
+![Anime/Manga Page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/0b8be187-2533-4f8e-907d-cbeb21076a00)
 
 ### Watch Episode Page
 
 ![Watch Episode Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/4aa7c81c-ef57-4bca-84eb-0690a08774ff)
 
 ![Watch Episode Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/ae8984c6-8eb9-4de4-9df3-2969cc4f775e)
+
+### Playlist Page
+![Playlist page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/34a30f4d-0048-4413-a32f-5e851c676557)

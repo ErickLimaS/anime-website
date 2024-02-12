@@ -67,7 +67,7 @@ ul.carousel_container li.carousel_item div.item_info {
 
 }
 
-@media((min-width: 1620px)) {
+@media((min-width: 1980px)) {
 
     ul.carousel_container li.carousel_item div.item_info {
 
@@ -142,20 +142,18 @@ ul.carousel_container li.carousel_item .item_info_inside p {
 
 ul.carousel_container li.carousel_item div.item_info .item_buttons {
 
-    display: flex;
+    display: grid;
 
     gap: 8px 0;
-
-    flex-direction: column;
 
 }
 
 @media((min-width: 590px)) {
     ul.carousel_container li.carousel_item div.item_info .item_buttons {
 
-        flex-direction: row;
+        grid-template-columns: 200px 200px;
 
-        gap: 0 24px;
+        gap: 16px 24px;
 
         justify-content: center;
 
