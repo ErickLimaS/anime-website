@@ -22,8 +22,8 @@ export const metadata: Metadata = {
 export default async function Home() {
 
   // section 1
-  const popularData = await API.getTrendingMedia("DATE_DESC").then(
-    res => (res as ApiTrendingMidiaResults[]).filter((item) => item.media.bannerImage)
+  const popularData = await API.getNewReleases("ANIME", undefined, "TRENDING_DESC").then(
+    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false && item.bannerImage)
   )
 
   // section 2
@@ -53,8 +53,6 @@ export default async function Home() {
       <section id={styles.hero_section}>
 
         <HeroCarousel data={popularData} />
-
-        <span id={styles.box_shadow_end_section}></span>
 
       </section>
 

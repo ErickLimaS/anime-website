@@ -30,6 +30,8 @@ span#box_shadow_end_section {
 
     display: grid;
 
+    padding-top: 32px;
+
     grid-template-columns: repeat(2, 1fr);
 
     grid-template-areas:
@@ -67,6 +69,11 @@ span#box_shadow_end_section {
     }
 }
 
+@media((min-width: 990px)) {
+    #popular_container {
+        padding-top: 0;
+    }
+}
 
 @media((min-width: 992px) and (max-width: 1200px)) {
     #popular_container {
@@ -371,6 +378,7 @@ span#box_shadow_end_section {
         text-align: start;
     }
 }
+
 #media_banner_container #media_info>span,
 #media_banner_container #media_info>span>p {
 

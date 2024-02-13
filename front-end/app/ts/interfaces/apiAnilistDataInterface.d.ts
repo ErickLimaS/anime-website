@@ -10,6 +10,7 @@ export interface ApiDefaultResult {
     },
     description: string,
     episodes: number,
+    duration: number,
     season: string,
     seasonYear: number,
     isAdult: Boolean,

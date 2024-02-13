@@ -20,7 +20,11 @@ function NavThoughMidiasByTimeRange() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
-        getMediaByDaysRange(1)
+        if (data[0] == null || data[0] == undefined) {
+            getMediaByDaysRange(30)
+        } else {
+            getMediaByDaysRange(1)
+        }
     }, [])
 
     // gets the range of days than parse it to unix, runs function to get any midia releasing in the selected range

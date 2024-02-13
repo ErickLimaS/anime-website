@@ -41,9 +41,12 @@ function MediaRankingSection(props: PropsTypes) {
 
                 <h3>Top 10 this week</h3>
 
-                <NavButtons functionReceived={loadMedia as (parameter: string | number) => void} actualValue={currentQueryValue} options={[
-                    { name: "Animes", value: "ANIME" }, { name: "Mangas", value: "MANGA" }
-                ]} />
+                <NavButtons
+                    functionReceived={loadMedia as (parameter: string | number) => void}
+                    actualValue={currentQueryValue} options={[
+                        { name: "Animes", value: "ANIME" }, { name: "Mangas", value: "MANGA" }
+                    ]}
+                />
 
             </div>
 

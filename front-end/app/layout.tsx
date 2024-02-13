@@ -31,11 +31,11 @@ export default function RootLayout({
           showSpinner={false}
         />
 
-        <Suspense fallback={<LoadingPlaceholder />}>
+        {/* <Suspense fallback={<LoadingPlaceholder />}> */}
 
-          {children}
+        {children}
 
-        </Suspense>
+        {/* </Suspense> */}
 
         <Footer />
 

@@ -3,12 +3,12 @@ import React, { useState } from 'react'
 import styles from "./carouselComponent.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
-import { ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
 import AddToPlaylistButton from '../AddToPlaylistButton'
 
-function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
+function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
 
     const [[page, direction], setPage] = useState([0, 0]);
 
@@ -45,7 +45,7 @@ function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
     };
 
     const styledList = {
-        background: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.10)), url(${data[imageIndex]?.media.bannerImage})`,
+        background: `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage})`,
         backgroundPosition: "center",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat"
@@ -86,33 +86,38 @@ function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
                         >
                             <div className={styles.item_info}>
 
-                                <h2><Link href={`/media/${data[imageIndex]?.media.id}`}>{data[imageIndex]?.media.title.romaji}</Link></h2>
+                                <h2><Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex]?.title.romaji}</Link></h2>
 
                                 <div className={`${styles.item_info_inside} display_flex_row`}>
 
-                                    {data[imageIndex]?.media.seasonYear != undefined && (
-                                        <p>{data[imageIndex].media.seasonYear.toString()}</p>
+                                    {data[imageIndex]?.seasonYear != undefined && (
+                                        <p>{data[imageIndex].seasonYear.toString()}</p>
                                     )}
-                                    {((data[imageIndex]?.media.genres != undefined) && (data[imageIndex]?.media.seasonYear != undefined)) && (
+                                    {((data[imageIndex]?.genres != undefined) && (data[imageIndex]?.seasonYear != undefined)) && (
                                         <span>|</span>
                                     )}
-                                    {data[imageIndex]?.media.genres != undefined && (
-                                        <p><Link href={`/genre/${data[imageIndex]?.media.genres[0].toLowerCase()}`}>{data[imageIndex]?.media.genres[0]}</Link></p>
+                                    {data[imageIndex]?.genres != undefined && (
+                                        <p><Link href={`/genre/${data[imageIndex]?.genres[0].toLowerCase()}`}>{data[imageIndex]?.genres[0]}</Link></p>
                                     )}
-                                    {((data[imageIndex]?.media.seasonYear != undefined) && (data[imageIndex]?.media.episodes != undefined)) && (
+                                    {((data[imageIndex]?.seasonYear != undefined) && (data[imageIndex]?.episodes != undefined)) && (
                                         <span>|</span>
                                     )}
-                                    {data[imageIndex]?.media.episodes != undefined && (
-                                        <p>{data[imageIndex].media.episodes.toString()} Episodes</p>
+
+                                    {data[imageIndex]?.episodes != undefined && data[imageIndex].format != "MOVIE" && (
+                                        <p>{data[imageIndex].episodes.toString()} {data[imageIndex].episodes > 1 ? "Episodes" : "Episode"}</p>
+                                    )}
+
+                                    {data[imageIndex]?.duration && data[imageIndex].format == "MOVIE" && (
+                                        <p>{data[imageIndex].duration} Minutes</p>
                                     )}
 
                                 </div>
 
                                 <div className={styles.item_buttons}>
 
-                                    <Link href={`/media/${data[imageIndex]?.media.id}`}>WATCH NOW</Link>
+                                    <Link href={`/media/${data[imageIndex]?.id}`}>WATCH NOW</Link>
 
-                                    <AddToPlaylistButton data={data[imageIndex]?.media} />
+                                    <AddToPlaylistButton data={data[imageIndex]} />
 
                                 </div>
 
@@ -127,17 +132,17 @@ function HeroCarousel({ data }: { data: ApiTrendingMidiaResults[] }) {
 
             <div id={styles.recomendations_container}>
 
-                <h3>Recomendations</h3>
+                <h3>Todays Recomendation</h3>
 
                 <ul className="display_grid">
                     {data != undefined && (
-                        data.slice(0, 6).map((item: ApiTrendingMidiaResults, key: number) => (
-                            item.media.bannerImage && (
+                        data.slice(0, 9).map((item, key: number) => (
+                            item.bannerImage && (
                                 <li key={key}>
-                                    <Link href={`/media/${item.media.id}`}>
-                                        <Image src={item.media.bannerImage} alt={`Cover for ${item.media.title.romaji}`} fill />
+                                    <Link href={`/media/${item.id}`}>
+                                        <Image src={item.bannerImage} alt={`Cover for ${item.title.romaji}`} fill sizes='100%'/>
                                     </Link>
-                                    <span>{item.media.title.romaji}</span>
+                                    <span>{item.title.romaji}</span>
                                 </li>
                             ))
                         )
