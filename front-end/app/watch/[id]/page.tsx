@@ -44,6 +44,7 @@ async function WatchEpisode({ params, searchParams }: {
                         width="100%"
                         height="260px"
                         scrolling="no"
+                        title={mediaData.title.romaji + " Episode " + searchParams?.q.replace(/-/g, ' ').split(" ").map((item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/))}
                     />
                 </section>
             </div>

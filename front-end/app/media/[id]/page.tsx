@@ -1,4 +1,4 @@
-import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import React from 'react'
 import API from "@/api/anilist"
 import styles from "./page.module.css"
@@ -72,7 +72,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
             <li id={styles.playlist_btn} className={`${styles.info_item}`}>
 
               <AddToPlaylistButton
-                data={mediaData}
+                data={mediaData as ApiDefaultResult}
                 customText={
                   [<BookmarkFillSvg key={0} />, <BookmarkSvg key={1} />]
                 }
