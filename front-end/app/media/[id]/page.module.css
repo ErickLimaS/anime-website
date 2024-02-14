@@ -6,7 +6,10 @@
 
 }
 
-.heading_style {
+h2.heading_style {
+
+    font-family: var(--font-family-sans-serif);
+
     margin: 8px 0;
 
     color: var(--white-50);
@@ -81,6 +84,29 @@
 
 }
 
+#media_title_container #add_playlist_container button {
+
+    box-shadow: 3px 3px 4px var(--black-75);
+
+    display: flex;
+
+    border: 0;
+
+    text-align: center;
+
+    padding: 16px;
+    background-color: var(--white-100);
+
+    border-radius: 8px;
+
+}
+
+#media_title_container #add_playlist_container button[data-added=true] {
+
+    background-color: var(--brand-color);
+
+}
+
 #media_title_container ul {
     gap: 8px;
 }
@@ -105,13 +131,26 @@
 }
 
 #media_title_container #genres_and_type_container {
+
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+#media_title_container #genres_and_type_container>div:not(#add_playlist_container) {
+
+    margin: auto 0;
+
+    gap: 16px;
+
     white-space: break-spaces;
     flex-wrap: wrap;
 }
 
 #media_title_container #genres_and_type_container span {
 
-    margin-left: 16px;
+    margin: auto 0;
 
     color: var(--white-75);
 
@@ -155,7 +194,47 @@
     }
 }
 
-#info_list_container li:not(#playlist_btn) {
+#info_list_container li.action_btn:first-child button {
+
+    transition: all ease-in-out 100ms;
+
+    display: flex;
+
+    background-color: #38a935;
+
+}
+
+#info_list_container li.action_btn:first-child button:hover {
+
+    background-color: #2e882b;
+
+}
+
+#info_list_container li.action_btn:first-child button[disabled] {
+
+    filter: brightness(25%);
+
+    background-color: var(--white-25);
+    cursor: default;
+
+}
+
+#info_list_container li.action_btn:first-child svg {
+
+    margin: auto;
+    transform: scale(2.5);
+
+}
+
+@media(min-width: 680px) {
+    #info_list_container li.action_btn:first-child svg {
+
+        transform: scale(3.5);
+
+    }
+}
+
+#info_list_container li:not(.action_btn) {
 
     display: grid;
     grid-template-columns: 20% 80%;
@@ -168,15 +247,15 @@
 }
 
 @media(min-width: 520px) {
-    #info_list_container li:not(#playlist_btn) {
+    #info_list_container li:not(.action_btn) {
 
         padding: 28px 16px;
 
     }
 }
 
-/* ADD TO PLAYLIST BUTTON */
-#info_list_container li#playlist_btn button {
+/* PLAY BUTTON */
+#info_list_container li.action_btn button {
 
     border: 0;
 
@@ -191,12 +270,6 @@
     border-radius: 24px;
 }
 
-#info_list_container li#playlist_btn button[data-added=true] {
-
-    background-color: var(--brand-color);
-
-}
-
 /*  */
 #info_list_container .info_item p {
 
@@ -206,6 +279,7 @@
 
 #info_list_container li h2 {
 
+    font-family: var(--font-family-sans-serif);
     position: relative;
     left: 0px;
 
@@ -228,6 +302,8 @@
 }
 
 #info_list_container li p {
+
+    font-family: var(--font-family-sans-serif);
 
     position: relative;
     left: -12px;
@@ -269,6 +345,7 @@
 }
 
 #description_episodes_related_container #description_container span * {
+    font-family: var(--font-family-sans-serif);
     color: var(--white-100);
 }
 

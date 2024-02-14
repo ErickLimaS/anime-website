@@ -60,6 +60,7 @@ export interface ApiTrendingMidiaResults {
 
 export interface ApiMediaResults extends ApiDefaultResult {
 
+    source: string,
     status: string | null,
     duration: number | null,
     volumes: number | null,

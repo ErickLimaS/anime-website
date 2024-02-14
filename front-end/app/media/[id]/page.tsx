@@ -14,6 +14,7 @@ import EpisodesContainer from '@/app/components/AnimeEpisodesContainer'
 import MangaChaptersContainer from '@/app/components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
 import ScoreInStars from '@/app/components/ScoreInStars'
+import PlayBtn from './components/WatchPlayBtn'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -27,8 +28,9 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 
 async function MediaPage({ params }: { params: { id: number } }) {
 
+
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
-  
+
   return (
     <div id={styles.container}>
 
@@ -49,19 +51,32 @@ async function MediaPage({ params }: { params: { id: number } }) {
             <h1>{mediaData.title.native}</h1>
           )}
 
-          <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>
-            {mediaData.genres && (
-              <ul className='display_flex_row'>
-                {mediaData.genres.slice(0, 3).map((item, key: number) => (
-                  <li key={key}>
-                    <Link href={`/search?genre=${item.toLowerCase()}`}>{item}</Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {mediaData.type && (
-              <span>{mediaData.type.toUpperCase()}</span>
-            )}
+          <div id={styles.genres_and_type_container} className='display_flex_row'>
+
+            <div className='display_flex_row align_items_center'>
+              {mediaData.genres && (
+                <ul className='display_flex_row'>
+                  {mediaData.genres.slice(0, 3).map((item, key: number) => (
+                    <li key={key}>
+                      <Link href={`/search?genre=${item.toLowerCase()}`}>{item}</Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {mediaData.format && (
+                <span>{(mediaData.format == "TV" ? "anime" : mediaData.format).toUpperCase()}</span>
+              )}
+            </div>
+
+            <div id={styles.add_playlist_container}>
+              <AddToPlaylistButton
+                data={mediaData as ApiDefaultResult}
+                customText={
+                  [<BookmarkFillSvg key={0} />, <BookmarkSvg key={1} />]
+                }
+              />
+            </div>
+
           </div>
 
         </section>
@@ -70,44 +85,47 @@ async function MediaPage({ params }: { params: { id: number } }) {
         <section id={styles.info_list_container}>
 
           <ul>
+            {(mediaData.type != "MANGA") && (
+              <li className={`${styles.info_item} ${styles.action_btn}`}>
 
-            <li id={styles.playlist_btn} className={`${styles.info_item}`}>
+                <PlayBtn mediaId={mediaData.id} mediaTitle={mediaData.title.romaji} />
 
-              <AddToPlaylistButton
-                data={mediaData as ApiDefaultResult}
-                customText={
-                  [<BookmarkFillSvg key={0} />, <BookmarkSvg key={1} />]
-                }
-              />
+              </li>
+            )}
 
-            </li>
+            {(mediaData.format == "MOVIE") ? (
+              <li className={`${styles.info_item}`}>
 
+                <h2>SOURCE</h2>
 
-            <li className={`${styles.info_item}`}>
+                <p>{mediaData.source.toUpperCase() || "Not Available"}</p>
 
-              <h2>STATUS</h2>
+              </li>
+            ) : (
+              <li className={`${styles.info_item}`}>
 
-              <p>{mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED" : mediaData.status || "Not Available"}</p>
+                <h2>STATUS</h2>
 
-            </li>
+                <p>{mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED" : mediaData.status || "Not Available"}</p>
 
-            <li className={`${styles.info_item}`}>
+              </li>
+            )}
 
-              {mediaData.type == "ANIME" && (<>
+            {(mediaData.type == "ANIME" && mediaData.format != "MOVIE") && (
+              <li className={`${styles.info_item}`}>
                 <h2>EPISODES</h2>
 
                 <p>{mediaData.episodes || "Not Available"}</p>
-              </>
-              )}
+              </li>
+            )}
 
-              {mediaData.type == "MANGA" && (<>
+            {mediaData.type == "MANGA" && (
+              <li className={`${styles.info_item}`}>
                 <h2>VOLUMES</h2>
 
                 <p>{mediaData.volumes || "Not Available"}</p>
-              </>
-              )}
-
-            </li>
+              </li>
+            )}
 
             <li className={`${styles.info_item}`}>
 
@@ -222,7 +240,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
             )}
 
             {/* EPISODES ONLY IF ANIME */}
-            {((mediaData.type == "ANIME")) && (
+            {(mediaData.type == "ANIME" && mediaData.format != "MOVIE") && (
               <section id={styles.episodes_container}>
 
                 <h2 className={styles.heading_style}>EPISODES</h2>

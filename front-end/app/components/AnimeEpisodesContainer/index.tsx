@@ -8,6 +8,7 @@ import gogoanime from '@/api/gogoanime';
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import placeholderImg from "@/public/photo-placeholder.jpg"
+import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 
 type EpisodesType = {
   site: string,
@@ -75,7 +76,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
     setPageNumber(0)
 
     // transform title in some way it can get query by other sources removing special chars
-    const query = props.mediaTitle.replace(/[^a-z]+/i, ' ').split(" ").join("-").toLowerCase()
+    const query = stringToUrlFriendly(props.mediaTitle)
 
     let mediaEpisodes
 
