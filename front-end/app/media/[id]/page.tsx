@@ -9,9 +9,11 @@ import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 import ChevonRightSvg from "@/public/assets/chevron-right.svg"
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
+import AnilistSvg from "@/public/assets/anilist.svg"
 import EpisodesContainer from '@/app/components/AnimeEpisodesContainer'
 import MangaChaptersContainer from '@/app/components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
+import ScoreInStars from '@/app/components/ScoreInStars'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -26,7 +28,7 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 async function MediaPage({ params }: { params: { id: number } }) {
 
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
-
+  
   return (
     <div id={styles.container}>
 
@@ -111,7 +113,15 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <h2>RELEASE</h2>
 
-              <p>{mediaData.seasonYear || "Not Available"}</p>
+              <p>
+                {mediaData.startDate &&
+                  new Date(
+                    Date.parse(
+                      `${mediaData.startDate.month} ${mediaData.startDate.day} ${mediaData.startDate.year}`
+                    )).toLocaleString('default', { month: 'long', day: "numeric", year: "numeric" })
+                  ||
+                  "Not Available"}
+              </p>
 
             </li>
 
@@ -291,20 +301,22 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
           <div id={styles.hype_container}>
 
-            {/* WILL BE ADDED IF I FOUND A API TO IT */}
-            {/* <div>
-              <h2 className={styles.heading_style}>
-                HYPE
-              </h2>
+            {mediaData.averageScore && (
+              <div id={styles.score_container}>
+                <h2 className={styles.heading_style}>
+                  SCORE
+                </h2>
 
-              <ul>
+                <ul>
 
-                <li><span>iii</span> 90%</li>
-                <li><span>iii</span> 90%</li>
-                <li><span>iii</span> 90%</li>
+                  <li className='display_flex_row align_items_center'>
+                    <span><AnilistSvg fill={"#02a9ff"} width={32} height={32} alt={"Anilist Icon"} title={'Anilist'} /> Anilist</span>
+                    <ScoreInStars score={(mediaData.averageScore / 2) / 10} />
+                  </li>
 
-              </ul>
-            </div> */}
+                </ul>
+              </div>
+            )}
 
             {(mediaData.trailer) && (
               <div id={styles.yt_video_container}>

@@ -286,7 +286,7 @@ export function mediaByIdQueryRequest(otherQueryFields?: unknown, otherMediasFie
                                         isAdult
                                         isMediaSpoiler
                                     }
-                                    characters(sort: ROLE){
+                                    characters(sort: [ROLE, FAVOURITES_DESC]){
                                         edges{
                                             id
                                             role
@@ -303,7 +303,7 @@ export function mediaByIdQueryRequest(otherQueryFields?: unknown, otherMediasFie
                                                 gender
                                                 age
                                             }
-                                            voiceActorRoles{
+                                            voiceActorRoles(language: JAPANESE){
                                                 voiceActor{
                                                     id
                                                     name{

@@ -129,8 +129,11 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         <NavButtons
           functionReceived={setEpisodesSource as (parameter: string | number) => void}
-          actualValue={episodeSource}
-          options={[{ name: "Crunchyroll", value: "crunchyroll" }, { name: "GoGoAnime", value: "gogoanime" }]}
+          actualValue={episodeSource == "crunchyroll" && data.length == 0 ? "gogoanime" : episodeSource}
+          options={data.length == 0 ?
+            [{ name: "GoGoAnime", value: "gogoanime" }] :
+            [{ name: "Crunchyroll", value: "crunchyroll" }, { name: "GoGoAnime", value: "gogoanime" }]
+          }
           sepateWithSpan={true}
         />
 
