@@ -7,6 +7,8 @@ import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
 import AddToPlaylistButton from '../AddToPlaylistButton'
+import SwiperListContainer from '../SwiperListContainer'
+import ListCarousel from '../HeroListCarousel'
 
 function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
 
@@ -134,16 +136,28 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
 
                 <h3>Todays Recomendation</h3>
 
-                <ul className="display_grid">
+                {/* SHOWS ONLY ON MOBILE */}
+                <div id={styles.swiper_list_container}>
+                    {data != undefined && (
+                        <SwiperListContainer
+                            data={data.slice(0, 9)}
+                            options={{
+                                slidesPerView: 2,
+                                bp480: 2,
+                                bp740: 3,
+                                bp1275: 3
+                            }}
+                            customHeroSection
+                        />
+                    )}
+                </div>
+
+                {/* SHOWS ON DESKTOP */}
+                <ul>
                     {data != undefined && (
                         data.slice(0, 9).map((item, key: number) => (
                             item.bannerImage && (
-                                <li key={key}>
-                                    <Link href={`/media/${item.id}`}>
-                                        <Image src={item.bannerImage} alt={`Cover for ${item.title.romaji}`} fill sizes='100%'/>
-                                    </Link>
-                                    <span>{item.title.romaji}</span>
-                                </li>
+                                <ListCarousel key={key} data={item} className={styles.desktop_list_item} />
                             ))
                         )
                     )}

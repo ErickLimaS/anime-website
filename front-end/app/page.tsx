@@ -13,6 +13,7 @@ import { convertToUnix } from "./lib/format_date_unix";
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 import AddToPlaylistButton from "./components/AddToPlaylistButton";
+import SwiperListContainer from "./components/SwiperListContainer";
 
 export const metadata: Metadata = {
   title: 'Home | AniProject',
@@ -71,10 +72,19 @@ export default async function Home() {
 
         </div>
 
+        {/* SHOWS ONLY ON MOBILE */}
+        <div id={styles.popular_list_container}>
+          <SwiperListContainer
+            data={trendingData}
+          />
+        </div>
+
+        {/* SHOWS ON DESKTOP*/}
         {trendingData != undefined &&
           (trendingData.slice(0, 12).map((item, key: number) => (
-            <MediaItemCoverInfo data={item} key={key} positionIndex={key + 1} darkMode={true} />
-          )))
+            <MediaItemCoverInfo data={item} key={key} positionIndex={key + 1} darkMode={true} hiddenOnDesktop />
+          ))
+          )
         }
 
       </section>

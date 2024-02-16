@@ -529,13 +529,13 @@ h2.heading_style {
 
 }
 
-#related_container ul,
 #similar_container ul {
 
     overflow: auto;
 
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(141px, 1fr));
+
     justify-content: center;
     gap: 16px;
 
@@ -543,10 +543,10 @@ h2.heading_style {
 
 @media(min-width:700px) {
 
-    #related_container ul,
     #similar_container ul {
         justify-content: initial;
     }
+
 }
 
 /* SCORE */

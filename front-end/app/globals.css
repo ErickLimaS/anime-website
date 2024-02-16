@@ -158,6 +158,10 @@ li {
   display: grid;
 }
 
+.display_wrap{
+  flex-wrap: wrap;
+}
+
 .space_beetween {
   justify-content: space-between;
 }

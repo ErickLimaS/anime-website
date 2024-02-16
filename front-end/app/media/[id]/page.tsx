@@ -10,11 +10,13 @@ import ChevonRightSvg from "@/public/assets/chevron-right.svg"
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import AnilistSvg from "@/public/assets/anilist.svg"
+import SwipeSvg from "@/public/assets/swipe.svg"
 import EpisodesContainer from '@/app/components/AnimeEpisodesContainer'
 import MangaChaptersContainer from '@/app/components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
 import ScoreInStars from '@/app/components/ScoreInStars'
 import PlayBtn from './components/WatchPlayBtn'
+import SwiperListContainer from '@/app/components/SwiperListContainer'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -269,25 +271,22 @@ async function MediaPage({ params }: { params: { id: number } }) {
             {mediaData.relations.nodes[0] && (
               <section id={styles.related_container}>
 
-                <div className='display_flex_row space_beetween align_items_center'>
+                <div className='display_flex_row space_beetween align_items_center display_wrap'>
                   <h2 className={styles.heading_style}>RELATED TO {(mediaData.title.romaji).toUpperCase()}</h2>
 
-                  {mediaData.relations.nodes.length > 12 && (
-                    <Link href={`/search?id=${mediaData.id}&related=true`}>VIEW ALL <ChevonRightSvg width={16} height={16} alt="Icon to right" /></Link>
+                  {mediaData.relations.nodes.length > 5 && (
+                    <p className='display_flex_row align_items_center' style={{ marginBottom: "8px", color: "var(--brand-color)" }}>
+                      <span style={{ marginRight: "8px" }}><SwipeSvg fill="var(--brand-color)" width={24} height={24} alt="Swipe to Right" /></span>
+                      Scroll To See More
+                      <ChevonRightSvg width={16} height={16} alt="Arrow to Right" />
+                    </p>
                   )}
                 </div>
 
                 <ul>
 
-                  {(mediaData).relations.nodes.slice(0, 12).map((item, key: number) => (
+                  <SwiperListContainer data={(mediaData).relations.nodes} />
 
-                    <li key={key}>
-
-                      <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item} />
-
-                    </li>
-
-                  ))}
                 </ul>
 
               </section>
@@ -301,11 +300,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <ul>
 
-                  {mediaData.recommendations.edges.slice(0, 12).map((item, key: number) => (
-                    <li key={key}>
+                  {mediaData?.recommendations.edges.slice(0, 12).map((item, key: number) => (
 
+                    <li key={key} >
                       <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item.node.mediaRecommendation} />
-
                     </li>
 
                   ))}

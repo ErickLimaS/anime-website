@@ -8,12 +8,20 @@ import AnimeSvg from "@/public/assets/play-circle.svg"
 import MangaSvg from "@/public/assets/book.svg"
 import MusicSvg from "@/public/assets/music-note-beamed.svg"
 
-function MediaItemCoverInfo({ positionIndex, data, darkMode, loading }: { data: ApiDefaultResult, positionIndex?: number, darkMode?: boolean, loading?: boolean }) {
+type ComponentTypes = {
+    data: ApiDefaultResult,
+    positionIndex?: number,
+    darkMode?: boolean,
+    loading?: boolean,
+    hiddenOnDesktop?: boolean
+}
+
+function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDesktop }: ComponentTypes) {
     return (
 
         <div
             id={styles.midia_item_cover}
-            className={`${styles.midia_item_container} ${darkMode ? styles.darkMode : ''}`}
+            className={`${styles.midia_item_container} ${darkMode ? styles.darkMode : ''} ${hiddenOnDesktop ? styles.midia_item_container_hidden : ""}`}
             style={{ gridArea: `item${positionIndex}` }}
             data-loading={loading || false}
         >
@@ -34,7 +42,7 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading }: { data: 
 
                 </span>
             </Link>
-            
+
             <small>{(data.seasonYear && (`${data.seasonYear}, `))} {data.genres && data.genres[0]}</small>
 
             <Link href={`/media/${data.id}`}>{data.title && data.title.romaji}</Link>

@@ -1,0 +1,16 @@
+.list_container {
+    overflow: hidden;
+    width: 100%;
+}
+
+.list_container>div {
+    display: flex;
+    flex-direction: row;
+}
+
+.custom_list_item>* {
+
+    height: inherit;
+    width: inherit !important;
+
+}
