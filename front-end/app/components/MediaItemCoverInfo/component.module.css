@@ -11,6 +11,12 @@
 
 }
 
+@media(max-width: 989px) {
+    .midia_item_container_hidden {
+        display: none !important;
+    }
+}
+
 #midia_item_cover[data-loading=true] {
 
     animation: loading 1800ms infinite;

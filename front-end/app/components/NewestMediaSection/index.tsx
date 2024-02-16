@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import MediaListCoverInfo from '../MediaListCoverInfo'
 import CardMediaCoverAndDescription from '../CardMediaCoverAndDescription'
@@ -27,12 +27,12 @@ function NewestMediaSection(props: PropsTypes) {
     const loadMedia: (parameter: number) => void = async (parameter: number) => {
         console.log(`Received parameter: ${parameter}`);
 
-        getMidiaByDaysRange(parameter)
+        getMediaByDaysRange(parameter)
 
     }
 
     // gets the range of days than parse it to unix, runs function to get any media releasing in the selected range
-    async function getMidiaByDaysRange(days: number) {
+    async function getMediaByDaysRange(days: number) {
 
         currentQueryValue = days
 
@@ -48,14 +48,14 @@ function NewestMediaSection(props: PropsTypes) {
         ) as ApiAiringMidiaResults[]
 
         setMediaList(response)
-        
+
         setIsLoading(false)
 
     }
 
     useEffect(() => {
         if (data[0] == null || data[0] == undefined) {
-            getMidiaByDaysRange(7)
+            getMediaByDaysRange(30)
         }
         else {
             setMediaList(data)
@@ -72,7 +72,7 @@ function NewestMediaSection(props: PropsTypes) {
 
                 <NavButtons
                     functionReceived={loadMedia as (parameter: string | number) => void}
-                    actualValue={currentQueryValue}
+                    actualValue={data[0] == null || data[0] == undefined ? 30 : currentQueryValue}
                     options={[
                         { name: "Today", value: 1 }, { name: "This week", value: 7 }, { name: "Last 30 days", value: 30 }
                     ]} />
@@ -86,7 +86,7 @@ function NewestMediaSection(props: PropsTypes) {
                             {(mediaList[0] != undefined) ? (
                                 <CardMediaCoverAndDescription data={(mediaList as ApiDefaultResult[])[0]} />
                             ) : (
-                                <>No results for today</>
+                                <p>No results for today</p>
                             )}
                         </li>
 

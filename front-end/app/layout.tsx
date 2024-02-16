@@ -31,11 +31,7 @@ export default function RootLayout({
           showSpinner={false}
         />
 
-        <Suspense fallback={<LoadingPlaceholder />}>
-
-          {children}
-
-        </Suspense>
+        {children}
 
         <Footer />
 

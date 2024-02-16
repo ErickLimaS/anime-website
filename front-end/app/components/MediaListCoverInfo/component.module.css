@@ -5,8 +5,8 @@ li.item_list {
 
     gap: 8px;
 
-    padding: 8px 0;
-    border-bottom: 1px solid var(--white-25);
+    padding: 16px 0;
+    border-bottom: 1px solid var(--white-05);
 
 }
 

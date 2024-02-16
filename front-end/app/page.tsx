@@ -13,6 +13,7 @@ import { convertToUnix } from "./lib/format_date_unix";
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 import AddToPlaylistButton from "./components/AddToPlaylistButton";
+import SwiperListContainer from "./components/SwiperListContainer";
 
 export const metadata: Metadata = {
   title: 'Home | AniProject',
@@ -22,8 +23,8 @@ export const metadata: Metadata = {
 export default async function Home() {
 
   // section 1
-  const popularData = await API.getTrendingMedia("DATE_DESC").then(
-    res => (res as ApiTrendingMidiaResults[]).filter((item) => item.media.bannerImage)
+  const popularData = await API.getNewReleases("ANIME", undefined, "TRENDING_DESC").then(
+    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false && item.bannerImage)
   )
 
   // section 2
@@ -54,8 +55,6 @@ export default async function Home() {
 
         <HeroCarousel data={popularData} />
 
-        <span id={styles.box_shadow_end_section}></span>
-
       </section>
 
       {/* POPULAR MEDIA  SECTION*/}
@@ -73,10 +72,19 @@ export default async function Home() {
 
         </div>
 
+        {/* SHOWS ONLY ON MOBILE */}
+        <div id={styles.popular_list_container}>
+          <SwiperListContainer
+            data={trendingData}
+          />
+        </div>
+
+        {/* SHOWS ON DESKTOP*/}
         {trendingData != undefined &&
           (trendingData.slice(0, 12).map((item, key: number) => (
-            <MediaItemCoverInfo data={item} key={key} positionIndex={key + 1} darkMode={true} />
-          )))
+            <MediaItemCoverInfo data={item} key={key} positionIndex={key + 1} darkMode={true} hiddenOnDesktop />
+          ))
+          )
         }
 
       </section>

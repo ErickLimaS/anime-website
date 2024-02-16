@@ -21,8 +21,34 @@ ul.carousel_container li.carousel_item {
 
     min-width: 100vw;
 
-    min-height: 60vh;
+    min-height: 460px;
 
+}
+
+@media((min-width: 1020px)) {
+    ul.carousel_container li.carousel_item {
+
+        height: calc(450px + 10vw);
+        max-height: 810px;
+
+    }
+}
+
+@media((min-width: 1440px)) {
+    ul.carousel_container li.carousel_item {
+
+        height: calc(450px + 15vw);
+        max-height: 644px;
+
+    }
+}
+
+@media((min-width: 1921px)) {
+    ul.carousel_container li.carousel_item {
+
+        max-height: 810px;
+
+    }
 }
 
 ul.carousel_container li.carousel_item div.item_info {
@@ -39,7 +65,7 @@ ul.carousel_container li.carousel_item div.item_info {
 @media((min-width: 380px)) {
 
     ul.carousel_container li.carousel_item div.item_info {
-        bottom: -50%;
+        bottom: -64px;
     }
 }
 
@@ -50,7 +76,7 @@ ul.carousel_container li.carousel_item div.item_info {
         left: calc(var(--breakpoint-sm) / 4);
 
         bottom: auto;
-        top: 35%;
+        top: 40%;
         max-width: 34%;
 
     }
@@ -138,6 +164,7 @@ ul.carousel_container li.carousel_item .item_info_inside {
 ul.carousel_container li.carousel_item .item_info_inside span,
 ul.carousel_container li.carousel_item .item_info_inside p {
     color: var(--white-100);
+    font-weight: 300;
 }
 
 ul.carousel_container li.carousel_item div.item_info .item_buttons {
@@ -218,14 +245,13 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
     margin-top: 24px;
 
-    position: relative;
-    bottom: 0;
+    position: absolute;
+    bottom: 24px;
     left: 2%;
     width: 96%;
     padding: 0 15px;
 
     height: fit-content;
-
 }
 
 @media((min-width: 1200px)) {
@@ -263,39 +289,55 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
     }
 }
 
+/* SWIPER */
+#recomendations_container #swiper_list_container {
+    display: flex;
+}
+
+#recomendations_container>h3,
+#recomendations_container #swiper_list_container {
+    max-width: var(--breakpoint-sm);
+    margin: auto;
+}
+
+@media((min-width: 768px)) {
+
+    #recomendations_container>h3,
+    #recomendations_container #swiper_list_container {
+        max-width: var(--breakpoint-md);
+        margin: auto;
+    }
+}
+
+#recomendations_container #swiper_list_container>div>div {
+
+    display: flex;
+
+}
+
+@media((min-width: 1200px)) {
+    #recomendations_container #swiper_list_container {
+        display: none;
+    }
+}
+
+/*  */
+
 #recomendations_container ul {
 
-    grid-template-columns: repeat(auto-fill, 130px);
-
+    display: none;
     width: 100%;
 
-    justify-content: center;
-
-    justify-items: center;
-    align-items: center;
-
-    gap: 8px 16px;
-
-}
-
-@media((min-width: 760px)) {
-    #recomendations_container ul {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media((min-width: 990px)) {
-    #recomendations_container ul {
-
-        justify-content: start;
-
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
 }
 
 @media((min-width: 1200px)) {
     #recomendations_container ul {
+        display: grid;
         grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px 16px;
+        justify-items: center;
+        align-items: center;
+        justify-content: start;
     }
 }
 
@@ -309,7 +351,15 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
 }
 
+@media((max-width: 1199px)) {
+    #recomendations_container ul .desktop_list_item {
+        display: none;
+    }
+}
+
 #recomendations_container ul li {
+
+    aspect-ratio: 16/9;
 
     position: relative;
     top: 0;
@@ -321,49 +371,14 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
 }
 
+@media((min-width: 1200px)) {
+    #recomendations_container ul li {
+        height: auto;
+    }
+}
+
 #recomendations_container ul li:hover {
 
     filter: brightness(80%);
-
-}
-
-#recomendations_container ul li a>img {
-
-    object-fit: cover;
-
-}
-
-#recomendations_container ul li span {
-    opacity: 0;
-
-    display: block;
-
-    position: relative;
-    bottom: 0;
-
-    transition: all ease-in-out 100ms;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
-
-    text-align: center;
-    font-size: var(--font-size--small-1);
-    font-weight: 600;
-    padding: 4px 0;
-
-    color: var(--white-100);
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
-
-    background-color: var(--black-75);
-
-}
-
-#recomendations_container ul li:hover span {
-
-    opacity: 1;
 
 }

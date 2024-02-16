@@ -10,6 +10,7 @@ export interface ApiDefaultResult {
     },
     description: string,
     episodes: number,
+    duration: number,
     season: string,
     seasonYear: number,
     isAdult: Boolean,
@@ -59,6 +60,7 @@ export interface ApiTrendingMidiaResults {
 
 export interface ApiMediaResults extends ApiDefaultResult {
 
+    source: string,
     status: string | null,
     duration: number | null,
     volumes: number | null,

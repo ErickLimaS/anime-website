@@ -4,16 +4,21 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
-function MediaListCoverInfo(
-    { positionIndex, data, showCoverArt, alternativeBorder }:
-        { positionIndex: number, data: ApiDefaultResult, showCoverArt?: boolean, alternativeBorder?: boolean }
-) {
+type MediaListInfo = {
+    positionIndex: number,
+    data: ApiDefaultResult,
+    showCoverArt?: boolean,
+    alternativeBorder?: boolean
+}
+
+function MediaListCoverInfo({ positionIndex, data, showCoverArt, alternativeBorder }: MediaListInfo) {
+
     return (
         <li className={styles.item_list} data-no-border={alternativeBorder}>
             {showCoverArt ? (
                 <div className={styles.img_container}>
                     <Link href={`/media/${data.id}`}>
-                        <Image src={data.coverImage.large} alt={`Cover Art For ${data.title.romaji}`} fill />
+                        <Image src={data.coverImage.large} alt={`Cover Art For ${data.title.romaji}`} fill sizes='100%' />
                     </Link>
                 </div>
             ) : (

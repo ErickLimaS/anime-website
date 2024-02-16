@@ -1,4 +1,4 @@
-import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import React from 'react'
 import API from "@/api/anilist"
 import styles from "./page.module.css"
@@ -8,10 +8,20 @@ import parse from "html-react-parser"
 import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 import ChevonRightSvg from "@/public/assets/chevron-right.svg"
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
+import PlaySvg from "@/public/assets/play-circle.svg"
+import BookSvg from "@/public/assets/book.svg"
+import CalendarSvg from "@/public/assets/calendar3.svg"
+import ClockSvg from "@/public/assets/clock.svg"
+import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
+import AnilistSvg from "@/public/assets/anilist.svg"
+import SwipeSvg from "@/public/assets/swipe.svg"
 import EpisodesContainer from '@/app/components/AnimeEpisodesContainer'
 import MangaChaptersContainer from '@/app/components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
+import ScoreInStars from '@/app/components/ScoreInStars'
+import PlayBtn from './components/WatchPlayBtn'
+import SwiperListContainer from '@/app/components/SwiperListContainer'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -24,6 +34,7 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 }
 
 async function MediaPage({ params }: { params: { id: number } }) {
+
 
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
 
@@ -47,19 +58,32 @@ async function MediaPage({ params }: { params: { id: number } }) {
             <h1>{mediaData.title.native}</h1>
           )}
 
-          <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>
-            {mediaData.genres && (
-              <ul className='display_flex_row'>
-                {mediaData.genres.slice(0, 3).map((item, key: number) => (
-                  <li key={key}>
-                    <Link href={`/search?genre=${item.toLowerCase()}`}>{item}</Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {mediaData.type && (
-              <span>{mediaData.type.toUpperCase()}</span>
-            )}
+          <div id={styles.genres_and_type_container} className='display_flex_row'>
+
+            <div className='display_flex_row align_items_center'>
+              {mediaData.genres && (
+                <ul className='display_flex_row'>
+                  {mediaData.genres.slice(0, 3).map((item, key: number) => (
+                    <li key={key}>
+                      <Link href={`/search?genre=${item.toLowerCase()}`}>{item}</Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {mediaData.format && (
+                <span>{(mediaData.format == "TV" ? "anime" : mediaData.format).toUpperCase()}</span>
+              )}
+            </div>
+
+            <div id={styles.add_playlist_container}>
+              <AddToPlaylistButton
+                data={mediaData as ApiDefaultResult}
+                customText={
+                  [<BookmarkFillSvg key={0} />, <BookmarkSvg key={1} />]
+                }
+              />
+            </div>
+
           </div>
 
         </section>
@@ -68,56 +92,90 @@ async function MediaPage({ params }: { params: { id: number } }) {
         <section id={styles.info_list_container}>
 
           <ul>
+            {(mediaData.type != "MANGA") && (
+              <li className={`${styles.info_item} ${styles.action_btn}`}>
 
-            <li id={styles.playlist_btn} className={`${styles.info_item}`}>
+                <PlayBtn mediaId={mediaData.id} mediaTitle={mediaData.title.romaji} />
 
-              <AddToPlaylistButton
-                data={mediaData}
-                customText={
-                  [<BookmarkFillSvg key={0} />, <BookmarkSvg key={1} />]
-                }
-              />
+              </li>
+            )}
 
-            </li>
+            {(mediaData.format == "MOVIE") ? (
+              <li className={`${styles.info_item}`}>
 
+                <h2>SOURCE</h2>
 
-            <li className={`${styles.info_item}`}>
+                <p>{mediaData.source.toUpperCase() || "Not Available"}</p>
 
-              <h2>STATUS</h2>
+              </li>
+            ) : (
+              <li className={`${styles.info_item}`}>
 
-              <p>{mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED" : mediaData.status || "Not Available"}</p>
+                <span>
+                  <ProgressSvg width={16} height={16} alt="Progress" />
+                </span>
 
-            </li>
+                <h2>STATUS</h2>
 
-            <li className={`${styles.info_item}`}>
+                <p>{mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED" : mediaData.status || "Not Available"}</p>
 
-              {mediaData.type == "ANIME" && (<>
+              </li>
+            )}
+
+            {(mediaData.type == "ANIME" && mediaData.format != "MOVIE") && (
+              <li className={`${styles.info_item}`}>
+
+                <span>
+                  <PlaySvg width={16} height={16} alt="Episodes" />
+                </span>
+
                 <h2>EPISODES</h2>
 
                 <p>{mediaData.episodes || "Not Available"}</p>
-              </>
-              )}
+              </li>
+            )}
 
-              {mediaData.type == "MANGA" && (<>
+            {mediaData.type == "MANGA" && (
+              <li className={`${styles.info_item}`}>
+
+                <span>
+                  <BookSvg width={16} height={16} alt="Volumes" />
+                </span>
+
                 <h2>VOLUMES</h2>
 
                 <p>{mediaData.volumes || "Not Available"}</p>
-              </>
-              )}
-
-            </li>
+              </li>
+            )}
 
             <li className={`${styles.info_item}`}>
 
+              <span>
+                <CalendarSvg width={16} height={16} alt="Release" />
+              </span>
+
               <h2>RELEASE</h2>
 
-              <p>{mediaData.seasonYear || "Not Available"}</p>
+              <p>
+                {mediaData.startDate &&
+                  new Date(
+                    Date.parse(
+                      `${mediaData.startDate.month} ${mediaData.startDate.day} ${mediaData.startDate.year}`
+                    )).toLocaleString('default', { month: 'long', day: "numeric", year: "numeric" })
+                  ||
+                  "Not Available"}
+              </p>
 
             </li>
 
             <li className={`${styles.info_item}`}>
 
               {mediaData.type == "ANIME" && (<>
+
+                <span>
+                  <ClockSvg width={16} height={16} alt="Length" />
+                </span>
+
                 <h2>LENTGH</h2>
 
                 <p>{mediaData.duration == null ? "Not Available" : `${mediaData.duration} min` || "Not Available"}</p>
@@ -125,6 +183,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
               )}
 
               {mediaData.type == "MANGA" && (<>
+
+                <span>
+                  <BookSvg width={16} height={16} alt="Chapters" />
+                </span>
+
                 <h2>CHAPTERS</h2>
 
                 <p>{mediaData.chapters || "Not Available"}</p>
@@ -212,7 +275,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
             )}
 
             {/* EPISODES ONLY IF ANIME */}
-            {((mediaData.type == "ANIME")) && (
+            {(mediaData.type == "ANIME" && mediaData.format != "MOVIE") && (
               <section id={styles.episodes_container}>
 
                 <h2 className={styles.heading_style}>EPISODES</h2>
@@ -241,25 +304,22 @@ async function MediaPage({ params }: { params: { id: number } }) {
             {mediaData.relations.nodes[0] && (
               <section id={styles.related_container}>
 
-                <div className='display_flex_row space_beetween align_items_center'>
+                <div className='display_flex_row space_beetween align_items_center display_wrap'>
                   <h2 className={styles.heading_style}>RELATED TO {(mediaData.title.romaji).toUpperCase()}</h2>
 
-                  {mediaData.relations.nodes.length > 12 && (
-                    <Link href={`/search?id=${mediaData.id}&related=true`}>VIEW ALL <ChevonRightSvg width={16} height={16} alt="Icon to right" /></Link>
+                  {mediaData.relations.nodes.length > 5 && (
+                    <p className='display_flex_row align_items_center' style={{ marginBottom: "8px", color: "var(--brand-color)" }}>
+                      <span style={{ marginRight: "8px" }}><SwipeSvg fill="var(--brand-color)" width={24} height={24} alt="Swipe to Right" /></span>
+                      Scroll To See More
+                      <ChevonRightSvg width={16} height={16} alt="Arrow to Right" />
+                    </p>
                   )}
                 </div>
 
                 <ul>
 
-                  {(mediaData).relations.nodes.slice(0, 12).map((item, key: number) => (
+                  <SwiperListContainer data={(mediaData).relations.nodes} />
 
-                    <li key={key}>
-
-                      <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item} />
-
-                    </li>
-
-                  ))}
                 </ul>
 
               </section>
@@ -273,11 +333,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <ul>
 
-                  {mediaData.recommendations.edges.slice(0, 12).map((item, key: number) => (
-                    <li key={key}>
+                  {mediaData?.recommendations.edges.slice(0, 12).map((item, key: number) => (
 
+                    <li key={key} >
                       <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item.node.mediaRecommendation} />
-
                     </li>
 
                   ))}
@@ -291,20 +350,22 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
           <div id={styles.hype_container}>
 
-            {/* WILL BE ADDED IF I FOUND A API TO IT */}
-            {/* <div>
-              <h2 className={styles.heading_style}>
-                HYPE
-              </h2>
+            {mediaData.averageScore && (
+              <div id={styles.score_container}>
+                <h2 className={styles.heading_style}>
+                  SCORE
+                </h2>
 
-              <ul>
+                <ul>
 
-                <li><span>iii</span> 90%</li>
-                <li><span>iii</span> 90%</li>
-                <li><span>iii</span> 90%</li>
+                  <li className='display_flex_row align_items_center'>
+                    <span><AnilistSvg fill={"#02a9ff"} width={32} height={32} alt={"Anilist Icon"} title={'Anilist'} /> Anilist</span>
+                    <ScoreInStars score={(mediaData.averageScore / 2) / 10} />
+                  </li>
 
-              </ul>
-            </div> */}
+                </ul>
+              </div>
+            )}
 
             {(mediaData.trailer) && (
               <div id={styles.yt_video_container}>
