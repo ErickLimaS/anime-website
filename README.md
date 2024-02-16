@@ -31,6 +31,7 @@ Front-end (on netlify.com):
 - ``Firebase``
 - ``GraphQL``
 - ``Framer Motion``
+- ``Swiper``
 - ``Anilist API``
 - ``Consumet API``
 
@@ -81,18 +82,18 @@ Its simple!
 
 ### Home
 
-![Home page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/89a7ffe6-8bd0-4858-9dfe-6fc5daa39c94)
-![Home page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/b7250330-c279-4b07-b2c1-27947ad25033)
+![Home page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/9500407a-86d1-4204-b658-aa8cebd33c1a)
+![Home page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/c5db2826-1dec-482f-a59b-64c57d9efa3c)
 ![Home page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/2880596f-d1fa-4522-a55c-43ab3ba2908e)
 ![Home page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/134d0040-13b7-491c-af6a-66646fb4437b)
 ![Home page 5](https://github.com/ErickLimaS/anime-website/assets/69987890/9676c57f-86e3-418d-82e9-50521f8619ba)
 
 ### Anime/Manga Page
 
-![Anime/Manga Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/d5d740c7-a0d9-4f91-b50f-d19b4fe05323)
-![Anime/Manga Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/fd8c115e-9d19-4b1f-8f7b-575985b297b8)
-![Anime/Manga Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/d4e38df1-7c06-4dc7-bdd5-2bf1705d44d7)
-![Anime/Manga Page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/0b8be187-2533-4f8e-907d-cbeb21076a00)
+![Anime/Manga Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/f29743ee-b913-4887-832d-3adefd33fc9f)
+![Anime/Manga Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/03e40e6f-aba2-415c-b824-a9e086c9ff1f)
+![Anime/Manga Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/10861040-3c42-4fd5-91ca-27ea07928487)
+![Anime/Manga Page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/37de9d84-6521-4f69-a41d-4e54bcc3dffa)
 
 ### Watch Episode Page
 

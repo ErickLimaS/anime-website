@@ -8,6 +8,11 @@ import parse from "html-react-parser"
 import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 import ChevonRightSvg from "@/public/assets/chevron-right.svg"
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
+import PlaySvg from "@/public/assets/play-circle.svg"
+import BookSvg from "@/public/assets/book.svg"
+import CalendarSvg from "@/public/assets/calendar3.svg"
+import ClockSvg from "@/public/assets/clock.svg"
+import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import AnilistSvg from "@/public/assets/anilist.svg"
 import SwipeSvg from "@/public/assets/swipe.svg"
@@ -106,6 +111,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
             ) : (
               <li className={`${styles.info_item}`}>
 
+                <span>
+                  <ProgressSvg width={16} height={16} alt="Progress" />
+                </span>
+
                 <h2>STATUS</h2>
 
                 <p>{mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED" : mediaData.status || "Not Available"}</p>
@@ -115,6 +124,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
             {(mediaData.type == "ANIME" && mediaData.format != "MOVIE") && (
               <li className={`${styles.info_item}`}>
+
+                <span>
+                  <PlaySvg width={16} height={16} alt="Episodes" />
+                </span>
+
                 <h2>EPISODES</h2>
 
                 <p>{mediaData.episodes || "Not Available"}</p>
@@ -123,6 +137,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
             {mediaData.type == "MANGA" && (
               <li className={`${styles.info_item}`}>
+
+                <span>
+                  <BookSvg width={16} height={16} alt="Volumes" />
+                </span>
+
                 <h2>VOLUMES</h2>
 
                 <p>{mediaData.volumes || "Not Available"}</p>
@@ -130,6 +149,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
             )}
 
             <li className={`${styles.info_item}`}>
+
+              <span>
+                <CalendarSvg width={16} height={16} alt="Release" />
+              </span>
 
               <h2>RELEASE</h2>
 
@@ -148,6 +171,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
             <li className={`${styles.info_item}`}>
 
               {mediaData.type == "ANIME" && (<>
+
+                <span>
+                  <ClockSvg width={16} height={16} alt="Length" />
+                </span>
+
                 <h2>LENTGH</h2>
 
                 <p>{mediaData.duration == null ? "Not Available" : `${mediaData.duration} min` || "Not Available"}</p>
@@ -155,6 +183,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
               )}
 
               {mediaData.type == "MANGA" && (<>
+
+                <span>
+                  <BookSvg width={16} height={16} alt="Chapters" />
+                </span>
+
                 <h2>CHAPTERS</h2>
 
                 <p>{mediaData.chapters || "Not Available"}</p>
