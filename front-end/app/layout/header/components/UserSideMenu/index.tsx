@@ -4,17 +4,16 @@ import styles from './component.module.css'
 import PersonIcon from '@/public/assets/person-circle.svg'
 import ChevronDownSvg from '@/public/assets/chevron-down.svg'
 import ChevronUpSvg from '@/public/assets/chevron-up.svg'
-import LoginSvg from '@/public/assets/login.svg'
 import LogoutSvg from '@/public/assets/logout.svg'
 import SettingsSvg from '@/public/assets/gear-fill.svg'
 import HistorySvg from '@/public/assets/clock-history.svg'
 import BookmarkSvg from '@/public/assets/bookmark-check-fill.svg'
-import GoogleSvg from '@/public/assets/google.svg'
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 import { initFirebase } from "@/firebase/firebaseApp";
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
 import Link from 'next/link'
+import UserModal from '../UserLoginModal'
 
 function UserSideMenu() {
 
@@ -27,10 +26,6 @@ function UserSideMenu() {
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
-
-    const signIn = async () => {
-        await signInWithPopup(auth, provider)
-    }
 
     useEffect(() => {
         setIsUserMenuOpen(false)
@@ -57,22 +52,9 @@ function UserSideMenu() {
                     </button>
 
                     {isUserMenuOpen && (
-                        <div id={styles.user_menu_list} aria-expanded={isUserMenuOpen}>
 
-                            <ul role='menu'>
-                                <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                    <button onClick={() => signIn()}>
-                                        <GoogleSvg width={16} height={16} alt={"Login icon"} /> Login
-                                    </button>
-                                </li>
-                                <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                    <button onClick={() => signIn()}>
-                                        <GoogleSvg width={16} height={16} alt={"Sign Up icon"} /> Sign Up
-                                    </button>
-                                </li>
-                            </ul>
+                        <UserModal onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} auth={auth} provider={provider} aria-expanded={isUserMenuOpen} />
 
-                        </div>
                     )}
                 </>
             ) : (
