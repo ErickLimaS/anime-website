@@ -16,8 +16,8 @@ import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import AnilistSvg from "@/public/assets/anilist.svg"
 import SwipeSvg from "@/public/assets/swipe.svg"
-import EpisodesContainer from '@/app/components/AnimeEpisodesContainer'
-import MangaChaptersContainer from '@/app/components/MangaChaptersContainer'
+import EpisodesContainer from './components/AnimeEpisodesContainer'
+import MangaChaptersContainer from './components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
 import ScoreInStars from '@/app/components/ScoreInStars'
 import PlayBtn from './components/WatchPlayBtn'
@@ -34,7 +34,6 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 }
 
 async function MediaPage({ params }: { params: { id: number } }) {
-
 
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
 

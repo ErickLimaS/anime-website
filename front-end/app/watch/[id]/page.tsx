@@ -5,7 +5,7 @@ import gogoanime from '@/api/gogoanime'
 import anilist from '@/api/anilist'
 import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
 import { EpisodeLinks } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
-import EpisodesSideListContainer from '@/app/components/EpisodesSideListContainer'
+import EpisodesSideListContainer from './components/EpisodesSideListContainer'
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID

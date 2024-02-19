@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import Link from 'next/link';
 import Image from 'next/image';
-import NavButtons from '../NavButtons';
+import NavButtons from '../../../../components/NavButtons';
 import gogoanime from '@/api/gogoanime';
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"

@@ -1,16 +1,16 @@
 import styles from "./page.module.css";
 import Link from "next/link";
 import React from "react";
-import HeroCarousel from "./components/HeroCarouselHomePage";
+import HeroCarousel from "./components/HomePage/HeroCarouselHomePage";
 import MediaItemCoverInfo from "./components/MediaItemCoverInfo";
 import ChevronRightIcon from '../public/assets/chevron-right.svg';
 import API from '../api/anilist';
-import NavThoughMidiasByTimeRange from "./components/NavThoughMidiasByTimeRange";
+import NavThoughMidiasByTimeRange from "./components/NavThoughMediasByTimeRange";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/NewestMediaSection";
 import MediaRankingSection from "./components/MediaRankingSection";
 import { convertToUnix } from "./lib/format_date_unix";
-import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from "./ts/interfaces/apiAnilistDataInterface";
+import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 import AddToPlaylistButton from "./components/AddToPlaylistButton";
 import SwiperListContainer from "./components/SwiperListContainer";

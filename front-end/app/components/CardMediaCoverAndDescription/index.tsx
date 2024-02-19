@@ -31,7 +31,7 @@ function CardMediaCoverAndDescription({ data, showButtons }: { data: ApiDefaultR
                 {showButtons == undefined && (
                     <div className={styles.buttons_container}>
 
-                        <Link href={`/media/${data.id}`}>WATCH NOW</Link>
+                        <Link href={`/media/${data.id}`}>{data.format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
 
                         <AddToPlaylistButton data={data}/>
 
