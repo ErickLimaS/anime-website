@@ -48,6 +48,7 @@
 #modal #heading h5 {
 
     font-weight: 600;
+    color: var(--black-100);
     font-size: var(--font-size--h4);
 
 }
@@ -130,6 +131,8 @@
 
 #modal #span_container>span:nth-child(2) {
 
+    color: var(--black-100);
+
     font-weight: 600;
     font-size: var(--font-size--h5);
 
@@ -137,6 +140,7 @@
 
 }
 
+/*  */
 #modal form {
 
     display: flex;
@@ -194,10 +198,19 @@
     margin: auto;
     width: max-content;
 
+    font-size: var(--font-size--small-1);
+
+
     background-color: transparent;
 
     border: 0;
 
     color: var(--brand-color);
+
+}
+
+#modal #create_account_button:hover {
+
+    text-decoration: underline;
 
 }

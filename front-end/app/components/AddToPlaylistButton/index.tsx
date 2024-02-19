@@ -4,28 +4,32 @@ import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc, FieldPath, setDoc, DocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { initFirebase } from "@/firebase/firebaseApp"
-import { getAuth } from 'firebase/auth'
+import { GoogleAuthProvider, getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useRouter } from 'next/navigation';
+import UserModal from '@/app/components/UserLoginModal';
 
 function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, customText?: any[] }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [wasAddedToPlaylist, setWasAddedToPlaylist] = useState<boolean>(false)
 
+    const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+
     const auth = getAuth()
+    const provider = new GoogleAuthProvider()
+
     const [user, loading] = useAuthState(auth)
 
     const db = getFirestore(initFirebase());
-
-    const router = useRouter()
 
     // WHEN BUTTON IS CLICKED, RUN FUNCTION TO ADD OR REMOVE MEDIA FROM FIRESTORE
     async function addThisMedia() {
 
         if (!user) {
-            router.push("/login")
+
+            // opens user login modal
+            setIsUserModalOpen(true)
             return
         }
 
@@ -105,27 +109,38 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
 
     useEffect(() => {
 
-        if (!user || loading) return
+        if (!user || loading) {
+            return
+        } else {
+            setIsUserModalOpen(false)
+            isMediaOnDB()
+        }
 
-        isMediaOnDB()
 
     }, [user])
 
     return (
-        <button
-            id={styles.container}
-            onClick={() => addThisMedia()}
-            disabled={isLoading}
-            data-added={wasAddedToPlaylist}
-            aria-label={wasAddedToPlaylist ? "Click To Remove from Playlist" : "Click To Add To Playlist"}
-            title={wasAddedToPlaylist ? `Remove ${data.title && data.title?.romaji} from Playlist` : `Add ${data.title && data.title?.romaji} To Playlist`}
-        >
-            {isLoading ?
-                <LoadingSvg alt="Loading Icon" width={16} height={16} />
-                :
-                (wasAddedToPlaylist ? (customText ? customText[0] : "ON PLAYLIST") : (customText ? customText[1] : "+ PLAYLIST"))
-            }
-        </button>
+        <>
+            {isUserModalOpen && (
+                <UserModal onClick={() => setIsUserModalOpen(false)} auth={auth} provider={provider} />
+            )}
+
+            <button
+                id={styles.container}
+                onClick={() => addThisMedia()}
+                disabled={isLoading}
+                data-added={wasAddedToPlaylist}
+                aria-label={wasAddedToPlaylist ? "Click To Remove from Playlist" : "Click To Add To Playlist"}
+                title={wasAddedToPlaylist ? `Remove ${data.title && data.title?.romaji} from Playlist` : `Add ${data.title && data.title?.romaji} To Playlist`}
+            >
+                {isLoading ?
+                    <LoadingSvg alt="Loading Icon" width={16} height={16} />
+                    :
+                    (wasAddedToPlaylist ? (customText ? customText[0] : "ON PLAYLIST") : (customText ? customText[1] : "+ PLAYLIST"))
+                }
+            </button>
+
+        </>
     )
 }
 

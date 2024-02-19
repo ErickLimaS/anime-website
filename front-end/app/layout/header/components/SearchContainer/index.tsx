@@ -6,6 +6,7 @@ import anilist from '@/api/anilist'
 import SearchResultItemCard from '@/app/layout/header/components/SearchResultItemCard'
 import LoadingIcon from '@/public/assets/ripple-1s-200px.svg'
 import SearchIcon from '@/public/assets/search.svg'
+import CloseSvg from '@/public/assets/x.svg'
 
 function SearchContainer() {
 
@@ -96,7 +97,9 @@ function SearchContainer() {
             {searchResults != null && (
                 <div id={styles.search_results_container}>
 
-                    <button onClick={() => setSearchResults(null)}>Clear Search</button>
+                    <button onClick={() => setSearchResults(null)} title="Close Search Results">
+                        <CloseSvg alt="Close Icon" width={16} height={16} />
+                    </button>
 
                     <ul>
                         {searchResults.slice(0, 6).map((item: ApiDefaultResult, key: number) => (

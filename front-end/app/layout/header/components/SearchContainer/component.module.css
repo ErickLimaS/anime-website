@@ -160,22 +160,28 @@
 
 #search_results_container>button {
 
+    transition: all ease-in-out 100ms;
+
+    transform: scale(2.3);
+
     display: block;
     margin-top: 16px;
+    margin-right: 16px;
     margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 24px;
-
-    text-align: center;
 
     border: none;
 
-    border-bottom: 2px solid var(--white-75);
     background: transparent;
 
-    color: var(--white-75);
+}
 
-    font-weight: 600;
+#search_results_container>button svg {
+    fill: var(--brand-color) !important;
+}
+
+#search_results_container>button:hover {
+
+    transform: scale(2.4);
 
 }
 
@@ -216,7 +222,7 @@
     }
 }
 
-#search_container button#btn_open_search_form_mobile svg{
+#search_container button#btn_open_search_form_mobile svg {
 
     display: flex;
 

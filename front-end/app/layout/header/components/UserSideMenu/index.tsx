@@ -13,7 +13,7 @@ import { initFirebase } from "@/firebase/firebaseApp";
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
 import Link from 'next/link'
-import UserModal from '../UserLoginModal'
+import UserModal from '../../../../components/UserLoginModal'
 
 function UserSideMenu() {
 
