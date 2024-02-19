@@ -20,8 +20,7 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
     return (
 
         <div
-            id={styles.midia_item_cover}
-            className={`${styles.midia_item_container} ${darkMode ? styles.darkMode : ''} ${hiddenOnDesktop ? styles.midia_item_container_hidden : ""}`}
+            className={`${styles.media_item_container} ${darkMode ? styles.darkMode : ''} ${hiddenOnDesktop ? styles.midia_item_container_hidden : ""}`}
             style={{ gridArea: `item${positionIndex}` }}
             data-loading={loading || false}
         >
@@ -40,10 +39,14 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                     {(data.format == "MANGA") && <MangaSvg width={16} height={16} alt="Manga Icon" />}
                     {(data.format == "MUSIC") && <MusicSvg width={16} height={16} alt="Music Icon" />}
 
+                    <span className={styles.media_format_title}>{data.format == "TV" ? "ANIME" : data.format}</span>
+
                 </span>
             </Link>
 
-            <small>{(data.seasonYear && (`${data.seasonYear}, `))} {data.genres && data.genres[0]}</small>
+            {(data.seasonYear != undefined && data.genres != undefined) && (
+                <small>{(data.seasonYear && (`${data.seasonYear}, `))} {data.genres && data.genres[0]}</small>
+            )}
 
             <Link href={`/media/${data.id}`}>{data.title && data.title.romaji}</Link>
         </div>

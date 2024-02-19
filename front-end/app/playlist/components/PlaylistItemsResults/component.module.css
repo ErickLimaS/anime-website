@@ -1,17 +1,17 @@
 #container ul {
 
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(296px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 16px;
     justify-items: center;
 
 }
 
-@media(min-width: 500px) {
+@media(min-width: 600px) {
 
     #container ul {
 
-        grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
         justify-items: start;
 
     }
@@ -22,8 +22,6 @@
 
     width: 100%;
     padding: 8px;
-
-    background-color: var(--black-50);
 
 }
 

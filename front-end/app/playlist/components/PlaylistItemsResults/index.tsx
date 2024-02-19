@@ -6,8 +6,8 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useRouter } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/firebase/firebaseApp'
-import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 
 function PlaylistItemsResults({ params }: { params?: { format: string } }) {
 
@@ -59,7 +59,7 @@ function PlaylistItemsResults({ params }: { params?: { format: string } }) {
 
                     {userBookmarks.map((item, key: number) => (
                         <li key={key}>
-                            <CardMediaCoverAndDescription data={item as ApiDefaultResult} />
+                            <MediaItemCoverInfo data={item as ApiDefaultResult} darkMode/>
                         </li>
                     ))}
 
