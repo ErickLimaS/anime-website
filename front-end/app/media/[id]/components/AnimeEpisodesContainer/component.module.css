@@ -114,7 +114,7 @@
     height: 100%;
     background: center;
     background-repeat: no-repeat;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.356), rgba(54, 7, 26, 0.15)), url("../../../public/assets/play.svg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.356), rgba(54, 7, 26, 0.15)), url("../../../../../public/assets/play.svg");
     opacity: .9;
 }
 

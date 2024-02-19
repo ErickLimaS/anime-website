@@ -5,20 +5,20 @@ import MediaItemCoverInfo from '../MediaItemCoverInfo';
 import { A11y, Navigation, Pagination } from 'swiper/modules';
 import styles from "./styles.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import ListCarousel from '../HeroListCarousel';
+import ListCarousel from '../HomePage/HeroListCarousel';
 
-function SwiperListContainer({ data, options, children, customHeroSection }: {
-    children?: any,
+function SwiperListContainer({ data, options, children, customHeroSection }: { 
     data?: ApiDefaultResult[],
     options?: {
         slidesPerView?: number
         bp480: number,
         bp740: number,
         bp1275: number,
-    }
+    },
+    children?: any,
     customHeroSection?: boolean
 }) {
-    console.log(children)
+    
     return (
         <Swiper
             className={styles.list_container}

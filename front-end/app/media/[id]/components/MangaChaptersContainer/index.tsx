@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import Link from 'next/link';
-import NavButtons from '../NavButtons';
+import NavButtons from '../../../../components/NavButtons';
 import gogoanime from '@/api/gogoanime';
 import { MangaChapters, MangaInfo, MangaSearchResult, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import BookSvg from "@/public/assets/book.svg"

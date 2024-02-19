@@ -2,12 +2,11 @@
 import React, { useState } from 'react'
 import styles from "./carouselComponent.module.css"
 import Link from 'next/link'
-import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
-import AddToPlaylistButton from '../AddToPlaylistButton'
-import SwiperListContainer from '../SwiperListContainer'
+import AddToPlaylistButton from '../../AddToPlaylistButton'
+import SwiperListContainer from '../../SwiperListContainer'
 import ListCarousel from '../HeroListCarousel'
 
 function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
@@ -117,7 +116,7 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
 
                                 <div className={styles.item_buttons}>
 
-                                    <Link href={`/media/${data[imageIndex]?.id}`}>WATCH NOW</Link>
+                                    <Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex].format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
 
                                     <AddToPlaylistButton data={data[imageIndex]} />
 

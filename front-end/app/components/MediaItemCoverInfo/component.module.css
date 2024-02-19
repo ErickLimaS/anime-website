@@ -1,4 +1,4 @@
-#midia_item_cover {
+.media_item_container {
 
     position: relative;
 
@@ -17,7 +17,7 @@
     }
 }
 
-#midia_item_cover[data-loading=true] {
+.media_item_container[data-loading=true] {
 
     animation: loading 1800ms infinite;
 
@@ -40,13 +40,13 @@
 
 }
 
-#midia_item_cover:hover #img_container {
+.media_item_container:hover #img_container {
 
     filter: brightness(85%);
 
 }
 
-#midia_item_cover #img_container {
+.media_item_container #img_container {
 
     position: relative;
     top: 0;
@@ -56,11 +56,19 @@
     aspect-ratio: 46 / 65;
 
     transition: all ease-in-out 190ms;
+
+    margin-bottom: 4px;
+
 }
 
-#midia_item_cover .media_type_icon {
+.media_item_container .media_type_icon {
 
     display: flex;
+
+    gap: 0 4px;
+
+    align-items: center;
+
     margin: auto;
 
     position: absolute;
@@ -72,36 +80,73 @@
 
     border-radius: 50%;
 
-
     top: 4px;
     left: 4px;
 
 }
 
-#midia_item_cover .media_type_icon svg {
+/* SPAN OVER IMG */
+.media_item_container .media_type_icon svg {
 
     fill: var(--brand-color);
 
 }
 
-.midia_item_container small {
+.media_item_container .media_type_icon span.media_format_title {
+
+    animation: forwards showIn 500ms;
+
+    display: none;
+
+    opacity: 0;
 
     font-size: var(--font-size--small-2);
 
-    margin-top: 4px;
-    margin-bottom: 4px;
+}
+
+.media_item_container:hover .media_type_icon {
+
+    border-radius: 4px;
+
+    background-color: var(--black-100);
+}
+
+.media_item_container:hover span.media_format_title {
+
+    display: block;
+
+    opacity: 1;
+
+}
+
+@keyframes showIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/*  */
+.media_item_container small {
+
+    font-size: var(--font-size--small-2);
 
     color: var(--black-50);
 
 }
 
-.midia_item_container.darkMode small {
+.media_item_container.darkMode small {
 
     color: var(--white-50);
 
 }
 
-.midia_item_container a {
+.media_item_container a {
+    margin-top: 4px;
+
     color: var(--black-100);
 
     font-size: var(--font-size--small-1);
@@ -113,7 +158,7 @@
 
 }
 
-.midia_item_container.darkMode a {
+.media_item_container.darkMode a {
     color: var(--white-100);
     font-weight: 500;
 }
