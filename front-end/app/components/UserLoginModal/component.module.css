@@ -194,10 +194,19 @@
     margin: auto;
     width: max-content;
 
+    font-size: var(--font-size--small-1);
+
+
     background-color: transparent;
 
     border: 0;
 
     color: var(--brand-color);
+
+}
+
+#modal #create_account_button:hover {
+    
+    text-decoration: underline;
 
 }

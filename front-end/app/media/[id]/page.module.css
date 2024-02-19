@@ -84,7 +84,7 @@ h2.heading_style {
 
 }
 
-#media_title_container #add_playlist_container button {
+#media_title_container #add_playlist_container>button {
 
     box-shadow: 3px 3px 4px var(--black-75);
 
@@ -101,7 +101,7 @@ h2.heading_style {
 
 }
 
-#media_title_container #add_playlist_container button[data-added=true] {
+#media_title_container #add_playlist_container>button[data-added=true] {
 
     background-color: var(--brand-color);
 

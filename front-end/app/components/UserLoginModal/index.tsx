@@ -43,10 +43,9 @@ function UserModal({ onClick, auth, provider }: { onClick: MouseEventHandler<HTM
     return (
 
         <AnimatePresence
-            initial={false}
+            initial={true}
             mode='wait'
             onExitComplete={() => null}
-
         >
             <motion.div
                 id={styles.backdrop}
