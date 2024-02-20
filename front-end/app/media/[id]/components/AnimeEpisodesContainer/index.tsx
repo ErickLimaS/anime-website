@@ -1,21 +1,14 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import Link from 'next/link';
-import Image from 'next/image';
 import NavButtons from '../../../../components/NavButtons';
 import gogoanime from '@/api/gogoanime';
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
-import placeholderImg from "@/public/photo-placeholder.jpg"
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
-
-type EpisodesType = {
-  site: string,
-  url: string,
-  thumbnail: string,
-  title: string,
-}
+import GoGoAnimeEpisode from '../GoGoAnimeEpisodeContainer';
+import CrunchyrollEpisode from '../CrunchyrollEpisodeContainer';
+import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 
 function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, mediaId: number }) {
 
@@ -149,63 +142,23 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
           (pageNumber != 0 ? (rangeEpisodesPerPage * (pageNumber)) : (rangeEpisodesPerPage * (pageNumber + 1)))
         ).map((item, key: number) => (
 
-          <li key={key}>
-
-            {episodeSource != "crunchyroll" ? (
-
-              !loading && (
-                <>
-                  <Link href={`/watch/${props.mediaId}?q=${(item as MediaEpisodes).id}`} className={styles.img_container}>
-                    <Image
-                      src={placeholderImg}
-                      data-other-source={true}
-                      fill
-                      sizes='100%'
-                      alt={`Watch episode ${(item as MediaEpisodes).number}`}
-                      placeholder='blur'
-                      blurDataURL={'data:image/svg+xml;base64,CiAgICA8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDggNSc+CiAgICAgIDxmaWx0ZXIgaWQ9J2InIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0nc1JHQic+CiAgICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0nMScgLz4KICAgICAgPC9maWx0ZXI+CgogICAgICA8aW1hZ2UgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZScgZmlsdGVyPSd1cmwoI2IpJyB4PScwJyB5PScwJyBoZWlnaHQ9JzEwMCUnIHdpZHRoPScxMDAlJyAKICAgICAgaHJlZj0nZGF0YTppbWFnZS9hdmlmO2Jhc2U2NCwvOWovMndCREFBZ0dCZ2NHQlFnSEJ3Y0pDUWdLREJRTkRBc0xEQmtTRXc4VUhSb2ZIaDBhSEJ3Z0pDNG5JQ0lzSXh3Y0tEY3BMREF4TkRRMEh5YzVQVGd5UEM0ek5ETC8yd0JEQVFrSkNRd0xEQmdORFJneUlSd2hNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpML3dBQVJDQUFMQUJBREFTSUFBaEVCQXhFQi84UUFGZ0FCQVFFQUFBQUFBQUFBQUFBQUFBQUFCZ01ILzhRQUloQUFBZ0lDQWdFRkFRQUFBQUFBQUFBQUFRSURCQVVSQUNFU0JoTVVNVUhCLzhRQUZRRUJBUUFBQUFBQUFBQUFBQUFBQUFBQUFBTC94QUFaRVFBREFBTUFBQUFBQUFBQUFBQUFBQUFBQVJFQ0lUSC8yZ0FNQXdFQUFoRURFUUEvQU5KdFhNbEZqekxjaGZIMVl4dDVQa3B2ZjUzL0FEWGZJeGVzemtFclJZK3V0eVYxVVNsU3dDc1U4aHM2ME5nRTY0aEVVZCtrOWEzR2swRWkrTG82Z2dnOWNNNTJOYU9GdFdxbzltWlN6cXlIV2pvOWdmWDd3M3VsNHpoLy85az0nIC8+CiAgICA8L3N2Zz4KICA='}>
-                    </Image>
-                  </Link>
-
-                  <div>
-                    <h3>
-                      <Link href={`/watch/${props.mediaId}?q=${(item as MediaEpisodes).id}`}>
-                        {`Episode ${(item as MediaEpisodes).number}`}
-                      </Link>
-                    </h3>
-                  </div>
-                </>
-              )
-            ) : (
-              !loading && (
-                <>
-                  <Link href={item.url} className={styles.img_container} target='_blank'>
-                    <Image
-                      src={(item as EpisodesType).thumbnail}
-                      fill
-                      sizes='100%'
-                      alt={`Watch ${(item as EpisodesType).title}`}
-                      placeholder='blur'
-                      blurDataURL={'data:image/svg+xml;base64,CiAgICA8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDggNSc+CiAgICAgIDxmaWx0ZXIgaWQ9J2InIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0nc1JHQic+CiAgICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0nMScgLz4KICAgICAgPC9maWx0ZXI+CgogICAgICA8aW1hZ2UgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZScgZmlsdGVyPSd1cmwoI2IpJyB4PScwJyB5PScwJyBoZWlnaHQ9JzEwMCUnIHdpZHRoPScxMDAlJyAKICAgICAgaHJlZj0nZGF0YTppbWFnZS9hdmlmO2Jhc2U2NCwvOWovMndCREFBZ0dCZ2NHQlFnSEJ3Y0pDUWdLREJRTkRBc0xEQmtTRXc4VUhSb2ZIaDBhSEJ3Z0pDNG5JQ0lzSXh3Y0tEY3BMREF4TkRRMEh5YzVQVGd5UEM0ek5ETC8yd0JEQVFrSkNRd0xEQmdORFJneUlSd2hNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpML3dBQVJDQUFMQUJBREFTSUFBaEVCQXhFQi84UUFGZ0FCQVFFQUFBQUFBQUFBQUFBQUFBQUFCZ01ILzhRQUloQUFBZ0lDQWdFRkFRQUFBQUFBQUFBQUFRSURCQVVSQUNFU0JoTVVNVUhCLzhRQUZRRUJBUUFBQUFBQUFBQUFBQUFBQUFBQUFBTC94QUFaRVFBREFBTUFBQUFBQUFBQUFBQUFBQUFBQVJFQ0lUSC8yZ0FNQXdFQUFoRURFUUEvQU5KdFhNbEZqekxjaGZIMVl4dDVQa3B2ZjUzL0FEWGZJeGVzemtFclJZK3V0eVYxVVNsU3dDc1U4aHM2ME5nRTY0aEVVZCtrOWEzR2swRWkrTG82Z2dnOWNNNTJOYU9GdFdxbzltWlN6cXlIV2pvOWdmWDd3M3VsNHpoLy85az0nIC8+CiAgICA8L3N2Zz4KICA='}>
-                    </Image>
-                  </Link>
-
-                  <div>
-                    <h3>
-                      <Link href={(item as EpisodesType).url} target='_blank'>
-                        {(item as EpisodesType).title}
-                      </Link>
-                    </h3>
-                  </div>
-                </>
-              )
-            )}
-
-            {loading && (
+          loading ? (
+            <li key={key}>
               <LoadingSvg width={16} height={16} alt="Loading Episodes" />
-            )}
+            </li>
+          ) : (
 
-          </li>
+            episodeSource == "crunchyroll" ? (
+
+              <CrunchyrollEpisode key={key} data={item as EpisodesType} mediaId={props.mediaId} />
+
+            ) : (
+
+              <GoGoAnimeEpisode key={key} data={item as MediaEpisodes} mediaId={props.mediaId} />
+
+            )
+          )
+
         ))}
 
       </ol>

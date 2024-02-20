@@ -63,61 +63,6 @@
 
 }
 
-#container li img {
-    transition: all ease-in-out 100ms;
-}
-
-#container li:hover img {
-
-    transform: scale(1.1);
-
-}
-
-#container li a {
-
-    display: block;
-
-    color: var(--white-100);
-    font-size: var(--font-size--small-1);
-    font-weight: 500;
-
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-
-}
-
-#container li a.img_container {
-
-    position: relative;
-    top: 0;
-
-    aspect-ratio: 4 / 3;
-
-    margin-bottom: 16px;
-
-    border-radius: 8px;
-
-}
-
-#container li a.img_container>img {
-    background: linear-gradient(45deg, var(--brand-color), transparent);
-}
-
-#container li:hover a.img_container::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: center;
-    background-repeat: no-repeat;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.356), rgba(54, 7, 26, 0.15)), url("../../../../../public/assets/play.svg");
-    opacity: .9;
-}
-
 /* PAGINATION BUTTONS */
 #pagination_buttons_container {
 

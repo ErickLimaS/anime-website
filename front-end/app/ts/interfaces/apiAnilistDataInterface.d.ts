@@ -58,6 +58,13 @@ export interface ApiTrendingMidiaResults {
 
 }
 
+export interface EpisodesType {
+    site: string,
+    url: string,
+    thumbnail: string,
+    title: string,
+}
+
 export interface ApiMediaResults extends ApiDefaultResult {
 
     source: string,
@@ -83,7 +90,7 @@ export interface ApiMediaResults extends ApiDefaultResult {
                     image: {
                         large: string,
                         medium: string
-                    }, 
+                    },
                     name: {
                         full: string
                     }
@@ -91,12 +98,7 @@ export interface ApiMediaResults extends ApiDefaultResult {
             }]
         }]
     },
-    streamingEpisodes: [{
-        site: string,
-        url: string,
-        thumbnail: string,
-        title: string,
-    }]
+    streamingEpisodes: EpisodesType[]
     studios: {
         edges: {
             node: {
