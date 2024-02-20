@@ -93,7 +93,7 @@
 
 #list_container li[data-active=true] {
 
-    background-color: var(--brand-color);
+    background-color: var(--brand-dark-color);
 
 }
 
@@ -108,7 +108,7 @@
 
 }
 
-#list_container li>a {
+#list_container li {
 
     display: grid;
     grid-template-columns: 20% 80%;
@@ -119,11 +119,20 @@
 
 }
 
-#list_container li[data-active=false]>a:hover {
+#list_container li[data-active=false]:hover {
     border: 2px solid var(--white-25);
 }
 
-#list_container li h4 {
+#list_container li .episode_info_container {
+
+    display: flex;
+    width: 85%;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+#list_container li .episode_info_container h4 {
 
     font-size: var(--font-size--p);
     font-weight: 400;

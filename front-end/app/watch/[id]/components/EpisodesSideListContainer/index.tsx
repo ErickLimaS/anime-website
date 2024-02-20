@@ -5,6 +5,7 @@ import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces
 import gogoanime from '@/api/gogoanime'
 import Link from 'next/link'
 import Image from 'next/image'
+import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
 
 function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId: number, mediaTitle: string, episodeId: string }) {
 
@@ -57,6 +58,7 @@ function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId
 
                     episodesList?.map((item, key: number) => (
                         <li key={key} data-active={item.id == episodeId}>
+
                             <Link href={`/watch/${mediaId}?q=${item.id}`}>
 
                                 <div className={styles.img_container}>
@@ -65,19 +67,25 @@ function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId
 
                                 </div>
 
-                                <div>
+                            </Link>
 
+                            <div className={styles.episode_info_container}>
+
+                                <Link href={`/watch/${mediaId}?q=${item.id}`}>
                                     <h4>Episode {item.number}</h4>
 
-                                </div>
+                                </Link>
 
-                            </Link>
+                                <ButtonMarkEpisodeAsWatched data={item} mediaId={mediaId} source={'gogoanime'} hasText={true}/>
+
+                            </div>
+
                         </li>
                     ))
                 )}
             </ol>
 
-        </div>
+        </div >
     )
 }
 

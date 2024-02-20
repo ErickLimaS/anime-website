@@ -1,109 +1,12 @@
-"use client"
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
-import CheckSvg from "@/public/assets/check-circle.svg"
-import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
-import { DocumentData, DocumentSnapshot, FieldPath, arrayRemove, arrayUnion, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
-import { initFirebase } from '@/firebase/firebaseApp'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { getAuth } from 'firebase/auth'
+import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
 
 function GoGoAnimeEpisode({ data, mediaId }: { data: MediaEpisodes, mediaId: number }) {
-
-    const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-
-    const auth = getAuth()
-
-    const [user, loading] = useAuthState(auth)
-
-    const db = getFirestore(initFirebase());
-
-    // ADD OR REMOVE EPISODE FROM FIRESTORE
-    async function handleEpisodeWatch() {
-
-        setIsLoading(true)
-
-        if (!user) return
-
-        if (!wasEpisodeWatched) {
-
-            await setDoc(doc(db, 'users', user.uid),
-                {
-                    episodesWatchedBySource: {
-                        gogoanime: {
-                            [mediaId]: arrayUnion(...[{
-
-                                mediaId: mediaId,
-                                episodeId: data.id,
-                                episodeTitle: data.number
-
-                            }])
-                        }
-                    }
-                } as unknown as FieldPath,
-                { merge: true }
-            )
-
-            setWasEpisodeWatched(true)
-
-        }
-        else {
-
-            await setDoc(doc(db, 'users', user.uid),
-                {
-                    episodesWatchedBySource: {
-                        gogoanime: {
-                            [mediaId]: arrayRemove(...[{
-
-                                mediaId: mediaId,
-                                episodeId: data.id,
-                                episodeTitle: data.number
-
-                            }])
-                        }
-                    }
-                } as unknown as FieldPath,
-                { merge: true }
-            )
-
-            setWasEpisodeWatched(false)
-
-        }
-
-        setIsLoading(false)
-    }
-
-    // CHECK IF EPISODE IS ON FIRESTORE, THEN CHANGE STATE
-    async function checkEpisodeMarkedAsWatched() {
-
-        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
-
-        if (!userDoc) return
-
-        const onGoGoAnimeList = userDoc.get("episodesWatchedBySource")?.gogoanime
-
-        if (!onGoGoAnimeList) return
-
-        const episodedWatched = onGoGoAnimeList[mediaId]?.find(
-            (item: { episodeId: string }) => item.episodeId == data.id
-        )
-
-        if (episodedWatched) setWasEpisodeWatched(true)
-
-    }
-
-    useEffect(() => {
-
-        if (!user) return
-
-        checkEpisodeMarkedAsWatched()
-
-    }, [user])
 
     return (
         <li className={styles.container}>
@@ -127,22 +30,7 @@ function GoGoAnimeEpisode({ data, mediaId }: { data: MediaEpisodes, mediaId: num
                     </Link>
                 </h3>
 
-                {user && (
-
-                    <button
-                        onClick={() => handleEpisodeWatch()}
-                        data-active={wasEpisodeWatched}
-                        disabled={isLoading}
-                        title={wasEpisodeWatched ? "Mark as Unwatched " : "Mark as Watched"}
-                    >
-                        {wasEpisodeWatched ? (
-                            <CheckFillSvg width={16} height={16} alt="Check Episode as Watched" />
-                        ) : (
-                            <CheckSvg width={16} height={16} alt="Check Episode as Not Watched" />
-                        )}
-                    </button>
-
-                )}
+                <ButtonMarkEpisodeAsWatched data={data} mediaId={mediaId} source="gogoanime" />
 
             </div>
 

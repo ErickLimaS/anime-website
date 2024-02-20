@@ -41,9 +41,13 @@ async function MediaPage({ params }: { params: { id: number } }) {
     <div id={styles.container}>
 
       {/* BANNER or BACKGROUND COLOR*/}
-      <div id={styles.banner_background_container} style={{
-        background: `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData && mediaData.bannerImage})`
-      }}></div>
+      <div
+        id={styles.banner_background_container}
+        style={{
+          background: `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData && mediaData.bannerImage})`
+        }}
+      >
+      </div>
 
       {/* MEDIA INFO */}
       <div id={styles.media_info_container}>
@@ -70,7 +74,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 </ul>
               )}
               {mediaData.format && (
-                <span>{(mediaData.format == "TV" ? "anime" : mediaData.format).toUpperCase()}</span>
+                <span style={{ color: mediaData.coverImage?.color || "var(--white-100)" }}>{(mediaData.format == "TV" ? "anime" : mediaData.format).toUpperCase()}</span>
               )}
             </div>
 

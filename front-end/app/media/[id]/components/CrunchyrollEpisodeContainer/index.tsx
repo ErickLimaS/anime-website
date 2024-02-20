@@ -1,108 +1,11 @@
-"use client"
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import CheckSvg from "@/public/assets/check-circle.svg"
-import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
-import { getAuth } from 'firebase/auth'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { DocumentData, DocumentSnapshot, FieldPath, arrayRemove, arrayUnion, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
-import { initFirebase } from '@/firebase/firebaseApp'
+import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
 
 function CrunchyrollEpisode({ data, mediaId }: { data: EpisodesType, mediaId: number }) {
-
-    const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-
-    const auth = getAuth()
-
-    const [user, loading] = useAuthState(auth)
-
-    const db = getFirestore(initFirebase());
-
-    // ADD OR REMOVE EPISODE FROM FIRESTORE
-    async function handleEpisodeWatch() {
-
-        setIsLoading(true)
-
-        if (!user) return
-
-        if (!wasEpisodeWatched) {
-
-            await setDoc(doc(db, 'users', user.uid),
-                {
-                    episodesWatchedBySource: {
-                        crunchyroll: {
-                            [mediaId]: arrayUnion(...[{
-
-                                mediaId: mediaId,
-                                episodeId: data.title, // crunchyroll has no id for episodes, so it will be used its title
-                                episodeTitle: data.title
-
-                            }])
-                        }
-                    }
-                } as unknown as FieldPath,
-                { merge: true }
-            )
-
-            setWasEpisodeWatched(true)
-
-        }
-        else {
-
-            await setDoc(doc(db, 'users', user.uid),
-                {
-                    episodesWatchedBySource: {
-                        crunchyroll: {
-                            [mediaId]: arrayRemove(...[{
-
-                                mediaId: mediaId,
-                                episodeId: data.title, // crunchyroll has no id for episodes, so it will be used its title
-                                episodeTitle: data.title
-
-                            }])
-                        }
-                    }
-                } as unknown as FieldPath,
-                { merge: true }
-            )
-
-            setWasEpisodeWatched(false)
-
-        }
-
-        setIsLoading(false)
-    }
-
-    // CHECK IF EPISODE IS ON FIRESTORE, THEN CHANGE STATE
-    async function checkEpisodeMarkedAsWatched() {
-
-        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
-
-        if (!userDoc) return
-
-        const onCrunchyrollList = userDoc.get("episodesWatchedBySource")?.crunchyroll
-
-        if (!onCrunchyrollList) return
-
-        const episodedWatched = onCrunchyrollList[mediaId]?.find(
-            (item: { episodeId: string }) => item.episodeId == data.title
-        )
-
-        if (episodedWatched) setWasEpisodeWatched(true)
-
-    }
-
-    useEffect(() => {
-
-        if (!user) return
-
-        checkEpisodeMarkedAsWatched()
-
-    }, [user])
 
     return (
         <li className={styles.container}>
@@ -124,22 +27,7 @@ function CrunchyrollEpisode({ data, mediaId }: { data: EpisodesType, mediaId: nu
                     </Link>
                 </h3>
 
-                {user && (
-
-                    <button
-                        onClick={() => handleEpisodeWatch()}
-                        data-active={wasEpisodeWatched}
-                        disabled={isLoading}
-                        title={wasEpisodeWatched ? "Mark as Unwatched " : "Mark as Watched"}
-                    >
-                        {wasEpisodeWatched ? (
-                            <CheckFillSvg width={16} height={16} alt="Check Episode as Watched" />
-                        ) : (
-                            <CheckSvg width={16} height={16} alt="Check Episode as Not Watched" />
-                        )}
-                    </button>
-
-                )}
+                <ButtonMarkEpisodeAsWatched data={data} mediaId={mediaId} source="crunchyroll"/>
 
             </div>
         </li>
