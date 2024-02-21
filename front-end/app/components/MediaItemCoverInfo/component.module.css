@@ -100,6 +100,8 @@
 
     opacity: 0;
 
+    color: var(--white-100) !important;
+
     font-size: var(--font-size--small-2);
 
 }
