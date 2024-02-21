@@ -362,8 +362,13 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 <ul>
 
                   <li className='display_flex_row align_items_center'>
-                    <span><AnilistSvg fill={"#02a9ff"} width={32} height={32} alt={"Anilist Icon"} title={'Anilist'} /> Anilist</span>
+                    <span>
+                      <AnilistSvg fill={"#02a9ff"} width={32} height={32} alt={"Anilist Icon"} title={'Anilist'} /> Anilist
+                    </span>
                     <ScoreInStars score={(mediaData.averageScore / 2) / 10} />
+                    <span>
+                      {`(${(mediaData.averageScore / 2) / 10}/5)`}
+                    </span>
                   </li>
 
                 </ul>
