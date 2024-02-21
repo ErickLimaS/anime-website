@@ -5,7 +5,7 @@ import HeroCarousel from "./components/HomePage/HeroCarouselHomePage";
 import MediaItemCoverInfo from "./components/MediaItemCoverInfo";
 import ChevronRightIcon from '../public/assets/chevron-right.svg';
 import API from '../api/anilist';
-import NavThoughMidiasByTimeRange from "./components/NavThoughMediasByTimeRange";
+import NavThoughMedias from "./components/NavThoughMedias";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/NewestMediaSection";
 import MediaRankingSection from "./components/MediaRankingSection";
@@ -68,7 +68,7 @@ export default async function Home() {
 
           <span></span>
 
-          <Link href={'#'}>VIEW ALL <ChevronRightIcon width={16} height={16} /> </Link>
+          <Link href={'#'}>VIEW ALL <ChevronRightIcon width={16} height={16} /></Link>
 
         </div>
 
@@ -97,10 +97,10 @@ export default async function Home() {
 
       </div>
 
-      {/* SECTION => SHOWS MIDIA RELEASED BY A SELECTED TIME (today, 7 days, 30 days)  */}
-      <section id={styles.launch_by_time_span_container}>
+      {/* SECTION => SHOWS MEDIA RELEASED BY A SELECTED TIME (today, 7 days, 30 days)  */}
+      <section className={styles.medias_sections_container}>
 
-        <NavThoughMidiasByTimeRange />
+        <NavThoughMedias dateOptions={true} sort="RELEASE" title={"Latest Releases"} route={"/releases"} />
 
       </section>
 
@@ -148,6 +148,21 @@ export default async function Home() {
 
         </section>
       )}
+
+
+      {/* SECTION => SHOWS MEDIAS SORTED BY FAVOURITES */}
+      <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
+
+        <NavThoughMedias title={"All Time Favorites"} route={"/favourites"} sort={"FAVOURITES_DESC"} darkBackground={true} />
+
+      </section>
+
+      {/* SECTION => SHOWS MEDIAS SORTED BY POPULARITY   */}
+      <section className={`${styles.medias_sections_container}`}>
+
+        <NavThoughMedias title={"Most Popular"} route={"/popular"} sort={"POPULARITY_DESC"} layoutInverted={true} />
+
+      </section>
 
       {/* RANKING and NEWEST SECTION */}
       <section className={styles.background}>

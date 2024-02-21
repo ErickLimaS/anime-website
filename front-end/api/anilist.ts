@@ -206,16 +206,16 @@ export default {
     },
 
     // MEDIAS IN THIS FORMAT    
-    getMediaForThisFormat: async (type: string, sort?: string) => {
+    getMediaForThisFormat: async (type: string, sort?: string, pageNumber?: number, perPage?: number) => {
 
         try {
 
             const graphqlQuery = {
                 "query": defaultApiQueryRequest(),
                 "variables": {
-                    'page': 1,
+                    'page': pageNumber || 1,
                     'sort': sort || 'TRENDING_DESC',
-                    'perPage': 20,
+                    'perPage': perPage || 20,
                     'showAdultContent': false,
                     'type': type
                 }
