@@ -13,10 +13,10 @@ You can access it <a href='https://aniproject-dev.netlify.app/'>here</a>.
 - [x] `Read`: Read any manga chapter available.
 - [x] `Log In`: You can log in with your Google Account (more options in the future).
 - [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.
+- [x] `Bookmark the episodes you watched`: And keep watching from there later
       
 ## :pushpin: Under Development
  
-- [ ] `Bookmark the episodes you watched`
 - [ ] `Keep track of what you watched last`
 - [ ] `Be notified when a new episode/chapter is released`
 
@@ -90,16 +90,16 @@ Its simple!
 
 ### Anime/Manga Page
 
-![Anime/Manga Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/f29743ee-b913-4887-832d-3adefd33fc9f)
-![Anime/Manga Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/03e40e6f-aba2-415c-b824-a9e086c9ff1f)
-![Anime/Manga Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/10861040-3c42-4fd5-91ca-27ea07928487)
-![Anime/Manga Page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/37de9d84-6521-4f69-a41d-4e54bcc3dffa)
+![Anime/Manga Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/dcf1bcdf-c488-4959-ac10-5171fc38019d)
+![Anime/Manga Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/9c49b769-f19d-4972-8655-8cd9815b6026)
+![Anime/Manga Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/37de9d84-6521-4f69-a41d-4e54bcc3dffa)
 
 ### Watch Episode Page
 
-![Watch Episode Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/4aa7c81c-ef57-4bca-84eb-0690a08774ff)
-
-![Watch Episode Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/ae8984c6-8eb9-4de4-9df3-2969cc4f775e)
+![Watch Episode Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/a0d6eddc-1d8b-4baa-9ba9-be89de97204e)
+![Watch Episode Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/8c73d164-fa68-444c-9ed2-449784aa20eb)
 
 ### Playlist Page
-![Playlist page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/34a30f4d-0048-4413-a32f-5e851c676557)
+
+![Playlist page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/c8ed47e5-6ac8-4ec2-adc4-fdbf2119cc11)
+
