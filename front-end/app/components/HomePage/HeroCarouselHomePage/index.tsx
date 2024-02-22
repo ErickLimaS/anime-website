@@ -53,7 +53,7 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
         ,
         backgroundPosition: (typeof window !== "undefined") && window.matchMedia("(max-width: 700px)").matches ?
             "top"
-            : 
+            :
             "center"
         ,
         backgroundSize: "cover",
@@ -63,9 +63,10 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
     return (
         <>
             {data != undefined && (
-                <ul id="carousel" className={`${styles.carousel_container} display_flex_row`}>
 
-                    <AnimatePresence initial={true} custom={direction} mode='sync'>
+                <AnimatePresence initial={true} custom={direction} mode='sync'>
+
+                    <ul id="carousel" className={`${styles.carousel_container} display_flex_row`}>
 
                         <motion.li
                             key={page}
@@ -134,9 +135,9 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
 
                         </motion.li>
 
-                    </AnimatePresence>
+                    </ul >
 
-                </ul >
+                </AnimatePresence>
             )}
 
             <div id={styles.recomendations_container}>
