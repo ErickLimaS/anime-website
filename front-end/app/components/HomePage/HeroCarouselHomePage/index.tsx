@@ -45,9 +45,17 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
         setPage([page + newDirection, newDirection]);
     };
 
-    const styledList = {
-        background: `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage})`,
-        backgroundPosition: "center",
+    let styledList = {
+        background: (typeof window !== "undefined") && window.matchMedia("(max-width: 700px)").matches ?
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${data[imageIndex]?.coverImage.extraLarge})`
+            :
+            `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage})`
+        ,
+        backgroundPosition: (typeof window !== "undefined") && window.matchMedia("(max-width: 700px)").matches ?
+            "top"
+            : 
+            "center"
+        ,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat"
     }
@@ -57,7 +65,7 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
             {data != undefined && (
                 <ul id="carousel" className={`${styles.carousel_container} display_flex_row`}>
 
-                    <AnimatePresence initial={false} custom={direction}>
+                    <AnimatePresence initial={true} custom={direction} mode='sync'>
 
                         <motion.li
                             key={page}
@@ -151,7 +159,7 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
                     )}
                 </div>
 
-                {/* SHOWS ON DESKTOP */}
+                {/* SHOWS ONLY ON DESKTOP */}
                 <ul>
                     {data != undefined && (
                         data.slice(0, 9).map((item, key: number) => (
