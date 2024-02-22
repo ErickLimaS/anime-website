@@ -9,6 +9,7 @@ import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 import GoGoAnimeEpisode from '../GoGoAnimeEpisodeContainer';
 import CrunchyrollEpisode from '../CrunchyrollEpisodeContainer';
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
+import NavPaginateItems from '@/app/components/PaginateItems';
 
 function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, mediaId: number }) {
 
@@ -17,42 +18,29 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
   const [loading, setLoading] = useState(false)
   const [episodesDataFetched, setEpisodesDataFetched] = useState<EpisodesType[] | MediaEpisodes[]>(data)
 
+  const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | null>(null);
+  const [itemOffset, setItemOffset] = useState<number>(0);
+
+
   const [episodeSource, setEpisodeSource] = useState<string>("crunchyroll")
-  const [pageNumber, setPageNumber] = useState<number>(0)
 
-  const rangeEpisodesPerPage = 25
   // the length os episodes array will be divided by 25, getting the range of pagination
-  const paginationNumber = Math.ceil((episodesDataFetched.length + 1) / rangeEpisodesPerPage)
+  const rangeEpisodesPerPage = 25
 
-  // set new page of episodes
-  const setNewPage: (parameter: number) => void = async (parameter: number) => {
+  const [pageCount, setPageCount] = useState<number>(0);
 
-    console.log(`Episodes Page Parameter: ${parameter} `)
+  // Invoke when user click to request another page.
+  const handlePageClick = (event: { selected: number }) => {
+    const newOffset = event.selected * rangeEpisodesPerPage % episodesDataFetched.length;
 
-    setPageNumber(parameter)
-
-  }
+    setItemOffset(newOffset);
+  };
 
   const setEpisodesSource: (parameter: string) => void = async (parameter: string) => {
 
     console.log(`Episodes Source Parameter: ${parameter} `)
 
     getEpisodesFromNewSource(parameter)
-
-  }
-
-  // get range within the episodes and returns array of values to be shown on nav buttons
-  const returnPaginationRange = () => {
-
-    let buttonsOptions = []
-
-    for (let i = 1; i <= paginationNumber; i++) {
-
-      buttonsOptions.push({ name: i.toString(), value: i })
-
-    }
-
-    return buttonsOptions
 
   }
 
@@ -65,8 +53,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
     setLoading(true)
 
-    // reiniciate the episodes page counter
-    setPageNumber(0)
+    const endOffset = itemOffset + rangeEpisodesPerPage
 
     // transform title in some way it can get query by other sources removing special chars
     const query = stringToUrlFriendly(props.mediaTitle)
@@ -77,9 +64,12 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
       case "crunchyroll":
 
+        setEpisodeSource(chooseSource)
+
         setEpisodesDataFetched(data)
 
-        setEpisodeSource(chooseSource)
+        setCurrentItems(data.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(data.length / rangeEpisodesPerPage));
 
         setLoading(false)
 
@@ -101,6 +91,9 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         setEpisodesDataFetched(mediaEpisodes.episodes)
 
+        setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+
         setLoading(false)
 
         break
@@ -110,11 +103,21 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
   }
 
   useEffect(() => {
-    // if there is no episodes on crunchyroll, gets episodes from other source
+
+    // if there's no episodes coming from crunchyroll, gets episodes from other source
     getEpisodesFromNewSource(episodeSource)
 
-    returnPaginationRange()
-  }, [])
+    const endOffset = itemOffset + rangeEpisodesPerPage;
+
+    if (episodeSource == "crunchyroll") {
+
+      setPageCount(Math.ceil(data.length / rangeEpisodesPerPage));
+
+    }
+
+    setCurrentItems(episodesDataFetched.slice(itemOffset, endOffset));
+
+  }, [episodesDataFetched, itemOffset, data, episodeSource])
 
   return (
     <div>
@@ -135,12 +138,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
       <ol id={styles.container} data-loading={loading}>
 
-        {episodesDataFetched.slice(
-          //if page is on 0 (is the default page number), it just begins from 0, after that it multiples by the number of page 
-          (pageNumber != 0 ? (rangeEpisodesPerPage * (pageNumber - 1)) : 0),
-          //if page is on 0, it will be set as 25, after that it multiples by the number of page 
-          (pageNumber != 0 ? (rangeEpisodesPerPage * (pageNumber)) : (rangeEpisodesPerPage * (pageNumber + 1)))
-        ).map((item, key: number) => (
+        {currentItems && currentItems.map((item, key: number) => (
 
           loading ? (
             <li key={key}>
@@ -163,19 +161,17 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
       </ol>
 
-      {episodesDataFetched.length == 0 && (
+      {(episodesDataFetched.length == 0 && !loading) && (
         <p>No episodes available.</p>
       )}
 
       <nav id={styles.pagination_buttons_container}>
 
-        <NavButtons
-          functionReceived={setNewPage as (parameter: string | number) => void}
-          options={returnPaginationRange()}
-          actualValue={pageNumber}
-          previousAndNextButtons={true}
-          customForPagination={true}
+        <NavPaginateItems
+          onPageChange={handlePageClick}
+          pageCount={pageCount}
         />
+
 
       </nav>
 

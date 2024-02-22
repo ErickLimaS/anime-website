@@ -2,46 +2,28 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import Link from 'next/link';
-import NavButtons from '../../../../components/NavButtons';
 import gogoanime from '@/api/gogoanime';
-import { MangaChapters, MangaInfo, MangaSearchResult, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
+import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import BookSvg from "@/public/assets/book.svg"
+import NavPaginateItems from '@/app/components/PaginateItems';
 
 function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
   const [loading, setLoading] = useState(true)
   const [chaptersDataFetched, setChaptersDataFetched] = useState<MangaChapters[]>([])
 
-  const [pageNumber, setPageNumber] = useState<number>(0)
+  const [currentItems, setCurrentItems] = useState<MangaChapters[] | null>(null);
+  const [pageCount, setPageCount] = useState<number>(0);
+
+  const [itemOffset, setItemOffset] = useState<number>(0);
 
   const rangeChaptersPerPage = 10
 
-  // set new page of chapters
-  const setNewPage: (parameter: number) => void = async (parameter: number) => {
+  const handlePageClick = (event: { selected: number }) => {
+    const newOffset = event.selected * rangeChaptersPerPage % chaptersDataFetched.length;
 
-    console.log(`Chapters Page Parameter: ${parameter} `)
-
-    setPageNumber(parameter)
-
-  }
-
-  // get range within the chapters and returns array of values to be shown on nav buttons
-  const returnPaginationRange = () => {
-
-    // the length os episodes array will be divided by 25, getting the range of pagination
-    const paginationNumber = Math.ceil((chaptersDataFetched.length + 1) / rangeChaptersPerPage)
-
-    let buttonsOptions = []
-
-    for (let i = 1; i <= paginationNumber; i++) {
-
-      buttonsOptions.push({ name: i.toString(), value: i })
-
-    }
-
-    return buttonsOptions
-
-  }
+    setItemOffset(newOffset);
+  };
 
   const getChapters = async () => {
 
@@ -61,6 +43,7 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
       mangaInfo = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0].id, "manga") as MangaInfo
     }
 
+    // sort ASC chapters
     const data = mangaInfo.chapters.sort((a, b) => {
       if (a.title < b.title) {
         return -1 as any;
@@ -69,29 +52,32 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
     setChaptersDataFetched(data)
 
-    setLoading(false)
+    const endOffset = itemOffset + rangeChaptersPerPage;
+    setCurrentItems(data.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(data.length / rangeChaptersPerPage));
 
     setLoading(false)
 
   }
 
   useEffect(() => {
-    getChapters()
 
-    returnPaginationRange()
-  }, [])
+    // Fetch items 
+    if (chaptersDataFetched.length == 0) {
+      getChapters()
+    }
+
+    const endOffset = itemOffset + rangeChaptersPerPage;
+    setCurrentItems(chaptersDataFetched.slice(itemOffset, endOffset));
+
+  }, [itemOffset, rangeChaptersPerPage]);
 
   return (
     <div>
 
       <ol id={styles.container} data-loading={loading}>
 
-        {chaptersDataFetched && chaptersDataFetched.slice(
-          //if page is on 0 (is the default page number), it just begins from 0, after that it multiples by the number of page 
-          (pageNumber != 0 ? (rangeChaptersPerPage * (pageNumber - 1)) : 0),
-          //if page is on 0, it will be set as 25, after that it multiples by the number of page 
-          (pageNumber != 0 ? (rangeChaptersPerPage * (pageNumber)) : (rangeChaptersPerPage * (pageNumber + 1)))
-        ).map((item, key: number) => (
+        {currentItems && currentItems.map((item: any, key: number) => (
 
           <li key={key} >
             <Link href={`http://www.mangahere.cc/manga/${item.id}/1.html`} className={styles.chapter_container} target='_blank'>
@@ -120,12 +106,9 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
       {chaptersDataFetched.length > 0 && (
         <nav id={styles.pagination_buttons_container}>
 
-          <NavButtons
-            functionReceived={setNewPage as (parameter: string | number) => void}
-            options={returnPaginationRange()}
-            actualValue={pageNumber}
-            previousAndNextButtons={true}
-            customForPagination={true}
+          <NavPaginateItems
+            onPageChange={handlePageClick}
+            pageCount={pageCount}
           />
 
         </nav>
