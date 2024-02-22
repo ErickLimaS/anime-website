@@ -57,17 +57,16 @@ ul.carousel_container li.carousel_item div.item_info {
 
     /* top: 10%; */
     bottom: calc(-20% - 2vh);
-    left: 2%;
     width: 92%;
 
 }
 
-/* @media((min-width: 380px)) {
+@media((max-width: 1199px)) {
 
     ul.carousel_container li.carousel_item div.item_info {
-        bottom: -64px;
+       margin: auto;
     }
-} */
+}
 
 @media((min-width: 1200px)) {
 
