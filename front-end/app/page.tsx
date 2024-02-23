@@ -14,6 +14,8 @@ import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnil
 import { Metadata } from "next";
 import AddToPlaylistButton from "./components/AddToPlaylistButton";
 import SwiperListContainer from "./components/SwiperListContainer";
+import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: 'Home | AniProject',
@@ -21,6 +23,8 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
+  
+  const isMobileScreen = checkDeviceIsMobile(headers())
 
   // section 1
   const popularData = await API.getNewReleases("ANIME", undefined, "TRENDING_DESC").then(
@@ -53,7 +57,7 @@ export default async function Home() {
 
       <section id={styles.hero_section}>
 
-        <HeroCarousel data={popularData} />
+        <HeroCarousel data={popularData} isMobile={isMobileScreen}/>
 
       </section>
 

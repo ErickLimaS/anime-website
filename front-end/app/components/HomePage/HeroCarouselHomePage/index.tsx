@@ -8,14 +8,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import AddToPlaylistButton from '../../AddToPlaylistButton'
 import SwiperListContainer from '../../SwiperListContainer'
 import ListCarousel from '../HeroListCarousel'
-import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
-import { headers } from 'next/headers'
 
-function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
+function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: boolean }) {
 
     const [[page, direction], setPage] = useState([0, 0]);
-
-    const isMobileScreen = checkDeviceIsMobile(headers())
 
     const variants = {
         enter: (direction: number) => {
@@ -50,12 +46,12 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
     };
 
     let styledList = {
-        background: isMobileScreen ?
+        background: isMobile ?
             `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${data[imageIndex]?.coverImage.extraLarge})`
             :
             `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage})`
         ,
-        backgroundPosition: isMobileScreen ?
+        backgroundPosition: isMobile ?
             "top"
             :
             "center"
