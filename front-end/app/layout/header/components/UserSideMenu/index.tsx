@@ -38,14 +38,11 @@ function UserSideMenu() {
             y: "0",
             opacity: 1,
             transition: {
-                duration: 0.2,
-                damping: 25,
-                type: "spring",
-                stiffness: 500
+                duration: 0.2
             }
         },
         exit: {
-            y: "-100vh",
+            y: "-180px",
             opacity: 0
         }
 

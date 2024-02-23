@@ -5,7 +5,7 @@ import HeroCarousel from "./components/HomePage/HeroCarouselHomePage";
 import MediaItemCoverInfo from "./components/MediaItemCoverInfo";
 import ChevronRightIcon from '../public/assets/chevron-right.svg';
 import API from '../api/anilist';
-import NavThoughMedias from "./components/NavThoughMedias";
+import NavThoughMedias from "./components/HomePage/NavThoughMedias";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/NewestMediaSection";
 import MediaRankingSection from "./components/MediaRankingSection";

@@ -22,6 +22,8 @@ import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
 import ScoreInStars from '@/app/components/ScoreInStars'
 import PlayBtn from './components/WatchPlayBtn'
 import SwiperListContainer from '@/app/components/SwiperListContainer'
+import { headers } from 'next/headers'
+import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -37,6 +39,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
 
+  const isMobileScreen = checkDeviceIsMobile(headers())
+
   return (
     <div id={styles.container}>
 
@@ -44,7 +48,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
       <div
         id={styles.banner_background_container}
         style={{
-          background: `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData && mediaData.bannerImage})`
+          background: isMobileScreen ?
+            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData?.coverImage?.extraLarge})`
+            :
+            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.bannerImage})`
         }}
       >
       </div>
