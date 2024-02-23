@@ -14,6 +14,7 @@ import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
 import Link from 'next/link'
 import UserModal from '../../../../components/UserLoginModal'
+import { AnimatePresence, motion } from 'framer-motion'
 
 function UserSideMenu() {
 
@@ -26,6 +27,29 @@ function UserSideMenu() {
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
+
+    const showUpMotion = {
+
+        hidden: {
+            y: "-40px",
+            opacity: 0
+        },
+        visible: {
+            y: "0",
+            opacity: 1,
+            transition: {
+                duration: 0.2,
+                damping: 25,
+                type: "spring",
+                stiffness: 500
+            }
+        },
+        exit: {
+            y: "-100vh",
+            opacity: 0
+        }
+
+    }
 
     useEffect(() => {
         setIsUserMenuOpen(false)
@@ -42,20 +66,25 @@ function UserSideMenu() {
                         aria-label={isUserMenuOpen ? 'Click to Hide User Menu' : 'Click to Show User Menu'}
                         className={`display_flex_row align_items_center ${styles.heading_btn}`}
                         id={styles.user_btn}
+                        data-userActive={false}
                     >
-                        <PersonIcon className={styles.scale_1_6} alt="User Icon" width={16} height={16} />
+                        <PersonIcon className={styles.scale} alt="User Icon" width={16} height={16} />
                         <span>
-                            {!isUserMenuOpen ?
-                                <ChevronDownSvg /> : <ChevronUpSvg />
-                            }
+                            Login
                         </span>
                     </button>
 
-                    {isUserMenuOpen && (
+                    <AnimatePresence
+                        initial={false}
+                        mode='wait'
+                    >
+                        {isUserMenuOpen && (
 
-                        <UserModal onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} auth={auth} provider={provider} aria-expanded={isUserMenuOpen} />
+                            <UserModal onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} auth={auth} provider={provider} aria-expanded={isUserMenuOpen} />
 
-                    )}
+                        )}
+
+                    </AnimatePresence>
                 </>
             ) : (
                 <>
@@ -65,6 +94,7 @@ function UserSideMenu() {
                         aria-label={isUserMenuOpen ? 'Click to Hide User Menu' : 'Click to Show User Menu'}
                         className={`display_flex_row align_items_center ${styles.heading_btn}`}
                         id={styles.user_btn}
+                        data-userActive={true}
                     >
                         <span id={styles.img_container}>
                             <Image
@@ -81,34 +111,47 @@ function UserSideMenu() {
                         </span>
                     </button>
 
-                    {isUserMenuOpen && (
-                        <div id={styles.user_menu_list} aria-expanded={isUserMenuOpen}>
+                    <AnimatePresence
+                        initial={false}
+                        mode='wait'
+                    >
+                        {isUserMenuOpen && (
+                            <motion.div
+                                variants={showUpMotion}
+                                id={styles.user_menu_list}
+                                aria-expanded={isUserMenuOpen}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                            >
 
-                            <ul role='menu'>
-                                <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                    <Link href={"/playlist"}>
-                                        <BookmarkSvg width={16} height={16} alt={"Bookmarks Icon"} /> Playlist
-                                    </Link>
-                                </li>
-                                {/* <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
+                                <ul role='menu'>
+                                    <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
+                                        <Link href={"/playlist"}>
+                                            <BookmarkSvg width={16} height={16} alt={"Bookmarks Icon"} /> Playlist
+                                        </Link>
+                                    </li>
+                                    {/* <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                     <Link href={"/history"}>
                                         <HistorySvg width={16} height={16} alt={"History Icon"} /> History
                                     </Link>
                                 </li> */}
-                                {/* <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
+                                    {/* <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                     <Link href={"/settings"}>
                                         <SettingsSvg width={16} height={16} alt={"Settings Icon"} /> Settings
                                     </Link>
                                 </li> */}
-                                <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                    <button onClick={() => auth.signOut()}>
-                                        <LogoutSvg width={16} height={16} alt={"Logout Icon"} /> Log Out
-                                    </button>
-                                </li>
-                            </ul>
+                                    <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
+                                        <button onClick={() => auth.signOut()}>
+                                            <LogoutSvg width={16} height={16} alt={"Logout Icon"} /> Log Out
+                                        </button>
+                                    </li>
+                                </ul>
 
-                        </div>
-                    )}
+                            </motion.div>
+                        )}
+
+                    </AnimatePresence>
                 </>
             )}
         </div>

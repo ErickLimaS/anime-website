@@ -13,6 +13,36 @@
 
 }
 
+#user_container #user_btn[data-userActive=false] {
+
+    height: inherit;
+
+    transition: all ease-in-out 60ms;
+
+    padding: 8px 16px;
+
+    box-shadow: 1px 1px;
+
+    background-color: var(--brand-color);
+
+    border-radius: 4px;
+
+    gap: 0 8px;
+
+}
+
+#user_container #user_btn[data-userActive=false]:hover {
+    box-shadow: 3px 3px;
+}
+
+#user_container #user_btn[data-userActive=false] span {
+
+    color: var(--white-100);
+
+    font-family: var(--font-family-sans-serif);
+
+}
+
 #user_container #user_btn #img_container {
 
     position: relative;
@@ -27,11 +57,11 @@
 
 }
 
-#user_container #user_btn>svg.scale_1_6 {
+#user_container #user_btn>svg.scale {
 
     margin-right: 4px;
 
-    transform: scale(1.6);
+    transform: scale(1.4);
 
 }
 
@@ -128,11 +158,19 @@
 
     width: 100%;
 
-    padding: 8px;
+    padding: 16px 8px;
 
     font-size: var(--font-size--small-1);
     font-weight: 600;
 
+}
+
+@media(min-width: 576px) {
+    #user_container>#user_menu_list ul li>button,
+    #user_container>#user_menu_list ul li>a {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
 }
 
 #user_container>#user_menu_list ul li>button:hover,
