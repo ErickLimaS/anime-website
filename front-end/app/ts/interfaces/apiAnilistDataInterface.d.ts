@@ -67,6 +67,12 @@ export interface EpisodesType {
 
 export interface ApiMediaResults extends ApiDefaultResult {
 
+    nextAiringEpisode: {
+        airingAt: number,
+        episode: number
+    },
+    hashtag: string,
+    favourites: number,
     source: string,
     status: string | null,
     duration: number | null,
@@ -100,14 +106,14 @@ export interface ApiMediaResults extends ApiDefaultResult {
     },
     streamingEpisodes: EpisodesType[]
     studios: {
-        edges: {
+        edges: [{
             node: {
                 name: string,
                 id: number
                 isAnimationStudio: boolean,
                 siteUrl: string
             }
-        }
+        }]
     },
     relations: {
         nodes: ApiDefaultResult[]

@@ -13,8 +13,17 @@ export function convertToUnix(days: number) {
     return timestamp
 }
 
+// receive a unix timestamp and converts to date 
+export function convertFromUnix(unixTimestamp: number) {
+
+    const date = new Date(unixTimestamp * 1000)
+
+    return date.toLocaleDateString('default', { month: 'long', day: "numeric", year: "numeric" })
+    
+}
+
 // get last minutes and seconds of this day (today) and returns the unix timestamp
-export function lastHourOfTheDay(days: number){
+export function lastHourOfTheDay(days: number) {
 
     const date = new Date(
         Date.UTC(
