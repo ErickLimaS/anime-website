@@ -8,6 +8,7 @@ import { GoogleAuthProvider, getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import UserModal from '@/app/components/UserLoginModal';
+import { AnimatePresence } from 'framer-motion';
 
 function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, customText?: any[] }) {
 
@@ -121,9 +122,14 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
 
     return (
         <>
-            {isUserModalOpen && (
-                <UserModal onClick={() => setIsUserModalOpen(false)} auth={auth} provider={provider} />
-            )}
+            <AnimatePresence
+                initial={false}
+                mode='wait'
+            >
+                {isUserModalOpen && (
+                    <UserModal onClick={() => setIsUserModalOpen(false)} auth={auth} provider={provider} />
+                )}
+            </AnimatePresence>
 
             <button
                 id={styles.container}

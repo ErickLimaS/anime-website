@@ -6,24 +6,28 @@ import gogoanime from '@/api/gogoanime'
 import Link from 'next/link'
 import Image from 'next/image'
 import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
+import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
 
 function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId: number, mediaTitle: string, episodeId: string }) {
 
     const [mediaData, setMediaData] = useState<MediaInfo>()
-    const [episodesList, setEpisodesList] = useState<MediaEpisodes[]>()
+    const [episodesList, setEpisodesList] = useState<MediaEpisodes[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     async function loadData() {
 
         setIsLoading(true)
-        const query = mediaTitle.replace(/[^a-z]+/i, ' ').split(" ").join("-").toLowerCase()
+        const query = stringToUrlFriendly(mediaTitle)
 
         let response = await gogoanime.getInfoFromThisMedia(query, "anime") as MediaInfo
 
         if (response == null) {
             const searchResultsForMedia = await gogoanime.searchMedia(query, "anime") as MediaSearchResult[]
 
-            response = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0].id, "anime") as MediaInfo
+            // try to found a result that matches the title from anilist on gogoanime (might work in some cases)
+            const closestResult = searchResultsForMedia.find((item) => item.id.includes(query + "-tv"))
+
+            response = await gogoanime.getInfoFromThisMedia(closestResult?.id || searchResultsForMedia[0].id, "anime") as MediaInfo
         }
 
         setMediaData(response)
@@ -35,9 +39,15 @@ function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId
 
     useEffect(() => {
 
-        loadData()
+        // focus list item that correspond to current episode on page
+        if (!isLoading) {
+            const elementActive = document.querySelector("li[data-active=true]")
+            elementActive?.scrollIntoView();
+        }
 
-    }, [mediaTitle])
+        if (episodesList.length == 0) loadData()
+
+    }, [mediaTitle, isLoading, episodeId])
 
     return (
         <div id={styles.episodes_list_container}>
@@ -54,6 +64,7 @@ function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId
                         <li className={styles.item_placeholder}></li>
                     </>
                 )}
+
                 {isLoading == false && (
 
                     episodesList?.map((item, key: number) => (
@@ -76,13 +87,19 @@ function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId
 
                                 </Link>
 
-                                <ButtonMarkEpisodeAsWatched data={item} mediaId={mediaId} source={'gogoanime'} hasText={true}/>
+                                <ButtonMarkEpisodeAsWatched
+                                    data={item}
+                                    mediaId={mediaId}
+                                    source={'gogoanime'}
+                                    hasText={true}
+                                />
 
                             </div>
 
                         </li>
                     ))
                 )}
+
             </ol>
 
         </div >

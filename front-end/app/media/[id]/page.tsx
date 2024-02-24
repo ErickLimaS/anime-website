@@ -22,6 +22,9 @@ import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
 import ScoreInStars from '@/app/components/ScoreInStars'
 import PlayBtn from './components/WatchPlayBtn'
 import SwiperListContainer from '@/app/components/SwiperListContainer'
+import { headers } from 'next/headers'
+import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
+import { convertFromUnix } from '@/app/lib/format_date_unix'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -37,6 +40,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
 
+  const isMobileScreen = checkDeviceIsMobile(headers())
+
   return (
     <div id={styles.container}>
 
@@ -44,7 +49,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
       <div
         id={styles.banner_background_container}
         style={{
-          background: `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData && mediaData.bannerImage})`
+          background: isMobileScreen ?
+            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData?.coverImage?.extraLarge})`
+            :
+            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.bannerImage})`
         }}
       >
       </div>
@@ -159,12 +167,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <h2>RELEASE</h2>
 
-              <p>
+              <p className={styles.width_min_content}>
                 {mediaData.startDate &&
-                  new Date(
-                    Date.parse(
-                      `${mediaData.startDate.month} ${mediaData.startDate.day} ${mediaData.startDate.year}`
-                    )).toLocaleString('default', { month: 'long', day: "numeric", year: "numeric" })
+                  new Date(Date.parse(
+                    `${mediaData.startDate.month} ${mediaData.startDate.day} ${mediaData.startDate.year}`
+                  )).toLocaleString('default', { month: 'long', day: "numeric", year: "numeric" })
                   ||
                   "Not Available"}
               </p>
@@ -205,6 +212,21 @@ async function MediaPage({ params }: { params: { id: number } }) {
         <section id={styles.info_container}>
 
           <div id={styles.description_episodes_related_container}>
+
+            {/* NEXT EPISODE */}
+            {(isMobileScreen == true && mediaData.nextAiringEpisode) && (
+              <div id={styles.next_episode_container}>
+
+                <h2 className={styles.heading_style}>
+                  NEXT EPISODE
+                </h2>
+
+                <p>
+                  <span>Episode {mediaData.nextAiringEpisode.episode}</span> on {convertFromUnix(mediaData.nextAiringEpisode.airingAt)}
+                </p>
+
+              </div>
+            )}
 
             {/* DESCRIPTION */}
             <section id={styles.description_container}>
@@ -352,6 +374,21 @@ async function MediaPage({ params }: { params: { id: number } }) {
           </div>
 
           <div id={styles.hype_container}>
+            
+            {/* NEXT EPISODE */}
+            {(isMobileScreen == false && mediaData.nextAiringEpisode) && (
+              <div id={styles.next_episode_container}>
+
+                <h2 className={styles.heading_style}>
+                  NEXT EPISODE
+                </h2>
+
+                <p>
+                  <span>Episode {mediaData.nextAiringEpisode.episode}</span> on {convertFromUnix(mediaData.nextAiringEpisode.airingAt)}
+                </p>
+
+              </div>
+            )}
 
             {mediaData.averageScore && (
               <div id={styles.score_container}>
@@ -388,13 +425,47 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </div>
             )}
 
+            <div id={styles.more_info_container}>
+
+              <h2 className={styles.heading_style}>MORE INFO</h2>
+
+              <ul>
+
+                {mediaData.studios?.edges[0]?.node && (
+                  <li>
+                    <p>Main Studio <span className={styles.color_brand}>{mediaData.studios.edges[0].node.name}</span></p>
+                  </li>
+                )}
+
+                {mediaData.trending && (
+                  <li>
+                    <p>Trending Level <span className={styles.color_brand}>{mediaData.trending}</span></p>
+                  </li>
+                )}
+
+                {mediaData.favourites && (
+                  <li>
+                    <p>Favorited by <span><span className={styles.color_brand}>{mediaData.favourites.toLocaleString("en-US")}</span> {mediaData.favourites == 1 ? "User" : "Users"}</span></p>
+                  </li>
+                )}
+
+                {mediaData.hashtag && (
+                  <li>
+                    <p>Hashtag <span className={styles.color_brand}>{mediaData.hashtag.toUpperCase()}</span></p>
+                  </li>
+                )}
+
+              </ul>
+              
+            </div>
+
           </div>
 
         </section>
 
-      </div>
+      </div >
 
-    </div>
+    </div >
   )
 }
 

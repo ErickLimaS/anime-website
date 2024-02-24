@@ -261,13 +261,16 @@ span#box_shadow_end_section {
 
 }
 
-#launch_by_time_span_container {
+.medias_sections_container {
 
     padding-top: 62px;
-    /* padding-bottom: 36px; */
 
     background-color: var(--white-100);
 
+}
+
+.medias_sections_container.dark_background {
+    background-color: var(--black-50);
 }
 
 /* Midia Banner Container */

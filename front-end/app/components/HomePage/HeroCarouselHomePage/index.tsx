@@ -9,7 +9,7 @@ import AddToPlaylistButton from '../../AddToPlaylistButton'
 import SwiperListContainer from '../../SwiperListContainer'
 import ListCarousel from '../HeroListCarousel'
 
-function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
+function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: boolean }) {
 
     const [[page, direction], setPage] = useState([0, 0]);
 
@@ -45,9 +45,17 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
         setPage([page + newDirection, newDirection]);
     };
 
-    const styledList = {
-        background: `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage})`,
-        backgroundPosition: "center",
+    let styledList = {
+        background: isMobile ?
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${data[imageIndex]?.coverImage.extraLarge})`
+            :
+            `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage})`
+        ,
+        backgroundPosition: isMobile ?
+            "top"
+            :
+            "center"
+        ,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat"
     }
@@ -55,9 +63,10 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
     return (
         <>
             {data != undefined && (
-                <ul id="carousel" className={`${styles.carousel_container} display_flex_row`}>
 
-                    <AnimatePresence initial={false} custom={direction}>
+                <AnimatePresence initial={true} custom={direction} mode='sync'>
+
+                    <ul id="carousel" className={`${styles.carousel_container} display_flex_row`}>
 
                         <motion.li
                             key={page}
@@ -126,9 +135,9 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
 
                         </motion.li>
 
-                    </AnimatePresence>
+                    </ul >
 
-                </ul >
+                </AnimatePresence>
             )}
 
             <div id={styles.recomendations_container}>
@@ -151,7 +160,7 @@ function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
                     )}
                 </div>
 
-                {/* SHOWS ON DESKTOP */}
+                {/* SHOWS ONLY ON DESKTOP */}
                 <ul>
                     {data != undefined && (
                         data.slice(0, 9).map((item, key: number) => (

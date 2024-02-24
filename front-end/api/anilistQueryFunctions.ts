@@ -347,7 +347,7 @@ export function mediaByIdQueryRequest(otherQueryFields?: unknown, otherMediasFie
                                             }
                                         }
                                     }
-                            studios{
+                            studios(isMain: true){
                                         edges{
                                             node{
                                                 name
@@ -480,6 +480,9 @@ export function mediaByIdQueryRequest(otherQueryFields?: unknown, otherMediasFie
                             }
                             bannerImage
                             type
+                            hashtag
+                            favourites
+                            trending
                             format
                             genres
                             popularity

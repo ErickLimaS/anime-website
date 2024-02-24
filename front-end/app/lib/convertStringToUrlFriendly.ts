@@ -1,5 +1,5 @@
 export function stringToUrlFriendly(text: string) {
-
-    return text.replace(/[^a-z]+/i, ' ').split(" ").join("-").toLowerCase()
+    
+    return text.replace(/[^A-Za-z0-9]+/g, '-').toLowerCase()
 
 }

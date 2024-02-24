@@ -328,6 +328,7 @@ h2.heading_style {
     font-size: var(--font-size--p);
     font-weight: 500;
 
+    text-shadow: 0 0 8px var(--black-25);
     color: var(--white-50);
 
     transform: rotate(270deg);
@@ -344,14 +345,19 @@ h2.heading_style {
 
     font-family: var(--font-family-sans-serif);
 
-    position: relative;
-    left: -12px;
+    position: absolute;
 
     padding: 24px 0;
 
     font-size: var(--font-size--h3);
     color: var(--white-100);
     font-weight: 700;
+
+}
+
+#info_list_container li p.width_min_content {
+
+    width: 71%;
 
 }
 
@@ -575,9 +581,31 @@ h2.heading_style {
 
 }
 
+/* NEXT EPISODE */
+#next_episode_container {
+
+    margin-bottom: 32px;
+
+}
+
+#next_episode_container p {
+
+    color: var(--white-100);
+    font-weight: 600;
+
+}
+
+#next_episode_container p span {
+
+    font-size: var(--font-size--p);
+    color: var(--brand-color);
+
+}
+
 /* SCORE */
 #score_container {
 
+    margin-top: 32px;
     margin-bottom: 32px;
 
 }
@@ -628,4 +656,54 @@ h2.heading_style {
     #yt_video_container {
         margin-top: 0;
     }
+}
+
+
+/* MORE INFO */
+#more_info_container {
+
+    margin-top: 32px;
+
+}
+
+#more_info_container ul {
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px 0;
+
+}
+
+#more_info_container ul li {
+
+    padding-bottom: 16px;
+    padding-top: 8px;
+
+    color: var(--white-100);
+
+}
+
+#more_info_container ul li:not(:last-child) {
+
+    border-bottom: 1px solid var(--white-25);
+
+}
+
+#more_info_container ul li p {
+
+    font-size: var(--font-size--small-1);
+    font-weight: 600;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    justify-content: space-between;
+
+}
+
+#more_info_container ul li span.color_brand {
+
+    color: var(--brand-color);
+
 }

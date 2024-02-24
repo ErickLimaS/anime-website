@@ -76,10 +76,16 @@
     background: linear-gradient(to right, var(--brand-color), var(--white-25));
 
     display: grid;
-    grid-template-columns: 10% 90%;
+    grid-template-columns: 15% 85%;
     align-items: center;
     justify-items: start;
 
+}
+
+@media(min-width: 520px) {
+    .chapter_container {
+        grid-template-columns: 10% 90%;
+    }
 }
 
 .chapter_container .icon_container {
@@ -131,60 +137,5 @@
 #pagination_buttons_container {
 
     margin: 32px 0;
-
-}
-
-#pagination_buttons_container>div {
-
-    justify-content: center;
-
-}
-
-#pagination_buttons_container>div button {
-
-    transition: all ease-in-out 120ms;
-
-    border: 2px solid var(--white-50);
-    color: var(--white-75);
-    border-radius: 50%;
-
-    padding: 8px;
-
-}
-
-#pagination_buttons_container>div button:first-child,
-#pagination_buttons_container>div button:last-child {
-
-    padding: 8px;
-
-}
-
-#pagination_buttons_container>div button:first-child svg,
-#pagination_buttons_container>div button:last-child svg {
-
-    display: block;
-
-}
-
-#pagination_buttons_container>div button[data-active=true] {
-
-    background-color: var(--brand-color);
-    border-color: var(--brand-color);
-    color: var(--white-100);
-
-}
-
-#pagination_buttons_container>div button[data-active=false]:hover,
-#pagination_buttons_container>div button:hover {
-
-    border-color: var(--brand-color);
-
-}
-
-#pagination_buttons_container>div>button:disabled {
-
-    border-color: var(--white-50);
-    cursor: default;
-    opacity: 0.2;
 
 }
