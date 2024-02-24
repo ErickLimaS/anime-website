@@ -2,10 +2,14 @@ import { motion } from 'framer-motion'
 import React, { MouseEventHandler } from 'react'
 import styles from "./component.module.css"
 import GoogleSvg from '@/public/assets/google-fill.svg'
+import GitHubSvg from '@/public/assets/github.svg'
 import CloseSvg from '@/public/assets/x.svg'
-import { signInWithPopup, GoogleAuthProvider, Auth } from 'firebase/auth'
+import { signInWithPopup, GoogleAuthProvider, GithubAuthProvider, Auth } from 'firebase/auth'
 
-function UserModal({ onClick, auth, provider }: { onClick: MouseEventHandler<HTMLDivElement>, auth: Auth, provider: GoogleAuthProvider }) {
+function UserModal({ onClick, auth, }: { onClick: MouseEventHandler<HTMLDivElement>, auth: Auth }) {
+
+    const googleProvider = new GoogleAuthProvider()
+    const githubProvider = new GithubAuthProvider()
 
     const dropIn = {
 
@@ -30,8 +34,12 @@ function UserModal({ onClick, auth, provider }: { onClick: MouseEventHandler<HTM
 
     }
 
-    const signIn = async () => {
-        await signInWithPopup(auth, provider)
+    const signInGoogle = async () => {
+        await signInWithPopup(auth, googleProvider)
+    }
+
+    const signInGithub = async () => {
+        await signInWithPopup(auth, githubProvider)
     }
 
     const handleLoginForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,9 +76,15 @@ function UserModal({ onClick, auth, provider }: { onClick: MouseEventHandler<HTM
                     </button>
                 </div>
 
-                <button id={styles.google_button} onClick={() => signIn()}>
-                    <GoogleSvg width={16} height={16} alt={"Login icon"} /> Login With Google
-                </button>
+                <div id={styles.login_buttons_container}>
+                    <button id={styles.google_button} onClick={() => signInGoogle()}>
+                        <GoogleSvg width={16} height={16} alt={"Google icon"} />
+                    </button>
+
+                    <button id={styles.github_button} onClick={() => signInGithub()}>
+                        <GitHubSvg width={16} height={16} alt={"GitHub icon"} />
+                    </button>
+                </div>
 
                 <div id={styles.span_container}>
                     <span></span>
