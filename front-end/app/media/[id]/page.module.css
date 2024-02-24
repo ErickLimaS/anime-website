@@ -328,6 +328,7 @@ h2.heading_style {
     font-size: var(--font-size--p);
     font-weight: 500;
 
+    text-shadow: 0 0 8px var(--black-25);
     color: var(--white-50);
 
     transform: rotate(270deg);
@@ -344,14 +345,19 @@ h2.heading_style {
 
     font-family: var(--font-family-sans-serif);
 
-    position: relative;
-    left: -12px;
+    position: absolute;
 
     padding: 24px 0;
 
     font-size: var(--font-size--h3);
     color: var(--white-100);
     font-weight: 700;
+
+}
+
+#info_list_container li p.width_min_content {
+
+    width: 71%;
 
 }
 

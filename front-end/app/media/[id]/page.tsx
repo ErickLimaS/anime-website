@@ -166,12 +166,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <h2>RELEASE</h2>
 
-              <p>
+              <p className={styles.width_min_content}>
                 {mediaData.startDate &&
-                  new Date(
-                    Date.parse(
-                      `${mediaData.startDate.month} ${mediaData.startDate.day} ${mediaData.startDate.year}`
-                    )).toLocaleString('default', { month: 'long', day: "numeric", year: "numeric" })
+                  new Date(Date.parse(
+                    `${mediaData.startDate.month} ${mediaData.startDate.day} ${mediaData.startDate.year}`
+                  )).toLocaleString('default', { month: 'long', day: "numeric", year: "numeric" })
                   ||
                   "Not Available"}
               </p>

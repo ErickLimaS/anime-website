@@ -19,6 +19,8 @@
 
 #list_container {
 
+    transition: all ease-in-out 100ms;
+
     padding-right: 8px;
 
     display: flex;
