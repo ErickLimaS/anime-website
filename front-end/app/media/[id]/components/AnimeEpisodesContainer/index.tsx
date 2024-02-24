@@ -84,7 +84,11 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
         if (mediaEpisodes == null) {
           const searchResultsForMedia = await gogoanime.searchMedia(query, "anime") as MediaSearchResult[]
 
-          mediaEpisodes = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0].id, "anime") as MediaInfo
+          // try to found a result that matches the title from anilist on gogoanime (might work in some cases)
+          const closestResult = searchResultsForMedia.find((item) => item.id.includes(query + "-tv"))
+
+          mediaEpisodes = await gogoanime.getInfoFromThisMedia(closestResult?.id || searchResultsForMedia[0].id, "anime") as MediaInfo
+
         }
 
         setEpisodeSource(chooseSource)

@@ -431,7 +431,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <ul>
 
-                {mediaData.studios && (
+                {mediaData.studios?.edges[0]?.node && (
                   <li>
                     <p>Main Studio <span className={styles.color_brand}>{mediaData.studios.edges[0].node.name}</span></p>
                   </li>
