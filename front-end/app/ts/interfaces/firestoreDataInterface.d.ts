@@ -11,3 +11,17 @@ interface BookmarkItem {
     id: number
 
 }
+
+interface Comment {
+
+    username: string,
+    userPhoto: string,
+    comment: string,
+    createdAt: number,
+    likes: number,
+    dislikes: number,
+    userId: {
+        id: string
+    }
+
+}

@@ -14,12 +14,12 @@ export function convertToUnix(days: number) {
 }
 
 // receive a unix timestamp and converts to date 
-export function convertFromUnix(unixTimestamp: number) {
+export function convertFromUnix(unixTimestamp: number, options?: { month: "numeric" | "2-digit" | "long" | "short" | "narrow" | undefined }) {
 
     const date = new Date(unixTimestamp * 1000)
 
-    return date.toLocaleDateString('default', { month: 'long', day: "numeric", year: "numeric" })
-    
+    return date.toLocaleDateString('default', { month: options ? options.month : 'long', day: "numeric", year: "numeric" })
+
 }
 
 // get last minutes and seconds of this day (today) and returns the unix timestamp
