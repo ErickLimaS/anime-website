@@ -17,6 +17,7 @@ interface Comment {
     username: string,
     userPhoto: string,
     comment: string,
+    isSpoiler: boolean,
     createdAt: number,
     likes: number,
     dislikes: number,

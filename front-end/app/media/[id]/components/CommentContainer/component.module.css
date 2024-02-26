@@ -55,6 +55,13 @@
 
 }
 
+.comment_container[data-has-spoiler=true] .comment_text_container {
+
+
+    position: relative;
+
+}
+
 .comment_container .comment_text_container p {
 
     padding: 8px;
@@ -64,6 +71,33 @@
 
     font-weight: 300;
     color: var(--white-100);
+
+}
+
+.comment_container[data-has-spoiler=true] .comment_text_container p {
+
+    transition: all ease-in-out 100ms;
+
+    filter: blur(4px) brightness(70%);
+
+}
+
+.comment_container[data-has-spoiler=true] .comment_text_container::before {
+
+    color: var(--white-100);
+    font-weight: 600;
+
+    content: "SPOILER!!! Click to Reveal.";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
 }
 

@@ -24,6 +24,8 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     const [isDisliked, setIsDisliked] = useState<boolean>(false)
     const [wasDeleted, setWasDeleted] = useState<boolean>(false)
 
+    const [isSpoiler, setIsSpoiler] = useState<boolean>(item.isSpoiler)
+
     const [commentData, setCommentData] = useState<QueryDocumentSnapshot<DocumentData, DocumentData> | any>()
     const [commentDocId, setCommentDocId] = useState<string | DocumentData>()
 
@@ -214,7 +216,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
     return (
         !wasDeleted && (
-            <li className={styles.comment_container} onClick={() => console.log(commentData)}>
+            <li className={styles.comment_container} data-has-spoiler={isSpoiler}>
 
                 <div className={styles.user_img_container}>
 
@@ -232,7 +234,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
                         <p>{convertFromUnix(item.createdAt, { month: "short" })}</p>
                     </div>
 
-                    <div className={styles.comment_text_container}>
+                    <div className={styles.comment_text_container} onClick={() => item.isSpoiler && setIsSpoiler(!isSpoiler)}>
 
                         <p>{item.comment}</p>
 

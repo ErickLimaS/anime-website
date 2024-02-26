@@ -90,6 +90,7 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
                 createdAt: timeStamp,
                 // createdAt: serverTimestamp() as FieldValue,
                 comment: form.comment.value,
+                isSpoiler: form.spoiler.checked,
                 likes: 0,
                 dislikes: 0
             }
@@ -152,7 +153,10 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
                         <textarea rows={4} cols={70} name='comment' onChange={() => setCommentSaved(false)}></textarea>
                     </label>
 
-                    {/* <input type='checkbox' name='spoiler'>Is Spoiler</input> */}
+                    <label id={styles.checkbox_row}>
+                        Is Spoiler
+                        <input type='checkbox' name='spoiler' value="true"></input>
+                    </label>
 
                     <button type='submit' disabled={isLoading} >
                         {commentSaved ? <><SvgCheck width={16} height={16} alt="Check" /> Comment Done</> : "Comment"}

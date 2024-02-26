@@ -23,7 +23,7 @@
     border-radius: 50%;
 }
 
-#write_comment_container form label {
+#write_comment_container form label:first-child {
 
     display: flex;
     flex-direction: column;
@@ -31,6 +31,31 @@
     font-size: var(--font-size--p);
 
     color: var(--white-100);
+
+}
+
+#write_comment_container form label#checkbox_row {
+
+    padding: 8px;
+
+    width: max-content;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--white-100);
+    background-color: var(--white-25);
+    border-radius: 4px;
+
+}
+
+#write_comment_container form label#checkbox_row input {
+
+    height: 16px;
+    width: 16px;
+
+    accent-color: var(--brand-color);
 
 }
 
@@ -56,10 +81,16 @@
 
 #write_comment_container form button {
 
+    margin-top: 16px;
+    margin-left: auto;
+
+    width: 100%;
+
     background: var(--brand-color);
 
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 16px;
 
     border: 0;
@@ -68,6 +99,15 @@
     color: var(--white-100);
 
     padding: 12px 24px;
+
+}
+
+@media(min-width: 600px) {
+
+    #write_comment_container form button {
+        width: auto;
+        justify-content: start;
+    }
 
 }
 
