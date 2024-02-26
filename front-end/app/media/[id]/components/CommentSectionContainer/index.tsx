@@ -14,6 +14,7 @@ import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import Comment from '../CommentContainer';
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
+import SvgFilter from "@/public/assets/filter-right.svg"
 
 function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
 
@@ -21,7 +22,7 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
     const [commentSaved, setCommentSaved] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    // const [sortComments, setSortComments] = useState<string>("date")
+    const [sortComments, setSortComments] = useState<string>("date")
     const [commentsSliceRange, setCommentsSliceRange] = useState<number>(3)
 
     const auth = getAuth()
@@ -34,6 +35,49 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
     function setNewSliceRange() {
 
         setCommentsSliceRange(commentsSliceRange + 5)
+
+    }
+
+    async function sortCommentsBy(sort: string, data?: DocumentData[]) {
+
+        let sorted
+
+        if (!data) await loadComments()
+
+        setIsLoading(true)
+
+        switch (sort) {
+            case "date":
+
+                sorted = (data || comments).sort((x, y) => y.createdAt - x.createdAt)
+                setComments(sorted)
+
+                break
+
+            case "likes":
+
+                sorted = (data || comments).sort((x, y) => y.likes - x.likes)
+                setComments(sorted)
+
+                break
+
+            case "dislikes":
+
+                sorted = (data || comments).sort((x, y) => y.dislikes - x.dislikes)
+                setComments(sorted)
+
+                break
+
+            default:
+
+                sorted = (data || comments).sort((x, y) => y.createdAt - x.createdAt)
+                setComments(sorted)
+
+                break
+
+        }
+
+        setIsLoading(false)
 
     }
 
@@ -56,11 +100,8 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
 
         const data = commentsToThisMedia.docs.map((doc: QueryDocumentSnapshot) => doc.data())
 
-        const sortedDate = data.sort((x, y) => y.createdAt - x.createdAt)
-        // const sortedLikes = data.sort((x, y) => y.likes - x.likes)
-        // const sortedDislikes = data.sort((x, y) => y.dislikes - x.dislikes)
-
-        setComments(sortedDate)
+        // SORT AND SET COMMENTS TO STATE
+        await sortCommentsBy("date", data)
 
         setIsLoading(false)
 
@@ -169,6 +210,17 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
 
                 {comments.length > 0 && (
                     <>
+                        {comments.length > 2 && (
+                            <div id={styles.custom_select}>
+                                <SvgFilter width={16} height={16} alt="Filter" />
+                                <select onChange={(e) => sortCommentsBy(e.target.value)} title="Choose How To Sort The Comments">
+                                    <option selected value="date">Most Recent</option>
+                                    <option value="likes">Most Likes</option>
+                                    <option value="dislikes">Most Dislikes</option>
+                                </select>
+                            </div>
+                        )}
+
                         <ul>
                             {!isLoading ? (
                                 comments.slice(0, commentsSliceRange).map((item, key) => (

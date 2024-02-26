@@ -141,6 +141,45 @@
 
 }
 
+/* ALL COMMENTS */
+#all_comments_container #custom_select {
+
+    width: 170px;
+    margin-left: auto;
+    margin-bottom: 16px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+#all_comments_container #custom_select svg {
+    transform: scale(2);
+    fill: var(--brand-color);
+}
+
+#all_comments_container select {
+
+    padding: 8px 16px;
+
+    background-color: transparent;
+    border: 1px solid var(--brand-color);
+    border-radius: 4px;
+
+    font-weight: 600;
+    font-family: var(--font-family-sans-serif);
+    color: var(--white-100);
+
+}
+
+#all_comments_container select option {
+
+    padding: 8px 16px;
+    background-color: var(--black-100);
+
+}
+
 #all_comments_container>button {
 
     transition: all ease-in-out 100ms;
