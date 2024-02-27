@@ -19,6 +19,8 @@ import Comment from '../CommentContainer';
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
+import UserModal from '../UserLoginModal';
+import { AnimatePresence } from 'framer-motion';
 
 type CommetsSectionTypes = {
     media: ApiMediaResults | ApiDefaultResult,
@@ -32,6 +34,8 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
     const [comments, setComments] = useState<DocumentData[]>([])
     const [commentSaved, setCommentSaved] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
 
     const [commentsSliceRange, setCommentsSliceRange] = useState<number>(3)
 
@@ -136,7 +140,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
         e.preventDefault()
 
-        if (!user) return
+        if (!user) return setIsUserModalOpen(true)
 
         const form = e.target as any
 
@@ -214,92 +218,111 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
 
     return (
-        <div id={styles.container}>
+        <>
+            <AnimatePresence
+                initial={false}
+                mode='wait'
+            >
+                {(!user && isUserModalOpen) && (
+                    <UserModal
+                        onClick={() => setIsUserModalOpen(false)}
+                        auth={auth}
+                    />
+                )}
+            </AnimatePresence>
 
-            <div id={styles.write_comment_container}>
+            <div id={styles.container}>
 
-                <div className={styles.img_container}>
-                    {user ? (
-                        <Image src={user.photoURL!} alt={user.displayName!} fill sizes='100%' />
-                    ) : (
-                        <span></span>
-                    )}
+                <div id={styles.write_comment_container}>
+
+                    <div className={styles.img_container}>
+                        {user ? (
+                            <Image src={user.photoURL!} alt={user.displayName!} fill sizes='100%' />
+                        ) : (
+                            <span></span>
+                        )}
+                    </div>
+
+                    <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => createComment(e)}>
+                        <label>
+                            Leave your comment
+                            <textarea
+                                rows={3} cols={70}
+                                name='comment'
+                                onChange={() => setCommentSaved(false)}
+                                placeholder='Your comment here'
+                            ></textarea>
+                        </label>
+
+                        <label id={styles.checkbox_row}>
+                            Is a Spoiler
+                            <input type='checkbox' name='spoiler' value="true"></input>
+                        </label>
+
+                        <button type='submit' disabled={isLoading}>
+                            {commentSaved ? <><SvgCheck width={16} height={16} alt="Check" /> Comment Done</> : "Comment"}
+                        </button>
+                    </form>
+
                 </div>
 
-                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => createComment(e)}>
-                    <label>
-                        Leave your comment
-                        <textarea rows={4} cols={70} name='comment' onChange={() => setCommentSaved(false)}></textarea>
-                    </label>
+                <div id={styles.all_comments_container}>
 
-                    <label id={styles.checkbox_row}>
-                        Is a Spoiler
-                        <input type='checkbox' name='spoiler' value="true"></input>
-                    </label>
+                    {comments.length > 0 && (
+                        <>
+                            <div id={styles.comments_heading}>
+                                {comments.length > 1 && (
+                                    <div id={styles.custom_select}>
+                                        <SvgFilter width={16} height={16} alt="Filter" />
+                                        <select onChange={(e) => sortCommentsBy(e.target.value)} title="Choose How To Sort The Comments">
+                                            <option selected value="date">Most Recent</option>
+                                            <option value="likes">Most Likes</option>
+                                            <option value="dislikes">Most Dislikes</option>
+                                        </select>
+                                    </div>
+                                )}
 
-                    <button type='submit' disabled={isLoading} >
-                        {commentSaved ? <><SvgCheck width={16} height={16} alt="Check" /> Comment Done</> : "Comment"}
-                    </button>
-                </form>
+                                <p>{comments.length} comment{comments.length > 1 ? "s" : ""}</p>
+                            </div>
 
-            </div>
+                            <ul>
+                                {!isLoading ? (
+                                    comments.slice(0, commentsSliceRange).map((item, key) => (
+                                        <Comment key={key} item={item as Comment} mediaId={media.id} />
+                                    ))
+                                ) : (
+                                    <></>
+                                )}
+                            </ul>
 
-            <div id={styles.all_comments_container}>
+                            {comments.length > commentsSliceRange && (
 
-                {comments.length > 0 && (
-                    <>
-                        <div id={styles.comments_heading}>
-                            {comments.length > 1 && (
-                                <div id={styles.custom_select}>
-                                    <SvgFilter width={16} height={16} alt="Filter" />
-                                    <select onChange={(e) => sortCommentsBy(e.target.value)} title="Choose How To Sort The Comments">
-                                        <option selected value="date">Most Recent</option>
-                                        <option value="likes">Most Likes</option>
-                                        <option value="dislikes">Most Dislikes</option>
-                                    </select>
-                                </div>
+                                <button onClick={() => setNewSliceRange()}>SEE MORE COMMENTS</button>
+
                             )}
+                        </>
+                    )}
 
-                            <p>{comments.length} comment{comments.length > 1 ? "s" : ""}</p>
+                    {isLoading && (
+                        <div >
+
+                            <SvgLoading width={120} height={120} alt="Loading" />
+
                         </div>
+                    )}
 
-                        <ul>
-                            {!isLoading ? (
-                                comments.slice(0, commentsSliceRange).map((item, key) => (
-                                    <Comment key={key} item={item as Comment} mediaId={media.id} />
-                                ))
-                            ) : (
-                                <></>
-                            )}
-                        </ul>
+                    {(comments.length == 0 && !isLoading) && (
+                        <div id={styles.no_comments_container}>
 
-                        {comments.length > commentsSliceRange && (
+                            <p>No Comments Yet.</p>
 
-                            <button onClick={() => setNewSliceRange()}>SEE MORE COMMENTS</button>
+                        </div>
+                    )}
 
-                        )}
-                    </>
-                )}
-
-                {isLoading && (
-                    <div >
-
-                        <SvgLoading width={120} height={120} alt="Loading" />
-
-                    </div>
-                )}
-
-                {(comments.length == 0 && !isLoading) && (
-                    <div id={styles.no_comments_container}>
-
-                        <p>No Comments Yet.</p>
-
-                    </div>
-                )}
+                </div>
 
             </div>
-
-        </div>
+        </>
     )
 
 }

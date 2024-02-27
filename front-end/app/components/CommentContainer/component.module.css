@@ -66,12 +66,13 @@
 
 .comment_container[data-has-spoiler=true] .comment_text_container {
 
-
     position: relative;
 
 }
 
 .comment_container .comment_text_container p {
+
+    position: relative;
 
     padding: 8px;
 
@@ -81,6 +82,17 @@
     font-weight: 300;
     color: var(--white-100);
 
+}
+
+.comment_container .comment_text_container p::before {
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: -6px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-color: rgb(82, 82, 82) transparent transparent transparent;
 }
 
 .comment_container[data-has-spoiler=true] .comment_text_container p {

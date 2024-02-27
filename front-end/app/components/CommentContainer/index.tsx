@@ -17,6 +17,8 @@ import {
 import { initFirebase } from '@/firebase/firebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
+import { AnimatePresence } from 'framer-motion';
+import UserModal from '../UserLoginModal';
 
 function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
@@ -28,6 +30,8 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
     const [commentData, setCommentData] = useState<QueryDocumentSnapshot<DocumentData, DocumentData> | any>()
     const [commentDocId, setCommentDocId] = useState<string | DocumentData>()
+
+    const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
@@ -53,7 +57,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     // INCREASES NUMBER OF INTERACTIONS WITH BUTTONS LIKE DISLIKE
     async function likeOrDislikeIncrease(button: string, add: boolean) {
 
-        if (!user) return
+        if (!user) return setIsUserModalOpen(true)
 
         const query = await queryCommentDoc()
 
@@ -215,70 +219,84 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     }, [user, item, mediaId])
 
     return (
-        !wasDeleted && (
-            <li className={styles.comment_container} data-has-spoiler={isSpoiler}>
+        <>
+            <AnimatePresence
+                initial={false}
+                mode='wait'
+            >
+                {(!user && isUserModalOpen) && (
+                    <UserModal
+                        onClick={() => setIsUserModalOpen(false)}
+                        auth={auth}
+                    />
+                )}
+            </AnimatePresence>
+            
+            {!wasDeleted && (
+                <li className={styles.comment_container} data-has-spoiler={isSpoiler}>
 
-                <div className={styles.user_img_container}>
+                    <div className={styles.user_img_container}>
 
-                    <Image src={item.userPhoto} alt={item.username} fill sizes='100%' />
-
-                </div>
-
-                <div className={styles.comment_data}>
-
-                    <div className={styles.heading_container}>
-                        <h5>
-                            {item.username.length > 10 ? `${item.username.slice(0, 10)}...` : item.username}
-                        </h5>
-
-                        <p>{convertFromUnix(item.createdAt, { month: "short" })}</p>
-                    </div>
-
-                    <div className={styles.comment_text_container} onClick={() => item.isSpoiler && setIsSpoiler(!isSpoiler)}>
-
-                        <p>{item.comment}</p>
+                        <Image src={item.userPhoto} alt={item.username} fill sizes='100%' />
 
                     </div>
 
-                    {commentData && (
-                        <div className={`${styles.flex} display_flex_row space_beetween align_items_center`}>
+                    <div className={styles.comment_data}>
 
-                            <div className={styles.buttons_container}>
-                                <button onClick={() => likeOrDislikeIncrease("like", isLiked ? false : true)}>
-                                    {isLiked ? (
-                                        <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes </>
-                                    ) : (
-                                        <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like </>
-                                    )}
-                                </button>
+                        <div className={styles.heading_container}>
+                            <h5>
+                                {item.username.length > 10 ? `${item.username.slice(0, 10)}...` : item.username}
+                            </h5>
 
-                                <button onClick={() => likeOrDislikeIncrease("dislike", isDisliked ? false : true)}>
-                                    {isDisliked ? (
-                                        <> <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes </>
-                                    ) : (
-                                        <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike </>
-                                    )}
-                                </button>
+                            <p>{convertFromUnix(item.createdAt, { month: "short" })}</p>
+                        </div>
 
-                                {/* <button onClick={() => console.log("")} disabled>
+                        <div className={styles.comment_text_container} onClick={() => item.isSpoiler && setIsSpoiler(!isSpoiler)}>
+
+                            <p>{item.comment}</p>
+
+                        </div>
+
+                        {commentData && (
+                            <div className={`${styles.flex} display_flex_row space_beetween align_items_center`}>
+
+                                <div className={styles.buttons_container}>
+                                    <button onClick={() => likeOrDislikeIncrease("like", isLiked ? false : true)}>
+                                        {isLiked ? (
+                                            <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes </>
+                                        ) : (
+                                            <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like </>
+                                        )}
+                                    </button>
+
+                                    <button onClick={() => likeOrDislikeIncrease("dislike", isDisliked ? false : true)}>
+                                        {isDisliked ? (
+                                            <> <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes </>
+                                        ) : (
+                                            <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike </>
+                                        )}
+                                    </button>
+
+                                    {/* <button onClick={() => console.log("")} disabled>
                                     <SvgReply width={16} height={16} alt="Reply" />Reply
                                 </button> */}
 
-                                {(user?.uid == item.userId.id) && (
-                                    <button className={styles.delete_btn} onClick={() => deleteComment()}><SvgTrash width={16} height={16} alt="Delete Icon" />Delete</button>
+                                    {(user?.uid == item.userId.id) && (
+                                        <button className={styles.delete_btn} onClick={() => deleteComment()}><SvgTrash width={16} height={16} alt="Delete Icon" />Delete</button>
+                                    )}
+                                </div>
+
+                                {commentData.episodeNumber && (
+                                    <small>On Episode {commentData.episodeNumber}</small>
                                 )}
+
                             </div>
+                        )}
+                    </div>
 
-                            {commentData.episodeNumber && (
-                                <small>On Episode {commentData.episodeNumber}</small>
-                            )}
-
-                        </div>
-                    )}
-                </div>
-
-            </li >
-        )
+                </li >
+            )}
+        </>
 
     )
 }
