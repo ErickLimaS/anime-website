@@ -8,7 +8,7 @@ import LogoutSvg from '@/public/assets/logout.svg'
 import SettingsSvg from '@/public/assets/gear-fill.svg'
 import HistorySvg from '@/public/assets/clock-history.svg'
 import BookmarkSvg from '@/public/assets/bookmark-check-fill.svg'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 import { initFirebase } from "@/firebase/firebaseApp";
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
@@ -22,8 +22,6 @@ function UserSideMenu() {
 
     // FIREBASE LOGIN 
     const app = initFirebase()
-
-    const provider = new GoogleAuthProvider()
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
@@ -77,7 +75,11 @@ function UserSideMenu() {
                     >
                         {isUserMenuOpen && (
 
-                            <UserModal onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} auth={auth} provider={provider} aria-expanded={isUserMenuOpen} />
+                            <UserModal
+                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                auth={auth}
+                                aria-expanded={isUserMenuOpen}
+                            />
 
                         )}
 

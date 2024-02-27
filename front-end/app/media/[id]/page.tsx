@@ -25,6 +25,7 @@ import SwiperListContainer from '@/app/components/SwiperListContainer'
 import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/format_date_unix'
+import CommentSectionContainer from '../../components/CommentSectionContainer'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -350,6 +351,15 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </section>
             )}
 
+            {/* COMMENTS SECTION */}
+            <section id={styles.comments_container}>
+
+              <h2 className={styles.heading_style}>COMMENTS</h2>
+
+              <CommentSectionContainer media={mediaData} />
+
+            </section>
+
             {/* RECOMMENDATIONS ACCORDING TO THIS MEDIA */}
             {mediaData.recommendations.edges[0] && (
               <section id={styles.similar_container}>
@@ -374,7 +384,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
           </div>
 
           <div id={styles.hype_container}>
-            
+
             {/* NEXT EPISODE */}
             {(isMobileScreen == false && mediaData.nextAiringEpisode) && (
               <div id={styles.next_episode_container}>
@@ -456,7 +466,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 )}
 
               </ul>
-              
+
             </div>
 
           </div>

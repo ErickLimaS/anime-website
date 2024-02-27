@@ -4,7 +4,7 @@ import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc, FieldPath, setDoc, DocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { initFirebase } from "@/firebase/firebaseApp"
-import { GoogleAuthProvider, getAuth } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import UserModal from '@/app/components/UserLoginModal';
@@ -18,7 +18,6 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
     const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
     const auth = getAuth()
-    const provider = new GoogleAuthProvider()
 
     const [user, loading] = useAuthState(auth)
 
@@ -101,7 +100,7 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
             return
         }
 
-        const isMediaIdOnDoc = userDoc.get("bookmarks").find((item: { id: number }) => item.id == data.id)
+        const isMediaIdOnDoc = userDoc.get("bookmarks")?.find((item: { id: number }) => item.id == data.id)
 
         if (isMediaIdOnDoc) {
             setWasAddedToPlaylist(true)
@@ -127,7 +126,10 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
                 mode='wait'
             >
                 {isUserModalOpen && (
-                    <UserModal onClick={() => setIsUserModalOpen(false)} auth={auth} provider={provider} />
+                    <UserModal
+                        onClick={() => setIsUserModalOpen(false)}
+                        auth={auth}
+                    />
                 )}
             </AnimatePresence>
 
