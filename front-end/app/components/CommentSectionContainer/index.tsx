@@ -5,24 +5,34 @@ import Image from 'next/image';
 import {
     getFirestore, doc, arrayUnion, FieldPath, setDoc,
     DocumentSnapshot, DocumentData, QueryDocumentSnapshot,
-    addDoc, collection, getDocs, QuerySnapshot
+    addDoc, collection, getDocs, QuerySnapshot,
+    getDoc,
+    DocumentReference,
+    where,
+    query
 } from 'firebase/firestore';
 import { initFirebase } from "@/firebase/firebaseApp"
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
+import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import Comment from '../CommentContainer';
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
 
-function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
+type CommetsSectionTypes = {
+    media: ApiMediaResults | ApiDefaultResult,
+    onWatchPage?: boolean,
+    episodeId?: string,
+    episodeNumber?: number
+}
+
+function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber }: CommetsSectionTypes) {
 
     const [comments, setComments] = useState<DocumentData[]>([])
     const [commentSaved, setCommentSaved] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [sortComments, setSortComments] = useState<string>("date")
     const [commentsSliceRange, setCommentsSliceRange] = useState<number>(3)
 
     const auth = getAuth()
@@ -86,14 +96,28 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
 
         setIsLoading(true)
 
-        let commentsToThisMedia: QuerySnapshot<DocumentData, DocumentData> = await getDocs(collection(db, 'comments', `${media.id}`, "all"))
+        let commentsToThisMedia: QuerySnapshot<DocumentData, DocumentData> = await getDocs(collection(db, 'comments', `${media.id}`, onWatchPage ? `${episodeId}` : "all"))
 
         // IF HAS NO COMMENTS DOC ON FIRESTORE, IT CREATES ONE
         if (!commentsToThisMedia) {
 
             await setDoc(doc(db, 'comments', `${media.id}`), {}) as unknown as DocumentSnapshot<DocumentData, DocumentData>
 
-            commentsToThisMedia = await getDocs(collection(db, 'comments', `${media.id}`, "all"))
+            commentsToThisMedia = await getDocs(collection(db, 'comments', `${media.id}`, onWatchPage ? `${episodeId}` : "all"))
+
+            return
+        }
+
+        if (onWatchPage) {
+            let data: DocumentData[] = []
+
+            const queryCommentsToThisEpisode = query(collection(db, 'comments', `${media.id}`, "all"), where("episodeId", "==", episodeId))
+
+            const querySnapshot = await getDocs(queryCommentsToThisEpisode)
+
+            querySnapshot.docs.forEach(doc => data.push(doc.data()))
+
+            await sortCommentsBy("date", data)
 
             return
         }
@@ -122,20 +146,34 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
 
         const timeStamp = Math.floor(new Date().getTime() / 1000.0)
 
-        // SAVES COMMENT ON DB
-        const commentSaved = await addDoc(collection(db, 'comments', `${media.id}`, "all"),
-            {
-                userId: doc(db, "users", user.uid),
-                username: user.displayName,
-                userPhoto: user.photoURL,
-                createdAt: timeStamp,
-                // createdAt: serverTimestamp() as FieldValue,
-                comment: form.comment.value,
-                isSpoiler: form.spoiler.checked,
-                likes: 0,
-                dislikes: 0
-            }
-        )
+        const commentValues = {
+
+            userId: doc(db, "users", user.uid),
+            username: user.displayName,
+            userPhoto: user.photoURL,
+            createdAt: timeStamp,
+            // createdAt: serverTimestamp() as FieldValue,
+            comment: form.comment.value,
+            isSpoiler: form.spoiler.checked,
+            likes: 0,
+            dislikes: 0,
+            fromEpisode: onWatchPage || null,
+            episodeId: episodeId || null,
+            episodeNumber: episodeNumber || null
+
+        }
+
+        let commentSaved
+
+        // SAVES COMMENT ON COLLECTION "ALL" OF MEDIA
+        commentSaved = await addDoc(collection(db, 'comments', `${media.id}`, "all"), commentValues)
+
+        if (onWatchPage) {
+            // SAVES ON COLLECTION OF EPISODE
+            await addDoc(collection(db, 'comments', `${media.id}`, `${episodeId}`), {
+                commentRef: doc(db, 'comments', `${media.id}`, "all", commentSaved.id)
+            })
+        }
 
         if (commentSaved) {
 
@@ -172,7 +210,7 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
 
         loadComments()
 
-    }, [media, user])
+    }, [media, user, episodeId])
 
 
     return (
@@ -184,7 +222,7 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
                     {user ? (
                         <Image src={user.photoURL!} alt={user.displayName!} fill sizes='100%' />
                     ) : (
-                        <></>
+                        <span></span>
                     )}
                 </div>
 
@@ -195,7 +233,7 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
                     </label>
 
                     <label id={styles.checkbox_row}>
-                        Is Spoiler
+                        Is a Spoiler
                         <input type='checkbox' name='spoiler' value="true"></input>
                     </label>
 
@@ -210,16 +248,20 @@ function CommentSectionContainer({ media }: { media: ApiMediaResults }) {
 
                 {comments.length > 0 && (
                     <>
-                        {comments.length > 2 && (
-                            <div id={styles.custom_select}>
-                                <SvgFilter width={16} height={16} alt="Filter" />
-                                <select onChange={(e) => sortCommentsBy(e.target.value)} title="Choose How To Sort The Comments">
-                                    <option selected value="date">Most Recent</option>
-                                    <option value="likes">Most Likes</option>
-                                    <option value="dislikes">Most Dislikes</option>
-                                </select>
-                            </div>
-                        )}
+                        <div id={styles.comments_heading}>
+                            {comments.length > 1 && (
+                                <div id={styles.custom_select}>
+                                    <SvgFilter width={16} height={16} alt="Filter" />
+                                    <select onChange={(e) => sortCommentsBy(e.target.value)} title="Choose How To Sort The Comments">
+                                        <option selected value="date">Most Recent</option>
+                                        <option value="likes">Most Likes</option>
+                                        <option value="dislikes">Most Dislikes</option>
+                                    </select>
+                                </div>
+                            )}
+
+                            <p>{comments.length} comment{comments.length > 1 ? "s" : ""}</p>
+                        </div>
 
                         <ul>
                             {!isLoading ? (

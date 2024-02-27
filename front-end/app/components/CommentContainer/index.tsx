@@ -212,7 +212,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
         checkLikesAndDislikes()
 
-    }, [user])
+    }, [user, item, mediaId])
 
     return (
         !wasDeleted && (
@@ -241,30 +241,38 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
                     </div>
 
                     {commentData && (
-                        <div className={styles.buttons_container}>
-                            <button onClick={() => likeOrDislikeIncrease("like", isLiked ? false : true)}>
-                                {isLiked ? (
-                                    <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes </>
-                                ) : (
-                                    <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like </>
+                        <div className={`${styles.flex} display_flex_row space_beetween align_items_center`}>
+
+                            <div className={styles.buttons_container}>
+                                <button onClick={() => likeOrDislikeIncrease("like", isLiked ? false : true)}>
+                                    {isLiked ? (
+                                        <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes </>
+                                    ) : (
+                                        <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like </>
+                                    )}
+                                </button>
+
+                                <button onClick={() => likeOrDislikeIncrease("dislike", isDisliked ? false : true)}>
+                                    {isDisliked ? (
+                                        <> <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes </>
+                                    ) : (
+                                        <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike </>
+                                    )}
+                                </button>
+
+                                {/* <button onClick={() => console.log("")} disabled>
+                                    <SvgReply width={16} height={16} alt="Reply" />Reply
+                                </button> */}
+
+                                {(user?.uid == item.userId.id) && (
+                                    <button className={styles.delete_btn} onClick={() => deleteComment()}><SvgTrash width={16} height={16} alt="Delete Icon" />Delete</button>
                                 )}
-                            </button>
+                            </div>
 
-                            <button onClick={() => likeOrDislikeIncrease("dislike", isDisliked ? false : true)}>
-                                {isDisliked ? (
-                                    <> <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes </>
-                                ) : (
-                                    <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike </>
-                                )}
-                            </button>
-
-                            {/* <button onClick={() => console.log("")} disabled>
-                                <SvgReply width={16} height={16} alt="Reply" />Reply
-                            </button> */}
-
-                            {(user?.uid == item.userId.id) && (
-                                <button className={styles.delete_btn} onClick={() => deleteComment()}><SvgTrash width={16} height={16} alt="Delete Icon" />Delete</button>
+                            {commentData.episodeNumber && (
+                                <small>On Episode {commentData.episodeNumber}</small>
                             )}
+
                         </div>
                     )}
                 </div>

@@ -19,6 +19,15 @@
     border-radius: 50%;
 }
 
+@media(max-width:420px) {
+    .comment_container .flex {
+
+        flex-direction: column;
+
+    }
+
+}
+
 .comment_container .heading_container {
 
     margin-top: 4px;
@@ -156,4 +165,8 @@
 
     fill: var(--white-100);
 
+}
+
+.comment_container small {
+    color: var(--white-50);
 }

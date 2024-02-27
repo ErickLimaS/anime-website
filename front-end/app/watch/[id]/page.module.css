@@ -46,7 +46,6 @@
 
     padding: 16px;
 
-
     max-width: var(--breakpoint-sm);
 
 }
@@ -99,7 +98,7 @@
 
     color: var(--brand-color);
     white-space: break-spaces;
-    
+
 }
 
 #media_info_container>h1>span:first-child {
@@ -121,4 +120,43 @@
     background-color: var(--black-50);
     height: max-content;
 
+}
+
+#comment_container {
+
+    margin: 32px auto 64px auto;
+    padding: 16px;
+    max-width: var(--breakpoint-sm);
+
+}
+
+#comment_container h2 {
+
+    color: var(--white-100);
+    font-size: var(--font-size--h4);
+
+}
+
+@media(min-width: 768px) {
+    #comment_container {
+
+        max-width: var(--breakpoint-md);
+
+    }
+}
+
+@media(min-width: 980px) {
+    #comment_container {
+
+        max-width: var(--breakpoint-xl);
+
+    }
+}
+
+@media(min-width: 1400px) {
+    #comment_container {
+
+        max-width: var(--breakpoint-xxl);
+
+    }
 }

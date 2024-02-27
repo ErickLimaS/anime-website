@@ -25,7 +25,7 @@ import SwiperListContainer from '@/app/components/SwiperListContainer'
 import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/format_date_unix'
-import CommentSectionContainer from './components/CommentSectionContainer'
+import CommentSectionContainer from '../../components/CommentSectionContainer'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 

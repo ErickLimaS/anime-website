@@ -23,6 +23,9 @@ interface Comment {
     dislikes: number,
     userId: {
         id: string
-    }
+    },
+    fromEpisode: boolean,
+    episodeId: string,
+    episodeNumber: number
 
 }
