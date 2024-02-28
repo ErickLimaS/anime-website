@@ -12,7 +12,7 @@
 
 #content_container #results_container {
 
-    padding-bottom: 32px;
+    padding-bottom: 46px;
 
     border-bottom: 1px solid var(--white-25);
 
@@ -34,7 +34,7 @@
 
     position: relative;
 
-    top: -24px;
+    top: -26px;
 
     display: block;
     margin: auto;

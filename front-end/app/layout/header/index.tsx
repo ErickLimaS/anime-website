@@ -22,7 +22,7 @@ function Header() {
                     <NavListMenu />
 
                     <Link href="/" id={styles.img_container}>
-                        <Image id={styles.logo} src={'/logo.png'} alt='AniProject Website Logo' fill sizes='100%'/>
+                        <Image id={styles.logo} src={'/logo.png'} alt='AniProject Website Logo' fill sizes='100%' />
                     </Link>
                 </div>
 
@@ -41,9 +41,9 @@ function Header() {
 
                             <MangaNavListHover />
                         </li>
-                        {/* <li className='display_flex_row align_items_center'>
-                            Movies <ChevronDownIcon alt="Open Movies List" width={16} height={16} />
-                        </li> */}
+                        <li className='display_flex_row align_items_center' style={{ textDecoration: "line-through" }}>
+                            News <ChevronDownIcon alt="Open News List" width={16} height={16} />
+                        </li>
                     </ul>
                 </div>
 

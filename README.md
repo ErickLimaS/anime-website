@@ -37,10 +37,7 @@ Front-end (on netlify.com):
 - ``Anilist API``
 - ``Consumet API``
 
-Back-End (Firebase (Backend as a Service)):
-
-- On Development...
-
+Back-End (Firebase and Next.js API routes)
 
 ## :computer: How Can I Run It? 
 

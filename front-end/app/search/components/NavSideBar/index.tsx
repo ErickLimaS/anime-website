@@ -172,7 +172,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                 mode='wait'
             >
                 {/* SHOW IF IS MOBILE AND MENU IS OPEN, OR IF IS NOT MOBILE (ON DESKTOP) AND MENU IS CLOSED */}
-                {(isMobile && openFiltersMenu == true) || (!isMobile && !openFiltersMenu) && (
+                {((isMobile && openFiltersMenu == true) || (!isMobile && !openFiltersMenu)) && (
                     <motion.div
                         id={styles.container}
                         variants={showUpMotion}
