@@ -74,7 +74,7 @@ function ResultsContainer({ data, totalLength }: { data: MediaDbOffline[], total
 
             <span>Showing {(itemsPerClick * newRange >= totalLength) ?
                 "all " : `${itemsPerClick * newRange} out of `}
-                <span>{totalLength}</span> results
+                <span>{totalLength.toLocaleString("en-US")}</span> results
             </span>
 
         </div >

@@ -56,7 +56,6 @@ function UserModal({ onClick, auth, }: { onClick: MouseEventHandler<HTMLDivEleme
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
         >
-
             <motion.div
                 onClick={(e) => e.stopPropagation()}
                 id={styles.modal}

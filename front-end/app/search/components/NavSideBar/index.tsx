@@ -171,207 +171,219 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                 initial={false}
                 mode='wait'
             >
-                {/* SHOW IF IS MOBILE AND MENU IS OPEN, OR IF IS NOT MOBILE (ON DESKTOP) AND MENU IS CLOSED */}
                 {((isMobile && openFiltersMenu == true) || (!isMobile && !openFiltersMenu)) && (
                     <motion.div
-                        id={styles.container}
-                        variants={showUpMotion}
-                        initial="hidden"
-                        animate="visible"
-                        data-loading={isLoading}
-                        data-active={openFiltersMenu}
+                        id={styles.backdrop}
+                        onClick={() => setOpenFiltersMenu(false)}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                     >
-                        <form className={styles.nav_container}>
-
-                            <p>GENRES</p>
-
-                            <ul>
-
-                                {allGenresAnilist.map((item, key) => (
-                                    <li key={key}>
-                                        <label>
-                                            {item.name}
-                                            <input
-                                                type='checkbox'
-                                                value={item.value}
-                                                checked={urlQuery.get("genre")?.includes(item.value)}
-                                                onClick={(e) => fetchData("genre", e.target)}>
-                                            </input>
-                                        </label>
-                                    </li>
-                                ))}
-
-                            </ul>
-
-                        </form>
-
-                        <form className={styles.nav_container}>
-
-                            <p>YEAR</p>
-
-                            <select
-                                defaultValue={urlQuery.get("year") ? `${urlQuery.get("year")}` : `any`}
-                                onChange={(e) => fetchData("year", e.target)}
+                        {/* SHOW IF IT IS MOBILE AND MENU IS OPEN, OR IF IS NOT MOBILE (ON DESKTOP) AND MENU IS CLOSED */}
+                        {((isMobile && openFiltersMenu == true) || (!isMobile && !openFiltersMenu)) && (
+                            <motion.div
+                                onClick={(e) => e.stopPropagation()}
+                                onScrollCapture={(e) => e.stopPropagation()}
+                                id={styles.container}
+                                variants={showUpMotion}
+                                initial="hidden"
+                                animate="visible"
+                                data-loading={isLoading}
+                                data-active={openFiltersMenu}
                             >
-                                <option value="any">Any</option>
-                                {range(70).map((item, key) => (
-                                    <option
-                                        selected={urlQuery.get("year")?.search(`/\b${new Date().getFullYear() - item}\b/`) == 1 ? true : false}
-                                        key={key}
-                                        value={new Date().getFullYear() - item}
+                                <form className={styles.nav_container}>
+
+                                    <p>GENRES</p>
+
+                                    <ul>
+
+                                        {allGenresAnilist.map((item, key) => (
+                                            <li key={key}>
+                                                <label>
+                                                    {item.name}
+                                                    <input
+                                                        type='checkbox'
+                                                        value={item.value}
+                                                        checked={urlQuery.get("genre")?.includes(item.value)}
+                                                        onClick={(e) => fetchData("genre", e.target)}>
+                                                    </input>
+                                                </label>
+                                            </li>
+                                        ))}
+
+                                    </ul>
+
+                                </form>
+
+                                <form className={styles.nav_container}>
+
+                                    <p>YEAR</p>
+
+                                    <select
+                                        defaultValue={urlQuery.get("year") ? `${urlQuery.get("year")}` : `any`}
+                                        onChange={(e) => fetchData("year", e.target)}
                                     >
-                                        {new Date().getFullYear() - item}
-                                    </option>
-                                ))}
-                            </select>
+                                        <option value="any">Any</option>
+                                        {range(70).map((item, key) => (
+                                            <option
+                                                selected={urlQuery.get("year")?.search(`/\b${new Date().getFullYear() - item}\b/`) == 1 ? true : false}
+                                                key={key}
+                                                value={new Date().getFullYear() - item}
+                                            >
+                                                {new Date().getFullYear() - item}
+                                            </option>
+                                        ))}
+                                    </select>
 
-                        </form>
+                                </form>
 
-                        <form className={`${styles.nav_container} ${styles.hidden_checkbox}`}>
+                                <form className={`${styles.nav_container} ${styles.hidden_checkbox}`}>
 
-                            <p>TYPE</p>
+                                    <p>TYPE</p>
 
-                            <ul>
+                                    <ul>
 
-                                <li>
-                                    <label>Anime
-                                        <input
-                                            type='checkbox'
-                                            value={"tv"}
-                                            checked={urlQuery.get("type") == "tv" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
-                                        </input>
-                                    </label>
-                                </li>
+                                        <li>
+                                            <label>Anime
+                                                <input
+                                                    type='checkbox'
+                                                    value={"tv"}
+                                                    checked={urlQuery.get("type") == "tv" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
+                                                </input>
+                                            </label>
+                                        </li>
 
-                                <li>
-                                    <label>Manga
-                                        <input
-                                            type='checkbox'
-                                            value={"manga"}
-                                            checked={urlQuery.get("type") == "manga" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
+                                        <li>
+                                            <label>Manga
+                                                <input
+                                                    type='checkbox'
+                                                    value={"manga"}
+                                                    checked={urlQuery.get("type") == "manga" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
 
-                                        </input>
-                                    </label>
-                                </li>
+                                                </input>
+                                            </label>
+                                        </li>
 
-                                <li>
-                                    <label>Movie
-                                        <input type='checkbox'
-                                            value={"movie"}
-                                            checked={urlQuery.get("type") == "movie" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
+                                        <li>
+                                            <label>Movie
+                                                <input type='checkbox'
+                                                    value={"movie"}
+                                                    checked={urlQuery.get("type") == "movie" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
 
-                                        </input>
-                                    </label>
-                                </li>
+                                                </input>
+                                            </label>
+                                        </li>
 
-                                <li>
-                                    <label>Special
-                                        <input
-                                            type='checkbox'
-                                            value={"special"}
-                                            checked={urlQuery.get("type") == "special" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
-                                        </input>
-                                    </label>
-                                </li>
+                                        <li>
+                                            <label>Special
+                                                <input
+                                                    type='checkbox'
+                                                    value={"special"}
+                                                    checked={urlQuery.get("type") == "special" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
+                                                </input>
+                                            </label>
+                                        </li>
 
-                                <li>
-                                    <label>Novel
-                                        <input
-                                            type='checkbox'
-                                            value={"novel"}
-                                            checked={urlQuery.get("type") == "novel" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
-                                        </input>
-                                    </label>
-                                </li>
+                                        <li>
+                                            <label>Novel
+                                                <input
+                                                    type='checkbox'
+                                                    value={"novel"}
+                                                    checked={urlQuery.get("type") == "novel" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
+                                                </input>
+                                            </label>
+                                        </li>
 
-                                <li>
-                                    <label>Ova
-                                        <input
-                                            type='checkbox'
-                                            value={"ova"}
-                                            checked={urlQuery.get("type") == "ova" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
-                                        </input>
-                                    </label>
-                                </li>
+                                        <li>
+                                            <label>Ova
+                                                <input
+                                                    type='checkbox'
+                                                    value={"ova"}
+                                                    checked={urlQuery.get("type") == "ova" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
+                                                </input>
+                                            </label>
+                                        </li>
 
-                                <li>
-                                    <label>Ona
-                                        <input
-                                            type='checkbox'
-                                            value={"ona"}
-                                            checked={urlQuery.get("type") == "ona" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
-                                        </input>
-                                    </label>
-                                </li >
+                                        <li>
+                                            <label>Ona
+                                                <input
+                                                    type='checkbox'
+                                                    value={"ona"}
+                                                    checked={urlQuery.get("type") == "ona" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
+                                                </input>
+                                            </label>
+                                        </li >
 
-                                <li>
-                                    <label>Music
-                                        <input
-                                            type='checkbox'
-                                            value={"music"}
-                                            checked={urlQuery.get("type") == "music" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
-                                        </input>
-                                    </label>
-                                </li >
+                                        <li>
+                                            <label>Music
+                                                <input
+                                                    type='checkbox'
+                                                    value={"music"}
+                                                    checked={urlQuery.get("type") == "music" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
+                                                </input>
+                                            </label>
+                                        </li >
 
-                                <li>
-                                    <label>Tv Short
-                                        <input
-                                            type='checkbox'
-                                            value={"tv_short"}
-                                            checked={urlQuery.get("type") == "tv_short" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
-                                        </input>
-                                    </label>
-                                </li >
+                                        <li>
+                                            <label>Tv Short
+                                                <input
+                                                    type='checkbox'
+                                                    value={"tv_short"}
+                                                    checked={urlQuery.get("type") == "tv_short" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
+                                                </input>
+                                            </label>
+                                        </li >
 
-                                <li>
-                                    <label>One Shot
-                                        <input
-                                            type='checkbox'
-                                            value={"one_shot"}
-                                            checked={urlQuery.get("type") == "one_shot" ? true : false}
-                                            onClick={(e) => fetchData("type", e.target)}>
-                                        </input>
-                                    </label>
-                                </li >
+                                        <li>
+                                            <label>One Shot
+                                                <input
+                                                    type='checkbox'
+                                                    value={"one_shot"}
+                                                    checked={urlQuery.get("type") == "one_shot" ? true : false}
+                                                    onClick={(e) => fetchData("type", e.target)}>
+                                                </input>
+                                            </label>
+                                        </li >
 
-                            </ul>
+                                    </ul>
 
-                        </form>
+                                </form>
 
-                        <form className={`${styles.nav_container} ${styles.hidden_checkbox} ${styles.hidden_checkbox2}`}>
+                                <form className={`${styles.nav_container} ${styles.hidden_checkbox} ${styles.hidden_checkbox2}`}>
 
-                            <p>STATUS</p>
+                                    <p>STATUS</p>
 
-                            <ul>
+                                    <ul>
 
-                                {allStatusAnilist.map((item, key) => (
-                                    <li key={key}>
-                                        <label>
-                                            {item.name}
-                                            <input
-                                                type='checkbox'
-                                                value={item.value}
-                                                checked={urlQuery.get("status")?.includes(item.value)}
-                                                onClick={(e) => fetchData("status", e.target)}>
-                                            </input>
-                                        </label>
-                                    </li>
-                                ))}
+                                        {allStatusAnilist.map((item, key) => (
+                                            <li key={key}>
+                                                <label>
+                                                    {item.name}
+                                                    <input
+                                                        type='checkbox'
+                                                        value={item.value}
+                                                        checked={urlQuery.get("status")?.includes(item.value)}
+                                                        onClick={(e) => fetchData("status", e.target)}>
+                                                    </input>
+                                                </label>
+                                            </li>
+                                        ))}
 
-                            </ul>
+                                    </ul>
 
-                        </form>
+                                </form>
 
+                            </motion.div>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>
