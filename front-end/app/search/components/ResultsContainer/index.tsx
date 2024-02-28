@@ -4,8 +4,9 @@ import styles from "./component.module.css"
 import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
 import { AnimatePresence, motion } from 'framer-motion'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-function ResultsContainer({ data }: { data: MediaDbOffline[] }) {
+function ResultsContainer({ data, totalLength }: { data: MediaDbOffline[], totalLength: number }) {
 
     const [newRange, setNewRange] = useState<number>(1)
 
@@ -24,6 +25,24 @@ function ResultsContainer({ data }: { data: MediaDbOffline[] }) {
                 duration: 1
             }
         }
+
+    }
+
+    const router = useRouter()
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    function fetchData() {
+
+        const current = new URLSearchParams(Array.from(searchParams.entries()));
+
+        current.set("page", `${newRange + 1}`)
+
+        const query = current ? `?${current}` : ""
+
+        setNewRange(newRange + 1)
+
+        router.push(`${pathname}${decodeURI(query)}`)
 
     }
 
@@ -49,16 +68,16 @@ function ResultsContainer({ data }: { data: MediaDbOffline[] }) {
                 </AnimatePresence>
             </div>
 
-            {(itemsPerClick * newRange < data.length) && (
-                <button onClick={() => setNewRange(newRange + 1)}>+ View more</button>
+            {((itemsPerClick * newRange) < totalLength) && (
+                <button onClick={() => fetchData()}> + View more</button>
             )}
 
-            <span>Showing {(itemsPerClick * newRange >= data.length) ?
+            <span>Showing {(itemsPerClick * newRange >= totalLength) ?
                 "all " : `${itemsPerClick * newRange} out of `}
-                <span>{data.length}</span> results
+                <span>{totalLength}</span> results
             </span>
 
-        </div>
+        </div >
     )
 }
 

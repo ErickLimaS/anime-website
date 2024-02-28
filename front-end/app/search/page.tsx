@@ -1,11 +1,11 @@
 import React from 'react'
-import AnimeDataOffline from "@/api/anime-offline-database.json"
 import styles from './page.module.css'
 import NavSideBar from './components/NavSideBar'
 import ResultsContainer from './components/ResultsContainer'
 import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '../lib/checkMobileOrDesktop'
 import { Metadata } from 'next'
+import axios from 'axios'
 
 export const metadata: Metadata = {
     title: 'Search | AniProject',
@@ -14,27 +14,37 @@ export const metadata: Metadata = {
 
 async function SearchPage({ searchParams }: {
     searchParams: {
-        type?: string, title?: string, genre?: string[], year?: number, status?: string
+        type?: string,
+        title?: string,
+        genre?: string[],
+        year?: number,
+        status?: string,
+        page?: string
     }
 }) {
 
     const isMobile = checkDeviceIsMobile(headers())
 
-    let sort = (AnimeDataOffline as any).data
+    // UGLY CODE! I WILL TRY TO FIX IT LATER!
+    // APPEND POSSIBLES QUERYS TO THIS VARIABLE
+    const query = (searchParams ?
+        `?
+        ${searchParams.type ? `type=${searchParams.type}` : ""}${searchParams.title ? "&" : ""}
+        ${searchParams.title ? `title=${searchParams.title}` : ""}${searchParams.genre ? "&" : ""}
+        ${searchParams.genre ? `genre=${searchParams.genre}` : ""}${searchParams.year ? "&" : ""}
+        ${searchParams.year ? `year=${searchParams.year}` : ""}${searchParams.status ? "&" : ""}
+        ${searchParams.status ? `status=${searchParams.status}` : ""}${searchParams.page ? "&" : ""}
+        ${searchParams.page ? `page=${searchParams.page}` : ""}`
+        :
+        "")
+        .replace(/(\r\n|\n|\r)/gm, "")
+        .replace(/\s+/g, '')
 
-    if (searchParams.type) sort = sort.filter((item: { type: string }) => item.type == searchParams.type!.toUpperCase())
-
-    if (searchParams.genre) sort = sort.filter((item: { tags: string[] }) => item.tags.some(a => searchParams.genre!.includes(a)))
-
-    if (searchParams.status) sort = sort.filter((item: { status: string }) => item.status == searchParams.status!.toUpperCase())
-
-    if (searchParams.year) sort = sort.filter((item: { animeSeason: { year: number } }) => item.animeSeason.year == searchParams.year)
-
-    if (searchParams.title) sort = sort.filter((item: { title: string }) => item.title.toLowerCase().includes(searchParams.title!.toLowerCase()))
+    const sort: any = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}${query ? query : ""}`).then(res => res.data)
 
     // GET ANILIST ID FOR THIS MEDIA
-    if (sort) {
-        sort.map((item: { sources: string[]; anilistId: string }) => item.sources.map(a => {
+    if (sort.data) {
+        sort.data.map((item: { sources: string[]; anilistId: string }) => item.sources.map(a => {
             const foundUrl: string | null = a.includes("https://anilist.co/anime") ? a.slice(a.search(/\banime\b/)) : null
 
             if (foundUrl) item.anilistId = foundUrl!.slice(6)
@@ -51,7 +61,7 @@ async function SearchPage({ searchParams }: {
 
             </div>
 
-            <ResultsContainer data={sort} />
+            <ResultsContainer data={sort.data} totalLength={sort.allResultsLength} />
 
         </main>
     )
