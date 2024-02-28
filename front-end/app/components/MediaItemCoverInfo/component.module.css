@@ -17,6 +17,13 @@
     }
 }
 
+/* FOR MEDIA WITH NO ID */
+.media_item_container a.disabled {
+
+    pointer-events: none;
+
+}
+
 .media_item_container[data-loading=true] {
 
     animation: loading 1800ms infinite;
@@ -61,6 +68,7 @@
 
 }
 
+/* SPAN TYPE MEDIA OVER IMG */
 .media_item_container .media_type_icon {
 
     display: flex;
@@ -85,7 +93,6 @@
 
 }
 
-/* SPAN OVER IMG */
 .media_item_container .media_type_icon svg {
 
     fill: var(--brand-color);
@@ -111,6 +118,38 @@
     border-radius: 4px;
 
     background-color: var(--black-100);
+}
+
+/* NO PAGE FOR THIS MEDIA */
+.media_item_container .no_page_container {
+    display: none;
+}
+
+.media_item_container:hover .no_page_container {
+
+    display: flex;
+    position: absolute;
+    z-index: 1;
+
+    bottom: 0;
+    left: 0;
+
+    gap: 0 4px;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: var(--font-size--p);
+    font-weight: 600;
+    color: var(--white-100);
+
+    padding: 8px;
+
+    height: 100%;
+    width: 100%;
+
+    background-image: linear-gradient(rgba(0, 0, 0, 0.15), var(--background) 100%);
+
 }
 
 .media_item_container:hover span.media_format_title {

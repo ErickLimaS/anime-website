@@ -44,16 +44,16 @@ async function Footer() {
                         <h5>Categories</h5>
 
                         <ul className={`${styles.grid_template} display_grid`}>
-                            <li><Link href="/genre/action">Action</Link></li>
-                            <li><Link href="/genre/adventure">Adventure</Link></li>
-                            <li><Link href="/genre/drama">Drama</Link></li>
-                            <li><Link href="/genre/sci-fi">Sci-fi</Link></li>
-                            <li><Link href="/genre/comedy">Comedy</Link></li>
-                            <li><Link href="/genre/slice-of-life">Slice of Life</Link></li>
-                            <li><Link href="/genre/mistery">Mistery</Link></li>
-                            <li><Link href="/genre/supernatural">Supernatural</Link></li>
-                            <li><Link href="/genre/romance">Romance</Link></li>
-                            <li><Link href="/genre/sports">Sports</Link></li>
+                            <li><Link href="/search?genre=[action]">Action</Link></li>
+                            <li><Link href="/search?genre=[adventure]">Adventure</Link></li>
+                            <li><Link href="/search?genre=[drama]">Drama</Link></li>
+                            <li><Link href="/search?genre=[sci-fi]">Sci-fi</Link></li>
+                            <li><Link href="/search?genre=[comedy]">Comedy</Link></li>
+                            <li><Link href="/search?genre=[slice-of-life]">Slice of Life</Link></li>
+                            <li><Link href="/search?genre=[mistery]">Mistery</Link></li>
+                            <li><Link href="/search?genre=[supernatural]">Supernatural</Link></li>
+                            <li><Link href="/search?genre=[romance]">Romance</Link></li>
+                            <li><Link href="/search?genre=[sports]">Sports</Link></li>
                         </ul>
 
                     </div>

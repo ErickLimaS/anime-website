@@ -1,38 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["s4.anilist.co", "img1.ak.crunchyroll.com", "gogocdn.net", "lh3.googleusercontent.com", "avatars.githubusercontent.com"],
+    // So many new Sources that i had to just allow any 
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "s4.anilist.co",
+        hostname: "**",
         port: "",
         pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "img1.ak.crunchyroll.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "gogocdn.net",
-        port: "",
-        pathname: "/**",
-      }, 
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com",
-        port: "",
-        pathname: "/**",
-      },
+      }
     ],
   },
   webpack(config) {

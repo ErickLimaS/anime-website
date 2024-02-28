@@ -44,7 +44,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
   const isMobileScreen = checkDeviceIsMobile(headers())
 
   return (
-    <div id={styles.container}>
+    <main id={styles.container}>
 
       {/* BANNER or BACKGROUND COLOR*/}
       <div
@@ -77,7 +77,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 <ul className='display_flex_row'>
                   {mediaData.genres.slice(0, 3).map((item, key: number) => (
                     <li key={key}>
-                      <Link href={`/search?genre=${item.toLowerCase()}`}>{item}</Link>
+                      <Link href={`/search?genre=[${item.toLowerCase()}]`}>{item}</Link>
                     </li>
                   ))}
                 </ul>
@@ -475,7 +475,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
       </div >
 
-    </div >
+    </main >
   )
 }
 

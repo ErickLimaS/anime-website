@@ -1,4 +1,4 @@
-<h1 align="center">AniProject 2.0 - Under Development!</h1>
+<h1 align="center">AniProject 2.0</h1>
 
 ![AniProject Website Logo](https://user-images.githubusercontent.com/69987890/177884319-0678f842-f3ca-4f62-8d31-7638ca954057.png)
 
@@ -18,6 +18,7 @@ You can access it <a href='https://aniproject-dev.netlify.app/'>here</a>.
 
 ## :pushpin: Under Development
  
+- [ ] `News Feed Section`
 - [ ] `Keep track of what you watched last`
 - [ ] `Be notified when a new episode/chapter is released`
 

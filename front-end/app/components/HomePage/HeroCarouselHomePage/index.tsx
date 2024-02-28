@@ -107,7 +107,7 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                                         <span>|</span>
                                     )}
                                     {data[imageIndex]?.genres != undefined && (
-                                        <p><Link href={`/genre/${data[imageIndex]?.genres[0].toLowerCase()}`}>{data[imageIndex]?.genres[0]}</Link></p>
+                                        <p><Link href={`/search?genre=[${data[imageIndex]?.genres[0].toLowerCase()}]`}>{data[imageIndex]?.genres[0]}</Link></p>
                                     )}
                                     {((data[imageIndex]?.seasonYear != undefined) && (data[imageIndex]?.episodes != undefined)) && (
                                         <span>|</span>

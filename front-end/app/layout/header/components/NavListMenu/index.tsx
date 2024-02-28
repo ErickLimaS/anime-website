@@ -81,16 +81,16 @@ function NavListMenu() {
                                 </h5>
 
                                 <ul data-visible={toggleListOne}>
-                                    <li><Link href={`/filter?type=anime&genre=action`}>Action</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=adventure`}>Adventure</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=comedy`}>Comedy</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=drama`}>Drama</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=sci-fi`}>Sci-Fi</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=thriller`}>Thriller</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=romance`}>Romance</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=slice-of-life`}>Slice of Life</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=mistery`}>Mistery</Link></li>
-                                    <li><Link href={`/filter?type=anime&genre=sports`}>Sports</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[action]`}>Action</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[adventure]`}>Adventure</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[comedy]`}>Comedy</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[drama]`}>Drama</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[sci-fi]`}>Sci-Fi</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[thriller]`}>Thriller</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[romance]`}>Romance</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[slice-of-life]`}>Slice of Life</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[mistery]`}>Mistery</Link></li>
+                                    <li><Link href={`/search?type=tv&genre=[sports]`}>Sports</Link></li>
                                 </ul>
                             </li>
 
@@ -109,13 +109,13 @@ function NavListMenu() {
                                 </h5>
 
                                 <ul data-visible={toggleListTwo}>
-                                    <li><Link href={`/filter?type=manga&sort=trending_desc`}>Trending</Link></li>
-                                    <li><Link href={`/filter?type=manga&sort=releases_desc`}>Lastest Releases</Link></li>
-                                    <li><Link href={`/filter?type=manga&genre=shounen`}>Shounen</Link></li>
-                                    <li><Link href={`/filter?type=manga&genre=drama`}>Genre: Drama</Link></li>
-                                    <li><Link href={`/filter?type=manga&genre=slice-of-life`}>Genre: Slice of Life</Link></li>
-                                    <li><Link href={`/filter?type=manga&genre=comedy`}>Genre: Comedy</Link></li>
-                                    <li><Link href={`/filter?type=manga&sort=score_desc`}>Highest Rated</Link></li>
+                                    <li><Link href={`/search?type=manga&sort=trending_desc`}>Trending</Link></li>
+                                    <li><Link href={`/search?type=manga&sort=releases_desc`}>Lastest Releases</Link></li>
+                                    <li><Link href={`/search?type=manga&genre=[shounen]`}>Shounen</Link></li>
+                                    <li><Link href={`/search?type=manga&genre=[drama]`}>Genre: Drama</Link></li>
+                                    <li><Link href={`/search?type=manga&genre=[slice-of-life]`}>Genre: Slice of Life</Link></li>
+                                    <li><Link href={`/search?type=manga&genre=[comedy]`}>Genre: Comedy</Link></li>
+                                    <li><Link href={`/search?type=manga&sort=score_desc`}>Highest Rated</Link></li>
                                 </ul>
                             </li>
                             {/* <li role='menuitem'>Movies</li> */}

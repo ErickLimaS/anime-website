@@ -26,13 +26,13 @@ function MangaNavListHover() {
             <li>
                 <div id={styles.topics_container}>
                     <ul>
-                        <li><Link href={`/filter?type=manga&sort=trending_desc`}>Trending</Link></li>
-                        <li><Link href={`/filter?type=manga&sort=releases_desc`}>Lastest Releases</Link></li>
-                        <li><Link href={`/filter?type=manga&genre=shounen`}>Shounen</Link></li>
-                        <li><Link href={`/filter?type=manga&genre=drama`}>Genre: Drama</Link></li>
-                        <li><Link href={`/filter?type=manga&genre=slice-of-life`}>Genre: Slice of Life</Link></li>
-                        <li><Link href={`/filter?type=manga&genre=comedy`}>Genre: Comedy</Link></li>
-                        <li><Link href={`/filter?type=manga&sort=score_desc`}>Highest Rated</Link></li>
+                        <li><Link href={`/search?type=manga&sort=trending_desc`}>Trending</Link></li>
+                        <li><Link href={`/search?type=manga&sort=releases_desc`}>Lastest Releases</Link></li>
+                        <li><Link href={`/search?type=manga&genre=[shounen]`}>Shounen</Link></li>
+                        <li><Link href={`/search?type=manga&genre=[drama]`}>Genre: Drama</Link></li>
+                        <li><Link href={`/search?type=manga&genre=[slice-of-life]`}>Genre: Slice of Life</Link></li>
+                        <li><Link href={`/search?type=manga&genre=[comedy]`}>Genre: Comedy</Link></li>
+                        <li><Link href={`/search?type=manga&sort=score_desc`}>Highest Rated</Link></li>
                     </ul>
                 </div>
 

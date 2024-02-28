@@ -40,16 +40,16 @@ function AnimeNavListHover() {
                     <h5>Anime Genres</h5>
 
                     <ul>
-                        <li><Link href={`/filter?type=anime&genre=action`}>Action</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=adventure`}>Adventure</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=comedy`}>Comedy</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=drama`}>Drama</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=sci-fi`}>Sci-Fi</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=thriller`}>Thriller</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=romance`}>Romance</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=slice-of-life`}>Slice of Life</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=mistery`}>Mistery</Link></li>
-                        <li><Link href={`/filter?type=anime&genre=sports`}>Sports</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[action]`}>Action</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[adventure]`}>Adventure</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[comedy]`}>Comedy</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[drama]`}>Drama</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[sci-fi]`}>Sci-Fi</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[thriller]`}>Thriller</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[romance]`}>Romance</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[slice-of-life]`}>Slice of Life</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[mistery]`}>Mistery</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[sports]`}>Sports</Link></li>
                     </ul>
                 </div>
 
