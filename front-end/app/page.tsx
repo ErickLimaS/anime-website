@@ -22,6 +22,8 @@ export const metadata: Metadata = {
   description: 'A website which shows a variety of info about animes, mangas and movies.',
 }
 
+export const revalidate = 1800 // revalidate the data every 30 min
+
 export default async function Home() {
   
   const isMobileScreen = checkDeviceIsMobile(headers())

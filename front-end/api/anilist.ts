@@ -1,7 +1,12 @@
 import { lastHourOfTheDay } from '@/app/lib/format_date_unix'
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Axios from 'axios'
-import { defaultApiQueryRequest, getCurrentSeason, mediaAiringApiQueryRequest, mediaByIdQueryRequest, mediaTrendingApiQueryRequest } from './anilistQueryFunctions'
+import {
+    defaultApiQueryRequest, getCurrentSeason,
+    mediaAiringApiQueryRequest, mediaByIdQueryRequest,
+    mediaTrendingApiQueryRequest
+} from './anilistQueryFunctions'
+import { cache } from 'react'
 
 const BASE_URL: string = 'https://graphql.anilist.co/'
 
@@ -21,7 +26,7 @@ type ErrorTypes = {
 export default {
 
     // HOME PAGE
-    getNewReleases: async (type: string, format?: string, sort?: string) => {
+    getNewReleases: cache(async (type: string, format?: string, sort?: string) => {
 
         const season: string = getCurrentSeason()
 
@@ -56,10 +61,10 @@ export default {
             return console.log((error as ErrorTypes).response.data.errors)
 
         }
-    },
+    }),
 
     //SEARCH
-    getSeachResults: async (query: string) => {
+    getSeachResults: cache(async (query: string) => {
 
         try {
 
@@ -89,10 +94,10 @@ export default {
             return console.log((error as ErrorTypes).response.data.errors)
 
         }
-    },
+    }),
 
     // RELEASING THIS WEEK
-    getReleasingThisWeek: async (type: string, format?: string, page?: number) => {
+    getReleasingThisWeek: cache(async (type: string, format?: string, page?: number) => {
 
         try {
 
@@ -126,10 +131,10 @@ export default {
 
         }
 
-    },
+    }),
 
     // RELEASING BY DAYS RANGE
-    getReleasingByDaysRange: async (type: string, timestamp: number, pageNumber?: number) => {
+    getReleasingByDaysRange: cache(async (type: string, timestamp: number, pageNumber?: number) => {
 
         try {
 
@@ -166,10 +171,10 @@ export default {
 
         }
 
-    },
+    }),
 
     // TRENDING
-    getTrendingMedia: async (sort?: string) => {
+    getTrendingMedia: cache(async (sort?: string) => {
 
         try {
 
@@ -203,10 +208,10 @@ export default {
 
         }
 
-    },
+    }),
 
     // MEDIAS IN THIS FORMAT    
-    getMediaForThisFormat: async (type: string, sort?: string, pageNumber?: number, perPage?: number) => {
+    getMediaForThisFormat: cache(async (type: string, sort?: string, pageNumber?: number, perPage?: number) => {
 
         try {
 
@@ -235,10 +240,10 @@ export default {
             return console.log((error as ErrorTypes).response.data.errors)
         }
 
-    },
+    }),
 
     // GET INFO OF anime/movie/manga by ID
-    getMediaInfo: async (id: number) => {
+    getMediaInfo: cache(async (id: number) => {
 
         try {
 
@@ -265,6 +270,6 @@ export default {
             return console.log((error as ErrorTypes).response.data.errors)
 
         }
-    },
+    }),
 
 }
