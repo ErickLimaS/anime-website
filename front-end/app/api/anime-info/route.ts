@@ -19,6 +19,10 @@ export async function GET(request: NextRequest) {
 
     if (params.get("title")) dataSort = dataSort.filter((item: { title: string }) => item.title.toLowerCase().includes(params.get("title")!.toLowerCase()))
 
+    if (params.get("season")) dataSort = dataSort.filter((item: { animeSeason: { season: string } }) =>
+        item.animeSeason.season.toLocaleLowerCase() == params.get("season")?.toLocaleLowerCase()
+    )
+
     if (params.get("sort")) {
         if (params.get("sort") == "releases_desc") {
             dataSort = dataSort.sort(

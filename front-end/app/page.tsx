@@ -57,7 +57,7 @@ export default async function Home() {
 
       <section id={styles.hero_section}>
 
-        <HeroCarousel data={popularData} isMobile={isMobileScreen}/>
+        <HeroCarousel data={popularData} isMobile={isMobileScreen || false}/>
 
       </section>
 

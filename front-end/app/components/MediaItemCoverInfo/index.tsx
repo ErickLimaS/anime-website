@@ -86,10 +86,15 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                 ((data as ApiDefaultResult).seasonYear != undefined && (data as ApiDefaultResult).genres != undefined)
             ) && (
                     fromOfflineDb ?
+
                         <small>
                             {((data as MediaDbOffline).animeSeason.year &&
-                                (`${(data as MediaDbOffline).animeSeason.year}, `))}
-                            {(data as MediaDbOffline).tags && (data as MediaDbOffline).tags[0]
+                                (`${(data as MediaDbOffline).animeSeason.year}, `)
+                            )}
+                            {
+                                (data as MediaDbOffline).tags && (data as MediaDbOffline).tags[0].slice(0, 1).toUpperCase()
+                                +
+                                (data as MediaDbOffline).tags[0].slice(1, (data as MediaDbOffline).tags[0].length)
                             }
                         </small>
                         :
@@ -99,6 +104,7 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                             {(data as ApiDefaultResult).genres && (data as ApiDefaultResult).genres[0]
                             }
                         </small>
+
                 )
             }
 

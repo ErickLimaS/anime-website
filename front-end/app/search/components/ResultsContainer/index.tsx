@@ -104,7 +104,7 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
                 <span>{totalLength.toLocaleString("en-US")}</span> results
             </span>
 
-            <span style={{ display: "block", fontSize: "var(--font-size--small-2" }}>Last Update: {lastUpdate.replace(/\-/g, "/")}</span>
+            <span style={{ display: "block", fontSize: "var(--font-size--small-2" }}>Last Update: {lastUpdate.replace(/\-/g, "/") || "undefined"}</span>
         </div >
     )
 }

@@ -41,7 +41,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
 
-  const isMobileScreen = checkDeviceIsMobile(headers())
+  const isMobileScreen = checkDeviceIsMobile(headers()) || false
 
   return (
     <main id={styles.container}>

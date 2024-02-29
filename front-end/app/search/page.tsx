@@ -9,7 +9,7 @@ import axios from 'axios'
 
 export const metadata: Metadata = {
     title: 'Search | AniProject',
-    description: 'Search for animes released on that year, or just discover a new one in a genre you didnt watched yet.',
+    description: 'Filter animes released on that year, or just discover a new one in a genre you didnt watched yet.',
 }
 
 async function SearchPage({ searchParams }: {
@@ -21,12 +21,13 @@ async function SearchPage({ searchParams }: {
         status?: string,
         page?: string,
         sort?: string,
+        season?: string,
     }
 }) {
 
     const isMobile = checkDeviceIsMobile(headers())
 
-    const sort: any = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
+    const sort = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
 
     // GET ANILIST ID FOR THIS MEDIA
     if (sort.data) {
@@ -43,7 +44,7 @@ async function SearchPage({ searchParams }: {
 
             <div id={styles.side_nav}>
 
-                <NavSideBar isMobile={isMobile} />
+                <NavSideBar isMobile={isMobile || false} />
 
             </div>
 
