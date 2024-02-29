@@ -1,0 +1,124 @@
+#heading_container {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-bottom: 8px;
+    margin-bottom: 32px;
+
+    border-bottom: 1px solid var(--white-25);
+
+}
+
+#heading_container h1 {
+
+    color: var(--white-100);
+    font-size: var(--font-size--h3);
+
+}
+
+#heading_container svg {
+
+    position: relative;
+    right: -32px;
+
+    fill: var(--brand-color);
+    transform: scale(1.5);
+
+}
+
+#heading_container select {
+
+    padding: 8px 16px;
+    padding-left: 32px;
+
+    text-align: center;
+
+    background-color: transparent;
+    border: 1px solid transparent;
+
+    color: var(--brand-color);
+    font-size: var(--font-size--p);
+    font-family: var(--font-family-sans-sarif);
+    font-weight: 400;
+
+}
+
+#heading_container select:focus {
+
+    background-color: var(--white-05);
+
+    border-color: var(--brand-color);
+    outline-color: var(--brand-color);
+
+}
+
+#heading_container select option {
+    background-color: var(--white-05);
+}
+
+#content_container #results_container {
+
+    padding-bottom: 46px;
+
+    border-bottom: 1px solid var(--white-25);
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+
+}
+
+@media(min-width: 1280px) {
+    #content_container #results_container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+#content_container>button {
+
+    transition: all .19s ease-in-out;
+
+    position: relative;
+
+    top: -26px;
+
+    display: block;
+    margin: auto;
+
+    width: 100%;
+    max-width: 220px;
+
+    background-color: var(--background);
+    border: 2px solid var(--white-25);
+    border-radius: 4px;
+    padding: 16px 24px;
+
+    font-size: var(--font-size--small-1);
+    font-weight: 600;
+    color: var(--white-100);
+
+}
+
+#content_container>button:hover {
+
+    background-color: var(--brand-color);
+    border-color: var(--brand-color);
+
+}
+
+#content_container>span {
+
+    display: block;
+    margin-top: 8px;
+
+    color: var(--white-75);
+
+}
+
+#content_container>span>span {
+
+    color: var(--brand-color);
+
+}

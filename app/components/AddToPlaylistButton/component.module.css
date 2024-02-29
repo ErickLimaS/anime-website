@@ -1,0 +1,37 @@
+#container {
+
+    transition: all ease-in-out 200ms;
+
+    height: inherit;
+
+    text-align: center;
+
+    font-weight: 600;
+    
+}
+
+#container svg{
+
+    transform: scale(1.2);
+
+}
+
+#container[data-added=false] svg {
+
+    fill: var(--brand-color);
+
+}
+
+#container[disabled] {
+
+    background-color: var(--white-100);
+
+}
+
+#container[data-added=true] {
+
+    background-color: var(--white-100);
+    color: var(--black-75);
+    border: 1px solid var(--black-100);
+
+}

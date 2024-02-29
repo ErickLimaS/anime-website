@@ -1,0 +1,162 @@
+#container .background {
+
+    background: black;
+
+}
+
+#video_container {
+
+    position: relative;
+
+    margin: 0 auto;
+
+    width: 100%;
+    min-height: 260px;
+    height: inherit;
+
+    scrollbar-width: 0;
+
+    overflow: hidden;
+
+    aspect-ratio: 16/ 9;
+
+}
+
+@media(min-width: 840px) {
+
+    #video_container {
+
+        max-width: 65vw;
+
+    }
+
+}
+
+#video_container>iframe {
+
+    position: absolute;
+    top: 0;
+    height: 100%;
+
+}
+
+#media_info_container {
+
+    margin: 16px auto;
+
+    padding: 16px;
+
+    max-width: var(--breakpoint-sm);
+
+}
+
+@media(min-width: 768px) {
+
+    #media_info_container {
+
+        max-width: var(--breakpoint-md);
+
+    }
+
+    #media_info_container>div.grid {
+        display: grid;
+        grid-template-columns: 70% 25%;
+        gap: 16px 32px;
+        justify-content: space-between;
+    }
+}
+
+@media(min-width: 980px) {
+
+    #media_info_container {
+
+        max-width: var(--breakpoint-xl);
+
+    }
+
+}
+
+@media(min-width: 1400px) {
+
+    #media_info_container {
+
+        max-width: var(--breakpoint-xxl);
+
+    }
+
+}
+
+#media_info_container>h1 {
+
+    display: flex;
+    flex-wrap: wrap;
+
+    margin-bottom: 24px;
+
+    font-size: var(--font-size--h4);
+    font-weight: 400;
+
+    color: var(--brand-color);
+    white-space: break-spaces;
+
+}
+
+#media_info_container>h1>span:first-child {
+    color: var(--white-50);
+    white-space: break-spaces;
+}
+
+#media_info_container>h1>span:last-child {
+
+    display: block;
+    white-space: break-spaces;
+    color: var(--white-50);
+    font-size: var(--font-size--p);
+
+}
+
+#media_info_container>div {
+
+    background-color: var(--black-50);
+    height: max-content;
+
+}
+
+#comment_container {
+
+    margin: 32px auto 64px auto;
+    padding: 16px;
+    max-width: var(--breakpoint-sm);
+
+}
+
+#comment_container h2 {
+
+    color: var(--white-100);
+    font-size: var(--font-size--h4);
+
+}
+
+@media(min-width: 768px) {
+    #comment_container {
+
+        max-width: var(--breakpoint-md);
+
+    }
+}
+
+@media(min-width: 980px) {
+    #comment_container {
+
+        max-width: var(--breakpoint-xl);
+
+    }
+}
+
+@media(min-width: 1400px) {
+    #comment_container {
+
+        max-width: var(--breakpoint-xxl);
+
+    }
+}
