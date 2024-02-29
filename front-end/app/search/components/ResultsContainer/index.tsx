@@ -47,7 +47,7 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
 
         const query = current ? `?${current}` : ""
 
-        router.push(`${pathname}${decodeURI(query)}`)
+        router.push(`${pathname}${decodeURI(query)}`, { scroll: false })
 
     }
 

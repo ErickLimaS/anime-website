@@ -92,9 +92,9 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                                 (`${(data as MediaDbOffline).animeSeason.year}, `)
                             )}
                             {
-                                (data as MediaDbOffline).tags && (data as MediaDbOffline).tags[0].slice(0, 1).toUpperCase()
+                                (data as MediaDbOffline).tags && (data as MediaDbOffline).tags[0]?.slice(0, 1).toUpperCase()
                                 +
-                                (data as MediaDbOffline).tags[0].slice(1, (data as MediaDbOffline).tags[0].length)
+                                (data as MediaDbOffline).tags[0]?.slice(1, (data as MediaDbOffline).tags[0].length)
                             }
                         </small>
                         :

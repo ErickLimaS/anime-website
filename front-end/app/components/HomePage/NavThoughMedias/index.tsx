@@ -21,6 +21,8 @@ type Component = {
 
 }
 
+export const revalidate = 1800 // revalidate the data every 30 min
+
 function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layoutInverted }: Component) {
 
     // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
@@ -40,7 +42,6 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
         let response
 
-        
         if (sort == "RELEASE") {
 
             // gets the range of days than parse it to unix and get any media releasing in the selected range
