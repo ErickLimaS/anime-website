@@ -54,12 +54,15 @@ Its simple!
   ```
   
 3. Now you need to create a ``.env.local`` file inside the ``front-end directory`` with the url to where your Consumet API server is setted and configs for your Firebase.
-   - Check the <a href='https://github.com/consumet/api.consumet.org'>repository of Consumet API</a>.
+   - Check the <a href='https://github.com/consumet/api.consumet.org'>repository of Consumet API</a> and host your own server.
+   - Get to the <a href='https://github.com/manami-project/anime-offline-database'>this repository of a JSON file filled with Animes info to use.</a>.
+   - This repository already has this json file, but it might be outdated. So get a new file there and put it under the ``front-end/app/api/anime-info`` directory.
    - On Firebase, get your config to use the Authentication and Firestore Database.
       
    Your file should look like example:
   ```javascript
   NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
+  NEXT_PUBLIC_INSIDE_API_URL=https://your-hosted-website-url.com/api/anime-info
   NEXT_PUBLIC_FIREBASE_API_KEY=[YOUR-FIREBASE-SETTINGS]
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=[YOUR-FIREBASE-SETTINGS]
   NEXT_PUBLIC_FIREBASE_PROJECT_ID=[YOUR-FIREBASE-SETTINGS]

@@ -19,28 +19,14 @@ async function SearchPage({ searchParams }: {
         genre?: string[],
         year?: number,
         status?: string,
-        page?: string
+        page?: string,
+        sort?: string,
     }
 }) {
 
     const isMobile = checkDeviceIsMobile(headers())
 
-    // UGLY CODE! I WILL TRY TO FIX IT LATER!
-    // APPEND POSSIBLES QUERYS TO THIS VARIABLE
-    const query = (searchParams ?
-        `?
-        ${searchParams.type ? `type=${searchParams.type}` : ""}${searchParams.title ? "&" : ""}
-        ${searchParams.title ? `title=${searchParams.title}` : ""}${searchParams.genre ? "&" : ""}
-        ${searchParams.genre ? `genre=${searchParams.genre}` : ""}${searchParams.year ? "&" : ""}
-        ${searchParams.year ? `year=${searchParams.year}` : ""}${searchParams.status ? "&" : ""}
-        ${searchParams.status ? `status=${searchParams.status}` : ""}${searchParams.page ? "&" : ""}
-        ${searchParams.page ? `page=${searchParams.page}` : ""}`
-        :
-        "")
-        .replace(/(\r\n|\n|\r)/gm, "")
-        .replace(/\s+/g, '')
-
-    const sort: any = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}${query ? query : ""}`).then(res => res.data)
+    const sort: any = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
 
     // GET ANILIST ID FOR THIS MEDIA
     if (sort.data) {

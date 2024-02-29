@@ -19,6 +19,30 @@ export async function GET(request: NextRequest) {
 
     if (params.get("title")) dataSort = dataSort.filter((item: { title: string }) => item.title.toLowerCase().includes(params.get("title")!.toLowerCase()))
 
+    if (params.get("sort")) {
+        if (params.get("sort") == "releases_desc") {
+            dataSort = dataSort.sort(
+                (a: { animeSeason: { year: number } }, b: { animeSeason: { year: number } }) => a.animeSeason.year - b.animeSeason.year
+            ).reverse()
+        }
+        else if (params.get("sort") == "releases_asc") {
+            dataSort = dataSort.sort(
+                (a: { animeSeason: { year: number } }, b: { animeSeason: { year: number } }) => a.animeSeason.year - b.animeSeason.year
+            )
+        }
+
+        if (params.get("sort") == "title_desc") {
+            dataSort = dataSort.sort(
+                (a: { title: string }, b: { title: string }) => a.title > b.title ? -1 : 1
+            )
+        }
+        else if (params.get("sort") == "title_asc") {
+            dataSort = dataSort.sort(
+                (a: { title: string }, b: { title: string }) => a.title > b.title ? -1 : 1
+            ).reverse()
+        }
+    }
+
     const totalLength = dataSort.length
 
     dataSort = dataSort.slice(0, pageLimit * Number(params.get("page") || 1))
