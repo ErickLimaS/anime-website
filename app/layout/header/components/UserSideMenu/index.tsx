@@ -61,7 +61,7 @@ function UserSideMenu() {
                         aria-label={isUserMenuOpen ? 'Click to Hide User Menu' : 'Click to Show User Menu'}
                         className={`display_flex_row align_items_center ${styles.heading_btn}`}
                         id={styles.user_btn}
-                        data-userActive={false}
+                        data-useractive={false}
                     >
                         <PersonIcon className={styles.scale} alt="User Icon" width={16} height={16} />
                         <span>
@@ -93,7 +93,7 @@ function UserSideMenu() {
                         aria-label={isUserMenuOpen ? 'Click to Hide User Menu' : 'Click to Show User Menu'}
                         className={`display_flex_row align_items_center ${styles.heading_btn}`}
                         id={styles.user_btn}
-                        data-userActive={true}
+                        data-useractive={true}
                     >
                         <span id={styles.img_container}>
                             <Image

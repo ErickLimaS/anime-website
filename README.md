@@ -4,11 +4,11 @@
 
 Project of animes and mangas website, utilizing the <a href='https://anilist.gitbook.io/anilist-apiv2-docs/'>AniList</a> API which has info of animes and mangas released, data of the cast of that media, and many other things.
 
-You can access it <a href='https://aniproject-dev.netlify.app/'>here</a>.
+<p align="center">You can access it <a href='https://aniproject-dev.netlify.app/'>here</a>.</p>
 
 ## :hammer: Features
 
-- [x] `Search`: Get a list of animes and mangas you want to search.
+- [x] `Search`: Get a list of all animes and mangas you want using filters.
 - [x] `Watch`: Watch any available episode.
 - [x] `Read`: Read any manga chapter available.
 - [x] `Comment`: Write what you thougth of that episode or just tell something that every should know about.
@@ -48,21 +48,21 @@ Its simple!
   git clone https://github.com/ErickLimaS/anime-website.git
   ```
    
-2. From the ``front-end directory``, run ``npm install`` on your CMD to get all dependencies
+2. Run ``npm install`` on your CMD to get all dependencies
   ```javascript
   npm install
   ```
   
-3. Now you need to create a ``.env.local`` file inside the ``front-end directory`` with the url to where your Consumet API server is setted and configs for your Firebase.
+3. Now you need to create a ``.env.local`` file inside the ``directory`` with the url to where your Consumet API server is setted and configs for your Firebase.
    - Check the <a href='https://github.com/consumet/api.consumet.org'>repository of Consumet API</a> and host your own server.
-   - Get to the <a href='https://github.com/manami-project/anime-offline-database'>this repository of a JSON file filled with Animes info to use.</a>.
-   - This repository already has this json file, but it might be outdated. So get a new file there and put it under the ``front-end/app/api/anime-info`` directory.
+   - Go to <a href='https://github.com/manami-project/anime-offline-database'>this repository</a> and get a JSON file filled with Animes info to use.
+   - This repository already has this json file, but it might be outdated. So get a new file there and put it under the ``/app/api/anime-info`` directory.
    - On Firebase, get your config to use the Authentication and Firestore Database.
       
    Your file should look like example:
   ```javascript
   NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
-  NEXT_PUBLIC_INSIDE_API_URL=https://your-hosted-website-url.com/api/anime-info
+  NEXT_PUBLIC_INSIDE_API_URL=https://url-to-where-your-website-is-hosted.com/api/anime-info
   NEXT_PUBLIC_FIREBASE_API_KEY=[YOUR-FIREBASE-SETTINGS]
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=[YOUR-FIREBASE-SETTINGS]
   NEXT_PUBLIC_FIREBASE_PROJECT_ID=[YOUR-FIREBASE-SETTINGS]
@@ -73,7 +73,7 @@ Its simple!
   NEXT_PUBLIC_FIREBASE_DATABASE_URL=[YOUR-FIREBASE-SETTINGS]
   ```
 
-4. From ``front-end directory``, run ``npm run dev`` to initialize the website
+4. Now run ``npm run dev`` to initialize the website
   ```javascript
   npm run dev
   ```
@@ -104,6 +104,11 @@ Its simple!
 
 ![Watch Episode Page1](https://github.com/ErickLimaS/anime-website/assets/69987890/7df405d1-6b2b-4866-8c48-4c0eb7f14c5d)
 ![Watch Episode Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/d8a1998c-df5d-4904-b40c-aa71c3aff2dc)
+
+### Search/Filter Page
+
+![Search/Filter Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/73e09258-c927-43cf-9a02-6ddfb4af5b14)
+![Search/Filter Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/497b35fe-4c6e-464a-9cc4-3a338db9d4cf)
 
 ### Playlist Page
 

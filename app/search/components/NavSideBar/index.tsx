@@ -201,8 +201,8 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                         {/* SHOW IF IT IS MOBILE AND MENU IS OPEN, OR IF IS NOT MOBILE (ON DESKTOP) AND MENU IS CLOSED */}
                         {((isMobile && openFiltersMenu == true) || (!isMobile && !openFiltersMenu)) && (
                             <motion.div
-                                onClick={(e) => e.stopPropagation()}
-                                onScrollCapture={(e) => e.stopPropagation()}
+                                onClick={(e: { stopPropagation: () => any }) => e.stopPropagation()}
+                                onScrollCapture={(e: { stopPropagation: () => any }) => e.stopPropagation()}
                                 id={styles.container}
                                 variants={showUpMotion}
                                 initial="hidden"
@@ -223,7 +223,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                                     <input
                                                         type='checkbox'
                                                         value={item.value}
-                                                        checked={urlQuery.get("genre")?.includes(item.value)}
+                                                        defaultChecked={urlQuery.get("genre")?.includes(item.value)}
                                                         onClick={(e) => fetchData("genre", e.target)}>
                                                     </input>
                                                 </label>
@@ -245,7 +245,6 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                         <option value="any">Any</option>
                                         {range(60).map((item, key) => (
                                             <option
-                                                selected={urlQuery.get("year")?.search(`/\b${new Date().getFullYear() - item}\b/`) == 1 ? true : false}
                                                 key={key}
                                                 value={new Date().getFullYear() - item}
                                             >
@@ -268,7 +267,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                                     <input
                                                         type='checkbox'
                                                         value={item.value}
-                                                        checked={urlQuery.get("type")?.includes(item.value)}
+                                                        defaultChecked={urlQuery.get("type")?.includes(item.value)}
                                                         onClick={(e) => fetchData("type", e.target)}>
                                                     </input>
                                                 </label>
@@ -291,7 +290,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                                     <input
                                                         type='checkbox'
                                                         value={item.value}
-                                                        checked={urlQuery.get("status")?.includes(item.value)}
+                                                        defaultChecked={urlQuery.get("status")?.includes(item.value)}
                                                         onClick={(e) => fetchData("status", e.target)}>
                                                     </input>
                                                 </label>
@@ -315,7 +314,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                                     <input
                                                         type='checkbox'
                                                         value={item.value}
-                                                        checked={urlQuery.get("season")?.includes(item.value)}
+                                                        defaultChecked={urlQuery.get("season")?.includes(item.value)}
                                                         onClick={(e) => fetchData("season", e.target)}>
                                                     </input>
                                                 </label>

@@ -60,17 +60,21 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
                 <div className='display_flex_row align_items_center'>
                     <SvgFilter height={16} width={16} alt="Filter Icon" />
                     <form>
-                        <select title="Sort the results" onChange={(e) => fetchData(e.target)}>
-                            <option value="title_asc" selected={new URLSearchParams(Array.from(searchParams.entries())).get("sort")?.includes("title_asc")}>
+                        <select
+                            title="Sort the results"
+                            onChange={(e) => fetchData(e.target)}
+                            defaultValue={new URLSearchParams(Array.from(searchParams.entries())).get("sort") || "title_asc"}
+                        >
+                            <option value="title_asc">
                                 From A to Z
                             </option>
-                            <option value="title_desc" selected={new URLSearchParams(Array.from(searchParams.entries())).get("sort")?.includes("title_desc")}>
+                            <option value="title_desc" >
                                 From Z to A
                             </option>
-                            <option value="releases_desc" selected={new URLSearchParams(Array.from(searchParams.entries())).get("sort")?.includes("releases_desc")}>
+                            <option value="releases_desc">
                                 Release Desc
                             </option>
-                            <option value="releases_asc" selected={new URLSearchParams(Array.from(searchParams.entries())).get("sort")?.includes("releases_asc")}>
+                            <option value="releases_asc">
                                 Release Asc
                             </option>
                         </select>

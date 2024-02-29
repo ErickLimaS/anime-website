@@ -1,6 +1,6 @@
 {
-  "name": "front-end",
-  "version": "2.3.0",
+  "name": "aniproject",
+  "version": "2.3.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
