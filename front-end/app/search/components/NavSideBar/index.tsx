@@ -58,10 +58,9 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
 
     const allStatusAnilist = [
         { name: "Finished", value: "finished" },
-        { name: "Releasing", value: "releasing" },
-        { name: "Cancelled", value: "cancelled" },
-        { name: "Hiatus", value: "hiatus" },
-        { name: "Not Yet Released", value: "not_yet_released" },
+        { name: "Releasing", value: "ongoing" },
+        { name: "Not Yet Released", value: "upcoming" },
+        { name: "Hiatus", value: "unknown" },
     ]
 
     function fetchData(queryType: string, inputTarget: any) {

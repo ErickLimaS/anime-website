@@ -50,7 +50,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
         {
             data: dataSort,
-            allResultsLength: totalLength
+            allResultsLength: totalLength,
+            lastUpdate: (AnimeDataOffline as any).lastUpdate
         }
     )
 

@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import SvgFilter from "@/public/assets/filter-right.svg"
 
-function ResultsContainer({ data, totalLength }: { data: MediaDbOffline[], totalLength: number }) {
+function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffline[], totalLength: number, lastUpdate: string }) {
 
     const [newRange, setNewRange] = useState<number>(1)
 
@@ -104,6 +104,7 @@ function ResultsContainer({ data, totalLength }: { data: MediaDbOffline[], total
                 <span>{totalLength.toLocaleString("en-US")}</span> results
             </span>
 
+            <span style={{ display: "block", fontSize: "var(--font-size--small-2" }}>Last Update: {lastUpdate.replace(/\-/g, "/")}</span>
         </div >
     )
 }

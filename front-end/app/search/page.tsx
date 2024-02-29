@@ -47,7 +47,7 @@ async function SearchPage({ searchParams }: {
 
             </div>
 
-            <ResultsContainer data={sort.data} totalLength={sort.allResultsLength} />
+            <ResultsContainer data={sort.data} lastUpdate={sort.lastUpdate} totalLength={sort.allResultsLength} />
 
         </main>
     )
