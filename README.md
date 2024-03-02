@@ -1,4 +1,4 @@
-<h1 align="center">AniProject 2.0</h1>
+<h1 align="center">AniProject</h1>
 
 ![AniProject Website Logo](https://user-images.githubusercontent.com/69987890/177884319-0678f842-f3ca-4f62-8d31-7638ca954057.png)
 
