@@ -41,8 +41,10 @@ function Header() {
 
                             <MangaNavListHover />
                         </li>
-                        <li className='display_flex_row align_items_center' style={{ textDecoration: "line-through" }}>
-                            News <ChevronDownIcon alt="Open News List" width={16} height={16} />
+                        <li className='display_flex_row align_items_center'>
+                            <Link href={'/news'}>News <ChevronDownIcon alt="Open News List" width={16} height={16} /></Link>
+
+
                         </li>
                     </ul>
                 </div>
