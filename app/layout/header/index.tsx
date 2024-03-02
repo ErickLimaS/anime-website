@@ -8,6 +8,7 @@ import MangaNavListHover from './components/MangaNavListHover'
 import UserSideMenu from './components/UserSideMenu'
 import NavListMenu from './components/NavListMenu'
 import SearchContainer from './components/SearchContainer'
+import NewsNavListHover from './components/NewsNavListHover'
 
 function Header() {
 
@@ -44,7 +45,7 @@ function Header() {
                         <li className='display_flex_row align_items_center'>
                             <Link href={'/news'}>News <ChevronDownIcon alt="Open News List" width={16} height={16} /></Link>
 
-
+                            <NewsNavListHover />
                         </li>
                     </ul>
                 </div>

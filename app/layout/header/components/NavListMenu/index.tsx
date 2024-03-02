@@ -118,7 +118,16 @@ function NavListMenu() {
                                     <li><Link href={`/search?type=manga&sort=score_desc`}>Highest Rated</Link></li>
                                 </ul>
                             </li>
-                            {/* <li role='menuitem'>Movies</li> */}
+                            
+                            <li role='menuitem'>
+
+                                <h5
+                                    className='display_flex_row align_items_center'
+                                >
+                                    <Link href={`/news`}>News</Link>
+                                </h5>
+
+                            </li>
                         </ul>
 
                     </motion.div>
