@@ -7,6 +7,7 @@ import Link from 'next/link'
 import SwiperContainer from './components/SwiperContainer'
 import SvgCalendar from "@/public/assets/calendar3.svg"
 import { News } from '../ts/interfaces/newsInterface'
+import NewsCard1 from './components/NewsCard1'
 
 export const metadata: Metadata = {
     title: 'News | AniProject',
@@ -43,7 +44,7 @@ async function NewsHomePage() {
                                     <Link className={styles.topic} href={`/news?topic=${news[0].topics[0]}`}>{news[0].topics[0].toUpperCase()}</Link>
                                 )}
 
-                                <h2><Link href={`/news/${news[0].id}`}>{news[0].title}</Link></h2>
+                                <h2><Link href={`/news/${news[0].id.replace(/\/?daily-briefs\//, "")}`}>{news[0].title}</Link></h2>
                             </div>
                         </div>
 
@@ -53,7 +54,7 @@ async function NewsHomePage() {
                                 <div className={styles.hero_news_container} key={key}>
 
                                     <div className={styles.image_container}>
-                                        <Link href={`/news/${news[0].id}`}><Image src={item.thumbnail} fill alt={item.title} /></Link>
+                                        <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}><Image src={item.thumbnail} fill alt={item.title} /></Link>
                                     </div>
 
                                     <div className={styles.highlight_title}>
@@ -61,7 +62,7 @@ async function NewsHomePage() {
                                             <Link className={styles.topic} href={`/news?topic=${item.topics[0]}`}>{item.topics[0].toUpperCase()}</Link>
                                         )}
 
-                                        <h2><Link href={`/news/${item.id}`}>{item.title}</Link></h2>
+                                        <h2><Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>{item.title}</Link></h2>
                                     </div>
                                 </div>
 
@@ -73,20 +74,7 @@ async function NewsHomePage() {
                     <div id={styles.hero_news_list}>
                         {news.slice(4, 9).map((item, key) => (
 
-                            <div className={styles.hero_news_container} key={key}>
-
-                                <div className={styles.image_container}>
-                                    <Link href={`/news/${news[0].id}`}><Image src={item.thumbnail} fill alt={item.title} /></Link>
-                                </div>
-
-                                <div className={styles.highlight_title}>
-                                    {news[0]?.topics[0] && (
-                                        <Link className={styles.topic} href={`/news?topic=${item.topics[0]}`}>{item.topics[0].toUpperCase()}</Link>
-                                    )}
-
-                                    <h2><Link href={`/news/${item.id}`}>{item.title}</Link></h2>
-                                </div>
-                            </div>
+                            <NewsCard1 key={key} data={item} />
 
                         ))}
                     </div>
@@ -117,7 +105,7 @@ async function NewsHomePage() {
                         <div className={styles.highlighted_container}>
 
                             <div className={styles.image_container}>
-                                <Link href={`/news/${mangasNews[0].id}`}><Image src={mangasNews[0].thumbnail} fill alt={mangasNews[0].title} /></Link>
+                                <Link href={`/news/${mangasNews[0].id.replace(/\/?daily-briefs\//, "")}`}><Image src={mangasNews[0].thumbnail} fill alt={mangasNews[0].title} /></Link>
                             </div>
 
                             <div className={styles.highlight_title}>
@@ -125,7 +113,7 @@ async function NewsHomePage() {
                                     <Link className={styles.topic} href={`/news?topic=${mangasNews[0].topics[0]}`}>{mangasNews[0].topics[0].toUpperCase()}</Link>
                                 )}
 
-                                <h2><Link href={`/news/${mangasNews[0].id}`}>{mangasNews[0].title}</Link></h2>
+                                <h2><Link href={`/news/${mangasNews[0].id.replace(/\/?daily-briefs\//, "")}`}>{mangasNews[0].title}</Link></h2>
                             </div>
                         </div>
 
@@ -134,12 +122,14 @@ async function NewsHomePage() {
                             <div className={styles.item_container} key={key}>
 
                                 <div className={styles.image_container}>
-                                    <Link href={`/news/${news[0].id}`}><Image src={item.thumbnail} fill alt={item.title} /></Link>
+                                    <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
+                                        <Image src={item.thumbnail} fill alt={item.title} />
+                                    </Link>
                                 </div>
 
                                 <div className={`${styles.highlight_title} ${styles.item_title_container}`}>
 
-                                    <h2><Link href={`/news/${item.id}`}>{item.title}</Link></h2>
+                                    <h2><Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>{item.title}</Link></h2>
 
                                     {item.uploadedAt && (
                                         <small><SvgCalendar width={16} height={16} alt={"Calendar"} />{item.uploadedAt}</small>
@@ -158,7 +148,9 @@ async function NewsHomePage() {
                         <div className={styles.highlighted_container}>
 
                             <div className={styles.image_container}>
-                                <Link href={`/news/${gamesNews[0].id}`}><Image src={gamesNews[0].thumbnail} fill alt={gamesNews[0].title} /></Link>
+                                <Link href={`/news/${gamesNews[0].id.replace(/\/?daily-briefs\//, "")}`}>
+                                    <Image src={gamesNews[0].thumbnail} fill alt={gamesNews[0].title} />
+                                </Link>
                             </div>
 
                             <div className={styles.highlight_title}>
@@ -166,7 +158,7 @@ async function NewsHomePage() {
                                     <Link className={styles.topic} href={`/news?topic=${gamesNews[0].topics[0]}`}>{gamesNews[0].topics[0].toUpperCase()}</Link>
                                 )}
 
-                                <h2><Link href={`/news/${gamesNews[0].id}`}>{gamesNews[0].title}</Link></h2>
+                                <h2><Link href={`/news/${gamesNews[0].id.replace(/\/?daily-briefs\//, "")}`}>{gamesNews[0].title}</Link></h2>
                             </div>
                         </div>
 
@@ -175,12 +167,14 @@ async function NewsHomePage() {
                             <div className={styles.item_container} key={key}>
 
                                 <div className={styles.image_container}>
-                                    <Link href={`/news/${news[0].id}`}><Image src={item.thumbnail} fill alt={item.title} /></Link>
+                                    <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
+                                        <Image src={item.thumbnail} fill alt={item.title} />
+                                    </Link>
                                 </div>
 
                                 <div className={`${styles.highlight_title} ${styles.item_title_container}`}>
 
-                                    <h2><Link href={`/news/${item.id}`}>{item.title}</Link></h2>
+                                    <h2><Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>{item.title}</Link></h2>
 
                                     {item.uploadedAt && (
                                         <small><SvgCalendar width={16} height={16} alt={"Calendar"} />{item.uploadedAt}</small>
@@ -199,7 +193,9 @@ async function NewsHomePage() {
                         <div className={styles.highlighted_container}>
 
                             <div className={styles.image_container}>
-                                <Link href={`/news/${industryNews[0].id}`}><Image src={industryNews[0].thumbnail} fill alt={industryNews[0].title} /></Link>
+                                <Link href={`/news/${industryNews[0].id.replace(/\/?daily-briefs\//, "")}`}>
+                                    <Image src={industryNews[0].thumbnail} fill alt={industryNews[0].title} />
+                                </Link>
                             </div>
 
                             <div className={styles.highlight_title}>
@@ -207,7 +203,7 @@ async function NewsHomePage() {
                                     <Link className={styles.topic} href={`/news?topic=${industryNews[0].topics[0]}`}>{industryNews[0].topics[0].toUpperCase()}</Link>
                                 )}
 
-                                <h2><Link href={`/news/${industryNews[0].id}`}>{industryNews[0].title}</Link></h2>
+                                <h2><Link href={`/news/${industryNews[0].id.replace(/\/?daily-briefs\//, "")}`}>{industryNews[0].title}</Link></h2>
                             </div>
                         </div>
 
@@ -216,12 +212,14 @@ async function NewsHomePage() {
                             <div className={styles.item_container} key={key}>
 
                                 <div className={styles.image_container}>
-                                    <Link href={`/news/${news[0].id}`}><Image src={item.thumbnail} fill alt={item.title} /></Link>
+                                    <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
+                                        <Image src={item.thumbnail} fill alt={item.title} />
+                                    </Link>
                                 </div>
 
                                 <div className={`${styles.highlight_title} ${styles.item_title_container}`}>
 
-                                    <h2><Link href={`/news/${item.id}`}>{item.title}</Link></h2>
+                                    <h2><Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>{item.title}</Link></h2>
 
                                     {item.uploadedAt && (
                                         <small><SvgCalendar width={16} height={16} alt={"Calendar"} />{item.uploadedAt}</small>

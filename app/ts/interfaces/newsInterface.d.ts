@@ -13,3 +13,10 @@ export interface News {
     url: string
 
 }
+
+export interface NewsArcticle extends News {
+
+    intro: string,
+    description: string
+
+}

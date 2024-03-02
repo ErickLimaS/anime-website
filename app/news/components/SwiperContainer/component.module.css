@@ -18,13 +18,12 @@
 .news_container {
 
     position: relative;
-    /* width: 100px; */
     height: 480px;
     overflow: hidden;
     border-radius: 12px;
 }
 
-.img_container img{
+.img_container img {
 
     object-fit: cover;
 

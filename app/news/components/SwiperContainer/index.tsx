@@ -2,7 +2,7 @@
 import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Navigation, Pagination } from 'swiper/modules';
-import styles from "./styles.module.css"
+import styles from "./component.module.css"
 import Image from 'next/image';
 import Link from 'next/link';
 import { News } from '@/app/ts/interfaces/newsInterface';
@@ -45,7 +45,7 @@ function SwiperContainer({ data, options, children }: {
 
                             <Link className={styles.topic} href={`/news?topic=${item.topics[0]}`}>{item.topics[0].toUpperCase()}</Link>
 
-                            <h3><Link href={item.id}>{item.title}</Link></h3>
+                            <h3><Link href={item.id.replace(/\/?daily-briefs\//, "")}>{item.title}</Link></h3>
 
                         </div>
                     </div>
