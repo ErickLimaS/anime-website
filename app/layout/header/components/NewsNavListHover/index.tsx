@@ -14,7 +14,7 @@ function AnimeNavListHover() {
 
     const loadData = async () => {
 
-        const data = await news.getNews()
+        const data = await news.getNews() as News[]
 
         setAnimeData(data)
 
