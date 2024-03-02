@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 async function NewsHomePage() {
 
-    const news = await newsApi.getNews()
+    const news = await newsApi.getNews() as News[]
 
     const animesNews = await newsApi.getNews("anime") as News[]
     const mangasNews = await newsApi.getNews("manga") as News[]
@@ -85,12 +85,12 @@ async function NewsHomePage() {
 
                     <h2>Recent Animes News</h2>
 
-                    <SwiperContainer data={animesNews}
+                    <SwiperContainer data={animesNews.slice(0, 10)}
                         options={{
-                            slidesPerView: 1,
-                            bp480: 2,
-                            bp740: 3,
-                            bp1275: 3,
+                            slidesPerView: 1.2,
+                            bp480: 2.2,
+                            bp740: 3.2,
+                            bp1275: 3.2,
                         }}
                     />
 

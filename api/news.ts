@@ -24,6 +24,8 @@ export default {
 
             console.log(err)
 
+            return err
+
         }
 
     }),
@@ -44,6 +46,8 @@ export default {
         catch (err) {
 
             console.log(err)
+
+            return err
 
         }
 

@@ -7,22 +7,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { News } from '@/app/ts/interfaces/newsInterface';
 
-function SwiperContainer({ data, options, children }: {
+function SwiperContainer({ data, options }: {
     data?: News[],
     options?: {
         slidesPerView?: number
         bp480: number,
         bp740: number,
         bp1275: number,
-    },
-    children?: any
+    }
 }) {
 
     return (
         <Swiper
             className={styles.list_container}
             modules={[Navigation, Pagination, A11y]}
-            slidesPerView={options?.slidesPerView || 3}
+            slidesPerView={options?.slidesPerView || 3.2}
             spaceBetween={16}
             breakpoints={{
                 480: { slidesPerView: options?.bp480 || 4 },
@@ -45,7 +44,7 @@ function SwiperContainer({ data, options, children }: {
 
                             <Link className={styles.topic} href={`/news?topic=${item.topics[0]}`}>{item.topics[0].toUpperCase()}</Link>
 
-                            <h3><Link href={item.id.replace(/\/?daily-briefs\//, "")}>{item.title}</Link></h3>
+                            <h3><Link href={`news/${item.id.replace(/\/?daily-briefs\//, "")}`}>{item.title}</Link></h3>
 
                         </div>
                     </div>

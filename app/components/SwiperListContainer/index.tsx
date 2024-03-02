@@ -7,7 +7,7 @@ import styles from "./styles.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import ListCarousel from '../HomePage/HeroListCarousel';
 
-function SwiperListContainer({ data, options, children, customHeroSection }: { 
+function SwiperListContainer({ data, options, customHeroSection }: {
     data?: ApiDefaultResult[],
     options?: {
         slidesPerView?: number
@@ -15,20 +15,19 @@ function SwiperListContainer({ data, options, children, customHeroSection }: {
         bp740: number,
         bp1275: number,
     },
-    children?: any,
     customHeroSection?: boolean
 }) {
-    
+
     return (
         <Swiper
             className={styles.list_container}
             modules={[Navigation, Pagination, A11y]}
-            slidesPerView={options?.slidesPerView || 3}
+            slidesPerView={options?.slidesPerView || 3.4}
             spaceBetween={16}
             breakpoints={{
-                480: { slidesPerView: options?.bp480 || 4 },
-                740: { slidesPerView: options?.bp740 || 5 },
-                1275: { slidesPerView: options?.bp1275 || 6 },
+                480: { slidesPerView: options?.bp480 || 4.4 },
+                740: { slidesPerView: options?.bp740 || 5.4 },
+                1275: { slidesPerView: options?.bp1275 || 6.4 },
             }}
         >
 
