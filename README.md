@@ -13,12 +13,12 @@ Project of animes and mangas website, utilizing the <a href='https://anilist.git
 - [x] `Read`: Read any manga chapter available.
 - [x] `Comment`: Write what you thougth of that episode or just tell something that every should know about.
 - [x] `Log In`: You can log in with your Google or GitHub Account.
+- [x] `News Feed`: Keep up with the latest news of animes, mangas and the industry.
 - [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.
 - [x] `Bookmark the episodes you watched`: And keep watching from there later
 
 ## :pushpin: Under Development
  
-- [ ] `News Feed Section`
 - [ ] `Keep track of what you watched last`
 - [ ] `Be notified when a new episode/chapter is released`
 
@@ -114,3 +114,13 @@ Its simple!
 
 ![Playlist page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/c8ed47e5-6ac8-4ec2-adc4-fdbf2119cc11)
 
+### News Home Page
+
+![News Home Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/4dd2c9d4-9c96-4c20-904b-b1abdf71aa37)
+![News Home Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/78a5889e-4fe9-4ebf-bae0-e8c014772196)
+![News Home Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/f6852a01-b012-43f0-a69b-d4c2113988e3)
+
+
+### News Article Page
+
+![News Article Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/216eca9e-4e9f-4c9f-9b0d-3ae40cb53772)

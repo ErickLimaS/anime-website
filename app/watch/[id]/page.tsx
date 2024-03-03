@@ -31,8 +31,9 @@ async function WatchEpisode({ params, searchParams }: {
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
 
     const episodeData = await gogoanime.getLinksForThisEpisode(searchParams.q) as EpisodeLinks
+
     const episodeNumber = searchParams?.q.replace(/-/g, ' ').split(" ").map(
-        (item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode \b/)
+        (item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/)
         )
 
     return (
@@ -59,29 +60,30 @@ async function WatchEpisode({ params, searchParams }: {
             <div id={styles.media_info_container}>
 
                 {/* SHOWS EPISODE ID SLICED FROM "EPISODE" WORD, AND ADD MEDIA NAME*/}
-                <h1 className='display_flex_row align_items_center'>
-                    {searchParams?.q.replace(/-/g, ' ').split(" ").map((item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/))}
-                    <span>{" "}-{" "}</span>
-                    <span>{mediaData.title.romaji || mediaData.title.native}</span>
-                </h1>
+                {mediaData.format == "MOVIE" ? (
+                    <h1 className='display_flex_row align_items_center'>{mediaData.title.romaji || mediaData.title.native}</h1>
+                ) : (
+                    <h1 className='display_flex_row align_items_center'>
+                        {episodeNumber}
+                        <span>{" "}-{" "}</span>
+                        <span>{mediaData.title.romaji || mediaData.title.native}</span>
+                    </h1>
+                )}
 
-                <div className={styles.grid}>
+                <div className={styles.grid} data-format={mediaData.format}>
                     <CardMediaCoverAndDescription data={mediaData} showButtons={false} />
 
-                    <EpisodesSideListContainer mediaId={params.id} mediaTitle={mediaData.title.romaji} episodeId={searchParams.q} />
+                    {mediaData.format != "MOVIE" && (
+                        <EpisodesSideListContainer mediaId={params.id} mediaTitle={mediaData.title.romaji} episodeId={searchParams.q} />
+                    )}
                 </div>
             </div>
 
             <div id={styles.comment_container}>
 
-                <h2>
-                    COMMENTS FOR EPISODE {searchParams?.q.replace(/-/g, ' ').split(" ").map(
-                        (item) =>
-                            item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode \b/))
-                    }
-                </h2>
+                <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${episodeNumber.toUpperCase()}`)}</h2>
 
-                <CommentSectionContainer media={mediaData} onWatchPage={true} episodeId={searchParams.q} episodeNumber={Number(episodeNumber)} />
+                <CommentSectionContainer media={mediaData} onWatchPage={true} episodeId={searchParams.q} episodeNumber={Number(episodeNumber.replace("Episode ", ""))} />
 
             </div>
         </main>

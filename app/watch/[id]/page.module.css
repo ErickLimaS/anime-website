@@ -50,6 +50,12 @@
 
 }
 
+#media_info_container>div.grid[data-format="MOVIE"]>* {
+
+    padding-right: 16px;
+
+}
+
 @media(min-width: 768px) {
 
     #media_info_container {
@@ -63,6 +69,15 @@
         grid-template-columns: 70% 25%;
         gap: 16px 32px;
         justify-content: space-between;
+    }
+
+    #media_info_container>div.grid[data-format="MOVIE"] {
+        grid-template-columns: 1fr;
+    }
+
+    #media_info_container>div.grid[data-format="MOVIE"]>* {
+
+        width: 80%;
     }
 }
 
