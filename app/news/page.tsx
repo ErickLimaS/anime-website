@@ -85,7 +85,7 @@ async function NewsHomePage() {
 
                     <h2>Recent Animes News</h2>
 
-                    <SwiperContainer data={animesNews.slice(0, 10)}
+                    <SwiperContainer data={animesNews}
                         options={{
                             slidesPerView: 1.2,
                             bp480: 2.2,

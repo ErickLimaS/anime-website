@@ -33,7 +33,7 @@ async function WatchEpisode({ params, searchParams }: {
     const episodeData = await gogoanime.getLinksForThisEpisode(searchParams.q) as EpisodeLinks
 
     const episodeNumber = searchParams?.q.replace(/-/g, ' ').split(" ").map(
-        (item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode \b/)
+        (item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/)
         )
 
     return (
@@ -64,13 +64,13 @@ async function WatchEpisode({ params, searchParams }: {
                     <h1 className='display_flex_row align_items_center'>{mediaData.title.romaji || mediaData.title.native}</h1>
                 ) : (
                     <h1 className='display_flex_row align_items_center'>
-                        Episode {episodeNumber}
+                        {episodeNumber}
                         <span>{" "}-{" "}</span>
                         <span>{mediaData.title.romaji || mediaData.title.native}</span>
                     </h1>
                 )}
 
-                <div className={styles.grid}>
+                <div className={styles.grid} data-format={mediaData.format}>
                     <CardMediaCoverAndDescription data={mediaData} showButtons={false} />
 
                     {mediaData.format != "MOVIE" && (
@@ -81,9 +81,9 @@ async function WatchEpisode({ params, searchParams }: {
 
             <div id={styles.comment_container}>
 
-                <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${episodeNumber}`)}</h2>
+                <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${episodeNumber.toUpperCase()}`)}</h2>
 
-                <CommentSectionContainer media={mediaData} onWatchPage={true} episodeId={searchParams.q} episodeNumber={Number(episodeNumber)} />
+                <CommentSectionContainer media={mediaData} onWatchPage={true} episodeId={searchParams.q} episodeNumber={Number(episodeNumber.replace("Episode ", ""))} />
 
             </div>
         </main>

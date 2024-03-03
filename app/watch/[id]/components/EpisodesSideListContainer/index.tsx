@@ -42,7 +42,9 @@ function EpisodesSideListContainer({ mediaId, mediaTitle, episodeId }: { mediaId
         // focus list item that correspond to current episode on page
         if (!isLoading) {
             const elementActive = document.querySelector("li[data-active=true]")
-            elementActive?.scrollIntoView();
+            elementActive?.scrollIntoView()
+
+            window.scrollTo({ top: 0, behavior: 'smooth' })
         }
 
         if (episodesList.length == 0) loadData()
