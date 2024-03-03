@@ -14,6 +14,8 @@ export const metadata: Metadata = {
     description: 'See the latest news about a variety of animes, mangas and movies.',
 }
 
+export const revalidate = 1800 // revalidate the data every 30 min
+
 async function NewsHomePage() {
 
     const news = await newsApi.getNews() as News[]
