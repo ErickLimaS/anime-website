@@ -6,7 +6,6 @@ import CardMediaCoverAndDescription from '../CardMediaCoverAndDescription'
 import NavButtons from '../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import API from "@/api/anilist"
-import { convertToUnix } from '@/app/lib/format_date_unix'
 
 type PropsTypes = {
 
@@ -38,14 +37,11 @@ function NewestMediaSection(props: PropsTypes) {
 
         setIsLoading(true)
 
-        let response: ApiAiringMidiaResults[] | void
-
-        response = await API.getReleasingByDaysRange("ANIME", convertToUnix(days)).then(
+        const response = await API.getReleasingByDaysRange("ANIME", days, undefined, 11).then(
             res => ((res as ApiAiringMidiaResults[]).map(
-                (item: ApiAiringMidiaResults) => item.media).filter(
-                    (item) => item.isAdult == false)
+                (item: ApiAiringMidiaResults) => item.media).filter((item) => item.isAdult == false)
             )
-        ) as ApiAiringMidiaResults[]
+        ).then(res => res.sort((a, b) => a.popularity - b.popularity).reverse())
 
         setMediaList(response)
 

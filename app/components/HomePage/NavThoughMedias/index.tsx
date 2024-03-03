@@ -7,7 +7,6 @@ import API from '@/api/anilist'
 import MediaItemCoverInfo from '../../MediaItemCoverInfo'
 import ChevronLeftIcon from '@/public/assets/chevron-left.svg'
 import ChevronRightIcon from '@/public/assets/chevron-right.svg'
-import { convertToUnix } from '@/app/lib/format_date_unix'
 import { Url } from 'next/dist/shared/lib/router/router'
 
 type Component = {
@@ -47,7 +46,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
             // gets the range of days than parse it to unix and get any media releasing in the selected range
             response = await API.getReleasingByDaysRange(
                 "ANIME",
-                convertToUnix(days!),
+                days!,
                 newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined
             ).then(
                 res => (res as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
@@ -66,7 +65,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
             ).then(
                 res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
             )
-            
+
         }
 
         // handles the pagination
@@ -80,11 +79,9 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
     useEffect(() => {
 
         if (sort == "RELEASE") {
-            if (data[0] == null || data[0] == undefined) {
-                getMedias(undefined, 30)
-            } else {
-                getMedias(undefined, 1)
-            }
+
+            getMedias(undefined, 1)
+
         }
         else {
             getMedias()
