@@ -53,7 +53,8 @@ header#background #menu_container button#btn_open_menu {
     }
 }
 
-#menu_container>#menu_list h5 {
+#menu_container>#menu_list h5,
+#menu_container>#menu_list>ul>li a {
 
     cursor: pointer;
 
@@ -99,11 +100,7 @@ header#background #menu_container button#btn_open_menu {
 
 }
 
-#menu_container>#menu_list>ul>li a {
-    font-size: var(--font-size--small-1);
-}
-
-#menu_container>#menu_list ul ul li a{
+#menu_container>#menu_list ul ul li a {
 
     padding: 16px 0;
     padding-right: 8px;
