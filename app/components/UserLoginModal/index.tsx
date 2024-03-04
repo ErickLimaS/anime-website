@@ -6,7 +6,7 @@ import GitHubSvg from '@/public/assets/github.svg'
 import CloseSvg from '@/public/assets/x.svg'
 import { signInWithPopup, GoogleAuthProvider, GithubAuthProvider, Auth } from 'firebase/auth'
 
-function UserModal({ onClick, auth, }: { onClick: MouseEventHandler<HTMLDivElement>, auth: Auth }) {
+function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElement>, auth: Auth }) {
 
     const googleProvider = new GoogleAuthProvider()
     const githubProvider = new GithubAuthProvider()

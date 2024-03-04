@@ -5,7 +5,7 @@ import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import SvgFilter from "@/public/assets/filter-right.svg"
+import SelectSort from '@/app/components/SelectSortInputs'
 
 function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffline[], totalLength: number, lastUpdate: string }) {
 
@@ -33,17 +33,12 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    function fetchData(element?: HTMLSelectElement) {
+    function fetchData() {
 
         const current = new URLSearchParams(Array.from(searchParams.entries()));
 
-        if (element) {
-            current.set("sort", `${element.value}`)
-        }
-        else {
-            current.set("page", `${newRange + 1}`)
-            setNewRange(newRange + 1)
-        }
+        current.set("page", `${newRange + 1}`)
+        setNewRange(newRange + 1)
 
         const query = current ? `?${current}` : ""
 
@@ -57,29 +52,7 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
             <div id={styles.heading_container}>
                 <h1>Results</h1>
 
-                <div className='display_flex_row align_items_center'>
-                    <SvgFilter height={16} width={16} alt="Filter Icon" />
-                    <form>
-                        <select
-                            title="Sort the results"
-                            onChange={(e) => fetchData(e.target)}
-                            defaultValue={new URLSearchParams(Array.from(searchParams.entries())).get("sort") || "title_asc"}
-                        >
-                            <option value="title_asc">
-                                From A to Z
-                            </option>
-                            <option value="title_desc" >
-                                From Z to A
-                            </option>
-                            <option value="releases_desc">
-                                Release Desc
-                            </option>
-                            <option value="releases_asc">
-                                Release Asc
-                            </option>
-                        </select>
-                    </form>
-                </div>
+                <SelectSort />
             </div>
 
             <div id={styles.results_container}>
