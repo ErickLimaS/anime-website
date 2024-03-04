@@ -27,10 +27,10 @@ async function Footer() {
                     <div id={styles.social_media_container}>
 
                         <ul className='display_flex_row'>
-                            <li><Link href="#"><Facebook width={16} height={16} /> Facebook</Link></li>
-                            <li><Link href="#"><Twitter width={16} height={16} /> Twitter</Link></li>
-                            <li><Link href="#"><Instagram width={16} height={16} /> Instagram</Link></li>
-                            <li><Link href="#"><Youtube width={16} height={16} /> YouTube</Link></li>
+                            <li><Link href="#"><Facebook width={16} height={16} title="Facebook" /> <span>Facebook</span></Link></li>
+                            <li><Link href="#"><Twitter width={16} height={16} title="Twitter" /> <span>Twitter</span></Link></li>
+                            <li><Link href="#"><Instagram width={16} height={16} title="Instagram" /> <span>Instagram</span></Link></li>
+                            <li><Link href="#"><Youtube width={16} height={16} title="YouTube" /> <span>YouTube</span></Link></li>
                         </ul>
 
                     </div>
