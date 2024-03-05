@@ -215,7 +215,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
           <div id={styles.description_episodes_related_container}>
 
             {/* NEXT EPISODE */}
-            {(isMobileScreen == true && mediaData.nextAiringEpisode) && (
+            {(isMobileScreen == true && mediaData.nextAiringEpisode && mediaData.format != "MOVIE") && (
               <div id={styles.next_episode_container}>
 
                 <h2 className={styles.heading_style}>
@@ -386,7 +386,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
           <div id={styles.hype_container}>
 
             {/* NEXT EPISODE */}
-            {(isMobileScreen == false && mediaData.nextAiringEpisode) && (
+            {(isMobileScreen == false && mediaData.nextAiringEpisode && mediaData.format != "MOVIE") && (
               <div id={styles.next_episode_container}>
 
                 <h2 className={styles.heading_style}>
