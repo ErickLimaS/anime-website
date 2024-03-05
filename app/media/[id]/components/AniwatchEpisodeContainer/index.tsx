@@ -3,15 +3,15 @@ import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
-import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
+import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function GoGoAnimeEpisode({ data, mediaId }: { data: MediaEpisodes, mediaId: number }) {
+function AniwatchEpisode({ data, mediaId }: { data: EpisodeAnimeWatch, mediaId: number }) {
 
     return (
         <li className={styles.container}>
 
-            <Link href={`/watch/${mediaId}?source=gogoanime&q=${data.id}`} className={styles.img_container}>
+            <Link href={`/watch/${mediaId}?source=animewatch&q=${data.episodeId}`} className={styles.img_container}>
                 <Image
                     src={placeholderImg}
                     data-other-source={true}
@@ -25,12 +25,12 @@ function GoGoAnimeEpisode({ data, mediaId }: { data: MediaEpisodes, mediaId: num
 
             <div className={styles.title_button_container}>
                 <h3>
-                    <Link href={`/watch/${mediaId}?source=gogoanime&q=${data.id}`}>
-                        {`Episode ${data.number}`}
+                    <Link href={`/watch/${mediaId}?source=animewatch&q=${data.episodeId}`}>
+                        {`Episode ${data.number} ${data.title && `- ${data.title}`}`}
                     </Link>
                 </h3>
 
-                <ButtonMarkEpisodeAsWatched data={data} mediaId={mediaId} source="gogoanime" />
+                <ButtonMarkEpisodeAsWatched data={data} mediaId={mediaId} source="animewatch" />
 
             </div>
 
@@ -38,4 +38,4 @@ function GoGoAnimeEpisode({ data, mediaId }: { data: MediaEpisodes, mediaId: num
     )
 }
 
-export default GoGoAnimeEpisode
+export default AniwatchEpisode

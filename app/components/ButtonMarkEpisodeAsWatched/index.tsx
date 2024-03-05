@@ -9,8 +9,11 @@ import { DocumentData, DocumentSnapshot, FieldPath, arrayRemove, arrayUnion, doc
 import { initFirebase } from '@/firebase/firebaseApp'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import styles from "./component.module.css"
+import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function ButtonMarkEpisodeAsWatched({ data, mediaId, source, hasText }: { data: EpisodesType | MediaEpisodes, mediaId: number, source: string, hasText?: boolean }) {
+function ButtonMarkEpisodeAsWatched(
+    { data, mediaId, source, hasText }:
+        { data: EpisodesType | MediaEpisodes | EpisodeAnimeWatch, mediaId: number, source: string, hasText?: boolean }) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)

@@ -32,7 +32,8 @@
 
 }
 
-#video_container>iframe {
+#video_container>iframe,
+#video_container video {
 
     position: absolute;
     top: 0;
