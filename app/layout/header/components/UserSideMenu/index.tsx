@@ -8,6 +8,7 @@ import LogoutSvg from '@/public/assets/logout.svg'
 import SettingsSvg from '@/public/assets/gear-fill.svg'
 import HistorySvg from '@/public/assets/clock-history.svg'
 import BookmarkSvg from '@/public/assets/bookmark-check-fill.svg'
+import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from "@/firebase/firebaseApp";
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -62,11 +63,16 @@ function UserSideMenu() {
                         className={`display_flex_row align_items_center ${styles.heading_btn}`}
                         id={styles.user_btn}
                         data-useractive={false}
+                        data-loading={loading}
                     >
-                        <PersonIcon className={styles.scale} alt="User Icon" width={16} height={16} />
-                        <span>
-                            Login
-                        </span>
+                        {loading ? (<LoadingSvg width={16} height={16} title="Loading" />) : (
+                            <>
+                                <PersonIcon className={styles.scale} alt="User Icon" width={16} height={16} />
+                                <span>
+                                    Login
+                                </span>
+                            </>
+                        )}
                     </button>
 
                     <AnimatePresence

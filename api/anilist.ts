@@ -1,4 +1,4 @@
-import { convertToUnix, lastHourOfTheDay } from '@/app/lib/format_date_unix'
+import { convertToUnix, lastHourOfTheDay } from '@/app/lib/formatDateUnix'
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Axios from 'axios'
 import {

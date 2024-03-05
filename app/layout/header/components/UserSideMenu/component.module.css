@@ -43,6 +43,12 @@
 
 }
 
+#user_container #user_btn[data-loading=true] {
+
+    background-color: var(--black-75);
+
+}
+
 #user_container #user_btn #img_container {
 
     position: relative;
@@ -166,6 +172,7 @@
 }
 
 @media(min-width: 576px) {
+
     #user_container>#user_menu_list ul li>button,
     #user_container>#user_menu_list ul li>a {
         padding-top: 8px;
