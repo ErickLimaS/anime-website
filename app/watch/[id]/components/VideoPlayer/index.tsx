@@ -1,27 +1,36 @@
 "use client"
-import Hls from 'hls.js'
 import React from 'react'
-import VPlayer from 'vnetwork-player'
-import 'vnetwork-player/dist/vnetwork-player.min.css';
-import { Subtitle } from 'vnetwork-player/dist/utils/types'
+import ReactPlayer from 'react-player';
+import { TrackProps } from 'react-player/file';
 
-function Player({ source, subtitles }: { source: string, subtitles?: { file: string, label: string }[] }) {
+function Player({ source, subtitles }: { source: string, subtitles?: { kind: string, default: boolean | undefined, file: string, label: string }[] }) {
 
-    const subList: Subtitle[] | undefined = []
+    const subList: TrackProps[] | undefined = []
 
     subtitles?.map((item, key) => (
         subList.push({
-            lang: subtitles[key].label,
-            url: subtitles[key].file
+            kind: subtitles[key].kind,
+            srcLang: subtitles[key].label,
+            src: subtitles[key].file,
+            default: subtitles[key].default,
+            label: subtitles[key].label
         })
     ))
-    
+
     return (
-        <VPlayer
-            source={source}
-            color="var(--brand-color)"
-            subtitle={subList}
-            Hls={Hls}
+        <ReactPlayer
+            controls
+            playing
+            volume={0.6}
+            url={source}
+            config={{
+                file: {
+                    attributes: {
+                        crossOrigin: "anonymous",
+                    },
+                    tracks: subList
+                }
+            }}
         />
     )
 }
