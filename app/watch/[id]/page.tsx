@@ -13,25 +13,20 @@ import { EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterfa
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { source: string, q: string } // EPISODE ID
+    searchParams: { episode: string, source: string, q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
 
-    const episodeNumber = searchParams.source == "gogoanime" ?
-        searchParams?.q.replace(/-/g, ' ').split(" ").map((item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/))
-        :
-        searchParams?.q.replace(/-/g, ' ').split(" ").map((item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bep\b/))
-
     return {
-        title: `Watching Episode ${episodeNumber} - ${mediaData.title.romaji} | AniProject`,
-        description: `Watch ${mediaData.title.romaji} ${episodeNumber}. ${mediaData.description && mediaData.description}}`,
+        title: `Watching Episode ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
+        description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}}`,
     }
 }
 
 async function WatchEpisode({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { source: string, q: string, episodeNumber?: string } // EPISODE ID
+    searchParams: { episode: string, source: string, q: string, episodeNumber?: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
@@ -49,10 +44,6 @@ async function WatchEpisode({ params, searchParams }: {
 
     }
 
-    const episodeNumber = searchParams?.q.replace(/-/g, ' ').split(" ").map(
-        (item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/)
-        )
-
     return (
         <main id={styles.container}>
 
@@ -67,13 +58,14 @@ async function WatchEpisode({ params, searchParams }: {
                             width="100%"
                             height="260px"
                             scrolling="no"
-                            title={mediaData.title.romaji + " Episode " + searchParams?.q.replace(/-/g, ' ').split(" ").map(
-                                (item) => item[0].toUpperCase() + item.slice(1)).join(" ").slice(searchParams?.q.search(/\bepisode\b/))
-                            }
+                            title={`${mediaData.title.romaji} - Episode ${searchParams.episode}`}
                         />
                     ) : (
 
-                        <Player source={episodeData.sources[0].url} subtitles={(episodeData as EpisodeLinksAnimeWatch).tracks} />
+                        <Player
+                            source={episodeData.sources[0].url}
+                            subtitles={(episodeData as EpisodeLinksAnimeWatch).tracks}
+                        />
 
                     )}
                 </section>
@@ -86,7 +78,7 @@ async function WatchEpisode({ params, searchParams }: {
                     <h1 className='display_flex_row align_items_center'>{mediaData.title.romaji || mediaData.title.native}</h1>
                 ) : (
                     <h1 className='display_flex_row align_items_center'>
-                        {(searchParams.source == "animewatch") ? "Episode " : ""}{episodeNumber}
+                        Episode {searchParams.episode}
                         <span>{" "}-{" "}</span>
                         <span>{mediaData.title.romaji || mediaData.title.native}</span>
                     </h1>
@@ -100,7 +92,7 @@ async function WatchEpisode({ params, searchParams }: {
                             source={searchParams.source}
                             mediaId={params.id}
                             mediaTitle={mediaData.title.romaji}
-                            episodeId={searchParams.q}
+                            activeEpisodeNumber={Number(searchParams.episode)}
                         />
                     )}
                 </div>
@@ -108,9 +100,14 @@ async function WatchEpisode({ params, searchParams }: {
 
             <div id={styles.comment_container}>
 
-                <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "animewatch") ? "EPISODE " : ""}${episodeNumber.toUpperCase()}`)}</h2>
+                <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "animewatch") ? "EPISODE " : ""}${searchParams.episode}`)}</h2>
 
-                <CommentSectionContainer media={mediaData} onWatchPage={true} episodeId={searchParams.q} episodeNumber={Number(episodeNumber.replace("Episode ", ""))} />
+                <CommentSectionContainer
+                    media={mediaData}
+                    onWatchPage={true}
+                    episodeId={searchParams.q}
+                    episodeNumber={Number(searchParams.episode)}
+                />
 
             </div>
         </main>

@@ -11,7 +11,7 @@ function AniwatchEpisode({ data, mediaId }: { data: EpisodeAnimeWatch, mediaId: 
     return (
         <li className={styles.container}>
 
-            <Link href={`/watch/${mediaId}?source=animewatch&q=${data.episodeId}`} className={styles.img_container}>
+            <Link href={`/watch/${mediaId}?source=animewatch&episode=${data.number}&q=${data.episodeId}`} className={styles.img_container}>
                 <Image
                     src={placeholderImg}
                     data-other-source={true}
@@ -25,7 +25,7 @@ function AniwatchEpisode({ data, mediaId }: { data: EpisodeAnimeWatch, mediaId: 
 
             <div className={styles.title_button_container}>
                 <h3>
-                    <Link href={`/watch/${mediaId}?source=animewatch&q=${data.episodeId}`}>
+                    <Link href={`/watch/${mediaId}?source=animewatch&episode=${data.number}&q=${data.episodeId}`}>
                         {`Episode ${data.number} ${data.title && `- ${data.title}`}`}
                     </Link>
                 </h3>

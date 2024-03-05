@@ -11,7 +11,7 @@ function GoGoAnimeEpisode({ data, mediaId }: { data: MediaEpisodes, mediaId: num
     return (
         <li className={styles.container}>
 
-            <Link href={`/watch/${mediaId}?source=gogoanime&q=${data.id}`} className={styles.img_container}>
+            <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`} className={styles.img_container}>
                 <Image
                     src={placeholderImg}
                     data-other-source={true}
@@ -25,7 +25,7 @@ function GoGoAnimeEpisode({ data, mediaId }: { data: MediaEpisodes, mediaId: num
 
             <div className={styles.title_button_container}>
                 <h3>
-                    <Link href={`/watch/${mediaId}?source=gogoanime&q=${data.id}`}>
+                    <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`}>
                         {`Episode ${data.number}`}
                     </Link>
                 </h3>

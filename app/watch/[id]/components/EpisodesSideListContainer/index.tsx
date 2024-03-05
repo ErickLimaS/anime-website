@@ -10,7 +10,7 @@ import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
 import aniwatch from '@/api/aniwatch'
 import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch, MediaInfoFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function EpisodesSideListContainer({ source, mediaId, mediaTitle, episodeId }: { source: string, mediaId: number, mediaTitle: string, episodeId: string }) {
+function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeNumber }: { source: string, mediaId: number, mediaTitle: string, activeEpisodeNumber: number }) {
 
     const [mediaData, setMediaData] = useState<MediaInfo | EpisodesFetchedAnimeWatch>()
     const [episodesList, setEpisodesList] = useState<MediaEpisodes[] | EpisodeAnimeWatch[]>([])
@@ -63,12 +63,12 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, episodeId }: {
             const elementActive = document.querySelector("li[data-active=true]")
             elementActive?.scrollIntoView()
 
-            window.scrollTo({ top: 0, behavior: 'smooth' })
+            window.scrollTo({ top: 0, behavior: 'instant' })
         }
 
         if (episodesList.length == 0) loadData()
 
-    }, [mediaTitle, isLoading, episodeId])
+    }, [mediaTitle, isLoading, activeEpisodeNumber])
 
     return (
         <div id={styles.episodes_list_container}>
@@ -89,10 +89,10 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, episodeId }: {
                 {isLoading == false && (
 
                     episodesList?.map((item, key: number) => (
-                        <li key={key} data-active={(item as MediaEpisodes).id == episodeId}>
+                        <li key={key} data-active={(item as MediaEpisodes).number == activeEpisodeNumber}>
 
                             <Link
-                                href={`/watch/${mediaId}?source=${source}&q=${source == "gogoanime" ? (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`}
+                                href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${source == "gogoanime" ? (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`}
                             >
 
                                 <div className={styles.img_container}>
@@ -106,7 +106,7 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, episodeId }: {
                             <div className={styles.episode_info_container}>
 
                                 <Link
-                                    href={`/watch/${mediaId}?source=${source}&q=${source == "gogoanime" ? (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`}
+                                    href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${source == "gogoanime" ? (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`}
                                 >
                                     <h4>Episode {item.number}</h4>
                                 </Link>
