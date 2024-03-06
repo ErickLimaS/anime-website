@@ -100,7 +100,7 @@ async function WatchEpisode({ params, searchParams }: {
 
             <div id={styles.comment_container}>
 
-                <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "animewatch") ? "EPISODE " : ""}${searchParams.episode}`)}</h2>
+                <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "aniwatch") ? "EPISODE " : ""}${searchParams.episode}`)}</h2>
 
                 <CommentSectionContainer
                     media={mediaData}

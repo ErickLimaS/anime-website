@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
 
-        {/* <Header /> */}
+        <Header />
 
         <NextTopLoader
           color="var(--brand-color)"
@@ -33,7 +33,7 @@ export default function RootLayout({
 
         {children}
 
-        {/* <Footer /> */}
+        <Footer />
 
       </body>
     </html>
