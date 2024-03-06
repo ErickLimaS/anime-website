@@ -93,14 +93,14 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     async function fetchWithAniWatch() {
 
-        const searchResultsForMedia = await aniwatch.searchMedia(stringToUrlFriendly(mediaTitle)).then(
+        const searchResultsForMedia = await aniwatch.searchMedia(mediaTitle).then(
             (res: void | MediaInfoFetchedAnimeWatch) => {
                 setSource("aniwatch")
                 return res!.animes
             }
         )
 
-        const closestResult = searchResultsForMedia.find((item: any) => item.name.includes(stringToUrlFriendly(mediaTitle))) || searchResultsForMedia[0]
+        const closestResult = searchResultsForMedia.find((item) => item.name.includes(mediaTitle)) || searchResultsForMedia[0]
 
         const res = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
 

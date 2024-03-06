@@ -13,10 +13,10 @@ export default {
         try {
 
             const { data } = await Axios({
-                url: `${BASE_URL}/anime/search?q=${query}${page && `&page=${page}`}`,
+                url: `${BASE_URL}/anime/search?q=${query}${page ? `&page=${page}` : ""}`,
             })
 
-            return data as MediaInfoFetchedAnimeWatch 
+            return data as MediaInfoFetchedAnimeWatch
 
         }
         catch (error: any) {
@@ -51,7 +51,7 @@ export default {
         try {
 
             const { data } = await Axios({
-                url: `${BASE_URL}/anime/episode-srcs?id=${mediaId}${server && `&server=${server}`}${category && `&category=${category}`}`,
+                url: `${BASE_URL}/anime/episode-srcs?id=${mediaId}${server ? `&server=${server}` : ""}${category ? `&category=${category}` : ""}`,
             })
 
             return data as EpisodeLinksAnimeWatch

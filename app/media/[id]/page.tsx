@@ -332,14 +332,6 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <div className='display_flex_row space_beetween align_items_center display_wrap'>
                   <h2 className={styles.heading_style}>RELATED TO {(mediaData.title.romaji).toUpperCase()}</h2>
-
-                  {mediaData.relations.nodes.length > 5 && (
-                    <p className='display_flex_row align_items_center' style={{ marginBottom: "8px", color: "var(--brand-color)" }}>
-                      <span style={{ marginRight: "8px" }}><SwipeSvg fill="var(--brand-color)" width={24} height={24} alt="Swipe to Right" /></span>
-                      Scroll To See More
-                      <ChevonRightSvg width={16} height={16} alt="Arrow to Right" />
-                    </p>
-                  )}
                 </div>
 
                 <ul>
