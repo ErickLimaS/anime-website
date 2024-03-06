@@ -146,7 +146,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
     // redirect to watch page
     function redirectTo() {
 
-        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber}&q=${movieId}`)
+        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}`)
 
     }
 

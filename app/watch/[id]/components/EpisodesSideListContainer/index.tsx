@@ -45,7 +45,6 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
                 const closestResult = searchResultsForMedia.animes.find((item) => item.name.includes(query)) || searchResultsForMedia.animes[0]
 
                 response = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
-
             }
         }
 
@@ -96,8 +95,10 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
                             >
 
                                 <div className={styles.img_container}>
-                                    {source == "gogoanime" && (
+                                    {source == "gogoanime" ? (
                                         <Image src={(mediaData as MediaInfo)?.image as string} alt={(mediaData as MediaInfo)?.title as string} fill></Image>
+                                    ) : (
+                                        <span>{item.number}</span>
                                     )}
                                 </div>
 
@@ -108,7 +109,7 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
                                 <Link
                                     href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${source == "gogoanime" ? (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`}
                                 >
-                                    <h4>Episode {item.number}</h4>
+                                    <h4>{source == "gogoanime" ? `Episode ${(item as MediaEpisodes).number}` : (item as EpisodeAnimeWatch).title}</h4>
                                 </Link>
 
                                 <ButtonMarkEpisodeAsWatched

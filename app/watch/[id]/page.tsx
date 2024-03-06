@@ -61,31 +61,54 @@ async function WatchEpisode({ params, searchParams }: {
                             title={`${mediaData.title.romaji} - Episode ${searchParams.episode}`}
                         />
                     ) : (
-
                         <Player
                             source={episodeData.sources[0].url}
                             subtitles={(episodeData as EpisodeLinksAnimeWatch).tracks}
                         />
-
                     )}
                 </section>
             </div>
 
-            <div id={styles.media_info_container}>
+            <section id={styles.media_info_container}>
 
-                {/* SHOWS EPISODE ID SLICED FROM "EPISODE" WORD, AND ADD MEDIA NAME*/}
-                {mediaData.format == "MOVIE" ? (
-                    <h1 className='display_flex_row align_items_center'>{mediaData.title.romaji || mediaData.title.native}</h1>
-                ) : (
-                    <h1 className='display_flex_row align_items_center'>
-                        Episode {searchParams.episode}
-                        <span>{" "}-{" "}</span>
-                        <span>{mediaData.title.romaji || mediaData.title.native}</span>
-                    </h1>
-                )}
+                <div id={styles.info_comments}>
 
-                <div className={styles.grid} data-format={mediaData.format}>
-                    <CardMediaCoverAndDescription data={mediaData} showButtons={false} />
+                    <div id={styles.heading_info_container}>
+
+                        {mediaData.format == "MOVIE" ? (
+                            <h1 className='display_flex_row align_items_center'>{mediaData.title.romaji || mediaData.title.native}</h1>
+                        ) : (
+                            <h1 className='display_flex_row align_items_center'>
+                                Episode {searchParams.episode}
+                                <span>{" "}-{" "}</span>
+                                <span>{mediaData.title.romaji || mediaData.title.native}</span>
+                            </h1>
+                        )}
+
+                        <CardMediaCoverAndDescription data={mediaData} showButtons={false} />
+
+                    </div>
+
+                    <div className={styles.only_desktop}>
+
+                        <div className={styles.comment_container}>
+
+                            <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "aniwatch") ? "EPISODE " : ""}${searchParams.episode}`)}</h2>
+
+                            {/* ONLY ON DESKTOP */}
+                            <CommentSectionContainer
+                                media={mediaData}
+                                onWatchPage={true}
+                                episodeId={searchParams.q}
+                                episodeNumber={Number(searchParams.episode)}
+                            />
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div data-format={mediaData.format}>
 
                     {mediaData.format != "MOVIE" && (
                         <EpisodesSideListContainer
@@ -95,21 +118,28 @@ async function WatchEpisode({ params, searchParams }: {
                             activeEpisodeNumber={Number(searchParams.episode)}
                         />
                     )}
+
+                    {/* ONLY ON MOBILE */}
+                    <div className={styles.only_mobile}>
+
+                        <div className={styles.comment_container}>
+
+                            <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "aniwatch") ? "EPISODE " : ""}${searchParams.episode}`)}</h2>
+
+                            <CommentSectionContainer
+                                media={mediaData}
+                                onWatchPage={true}
+                                episodeId={searchParams.q}
+                                episodeNumber={Number(searchParams.episode)}
+                            />
+                        </div>
+
+                    </div>
+
                 </div>
-            </div>
 
-            <div id={styles.comment_container}>
+            </section>
 
-                <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "aniwatch") ? "EPISODE " : ""}${searchParams.episode}`)}</h2>
-
-                <CommentSectionContainer
-                    media={mediaData}
-                    onWatchPage={true}
-                    episodeId={searchParams.q}
-                    episodeNumber={Number(searchParams.episode)}
-                />
-
-            </div>
         </main>
     )
 }
