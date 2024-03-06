@@ -113,6 +113,7 @@ async function WatchEpisode({ params, searchParams }: {
                     {mediaData.format != "MOVIE" && (
                         <EpisodesSideListContainer
                             source={searchParams.source}
+                            sourceMediaId={searchParams.q.slice(0, searchParams?.q.search(/\bep\b/))}
                             mediaId={params.id}
                             mediaTitle={mediaData.title.romaji}
                             activeEpisodeNumber={Number(searchParams.episode)}

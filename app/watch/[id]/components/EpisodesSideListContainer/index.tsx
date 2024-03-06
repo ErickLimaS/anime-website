@@ -8,9 +8,17 @@ import Image from 'next/image'
 import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
 import aniwatch from '@/api/aniwatch'
-import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch, MediaInfoFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeNumber }: { source: string, mediaId: number, mediaTitle: string, activeEpisodeNumber: number }) {
+type ComponentTypes = {
+    source: string,
+    mediaId: number,
+    mediaTitle: string,
+    activeEpisodeNumber: number,
+    sourceMediaId: string
+}
+
+function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeNumber, sourceMediaId }: ComponentTypes) {
 
     const [mediaData, setMediaData] = useState<MediaInfo | EpisodesFetchedAnimeWatch>()
     const [episodesList, setEpisodesList] = useState<MediaEpisodes[] | EpisodeAnimeWatch[]>([])
@@ -19,7 +27,7 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
     async function loadData() {
 
         setIsLoading(true)
-        const query = stringToUrlFriendly(mediaTitle)
+        const query = mediaTitle
 
         let response
 
@@ -27,7 +35,7 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
             response = await gogoanime.getInfoFromThisMedia(query, "anime") as MediaInfo
 
             if (response == null) {
-                const searchResultsForMedia = await gogoanime.searchMedia(query, "anime") as MediaSearchResult[]
+                const searchResultsForMedia = await gogoanime.searchMedia(stringToUrlFriendly(query), "anime") as MediaSearchResult[]
 
                 // try to found a result that matches the title from anilist on gogoanime (might work in some cases)
                 const closestResult = searchResultsForMedia.find((item) => item.id.includes(query + "-tv"))
@@ -36,16 +44,9 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
             }
         }
         else {
-            response = await aniwatch.getEpisodes(query) as EpisodesFetchedAnimeWatch
 
-            // if the name dont match any results, it will search for the query on the api, than make a new request by the ID of the first result 
-            if (response == null) {
-                const searchResultsForMedia = await aniwatch.searchMedia(query) as MediaInfoFetchedAnimeWatch
+            response = await aniwatch.getEpisodes(sourceMediaId.slice(0, sourceMediaId.length - 1)) as EpisodesFetchedAnimeWatch
 
-                const closestResult = searchResultsForMedia.animes.find((item) => item.name.includes(query)) || searchResultsForMedia.animes[0]
-
-                response = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
-            }
         }
 
         setMediaData(response)
