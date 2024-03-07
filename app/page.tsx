@@ -163,11 +163,11 @@ export default async function Home() {
       </section>
 
       {/* SECTION => SHOWS MEDIAS SORTED BY POPULARITY   */}
-      <section className={`${styles.medias_sections_container}`}>
+      {/* <section className={`${styles.medias_sections_container}`}>
 
         <NavThoughMedias title={"Most Popular"} route={"/popular"} sort={"POPULARITY_DESC"} layoutInverted={true} />
 
-      </section>
+      </section> */}
 
       {/* RANKING and NEWEST SECTION */}
       <section className={styles.background}>

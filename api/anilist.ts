@@ -106,7 +106,8 @@ export default {
             const graphqlQuery = {
                 "query": defaultApiQueryRequest(),
                 "variables": {
-                    'page': 1,
+                    'type': type || "ANIME",
+                    'page': page || 1,
                     'sort': 'TRENDING_DESC',
                     'perPage': 10,
                     'showAdultContent': false,
