@@ -156,11 +156,11 @@ export default async function Home() {
 
 
       {/* SECTION => SHOWS MEDIAS SORTED BY FAVOURITES */}
-      <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
+      {/* <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
 
         <NavThoughMedias title={"All Time Favorites"} route={"/favourites"} sort={"FAVOURITES_DESC"} darkBackground={true} />
 
-      </section>
+      </section> */}
 
       {/* SECTION => SHOWS MEDIAS SORTED BY POPULARITY   */}
       {/* <section className={`${styles.medias_sections_container}`}>
