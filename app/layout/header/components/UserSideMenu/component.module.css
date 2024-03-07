@@ -45,7 +45,8 @@
 
 #user_container #user_btn[data-loading=true] {
 
-    background-color: var(--black-75);
+    background-color: transparent;
+    box-shadow: 0 0 !important;
 
 }
 

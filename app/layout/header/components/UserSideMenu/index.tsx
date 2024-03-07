@@ -65,7 +65,9 @@ function UserSideMenu() {
                         data-useractive={false}
                         data-loading={loading}
                     >
-                        {loading ? (<LoadingSvg width={16} height={16} title="Loading" />) : (
+                        {loading ? (
+                            <LoadingSvg width={16} height={16} title="Loading" />
+                        ) : (
                             <>
                                 <PersonIcon className={styles.scale} alt="User Icon" width={16} height={16} />
                                 <span>
