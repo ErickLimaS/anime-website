@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -7,7 +8,9 @@ import MovieSvg from "@/public/assets/film.svg"
 import AnimeSvg from "@/public/assets/play-circle.svg"
 import MangaSvg from "@/public/assets/book.svg"
 import MusicSvg from "@/public/assets/music-note-beamed.svg"
+import ErrorImg from "@/public/ERR0R_NO_IMAGE_FOUND.jpg"
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
+
 
 type ComponentTypes = {
     data: ApiDefaultResult | MediaDbOffline,
@@ -22,6 +25,13 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
 
     const customStyle = positionIndex && { gridArea: `item${positionIndex}` }
 
+    const [imageError, setImageError] = useState(false);
+
+    let srcImg = fromOfflineDb ?
+        (data as MediaDbOffline).picture
+        :
+        (data as ApiDefaultResult).coverImage && (data as ApiDefaultResult).coverImage.large
+
     return (
         <div
             className={`${styles.media_item_container} ${darkMode ? styles.darkMode : ''} ${hiddenOnDesktop ? styles.midia_item_container_hidden : ""}`}
@@ -35,15 +45,11 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
             >
 
                 <Image
-                    src={fromOfflineDb ?
-                        (data as MediaDbOffline).picture
-                        :
-                        (data as ApiDefaultResult).coverImage
-                        && (data as ApiDefaultResult).coverImage.large
-                    }
+                    src={imageError ? ErrorImg : srcImg}
                     alt={`Cover Art for ${fromOfflineDb ? (data as MediaDbOffline).title : (data as ApiDefaultResult).title && (data as ApiDefaultResult).title.romaji || "Not Available"}`}
                     fill
                     sizes='100%'
+                    onError={() => setImageError(true)}
                     title={fromOfflineDb ? (data as MediaDbOffline).title : (data as ApiDefaultResult).title.romaji || (data as ApiDefaultResult).title.native}
                 ></Image>
 
@@ -80,11 +86,12 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                 )}
             </Link>
 
-            {(fromOfflineDb ?
-                (data as MediaDbOffline).animeSeason.year != undefined && (data as MediaDbOffline).tags != undefined
-                :
-                ((data as ApiDefaultResult).seasonYear != undefined && (data as ApiDefaultResult).genres != undefined)
-            ) && (
+            {
+                (fromOfflineDb ?
+                    (data as MediaDbOffline).animeSeason.year != undefined && (data as MediaDbOffline).tags != undefined
+                    :
+                    ((data as ApiDefaultResult).seasonYear != undefined && (data as ApiDefaultResult).genres != undefined)
+                ) && (
                     fromOfflineDb ?
 
                         <small>
