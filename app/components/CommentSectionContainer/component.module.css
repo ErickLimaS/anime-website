@@ -5,7 +5,7 @@
     margin-bottom: 40px;
 
     display: grid;
-    grid-template-columns: minmax(50px, 80px) minmax(120px, 1fr);
+    grid-template-columns: minmax(50px, 60px) minmax(120px, 1fr);
 
 }
 
@@ -14,7 +14,7 @@
     position: relative;
     top: 0;
     height: 100%;
-    max-height: 60px;
+    max-height: 48px;
     aspect-ratio: 1;
 
 }
@@ -142,7 +142,7 @@
 
     background-color: var(--white-25);
 
-    padding: 32px ;
+    padding: 32px;
 
     width: 100%;
     display: flex;

@@ -27,10 +27,10 @@ async function Footer() {
                     <div id={styles.social_media_container}>
 
                         <ul className='display_flex_row'>
-                            <li><Link href="#"><Facebook width={16} height={16} /> Facebook</Link></li>
-                            <li><Link href="#"><Twitter width={16} height={16} /> Twitter</Link></li>
-                            <li><Link href="#"><Instagram width={16} height={16} /> Instagram</Link></li>
-                            <li><Link href="#"><Youtube width={16} height={16} /> YouTube</Link></li>
+                            <li><Link href="#"><Facebook width={16} height={16} title="Facebook" /> <span>Facebook</span></Link></li>
+                            <li><Link href="#"><Twitter width={16} height={16} title="Twitter" /> <span>Twitter</span></Link></li>
+                            <li><Link href="#"><Instagram width={16} height={16} title="Instagram" /> <span>Instagram</span></Link></li>
+                            <li><Link href="#"><Youtube width={16} height={16} title="YouTube" /> <span>YouTube</span></Link></li>
                         </ul>
 
                     </div>
@@ -83,6 +83,7 @@ async function Footer() {
                                 <li><Link href="https://github.com/ErickLimaS/anime-website/" target='_blank'>This Project</Link></li>
                                 <li><Link href="https://anilist.gitbook.io/anilist-apiv2-docs/" target='_blank'>AniList API</Link></li>
                                 <li><Link href="https://docs.consumet.org/" target='_blank'>Consumet API</Link></li>
+                                <li><Link href="https://github.com/ghoshRitesh12/aniwatch-api" target='_blank'>Aniwatch API</Link></li>
                                 <li><Link href="https://preview.themeforest.net/item/vodi-video-wordpress-theme-for-movies-tv-shows/full_screen_preview/23738703" target='_blank'>Inspiration 1</Link></li>
                                 <li><Link href="https://dribbble.com/shots/20333170-The-Trailers-Concept-Site-Part-2" target='_blank'>Inspiration 2</Link></li>
                             </ul>

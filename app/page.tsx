@@ -9,7 +9,6 @@ import NavThoughMedias from "./components/HomePage/NavThoughMedias";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/NewestMediaSection";
 import MediaRankingSection from "./components/MediaRankingSection";
-import { convertToUnix } from "./lib/format_date_unix";
 import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 import AddToPlaylistButton from "./components/AddToPlaylistButton";
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
 export const revalidate = 1800 // revalidate the data every 30 min
 
 export default async function Home() {
-  
+
   const isMobileScreen = checkDeviceIsMobile(headers())
 
   // section 1
@@ -47,9 +46,9 @@ export default async function Home() {
   const mediaRankingData = await API.getMediaForThisFormat("ANIME").then(
     res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
   )
-  const newestMediaData = await API.getReleasingByDaysRange("ANIME", convertToUnix(1)).then(
+  const newestMediaData = await API.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
     res => (res as ApiAiringMidiaResults[]).map((item) => item.media).filter((item) => item.isAdult == false)
-  )
+  ).then(res => res.sort((a, b) => a.popularity - b.popularity).reverse())
 
   // used on banner section
   const randomNumber = Math.floor(Math.random() * (mediaBannerData?.length || 10)) + 1
@@ -59,7 +58,7 @@ export default async function Home() {
 
       <section id={styles.hero_section}>
 
-        <HeroCarousel data={popularData} isMobile={isMobileScreen || false}/>
+        <HeroCarousel data={popularData} isMobile={isMobileScreen || false} />
 
       </section>
 
@@ -157,18 +156,18 @@ export default async function Home() {
 
 
       {/* SECTION => SHOWS MEDIAS SORTED BY FAVOURITES */}
-      <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
+      {/* <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
 
         <NavThoughMedias title={"All Time Favorites"} route={"/favourites"} sort={"FAVOURITES_DESC"} darkBackground={true} />
 
-      </section>
+      </section> */}
 
       {/* SECTION => SHOWS MEDIAS SORTED BY POPULARITY   */}
-      <section className={`${styles.medias_sections_container}`}>
+      {/* <section className={`${styles.medias_sections_container}`}>
 
         <NavThoughMedias title={"Most Popular"} route={"/popular"} sort={"POPULARITY_DESC"} layoutInverted={true} />
 
-      </section>
+      </section> */}
 
       {/* RANKING and NEWEST SECTION */}
       <section className={styles.background}>

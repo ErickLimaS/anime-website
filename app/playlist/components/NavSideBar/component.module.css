@@ -14,7 +14,6 @@
     color: var(--white-100);
 
     padding: 8px 0;
-    margin: 0 4px;
 
     border-bottom: 1px solid var(--white-25);
 
@@ -22,14 +21,22 @@
 
 #nav_container ul li:hover {
 
-
-    color: var(--white-75);
+    color: var(--brand-color);
 
 }
 
 #nav_container ul li a {
 
-    display: block;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+#nav_container ul li a span{
+
+    font-size: var(--font-size--small-1);
+
+    color: var(--white-50);
 
 }
 

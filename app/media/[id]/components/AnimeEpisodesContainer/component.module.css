@@ -27,6 +27,7 @@
 
         flex-direction: row;
         align-items: flex-end;
+        gap: 0 24px;
         justify-content: space-between;
     }
 }
@@ -46,9 +47,37 @@
 }
 
 #container_heading span {
-    
+
     margin: auto;
     font-size: var(--font-size--small-1);
+
+}
+
+#container_heading #select_media_container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px 0;
+
+}
+
+#container_heading #select_media_container small {
+
+    font-weight: 600;
+    color: var(--white-75);
+
+}
+
+#container_heading #select_media_container select {
+
+    padding: 8px 16px;
+    border-radius: 4px;
+
+    width: 100%;
+    max-width: 240px;
+
+    background-color: var(--background);
+    color: var(--brand-color);
 
 }
 

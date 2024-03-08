@@ -38,9 +38,10 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                     src={fromOfflineDb ?
                         (data as MediaDbOffline).picture
                         :
-                        (data as ApiDefaultResult).coverImage
-                        && (data as ApiDefaultResult).coverImage.large
+                        (data as ApiDefaultResult).coverImage && (data as ApiDefaultResult).coverImage.large
                     }
+                    placeholder='blur'
+                    blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
                     alt={`Cover Art for ${fromOfflineDb ? (data as MediaDbOffline).title : (data as ApiDefaultResult).title && (data as ApiDefaultResult).title.romaji || "Not Available"}`}
                     fill
                     sizes='100%'
@@ -80,11 +81,12 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                 )}
             </Link>
 
-            {(fromOfflineDb ?
-                (data as MediaDbOffline).animeSeason.year != undefined && (data as MediaDbOffline).tags != undefined
-                :
-                ((data as ApiDefaultResult).seasonYear != undefined && (data as ApiDefaultResult).genres != undefined)
-            ) && (
+            {
+                (fromOfflineDb ?
+                    (data as MediaDbOffline).animeSeason.year != undefined && (data as MediaDbOffline).tags != undefined
+                    :
+                    ((data as ApiDefaultResult).seasonYear != undefined && (data as ApiDefaultResult).genres != undefined)
+                ) && (
                     fromOfflineDb ?
 
                         <small>

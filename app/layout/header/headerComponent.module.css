@@ -149,6 +149,12 @@ header#background button svg {
 
 }
 
+#navbar_container>ul>li>a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 #navbar_container>ul>li>ul,
 #navbar_container>ul>li>div {
     display: none;
@@ -170,7 +176,8 @@ header#background button svg {
 
 }
 
-#navbar_container>ul>li>svg {
+#navbar_container>ul>li>svg,
+#navbar_container>ul>li>a>svg {
 
     margin-left: 4px;
 

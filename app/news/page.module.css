@@ -134,15 +134,27 @@
 #highlighted_news #main_news .highlight_title {
     position: absolute;
 
-    right: 8px;
-    left: 8px;
-    bottom: 32px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    background-image: linear-gradient(0deg, var(--background), transparent);
+    padding: 0 8px;
+    padding-bottom: 32px;
+
 
 }
 
 @media(min-width: 520px) {
     #highlighted_news #main_news .highlight_title {
-        left: 170px;
+
+        background-image: none;
+
+        padding: 0;
+
+        left: 208px;
+        bottom: 32px;
+        right: 8px;
     }
 }
 
@@ -187,8 +199,14 @@
 
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 32px;
+    gap: 8px;
 
+}
+
+@media(min-width: 1020px) {
+    #news_second {
+        gap: 32px;
+    }
 }
 
 #news_second .hero_news_container {

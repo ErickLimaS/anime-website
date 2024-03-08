@@ -24,7 +24,7 @@ import PlayBtn from './components/WatchPlayBtn'
 import SwiperListContainer from '@/app/components/SwiperListContainer'
 import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
-import { convertFromUnix } from '@/app/lib/format_date_unix'
+import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import CommentSectionContainer from '../../components/CommentSectionContainer'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
@@ -215,7 +215,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
           <div id={styles.description_episodes_related_container}>
 
             {/* NEXT EPISODE */}
-            {(isMobileScreen == true && mediaData.nextAiringEpisode) && (
+            {(isMobileScreen == true && mediaData.nextAiringEpisode && mediaData.format != "MOVIE") && (
               <div id={styles.next_episode_container}>
 
                 <h2 className={styles.heading_style}>
@@ -332,14 +332,6 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <div className='display_flex_row space_beetween align_items_center display_wrap'>
                   <h2 className={styles.heading_style}>RELATED TO {(mediaData.title.romaji).toUpperCase()}</h2>
-
-                  {mediaData.relations.nodes.length > 5 && (
-                    <p className='display_flex_row align_items_center' style={{ marginBottom: "8px", color: "var(--brand-color)" }}>
-                      <span style={{ marginRight: "8px" }}><SwipeSvg fill="var(--brand-color)" width={24} height={24} alt="Swipe to Right" /></span>
-                      Scroll To See More
-                      <ChevonRightSvg width={16} height={16} alt="Arrow to Right" />
-                    </p>
-                  )}
                 </div>
 
                 <ul>
@@ -386,7 +378,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
           <div id={styles.hype_container}>
 
             {/* NEXT EPISODE */}
-            {(isMobileScreen == false && mediaData.nextAiringEpisode) && (
+            {(isMobileScreen == false && mediaData.nextAiringEpisode && mediaData.format != "MOVIE") && (
               <div id={styles.next_episode_container}>
 
                 <h2 className={styles.heading_style}>

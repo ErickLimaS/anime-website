@@ -9,8 +9,11 @@ import { DocumentData, DocumentSnapshot, FieldPath, arrayRemove, arrayUnion, doc
 import { initFirebase } from '@/firebase/firebaseApp'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import styles from "./component.module.css"
+import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function ButtonMarkEpisodeAsWatched({ data, mediaId, source, hasText }: { data: EpisodesType | MediaEpisodes, mediaId: number, source: string, hasText?: boolean }) {
+function ButtonMarkEpisodeAsWatched(
+    { data, mediaId, source, hasText }:
+        { data: EpisodesType | MediaEpisodes | EpisodeAnimeWatch, mediaId: number, source: string, hasText?: boolean }) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -33,7 +36,13 @@ function ButtonMarkEpisodeAsWatched({ data, mediaId, source, hasText }: { data: 
         if (!isOnEpisodesList) return
 
         const episodedWatched = isOnEpisodesList[mediaId]?.find(
-            (item: { episodeId: string }) => item.episodeId == (source == "crunchyroll" ? (data as EpisodesType).title : (data as MediaEpisodes).id)
+            (item: { episodeId: string }) => item.episodeId == (
+                source == "crunchyroll" && (data as EpisodesType).title
+                ||
+                source == "gogoanime" && (data as MediaEpisodes).id
+                ||
+                source == "aniwatch" && (data as EpisodeAnimeWatch).episodeId
+            )
         )
 
         if (episodedWatched) setWasEpisodeWatched(true)
@@ -50,9 +59,25 @@ function ButtonMarkEpisodeAsWatched({ data, mediaId, source, hasText }: { data: 
         const episodeData = {
 
             mediaId: mediaId,
-            // crunchyroll has no id for episodes, so it will be used its title
-            episodeId: source == "crunchyroll" ? (data as EpisodesType).title : (data as MediaEpisodes).id,
-            episodeTitle: source == "crunchyroll" ? (data as EpisodesType).title : (data as MediaEpisodes).number
+            // crunchyroll has no ID for episodes, so it will be used its title
+            episodeId: (source == "crunchyroll" &&
+                (data as EpisodesType).title
+                ||
+                source == "gogoanime" &&
+                (data as MediaEpisodes).id
+                ||
+                source == "aniwatch" &&
+                (data as EpisodeAnimeWatch).episodeId
+            ),
+            episodeTitle: (source == "crunchyroll" &&
+                (data as EpisodesType).title
+                ||
+                source == "gogoanime" &&
+                (data as MediaEpisodes).number // its used NUMBER to compare better on Media Page
+                ||
+                source == "aniwatch" &&
+                (data as EpisodeAnimeWatch).number // its used NUMBER to compare better on Media Page
+            )
 
         }
 

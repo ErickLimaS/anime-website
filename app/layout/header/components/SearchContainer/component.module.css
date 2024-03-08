@@ -5,6 +5,9 @@
 /* SEARCH BUTTON SECTION ---> DESKTOP and MOBILE */
 #search_container #form_search form input,
 #search_container #form_mobile_search form input {
+
+    transition: all ease-in-out 200ms;
+
     padding: 12px 12px;
     padding-left: 18px;
 
@@ -12,13 +15,31 @@
     border: 1px solid var(--black-75);
     border-right: 0;
 
+    color: var(--white-100);
+
+    background-color: var(--white-25);
+}
+
+#search_container #form_search form:hover input,
+#search_container #form_mobile_search:hover form input,
+#search_container #form_search form:hover button,
+#search_container #form_mobile_search:hover form button {
+
+    color: var(--black-100);
     background-color: var(--white-100);
+
 }
 
 #search_container #form_search form input:focus,
-#search_container #form_mobile_search form input:focus {
+#search_container #form_mobile_search form input:focus,
+#search_container #form_search form input:focus~button,
+#search_container #form_mobile_search input:focus~button {
 
     outline-width: 0;
+
+    color: var(--black-100);
+
+    background-color: var(--white-100);
 
     border: 1px solid var(--brand-color);
     border-right: 0;
@@ -26,6 +47,8 @@
 
 #search_container #form_search form button,
 #search_container #form_mobile_search form button {
+
+    transition: all ease-in-out 200ms;
 
     display: flex;
     align-items: center;
@@ -37,14 +60,7 @@
     border: 1px solid var(--black-75);
     border-left: 0;
 
-    background-color: var(--white-100);
-
-}
-
-#search_container #form_search form button:hover svg,
-#search_container #form_mobile_search form button:hover svg {
-
-    fill: var(--brand-color);
+    background-color: var(--white-25);
 
 }
 
@@ -54,14 +70,40 @@
     border-left: 0;
 }
 
+#search_container #form_search form input:-webkit-autofill~button,
+#search_container #form_mobile_search form input:-webkit-autofill~button {
+    background-color: var(--white-100);
+}
+
 #search_container #form_search form button svg,
 #search_container #form_mobile_search form button svg {
 
+    transition: all ease-in-out 200ms;
+
     transform: scale(1.21);
 
-    fill: var(--black-50);
+    fill: var(--white-75);
 
     margin-bottom: 4px;
+
+}
+
+#search_container #form_search form:hover button svg,
+#search_container #form_mobile_search:hover form button svg {
+    fill: var(--brand-color) !important;
+}
+
+#search_container #form_search form input:focus~button svg,
+#search_container #form_mobile_search input:focus~button svg,
+#search_container #form_search form input:-webkit-autofill~button svg,
+#search_container #form_mobile_search form input:-webkit-autofill~button svg {
+    fill: var(--brand-color);
+}
+
+#search_container #form_search form button:hover svg,
+#search_container #form_mobile_search form button:hover svg {
+
+    fill: var(--brand-color);
 
 }
 

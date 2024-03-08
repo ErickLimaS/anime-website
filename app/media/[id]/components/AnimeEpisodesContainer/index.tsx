@@ -4,21 +4,26 @@ import styles from "./component.module.css"
 import NavButtons from '../../../../components/NavButtons';
 import gogoanime from '@/api/gogoanime';
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
-import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
+import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 import GoGoAnimeEpisode from '../GoGoAnimeEpisodeContainer';
 import CrunchyrollEpisode from '../CrunchyrollEpisodeContainer';
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/components/PaginateItems';
+import aniwatch from '@/api/aniwatch';
+import AniwatchEpisode from '../AniwatchEpisodeContainer';
+import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch, MediaInfoAniwatch, MediaInfoAniwatchSuggestions, MediaInfoFetchedAnimeWatch, MediaInfoFetchedAnimeWatchSuggestions } from '@/app/ts/interfaces/apiAnimewatchInterface';
 
 function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, mediaId: number }) {
 
   const { data } = props
 
   const [loading, setLoading] = useState(false)
-  const [episodesDataFetched, setEpisodesDataFetched] = useState<EpisodesType[] | MediaEpisodes[]>(data)
+  const [episodesDataFetched, setEpisodesDataFetched] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[]>(data)
 
-  const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | null>(null);
+  const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<MediaInfoAniwatch[]>([])
+
+  const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | null>(null);
   const [itemOffset, setItemOffset] = useState<number>(0);
 
 
@@ -40,6 +45,8 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
     console.log(`Episodes Source Parameter: ${parameter} `)
 
+    setEpisodeSource(parameter)
+
     getEpisodesFromNewSource(parameter)
 
   }
@@ -56,7 +63,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
     const endOffset = itemOffset + rangeEpisodesPerPage
 
     // transform title in some way it can get query by other sources removing special chars
-    const query = stringToUrlFriendly(props.mediaTitle)
+    const query = props.mediaTitle
 
     let mediaEpisodes
 
@@ -76,13 +83,13 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
         break
 
       // get data from gogoanime as default
-      default:
+      case "gogoanime":
 
         mediaEpisodes = await gogoanime.getInfoFromThisMedia(query, "anime") as MediaInfo
 
         // if the name dont match any results, it will search for the query on the api, than make a new request by the ID of the first result 
         if (mediaEpisodes == null) {
-          const searchResultsForMedia = await gogoanime.searchMedia(query, "anime") as MediaSearchResult[]
+          const searchResultsForMedia = await gogoanime.searchMedia(stringToUrlFriendly(query), "anime") as MediaSearchResult[]
 
           // try to found a result that matches the title from anilist on gogoanime (might work in some cases)
           const closestResult = searchResultsForMedia.find((item) => item.id.includes(query + "-tv"))
@@ -102,7 +109,47 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         break
 
+      // get data from aniwatch
+      default: // aniwatch
+
+        const searchResultsForMedia = await aniwatch.searchMedia(query) as MediaInfoFetchedAnimeWatch
+
+        setMediaResultsInfoArray(searchResultsForMedia.animes)
+
+        const closestResult = searchResultsForMedia.animes.find((item) => item.name.toUpperCase().includes(query)) || searchResultsForMedia.animes[0]
+
+        mediaEpisodes = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
+
+        setEpisodeSource(chooseSource)
+
+        setEpisodesDataFetched(mediaEpisodes.episodes)
+
+        setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+
+        setLoading(false)
+
+        break
+
     }
+
+  }
+
+  // user can select a result that matches the page, if not correct
+  const getEpisodesToThisMediaFromAniwatch = async (id: string) => {
+
+    setLoading(true)
+
+    const endOffset = itemOffset + rangeEpisodesPerPage
+
+    const mediaEpisodes = await aniwatch.getEpisodes(id) as EpisodesFetchedAnimeWatch
+
+    setEpisodesDataFetched(mediaEpisodes.episodes)
+
+    setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+
+    setLoading(false)
 
   }
 
@@ -132,17 +179,31 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
           functionReceived={setEpisodesSource as (parameter: string | number) => void}
           actualValue={episodeSource == "crunchyroll" && data.length == 0 ? "gogoanime" : episodeSource}
           options={data.length == 0 ?
-            [{ name: "GoGoAnime", value: "gogoanime" }] :
-            [{ name: "Crunchyroll", value: "crunchyroll" }, { name: "GoGoAnime", value: "gogoanime" }]
+            [{ name: "GoGoAnime", value: "gogoanime" }, { name: "Aniwatch", value: "aniwatch" }] :
+            [{ name: "Crunchyroll", value: "crunchyroll" }, { name: "GoGoAnime", value: "gogoanime" }, { name: "Aniwatch", value: "aniwatch" }]
           }
           sepateWithSpan={true}
         />
+
+        {episodeSource == "aniwatch" && (
+          <div id={styles.select_media_container}>
+
+            <small>Wrong Episodes? Select bellow!</small>
+
+            <select onChange={(e) => getEpisodesToThisMediaFromAniwatch(e.target.value)}>
+              {mediaResultsInfoArray.length > 0 && mediaResultsInfoArray?.map((item, key) => (
+                <option key={key} value={item.id}>{item.name}</option>
+              ))}
+            </select>
+
+          </div>
+        )}
 
       </div>
 
       <ol id={styles.container} data-loading={loading}>
 
-        {currentItems && currentItems.map((item, key: number) => (
+        {currentItems && currentItems.map((item: EpisodesType | MediaEpisodes | EpisodeAnimeWatch, key: number) => (
 
           loading ? (
             <li key={key}>
@@ -150,13 +211,21 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
             </li>
           ) : (
 
-            episodeSource == "crunchyroll" ? (
+            episodeSource == "crunchyroll" && (
 
               <CrunchyrollEpisode key={key} data={item as EpisodesType} mediaId={props.mediaId} />
 
-            ) : (
+            )
+            ||
+            episodeSource == "gogoanime" && (
 
               <GoGoAnimeEpisode key={key} data={item as MediaEpisodes} mediaId={props.mediaId} />
+
+            )
+            ||
+            episodeSource == "aniwatch" && (
+
+              <AniwatchEpisode key={key} data={item as EpisodeAnimeWatch} mediaId={props.mediaId} />
 
             )
           )

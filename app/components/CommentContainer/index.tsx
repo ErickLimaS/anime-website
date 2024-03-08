@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import styles from "./component.module.css"
-import { convertFromUnix } from '@/app/lib/format_date_unix';
+import { convertFromUnix } from '@/app/lib/formatDateUnix';
 import SvgThumbUp from "@/public/assets/hand-thumbs-up.svg"
 import SvgThumbUpFill from "@/public/assets/hand-thumbs-up-fill.svg"
 import SvgThumbDown from "@/public/assets/hand-thumbs-down.svg"

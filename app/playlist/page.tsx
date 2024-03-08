@@ -1,7 +1,8 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import styles from "./page.module.css"
 import PlaylistItemsResults from './components/PlaylistItemsResults'
 import NavSideBar from './components/NavSideBar'
+import SelectSort from '../components/SelectSortInputs'
 
 export async function generateMetadata() {
 
@@ -11,14 +12,12 @@ export async function generateMetadata() {
     }
 }
 
-function PlaylistPage({ params, searchParams }: { params?: unknown, searchParams?: { format: string } }) {
+function PlaylistPage({ params, searchParams }: { params?: unknown, searchParams?: { format: string, sort: string } }) {
 
     return (
         <main id={styles.container}>
 
             <div id={styles.side_nav_container}>
-
-                <h2>FILTER BY</h2>
 
                 <NavSideBar params={searchParams} />
 
@@ -26,11 +25,20 @@ function PlaylistPage({ params, searchParams }: { params?: unknown, searchParams
 
             <section id={styles.main_content_container}>
 
-                <h1>Playlist</h1>
+                <div id={styles.heading_container}>
 
-                <Suspense fallback={<p>loading...</p>}>
-                    <PlaylistItemsResults params={searchParams} />
-                </Suspense>
+                    <h1>Playlist</h1>
+
+                    <SelectSort options={
+                        [
+                            { name: "From A to Z", value: "title_asc" },
+                            { name: "From Z to A", value: "title_desc" },
+                        ]
+                    } />
+
+                </div>
+
+                <PlaylistItemsResults params={searchParams} />
 
             </section>
 

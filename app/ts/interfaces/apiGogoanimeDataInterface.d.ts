@@ -73,18 +73,20 @@ export interface MangaPages {
 
 }
 
-export interface EpisodeLinks {
+export interface EpisodeLinksGoGoAnime {
 
     headers: {
         Referer: string,
     },
     sources: Episode[],
     download: string
-    
+
 }
 
-export interface Episode {
+export interface EpisodeGoGoAnime {
+
     url: string,
     isM3U8: boolean,
     quality: string
+
 }

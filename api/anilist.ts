@@ -1,4 +1,4 @@
-import { lastHourOfTheDay } from '@/app/lib/format_date_unix'
+import { convertToUnix, lastHourOfTheDay } from '@/app/lib/formatDateUnix'
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Axios from 'axios'
 import {
@@ -106,7 +106,8 @@ export default {
             const graphqlQuery = {
                 "query": defaultApiQueryRequest(),
                 "variables": {
-                    'page': 1,
+                    'type': type || "ANIME",
+                    'page': page || 1,
                     'sort': 'TRENDING_DESC',
                     'perPage': 10,
                     'showAdultContent': false,
@@ -134,24 +135,24 @@ export default {
     }),
 
     // RELEASING BY DAYS RANGE
-    getReleasingByDaysRange: cache(async (type: string, timestamp: number, pageNumber?: number) => {
+    getReleasingByDaysRange: cache(async (type: string, days: number, pageNumber?: number, perPage?: number) => {
 
         try {
 
+            const dateInUnix = convertToUnix(days)
+
             const graphqlQuery = {
                 "query": mediaAiringApiQueryRequest(
-                    `, $airingAt_greater: Int, $airingAt_lesser: Int, $episode_in: [Int]`,
-                    `, airingAt_greater: $airingAt_greater, airingAt_lesser: $airingAt_lesser, episode_in: $episode_in`
+                    `, $airingAt_greater: Int, $airingAt_lesser: Int`,
+                    `, airingAt_greater: $airingAt_greater, airingAt_lesser: $airingAt_lesser`
                 ),
                 "variables": {
                     'page': pageNumber || 1,
-                    'perPage': 8,
+                    'perPage': perPage || 5,
                     'type': type,
-                    'sort': 'TIME',
-                    "episode_in": 1,
                     'showAdultContent': false,
-                    'airingAt_greater': timestamp,
-                    'airingAt_lesser': lastHourOfTheDay(1)
+                    'airingAt_greater': dateInUnix,
+                    'airingAt_lesser': lastHourOfTheDay(1) // limit is today last hour 
                 }
             }
 

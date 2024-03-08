@@ -1,4 +1,4 @@
-import { EpisodeLinks, MangaInfo, MangaPages, MangaSearchResult, MediaInfo, MediaSearchResult } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import { EpisodeLinksGoGoAnime, MangaInfo, MangaPages, MangaSearchResult, MediaInfo, MediaSearchResult } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
 import Axios from "axios"
 
 const CONSUMET_API_URL = process.env.NEXT_PUBLIC_CONSUMET_API_URL
@@ -98,7 +98,7 @@ export default {
                 method: 'GET'
             })
 
-            return data as EpisodeLinks[];
+            return data as EpisodeLinksGoGoAnime[];
         }
         catch (error) {
 
