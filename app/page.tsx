@@ -156,18 +156,18 @@ export default async function Home() {
 
 
       {/* SECTION => SHOWS MEDIAS SORTED BY FAVOURITES */}
-      {/* <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
+      <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
 
         <NavThoughMedias title={"All Time Favorites"} route={"/favourites"} sort={"FAVOURITES_DESC"} darkBackground={true} />
 
-      </section> */}
+      </section>
 
       {/* SECTION => SHOWS MEDIAS SORTED BY POPULARITY   */}
-      {/* <section className={`${styles.medias_sections_container}`}>
+      <section className={`${styles.medias_sections_container}`}>
 
         <NavThoughMedias title={"Most Popular"} route={"/popular"} sort={"POPULARITY_DESC"} layoutInverted={true} />
 
-      </section> */}
+      </section>
 
       {/* RANKING and NEWEST SECTION */}
       <section className={styles.background}>
