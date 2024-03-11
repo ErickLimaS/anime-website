@@ -29,7 +29,7 @@ function Player({ source, subtitles }: { source: string, subtitles?: { kind: str
 
         }
 
-        let subListMap: React.SetStateAction<TrackProps[] | undefined> = []
+        let subListMap: TrackProps[] = []
 
         subtitles?.map((item, key) => {
 
