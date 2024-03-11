@@ -50,6 +50,18 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
     }
 
+    const languagesOptions = [
+
+        { name: "English", value: "English" },
+        { name: "Portuguese", value: "Portuguese" },
+        { name: "Spanish", value: "Spanish" },
+        { name: "German", value: "German" },
+        { name: "Italian", value: "Italian" },
+        { name: "Russian", value: "Russian" },
+        { name: "Francese", value: "Francese" },
+        { name: "Arabic", value: "Arabic" },
+    ]
+
     // changes info of user. mainly used to change video language
     async function changeSettings(e: React.FormEvent<HTMLFormElement> | HTMLFormElement) {
 
@@ -169,15 +181,9 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                 name='language'
                                 defaultValue={currentLang}
                             >
-                                <option value="English">English</option>
-                                <option value="Portuguese - Portuguese(Brazil)">Brazilian Portuguese</option>
-                                <option value="Spanish">Spanish</option>
-                                <option value="Spanish - Spanish(Latin_America)">Spanish - Latin America</option>
-                                <option value="German">German</option>
-                                <option value="Italian">Italian</option>
-                                <option value="Russian">Russian</option>
-                                <option value="Francese">Francese</option>
-                                <option value="Arabic">Arabic</option>
+                                {languagesOptions.map((item, key) => (
+                                    <option key={key} value={item.value}>{item.name}</option>
+                                ))}
                             </select>
                         </label>
                     )}
