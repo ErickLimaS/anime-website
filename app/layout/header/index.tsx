@@ -19,7 +19,7 @@ function Header() {
 
                 <div id={styles.menu_and_logo_container} className='display_flex_row align_items_center'>
 
-                    {/* MENU NAVIGATION -- SCREEN LEFT SIDE */}
+                    {/* MENU NAVIGATION -- SCREEN LEFT SIDE -- MOBILE*/}
                     <NavListMenu />
 
                     <Link href="/" id={styles.img_container}>

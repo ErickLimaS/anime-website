@@ -1,0 +1,168 @@
+#backdrop {
+
+    z-index: 100;
+
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#modal {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px 0;
+
+    width: 96%;
+
+    max-width: 500px;
+
+    min-height: 500px;
+
+    background-color: var(--white-100);
+
+    padding: 24px;
+
+    border-radius: 8px;
+
+    box-shadow: 0px 0px 3px var(--black-100);
+
+}
+
+#modal form {}
+
+#modal form h5:first-child {
+    margin-top: 0;
+}
+
+#modal form h5 {
+
+    margin-top: 24px;
+    margin-bottom: 8px;
+
+}
+
+#modal form h5:last-child {
+
+    color: red;
+
+}
+
+#modal form label {
+
+    display: flex;
+    flex-direction: column;
+
+
+}
+
+#modal form label select {
+
+    margin-top: 8px;
+
+    font-size: var(--font-size--p);
+
+    box-shadow: inset 0px 0px 3px var(--black-25);
+
+    background-color: var(--black-05);
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+    border: 1px solid transparent;
+
+}
+
+#modal form select:focus {
+
+    outline-width: 0;
+    border: 1px solid var(--brand-color);
+
+}
+
+
+#modal form .btns_container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px 0;
+
+}
+
+#modal form button:not([type="submit"]) {
+
+    transition: all ease-in-out 150ms;
+
+
+    box-shadow: inset 0px 0px 3px var(--black-25);
+
+    background-color: var(--black-05);
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+    border: 1px solid transparent;
+
+}
+
+#modal form button:not([type="submit"]):hover {
+
+    background-color: red;
+    color: var(--white-100);
+
+}
+
+#modal form button:focus {
+
+    outline-width: 0;
+    border: 1px solid var(--brand-color);
+
+}
+
+#modal form button[type="submit"] {
+
+    margin-top: 24px;
+
+    transition: all ease-in-out 150ms;
+
+    width: 100%;
+
+    box-shadow: inset 0px 0px 3px var(--black-25);
+
+    background-color: var(--brand-color);
+    color: var(--white-100);
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+    border: 1px solid transparent;
+
+}
+
+#modal form button[type="submit"][data-change-success=true] {
+
+    background-color: #2e882b;
+
+}
+
+#modal form button[type="submit"]:not(:disabled):hover {
+
+    filter: brightness(90%);
+
+}
+
+#modal form button[type="submit"][disabled] {
+
+    cursor: default;
+
+    background-color: var(--black-25);
+
+}

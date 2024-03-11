@@ -16,10 +16,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import UserModal from '../../../../components/UserLoginModal'
 import { AnimatePresence, motion } from 'framer-motion'
+import UserSettingsModal from '../UserSettingsModal'
 
 function UserSideMenu() {
 
     const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false)
+    const [isUserSettingsOpen, setIsUserSettingsOpen] = useState<boolean>(false)
 
     // FIREBASE LOGIN 
     const app = initFirebase()
@@ -41,8 +43,11 @@ function UserSideMenu() {
             }
         },
         exit: {
-            y: "-180px",
-            opacity: 0
+            y: "-100px",
+            opacity: 0,
+            transition: {
+                duration: 0.2
+            }
         }
 
     }
@@ -134,20 +139,22 @@ function UserSideMenu() {
 
                                 <ul role='menu'>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                        <Link href={"/playlist"}>
-                                            <BookmarkSvg width={16} height={16} alt={"Bookmarks Icon"} /> Playlist
+                                        <Link href={"/watchlist"}>
+                                            <BookmarkSvg width={16} height={16} alt={"Watchlist Icon"} /> Watchlist
                                         </Link>
                                     </li>
-                                    {/* <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                    <Link href={"/history"}>
-                                        <HistorySvg width={16} height={16} alt={"History Icon"} /> History
-                                    </Link>
-                                </li> */}
-                                    {/* <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                    <Link href={"/settings"}>
-                                        <SettingsSvg width={16} height={16} alt={"Settings Icon"} /> Settings
-                                    </Link>
-                                </li> */}
+                                    {/* 
+                                        <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
+                                            <Link href={"/history"}>
+                                                <HistorySvg width={16} height={16} alt={"History Icon"} /> History
+                                            </Link>
+                                        </li>
+                                    */}
+                                    <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
+                                        <button onClick={() => setIsUserSettingsOpen(true)}>
+                                            <SettingsSvg width={16} height={16} alt={"Settings Icon"} /> Settings
+                                        </button>
+                                    </li>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                         <button onClick={() => auth.signOut()}>
                                             <LogoutSvg width={16} height={16} alt={"Logout Icon"} /> Log Out
@@ -156,6 +163,17 @@ function UserSideMenu() {
                                 </ul>
 
                             </motion.div>
+                        )}
+
+
+                        {isUserSettingsOpen && (
+
+                            <UserSettingsModal
+                                onClick={() => setIsUserSettingsOpen(!isUserSettingsOpen)}
+                                auth={auth}
+                                aria-expanded={isUserSettingsOpen}
+                            />
+
                         )}
 
                     </AnimatePresence>

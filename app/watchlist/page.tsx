@@ -7,8 +7,8 @@ import SelectSort from '../components/SelectSortInputs'
 export async function generateMetadata() {
 
     return {
-        title: `Playlist | AniProject`,
-        description: `User Playlist.`,
+        title: `Watchlist | AniProject`,
+        description: `User Watchlist.`,
     }
 }
 
@@ -27,7 +27,7 @@ function PlaylistPage({ params, searchParams }: { params?: unknown, searchParams
 
                 <div id={styles.heading_container}>
 
-                    <h1>Playlist</h1>
+                    <h1>Watchlist</h1>
 
                     <SelectSort options={
                         [
