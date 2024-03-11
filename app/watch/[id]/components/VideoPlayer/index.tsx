@@ -19,13 +19,13 @@ function Player({ source, subtitles }: { source: string, subtitles?: { kind: str
 
     async function getUserPreferedLanguage() {
 
-        let preferredLanguage = null
+        let preferredLanguage: string | null = null
 
         if (user) {
 
             const data = await getDoc(doc(db, "users", user.uid))
 
-            preferredLanguage = await data.get("videoSubtitleLanguage") as string
+            preferredLanguage = await data.get("videoSubtitleLanguage")
 
         }
 
