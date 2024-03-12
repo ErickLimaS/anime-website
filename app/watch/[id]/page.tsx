@@ -44,28 +44,29 @@ async function WatchEpisode({ params, searchParams }: {
 
     }
 
+    let videoSrc: string
+
+    if (searchParams.source == "gogoanime") {
+
+        videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.filter(item => item.quality == "default" || item.quality == "1080p")[0].url
+
+        if (!videoSrc) videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources[0].url
+
+    }
+    else {
+        videoSrc = episodeData.sources[0].url
+    }
+
     return (
         <main id={styles.container}>
 
             {/* PLAYER */}
             <div className={styles.background}>
                 <section id={styles.video_container}>
-                    {searchParams.source == "gogoanime" ? (
-                        <iframe
-                            src={(episodeData as EpisodeLinksGoGoAnime).headers.Referer}
-                            frameBorder="0"
-                            allowFullScreen
-                            width="100%"
-                            height="260px"
-                            scrolling="no"
-                            title={`${mediaData.title.romaji} - Episode ${searchParams.episode}`}
-                        />
-                    ) : (
-                        <Player
-                            source={episodeData.sources[0].url}
-                            subtitles={(episodeData as EpisodeLinksAnimeWatch).tracks}
-                        />
-                    )}
+                    <Player
+                        source={videoSrc}
+                        subtitles={searchParams.source == "gogoanime" ? undefined : (episodeData as EpisodeLinksAnimeWatch).tracks}
+                    />
                 </section>
             </div>
 

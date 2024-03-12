@@ -30,37 +30,41 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
         setIsLoading(true)
         const query = mediaTitle
 
-        let response
+        let response: MediaInfo | EpisodesFetchedAnimeWatch | { episodes: MediaEpisodes[] } | null
 
         if (source == "gogoanime") {
+
             response = await gogoanime.getInfoFromThisMedia(query, "anime") as MediaInfo
+            let searchResultsForMedia: any[]
+            let closestResult: MediaSearchResult | undefined
 
             if (response == null) {
-                const searchResultsForMedia = await gogoanime.searchMedia(stringToUrlFriendly(query), "anime") as MediaSearchResult[]
+                searchResultsForMedia = await gogoanime.searchMedia(stringToUrlFriendly(query), "anime") as MediaSearchResult[]
 
                 // try to found a result that matches the title from anilist on gogoanime (might work in some cases)
-                const closestResult = searchResultsForMedia.find((item) => item.id.includes(query + "-tv"))
+                closestResult = searchResultsForMedia.find((item) => item.id.includes(query + "-tv"))
 
                 response = await gogoanime.getInfoFromThisMedia(closestResult?.id || searchResultsForMedia[0].id, "anime") as MediaInfo
 
-                // work around the api not return episodes
-                if (response.episodes.length == 0) {
+            }
 
-                    const episodes: MediaEpisodes[] = []
+            // work around the api not return episodes
+            if (response.episodes.length == 0) {
 
-                    simulateRange(totalEpisodes as number).map((item, key) => (
+                const episodes: MediaEpisodes[] = []
 
-                        episodes.push({
-                            number: key + 1,
-                            id: `${(closestResult?.id || searchResultsForMedia[0].id).toLowerCase()}-episode-${key + 1}`,
-                            url: ""
-                        })
+                simulateRange(totalEpisodes as number).map((item, key) => (
 
-                    ))
+                    episodes.push({
+                        number: key + 1,
+                        id: `${((response as MediaInfo)?.id || closestResult?.id || searchResultsForMedia[0].id).toLowerCase()}-episode-${key + 1}`,
+                        url: ""
+                    })
 
-                    response = { episodes: episodes }
+                ))
 
-                }
+                response = { episodes: episodes }
+
             }
         }
         else {
@@ -69,7 +73,7 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
 
         }
 
-        setEpisodesList(response.episodes)
+        setEpisodesList(response!.episodes)
 
         setIsLoading(false)
 
@@ -97,9 +101,13 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
             window.scrollTo({ top: 0, behavior: 'instant' })
         }
 
+    }, [isLoading])
+
+    useEffect(() => {
+
         if (episodesList.length == 0) loadData()
 
-    }, [mediaTitle, isLoading, activeEpisodeNumber])
+    }, [mediaTitle, activeEpisodeNumber])
 
     return (
         <div id={styles.episodes_list_container}>
