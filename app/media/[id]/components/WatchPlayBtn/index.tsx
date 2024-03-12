@@ -85,7 +85,9 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
             return res
         }) as MediaSearchResult[]
 
-        const res = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0].id, "anime") as MediaInfo || null
+        const res = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0]?.id, "anime") as MediaInfo || null
+
+        if (!res) return null
 
         return res.episodes.length == 0 ?
             [{

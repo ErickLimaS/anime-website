@@ -171,7 +171,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 {mediaData.startDate &&
                   new Date(Date.parse(
                     `${mediaData.startDate.month} ${mediaData.startDate.day} ${mediaData.startDate.year}`
-                  )).toLocaleString('default', { month: 'long', day: "numeric", year: "numeric" })
+                  )).toLocaleString('en-US', { month: 'long', day: "numeric", year: "numeric" })
                   ||
                   "Not Available"}
               </p>
