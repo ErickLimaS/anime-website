@@ -152,6 +152,8 @@
 
 #heading_info_container h1 span {
 
+    width: max-content;
+
     font-size: var(--font-size--p);
     font-weight: 400;
     color: var(--white-50);
