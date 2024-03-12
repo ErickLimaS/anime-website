@@ -22,7 +22,7 @@ function NavButtons(props: PropsType) {
 
     useEffect(() => {
         setLastValueReceived(props.actualValue || "" || 1)
-    }, [])
+    }, [props.actualValue])
 
     function toggleStateAndReturnValue(value: string | number) {
 
@@ -54,8 +54,7 @@ function NavButtons(props: PropsType) {
                         <span> | </span>
                     )}
                 </>
-            ))
-            }
+            ))}
 
         </div>
     )
