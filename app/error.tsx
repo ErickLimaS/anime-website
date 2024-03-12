@@ -1,6 +1,8 @@
 "use client"
 import Link from 'next/link'
-import React, { useEffect } from 'react'
+import React, { DetailedHTMLProps, HTMLAttributes, useEffect } from 'react'
+import ErrorImg from "@/public/error-img-4.png"
+import Image from 'next/image'
 
 function ErrorPage({ error, reset }: {
     error: Error & { digest?: string }
@@ -26,10 +28,19 @@ function ErrorPage({ error, reset }: {
 
     }
 
+    // img container
+    const imgStylesContainer = {
+
+        display: "flex",
+        alignItems: "center",
+        margin: "auto",
+
+    } as DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+
     // h1
     const errorH1Styles = {
-        fontWeight: "300",
-        color: "#f44336",
+        fontWeight: "700",
+        color: "var(--error)",
         padding: "16px"
     }
 
@@ -44,7 +55,7 @@ function ErrorPage({ error, reset }: {
         display: "flex",
         flexDirection: "column",
         gap: "32px 0",
-        margin: "auto",
+        margin: "0 auto auto auto",
         textAlign: "center",
 
     }
@@ -83,6 +94,10 @@ function ErrorPage({ error, reset }: {
     return (
 
         <div style={errorContainerStyles as any}>
+
+            <div style={imgStylesContainer}>
+                <Image src={ErrorImg} height={240} alt={'Error 404'} />
+            </div>
 
             <div style={errorHeadingContainerStyles as any}>
                 <h1 style={errorH1Styles}>Something went wrong!</h1>

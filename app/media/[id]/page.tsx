@@ -6,7 +6,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
 import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
-import ChevonRightSvg from "@/public/assets/chevron-right.svg"
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import PlaySvg from "@/public/assets/play-circle.svg"
 import BookSvg from "@/public/assets/book.svg"
@@ -172,7 +171,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 {mediaData.startDate &&
                   new Date(Date.parse(
                     `${mediaData.startDate.month} ${mediaData.startDate.day} ${mediaData.startDate.year}`
-                  )).toLocaleString('default', { month: 'long', day: "numeric", year: "numeric" })
+                  )).toLocaleString('en-US', { month: 'long', day: "numeric", year: "numeric" })
                   ||
                   "Not Available"}
               </p>
@@ -310,6 +309,9 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   data={mediaData.streamingEpisodes}
                   mediaTitle={mediaData.title.romaji}
                   mediaId={mediaData.id}
+                  totalEpisodes={mediaData.nextAiringEpisode ?
+                    mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes // work around to api gogoanime not showing episodes
+                  }
                 />
 
               </section>
@@ -439,7 +441,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   </li>
                 )}
 
-                {mediaData.trending && (
+                {mediaData.trending != 0 && (
                   <li>
                     <p>Trending Level <span className={styles.color_brand}>{mediaData.trending}</span></p>
                   </li>

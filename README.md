@@ -116,9 +116,9 @@ npm run dev
 ![Search/Filter Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/73e09258-c927-43cf-9a02-6ddfb4af5b14)
 ![Search/Filter Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/497b35fe-4c6e-464a-9cc4-3a338db9d4cf)
 
-### Playlist Page
+### Watchlist Page
 
-![Playlist page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/5829707e-dce2-4e66-8e6c-ade3b5acec20)
+![Watchlist page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/395214ba-ed17-4732-899c-0f7347186d76)
 
 ### News Home Page
 
