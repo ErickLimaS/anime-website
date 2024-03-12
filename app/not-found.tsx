@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React, { DetailedHTMLProps, HTMLAttributes } from 'react'
-import errorImg from "@/public/404.jpg"
+import ErrorImg from "@/public/error-img-1.png"
 import Image from 'next/image'
 
 function Custom404() {
@@ -20,9 +20,23 @@ function Custom404() {
 
     } as DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
+    // img container
+    const imgStylesContainer = {
+
+        position: "relative",
+        bottom: "-48px",
+        left: "-16px",
+        width: "100%",
+        maxWidth: "600px",
+        minHeight: "216px",
+        height: "calc(216px + 33vh / 10)",
+        maxHeight: "490px"
+
+    } as DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+
     // h1
     const errorH1Styles = {
-        fontWeight: "300",
+        fontWeight: "700",
         color: "#f44336",
         padding: "16px"
     } as DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -63,15 +77,15 @@ function Custom404() {
         <div style={errorContainerStyles}>
 
             <div style={errorHeadingContainerStyles}>
+
+                <div style={imgStylesContainer}>
+                    <Image src={ErrorImg} fill alt={'Error 404'} />
+                </div>
+
                 <h1 style={errorH1Styles}>Page Not Found!</h1>
 
-                <Image src={errorImg} width={240} alt={'Error 404'} />
-
-                <small style={{ fontSize: "10px" }}>
-                    <a style={{ fontSize: "10px" }} href="https://www.freepik.com/free-vector/oops-404-error-with-broken-robot-concept-illustration_13315300.htm#query=error%20404%20svg&position=0&from_view=keyword&track=ais&uuid=355f07d9-a7b2-462e-83b7-a05744e5d953">
-                        Image by storyset
-                    </a>
-                    {" "}on Freepik
+                <small style={{ fontSize: "var(--font-size-p)" }}>
+                    {`We can't find the page you're trying to reach`}
                 </small>
             </div>
 
