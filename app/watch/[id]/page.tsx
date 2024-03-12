@@ -94,7 +94,7 @@ async function WatchEpisode({ params, searchParams }: {
 
                         <div className={styles.comment_container}>
 
-                            <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "aniwatch") ? "EPISODE " : ""}${searchParams.episode}`)}</h2>
+                            <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
 
                             {/* ONLY ON DESKTOP */}
                             <CommentSectionContainer
@@ -129,7 +129,7 @@ async function WatchEpisode({ params, searchParams }: {
 
                         <div className={styles.comment_container}>
 
-                            <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR ${(searchParams.source == "aniwatch") ? "EPISODE " : ""}${searchParams.episode}`)}</h2>
+                            <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
 
                             <CommentSectionContainer
                                 media={mediaData}
