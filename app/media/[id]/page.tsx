@@ -441,7 +441,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   </li>
                 )}
 
-                {mediaData.trending && (
+                {mediaData.trending != 0 && (
                   <li>
                     <p>Trending Level <span className={styles.color_brand}>{mediaData.trending}</span></p>
                   </li>

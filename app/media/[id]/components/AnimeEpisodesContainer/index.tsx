@@ -26,8 +26,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
   const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | null>(null);
   const [itemOffset, setItemOffset] = useState<number>(0);
 
-
-  const [episodeSource, setEpisodeSource] = useState<string>("crunchyroll")
+  const [episodeSource, setEpisodeSource] = useState<string>(data.length == 0 ? "gogoanime" : "crunchyroll")
 
   // the length os episodes array will be divided by 25, getting the range of pagination
   const rangeEpisodesPerPage = 25
@@ -54,9 +53,9 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
   const getEpisodesFromNewSource = async (source: string) => {
 
     // if data props has 0 length, it is set to get data from gogoanime
-    const chooseSource = source == "crunchyroll" && data.length == 0 ? "googanime" : source
+    const chooseSource = source
 
-    if (chooseSource == episodeSource) return
+    if ((chooseSource == episodeSource) && episodesDataFetched.length > 0) return
 
     setLoading(true)
 
@@ -111,7 +110,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
             episodes.push({
               number: key + 1,
-              id: `${mediaEpisodes!.id}-episode-${key + 1}` || `${(searchResultsForMedia as any)[0].id}-episode-${key + 1}`,
+              id: `${mediaEpisodes!.id.toLowerCase()}-episode-${key + 1}` || `${(searchResultsForMedia as any)[0].id.toLowerCase()}-episode-${key + 1}`,
               url: ""
             })
 
@@ -187,6 +186,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
     const endOffset = itemOffset + rangeEpisodesPerPage;
 
+    // if theres episodes from crunchyroll, sets the pagination pages
     if (episodeSource == "crunchyroll") {
 
       setPageCount(Math.ceil(data.length / rangeEpisodesPerPage));

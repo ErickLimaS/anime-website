@@ -38,34 +38,34 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
         let episodedWatched
 
-        const isOnEpisodesListAnimeWatch = userDoc.get("episodesWatchedBySource")?.aniwatch
+        const isOnEpisodesListGoGoAnime = userDoc.get("episodesWatchedBySource")?.gogoanime
 
-        if (isOnEpisodesListAnimeWatch) setSource("aniwatch")
+        if (isOnEpisodesListGoGoAnime) setSource("gogoanime")
 
-        if (!isOnEpisodesListAnimeWatch) return fetchMediaWatchUrl()
+        if (!isOnEpisodesListGoGoAnime) return fetchMediaWatchUrl()
 
-        if (isOnEpisodesListAnimeWatch[mediaId] == undefined) return fetchMediaWatchUrl()
+        if (isOnEpisodesListGoGoAnime[mediaId] == undefined) return fetchMediaWatchUrl()
 
         // SORT ARRAY TO GET THE HIGHEST EPISODE NUMBER ON FIRST INDEX
-        episodedWatched = isOnEpisodesListAnimeWatch[mediaId].sort(
+        episodedWatched = isOnEpisodesListGoGoAnime[mediaId].sort(
             function (a: { episodeTitle: number }, b: { episodeTitle: number }) {
                 return b.episodeTitle - a.episodeTitle
             }
         )
 
-        // IF IS NOT ON ANIMEWATCH, TRY WITH GOGOANIME
+        // IF IS NOT ON GOGOANIME, TRY WITH ANIWATCH
         if (!episodedWatched) {
 
-            const isOnEpisodesListGoGoAnime = userDoc.get("episodesWatchedBySource")?.gogoanime
+            const isOnEpisodesListAnimeWatch = userDoc.get("episodesWatchedBySource")?.aniwatch
 
-            if (isOnEpisodesListGoGoAnime) setSource("gogoanime")
+            if (isOnEpisodesListAnimeWatch) setSource("aniwatch")
 
-            if (!isOnEpisodesListGoGoAnime) return fetchMediaWatchUrl()
+            if (!isOnEpisodesListAnimeWatch) return fetchMediaWatchUrl()
 
-            if (isOnEpisodesListGoGoAnime[mediaId] == undefined) return fetchMediaWatchUrl()
+            if (isOnEpisodesListAnimeWatch[mediaId] == undefined) return fetchMediaWatchUrl()
 
             // SORT ARRAY TO GET THE HIGHEST EPISODE NUMBER ON FIRST INDEX
-            episodedWatched = isOnEpisodesListGoGoAnime[mediaId].sort(
+            episodedWatched = isOnEpisodesListAnimeWatch[mediaId].sort(
                 function (a: { episodeTitle: number }, b: { episodeTitle: number }) {
                     return b.episodeTitle - a.episodeTitle
                 }
@@ -87,7 +87,14 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
         const res = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0].id, "anime") as MediaInfo || null
 
-        return res.episodes.length == 0 ? null : res.episodes
+        return res.episodes.length == 0 ?
+            [{
+                number: 1,
+                id: `${res!.id.toLowerCase()}-episode-1`,
+                url: ""
+            }]
+            :
+            res.episodes
 
     }
 
@@ -113,10 +120,10 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         setIsLoading(true)
 
         // try first with animewatch
-        let media: any = await fetchWithAniWatch()
+        let media: any = await fetchWithGoGoAnime()
 
         // if media is null, try with gogoanime
-        if (!media) media = await fetchWithGoGoAnime()
+        if (!media) media = await fetchWithAniWatch()
 
         if (media && lastEpisodeWatched) {
 
@@ -137,7 +144,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         }
 
         if (media) {
-            setMovieId(source == "gogoanime" ? media[0].id : media[0].episodeId)
+            setMovieId(source == "aniwatch" ? media[0].episodeId : media[0].id)
         }
 
         setIsLoading(false)
