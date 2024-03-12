@@ -43,6 +43,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
     const [deleteAccountClick, setDeleteAccountClick] = useState<boolean>(false)
 
     const [currentLang, setCurrentLang] = useState<string | null>(null)
+    const [currentSource, setCurrentSource] = useState<string | null>(null)
 
     const db = getFirestore(initFirebase());
 
@@ -62,8 +63,17 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
         { name: "German", value: "German" },
         { name: "Italian", value: "Italian" },
         { name: "Russian", value: "Russian" },
-        { name: "Francese", value: "Francese" },
+        { name: "French", value: "French" },
         { name: "Arabic", value: "Arabic" },
+
+    ]
+
+    const sourcesOptions = [
+
+        { name: "Crunchyroll", value: "crunchyroll" },
+        { name: "GoGoAnime", value: "gogoanime" },
+        { name: "Aniwatch", value: "aniwatch" },
+
     ]
 
     // changes info of user. mainly used to change video language
@@ -80,12 +90,12 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
         await updateDoc(doc(db, 'users', user.uid),
             {
-                videoSubtitleLanguage: form.language.value
+                videoSubtitleLanguage: form.language.value,
+                videoSource: form.source.value
             }
         )
 
         setIsLoading(false)
-
         setWasSuccessfull(true)
 
     }
@@ -151,8 +161,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
         const data = await getDoc(doc(db, 'users', user.uid))
 
         setCurrentLang(await data.get("videoSubtitleLanguage") as string || "English")
-
-        return
+        setCurrentSource(await data.get("videoSource") as string || "crunchyroll")
 
     }())
 
@@ -190,6 +199,23 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                             </select>
                         </label>
                     )}
+
+                    <h5>Source</h5>
+
+                    {currentSource && (
+                        <label>
+                            Select Source of Episodes.
+                            <select
+                                name='source'
+                                defaultValue={currentSource}
+                            >
+                                {sourcesOptions.map((item, key) => (
+                                    <option key={key} value={item.value}>{item.name}</option>
+                                ))}
+                            </select>
+                        </label>
+                    )}
+                    <small>Default Option: Crunchyroll</small>
 
                     <h5>Delete <span>(can not be reverted!)</span></h5>
 

@@ -26,6 +26,9 @@
     max-width: 500px;
 
     min-height: 500px;
+    max-height: 80vh;
+
+    overflow-y: auto;
 
     background-color: var(--white-100);
 
@@ -202,6 +205,8 @@
 
     cursor: default;
 
-    background-color: var(--black-25);
+    border-color: var(--brand-color);
+
+    background-color: transparent;
 
 }
