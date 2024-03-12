@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import React, { MouseEventHandler, useState } from 'react'
 import styles from "./component.module.css"
 import CheckSvg from '@/public/assets/check-circle-fill.svg'
@@ -37,6 +37,10 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
     const [isLoading, setIsLoading] = useState(false)
     const [wasSuccessfull, setWasSuccessfull] = useState<boolean | null>(null)
+
+    const [deleteBookmarksClick, setDeleteBookmarksClick] = useState<boolean>(false)
+    const [deleteEpisodesClick, setDeleteEpisodessClick] = useState<boolean>(false)
+    const [deleteAccountClick, setDeleteAccountClick] = useState<boolean>(false)
 
     const [currentLang, setCurrentLang] = useState<string | null>(null)
 
@@ -93,7 +97,6 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
         setIsLoading(true)
         setWasSuccessfull(false)
-
 
         switch (option) {
 
@@ -188,44 +191,101 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                         </label>
                     )}
 
-                    <h5>Delete (can not be reverted!)</h5>
+                    <h5>Delete <span>(can not be reverted!)</span></h5>
 
                     <div className={styles.btns_container}>
                         <label>
                             <motion.button
-                                onClick={() => deleteAccountInfo("bookmarks")}
+                                type='button'
+                                onClick={() => setDeleteBookmarksClick(!deleteBookmarksClick)}
                                 variants={btnVariants}
                                 whileTap="tap"
                             >
                                 Delete Watchlist
                             </motion.button>
+
                         </label>
+                        <AnimatePresence
+                            initial={false}
+                            mode='wait'
+                        >
+                            {deleteBookmarksClick && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                    animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                    exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                    className={styles.confirm_delete_container}
+                                >
+                                    <p>Are you Sure?</p>
+                                    <button type='button' onClick={() => setDeleteBookmarksClick(false)}>Cancel</button>
+                                    <button onClick={() => deleteAccountInfo("bookmarks")}>Delete!</button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
                         <label>
                             <motion.button
-                                onClick={() => deleteAccountInfo("episodes")}
+                                type='button'
+                                onClick={() => setDeleteEpisodessClick(!deleteEpisodesClick)}
                                 variants={btnVariants}
                                 whileTap="tap"
                             >
                                 Delete Episodes Watched
                             </motion.button>
                         </label>
+                        <AnimatePresence
+                            initial={false}
+                            mode='wait'
+                        >
+                            {deleteEpisodesClick && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                    animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                    exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                    className={styles.confirm_delete_container}
+                                >
+                                    <p>Are you Sure?</p>
+                                    <button type='button' onClick={() => setDeleteEpisodessClick(false)}>Cancel</button>
+                                    <button onClick={() => deleteAccountInfo("episodes")}>Delete!</button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
                         <label>
                             <motion.button
-                                onClick={() => deleteAccountInfo("account")}
+                                type='button'
+                                onClick={() => setDeleteAccountClick(!deleteAccountClick)}
                                 variants={btnVariants}
                                 whileTap="tap"
                             >
                                 Delete All Account Info
                             </motion.button>
                         </label>
+                        <AnimatePresence
+                            initial={false}
+                            mode='wait'
+                        >
+                            {deleteAccountClick && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                    animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                    exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                    className={styles.confirm_delete_container}
+                                >
+                                    <p>Are you Sure?</p>
+                                    <button type='button' onClick={() => setDeleteAccountClick(false)}>Cancel</button>
+                                    <button onClick={() => deleteAccountInfo("account")}>Delete!</button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
                     </div>
 
                     <button
                         type='submit'
                         data-change-success={wasSuccessfull}
                         disabled={isLoading}
+                        title='Submit Changes'
                     >
                         {isLoading ?
                             <LoadingSvg width={21} height={21} />

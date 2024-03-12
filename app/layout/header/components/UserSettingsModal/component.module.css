@@ -37,16 +37,22 @@
 
 }
 
-#modal form {}
-
 #modal form h5:first-child {
     margin-top: 0;
 }
 
 #modal form h5 {
 
+    color: var(--brand-color);
+
     margin-top: 24px;
     margin-bottom: 8px;
+
+}
+
+#modal form h5 span {
+
+    color: var(--black-75);
 
 }
 
@@ -113,17 +119,50 @@
 
 }
 
-#modal form button:not([type="submit"]):hover {
+#modal form label>button:not([type="submit"]):hover {
 
     background-color: red;
     color: var(--white-100);
 
 }
 
-#modal form button:focus {
+#modal form label>button:focus {
 
     outline-width: 0;
     border: 1px solid var(--brand-color);
+
+}
+
+#modal form .confirm_delete_container {
+
+    text-align: center;
+
+}
+
+#modal form .confirm_delete_container p {
+
+    margin-bottom: 8px;
+
+}
+
+#modal form .confirm_delete_container button {
+
+    margin: 0 8px;
+
+}
+
+#modal form .confirm_delete_container button:nth-child(2) {
+
+    background-color: var(--white-100);
+    color: var(--brand-color);
+    border-color: var(--brand-color);
+
+}
+
+#modal form .confirm_delete_container button:last-child {
+
+    background-color: red;
+    color: var(--white-100);
 
 }
 
