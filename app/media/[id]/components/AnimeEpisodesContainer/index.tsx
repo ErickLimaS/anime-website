@@ -12,9 +12,9 @@ import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/components/PaginateItems';
 import aniwatch from '@/api/aniwatch';
 import AniwatchEpisode from '../AniwatchEpisodeContainer';
-import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch, MediaInfoAniwatch, MediaInfoAniwatchSuggestions, MediaInfoFetchedAnimeWatch, MediaInfoFetchedAnimeWatchSuggestions } from '@/app/ts/interfaces/apiAnimewatchInterface';
+import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch, MediaInfoAniwatch, MediaInfoFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface';
 
-function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, mediaId: number }) {
+function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, mediaId: number, totalEpisodes: number }) {
 
   const { data } = props
 
@@ -100,10 +100,37 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         setEpisodeSource(chooseSource)
 
-        setEpisodesDataFetched(mediaEpisodes.episodes)
+        // if theres no episodes on data, it simulates filling a array with episodes 
+        if (mediaEpisodes.episodes.length == 0) {
 
-        setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+          const range = (n: number) => [...Array(n).keys()]
+
+          const episodes: MediaEpisodes[] = []
+
+          range(props.totalEpisodes).map((item, key) => (
+
+            episodes.push({
+              number: key + 1,
+              id: `${mediaEpisodes!.id}-episode-${key + 1}` || `${(searchResultsForMedia as any)[0].id}-episode-${key + 1}`,
+              url: ""
+            })
+
+          ))
+
+          setEpisodesDataFetched(episodes)
+
+          setCurrentItems(episodes.slice(itemOffset, endOffset))
+          setPageCount(Math.ceil(episodes.length / rangeEpisodesPerPage))
+
+        }
+        else {
+
+          setEpisodesDataFetched(mediaEpisodes.episodes)
+
+          setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset))
+          setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage))
+
+        }
 
         setLoading(false)
 

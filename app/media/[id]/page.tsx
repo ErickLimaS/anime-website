@@ -6,7 +6,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
 import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
-import ChevonRightSvg from "@/public/assets/chevron-right.svg"
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import PlaySvg from "@/public/assets/play-circle.svg"
 import BookSvg from "@/public/assets/book.svg"
@@ -310,6 +309,9 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   data={mediaData.streamingEpisodes}
                   mediaTitle={mediaData.title.romaji}
                   mediaId={mediaData.id}
+                  totalEpisodes={mediaData.nextAiringEpisode ?
+                    mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes // work around to api gogoanime not showing episodes
+                  }
                 />
 
               </section>
