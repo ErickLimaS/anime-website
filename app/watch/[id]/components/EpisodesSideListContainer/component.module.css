@@ -133,7 +133,7 @@
 #list_container li {
 
     display: grid;
-    grid-template-columns: 1fr 75%;
+    grid-template-columns: 1fr 3fr;
     gap: 0 16px;
     align-items: center;
 

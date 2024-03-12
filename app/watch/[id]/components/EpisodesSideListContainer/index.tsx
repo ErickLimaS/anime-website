@@ -4,23 +4,24 @@ import styles from "./component.module.css"
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import gogoanime from '@/api/gogoanime'
 import Link from 'next/link'
-import Image from 'next/image'
 import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
 import aniwatch from '@/api/aniwatch'
 import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import simulateRange from '@/app/lib/simulateRange'
+import { motion } from 'framer-motion'
 
 type ComponentTypes = {
     source: string,
     mediaId: number,
     mediaTitle: string,
     activeEpisodeNumber: number,
-    sourceMediaId: string
+    sourceMediaId: string,
+    totalEpisodes?: number
 }
 
-function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeNumber, sourceMediaId }: ComponentTypes) {
+function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeNumber, sourceMediaId, totalEpisodes }: ComponentTypes) {
 
-    const [mediaData, setMediaData] = useState<MediaInfo | EpisodesFetchedAnimeWatch>()
     const [episodesList, setEpisodesList] = useState<MediaEpisodes[] | EpisodeAnimeWatch[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -41,6 +42,25 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
                 const closestResult = searchResultsForMedia.find((item) => item.id.includes(query + "-tv"))
 
                 response = await gogoanime.getInfoFromThisMedia(closestResult?.id || searchResultsForMedia[0].id, "anime") as MediaInfo
+
+                // work around the api not return episodes
+                if (response.episodes.length == 0) {
+
+                    const episodes: MediaEpisodes[] = []
+
+                    simulateRange(totalEpisodes as number).map((item, key) => (
+
+                        episodes.push({
+                            number: key + 1,
+                            id: `${(closestResult?.id || searchResultsForMedia[0].id).toLowerCase()}-episode-${key + 1}`,
+                            url: ""
+                        })
+
+                    ))
+
+                    response = { episodes: episodes }
+
+                }
             }
         }
         else {
@@ -49,11 +69,22 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
 
         }
 
-        setMediaData(response)
         setEpisodesList(response.episodes)
 
         setIsLoading(false)
 
+    }
+
+    const loadingEpisodesMotion = {
+        initial: {
+            scale: 0,
+        },
+        animate: {
+            scale: 1,
+            transition: {
+                staggerChildren: 0.1,
+            },
+        },
     }
 
     useEffect(() => {
@@ -75,32 +106,37 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
 
             <h3>EPISODES</h3>
 
-            <ol id={styles.list_container} data-loading={isLoading}>
-
+            <motion.ol
+                id={styles.list_container}
+                data-loading={isLoading}
+                variants={loadingEpisodesMotion}
+                initial="initial"
+                animate="animate"
+            >
                 {isLoading && (
-                    <>
-                        <li className={styles.item_placeholder}></li>
-                        <li className={styles.item_placeholder}></li>
-                        <li className={styles.item_placeholder}></li>
-                        <li className={styles.item_placeholder}></li>
-                    </>
-                )}
+                    simulateRange(8).map((item, key) => (
+                        <motion.li className={styles.item_placeholder} key={key} variants={loadingEpisodesMotion}></motion.li>
+                    )))
+                }
 
-                {isLoading == false && (
+                {!isLoading && (
 
                     episodesList?.map((item, key: number) => (
-                        <li key={key} data-active={(item as MediaEpisodes).number == activeEpisodeNumber}>
+                        <motion.li
+                            key={key}
+                            data-active={(item as MediaEpisodes).number == activeEpisodeNumber}
+                            variants={loadingEpisodesMotion}
+                        >
 
                             <Link
-                                href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${source == "gogoanime" ? (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`}
+                                title={`Episode ${item.number}`}
+                                href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${source == "gogoanime" ?
+                                    (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`
+                                }
                             >
 
                                 <div className={styles.img_container}>
-                                    {source == "gogoanime" ? (
-                                        <Image src={(mediaData as MediaInfo)?.image as string} alt={(mediaData as MediaInfo)?.title as string} fill></Image>
-                                    ) : (
-                                        <span>{item.number}</span>
-                                    )}
+                                    <span>{item.number}</span>
                                 </div>
 
                             </Link>
@@ -108,7 +144,9 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
                             <div className={styles.episode_info_container}>
 
                                 <Link
-                                    href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${source == "gogoanime" ? (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`}
+                                    href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${source == "gogoanime" ?
+                                        (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`
+                                    }
                                 >
                                     <h4>{source == "gogoanime" ? `Episode ${(item as MediaEpisodes).number}` : (item as EpisodeAnimeWatch).title}</h4>
                                 </Link>
@@ -122,11 +160,11 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
 
                             </div>
 
-                        </li>
+                        </motion.li>
                     ))
                 )}
 
-            </ol>
+            </motion.ol>
 
         </div >
     )

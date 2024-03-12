@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from "./page.module.css"
-import { ApiDefaultResult } from '../../ts/interfaces/apiAnilistDataInterface'
+import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import gogoanime from '@/api/gogoanime'
 import anilist from '@/api/anilist'
 import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
@@ -19,7 +19,7 @@ export async function generateMetadata({ params, searchParams }: {
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
 
     return {
-        title: `Watching Episode ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
+        title: `Watching EP ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
         description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}}`,
     }
 }
@@ -29,7 +29,7 @@ async function WatchEpisode({ params, searchParams }: {
     searchParams: { episode: string, source: string, q: string, episodeNumber?: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
 
-    const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
+    const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
     let episodeData
 
@@ -85,7 +85,7 @@ async function WatchEpisode({ params, searchParams }: {
                             </h1>
                         )}
 
-                        <CardMediaCoverAndDescription data={mediaData} showButtons={false} />
+                        <CardMediaCoverAndDescription data={mediaData as ApiDefaultResult} showButtons={false} />
 
                     </div>
 
@@ -117,6 +117,9 @@ async function WatchEpisode({ params, searchParams }: {
                             mediaId={params.id}
                             mediaTitle={mediaData.title.romaji}
                             activeEpisodeNumber={Number(searchParams.episode)}
+                            totalEpisodes={mediaData.nextAiringEpisode ?
+                                mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes // work around to api gogoanime not showing episodes
+                            }
                         />
                     )}
 
