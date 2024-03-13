@@ -149,7 +149,9 @@
 @media(min-width: 990px) {
     #nav_title_buttons_container {
 
-        margin-bottom: 72px;
+        /* margin-bottom: 72px; */
+
+        margin: auto 0;
 
         width: inherit;
 
@@ -164,7 +166,7 @@
 
 #nav_title_buttons_container>h3 {
 
-    margin: 24px 0;
+    /* margin: 24px 0; */
 
     font-family: var(--font-family-sans-serif);
     color: var(--background);
@@ -217,7 +219,7 @@
 
     background-color: transparent;
 
-    border: 2px solid var(--black-25);
+    border: 2px solid var(--black-50);
 
     border-radius: 50%;
 
@@ -226,7 +228,7 @@
 }
 
 #itens_container[data-darkBackground=true] #buttons_container button {
-    border: 2px solid var(--white-25);
+    border: 2px solid var(--white-50);
 }
 
 #nav_title_buttons_container #buttons_container button:disabled {
@@ -238,37 +240,37 @@
 
 #nav_title_buttons_container #buttons_container button:not(:disabled):hover {
 
-    border-color: var(--black-50);
+    border-color: var(--black-75);
 
 }
 
 #itens_container[data-darkBackground=true] #buttons_container button:not(:disabled):hover {
 
-    border-color: var(--white-50);
+    border-color: var(--white-75);
 
 }
 
 #nav_title_buttons_container #buttons_container button svg {
 
-    fill: var(--black-25);
+    fill: var(--black-50);
 
 }
 
 #itens_container[data-darkBackground=true] #buttons_container button svg {
 
-    fill: var(--white-25);
+    fill: var(--white-50);
 
 }
 
 #nav_title_buttons_container #buttons_container button:not(:disabled):hover svg {
 
-    fill: var(--black-50);
+    fill: var(--black-75);
 
 }
 
 #itens_container[data-darkBackground=true] #buttons_container button:not(:disabled):hover svg {
 
-    fill: var(--white-50);
+    fill: var(--white-75);
 
 }
 

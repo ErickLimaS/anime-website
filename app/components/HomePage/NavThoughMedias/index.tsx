@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { SetStateAction, useEffect, useState } from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
@@ -39,6 +39,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [selectedId, setSelectedId] = useState<number | null>(null)
+    const [mediaSelect, setMediaSelected] = useState<ApiDefaultResult | null>(null)
 
     const popUpMediaMotion = {
         initial: {
@@ -98,6 +99,18 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
         setIsLoading(false)
     }
 
+    function setMediaPreview(media: number | null) {
+
+        if (media == null) {
+            setSelectedId(null)
+            setMediaSelected(null)
+        }
+        else {
+            setSelectedId(media)
+            setMediaSelected(data.find((item) => item.id == media) as SetStateAction<ApiDefaultResult | null>)
+        }
+    }
+
     useEffect(() => {
 
         if (sort == "RELEASE") {
@@ -148,7 +161,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                         <MediaItemCoverInfo3
                             layoutId={String(item.id)}
                             key={item.id}
-                            onClick={() => setSelectedId(item.id)}
+                            onClick={() => setMediaPreview(item.id)}
                             data={item as ApiDefaultResult}
                             positionIndex={key + 1}
                             loading={isLoading}
@@ -168,10 +181,10 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
                 {/* WHEN A ID IS SELECTED, SHOWS A INFO PREVIEW OF MEDIA */}
                 <AnimatePresence>
-                    {selectedId && (
+                    {(selectedId && mediaSelect) && (
                         <motion.div
                             id={styles.overlay}
-                            onClick={() => setSelectedId(null)}
+                            onClick={() => setMediaPreview(null)}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -181,8 +194,8 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                 id={styles.expand_container}
                                 onClick={(e) => e.stopPropagation()}
                                 style={{
-                                    background: data.find((item) => item.id == selectedId)?.bannerImage ?
-                                        `linear-gradient(rgba(0, 0, 0, 0.75) , rgba(0, 0, 0, 0.75) ), url(${data.find((item) => item.id == selectedId)?.bannerImage})`
+                                    background: mediaSelect.bannerImage ?
+                                        `linear-gradient(rgba(0, 0, 0, 0.75) , rgba(0, 0, 0, 0.75) ), url(${mediaSelect.bannerImage})`
                                         :
                                         `var(--black-100)`,
                                     backgroundPosition: "center",
@@ -191,7 +204,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                 }}
                             >
 
-                                <motion.button onClick={() => setSelectedId(null)} title="Close">
+                                <motion.button onClick={() => setMediaPreview(null)} title="Close">
                                     <CloseSvg width={16} height={16} />
                                 </motion.button>
 
@@ -200,8 +213,8 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                     <motion.div className={styles.img_container}>
 
                                         <Image
-                                            src={data.find((item) => item.id == selectedId)!.coverImage.large}
-                                            alt={data.find((item) => item.id == selectedId)!.title.romaji}
+                                            src={mediaSelect.coverImage.large}
+                                            alt={mediaSelect.title.romaji}
                                             fill
                                         />
 
@@ -209,21 +222,21 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
                                     <motion.div className={styles.info_container}>
 
-                                        <motion.h5>{data.find((item) => item.id == selectedId)!.title.romaji}</motion.h5>
+                                        <motion.h5>{mediaSelect.title.romaji}</motion.h5>
 
-                                        <motion.p style={{ color: data.find((item) => item.id == selectedId)!.coverImage.color || "var(--white-100)" }}>
-                                            {data.find((item) => item.id == selectedId)!.format}
+                                        <motion.p style={{ color: mediaSelect.coverImage.color || "var(--white-100)" }}>
+                                            {mediaSelect.format}
                                         </motion.p>
 
-                                        {data.find((item) => item.id == selectedId)!.episodes && (
-                                            <motion.p>{data.find((item) => item.id == selectedId)!.episodes} Episodes</motion.p>
+                                        {(mediaSelect.episodes && mediaSelect.format != "MOVIE" && mediaSelect.format != "MUSIC" && mediaSelect.format != "MANGA") && (
+                                            <motion.p>{mediaSelect.episodes} Episodes</motion.p>
                                         )}
 
-                                        <motion.p>{(data.find((item) => item.id == selectedId)!.seasonYear && (`${data.find((item) => item.id == selectedId)!.seasonYear} `))}</motion.p>
+                                        <motion.p>{(mediaSelect.seasonYear && (`${mediaSelect.seasonYear} `))}</motion.p>
 
-                                        {data.find((item) => item.id == selectedId)!.genres && (
+                                        {mediaSelect.genres && (
                                             <motion.p>
-                                                {data.find((item) => item.id == selectedId)!.genres.map((item, key) => (`${item}${key + 1 == data.find((item) => item.id == selectedId)!.genres.length ? "" : ", "}`))}
+                                                {mediaSelect.genres.map((item, key) => (`${item}${key + 1 == mediaSelect.genres.length ? "" : ", "}`))}
                                             </motion.p>
                                         )}
 
@@ -232,14 +245,14 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                 </motion.div>
 
                                 <motion.div className={styles.description_container}>
-                                    <motion.p>{parse(data.find((item) => item.id == selectedId)!.description)}</motion.p>
+                                    <motion.p>{parse(mediaSelect.description)}</motion.p>
                                 </motion.div>
 
                                 <motion.div className={styles.btn_container}>
 
-                                    <Link href={`/media/${data.find((item) => item.id == selectedId)!.id}`}>See More</Link>
+                                    <Link href={`/media/${mediaSelect.id}`}>SEE MORE</Link>
 
-                                    <AddToPlaylistButton data={data.find((item) => item.id == selectedId)!} />
+                                    <AddToPlaylistButton data={mediaSelect} />
 
                                 </motion.div>
 
@@ -274,7 +287,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
                     <span id={styles.line}></span>
 
-                    <Link href={route} className='display_align_justify_center'>VIEW ALL <ChevronRightIcon alt="Icon Facing Right" /></Link>
+                    {/* <Link href={route} className='display_align_justify_center'>VIEW ALL <ChevronRightIcon alt="Icon Facing Right" /></Link> */}
                 </div>
 
             </motion.div>

@@ -163,10 +163,10 @@ export default async function Home() {
       </section>
 
 
-      {/* SECTION => SHOWS MEDIAS SORTED BY RATE */}
+      {/* SECTION => SHOWS MEDIAS SORTED BY LATEST UPDATES ON ANILIST */}
       <section className={`${styles.medias_sections_container}`}>
 
-        <NavThoughMedias title={"Best Rated"} route={"#"} sort={"SCORE_DESC"} layoutInverted={true} />
+        <NavThoughMedias title={"Show Me Something New"} route={"#"} sort={"UPDATED_AT_DESC"} layoutInverted={true} />
 
       </section>
 
