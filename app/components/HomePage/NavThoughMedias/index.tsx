@@ -4,10 +4,15 @@ import styles from './component.module.css'
 import Link from 'next/link'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import API from '@/api/anilist'
-import MediaItemCoverInfo from '../../MediaItemCoverInfo'
 import ChevronLeftIcon from '@/public/assets/chevron-left.svg'
 import ChevronRightIcon from '@/public/assets/chevron-right.svg'
+import CloseSvg from '@/public/assets/x.svg'
 import { Url } from 'next/dist/shared/lib/router/router'
+import MediaItemCoverInfo3 from '../../MediaItemCoverInfo3'
+import { AnimatePresence, motion } from 'framer-motion'
+import Image from 'next/image'
+import AddToPlaylistButton from '../../AddToPlaylistButton'
+import parse from "html-react-parser"
 
 type Component = {
 
@@ -27,11 +32,13 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
     // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
     const [daysRange, setDaysRange] = useState<number>(1)
 
-    const [data, setData] = useState<ApiAiringMidiaResults[] | ApiDefaultResult[]>([])
+    const [data, setData] = useState<ApiDefaultResult[]>([])
 
     const [pageIndex, setPageIndex] = useState<number>(1)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const [selectedId, setSelectedId] = useState<number | null>(null)
 
     async function getMedias(newPageResults?: boolean, days?: number, previous?: boolean) {
 
@@ -51,6 +58,9 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
             ).then(
                 res => (res as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
             )
+
+            const responseMap = response.map(item => item.media)
+            response = responseMap
 
             setDaysRange(days!)
 
@@ -120,9 +130,11 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
                 {data.length > 0 ? (
                     data.slice(0, 8).map((item, key: number) => (
-                        <MediaItemCoverInfo
-                            key={key}
-                            data={sort == "RELEASE" ? (item as ApiAiringMidiaResults).media : (item as ApiDefaultResult)}
+                        <MediaItemCoverInfo3
+                            layoutId={String(item.id)}
+                            key={item.id}
+                            onClick={() => setSelectedId(item.id)}
+                            data={item as ApiDefaultResult}
                             positionIndex={key + 1}
                             loading={isLoading}
                             darkMode={darkBackground}
@@ -136,6 +148,81 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                         {(dateOptions && daysRange == 30) && "Nothing Released in 30 Days"}
                     </p>
                 )}
+
+                <AnimatePresence>
+                    {selectedId && (
+                        <motion.div id={styles.overlay} onClick={() => setSelectedId(null)}>
+                            <motion.div
+                                layoutId={String(selectedId)}
+                                id={styles.expand_container}
+                                onClick={(e) => e.stopPropagation()}
+                                style={{
+                                    background: data.find((item) => item.id == selectedId)?.bannerImage ?
+                                        `linear-gradient(rgba(0, 0, 0, 0.60) , rgba(0, 0, 0, 0.60) 50%), url(${data.find((item) => item.id == selectedId)?.bannerImage})`
+                                        :
+                                        `var(--black-100)`,
+                                    backgroundPosition: "center",
+                                    backgroundSize: "cover",
+                                    backgroundRepeat: "no-repeat"
+                                }}
+                            >
+
+                                <motion.button onClick={() => setSelectedId(null)} title="Close">
+                                    <CloseSvg width={16} height={16} />
+                                </motion.button>
+
+                                <motion.div className={styles.media_container}>
+
+                                    <motion.div className={styles.img_container}>
+
+                                        <Image
+                                            src={data.find((item) => item.id == selectedId)!.coverImage.extraLarge}
+                                            alt={data.find((item) => item.id == selectedId)!.title.romaji}
+                                            fill
+                                        />
+
+                                    </motion.div>
+
+                                    <motion.div className={styles.info_container}>
+
+                                        <motion.h5>{data.find((item) => item.id == selectedId)!.title.romaji}</motion.h5>
+
+                                        <motion.p style={{ color: data.find((item) => item.id == selectedId)!.coverImage.color || "var(--white-100)" }}>
+                                            {data.find((item) => item.id == selectedId)!.type}
+                                        </motion.p>
+
+                                        {data.find((item) => item.id == selectedId)!.episodes && (
+                                            <motion.p>{data.find((item) => item.id == selectedId)!.episodes} Episodes</motion.p>
+                                        )}
+
+                                        <motion.p>{(data.find((item) => item.id == selectedId)!.seasonYear && (`${data.find((item) => item.id == selectedId)!.seasonYear} `))}</motion.p>
+
+                                        {data.find((item) => item.id == selectedId)!.genres && (
+                                            <motion.p>
+                                                {data.find((item) => item.id == selectedId)!.genres.map((item, key) => (`${item}${key + 1 == data.find((item) => item.id == selectedId)!.genres.length ? "" : ", "}`))}
+                                            </motion.p>
+                                        )}
+
+                                    </motion.div>
+
+                                </motion.div>
+
+                                <motion.div className={styles.description_container}>
+                                    <motion.p>{parse(data.find((item) => item.id == selectedId)!.description)}</motion.p>
+                                </motion.div>
+
+                                <motion.div className={styles.btn_container}>
+
+                                    <Link href={`/media/${data.find((item) => item.id == selectedId)!.id}`}>See More</Link>
+
+                                    <AddToPlaylistButton data={data.find((item) => item.id == selectedId)!} />
+
+                                </motion.div>
+
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 <div id={styles.nav_title_buttons_container}>
 
@@ -166,7 +253,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                     <Link href={route} className='display_align_justify_center'>VIEW ALL <ChevronRightIcon alt="Icon Facing Right" /></Link>
                 </div>
 
-            </div>
+            </div >
 
         </>
     )
