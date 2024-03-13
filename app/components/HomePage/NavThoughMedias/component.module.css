@@ -363,6 +363,15 @@
 
 }
 
+@media(max-width: 540px) {
+    #expand_container {
+
+        height: 80vh;
+        overflow: auto;
+
+    }
+}
+
 #expand_container>button {
 
     transition: all ease-in-out 100ms;
@@ -448,10 +457,18 @@
     margin: 16px 0;
     color: var(--white-100);
 
-    max-height: 120px;
+    max-height: calc(8vh + 18vw);
 
     overflow: auto;
 
+}
+
+@media(min-width: 541px) {
+    #expand_container .description_container {
+
+        max-height: 120px;
+
+    }
 }
 
 #expand_container .description_container::-webkit-scrollbar {
@@ -485,6 +502,19 @@
     flex-direction: row;
     gap: 0 16px;
 
+}
+
+@media((max-width: 540px) and (min-height: 660px)) {
+    #expand_container .btn_container {
+
+        justify-content: space-evenly;
+
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        left: 24px;
+
+    }
 }
 
 #expand_container .btn_container>a,
