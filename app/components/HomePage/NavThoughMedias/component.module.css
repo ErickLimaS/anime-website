@@ -389,6 +389,17 @@
 
 }
 
+@media(max-width: 540px) {
+    #expand_container>button {
+
+        box-shadow: 0px 0px 8px 0px var(--black-100);
+
+        position: sticky;
+        top: 0;
+
+    }
+}
+
 #expand_container>button:hover {
 
     filter: brightness(80%);
@@ -521,7 +532,7 @@
         justify-content: space-evenly;
 
         position: fixed;
-        background: linear-gradient(var(--black-75), var(--black-100) 50%);
+        background: linear-gradient(var(--black-05), var(--black-100) 30%);
 
         bottom: calc(10vh);
         right: 0;
