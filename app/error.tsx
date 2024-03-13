@@ -15,6 +15,7 @@ function ErrorPage({ error, reset }: {
 
     const errorContainerStyles = {
         display: "flex",
+        overflow: "auto",
         flexDirection: "column",
         gap: "16px 0",
         margin: "20px auto",
