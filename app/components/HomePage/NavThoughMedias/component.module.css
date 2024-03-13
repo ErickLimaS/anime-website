@@ -429,7 +429,7 @@
 
 #expand_container .info_container {
 
-    margin: 0 16px;
+    margin-left: 16px;
 
     display: flex;
     flex-direction: column;
@@ -457,7 +457,7 @@
     margin: 16px 0;
     color: var(--white-100);
 
-    max-height: calc(8vh + 18vw);
+    padding-bottom: 10vh;
 
     overflow: auto;
 
@@ -465,6 +465,8 @@
 
 @media(min-width: 541px) {
     #expand_container .description_container {
+
+        padding-bottom: 0;
 
         max-height: 120px;
 
@@ -504,15 +506,26 @@
 
 }
 
-@media((max-width: 540px) and (min-height: 660px)) {
+@media((max-width: 540px)) {
     #expand_container .btn_container {
+
+        border-top: 0;
+
+        margin: auto;
+        width: inherit;
+
+        padding: 16px 0;
+
+        border-radius: 0 0 24px 24px;
 
         justify-content: space-evenly;
 
-        position: absolute;
-        bottom: 24px;
-        right: 24px;
-        left: 24px;
+        position: fixed;
+        background: linear-gradient(var(--black-75), var(--black-100) 50%);
+
+        bottom: calc(10vh);
+        right: 0;
+        left: 0;
 
     }
 }
