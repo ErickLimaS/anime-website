@@ -105,7 +105,7 @@ export default async function Home() {
       {/* SECTION => SHOWS MEDIA RELEASED BY A SELECTED TIME (today, 7 days, 30 days)  */}
       <section className={styles.medias_sections_container}>
 
-        <NavThoughMedias dateOptions={true} sort="RELEASE" title={"Latest Releases"} route={"/releases"} />
+        <NavThoughMedias title={"Latest Releases"} route={"#"} sort="RELEASE" dateOptions={true} />
 
       </section>
 
@@ -158,14 +158,15 @@ export default async function Home() {
       {/* SECTION => SHOWS MEDIAS SORTED BY FAVOURITES */}
       <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
 
-        <NavThoughMedias title={"All Time Favorites"} route={"/favourites"} sort={"FAVOURITES_DESC"} darkBackground={true} />
+        <NavThoughMedias title={"All Time Favorites"} route={"#"} sort={"FAVOURITES_DESC"} darkBackground={true} />
 
       </section>
 
-      {/* SECTION => SHOWS MEDIAS SORTED BY POPULARITY   */}
+
+      {/* SECTION => SHOWS MEDIAS SORTED BY RATE */}
       <section className={`${styles.medias_sections_container}`}>
 
-        <NavThoughMedias title={"Most Popular"} route={"/popular"} sort={"POPULARITY_DESC"} layoutInverted={true} />
+        <NavThoughMedias title={"Best Rated"} route={"#"} sort={"SCORE_DESC"} layoutInverted={true} />
 
       </section>
 

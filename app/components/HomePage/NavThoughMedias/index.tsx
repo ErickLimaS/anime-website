@@ -40,6 +40,18 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
     const [selectedId, setSelectedId] = useState<number | null>(null)
 
+    const popUpMediaMotion = {
+        initial: {
+            scale: 0,
+        },
+        animate: {
+            scale: 1,
+            transition: {
+                staggerChildren: 0.2,
+            },
+        },
+    }
+
     async function getMedias(newPageResults?: boolean, days?: number, previous?: boolean) {
 
         setIsLoading(true)
@@ -122,13 +134,16 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                 </nav>
             )}
 
-            <div
+            <motion.div
                 id={styles.itens_container}
                 data-darkBackground={darkBackground && darkBackground}
                 data-layoutInverted={layoutInverted && layoutInverted}
+                variants={popUpMediaMotion}
+                initial="initial"
+                animate="animate"
             >
 
-                {data.length > 0 ? (
+                {data.length > 0 && (
                     data.slice(0, 8).map((item, key: number) => (
                         <MediaItemCoverInfo3
                             layoutId={String(item.id)}
@@ -140,7 +155,9 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                             darkMode={darkBackground}
                         />
                     ))
-                ) : (
+                )}
+
+                {data.length == 0 && (
                     <p className='display_align_justify_center'>
                         {!dateOptions && "No results"}
                         {(dateOptions && daysRange == 1) && "Nothing Releasing Today"}
@@ -149,16 +166,23 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                     </p>
                 )}
 
+                {/* WHEN A ID IS SELECTED, SHOWS A INFO PREVIEW OF MEDIA */}
                 <AnimatePresence>
                     {selectedId && (
-                        <motion.div id={styles.overlay} onClick={() => setSelectedId(null)}>
+                        <motion.div
+                            id={styles.overlay}
+                            onClick={() => setSelectedId(null)}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
                             <motion.div
                                 layoutId={String(selectedId)}
                                 id={styles.expand_container}
                                 onClick={(e) => e.stopPropagation()}
                                 style={{
                                     background: data.find((item) => item.id == selectedId)?.bannerImage ?
-                                        `linear-gradient(rgba(0, 0, 0, 0.60) , rgba(0, 0, 0, 0.60) 50%), url(${data.find((item) => item.id == selectedId)?.bannerImage})`
+                                        `linear-gradient(rgba(0, 0, 0, 0.75) , rgba(0, 0, 0, 0.75) ), url(${data.find((item) => item.id == selectedId)?.bannerImage})`
                                         :
                                         `var(--black-100)`,
                                     backgroundPosition: "center",
@@ -176,7 +200,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                     <motion.div className={styles.img_container}>
 
                                         <Image
-                                            src={data.find((item) => item.id == selectedId)!.coverImage.extraLarge}
+                                            src={data.find((item) => item.id == selectedId)!.coverImage.large}
                                             alt={data.find((item) => item.id == selectedId)!.title.romaji}
                                             fill
                                         />
@@ -188,7 +212,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                         <motion.h5>{data.find((item) => item.id == selectedId)!.title.romaji}</motion.h5>
 
                                         <motion.p style={{ color: data.find((item) => item.id == selectedId)!.coverImage.color || "var(--white-100)" }}>
-                                            {data.find((item) => item.id == selectedId)!.type}
+                                            {data.find((item) => item.id == selectedId)!.format}
                                         </motion.p>
 
                                         {data.find((item) => item.id == selectedId)!.episodes && (
@@ -253,7 +277,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                     <Link href={route} className='display_align_justify_center'>VIEW ALL <ChevronRightIcon alt="Icon Facing Right" /></Link>
                 </div>
 
-            </div >
+            </motion.div>
 
         </>
     )
