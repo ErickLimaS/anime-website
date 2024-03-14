@@ -6,16 +6,13 @@ import {
     getFirestore, doc, arrayUnion, FieldPath, setDoc,
     DocumentSnapshot, DocumentData, QueryDocumentSnapshot,
     addDoc, collection, getDocs, QuerySnapshot,
-    getDoc,
-    DocumentReference,
-    where,
-    query
+    where, query
 } from 'firebase/firestore';
 import { initFirebase } from "@/firebase/firebaseApp"
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import Comment from '../CommentContainer';
+import Comment from './CommentContainer';
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"

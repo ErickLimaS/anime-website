@@ -12,6 +12,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
 import aniwatch from '@/api/aniwatch'
 import { EpisodesFetchedAnimeWatch, MediaInfoFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import simulateRange from '@/app/lib/simulateRange'
 
 function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
@@ -89,12 +90,18 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
         if (!res) return null
 
-        return res.episodes.length == 0 ?
-            [{
-                number: 1,
-                id: `${res!.id.toLowerCase()}-episode-1`,
+        let episodes: any[] = []
+
+        simulateRange(res.totalEpisodes).map((item, key) => {
+            episodes.push({
+                number: key + 1,
+                id: `${res!.id.toLowerCase()}-episode-${key + 1}`,
                 url: ""
-            }]
+            })
+        })
+
+        return res.episodes.length == 0 ?
+            episodes
             :
             res.episodes
 
@@ -125,9 +132,10 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         let media: any = await fetchWithGoGoAnime()
 
         // if media is null, try with gogoanime
-        if (!media) media = await fetchWithAniWatch()
+        if (!media) media = await fetchWithAniWatch() // High chances of getting the wrong media
 
-        if (media && lastEpisodeWatched) {
+        // if user has watched a episode and the episode is NOT the last, redirects to next episode
+        if (media && lastEpisodeWatched && (media.length > lastEpisodeWatched)) {
 
             // add 1 to get the next episode after the last watched
             const episodeSelected = media.find((item: { number: number }) => item.number == lastEpisodeWatched + 1)

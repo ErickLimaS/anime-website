@@ -614,27 +614,10 @@ h2.heading_style {
     flex-wrap: wrap;
 }
 
-#score_container ul li span:first-child {
+#score_container ul li span:first-child span:first-child svg {
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    font-size: var(--font-size--small-1);
-
-}
-
-#score_container ul li span:nth-child(2) {
-
-    margin-left: 32px;
-
-    transform: scale(1.3);
-
-}
-
-#score_container ul li span:nth-child(2) svg {
-
-    fill: #ffe234;
+    width: 32px;
+    height: 32px;
 
 }
 

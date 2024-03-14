@@ -7,12 +7,15 @@ import API from '@/api/anilist'
 import ChevronLeftIcon from '@/public/assets/chevron-left.svg'
 import ChevronRightIcon from '@/public/assets/chevron-right.svg'
 import CloseSvg from '@/public/assets/x.svg'
+import PlaySvg from '@/public/assets/play.svg'
 import { Url } from 'next/dist/shared/lib/router/router'
 import MediaItemCoverInfo3 from '../../MediaItemCoverInfo3'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import AddToPlaylistButton from '../../AddToPlaylistButton'
 import parse from "html-react-parser"
+import ScoreInStars from '../../ScoreInStars'
+import MediaFormatIcon from '../../MediaFormatIcon'
 
 type Component = {
 
@@ -33,6 +36,8 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
     const [daysRange, setDaysRange] = useState<number>(1)
 
     const [data, setData] = useState<ApiDefaultResult[]>([])
+
+    const [trailerActive, setTrailerActive] = useState<boolean>(false)
 
     const [pageIndex, setPageIndex] = useState<number>(1)
 
@@ -103,6 +108,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
         if (media == null) {
             setSelectedId(null)
+            setTrailerActive(false)
             setMediaSelected(null)
         }
         else {
@@ -222,20 +228,27 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
                                     <motion.div className={styles.info_container}>
 
-                                        <motion.h5>{mediaSelect.title.romaji}</motion.h5>
+                                        <motion.h5>
+                                            {mediaSelect.title.romaji}
+                                            {(mediaSelect.seasonYear && (<span> ({mediaSelect.seasonYear})</span>))}
+                                        </motion.h5>
 
                                         <motion.p style={{ color: mediaSelect.coverImage.color || "var(--white-100)" }}>
-                                            {mediaSelect.format}
+                                            <MediaFormatIcon format={mediaSelect.format} /> {mediaSelect.format == "TV" ? "ANIME" : mediaSelect.format}
                                         </motion.p>
+
+                                        {mediaSelect.averageScore && (
+                                            <motion.p>
+                                                <ScoreInStars score={(mediaSelect.averageScore / 2) / 10} source='anilist' />
+                                            </motion.p>
+                                        )}
 
                                         {(mediaSelect.episodes && mediaSelect.format != "MOVIE" && mediaSelect.format != "MUSIC" && mediaSelect.format != "MANGA") && (
                                             <motion.p>{mediaSelect.episodes} Episodes</motion.p>
                                         )}
 
-                                        <motion.p>{(mediaSelect.seasonYear && (`${mediaSelect.seasonYear} `))}</motion.p>
-
                                         {mediaSelect.genres && (
-                                            <motion.p>
+                                            <motion.p className={styles.smaller_fonts}>
                                                 {mediaSelect.genres.map((item, key) => (`${item}${key + 1 == mediaSelect.genres.length ? "" : ", "}`))}
                                             </motion.p>
                                         )}
@@ -244,19 +257,55 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
                                 </motion.div>
 
-                                <motion.div className={styles.description_container}>
-                                    <motion.p>{parse(mediaSelect.description)}</motion.p>
-                                </motion.div>
+                                {/* SHOWS TRAILER / SHOWS DESCRIPTION */}
+                                {trailerActive ? (
 
-                                <motion.div className={styles.btn_container}>
+                                    <motion.div className={styles.trailer_container}>
+                                        <iframe
+                                            className="yt_embed_video"
+                                            src={`https://www.youtube.com/embed/${mediaSelect.trailer.id}`}
+                                            frameBorder={0}
+                                            title={mediaSelect.title.romaji + " Trailer"}
+                                            allow="accelerometer; autoplay; encrypted-media; gyroscope;"
+                                            allowFullScreen></iframe>
+                                    </motion.div>
 
-                                    <Link href={`/media/${mediaSelect.id}`}>SEE MORE</Link>
+                                ) : (
+                                    mediaSelect.description && (
+                                        <motion.div className={styles.description_container}>
+                                            <motion.p>{parse(mediaSelect.description)}</motion.p>
+                                        </motion.div>
+                                    )
+                                )}
 
-                                    <AddToPlaylistButton data={mediaSelect} />
+                                <motion.div className={styles.btns_container}>
+
+                                    <motion.div className={`${styles.action_btns_container}`}>
+
+                                        <Link href={`/media/${mediaSelect.id}`}>SEE MORE</Link>
+
+                                        <AddToPlaylistButton data={mediaSelect} />
+
+                                    </motion.div>
+
+                                    {mediaSelect.trailer && (
+                                        <motion.div className={`${styles.action_btns_container} ${styles.trailer_btn_container}`}>
+
+                                            <motion.button
+                                                className={styles.trailer_btn}
+                                                onClick={() => setTrailerActive(!trailerActive)}
+                                                data-active={trailerActive}
+                                            >
+                                                <PlaySvg alt="Play" width={16} height={16} /> TRAILER
+                                            </motion.button>
+
+                                        </motion.div>
+                                    )}
 
                                 </motion.div>
 
                             </motion.div>
+
                         </motion.div>
                     )}
                 </AnimatePresence>

@@ -18,7 +18,7 @@ import { initFirebase } from '@/firebase/firebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { AnimatePresence } from 'framer-motion';
-import UserModal from '../UserLoginModal';
+import UserModal from '../../UserLoginModal';
 
 function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
@@ -231,7 +231,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
                     />
                 )}
             </AnimatePresence>
-            
+
             {!wasDeleted && (
                 <li className={styles.comment_container} data-has-spoiler={isSpoiler}>
 

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import gogoanime from '@/api/gogoanime';
 import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import BookSvg from "@/public/assets/book.svg"
-import NavPaginateItems from '@/app/components/PaginateItems';
+import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 
 function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 

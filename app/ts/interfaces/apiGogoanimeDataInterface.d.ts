@@ -4,7 +4,7 @@ export interface MediaInfo {
     title: string,
     url: string,
     genres: string[],
-    totalEpisode: number,
+    totalEpisodes: number,
     image: string,
     release: string,
     description: string,

@@ -2,11 +2,22 @@ import React from 'react'
 import StarFill from "@/public/assets/star-fill.svg"
 import StarHalf from "@/public/assets/star-half.svg"
 import Star from "@/public/assets/star.svg"
+import AnilistSvg from "@/public/assets/anilist.svg"
+import styles from "./component.module.css"
 
-function ScoreInStars({ score }: { score: number }) {
-    
+function ScoreInStars({ score, source }: { score: number, source?: "anilist" }) {
+
     return (
-        <span title={"Score: " + score + " out of 5"} style={{display: "flex", gap: "0 8px"}}>
+        <span
+            title={"Score: " + score + " out of 5"}
+            className={styles.container}
+        >
+
+            {source == "anilist" && (
+                <span className={styles.source}>
+                    <AnilistSvg fill={"#02a9ff"} width={24} height={24} alt={"Anilist Icon"} title={'Anilist'} /> Anilist
+                </span>
+            )}
 
             {/* 4 to 5 */}
             {(score == 5) && (

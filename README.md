@@ -19,6 +19,7 @@ Project of animes and mangas website, utilizing the <a href='https://anilist.git
 
 ## :pushpin: Under Development
 
+- [ ] `Add Reply to Comments`
 - [ ] `Keep track of what you watched last`
 - [ ] `Be notified when a new episode/chapter is released`
 

@@ -8,7 +8,7 @@
 
 }
 
-@media(min-width: 420px) {
+@media(min-width: 300px) {
     .midia_item_container {
         grid-template-columns: minmax(110px, 1fr) 3fr;
 

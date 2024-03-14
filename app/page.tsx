@@ -7,8 +7,8 @@ import ChevronRightIcon from '../public/assets/chevron-right.svg';
 import API from '../api/anilist';
 import NavThoughMedias from "./components/HomePage/NavThoughMedias";
 import parse from "html-react-parser"
-import NewestMediaSection from "./components/NewestMediaSection";
-import MediaRankingSection from "./components/MediaRankingSection";
+import NewestMediaSection from "./components/HomePage/NewestMediaSection";
+import MediaRankingSection from "./components/HomePage/MediaRankingSection";
 import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 import AddToPlaylistButton from "./components/AddToPlaylistButton";
