@@ -44,6 +44,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
     const [currentLang, setCurrentLang] = useState<string | null>(null)
     const [currentSource, setCurrentSource] = useState<string | null>(null)
+    const [currentQuality, setCurrentQuality] = useState<string | null>(null)
 
     const db = getFirestore(initFirebase());
 
@@ -76,6 +77,17 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
     ]
 
+    const qualityOptions = [
+
+        { name: "Auto", value: "auto" },
+        { name: "1080p", value: "1080p" },
+        { name: "720p", value: "720p" },
+        { name: "480p", value: "480p" },
+        { name: "360p", value: "360p" },
+        { name: "144p", value: "144p" },
+
+    ]
+
     // changes info of user. mainly used to change video language
     async function changeSettings(e: React.FormEvent<HTMLFormElement> | HTMLFormElement) {
 
@@ -91,7 +103,8 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
         await updateDoc(doc(db, 'users', user.uid),
             {
                 videoSubtitleLanguage: form.language.value,
-                videoSource: form.source.value
+                videoSource: form.source.value,
+                videoQuality: form.quality.value
             }
         )
 
@@ -162,6 +175,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
         setCurrentLang(await data.get("videoSubtitleLanguage") as string || "English")
         setCurrentSource(await data.get("videoSource") as string || "crunchyroll")
+        setCurrentQuality(await data.get("videoQuality") as string || "auto")
 
     }())
 
@@ -184,127 +198,167 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
                 <form onSubmit={(e) => changeSettings(e)}>
 
-                    <h5>Video</h5>
+                    <div className={styles.group_container}>
 
-                    {currentLang && (
-                        <label>
-                            Subtitle Language
-                            <select
-                                name='language'
-                                defaultValue={currentLang}
-                            >
-                                {languagesOptions.map((item, key) => (
-                                    <option key={key} value={item.value}>{item.name}</option>
-                                ))}
-                            </select>
-                        </label>
-                    )}
+                        <h5>Video</h5>
 
-                    <h5>Source</h5>
-
-                    {currentSource && (
-                        <label>
-                            Select Source of Episodes.
-                            <select
-                                name='source'
-                                defaultValue={currentSource}
-                            >
-                                {sourcesOptions.map((item, key) => (
-                                    <option key={key} value={item.value}>{item.name}</option>
-                                ))}
-                            </select>
-                        </label>
-                    )}
-                    <small>Default Option: Crunchyroll</small>
-
-                    <h5>Delete <span>(can not be reverted!)</span></h5>
-
-                    <div className={styles.btns_container}>
-                        <label>
-                            <motion.button
-                                type='button'
-                                onClick={() => setDeleteBookmarksClick(!deleteBookmarksClick)}
-                                variants={btnVariants}
-                                whileTap="tap"
-                            >
-                                Delete Watchlist
-                            </motion.button>
-
-                        </label>
-                        <AnimatePresence
-                            initial={false}
-                            mode='wait'
-                        >
-                            {deleteBookmarksClick && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
-                                    animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
-                                    exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
-                                    className={styles.confirm_delete_container}
-                                >
-                                    <p>Are you Sure?</p>
-                                    <button type='button' onClick={() => setDeleteBookmarksClick(false)}>Cancel</button>
-                                    <button onClick={() => deleteAccountInfo("bookmarks")}>Delete!</button>
-                                </motion.div>
+                        <div>
+                            {currentLang && (
+                                <label>
+                                    Subtitle Language
+                                    <select
+                                        name='language'
+                                        defaultValue={currentLang}
+                                    >
+                                        {languagesOptions.map((item, key) => (
+                                            <option key={key} value={item.value}>{item.name}</option>
+                                        ))}
+                                    </select>
+                                </label>
                             )}
-                        </AnimatePresence>
+                            <small>Only works with <b>Aniwatch</b></small>
 
-                        <label>
-                            <motion.button
-                                type='button'
-                                onClick={() => setDeleteEpisodessClick(!deleteEpisodesClick)}
-                                variants={btnVariants}
-                                whileTap="tap"
-                            >
-                                Delete Episodes Watched
-                            </motion.button>
-                        </label>
-                        <AnimatePresence
-                            initial={false}
-                            mode='wait'
-                        >
-                            {deleteEpisodesClick && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
-                                    animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
-                                    exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
-                                    className={styles.confirm_delete_container}
-                                >
-                                    <p>Are you Sure?</p>
-                                    <button type='button' onClick={() => setDeleteEpisodessClick(false)}>Cancel</button>
-                                    <button onClick={() => deleteAccountInfo("episodes")}>Delete!</button>
-                                </motion.div>
+                        </div>
+
+                        <div>
+                            {currentQuality && (
+                                <label>
+                                    Preferable Video Quality
+                                    <select
+                                        name='quality'
+                                        defaultValue={currentQuality}
+                                    >
+                                        {qualityOptions.map((item, key) => (
+                                            <option key={key} value={item.value}>{item.name}</option>
+                                        ))}
+                                    </select>
+                                </label>
                             )}
-                        </AnimatePresence>
+                            <small>
+                                Only works with <b>Aniwatch</b>.
+                                <br/>
+                                Some videos <b>may not have the quality above</b>.
+                                By that, the video will be displayed with the default quality.
+                            </small>
+                        </div>
 
-                        <label>
-                            <motion.button
-                                type='button'
-                                onClick={() => setDeleteAccountClick(!deleteAccountClick)}
-                                variants={btnVariants}
-                                whileTap="tap"
-                            >
-                                Delete All Account Info
-                            </motion.button>
-                        </label>
-                        <AnimatePresence
-                            initial={false}
-                            mode='wait'
-                        >
-                            {deleteAccountClick && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
-                                    animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
-                                    exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
-                                    className={styles.confirm_delete_container}
-                                >
-                                    <p>Are you Sure?</p>
-                                    <button type='button' onClick={() => setDeleteAccountClick(false)}>Cancel</button>
-                                    <button onClick={() => deleteAccountInfo("account")}>Delete!</button>
-                                </motion.div>
+                    </div>
+
+                    <div className={styles.group_container}>
+                        <h5>Source</h5>
+
+                        <div>
+                            {currentSource && (
+                                <label>
+                                    Select Source of Episodes
+                                    <select
+                                        name='source'
+                                        defaultValue={currentSource}
+                                    >
+                                        {sourcesOptions.map((item, key) => (
+                                            <option key={key} value={item.value}>{item.name}</option>
+                                        ))}
+                                    </select>
+                                </label>
                             )}
-                        </AnimatePresence>
+                            <small>Default Option: <b>Crunchyroll</b></small>
 
+                        </div>
+                    </div>
+
+                    <div >
+                        <h5 style={{ marginBottom: "16px" }}>Delete <span>(can not be reverted!)</span></h5>
+
+                        <div className={styles.btns_container}>
+                            <label>
+                                <motion.button
+                                    type='button'
+                                    onClick={() => setDeleteBookmarksClick(!deleteBookmarksClick)}
+                                    variants={btnVariants}
+                                    whileTap="tap"
+                                    data-active={deleteBookmarksClick}
+                                >
+                                    Delete Watchlist
+                                </motion.button>
+
+                            </label>
+                            <AnimatePresence
+                                initial={false}
+                                mode='wait'
+                            >
+                                {deleteBookmarksClick && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                        animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                        exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                        className={styles.confirm_delete_container}
+                                    >
+                                        <p>Are you Sure?</p>
+                                        <button type='button' onClick={() => setDeleteBookmarksClick(false)}>Cancel</button>
+                                        <button onClick={() => deleteAccountInfo("bookmarks")}>Delete!</button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            <label>
+                                <motion.button
+                                    type='button'
+                                    onClick={() => setDeleteEpisodessClick(!deleteEpisodesClick)}
+                                    variants={btnVariants}
+                                    whileTap="tap"
+                                    data-active={deleteEpisodesClick}
+                                >
+                                    Delete Episodes Watched
+                                </motion.button>
+                            </label>
+                            <AnimatePresence
+                                initial={false}
+                                mode='wait'
+                            >
+                                {deleteEpisodesClick && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                        animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                        exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                        className={styles.confirm_delete_container}
+                                    >
+                                        <p>Are you Sure?</p>
+                                        <button type='button' onClick={() => setDeleteEpisodessClick(false)}>Cancel</button>
+                                        <button onClick={() => deleteAccountInfo("episodes")}>Delete!</button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            <label>
+                                <motion.button
+                                    type='button'
+                                    onClick={() => setDeleteAccountClick(!deleteAccountClick)}
+                                    variants={btnVariants}
+                                    whileTap="tap"
+                                    data-active={deleteAccountClick}
+                                >
+                                    Delete All Account Info
+                                </motion.button>
+                            </label>
+                            <AnimatePresence
+                                initial={false}
+                                mode='wait'
+                            >
+                                {deleteAccountClick && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                        animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                        exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                        className={styles.confirm_delete_container}
+                                    >
+                                        <p>Are you Sure?</p>
+                                        <button type='button' onClick={() => setDeleteAccountClick(false)}>Cancel</button>
+                                        <button onClick={() => deleteAccountInfo("account")}>Delete!</button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                        </div>
                     </div>
 
                     <button
