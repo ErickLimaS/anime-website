@@ -3,11 +3,8 @@ import React from 'react'
 import styles from './component.module.css'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import MovieSvg from "@/public/assets/film.svg"
-import AnimeSvg from "@/public/assets/play-circle.svg"
-import MangaSvg from "@/public/assets/book.svg"
-import MusicSvg from "@/public/assets/music-note-beamed.svg"
 import { motion } from 'framer-motion'
+import MediaFormatIcon from '../MediaFormatIcon'
 
 type ComponentTypes = {
     data: ApiDefaultResult,
@@ -56,18 +53,7 @@ function MediaItemCoverInfo3({ positionIndex, data, darkMode, loading, hiddenOnD
 
                 <motion.span className={styles.media_type_icon}>
 
-                    {
-
-                        (data.format == "OVA" ||
-                            data.format == "TV" ||
-                            data.format == "ONA" ||
-                            data.format == "SPECIAL"
-                        )
-                        && <AnimeSvg width={16} height={16} alt="Tv Icon" />
-                    }
-                    {(data.format == "MOVIE") && <MovieSvg width={16} height={16} alt="Movie Icon" />}
-                    {(data.format == "MANGA") && <MangaSvg width={16} height={16} alt="Manga Icon" />}
-                    {(data.format == "MUSIC") && <MusicSvg width={16} height={16} alt="Music Icon" />}
+                    <MediaFormatIcon format={data.format} />
 
                     <motion.span className={styles.media_format_title}>
                         {data.format == "TV" ? "ANIME" : data.format}

@@ -3,11 +3,8 @@ import styles from './component.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import MovieSvg from "@/public/assets/film.svg"
-import AnimeSvg from "@/public/assets/play-circle.svg"
-import MangaSvg from "@/public/assets/book.svg"
-import MusicSvg from "@/public/assets/music-note-beamed.svg"
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
+import MediaFormatIcon from '../MediaFormatIcon'
 
 type ComponentTypes = {
     data: ApiDefaultResult | MediaDbOffline,
@@ -50,18 +47,13 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
 
                 <span className={styles.media_type_icon}>
 
-                    {
-                        (
-                            (fromOfflineDb ? (data as MediaDbOffline).type == "OVA" : (data as ApiDefaultResult).format == "OVA") ||
-                            (fromOfflineDb ? (data as MediaDbOffline).type == "TV" : (data as ApiDefaultResult).format == "TV") ||
-                            (fromOfflineDb ? (data as MediaDbOffline).type == "ONA" : (data as ApiDefaultResult).format == "ONA") ||
-                            (fromOfflineDb ? (data as MediaDbOffline).type == "SPECIAL" : (data as ApiDefaultResult).format == "SPECIAL")
-                        )
-                        && <AnimeSvg width={16} height={16} alt="Tv Icon" />
-                    }
-                    {((fromOfflineDb ? (data as MediaDbOffline).type == "MOVIE" : (data as ApiDefaultResult).format == "MOVIE")) && <MovieSvg width={16} height={16} alt="Movie Icon" />}
-                    {((fromOfflineDb ? (data as MediaDbOffline).type == "MANGA" : (data as ApiDefaultResult).format == "MANGA")) && <MangaSvg width={16} height={16} alt="Manga Icon" />}
-                    {((fromOfflineDb ? (data as MediaDbOffline).type == "MUSIC" : (data as ApiDefaultResult).format == "MUSIC")) && <MusicSvg width={16} height={16} alt="Music Icon" />}
+                    <MediaFormatIcon
+                        format={fromOfflineDb ?
+                            (data as MediaDbOffline).type == "TV" ? "ANIME" : (data as MediaDbOffline).type
+                            :
+                            (data as ApiDefaultResult).format == "TV" ? "ANIME" : (data as ApiDefaultResult).format
+                        }
+                    />
 
                     <span className={styles.media_format_title}>
                         {fromOfflineDb ?

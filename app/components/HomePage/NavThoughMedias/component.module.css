@@ -478,11 +478,27 @@
 
 #expand_container .info_container p {
 
+    display: flex;
+    align-items: center;
+    gap: 0 8px;
+
     font-weight: 400;
 
     color: var(--white-100);
 
 }
+
+#expand_container .info_container p.smaller_fonts {
+
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+
+    font-size: var(--font-size--small-1);
+
+}
+
 
 /* TRAILER */
 #expand_container .trailer_container {

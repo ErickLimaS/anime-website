@@ -15,6 +15,7 @@ import Image from 'next/image'
 import AddToPlaylistButton from '../../AddToPlaylistButton'
 import parse from "html-react-parser"
 import ScoreInStars from '../../ScoreInStars'
+import MediaFormatIcon from '../../MediaFormatIcon'
 
 type Component = {
 
@@ -233,7 +234,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                         </motion.h5>
 
                                         <motion.p style={{ color: mediaSelect.coverImage.color || "var(--white-100)" }}>
-                                            {mediaSelect.format}
+                                            <MediaFormatIcon format={mediaSelect.format} /> {mediaSelect.format == "TV" ? "ANIME" : mediaSelect.format}
                                         </motion.p>
 
                                         {mediaSelect.averageScore && (
@@ -247,7 +248,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                         )}
 
                                         {mediaSelect.genres && (
-                                            <motion.p>
+                                            <motion.p className={styles.smaller_fonts}>
                                                 {mediaSelect.genres.map((item, key) => (`${item}${key + 1 == mediaSelect.genres.length ? "" : ", "}`))}
                                             </motion.p>
                                         )}
@@ -270,11 +271,11 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                     </motion.div>
 
                                 ) : (
-
-                                    <motion.div className={styles.description_container}>
-                                        <motion.p>{parse(mediaSelect.description)}</motion.p>
-                                    </motion.div>
-
+                                    mediaSelect.description && (
+                                        <motion.div className={styles.description_container}>
+                                            <motion.p>{parse(mediaSelect.description)}</motion.p>
+                                        </motion.div>
+                                    )
                                 )}
 
                                 <motion.div className={styles.btns_container}>

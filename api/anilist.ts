@@ -150,9 +150,10 @@ export default {
                     'page': pageNumber || 1,
                     'perPage': perPage || 5,
                     'type': type,
+                    'sort': "EPISODE",
                     'showAdultContent': false,
                     'airingAt_greater': dateInUnix,
-                    'airingAt_lesser': lastHourOfTheDay(1) // limit is today last hour 
+                    'airingAt_lesser': lastHourOfTheDay(1) // returns today last hour 
                 }
             }
 
