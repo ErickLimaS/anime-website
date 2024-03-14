@@ -47,7 +47,7 @@ function NavSideBar({ params }: { params?: { format: string } }) {
             <nav id={styles.nav_container}>
                 <ul>
                     <li data-active={currentParam == ""}>
-                        <Link href={`/playlist`}>All {bookmarksLength && (<span>({bookmarksLength.all})</span>)}</Link>
+                        <Link href={`/watchlist`}>All {bookmarksLength && (<span>({bookmarksLength.all})</span>)}</Link>
                     </li>
                     <li data-active={currentParam == "tv"}>
                         <Link href={`?format=tv`}>Animes {bookmarksLength && (<span>({bookmarksLength.anime})</span>)}</Link>

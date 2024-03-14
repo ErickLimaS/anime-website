@@ -26,7 +26,7 @@ export async function generateMetadata({ params, searchParams }: {
 
 async function WatchEpisode({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string, source: string, q: string, episodeNumber?: string } // EPISODE NUMBER, SOURCE, EPISODE ID
+    searchParams: { episode: string, source: string, q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults

@@ -7,7 +7,7 @@ import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import NavPaginateItems from '@/app/components/PaginateItems';
+import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import aniwatch from '@/api/aniwatch';
 import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch, MediaInfoAniwatch, MediaInfoFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
