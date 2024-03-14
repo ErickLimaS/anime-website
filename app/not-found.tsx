@@ -23,14 +23,9 @@ function Custom404() {
     // img container
     const imgStylesContainer = {
 
-        position: "relative",
-        bottom: "-48px",
-        left: "-16px",
-        width: "100%",
-        maxWidth: "600px",
-        minHeight: "216px",
-        height: "calc(216px + 33vh / 10)",
-        maxHeight: "490px"
+        display: "flex",
+        alignItems: "center",
+        margin: "auto",
 
     } as DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
@@ -79,7 +74,7 @@ function Custom404() {
             <div style={errorHeadingContainerStyles}>
 
                 <div style={imgStylesContainer}>
-                    <Image src={ErrorImg} fill alt={'Error 404'} />
+                    <Image src={ErrorImg} height={330} alt={'Error 404'} />
                 </div>
 
                 <h1 style={errorH1Styles}>Page Not Found!</h1>

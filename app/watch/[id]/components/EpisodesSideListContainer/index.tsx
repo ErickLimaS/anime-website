@@ -94,14 +94,19 @@ function EpisodesSideListContainer({ source, mediaId, mediaTitle, activeEpisodeN
     useEffect(() => {
 
         // focus list item that correspond to current episode on page
-        if (!isLoading) {
+        const centerActiveEpisode = () => {
             const elementActive = document.querySelector("li[data-active=true]")
+
             elementActive?.scrollIntoView()
 
             window.scrollTo({ top: 0, behavior: 'instant' })
         }
 
-    }, [isLoading])
+        if (!isLoading) {
+            setTimeout(centerActiveEpisode, 500)
+        }
+
+    }, [isLoading, activeEpisodeNumber])
 
     useEffect(() => {
 
