@@ -7,13 +7,30 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import ReactPlayer from 'react-player';
 import { TrackProps } from 'react-player/file';
 
-function Player({ source, subtitles }: { source: string, subtitles?: { kind: string, default: boolean | undefined, file: string, label: string }[] }) {
+type VideoPlayerType = {
+    source: string,
+    subtitles?: {
+        kind: string,
+        default: boolean | undefined,
+        file: string,
+        label: string
+    }[],
+    videoQualities?: {
+        url: string,
+        quality: "360p" | "480p" | "720p" | "1080p" | "default" | "backup",
+        isM3U8: boolean
+    }[]
+}
+
+function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<TrackProps[] | undefined>(undefined)
 
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
+
+    const [videoSource, setVideoSource] = useState<string>()
 
     const db = getFirestore(initFirebase());
 
@@ -29,21 +46,22 @@ function Player({ source, subtitles }: { source: string, subtitles?: { kind: str
 
         }
 
+        // get user language and filter through the available subtitles to this media
         let subListMap: TrackProps[] = []
 
-        subtitles?.map((item, key) => {
+        subtitles?.map((item) => {
 
-            const isDefaultLang = (preferredLanguage && subtitles[key].label) ?
-                subtitles[key].label.toLowerCase().includes(preferredLanguage.toLowerCase())
+            const isDefaultLang = (preferredLanguage && item.label) ?
+                item.label.toLowerCase().includes(preferredLanguage.toLowerCase())
                 :
-                subtitles[key].default || subtitles[key].label == "English"
+                item.default || item.label == "English"
 
             subListMap.push({
-                kind: subtitles[key].kind,
-                srcLang: subtitles[key].label,
-                src: subtitles[key].file,
+                kind: item.kind,
+                srcLang: item.label,
+                src: item.file,
                 default: isDefaultLang,
-                label: subtitles[key].label
+                label: item.label
             })
 
         })
@@ -51,19 +69,46 @@ function Player({ source, subtitles }: { source: string, subtitles?: { kind: str
         setSubList(subListMap)
     }
 
+    async function getUserVideoQuality() {
+
+        let userVideoQuality: string | null = null
+
+        if (user) {
+
+            const data = await getDoc(doc(db, "users", user.uid))
+
+            userVideoQuality = await data.get("videoQuality")
+
+        }
+
+        if (!userVideoQuality) return setVideoSource(source)
+
+        // get which that matches the available qualities of this media
+        let videoSourceMatchedUserQuality
+
+        videoQualities?.map((item) => {
+
+            if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
+
+        })
+
+        setVideoSource(videoSourceMatchedUserQuality || source)
+    }
+
     useEffect(() => {
 
         getUserPreferedLanguage()
+        getUserVideoQuality()
 
     }, [user, loading])
 
     return (
-        (!loading && subList) && (
+        (!loading && subList && videoSource) && (
             <ReactPlayer
                 controls
                 playing
                 volume={0.6}
-                url={source}
+                url={videoSource}
                 config={{
                     file: {
                         attributes: {

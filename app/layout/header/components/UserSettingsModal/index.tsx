@@ -235,9 +235,9 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                 </label>
                             )}
                             <small>
-                                Only works with <b>Aniwatch</b>.
+                                Only works with <b>GoGoAnime</b>.
                                 <br/>
-                                Some videos <b>may not have the quality above</b>.
+                                Some videos <b>may not have the quality selected</b>.
                                 By that, the video will be displayed with the default quality.
                             </small>
                         </div>
@@ -261,7 +261,6 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                     </select>
                                 </label>
                             )}
-                            <small>Default Option: <b>Crunchyroll</b></small>
 
                         </div>
                     </div>
