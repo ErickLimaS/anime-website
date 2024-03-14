@@ -152,7 +152,7 @@
 
 #heading_info_container h1 span {
 
-    width: max-content;
+    width: fit-content;
 
     font-size: var(--font-size--p);
     font-weight: 400;

@@ -100,7 +100,7 @@ function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
         getUserPreferedLanguage()
         getUserVideoQuality()
 
-    }, [user, loading])
+    }, [user, loading, source])
 
     return (
         (!loading && subList && videoSource) && (
