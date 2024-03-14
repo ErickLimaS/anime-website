@@ -48,11 +48,7 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                 <span className={styles.media_type_icon}>
 
                     <MediaFormatIcon
-                        format={fromOfflineDb ?
-                            (data as MediaDbOffline).type == "TV" ? "ANIME" : (data as MediaDbOffline).type
-                            :
-                            (data as ApiDefaultResult).format == "TV" ? "ANIME" : (data as ApiDefaultResult).format
-                        }
+                        format={fromOfflineDb ? (data as MediaDbOffline).type : (data as ApiDefaultResult).format}
                     />
 
                     <span className={styles.media_format_title}>
