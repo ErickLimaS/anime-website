@@ -17,6 +17,7 @@ import Link from 'next/link'
 import UserModal from '../../../../components/UserLoginModal'
 import { AnimatePresence, motion } from 'framer-motion'
 import UserSettingsModal from '../UserSettingsModal'
+import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 
 function UserSideMenu() {
 
@@ -110,7 +111,7 @@ function UserSideMenu() {
                     >
                         <span id={styles.img_container}>
                             <Image
-                                src={user.photoURL as string}
+                                src={user.photoURL ? user.photoURL as string : ProfileFallbackImg as unknown as string}
                                 fill
                                 sizes='100%'
                                 alt={user.displayName as string}>

@@ -21,11 +21,15 @@
 
     gap: 24px 0;
 
+    overflow: auto;
+
     width: 96%;
 
     max-width: 500px;
 
     min-height: 400px;
+    height: auto;
+    max-height: 80vh;
 
     background-color: var(--white-100);
 
@@ -182,11 +186,15 @@
 
 }
 
-#modal form input {
+#modal form input,
+#modal form input:-webkit-autofill,
+#modal form input:-webkit-autofill:hover,
+#modal form input:-webkit-autofill:active {
 
-    box-shadow: inset 0px 0px 3px var(--black-25);
+    box-shadow: inset 0px 0px 3px var(--black-25) !important;
+    -webkit-box-shadow: inset 0px 0px 3px var(--black-25) !important;
 
-    background-color: var(--black-05);
+    background-color: var(--black-05) !important;
 
     padding: 16px 16px;
 
@@ -195,25 +203,64 @@
 
 }
 
-#modal form input:focus {
+#modal form input:focus,
+#modal form input:-webkit-autofill:focus {
+
+    -webkit-box-shadow: inset 0px 0px 3px var(--black-25) !important;
+    box-shadow: inset 0px 0px 3px var(--black-25) !important;
+
+    background-color: var(--black-05) !important;
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+
+    border: 1px solid transparent;
 
     outline-width: 0;
     border: 1px solid var(--brand-color);
 
 }
 
+#modal form[data-error-occurred=true] input,
+#modal form[data-error-occurred=true] input:-webkit-autofill,
+#modal form[data-error-occurred=true] input:-webkit-autofill:hover,
+#modal form[data-error-occurred=true] input:-webkit-autofill:focus,
+#modal form[data-error-occurred=true] input:-webkit-autofill:active {
+    background-color: rgb(255 172 166 / 60%) !important;
+    box-shadow: 0 0 0 3px rgb(255 172 166 / 60%) inset !important;
+    -webkit-box-shadow: 0 0 0 3px rgb(255 172 166 / 60%) inset !important;
+}
+
+/* #modal form[data-error-occurred=true] input {
+
+    background-color: rgb(255 172 166 / 60%) !important;
+    box-shadow: 0 0 0 3px rgb(255 172 166 / 60%) inset !important;
+    -webkit-box-shadow: 0 0 0 3px rgb(255 172 166 / 60%) inset !important;
+
+} */
+
 #modal form button {
 
     color: var(--white-100);
 
     background-color: var(--brand-color);
+    border: 1px solid transparent;
 
     padding: 18px 8px;
 
     width: 100%;
 
     border-radius: 8px;
-    border: 0;
+
+}
+
+#modal form button:disabled {
+
+    cursor: default;
+
+    background-color: transparent;
+    border: 2px solid var(--black-05);
 
 }
 
