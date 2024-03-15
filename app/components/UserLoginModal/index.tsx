@@ -8,10 +8,12 @@ import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg'
 import {
     signInWithPopup, GoogleAuthProvider,
     GithubAuthProvider, Auth, signInWithEmailAndPassword,
-    createUserWithEmailAndPassword
+    createUserWithEmailAndPassword,
+    updateProfile
 } from 'firebase/auth'
 import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
 import { initFirebase } from '@/firebase/firebaseApp'
+import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 
 function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElement>, auth: Auth }) {
 
@@ -82,7 +84,18 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
                 const res = await createUserWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
 
-                await setDoc(doc(collection(db, "users"), res.user?.uid), {})
+                await setDoc(doc(collection(db, "users"), res.user?.uid), {
+                    bookmarks: [],
+                    comments: {},
+                    episodesWatchedBySource: {},
+                    videoSource: "crunchyroll",
+                    videoQuality: "auto",
+                    videoSubtitleLanguage: "English",
+                })
+
+                await updateProfile(res.user, {
+                    photoURL: ProfileFallbackImg.src as string
+                })
 
                 setLoginError(null)
             }
