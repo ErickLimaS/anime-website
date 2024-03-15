@@ -6,7 +6,7 @@ import LoadingSvg from '@/public/assets/ripple-1s-200px.svg'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { deleteDoc, deleteField, doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore'
 import { initFirebase } from '@/firebase/firebaseApp'
-import { Auth } from 'firebase/auth'
+import { Auth, deleteUser } from 'firebase/auth'
 
 function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElement>, auth: Auth }) {
 
@@ -152,6 +152,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
             case "account":
 
                 await deleteDoc(doc(db, 'users', user.uid))
+                await deleteUser(user)
 
                 auth.signOut()
 
@@ -236,7 +237,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                             )}
                             <small>
                                 Only works with <b>GoGoAnime</b>.
-                                <br/>
+                                <br />
                                 Some videos <b>may not have the quality selected</b>.
                                 By that, the video will be displayed with the default quality.
                             </small>

@@ -1,15 +1,29 @@
-import { motion } from 'framer-motion'
-import React, { MouseEventHandler } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import React, { MouseEventHandler, useState } from 'react'
 import styles from "./component.module.css"
 import GoogleSvg from '@/public/assets/google-fill.svg'
 import GitHubSvg from '@/public/assets/github.svg'
 import CloseSvg from '@/public/assets/x.svg'
-import { signInWithPopup, GoogleAuthProvider, GithubAuthProvider, Auth } from 'firebase/auth'
+import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg'
+import {
+    signInWithPopup, GoogleAuthProvider,
+    GithubAuthProvider, Auth, signInWithEmailAndPassword,
+    createUserWithEmailAndPassword
+} from 'firebase/auth'
+import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
+import { initFirebase } from '@/firebase/firebaseApp'
 
 function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElement>, auth: Auth }) {
 
     const googleProvider = new GoogleAuthProvider()
     const githubProvider = new GithubAuthProvider()
+
+    const db = getFirestore(initFirebase());
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [alternativeForm, setAlternativeForm] = useState(false)
+    const [loginError, setLoginError] = useState<{ code: string, message: string } | null>(null)
 
     const dropIn = {
 
@@ -42,9 +56,61 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
         await signInWithPopup(auth, githubProvider)
     }
 
-    const handleLoginForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    async function handleLoginForm(e: React.FormEvent<HTMLFormElement>, action: "login" | "signup") {
 
         e.preventDefault()
+
+        setIsLoading(true)
+
+        const form: any = e.target
+
+        if (action == "signup") {
+            try {
+
+                const doesPasswordFieldsMatch = form.password.value.trim() == form.confirm_password.value.trim()
+
+                if (!doesPasswordFieldsMatch) {
+                    setLoginError({
+                        code: "password",
+                        message: "Passwords doesn't match."
+                    })
+
+                    setIsLoading(false)
+
+                    return
+                }
+
+                const res = await createUserWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
+
+                await setDoc(doc(collection(db, "users"), res.user?.uid), {})
+
+                setLoginError(null)
+            }
+            catch (err: any) {
+
+                setLoginError({
+                    code: err.code,
+                    message: err.message
+                })
+
+            }
+        }
+        else {
+            try {
+                const res = await signInWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
+                setLoginError(null)
+            }
+            catch (err: any) {
+
+                setLoginError({
+                    code: err.code,
+                    message: err.code == "auth/invalid-credential" ? "Check Your Email and Password, then try again." : err.message
+                })
+
+            }
+        }
+
+        setIsLoading(false)
 
     }
 
@@ -91,28 +157,107 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                     <span></span>
                 </div>
 
-                <form onSubmit={(e) => handleLoginForm(e)}>
+                <motion.form
+                    onSubmit={(e) => handleLoginForm(e, alternativeForm ? "signup" : "login")}
+                    onChange={() => setLoginError(null)}
+                    data-error-occurred={loginError ? true : false}
+                >
 
                     <label>
                         Email
-                        <input type='email' placeholder='under development' required></input>
+                        <input
+                            type='email'
+                            name='email'
+                            placeholder='Your Email'
+                            required></input>
                     </label>
 
                     <label>
                         Password
-                        <input type='password' placeholder='under development' required></input>
+                        <input
+                            type='password'
+                            name='password'
+                            pattern="^(?=.*\d)(?=.*[a-zA-Z]).{8,}$"
+                            title={"Password has to have at least 1 letter and 1 number. Min. 8 characters."}
+                            autoComplete={alternativeForm ? 'new-password' : 'current-password'}
+                            placeholder='Your Password'
+                            required>
+                        </input>
                     </label>
 
-                    <button type='submit'>LOGIN</button>
+                    <AnimatePresence>
+                        {alternativeForm && (
+                            <motion.label
+                                initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                            >
+                                Confirm Password
+                                <input
+                                    type='password'
+                                    name='confirm_password'
+                                    pattern="^(?=.*\d)(?=.*[a-zA-Z]).{8,}$"
+                                    title={"Password has to have at least 1 letter and 1 number. Min. 8 characters."}
+                                    placeholder='Your Password Again'
+                                    required>
+                                </input>
+                            </motion.label>
+                        )}
+                    </AnimatePresence>
 
-                </form>
+                    <motion.button
+                        type='submit'
+                        whileTap={{ scale: 0.95 }}
+                        disabled={isLoading}
+                    >
 
-                <button
+                        <AnimatePresence>
+                            {isLoading ? (
+                                <LoadingSvg width={16} height={16} alt={"Loading"} />
+                            ) : (
+                                alternativeForm ? (
+                                    <motion.span>
+                                        SIGN UP
+                                    </motion.span>
+                                ) : (
+                                    <motion.span>
+                                        LOGIN
+                                    </motion.span>
+                                )
+                            )}
+                        </AnimatePresence>
+                    </motion.button>
+
+                </motion.form>
+
+                <AnimatePresence>
+                    {loginError && (
+                        <motion.p
+                            style={{ color: "var(--black-100)", padding: "16px", background: "var(--black-05)" }}
+                            initial={{
+                                opacity: 0,
+                                height: 0
+                            }}
+                            animate={{
+                                opacity: 1,
+                                height: "auto"
+                            }}
+                            exit={{
+                                opacity: 0,
+                                height: 0
+                            }}
+                        >
+                            <span style={{ color: "var(--error)" }}>{loginError.code}:</span> {loginError.message}
+                        </motion.p>
+                    )}
+                </AnimatePresence>
+
+                <motion.button
                     id={styles.create_account_button}
-                    onClick={() => console.log("change state to sign up model")}
+                    onClick={() => setAlternativeForm(!alternativeForm)}
                 >
-                    Or Create Your Account
-                </button>
+                    {alternativeForm ? "Or Login in Your Account" : "Or Create Your Account"}
+                </motion.button>
 
             </motion.div>
         </motion.div>
