@@ -86,9 +86,9 @@ function Custom404() {
 
             <div style={errorButtonContainerStyles}>
 
-                <Link href={"/"} style={errorReturnHomeContainerStyles}>
+                <a href={"/"} style={errorReturnHomeContainerStyles}>
                     Return to Home Page
-                </Link>
+                </a>
 
             </div>
 
