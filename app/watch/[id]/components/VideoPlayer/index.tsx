@@ -1,7 +1,13 @@
 "use client"
+import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { initFirebase } from '@/firebase/firebaseApp';
 import { getAuth } from 'firebase/auth';
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import {
+    DocumentData, DocumentSnapshot,
+    FieldPath, arrayUnion,
+    doc, getDoc,
+    getFirestore, updateDoc
+} from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import ReactPlayer from 'react-player';
@@ -9,6 +15,10 @@ import { TrackProps } from 'react-player/file';
 
 type VideoPlayerType = {
     source: string,
+    mediaSource: string,
+    media: ApiMediaResults,
+    episode: string,
+    episodeId: string,
     subtitles?: {
         kind: string,
         default: boolean | undefined,
@@ -22,9 +32,12 @@ type VideoPlayerType = {
     }[]
 }
 
-function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
+function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episode }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<TrackProps[] | undefined>(undefined)
+
+    const [wasAddedToKeepWatching, setWasAddedToKeepWatching] = useState<boolean>(false)
+    const [mediaOnDb, setMediaOnDb] = useState<any>(null)
 
     const auth = getAuth()
 
@@ -95,6 +108,55 @@ function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
         setVideoSource(videoSourceMatchedUserQuality || source)
     }
 
+    async function addToKeepWatching() {
+
+        let isMediaIdOnDoc
+
+        if (!mediaOnDb) {
+
+            const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+
+            const keepWatchingList = await userDoc.get("keepWatching")
+
+            isMediaIdOnDoc = keepWatchingList?.find((item: { id: number }) => item.id == media!.id)
+
+            setMediaOnDb(isMediaIdOnDoc || null)
+
+        }
+
+        if (isMediaIdOnDoc || mediaOnDb) {
+
+            // UPDATE TIME ON DOC FIELD 
+
+        }
+        else {
+
+            await updateDoc(doc(db, "users", user!.uid),
+                {
+                    keepWatching: arrayUnion({
+                        id: media.id,
+                        title: {
+                            romaji: media.title.romaji
+                        },
+                        format: media.format,
+                        coverImage: {
+                            extraLarge: media.coverImage.extraLarge,
+                            large: media.coverImage.large
+                        },
+                        episode: episode,
+                        episodeId: episodeId,
+                        source: mediaSource,
+                        updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
+                    })
+                } as unknown as FieldPath,
+                { merge: true }
+            )
+        }
+
+        setWasAddedToKeepWatching(true)
+
+    }
+
     useEffect(() => {
 
         getUserPreferedLanguage()
@@ -109,6 +171,7 @@ function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
                 playing
                 volume={0.6}
                 url={videoSource}
+                onProgress={(e) => (Math.round(e.playedSeconds) == 25 && user) && addToKeepWatching()}
                 config={{
                     file: {
                         attributes: {

@@ -65,6 +65,10 @@ async function WatchEpisode({ params, searchParams }: {
                 <section id={styles.video_container}>
                     <Player
                         source={videoSrc}
+                        mediaSource={searchParams.source}
+                        media={mediaData}
+                        episode={searchParams.episode}
+                        episodeId={searchParams.q}
                         subtitles={searchParams.source == "gogoanime" ? undefined : (episodeData as EpisodeLinksAnimeWatch).tracks}
                         videoQualities={searchParams.source == "gogoanime" ? (episodeData as EpisodeLinksGoGoAnime).sources : undefined}
                     />
