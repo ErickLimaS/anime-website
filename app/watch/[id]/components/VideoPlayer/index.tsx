@@ -3,10 +3,9 @@ import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { initFirebase } from '@/firebase/firebaseApp';
 import { getAuth } from 'firebase/auth';
 import {
-    DocumentData, DocumentSnapshot,
-    FieldPath, arrayUnion,
+    FieldPath,
     doc, getDoc,
-    getFirestore, updateDoc
+    getFirestore, setDoc
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -107,7 +106,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     async function addToKeepWatching() {
 
-        await updateDoc(doc(db, "users", user!.uid),
+        await setDoc(doc(db, "users", user!.uid),
             {
                 keepWatching: {
                     [media.id]: {
@@ -126,7 +125,8 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                         updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
                     }
                 }
-            }
+            } as unknown as FieldPath,
+            { merge: true }
         )
 
     }

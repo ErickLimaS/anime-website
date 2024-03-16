@@ -15,6 +15,7 @@ import AddToPlaylistButton from "./components/AddToPlaylistButton";
 import SwiperListContainer from "./components/SwiperListContainer";
 import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";
 import { headers } from "next/headers";
+import KeepWatchingSection from "./components/HomePage/KeepWatchingSection";
 
 export const metadata: Metadata = {
   title: 'Home | AniProject',
@@ -61,6 +62,10 @@ export default async function Home() {
         <HeroCarousel data={popularData} isMobile={isMobileScreen || false} />
 
       </section>
+
+
+      {/* Keep Watching  */}
+      <KeepWatchingSection />
 
       {/* POPULAR MEDIA  SECTION*/}
       <section id={styles.popular_container} >
