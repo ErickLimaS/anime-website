@@ -36,9 +36,6 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     const [subList, setSubList] = useState<TrackProps[] | undefined>(undefined)
 
-    const [wasAddedToKeepWatching, setWasAddedToKeepWatching] = useState<boolean>(false)
-    const [mediaOnDb, setMediaOnDb] = useState<any>(null)
-
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
@@ -110,30 +107,10 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     async function addToKeepWatching() {
 
-        let isMediaIdOnDoc
-
-        if (!mediaOnDb) {
-
-            const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
-
-            const keepWatchingList = await userDoc.get("keepWatching")
-
-            isMediaIdOnDoc = keepWatchingList?.find((item: { id: number }) => item.id == media!.id)
-
-            setMediaOnDb(isMediaIdOnDoc || null)
-
-        }
-
-        if (isMediaIdOnDoc || mediaOnDb) {
-
-            // UPDATE TIME ON DOC FIELD 
-
-        }
-        else {
-
-            await updateDoc(doc(db, "users", user!.uid),
-                {
-                    keepWatching: arrayUnion({
+        await updateDoc(doc(db, "users", user!.uid),
+            {
+                keepWatching: {
+                    [media.id]: {
                         id: media.id,
                         title: {
                             romaji: media.title.romaji
@@ -147,13 +124,10 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                         episodeId: episodeId,
                         source: mediaSource,
                         updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
-                    })
-                } as unknown as FieldPath,
-                { merge: true }
-            )
-        }
-
-        setWasAddedToKeepWatching(true)
+                    }
+                }
+            }
+        )
 
     }
 
@@ -171,6 +145,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                 playing
                 volume={0.6}
                 url={videoSource}
+                on
                 onProgress={(e) => (Math.round(e.playedSeconds) == 25 && user) && addToKeepWatching()}
                 config={{
                     file: {
