@@ -54,10 +54,25 @@
     border-radius: 6px;
 }
 
+#modal #close_menu_btn {
+
+    display: flex;
+    margin-left: auto;
+    padding: 16px;
+    background: transparent;
+    border: 0;
+
+}
+
+#modal #close_menu_btn svg {
+    transform: scale(2);
+    fill: var(--brand-color);
+}
+
 #modal form {
 
     display: flex;
-    gap: 16px 0;
+    gap: 62px 0;
     flex-direction: column;
 
 }
@@ -66,19 +81,30 @@
 
     display: flex;
     flex-direction: column;
-    gap: 16px 0;
+    gap: 12px 0;
 
 }
 
 #modal form h5 {
 
-    color: var(--brand-color);
+    display: flex;
+    gap: 8px;
+
+    font-family: var(--font-family-sans-serif);
+
+    padding: 12px 16px;
+
+    border-radius: 8px;
+
+    background-color: var(--brand-color);
+
+    color: var(--white-100);
 
 }
 
 #modal form h5 span {
 
-    color: var(--black-75);
+    color: var(--white-75);
 
 }
 
@@ -88,6 +114,155 @@
 
 }
 
+#modal form .user_acc_info_container {
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+
+}
+
+@media(min-width: 400px) {
+    #modal form .user_acc_info_container {
+
+        grid-template-columns: minmax(100px, 1fr) 3fr;
+        gap: 0 8px;
+
+    }
+}
+
+@media(min-width: 520px) {
+    #modal form .user_acc_info_container {
+
+        grid-template-columns: minmax(140px, 1fr) 3fr;
+
+    }
+}
+
+#modal form .user_acc_info_container #img_container {
+
+    cursor: pointer;
+
+    position: relative;
+    top: 0;
+
+    width: inherit;
+    min-height: 240px;
+    height: 100%;
+
+    border-radius: 8px;
+    overflow: hidden;
+
+}
+
+@media(min-width: 400px) {
+    #modal form .user_acc_info_container #img_container {
+        min-height: 100px;
+    }
+}
+
+@media(min-width: 520px) {
+    #modal form .user_acc_info_container #img_container {
+        min-height: 140px;
+    }
+}
+
+#modal form .user_acc_info_container #img_container::after {
+
+    transition: all ease-in-out 200ms;
+}
+
+#modal form .user_acc_info_container #img_container:hover::after {
+
+    content: "Change Image";
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(var(--black-25), var(--black-25));
+    color: var(--white-100);
+
+    z-index: 2;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#modal form .user_acc_info_container #img_container:hover img {
+    filter: brightness(0.2);
+}
+
+/* IMAGES PANEL CONTAINER */
+#imgs_panel_container {
+
+    padding: 8px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+
+    background-color: var(--black-05);
+
+    border-radius: 8px;
+
+}
+
+@media(min-width: 420px) {
+    #imgs_panel_container {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media(min-width: 520px) {
+    #imgs_panel_container {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+#imgs_panel_container .img_checkbox {
+
+    position: relative;
+    aspect-ratio: 1/1;
+
+    overflow: hidden;
+
+}
+
+#imgs_panel_container .img_checkbox img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#imgs_panel_container .img_checkbox input {
+
+    border: 4px solid transparent;
+
+    position: relative;
+
+    border-radius: 50%;
+
+    background: rgba(40, 40, 40, 0.2);
+    color: black;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    z-index: 1;
+
+    width: 100%;
+    height: 100%;
+
+}
+
+#imgs_panel_container .img_checkbox input:checked {
+
+    border: 4px solid var(--brand-color);
+
+}
+
+/*  */
 #modal form label {
 
     display: flex;
@@ -96,7 +271,8 @@
 
 }
 
-#modal form label select {
+#modal form label select,
+#modal form label input {
 
     margin-top: 8px;
 
@@ -113,7 +289,8 @@
 
 }
 
-#modal form select:focus {
+#modal form select:focus,
+#modal form input:focus {
 
     outline-width: 0;
     border: 1px solid var(--brand-color);
@@ -215,25 +392,27 @@
 
     box-shadow: inset 0px 0px 3px var(--black-25);
 
-    background-color: var(--brand-color);
-    color: var(--white-100);
+    background-color: transparent;
+    color: var(--brand-color);
 
     padding: 16px 16px;
 
     border-radius: 8px;
-    border: 1px solid transparent;
+    border: 1px solid var(--brand-color);
 
 }
 
 #modal form button[type="submit"][data-change-success=true] {
 
     background-color: #2e882b;
+    color: var(--white-100);
+    border: 1px solid transparent;
 
 }
 
 #modal form button[type="submit"]:not(:disabled):hover {
 
-    filter: brightness(90%);
+    filter: brightness(65%);
 
 }
 

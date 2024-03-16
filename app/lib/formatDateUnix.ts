@@ -19,7 +19,7 @@ export function convertFromUnix(unixTimestamp: number, options?: { month: "numer
 
     const date = new Date(unixTimestamp * 1000)
 
-    return date.toLocaleDateString('default', { month: options ? options.month : 'long', day: "numeric", year: "numeric" })
+    return date.toLocaleDateString('en-US', { month: options ? options.month : 'long', day: "numeric", year: "numeric" })
 
 }
 
