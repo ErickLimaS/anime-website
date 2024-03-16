@@ -35,6 +35,8 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     const [subList, setSubList] = useState<TrackProps[] | undefined>(undefined)
 
+    const [addOnKeepWatching, setAddOnKeepWatching] = useState<boolean>(false)
+
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
@@ -104,7 +106,11 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
         setVideoSource(videoSourceMatchedUserQuality || source)
     }
 
+    // adds media to keep watching
+    // every time user watchs this episode, it will update time on DOC
     async function addToKeepWatching() {
+
+        if (addOnKeepWatching) return
 
         await setDoc(doc(db, "users", user!.uid),
             {
@@ -129,6 +135,8 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
             { merge: true }
         )
 
+        setAddOnKeepWatching(true)
+
     }
 
     useEffect(() => {
@@ -146,7 +154,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                 volume={0.6}
                 url={videoSource}
                 on
-                onProgress={(e) => (Math.round(e.playedSeconds) == 25 && user) && addToKeepWatching()}
+                onProgress={(e) => (user && (Math.round(e.playedSeconds) > 25) && (Math.round(e.playedSeconds) % 2) && !addOnKeepWatching) && addToKeepWatching()}
                 config={{
                     file: {
                         attributes: {
