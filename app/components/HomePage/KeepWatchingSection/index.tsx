@@ -39,8 +39,12 @@ function KeepWatchingSection() {
         const watchingList = userDoc.get("keepWatching")
 
         let listFromObjectToArray = Object.keys(watchingList).map(key => {
+
             return watchingList[key]
-        });
+
+        })
+
+        listFromObjectToArray = listFromObjectToArray.filter(item => item.length != 0 && item)
 
         setWatchingList(listFromObjectToArray || null)
 
@@ -69,6 +73,7 @@ function KeepWatchingSection() {
                     <div>
 
                         <SwiperListContainer
+                            keepWatchingVariant={true}
                             data={watchingList}
                         />
 

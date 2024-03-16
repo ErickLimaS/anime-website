@@ -29,3 +29,21 @@ interface Comment {
     episodeNumber: number
 
 }
+
+interface KeepWatchingItem {
+
+    title: {
+        romaji: string
+    },
+    updatedAt: number,
+    source: string,
+    format: string,
+    episode: string,
+    episodeId: string,
+    coverImage: {
+        extraLarge: string,
+        large: string
+    },
+    id: number
+
+}

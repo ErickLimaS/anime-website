@@ -2,13 +2,15 @@
 import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import MediaItemCoverInfo from '../MediaItemCoverInfo';
+import MediaItemCoverInfo4 from '../MediaItemCoverInfo4';
 import { A11y, Navigation, Pagination } from 'swiper/modules';
 import styles from "./styles.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import ListCarousel from '../HomePage/HeroListCarousel';
 
-function SwiperListContainer({ data, options, customHeroSection }: {
-    data?: ApiDefaultResult[],
+function SwiperListContainer({ data, options, customHeroSection, keepWatchingVariant }: {
+    data?: ApiDefaultResult[] | KeepWatchingItem[],
+    keepWatchingVariant?: boolean,
     options?: {
         slidesPerView?: number
         bp480: number,
@@ -34,11 +36,26 @@ function SwiperListContainer({ data, options, customHeroSection }: {
             {data?.map((item, key: number) => (
 
                 <SwiperSlide key={key} className={styles.custom_list_item} role="listitem">
-                    {customHeroSection ? (
-                        <ListCarousel data={item} />
+
+
+                    {keepWatchingVariant ? (
+
+                        <MediaItemCoverInfo4 darkMode={true} data={item as KeepWatchingItem} />
+
                     ) : (
-                        <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item} />
+
+                        customHeroSection ? (
+
+                            <ListCarousel data={item as ApiDefaultResult} />
+
+                        ) : (
+
+                            <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item as ApiDefaultResult} />
+
+                        )
+
                     )}
+
                 </SwiperSlide>
 
             ))}
