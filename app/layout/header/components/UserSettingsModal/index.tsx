@@ -290,6 +290,22 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                         ></input>
                                     </label>
                                 )}
+                                <AnimatePresence
+                                    initial={false}
+                                    mode='wait'
+                                >
+                                    {newImgProfileSelected && (
+                                        <motion.small
+                                            initial={{ opacity: 0, height: 0, marginTop: "8px" }}
+                                            animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                            exit={{ opacity: 0, height: 0, marginTop: "0" }}
+                                            style={{ height: "100%", display: "block", marginTop: "24px", color: "#2e882b", fontWeight: "500" }}
+                                        >
+                                            New Image Selected!
+                                        </motion.small>
+                                    )}
+
+                                </AnimatePresence>
                             </div>
 
                         </div>
@@ -388,17 +404,20 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
                         <div>
                             {currentSource && (
-                                <label>
-                                    Select Source of Episodes
-                                    <select
-                                        name='source'
-                                        defaultValue={currentSource}
-                                    >
-                                        {sourcesOptions.map((item, key) => (
-                                            <option key={key} value={item.value}>{item.name}</option>
-                                        ))}
-                                    </select>
-                                </label>
+                                <>
+                                    <label>
+                                        Select Main Source of Episodes
+                                        <select
+                                            name='source'
+                                            defaultValue={currentSource}
+                                        >
+                                            {sourcesOptions.map((item, key) => (
+                                                <option key={key} value={item.value}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                    <small>Focus the anime episodes to the source selected. <b>You can still use the others sources.</b></small>
+                                </>
                             )}
 
                         </div>
@@ -406,7 +425,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
                     <div >
                         <h5 style={{ marginBottom: "16px" }}>
-                            <span><DeleteSvg alt="Play" width={16} height={16} /></span> Delete <span>(can not be reverted!)</span>
+                            <span><DeleteSvg alt="Play" width={16} height={16} /></span> Delete <span style={{ color: "var(--white-75)" }}>(can not be reverted!)</span>
                         </h5>
 
                         <div className={styles.btns_container}>

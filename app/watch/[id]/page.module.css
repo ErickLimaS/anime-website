@@ -166,6 +166,10 @@
 
 }
 
+#heading_info_container>div>a {
+    box-shadow: 7px 0px 13px 0px;
+}
+
 @media(max-width: 1020px) {
     #heading_info_container h1 span:nth-child(1) {
         display: none;
