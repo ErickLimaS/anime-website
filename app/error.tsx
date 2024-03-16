@@ -111,9 +111,9 @@ function ErrorPage({ error, reset }: {
                     Try again
                 </button>
 
-                <Link href={"/"} style={errorReturnHomeContainerStyles}>
+                <a href={"/"} style={errorReturnHomeContainerStyles}>
                     Return to Home Page
-                </Link>
+                </a>
 
             </div>
 

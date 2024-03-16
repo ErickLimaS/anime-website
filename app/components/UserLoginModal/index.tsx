@@ -66,6 +66,7 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
         const form: any = e.target
 
+        // signup
         if (action == "signup") {
             try {
 
@@ -84,6 +85,7 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
                 const res = await createUserWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
 
+                // add default values to user doc
                 await setDoc(doc(collection(db, "users"), res.user?.uid), {
                     bookmarks: [],
                     comments: {},
@@ -93,7 +95,9 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                     videoSubtitleLanguage: "English",
                 })
 
+                // update user info
                 await updateProfile(res.user, {
+                    displayName: form.username.value,
                     photoURL: ProfileFallbackImg.src as string
                 })
 
@@ -108,6 +112,7 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
             }
         }
+        // login
         else {
             try {
                 const res = await signInWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
@@ -176,6 +181,26 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                     data-error-occurred={loginError ? true : false}
                 >
 
+                    <AnimatePresence>
+                        {alternativeForm && (
+                            <motion.label
+                                initial={{ opacity: 0, height: 0, }}
+                                animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                exit={{ opacity: 0, height: 0 }}
+                            >
+                                Username
+                                <input
+                                    type='text'
+                                    name='username'
+                                    pattern="^.{1,15}$"
+                                    title={"The limit is 15 characters."}
+                                    placeholder='Your Username'
+                                    required>
+                                </input>
+                            </motion.label>
+                        )}
+                    </AnimatePresence>
+
                     <label>
                         Email
                         <input
@@ -201,9 +226,9 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                     <AnimatePresence>
                         {alternativeForm && (
                             <motion.label
-                                initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                initial={{ opacity: 0, height: 0, marginTop: "8px" }}
                                 animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
-                                exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                exit={{ opacity: 0, height: 0, marginTop: "0" }}
                             >
                                 Confirm Password
                                 <input
