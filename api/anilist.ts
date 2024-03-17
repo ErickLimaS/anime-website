@@ -26,7 +26,7 @@ type ErrorTypes = {
 export default {
 
     // HOME PAGE
-    getNewReleases: cache(async (type: string, format?: string, sort?: string) => {
+    getNewReleases: cache(async (type: string, format?: string, sort?: string, showAdultContent?: boolean) => {
 
         const season: string = getCurrentSeason()
 
@@ -42,7 +42,7 @@ export default {
                     'perPage': 20,
                     'season': `${season}`,
                     'seasonYear': `${new Date().getFullYear()}`,
-                    'showAdultContent': false
+                    'showAdultContent': showAdultContent || false
                 }
             }
 
@@ -64,7 +64,7 @@ export default {
     }),
 
     //SEARCH
-    getSeachResults: cache(async (query: string) => {
+    getSeachResults: cache(async (query: string, showAdultContent?: boolean) => {
 
         try {
 
@@ -74,7 +74,7 @@ export default {
                     'page': 1,
                     'sort': 'TRENDING_DESC',
                     'perPage': 10,
-                    'showAdultContent': false,
+                    'showAdultContent': showAdultContent || false,
                     'search': query
                 }
             }
@@ -97,7 +97,7 @@ export default {
     }),
 
     // RELEASING THIS WEEK
-    getReleasingThisWeek: cache(async (type: string, format?: string, page?: number) => {
+    getReleasingThisWeek: cache(async (type: string, format?: string, page?: number, showAdultContent?: boolean) => {
 
         try {
 
@@ -110,7 +110,7 @@ export default {
                     'page': page || 1,
                     'sort': 'TRENDING_DESC',
                     'perPage': 10,
-                    'showAdultContent': false,
+                    'showAdultContent': showAdultContent || false,
                     'season': getCurrentSeason(),
                     'year': thisYear
                 }
@@ -135,7 +135,7 @@ export default {
     }),
 
     // RELEASING BY DAYS RANGE
-    getReleasingByDaysRange: cache(async (type: string, days: number, pageNumber?: number, perPage?: number) => {
+    getReleasingByDaysRange: cache(async (type: string, days: number, pageNumber?: number, perPage?: number, showAdultContent?: boolean) => {
 
         try {
 
@@ -151,7 +151,7 @@ export default {
                     'perPage': perPage || 5,
                     'type': type,
                     'sort': "EPISODE",
-                    'showAdultContent': false,
+                    'showAdultContent': showAdultContent || false,
                     'airingAt_greater': dateInUnix,
                     'airingAt_lesser': lastHourOfTheDay(1) // returns today last hour 
                 }
@@ -176,7 +176,7 @@ export default {
     }),
 
     // TRENDING
-    getTrendingMedia: cache(async (sort?: string) => {
+    getTrendingMedia: cache(async (sort?: string, showAdultContent?: boolean) => {
 
         try {
 
@@ -188,7 +188,7 @@ export default {
                     'page': 1,
                     'sort': sort || 'TRENDING_DESC',
                     'perPage': 20,
-                    'showAdultContent': false,
+                    'showAdultContent': showAdultContent || false,
                     'season': getCurrentSeason(),
                     'year': thisYear
                 }
@@ -213,7 +213,7 @@ export default {
     }),
 
     // MEDIAS IN THIS FORMAT    
-    getMediaForThisFormat: cache(async (type: string, sort?: string, pageNumber?: number, perPage?: number) => {
+    getMediaForThisFormat: cache(async (type: string, sort?: string, pageNumber?: number, perPage?: number, showAdultContent?: boolean) => {
 
         try {
 
@@ -223,7 +223,7 @@ export default {
                     'page': pageNumber || 1,
                     'sort': sort || 'TRENDING_DESC',
                     'perPage': perPage || 20,
-                    'showAdultContent': false,
+                    'showAdultContent': showAdultContent || false,
                     'type': type
                 }
             }
@@ -245,7 +245,7 @@ export default {
     }),
 
     // GET INFO OF anime/movie/manga by ID
-    getMediaInfo: cache(async (id: number) => {
+    getMediaInfo: cache(async (id: number, showAdultContent?: boolean) => {
 
         try {
 
@@ -253,7 +253,7 @@ export default {
                 "query": mediaByIdQueryRequest('$id: Int', 'id: $id'),
                 "variables": {
                     'id': id,
-                    'showAdultContent': false
+                    'showAdultContent': showAdultContent || false
                 }
             }
 

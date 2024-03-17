@@ -54,6 +54,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
     const [currentLang, setCurrentLang] = useState<string | null>(null)
     const [currentSource, setCurrentSource] = useState<string | null>(null)
     const [currentQuality, setCurrentQuality] = useState<string | null>(null)
+    const [currentShowAdultContent, setCurrentShowAdultContent] = useState<boolean | null>(null)
 
     const db = getFirestore(initFirebase());
 
@@ -161,7 +162,8 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
             {
                 videoSubtitleLanguage: form.language.value,
                 videoSource: form.source.value,
-                videoQuality: form.quality.value
+                videoQuality: form.quality.value,
+                showAdultContent: form.showAdultContent.value == "true"
             }
         )
 
@@ -244,6 +246,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
         setCurrentLang(await data.get("videoSubtitleLanguage") as string || "English")
         setCurrentSource(await data.get("videoSource") as string || "crunchyroll")
         setCurrentQuality(await data.get("videoQuality") as string || "auto")
+        setCurrentShowAdultContent(await data.get("showAdultContent") || false)
 
     }())
 
@@ -423,6 +426,25 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                         <div>
                             {currentSource && (
                                 <>
+                                    <p>Show Adult Content (+18)</p>
+                                    <div className={styles.radio_container}>
+                                        <label>
+                                            Yes
+                                            <input type='radio' name='showAdultContent' value={"true"} defaultChecked={(currentShowAdultContent == true) as boolean}></input>
+                                        </label>
+
+                                        <label>
+                                            No
+                                            <input type='radio' name='showAdultContent' value={"false"} defaultChecked={(currentShowAdultContent == false) as boolean}></input>
+                                        </label>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        <div>
+                            {currentSource && (
+                                <>
                                     <label>
                                         Select Main Source of Episodes
                                         <select
@@ -437,8 +459,8 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                     <small>Focus the anime episodes to the source selected. <b>You can still use the others sources.</b></small>
                                 </>
                             )}
-
                         </div>
+
                     </div>
 
                     <div >

@@ -323,6 +323,39 @@
 
 }
 
+/* RADIO */
+#modal p {
+
+    font-size: calc(var(--font-size--small-1) + 2px);
+
+}
+
+#modal .radio_container {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0 40px;
+
+    min-height: 120px;
+}
+
+#modal .radio_container label input[type="radio"] {
+
+    border: none;
+
+    accent-color: var(--brand-color);
+
+    width: 24px;
+    height: 24px;
+
+    background: transparent;
+    box-shadow: none;
+
+}
+
+/* DELETE */
 #modal form .confirm_delete_container {
 
     text-align: center;
@@ -375,7 +408,7 @@
     background-color: transparent;
     color: var(--brand-color);
     font-weight: 600;
-    
+
     padding: 16px 16px;
 
     border-radius: 8px;

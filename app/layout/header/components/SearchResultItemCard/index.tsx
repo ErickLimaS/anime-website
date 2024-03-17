@@ -47,7 +47,7 @@ function SearchResultItemCard({ onClick, item }: { onClick?: MouseEventHandler<H
                     )}
 
                     <div className={`${styles.width_flex} display_flex_row`}>
-                        <p>{item.type ? item.type : 'No Type Defined'}</p>
+                        <p><span style={{ color: "var(--error)" }}>{item.isAdult && "+18"}</span> {item.type ? item.type : 'No Type Defined'} </p>
                         {item.startDate != undefined ? (
                             <small>
                                 {item.type == 'ANIME' && 'First aired in '}

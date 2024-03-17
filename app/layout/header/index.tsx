@@ -34,7 +34,6 @@ function Header() {
                             Animes <ChevronDownIcon alt="Open Animes List" width={16} height={16} />
 
                             <AnimeNavListHover />
-
                         </li>
 
                         <li className='display_flex_row align_items_center'>
