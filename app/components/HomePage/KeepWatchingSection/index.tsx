@@ -44,7 +44,13 @@ function KeepWatchingSection() {
 
         })
 
+        // removes any empty object
         listFromObjectToArray = listFromObjectToArray.filter(item => item.length != 0 && item)
+
+        // sort by update date
+        listFromObjectToArray = listFromObjectToArray.sort(function (x: KeepWatchingItem, y: KeepWatchingItem) {
+            return x.updatedAt - y.updatedAt
+        }).reverse()
 
         setWatchingList(listFromObjectToArray || null)
 

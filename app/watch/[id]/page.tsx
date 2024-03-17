@@ -48,7 +48,7 @@ async function WatchEpisode({ params, searchParams }: {
 
     if (searchParams.source == "gogoanime") {
 
-        videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.filter(item => item.quality == "default" || item.quality == "1080p")[0].url
+        videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
 
         if (!videoSrc) videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources[0].url
 

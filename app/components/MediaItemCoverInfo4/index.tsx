@@ -1,5 +1,5 @@
 "user client"
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -13,12 +13,13 @@ import { initFirebase } from '@/firebase/firebaseApp'
 type ComponentTypes = {
     data: KeepWatchingItem,
     darkMode?: boolean,
-    loading?: boolean,
     hiddenOnDesktop?: boolean,
     fromOfflineDb?: boolean
 }
 
-function MediaItemCoverInfo4({ data, darkMode, loading }: ComponentTypes) {
+function MediaItemCoverInfo4({ data, darkMode }: ComponentTypes) {
+
+    const [wasDeleted, setWasDeleted] = useState<boolean>(false)
 
     const auth = getAuth()
 
@@ -38,17 +39,16 @@ function MediaItemCoverInfo4({ data, darkMode, loading }: ComponentTypes) {
 
         )
 
+        setWasDeleted(true)
+
     }
 
     return (
         <div
             className={`${styles.media_item_container} ${darkMode ? styles.darkMode : ''}`}
-            data-loading={loading || false}
+            data-deleted={wasDeleted}
         >
-            <Link
-                id={styles.img_container}
-                href={`/media/${data.id}`}
-            >
+            <div id={styles.img_container}>
 
                 <Image
                     src={data.coverImage && data.coverImage.large
@@ -73,9 +73,22 @@ function MediaItemCoverInfo4({ data, darkMode, loading }: ComponentTypes) {
 
                 </span>
 
-                <span className={styles.episode_name_span}>Episode {data.episode}</span>
+                <div className={styles.overlay_info_container}>
 
-            </Link>
+                    <Link href={`/media/${data.id}`}>SEE MORE</Link>
+
+                    <Link href={`/watch/${data.id}?source=${data.source}&episode=${data.episode}&q=${data.episodeId}`}>
+                        {data.format != "MOVIE" ? "CONTINUE EPISODE" : "CONTINUE"}
+                    </Link>
+
+                </div>
+
+                {data.format != "MOVIE" && (
+
+                    <span className={styles.episode_name_span}>Episode {data.episode}</span>
+
+                )}
+            </div>
 
             <div className='display_flex_row align_items_center space_beetween'>
                 <Link
@@ -84,7 +97,7 @@ function MediaItemCoverInfo4({ data, darkMode, loading }: ComponentTypes) {
                     {data.title && data.title.romaji}
                 </Link>
 
-                <button onClick={() => removeFromKeepWatching()} title={`Remove from ${data.title.romaji} from Keep Watching`}>
+                <button onClick={() => removeFromKeepWatching()} title={`Remove ${data.title.romaji} from Keep Watching`}>
 
                     <DeleteSvg width={16} height={16} alt="Delete" />
 
