@@ -144,13 +144,11 @@ function UserSideMenu() {
                                             <BookmarkSvg width={16} height={16} alt={"Watchlist Icon"} /> Watchlist
                                         </Link>
                                     </li>
-                                    {/* 
-                                        <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                            <Link href={"/history"}>
-                                                <HistorySvg width={16} height={16} alt={"History Icon"} /> History
-                                            </Link>
-                                        </li>
-                                    */}
+                                    <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
+                                        <Link href={"/history"}>
+                                            <HistorySvg width={16} height={16} alt={"History Icon"} /> Latests Watched
+                                        </Link>
+                                    </li>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
                                         <button onClick={() => setIsUserSettingsOpen(true)}>
                                             <SettingsSvg width={16} height={16} alt={"Settings Icon"} /> Settings

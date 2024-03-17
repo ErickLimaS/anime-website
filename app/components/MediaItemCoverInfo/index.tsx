@@ -7,7 +7,7 @@ import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
 import MediaFormatIcon from '../MediaFormatIcon'
 
 type ComponentTypes = {
-    data: ApiDefaultResult | MediaDbOffline,
+    data: ApiDefaultResult | MediaDbOffline | KeepWatchingItem,
     positionIndex?: number,
     darkMode?: boolean,
     loading?: boolean,
