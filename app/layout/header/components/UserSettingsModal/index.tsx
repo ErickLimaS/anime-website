@@ -410,8 +410,6 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                 </label>
                             )}
                             <small>
-                                Only works with <b>GoGoAnime</b>.
-                                <br />
                                 Some videos <b>may not have the quality selected</b>.
                                 By that, the video will be displayed with the default quality.
                             </small>
