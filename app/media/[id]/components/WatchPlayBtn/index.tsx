@@ -100,9 +100,17 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
         const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
 
-        const keepWatchingList = await userDoc.get("keepWatching")
+        let keepWatchingList = await userDoc.get("keepWatching")
 
-        const lastWatchedEpisode: KeepWatchingItem = keepWatchingList[mediaId]
+        let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
+
+            return keepWatchingList[key]
+
+        })
+
+        keepWatchingList = listFromObjectToArray.filter(item => item.length != 0 && item)
+
+        const lastWatchedEpisode: KeepWatchingItem = keepWatchingList.find((item: KeepWatchingItem) => item.id == mediaId)
 
         if (!lastWatchedEpisode) return null
 

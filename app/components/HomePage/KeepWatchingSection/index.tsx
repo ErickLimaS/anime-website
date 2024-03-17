@@ -16,7 +16,7 @@ function KeepWatchingSection() {
 
     const db = getFirestore(initFirebase());
 
-    const [watchingList, setWatchingList] = useState<any | null>(null)
+    const [watchingList, setWatchingList] = useState<KeepWatchingItem[]>([])
 
     const motionVariants = {
         initial: {
@@ -66,7 +66,7 @@ function KeepWatchingSection() {
         <AnimatePresence
             initial={false}
         >
-            {(user && watchingList) && (
+            {(user && watchingList!.length > 0) && (
                 <motion.section
                     id={styles.keep_watching_container}
                     variants={motionVariants}
