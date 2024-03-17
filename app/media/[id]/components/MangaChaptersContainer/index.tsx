@@ -6,6 +6,8 @@ import gogoanime from '@/api/gogoanime';
 import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import BookSvg from "@/public/assets/book.svg"
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
+import Image from 'next/image';
+import ErrorImg from "@/public/error-img-2.png"
 
 function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
@@ -77,6 +79,20 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
       <ol id={styles.container} data-loading={loading}>
 
+        {loading && (
+          <p>Loading...</p>
+        )}
+
+        {!loading && (chaptersDataFetched.length == 0 || currentItems == null) && (
+          <div id={styles.no_chapters_container}>
+
+            <Image src={ErrorImg} alt='Error' height={200} />
+
+            <p>No chapters available.</p>
+
+          </div>
+        )}
+
         {currentItems && currentItems.map((item: any, key: number) => (
 
           <li key={key} >
@@ -96,12 +112,6 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
       </ol>
 
-      {!loading && chaptersDataFetched.length == 0 && (
-        <p>No chapters available.</p>
-      )}
-      {loading && (
-        <p>Loading...</p>
-      )}
 
       {chaptersDataFetched.length > 0 && (
         <nav id={styles.pagination_buttons_container}>
