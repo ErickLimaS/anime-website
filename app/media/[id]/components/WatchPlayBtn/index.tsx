@@ -39,34 +39,17 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
         let episodedWatched
 
+        // CHECKS ON GOGOANIME FIRST
         const isOnEpisodesListGoGoAnime = userDoc.get("episodesWatchedBySource")?.gogoanime
 
         if (isOnEpisodesListGoGoAnime) setSource("gogoanime")
 
-        if (!isOnEpisodesListGoGoAnime) return fetchMediaWatchUrl()
+        const mediaOnDb = isOnEpisodesListGoGoAnime && isOnEpisodesListGoGoAnime[mediaId]
 
-        if (isOnEpisodesListGoGoAnime[mediaId] == undefined) return fetchMediaWatchUrl()
-
-        // SORT ARRAY TO GET THE HIGHEST EPISODE NUMBER ON FIRST INDEX
-        episodedWatched = isOnEpisodesListGoGoAnime[mediaId].sort(
-            function (a: { episodeTitle: number }, b: { episodeTitle: number }) {
-                return b.episodeTitle - a.episodeTitle
-            }
-        )
-
-        // IF IS NOT ON GOGOANIME, TRY WITH ANIWATCH
-        if (!episodedWatched) {
-
-            const isOnEpisodesListAnimeWatch = userDoc.get("episodesWatchedBySource")?.aniwatch
-
-            if (isOnEpisodesListAnimeWatch) setSource("aniwatch")
-
-            if (!isOnEpisodesListAnimeWatch) return fetchMediaWatchUrl()
-
-            if (isOnEpisodesListAnimeWatch[mediaId] == undefined) return fetchMediaWatchUrl()
+        if (mediaOnDb != undefined) {
 
             // SORT ARRAY TO GET THE HIGHEST EPISODE NUMBER ON FIRST INDEX
-            episodedWatched = isOnEpisodesListAnimeWatch[mediaId].sort(
+            episodedWatched = isOnEpisodesListGoGoAnime[mediaId].sort(
                 function (a: { episodeTitle: number }, b: { episodeTitle: number }) {
                     return b.episodeTitle - a.episodeTitle
                 }
@@ -74,8 +57,60 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
         }
 
+        // IF IS NOT ON GOGOANIME, TRY WITH ANIWATCH
+        if (!episodedWatched || episodedWatched.length == 0) {
+
+            const isOnEpisodesListAnimeWatch = userDoc.get("episodesWatchedBySource")?.aniwatch
+
+            if (isOnEpisodesListAnimeWatch) setSource("aniwatch")
+
+            const mediaOnDb = isOnEpisodesListAnimeWatch && isOnEpisodesListAnimeWatch[mediaId]
+
+            if (mediaOnDb != undefined) {
+
+                // SORT ARRAY TO GET THE HIGHEST EPISODE NUMBER ON FIRST INDEX
+                episodedWatched = isOnEpisodesListAnimeWatch[mediaId].sort(
+                    function (a: { episodeTitle: number }, b: { episodeTitle: number }) {
+                        return b.episodeTitle - a.episodeTitle
+                    }
+                )
+
+            }
+
+            // IF NO RESULTS ON ANIWATCH, CHECK "KEEP WATCHING LIST"
+            if (!episodedWatched || episodedWatched.length == 0) {
+
+                const onKeepWacthing = await checkKeepWatchingList()
+
+                if (!onKeepWacthing) fetchMediaWatchUrl()
+
+                return
+
+            }
+        }
+
         // CALL OTHER FUNCTION TO FETCH URL
         fetchMediaWatchUrl(episodedWatched[0].episodeTitle) // EPISODE TITLE HAS THE EPISODE NUMBER
+
+    }
+
+    // IF NO EPISODES FOUND ON "EPISODES WATCHED",
+    // IT VERIFIES LAST EPISODE ON "KEEP WATCHING"
+    async function checkKeepWatchingList() {
+
+        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+
+        const keepWatchingList = await userDoc.get("keepWatching")
+
+        const lastWatchedEpisode: KeepWatchingItem = keepWatchingList[mediaId]
+
+        if (!lastWatchedEpisode) return null
+
+        setSource(lastWatchedEpisode.source)
+        setMovieId(lastWatchedEpisode.episodeId)
+        setEpisodeNumber(Number(lastWatchedEpisode.episode))
+
+        return lastWatchedEpisode
 
     }
 
