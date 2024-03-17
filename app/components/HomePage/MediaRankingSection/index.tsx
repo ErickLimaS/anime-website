@@ -5,6 +5,10 @@ import MediaListCoverInfo from '../../MediaItemCoverInfo2'
 import NavButtons from '../../NavButtons'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import API from "@/api/anilist"
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { getAuth } from 'firebase/auth'
+import { initFirebase } from '@/firebase/firebaseApp'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 
 type PropsTypes = {
 
@@ -20,6 +24,11 @@ function MediaRankingSection(props: PropsTypes) {
     let { data } = props
     let currentQueryValue = "ANIME"
 
+    const auth = getAuth()
+    const [user] = useAuthState(auth)
+
+    const db = getFirestore(initFirebase())
+
     useEffect(() => {
         setMediaList(data as ApiDefaultResult[])
     }, [])
@@ -27,11 +36,20 @@ function MediaRankingSection(props: PropsTypes) {
     // request new type of media then set them
     const loadMedia: (parameter: string) => void = async (parameter: string) => {
 
-        const response = await API.getMediaForThisFormat(parameter).then(res => ((res as ApiDefaultResult[]).filter((item) => item.isAdult == false)))
+        let showAdultContent = false
+
+        if (user) {
+
+            showAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+
+        }
+
+        const response: ApiDefaultResult[] | void = await API.getMediaForThisFormat(parameter, undefined, undefined, undefined, showAdultContent)
 
         currentQueryValue = parameter
 
-        setMediaList(response)
+        setMediaList(response as ApiDefaultResult[])
+
     }
 
     return (
@@ -39,7 +57,7 @@ function MediaRankingSection(props: PropsTypes) {
 
             <div className={styles.title_navbar_container}>
 
-                <h3>Top 10 this week</h3>
+                <h3>Top 10 This Week</h3>
 
                 <NavButtons
                     functionReceived={loadMedia as (parameter: string | number) => void}

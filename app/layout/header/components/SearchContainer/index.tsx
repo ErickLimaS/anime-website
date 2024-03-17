@@ -8,8 +8,17 @@ import LoadingIcon from '@/public/assets/ripple-1s-200px.svg'
 import SearchIcon from '@/public/assets/search.svg'
 import CloseSvg from '@/public/assets/x.svg'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { getAuth } from 'firebase/auth'
+import { initFirebase } from '@/firebase/firebaseApp'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 
 function SearchContainer() {
+
+    const auth = getAuth()
+    const [user] = useAuthState(auth)
+
+    const db = getFirestore(initFirebase())
 
     const [isMobileSearchBarOpen, setIsMobileSearchBarOpen] = useState<boolean>(false)
 
@@ -43,13 +52,21 @@ function SearchContainer() {
 
         e.preventDefault()
 
+        let showAdultContent = false
+
+        if (user) {
+
+            showAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+
+        }
+
         const query = searchInput
 
         if (query.length == 0) return
 
         setIsLoading(true)
 
-        const result = await anilist.getSeachResults(query)
+        const result = await anilist.getSeachResults(query, showAdultContent)
 
         setSearchResults(result as ApiDefaultResult[])
 
@@ -137,7 +154,11 @@ function SearchContainer() {
 
                     <ul>
                         {searchResults.slice(0, 6).map((item: ApiDefaultResult, key: number) => (
-                            <SearchResultItemCard key={key} item={item} />
+                            <SearchResultItemCard
+                                key={key}
+                                item={item}
+                                onClick={() => setSearchResults(null)}
+                            />
                         ))}
                     </ul>
 

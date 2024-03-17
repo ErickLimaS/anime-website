@@ -1,14 +1,27 @@
 "use client"
+import styles from "./component.module.css"
+import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { initFirebase } from '@/firebase/firebaseApp';
 import { getAuth } from 'firebase/auth';
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import {
+    FieldPath,
+    doc, getDoc,
+    getFirestore, setDoc
+} from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
-import ReactPlayer from 'react-player';
-import { TrackProps } from 'react-player/file';
+import { MediaPlayer, MediaProvider, Track } from '@vidstack/react';
+import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
+import { CaptionsFileFormat, CaptionsParserFactory } from 'media-captions';
+import '@vidstack/react/player/styles/default/theme.css';
+import '@vidstack/react/player/styles/default/layouts/video.css';
 
 type VideoPlayerType = {
     source: string,
+    mediaSource: string,
+    media: ApiMediaResults,
+    episode: string,
+    episodeId: string,
     subtitles?: {
         kind: string,
         default: boolean | undefined,
@@ -22,9 +35,20 @@ type VideoPlayerType = {
     }[]
 }
 
-function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
+type SubtitlesType = {
+    src: string | undefined,
+    kind: string | TextTrackKind,
+    label: string | undefined,
+    srcLang: string | undefined,
+    type: string | CaptionsParserFactory | undefined,
+    default: boolean | undefined,
+}
 
-    const [subList, setSubList] = useState<TrackProps[] | undefined>(undefined)
+function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episode }: VideoPlayerType) {
+
+    const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
+
+    const [addOnKeepWatching, setAddOnKeepWatching] = useState<boolean>(false)
 
     const auth = getAuth()
 
@@ -47,7 +71,7 @@ function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
         }
 
         // get user language and filter through the available subtitles to this media
-        let subListMap: TrackProps[] = []
+        let subListMap: SubtitlesType[] = []
 
         subtitles?.map((item) => {
 
@@ -61,7 +85,8 @@ function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
                 srcLang: item.label,
                 src: item.file,
                 default: isDefaultLang,
-                label: item.label
+                label: item.label,
+                type: item.kind
             })
 
         })
@@ -95,6 +120,39 @@ function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
         setVideoSource(videoSourceMatchedUserQuality || source)
     }
 
+    // adds media to keep watching
+    // every time user watchs this episode, it will update time on DOC
+    async function addToKeepWatching() {
+
+        if (addOnKeepWatching) return
+
+        await setDoc(doc(db, "users", user!.uid),
+            {
+                keepWatching: {
+                    [media.id]: {
+                        id: media.id,
+                        title: {
+                            romaji: media.title.romaji
+                        },
+                        format: media.format,
+                        coverImage: {
+                            extraLarge: media.coverImage.extraLarge,
+                            large: media.coverImage.large
+                        },
+                        episode: episode,
+                        episodeId: episodeId,
+                        source: mediaSource,
+                        updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
+                    }
+                }
+            } as unknown as FieldPath,
+            { merge: true }
+        )
+
+        setAddOnKeepWatching(true)
+
+    }
+
     useEffect(() => {
 
         getUserPreferedLanguage()
@@ -104,20 +162,41 @@ function Player({ source, subtitles, videoQualities }: VideoPlayerType) {
 
     return (
         (!loading && subList && videoSource) && (
-            <ReactPlayer
-                controls
-                playing
-                volume={0.6}
-                url={videoSource}
-                config={{
-                    file: {
-                        attributes: {
-                            crossOrigin: "anonymous",
-                        },
-                        tracks: subList
-                    }
-                }}
-            />
+            <MediaPlayer
+                className={styles.container}
+                title={media.title.romaji}
+                src={videoSource}
+                autoPlay
+                volume={0.5}
+                onProgressCapture={(e: any) =>
+                    (
+                        user &&
+                        (Math.round(e.target.currentTime) > 25) &&
+                        (Math.round(e.target.currentTime) % 2) &&
+                        !addOnKeepWatching
+                    ) &&
+                    addToKeepWatching()
+                }
+            >
+                <MediaProvider >
+                    {subList.map((item) => (
+                        <Track
+                            key={item.src}
+                            src={item.src}
+                            kind={item.kind as TextTrackKind}
+                            label={item.label}
+                            lang={item.srcLang}
+                            type={item.kind as CaptionsFileFormat}
+                            default={item.default}
+                        />
+                    ))}
+                </MediaProvider>
+
+                <DefaultVideoLayout
+                    icons={defaultLayoutIcons}
+                    thumbnails={media.bannerImage || undefined}
+                />
+            </MediaPlayer >
         )
     )
 }

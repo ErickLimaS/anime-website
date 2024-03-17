@@ -88,9 +88,11 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                 // add default values to user doc
                 await setDoc(doc(collection(db, "users"), res.user?.uid), {
                     bookmarks: [],
+                    keepWatching: [],
                     comments: {},
                     episodesWatchedBySource: {},
                     videoSource: "crunchyroll",
+                    showAdultContent: false,
                     videoQuality: "auto",
                     videoSubtitleLanguage: "English",
                 })

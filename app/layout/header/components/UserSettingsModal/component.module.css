@@ -102,10 +102,8 @@
 
 }
 
-#modal form h5 span {
-
-    color: var(--white-75);
-
+#modal form h5 svg {
+    transform: scale(1.25);
 }
 
 #modal form h5:last-child {
@@ -125,7 +123,7 @@
 @media(min-width: 400px) {
     #modal form .user_acc_info_container {
 
-        grid-template-columns: minmax(100px, 1fr) 3fr;
+        grid-template-columns: minmax(90px, 1fr) 3fr;
         gap: 0 8px;
 
     }
@@ -146,25 +144,11 @@
     position: relative;
     top: 0;
 
-    width: inherit;
-    min-height: 240px;
-    height: 100%;
+    aspect-ratio: 1;
 
     border-radius: 8px;
     overflow: hidden;
 
-}
-
-@media(min-width: 400px) {
-    #modal form .user_acc_info_container #img_container {
-        min-height: 100px;
-    }
-}
-
-@media(min-width: 520px) {
-    #modal form .user_acc_info_container #img_container {
-        min-height: 140px;
-    }
 }
 
 #modal form .user_acc_info_container #img_container::after {
@@ -176,6 +160,8 @@
 
     content: "Change Image";
     display: flex;
+
+    text-align: center;
 
     width: 100%;
     height: 100%;
@@ -200,7 +186,7 @@
     padding: 8px;
 
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 8px;
 
     background-color: var(--black-05);
@@ -209,13 +195,7 @@
 
 }
 
-@media(min-width: 420px) {
-    #imgs_panel_container {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-}
-
-@media(min-width: 520px) {
+@media(min-width: 480px) {
     #imgs_panel_container {
         grid-template-columns: 1fr 1fr 1fr 1fr;
     }
@@ -343,6 +323,39 @@
 
 }
 
+/* RADIO */
+#modal p {
+
+    font-size: calc(var(--font-size--small-1) + 2px);
+
+}
+
+#modal .radio_container {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0 40px;
+
+    min-height: 120px;
+}
+
+#modal .radio_container label input[type="radio"] {
+
+    border: none;
+
+    accent-color: var(--brand-color);
+
+    width: 24px;
+    height: 24px;
+
+    background: transparent;
+    box-shadow: none;
+
+}
+
+/* DELETE */
 #modal form .confirm_delete_container {
 
     text-align: center;
@@ -394,6 +407,7 @@
 
     background-color: transparent;
     color: var(--brand-color);
+    font-weight: 600;
 
     padding: 16px 16px;
 

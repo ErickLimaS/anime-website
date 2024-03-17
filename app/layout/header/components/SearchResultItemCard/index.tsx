@@ -1,10 +1,10 @@
-import React, { useId } from 'react'
+import React, { MouseEventHandler, useId } from 'react'
 import styles from './component.module.css'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Link from 'next/link'
 
-function SearchResultItemCard({ item }: { item: ApiDefaultResult }) {
+function SearchResultItemCard({ onClick, item }: { onClick?: MouseEventHandler<HTMLDivElement>, item: ApiDefaultResult }) {
 
     const id = useId()
 
@@ -25,14 +25,17 @@ function SearchResultItemCard({ item }: { item: ApiDefaultResult }) {
     return (
         <li id={id} className={styles.result_container} onMouseEnter={(e) => { addHoverEffect(e, true) }} onMouseLeave={(e) => { addHoverEffect(e, false) }} >
 
-            <div className={styles.image_container}>
+            <div
+                className={styles.image_container}
+                onClick={onClick}
+            >
                 <Link href={`/media/${item.id}`}>
                     <Image src={item.coverImage.large} alt={`Cover Art for ${item.title.romaji}`} fill ></Image>
                 </Link>
             </div>
 
             <div className={styles.result_info_container}>
-                <h5><Link href={`/media/${item.id}`}>{item.title.romaji ? item.title.romaji : (item.title.romaji || `No Title`)}</Link></h5>
+                <h5 onClick={onClick}><Link href={`/media/${item.id}`}>{item.title.romaji ? item.title.romaji : (item.title.romaji || `No Title`)}</Link></h5>
 
                 <div>
                     {item.genres != undefined && (
@@ -44,7 +47,7 @@ function SearchResultItemCard({ item }: { item: ApiDefaultResult }) {
                     )}
 
                     <div className={`${styles.width_flex} display_flex_row`}>
-                        <p>{item.type ? item.type : 'No Type Defined'}</p>
+                        <p><span style={{ color: "var(--error)" }}>{item.isAdult && "+18"}</span> {item.type ? item.type : 'No Type Defined'} </p>
                         {item.startDate != undefined ? (
                             <small>
                                 {item.type == 'ANIME' && 'First aired in '}

@@ -6,6 +6,10 @@ import CardMediaCoverAndDescription from '../../CardMediaCoverAndDescription'
 import NavButtons from '../../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import API from "@/api/anilist"
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { getAuth } from 'firebase/auth'
+import { initFirebase } from '@/firebase/firebaseApp'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 
 type PropsTypes = {
 
@@ -19,11 +23,16 @@ function NewestMediaSection(props: PropsTypes) {
     const [mediaList, setMediaList] = useState<ApiAiringMidiaResults[] | ApiDefaultResult[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
+    const auth = getAuth()
+    const [user] = useAuthState(auth)
+
+    const db = getFirestore(initFirebase())
+
     let { data } = props
     let currentQueryValue = 1 //stands for 1 day (today)
 
     // request new type of media then set them
-    const loadMedia: (parameter: number) => void = async (parameter: number) => {
+    const loadMedia: (parameter: 1 | 7 | 30) => void = async (parameter: 1 | 7 | 30) => {
         console.log(`Received parameter: ${parameter}`);
 
         getMediaByDaysRange(parameter)
@@ -31,17 +40,23 @@ function NewestMediaSection(props: PropsTypes) {
     }
 
     // gets the range of days than parse it to unix, runs function to get any media releasing in the selected range
-    async function getMediaByDaysRange(days: number) {
+    async function getMediaByDaysRange(days: 1 | 7 | 30) {
+
+        let showAdultContent = false
+
+        if (user) {
+
+            showAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+
+        }
 
         currentQueryValue = days
 
         setIsLoading(true)
 
-        const response = await API.getReleasingByDaysRange("ANIME", days, undefined, 11).then(
-            res => ((res as ApiAiringMidiaResults[]).map(
-                (item: ApiAiringMidiaResults) => item.media).filter((item) => item.isAdult == false)
-            )
-        ).then(res => res.sort((a, b) => a.popularity - b.popularity).reverse())
+        const response = await API.getReleasingByDaysRange("ANIME", days, undefined, 11, showAdultContent).then(
+            res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
+        ).then(res => res.map((item) => item.media))
 
         setMediaList(response)
 

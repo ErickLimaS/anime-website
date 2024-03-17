@@ -412,6 +412,8 @@ h2.heading_style {
 #description_episodes_related_container p,
 #description_episodes_related_container span {
 
+    line-height: 1.4;
+
     color: var(--white-100);
 
 }

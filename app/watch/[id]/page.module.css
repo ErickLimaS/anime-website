@@ -11,7 +11,7 @@
     margin: 0 auto;
 
     width: 100%;
-    min-height: 260px;
+    min-height: 180px;
     height: inherit;
 
     scrollbar-width: 0;
@@ -164,6 +164,10 @@
 
     background-color: var(--black-50);
 
+}
+
+#heading_info_container>div>a {
+    box-shadow: 7px 0px 13px 0px;
 }
 
 @media(max-width: 1020px) {

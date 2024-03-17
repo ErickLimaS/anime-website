@@ -1,0 +1,6 @@
+.container[data-media-player][data-layout='video']:not([data-fullscreen]) {
+
+    border: none;
+    border-radius: 0;
+
+}

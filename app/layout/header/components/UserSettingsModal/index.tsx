@@ -54,6 +54,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
     const [currentLang, setCurrentLang] = useState<string | null>(null)
     const [currentSource, setCurrentSource] = useState<string | null>(null)
     const [currentQuality, setCurrentQuality] = useState<string | null>(null)
+    const [currentShowAdultContent, setCurrentShowAdultContent] = useState<boolean | null>(null)
 
     const db = getFirestore(initFirebase());
 
@@ -67,14 +68,34 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
     const languagesOptions = [
 
-        { name: "English", value: "English" },
-        { name: "Portuguese", value: "Portuguese" },
-        { name: "Spanish", value: "Spanish" },
-        { name: "German", value: "German" },
-        { name: "Italian", value: "Italian" },
-        { name: "Russian", value: "Russian" },
-        { name: "French", value: "French" },
         { name: "Arabic", value: "Arabic" },
+        { name: "Chinese", value: "Chinese" },
+        { name: "Croatian", value: "Croatian" },
+        { name: "Danish", value: "Danish" },
+        { name: "Dutch", value: "Dutch" },
+        { name: "English", value: "English" },
+        { name: "Finnish", value: "Finnish" },
+        { name: "French", value: "French" },
+        { name: "German", value: "German" },
+        { name: "Greek", value: "Greek" },
+        { name: "Hindi", value: "Hindi" },
+        { name: "Hebrew", value: "Hebrew" },
+        { name: "Hugarian", value: "Hugarian" },
+        { name: "Indonisian", value: "Indonisian" },
+        { name: "Italian", value: "Italian" },
+        { name: "Japanese", value: "Japanese" },
+        { name: "Korean", value: "Korean" },
+        { name: "Malay", value: "Malay" },
+        { name: "Norwegian", value: "Norwegian" },
+        { name: "Polish", value: "Polish" },
+        { name: "Portuguese", value: "Portuguese" },
+        { name: "Romanian", value: "Romanian" },
+        { name: "Russian", value: "Russian" },
+        { name: "Spanish", value: "Spanish" },
+        { name: "Swedish", value: "Swedish" },
+        { name: "Thai", value: "Thai" },
+        { name: "Turkish", value: "Turkish" },
+        { name: "Ukrainian", value: "Ukrainian" },
 
     ]
 
@@ -141,7 +162,8 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
             {
                 videoSubtitleLanguage: form.language.value,
                 videoSource: form.source.value,
-                videoQuality: form.quality.value
+                videoQuality: form.quality.value,
+                showAdultContent: form.showAdultContent.value == "true"
             }
         )
 
@@ -224,6 +246,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
         setCurrentLang(await data.get("videoSubtitleLanguage") as string || "English")
         setCurrentSource(await data.get("videoSource") as string || "crunchyroll")
         setCurrentQuality(await data.get("videoQuality") as string || "auto")
+        setCurrentShowAdultContent(await data.get("showAdultContent") || false)
 
     }())
 
@@ -290,6 +313,22 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                         ></input>
                                     </label>
                                 )}
+                                <AnimatePresence
+                                    initial={false}
+                                    mode='wait'
+                                >
+                                    {newImgProfileSelected && (
+                                        <motion.small
+                                            initial={{ opacity: 0, height: 0, marginTop: "8px" }}
+                                            animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                            exit={{ opacity: 0, height: 0, marginTop: "0" }}
+                                            style={{ height: "100%", display: "block", marginTop: "24px", color: "#2e882b", fontWeight: "500" }}
+                                        >
+                                            New Image Selected!
+                                        </motion.small>
+                                    )}
+
+                                </AnimatePresence>
                             </div>
 
                         </div>
@@ -374,8 +413,6 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                 </label>
                             )}
                             <small>
-                                Only works with <b>GoGoAnime</b>.
-                                <br />
                                 Some videos <b>may not have the quality selected</b>.
                                 By that, the video will be displayed with the default quality.
                             </small>
@@ -388,25 +425,47 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
                         <div>
                             {currentSource && (
-                                <label>
-                                    Select Source of Episodes
-                                    <select
-                                        name='source'
-                                        defaultValue={currentSource}
-                                    >
-                                        {sourcesOptions.map((item, key) => (
-                                            <option key={key} value={item.value}>{item.name}</option>
-                                        ))}
-                                    </select>
-                                </label>
-                            )}
+                                <>
+                                    <p>Show Adult Content (+18)</p>
+                                    <div className={styles.radio_container}>
+                                        <label>
+                                            Yes
+                                            <input type='radio' name='showAdultContent' value={"true"} defaultChecked={(currentShowAdultContent == true) as boolean}></input>
+                                        </label>
 
+                                        <label>
+                                            No
+                                            <input type='radio' name='showAdultContent' value={"false"} defaultChecked={(currentShowAdultContent == false) as boolean}></input>
+                                        </label>
+                                    </div>
+                                </>
+                            )}
                         </div>
+
+                        <div>
+                            {currentSource && (
+                                <>
+                                    <label>
+                                        Select Main Source of Episodes
+                                        <select
+                                            name='source'
+                                            defaultValue={currentSource}
+                                        >
+                                            {sourcesOptions.map((item, key) => (
+                                                <option key={key} value={item.value}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                    <small>Focus the anime episodes to the source selected. <b>You can still use the others sources.</b></small>
+                                </>
+                            )}
+                        </div>
+
                     </div>
 
                     <div >
                         <h5 style={{ marginBottom: "16px" }}>
-                            <span><DeleteSvg alt="Play" width={16} height={16} /></span> Delete <span>(can not be reverted!)</span>
+                            <span><DeleteSvg alt="Play" width={16} height={16} /></span> Delete <span style={{ color: "var(--white-75)" }}>(can not be reverted!)</span>
                         </h5>
 
                         <div className={styles.btns_container}>
