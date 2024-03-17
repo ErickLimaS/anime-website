@@ -1,4 +1,5 @@
 "use client"
+import styles from "./component.module.css"
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { initFirebase } from '@/firebase/firebaseApp';
 import { getAuth } from 'firebase/auth';
@@ -9,8 +10,11 @@ import {
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
-import ReactPlayer from 'react-player';
-import { TrackProps } from 'react-player/file';
+import { MediaPlayer, MediaProvider, Track } from '@vidstack/react';
+import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
+import { CaptionsFileFormat, CaptionsParserFactory } from 'media-captions';
+import '@vidstack/react/player/styles/default/theme.css';
+import '@vidstack/react/player/styles/default/layouts/video.css';
 
 type VideoPlayerType = {
     source: string,
@@ -31,9 +35,18 @@ type VideoPlayerType = {
     }[]
 }
 
+type SubtitlesType = {
+    src: string | undefined,
+    kind: string | TextTrackKind,
+    label: string | undefined,
+    srcLang: string | undefined,
+    type: string | CaptionsParserFactory | undefined,
+    default: boolean | undefined,
+}
+
 function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episode }: VideoPlayerType) {
 
-    const [subList, setSubList] = useState<TrackProps[] | undefined>(undefined)
+    const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
 
     const [addOnKeepWatching, setAddOnKeepWatching] = useState<boolean>(false)
 
@@ -58,7 +71,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
         }
 
         // get user language and filter through the available subtitles to this media
-        let subListMap: TrackProps[] = []
+        let subListMap: SubtitlesType[] = []
 
         subtitles?.map((item) => {
 
@@ -72,7 +85,8 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                 srcLang: item.label,
                 src: item.file,
                 default: isDefaultLang,
-                label: item.label
+                label: item.label,
+                type: item.kind
             })
 
         })
@@ -148,22 +162,41 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     return (
         (!loading && subList && videoSource) && (
-            <ReactPlayer
-                controls
-                playing
-                volume={0.6}
-                url={videoSource}
-                on
-                onProgress={(e) => (user && (Math.round(e.playedSeconds) > 25) && (Math.round(e.playedSeconds) % 2) && !addOnKeepWatching) && addToKeepWatching()}
-                config={{
-                    file: {
-                        attributes: {
-                            crossOrigin: "anonymous",
-                        },
-                        tracks: subList
-                    }
-                }}
-            />
+            <MediaPlayer
+                className={styles.container}
+                title={media.title.romaji}
+                src={videoSource}
+                autoPlay
+                volume={0.5}
+                onProgressCapture={(e: any) =>
+                    (
+                        user &&
+                        (Math.round(e.target.currentTime) > 25) &&
+                        (Math.round(e.target.currentTime) % 2) &&
+                        !addOnKeepWatching
+                    ) &&
+                    addToKeepWatching()
+                }
+            >
+                <MediaProvider >
+                    {subList.map((item) => (
+                        <Track
+                            key={item.src}
+                            src={item.src}
+                            kind={item.kind as TextTrackKind}
+                            label={item.label}
+                            lang={item.srcLang}
+                            type={item.kind as CaptionsFileFormat}
+                            default={item.default}
+                        />
+                    ))}
+                </MediaProvider>
+
+                <DefaultVideoLayout
+                    icons={defaultLayoutIcons}
+                    thumbnails={media.bannerImage || undefined}
+                />
+            </MediaPlayer >
         )
     )
 }
