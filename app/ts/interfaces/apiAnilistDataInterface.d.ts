@@ -34,6 +34,7 @@ export interface ApiDefaultResult {
 }
 
 export interface ApiAiringMidiaResults {
+    popularity: number,
 
     airingAt: number,
     episode: number,

@@ -44,12 +44,10 @@ export default async function Home() {
   )
 
   // section 4
-  const mediaRankingData = await API.getMediaForThisFormat("ANIME").then(
-    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
-  )
+  const mediaRankingData = await API.getMediaForThisFormat("ANIME")
   const newestMediaData = await API.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
-    res => (res as ApiAiringMidiaResults[]).map((item) => item.media).filter((item) => item.isAdult == false)
-  ).then(res => res.sort((a, b) => a.popularity - b.popularity).reverse())
+    res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
+  ).then(res => res.map((item) => item.media))
 
   // used on banner section
   const randomNumber = Math.floor(Math.random() * (mediaBannerData?.length || 10)) + 1

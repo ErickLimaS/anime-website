@@ -22,6 +22,24 @@ type ErrorTypes = {
     }
 }
 
+// returns medias which is adult
+function filterAdultContent(data: any[], reponseType?: "mediaByFormat") {
+
+    let filtered
+
+    if (reponseType == "mediaByFormat") {
+
+        filtered = data.filter((item) => item.isAdult == false)
+
+    }
+    else {
+        filtered = data.filter((item) => item.media.isAdult == false)
+    }
+
+    return filtered
+
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
 
@@ -74,7 +92,7 @@ export default {
                     'page': 1,
                     'sort': 'TRENDING_DESC',
                     'perPage': 10,
-                    'showAdultContent': showAdultContent || false,
+                    'showAdultContent': showAdultContent == true ? undefined : false,
                     'search': query
                 }
             }
@@ -86,7 +104,8 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.media as ApiDefaultResult[]
+            return showAdultContent ?
+                data.data.Page.media as ApiDefaultResult[] : filterAdultContent(data.data.Page.media)
 
         }
         catch (error) {
@@ -135,7 +154,7 @@ export default {
     }),
 
     // RELEASING BY DAYS RANGE
-    getReleasingByDaysRange: cache(async (type: string, days: number, pageNumber?: number, perPage?: number, showAdultContent?: boolean) => {
+    getReleasingByDaysRange: cache(async (type: string, days: 1 | 7 | 30, pageNumber?: number, perPage?: number, showAdultContent?: boolean) => {
 
         try {
 
@@ -151,7 +170,7 @@ export default {
                     'perPage': perPage || 5,
                     'type': type,
                     'sort': "EPISODE",
-                    'showAdultContent': showAdultContent || false,
+                    'showAdultContent': showAdultContent == true ? undefined : false,
                     'airingAt_greater': dateInUnix,
                     'airingAt_lesser': lastHourOfTheDay(1) // returns today last hour 
                 }
@@ -164,7 +183,8 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.airingSchedules as ApiAiringMidiaResults[]
+            return showAdultContent ?
+                data.data.Page.airingSchedules as ApiAiringMidiaResults[] : filterAdultContent(data.data.Page.airingSchedules) as ApiAiringMidiaResults[]
 
         }
         catch (error) {
@@ -188,7 +208,7 @@ export default {
                     'page': 1,
                     'sort': sort || 'TRENDING_DESC',
                     'perPage': 20,
-                    'showAdultContent': showAdultContent || false,
+                    'showAdultContent': showAdultContent == true ? undefined : false,
                     'season': getCurrentSeason(),
                     'year': thisYear
                 }
@@ -223,7 +243,7 @@ export default {
                     'page': pageNumber || 1,
                     'sort': sort || 'TRENDING_DESC',
                     'perPage': perPage || 20,
-                    'showAdultContent': showAdultContent || false,
+                    'showAdultContent': showAdultContent == true ? undefined : false,
                     'type': type
                 }
             }
@@ -235,7 +255,9 @@ export default {
                 data: graphqlQuery
             })
 
-            return data.data.Page.media as ApiDefaultResult[]
+            return showAdultContent ?
+                data.data.Page.media as ApiDefaultResult[] : filterAdultContent(data.data.Page.media, "mediaByFormat") as ApiDefaultResult[]
+
         }
         catch (error) {
 
@@ -252,8 +274,7 @@ export default {
             const graphqlQuery = {
                 "query": mediaByIdQueryRequest('$id: Int', 'id: $id'),
                 "variables": {
-                    'id': id,
-                    'showAdultContent': showAdultContent || false
+                    'id': id
                 }
             }
 

@@ -16,9 +16,9 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore'
 function SearchContainer() {
 
     const auth = getAuth()
-    const [user, loading] = useAuthState(auth)
+    const [user] = useAuthState(auth)
 
-    const db = getFirestore(initFirebase());
+    const db = getFirestore(initFirebase())
 
     const [isMobileSearchBarOpen, setIsMobileSearchBarOpen] = useState<boolean>(false)
 

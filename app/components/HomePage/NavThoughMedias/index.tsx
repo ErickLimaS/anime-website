@@ -16,6 +16,11 @@ import AddToPlaylistButton from '../../AddToPlaylistButton'
 import parse from "html-react-parser"
 import ScoreInStars from '../../ScoreInStars'
 import MediaFormatIcon from '../../MediaFormatIcon'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { getAuth } from 'firebase/auth'
+import { initFirebase } from '@/firebase/firebaseApp'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
+
 
 type Component = {
 
@@ -33,7 +38,7 @@ export const revalidate = 1800 // revalidate the data every 30 min
 function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layoutInverted }: Component) {
 
     // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
-    const [daysRange, setDaysRange] = useState<number>(1)
+    const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1)
 
     const [data, setData] = useState<ApiDefaultResult[]>([])
 
@@ -45,6 +50,11 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
     const [selectedId, setSelectedId] = useState<number | null>(null)
     const [mediaSelect, setMediaSelected] = useState<ApiDefaultResult | null>(null)
+
+    const auth = getAuth()
+    const [user] = useAuthState(auth)
+
+    const db = getFirestore(initFirebase())
 
     const popUpMediaMotion = {
         initial: {
@@ -58,13 +68,21 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
         },
     }
 
-    async function getMedias(newPageResults?: boolean, days?: number, previous?: boolean) {
+    async function getMedias(newPageResults?: boolean, days?: 1 | 7 | 30, previous?: boolean) {
 
         setIsLoading(true)
 
         if (newPageResults == false) setPageIndex(1)
 
-        let response
+        let response: ApiAiringMidiaResults[] | ApiDefaultResult[] | void
+
+        let showAdultContent = false
+
+        if (user) {
+
+            showAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+
+        }
 
         if (sort == "RELEASE") {
 
@@ -72,12 +90,12 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
             response = await API.getReleasingByDaysRange(
                 "ANIME",
                 days!,
-                newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined
-            ).then(
-                res => (res as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
+                newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined,
+                undefined,
+                showAdultContent
             )
 
-            const responseMap = response.map(item => item.media)
+            const responseMap = (response as ApiAiringMidiaResults[]).map((item) => item.media)
             response = responseMap
 
             setDaysRange(days!)
@@ -89,7 +107,8 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                 "ANIME",
                 sort,
                 newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined,
-                5
+                5,
+                showAdultContent
             ).then(
                 res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
             )
@@ -99,7 +118,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
         // handles the pagination
         if (newPageResults) setPageIndex(previous ? pageIndex - 1 : pageIndex + 1)
 
-        setData(response)
+        setData(response as ApiDefaultResult[])
 
         setIsLoading(false)
     }
@@ -317,7 +336,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                     <div id={styles.buttons_container} className='display_flex_row display_align_justify_center'>
 
                         <button
-                            onClick={() => sort == "RELEASE" ? getMedias(true, (daysRange as number), true) : getMedias(true, undefined, true)}
+                            onClick={() => sort == "RELEASE" ? getMedias(true, daysRange, true) : getMedias(true, undefined, true)}
                             disabled={pageIndex == 1}
                             aria-label="Previous Page Results"
                         >
@@ -325,7 +344,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                         </button>
 
                         <button
-                            onClick={() => sort == "RELEASE" ? getMedias(true, (daysRange as number), false) : getMedias(true, undefined, false)}
+                            onClick={() => sort == "RELEASE" ? getMedias(true, daysRange, false) : getMedias(true, undefined, false)}
                             disabled={data?.length <= 3}
                             aria-label="Next Page Results"
                         >
