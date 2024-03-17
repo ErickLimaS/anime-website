@@ -137,7 +137,11 @@ function SearchContainer() {
 
                     <ul>
                         {searchResults.slice(0, 6).map((item: ApiDefaultResult, key: number) => (
-                            <SearchResultItemCard key={key} item={item} />
+                            <SearchResultItemCard
+                                key={key}
+                                item={item}
+                                onClick={() => setSearchResults(null)}
+                            />
                         ))}
                     </ul>
 
