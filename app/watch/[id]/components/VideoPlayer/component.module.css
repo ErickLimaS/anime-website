@@ -31,6 +31,8 @@
 @media(min-width: 620px) {
     .container #skip_btn {
         padding: 12px 40px;
+        width: 20%;
+        max-width: 180px;
     }
 }
 

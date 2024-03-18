@@ -185,26 +185,28 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
         const currentTime = Math.round(e.currentTime)
         const duration = Math.round(e.duration)
 
-        if (episodeIntro) {
-            if (currentTime >= episodeIntro.start && currentTime < episodeIntro.end) {
+        if (episodeIntro || episodeOutro) {
+            if (episodeIntro && currentTime >= episodeIntro.start && currentTime < episodeIntro.end) {
                 if (timeskip == null) setTimeskip(() => episodeIntro.end)
             }
-            else {
-                if (timeskip != episodeOutro?.end) setTimeskip(null)
-            }
-        }
-        if (episodeOutro) {
-            if (currentTime >= episodeOutro.start && currentTime < episodeOutro.end) {
+            else if (episodeOutro && currentTime >= episodeOutro.start && currentTime < episodeOutro.end) {
                 if (timeskip == null) setTimeskip(() => episodeOutro.end)
             }
             else {
-                if (timeskip != episodeIntro?.end) setTimeskip(null)
+                setTimeskip(null)
             }
         }
 
         if (user && (currentTime % 30 === 0)) {
             addToKeepWatching(currentTime, duration)
         }
+
+    }
+
+    function skipEpisodeIntroOrOutro() {
+
+        setEpisodeLastStop(timeskip as number)
+        setTimeskip(null)
 
     }
 
@@ -234,7 +236,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
                         <motion.button
                             id={styles.skip_btn}
-                            onClick={() => setEpisodeLastStop(timeskip)}
+                            onClick={() => skipEpisodeIntroOrOutro()}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1, transition: { animation: 1.5 } }}
                             exit={{ opacity: 0 }}
