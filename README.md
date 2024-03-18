@@ -12,15 +12,15 @@ Project of animes and mangas website, utilizing the <a href='https://anilist.git
 - [x] `Watch`: Watch any available episode.
 - [x] `Read`: Read any manga chapter available.
 - [x] `Comment`: Write what you thougth of that episode or just tell something that every should know about.
-- [x] `Log In`: You can log in with your Google or GitHub Account.
-- [x] `News Feed`: Keep up with the latest news of animes, mangas and the industry.
+- [x] `Log In`: You can log in with Google, GitHub or Anonymously (with some restrictions).
+- [x] `Keep Watching`: Continue the episode from where you stop last time.
 - [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.
 - [x] `Bookmark the episodes you watched`: And keep watching from there later
+- [x] `News Feed`: Keep up with the latest news of animes, mangas and the industry.
 
 ## :pushpin: Under Development
 
 - [ ] `Add Reply to Comments`
-- [ ] `Keep track of what you watched last`
 - [ ] `Be notified when a new episode/chapter is released`
 
 ## :heavy_check_mark: Tecnologies Used
