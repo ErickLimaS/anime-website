@@ -263,15 +263,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
                               fill
                             ></Image>
                           </div>
-                          <h3>
-                            <Link href={`/character/${item.id}`}>
-                              {item.node.name.full}
-                            </Link>
-                          </h3>
+                          <h3>{item.node.name.full}</h3>
                         </div>
 
                         {/* SHOWS ONLY FOR ANIMES  */}
-                        {mediaData.type == "ANIME" && (
+                        {(mediaData.type == "ANIME" && item.voiceActorRoles[0]) && (
 
                           <div className={styles.actor_container}>
                             <div className={styles.img_container}>
@@ -282,11 +278,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                                 fill
                               ></Image>
                             </div>
-                            <h3>
-                              <Link href={`/actor/${item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.id}`}>
-                                {item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.name.full}
-                              </Link>
-                            </h3>
+                            <h3>{item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.name.full}</h3>
                           </div>
                         )}
 
@@ -446,7 +438,9 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 {mediaData.favourites && (
                   <li>
-                    <p>Favorited by <span><span className={styles.color_brand}>{mediaData.favourites.toLocaleString("en-US")}</span> {mediaData.favourites == 1 ? "User" : "Users"}</span></p>
+                    <p>Favorited by <span><span className={styles.color_brand}>
+                      {mediaData.favourites.toLocaleString("en-US")}</span> {mediaData.favourites == 1 ? "User" : "Users"}</span>
+                    </p>
                   </li>
                 )}
 
