@@ -147,7 +147,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     // adds media to keep watching
     // updates DOC every 30 secs
-    async function addToKeepWatching(currentEpisodeTime: number) {
+    async function addToKeepWatching(currentEpisodeTime: number, videoDuration: number) {
 
         await setDoc(doc(db, "users", user!.uid),
             {
@@ -165,6 +165,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                         episode: episode,
                         episodeId: episodeId,
                         episodeTimeLastStop: currentEpisodeTime,
+                        episodeDuration: videoDuration,
                         source: mediaSource,
                         updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
                     }
@@ -194,7 +195,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                 volume={0.5}
                 onProgressCapture={(e: any) =>
                     (user && (Math.round(e.target.currentTime) % 30 === 0)) &&
-                    addToKeepWatching(Math.round(e.target.currentTime))
+                    addToKeepWatching(Math.round(e.target.currentTime), Math.round(e.target.duration))
                 }
             >
                 <MediaProvider >

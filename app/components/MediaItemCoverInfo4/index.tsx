@@ -9,6 +9,7 @@ import { arrayRemove, doc, updateDoc, getFirestore, FieldPath, setDoc } from 'fi
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { initFirebase } from '@/firebase/firebaseApp'
+import { motion } from 'framer-motion'
 
 type ComponentTypes = {
     data: KeepWatchingItem,
@@ -88,6 +89,17 @@ function MediaItemCoverInfo4({ data, darkMode }: ComponentTypes) {
                     <span className={styles.episode_name_span}>Episode {data.episode}</span>
 
                 )}
+
+                <motion.div
+                    className={styles.progress_bar}
+                >
+                    <motion.div
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: (((data.episodeTimeLastStop / data.episodeDuration) * 100) / 100) || 0.005 }}
+                        transition={{ duration: 1 }}
+                    />
+                </motion.div>
+
             </div>
 
             <div className='display_flex_row align_items_center space_beetween'>
