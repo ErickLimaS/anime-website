@@ -4,6 +4,8 @@ import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { initFirebase } from '@/firebase/firebaseApp';
 import { getAuth } from 'firebase/auth';
 import {
+    DocumentData,
+    DocumentSnapshot,
     FieldPath,
     doc, getDoc,
     getFirestore, setDoc
@@ -23,6 +25,7 @@ type VideoPlayerType = {
     mediaSource: string,
     media: ApiMediaResults,
     episodeNumber: string,
+    nextEpisodeSrc?: any,
     episodeId: string,
     episodeIntro?: { start: number, end: number },
     episodeOutro?: { start: number, end: number },
@@ -48,7 +51,7 @@ type SubtitlesType = {
     default: boolean | undefined,
 }
 
-function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episodeNumber, currentLastStop, episodeIntro, episodeOutro }: VideoPlayerType) {
+function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episodeNumber, currentLastStop, episodeIntro, episodeOutro, nextEpisodeSrc }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
 
@@ -56,26 +59,38 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     const [timeskip, setTimeskip] = useState<number | null>(null)
 
+    const [videoSource, setVideoSource] = useState<string>()
+
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
 
-    const [videoSource, setVideoSource] = useState<string>()
-
     const db = getFirestore(initFirebase());
 
-    // get user preferred languag
-    async function getUserPreferedLanguage() {
 
-        let preferredLanguage: string | null = null
+    // get user preferences 
+    async function getUserPreferences() {
 
         if (user) {
 
             const data = await getDoc(doc(db, "users", user.uid))
 
-            preferredLanguage = await data.get("videoSubtitleLanguage")
+            getUserPreferredLanguage(data)
+            getUserVideoQuality(data)
+            getUserLastStopOnCurrentEpisode(data)
 
         }
+
+        return
+
+    }
+
+    // get user preferred language
+    async function getUserPreferredLanguage(user: DocumentSnapshot<DocumentData, DocumentData>) {
+
+        let preferredLanguage: string | null = null
+
+        preferredLanguage = await user.get("videoSubtitleLanguage")
 
         // get user language and filter through the available subtitles to this media
         let subListMap: SubtitlesType[] = []
@@ -102,17 +117,11 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
     }
 
     // get user preferred quality
-    async function getUserVideoQuality() {
+    async function getUserVideoQuality(user: DocumentSnapshot<DocumentData, DocumentData>) {
 
         let userVideoQuality: string | null = null
 
-        if (user) {
-
-            const data = await getDoc(doc(db, "users", user.uid))
-
-            userVideoQuality = await data.get("videoQuality")
-
-        }
+        userVideoQuality = await user.get("videoQuality")
 
         if (!userVideoQuality) return setVideoSource(source)
 
@@ -129,11 +138,11 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
     }
 
     // gets last time position of episode
-    async function getUserLastStopOnCurrentEpisode() {
+    async function getUserLastStopOnCurrentEpisode(user: DocumentSnapshot<DocumentData, DocumentData>) {
 
-        if (!user || currentLastStop) return
+        if (currentLastStop) return
 
-        let keepWatchingList = await getDoc(doc(db, 'users', user.uid)).then(doc => doc.get("keepWatching"))
+        let keepWatchingList = user.get("keepWatching")
 
         let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
 
@@ -201,6 +210,9 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
             addToKeepWatching(currentTime, duration)
         }
 
+        if (nextEpisodeSrc && currentTime > 1 && (currentTime >= (duration - 4))) {
+            setVideoSource(nextEpisodeSrc)
+        }
     }
 
     function skipEpisodeIntroOrOutro() {
@@ -212,11 +224,9 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     useEffect(() => {
 
-        getUserPreferedLanguage()
-        getUserVideoQuality()
-        getUserLastStopOnCurrentEpisode()
+        getUserPreferences()
 
-    }, [user, loading, source])
+    }, [user, loading, episodeId])
 
     return (
         (!loading && subList && videoSource) && (
@@ -228,7 +238,6 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                 autoPlay
                 volume={0.5}
                 onProgressCapture={(e) => checkSecondsAndSetSkipAndNextEpisode(e.target)}
-                onEnded={() => console.log("aaaa")}
             >
 
                 <AnimatePresence>

@@ -4,12 +4,14 @@ import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilis
 import gogoanime from '@/api/gogoanime'
 import anilist from '@/api/anilist'
 import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
-import { EpisodeLinksGoGoAnime } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
+import { EpisodeLinksGoGoAnime, MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import EpisodesSideListContainer from './components/EpisodesSideListContainer'
 import CommentSectionContainer from '@/app/components/CommentSectionContainer'
 import aniwatch from '@/api/aniwatch'
 import Player from './components/VideoPlayer'
-import { EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import { EpisodeLinksAnimeWatch, EpisodesFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import simulateRange from '@/app/lib/simulateRange'
+import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
@@ -33,6 +35,7 @@ async function WatchEpisode({ params, searchParams }: {
 
     let episodeData
 
+    // fetch episode data
     if (searchParams.source == "gogoanime") {
 
         episodeData = await gogoanime.getLinksForThisEpisode(searchParams.q) as EpisodeLinksGoGoAnime
@@ -46,6 +49,7 @@ async function WatchEpisode({ params, searchParams }: {
 
     let videoSrc: string
 
+    // fetch episode link source
     if (searchParams.source == "gogoanime") {
 
         videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
@@ -55,6 +59,79 @@ async function WatchEpisode({ params, searchParams }: {
     }
     else {
         videoSrc = episodeData.sources[0].url
+    }
+
+    let episodes
+    // fetch episodes for this media
+    let response: MediaInfo | EpisodesFetchedAnimeWatch | { episodes: MediaEpisodes[] } | null
+
+    if (searchParams.source == "gogoanime") {
+
+        response = await gogoanime.getInfoFromThisMedia(mediaData.title.romaji, "anime") as MediaInfo
+        let searchResultsForMedia: any[]
+        let closestResult: MediaSearchResult | undefined
+
+        if (response == null) {
+            searchResultsForMedia = await gogoanime.searchMedia(stringToUrlFriendly(mediaData.title.romaji), "anime") as MediaSearchResult[]
+
+            // try to found a result that matches the title from anilist on gogoanime (might work in some cases)
+            closestResult = searchResultsForMedia.find((item) => item.id.includes(mediaData.title.romaji + "-tv"))
+
+            response = await gogoanime.getInfoFromThisMedia(closestResult?.id || searchResultsForMedia[0].id, "anime") as MediaInfo
+
+        }
+
+        // work around the api not return episodes
+        if (response.episodes.length == 0) {
+
+            const episodes: MediaEpisodes[] = []
+
+            simulateRange(mediaData.nextAiringEpisode ?
+                mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes as number)
+                .map((item, key) => (
+
+                    episodes.push({
+                        number: key + 1,
+                        id: `${((response as MediaInfo)?.id || closestResult?.id || searchResultsForMedia[0].id).toLowerCase()}-episode-${key + 1}`,
+                        url: ""
+                    })
+
+                ))
+
+            response = { episodes: episodes }
+
+        }
+    }
+    else {
+
+        response = await aniwatch.getEpisodes(
+            searchParams.q.slice(0, searchParams?.q.search(/\bep\b/))
+                .slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)) as EpisodesFetchedAnimeWatch
+
+    }
+
+    episodes = response!.episodes
+
+    let nextEpisodeSrc
+    // find next episode
+    if (episodes) {
+
+        nextEpisodeSrc = episodes.find(item => item.number == (Number(searchParams.episode) + 1))
+
+        if (nextEpisodeSrc) {
+
+            if (searchParams.source == "gogoanime") {
+
+                nextEpisodeSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
+
+                if (!nextEpisodeSrc) nextEpisodeSrc = (episodeData as EpisodeLinksGoGoAnime).sources[0].url
+
+            }
+            else {
+                nextEpisodeSrc = episodeData.sources[0].url
+            }
+        }
+
     }
 
     return (
@@ -71,6 +148,7 @@ async function WatchEpisode({ params, searchParams }: {
                         episodeIntro={(episodeData as EpisodeLinksAnimeWatch)?.intro}
                         episodeOutro={(episodeData as EpisodeLinksAnimeWatch)?.outro}
                         episodeNumber={searchParams.episode}
+                        nextEpisodeSrc={nextEpisodeSrc}
                         episodeId={searchParams.q}
                         subtitles={searchParams.source == "gogoanime" ? undefined : (episodeData as EpisodeLinksAnimeWatch).tracks}
                         videoQualities={searchParams.source == "gogoanime" ? (episodeData as EpisodeLinksGoGoAnime).sources : undefined}
@@ -122,13 +200,9 @@ async function WatchEpisode({ params, searchParams }: {
                     {mediaData.format != "MOVIE" && (
                         <EpisodesSideListContainer
                             source={searchParams.source}
-                            sourceMediaId={searchParams.q.slice(0, searchParams?.q.search(/\bep\b/))}
+                            episodesList={episodes}
                             mediaId={params.id}
-                            mediaTitle={mediaData.title.romaji}
                             activeEpisodeNumber={Number(searchParams.episode)}
-                            totalEpisodes={mediaData.nextAiringEpisode ?
-                                mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes // work around to api gogoanime not showing episodes
-                            }
                         />
                     )}
 
@@ -145,6 +219,7 @@ async function WatchEpisode({ params, searchParams }: {
                                 episodeId={searchParams.q}
                                 episodeNumber={Number(searchParams.episode)}
                             />
+
                         </div>
 
                     </div>
