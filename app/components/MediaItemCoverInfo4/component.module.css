@@ -17,12 +17,6 @@
     }
 }
 
-.media_item_container:hover #img_container {
-
-    filter: brightness(85%);
-
-}
-
 .media_item_container #img_container {
 
     position: relative;
