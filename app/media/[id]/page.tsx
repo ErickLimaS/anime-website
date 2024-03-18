@@ -424,6 +424,21 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <ul>
 
+                {mediaData.endDate && (
+                  <li>
+                    <p>Ended in
+                      <span>
+                        {mediaData.endDate &&
+                          new Date(Date.parse(
+                            `${mediaData.endDate.month} ${mediaData.endDate.day} ${mediaData.endDate.year}`
+                          )).toLocaleString('en-US', { month: 'long', day: "numeric", year: "numeric" })
+                          ||
+                          "Not Available"}
+                      </span>
+                    </p>
+                  </li>
+                )}
+
                 {mediaData.studios?.edges[0]?.node && (
                   <li>
                     <p>Main Studio <span className={styles.color_brand}>{mediaData.studios.edges[0].node.name}</span></p>
