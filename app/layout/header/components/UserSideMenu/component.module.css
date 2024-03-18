@@ -148,6 +148,14 @@
 
 }
 
+#user_container>#user_menu_list ul li>button:disabled {
+
+    cursor: not-allowed;
+
+    filter: brightness(50%);
+
+}
+
 #user_container>#user_menu_list ul li>button,
 #user_container>#user_menu_list ul li>a {
 

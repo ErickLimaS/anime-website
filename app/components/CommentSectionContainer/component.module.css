@@ -130,6 +130,13 @@
 
 }
 
+#write_comment_container form button:disabled {
+
+    background: #3c3c3c;
+    cursor: not-allowed;
+
+}
+
 @media(min-width: 600px) {
 
     #write_comment_container form button {

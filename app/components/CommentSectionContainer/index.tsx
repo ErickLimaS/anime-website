@@ -18,6 +18,7 @@ import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
 import UserModal from '../UserLoginModal';
 import { AnimatePresence, motion } from 'framer-motion';
+import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 
 type CommetsSectionTypes = {
     media: ApiMediaResults | ApiDefaultResult,
@@ -236,7 +237,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
                     <div className={styles.img_container}>
                         {user ? (
-                            <Image src={user.photoURL!} alt={user.displayName!} fill sizes='100%' />
+                            <Image src={user.photoURL || ProfileFallbackImg} alt={user.displayName!} fill sizes='100%' />
                         ) : (
                             <span></span>
                         )}
@@ -261,7 +262,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
                         <motion.button
                             type='submit'
-                            disabled={isLoading}
+                            disabled={isLoading || user?.isAnonymous}
                             whileTap={{ scale: 0.9 }}
                         >
                             {commentSaved ?

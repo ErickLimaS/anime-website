@@ -3,13 +3,15 @@ import React, { MouseEventHandler, useState } from 'react'
 import styles from "./component.module.css"
 import GoogleSvg from '@/public/assets/google-fill.svg'
 import GitHubSvg from '@/public/assets/github.svg'
+import AnonymousSvg from '@/public/assets/person-fill.svg'
 import CloseSvg from '@/public/assets/x.svg'
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg'
 import {
     signInWithPopup, GoogleAuthProvider,
     GithubAuthProvider, Auth, signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
-    updateProfile
+    updateProfile,
+    signInAnonymously
 } from 'firebase/auth'
 import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
 import { initFirebase } from '@/firebase/firebaseApp'
@@ -56,6 +58,11 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
     const signInGithub = async () => {
         await signInWithPopup(auth, githubProvider)
+    }
+
+
+    const signAnonymously = async () => {
+        await signInAnonymously(auth)
     }
 
     async function handleLoginForm(e: React.FormEvent<HTMLFormElement>, action: "login" | "signup") {
@@ -162,13 +169,28 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                 </div>
 
                 <div id={styles.login_buttons_container}>
-                    <button id={styles.google_button} onClick={() => signInGoogle()}>
-                        <GoogleSvg width={16} height={16} alt={"Google icon"} />
-                    </button>
 
-                    <button id={styles.github_button} onClick={() => signInGithub()}>
-                        <GitHubSvg width={16} height={16} alt={"GitHub icon"} />
-                    </button>
+                    <div>
+                        <button title='Google' id={styles.google_button} onClick={() => signInGoogle()}>
+                            <GoogleSvg width={16} height={16} alt={"Google icon"} />
+                        </button>
+                        <small>Google</small>
+                    </div>
+
+                    <div>
+                        <button title='Anonymously' id={styles.anonymous_button} onClick={() => signAnonymously()}>
+                            <AnonymousSvg width={16} height={16} alt={"Anonymous icon"} />
+                        </button>
+                        <small>Anonymously</small>
+                    </div>
+
+                    <div>
+                        <button title='GitHub' id={styles.github_button} onClick={() => signInGithub()}>
+                            <GitHubSvg width={16} height={16} alt={"GitHub icon"} />
+                        </button>
+                        <small>GitHub</small>
+                    </div>
+
                 </div>
 
                 <div id={styles.span_container}>
