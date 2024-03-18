@@ -216,12 +216,22 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     }, [user, episodeNumber])
 
+    useEffect(() => {
+
+        if (mediaId && source && movieId) setIsLoading(false)
+
+    }, [mediaId, source, episodeNumber, movieId])
+
     return (
         <button
             role='link'
             onClick={() => redirectTo()}
             disabled={isLoading || movieId?.length == 0}
-            title={isLoading ? "Wait the Loading" : `Watch ${mediaTitle} ${episodeNumber ? ` - EP ${episodeNumber}` : ""}`}
+            title={isLoading ?
+                "Wait the Loading"
+                :
+                `Watch ${mediaTitle} ${episodeNumber ? ` - EP ${episodeNumber}` : ""}`
+            }
         >
 
             {(user && episodeNumber) && (
