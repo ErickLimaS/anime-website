@@ -18,14 +18,19 @@ import { CaptionsFileFormat, CaptionsParserFactory } from 'media-captions';
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
 import { AnimatePresence, motion } from "framer-motion";
+import { EpisodeLinksGoGoAnime, MediaEpisodes } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from "@/app/ts/interfaces/apiAnimewatchInterface";
+import gogoanime from "@/api/gogoanime";
+import aniwatch from "@/api/aniwatch";
+import { useRouter } from "next/navigation";
 
 type VideoPlayerType = {
     source: string,
     currentLastStop?: string,
     mediaSource: string,
     media: ApiMediaResults,
+    mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[],
     episodeNumber: string,
-    nextEpisodeSrc?: any,
     episodeId: string,
     episodeIntro?: { start: number, end: number },
     episodeOutro?: { start: number, end: number },
@@ -51,15 +56,23 @@ type SubtitlesType = {
     default: boolean | undefined,
 }
 
-function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episodeNumber, currentLastStop, episodeIntro, episodeOutro, nextEpisodeSrc }: VideoPlayerType) {
+function Player({
+    source, mediaSource, subtitles,
+    videoQualities, media, episodeId,
+    episodeNumber, currentLastStop, episodeIntro,
+    episodeOutro, mediaEpisodes }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
+
+    const [nextEpisode, setNextEpisode] = useState<any | undefined>(undefined)
+
+    const [showActionButtons, setShowActionButtons] = useState<boolean>(false)
 
     const [episodeLastStop, setEpisodeLastStop] = useState<number>(Number(currentLastStop) || 0)
 
     const [timeskip, setTimeskip] = useState<number | null>(null)
 
-    const [videoSource, setVideoSource] = useState<string>()
+    const [videoSource, setVideoSource] = useState<string>(source)
 
     const auth = getAuth()
 
@@ -67,6 +80,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     const db = getFirestore(initFirebase());
 
+    const router = useRouter()
 
     // get user preferences 
     async function getUserPreferences() {
@@ -76,7 +90,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
             const data = await getDoc(doc(db, "users", user.uid))
 
             getUserPreferredLanguage(data)
-            getUserVideoQuality(data)
+            // getUserVideoQuality(data)
             getUserLastStopOnCurrentEpisode(data)
 
         }
@@ -117,25 +131,25 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
     }
 
     // get user preferred quality
-    async function getUserVideoQuality(user: DocumentSnapshot<DocumentData, DocumentData>) {
+    // async function getUserVideoQuality(user: DocumentSnapshot<DocumentData, DocumentData>) {
 
-        let userVideoQuality: string | null = null
+    //     let userVideoQuality: string | null = null
 
-        userVideoQuality = await user.get("videoQuality")
+    //     userVideoQuality = await user.get("videoQuality")
 
-        if (!userVideoQuality) return setVideoSource(source)
+    //     if (!userVideoQuality) return setVideoSource(source)
 
-        // get which that matches the available qualities of this media
-        let videoSourceMatchedUserQuality
+    //     // get which that matches the available qualities of this media
+    //     let videoSourceMatchedUserQuality
 
-        videoQualities?.map((item) => {
+    //     videoQualities?.map((item) => {
 
-            if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
+    //         if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
 
-        })
+    //     })
 
-        setVideoSource(videoSourceMatchedUserQuality || source)
-    }
+    //     setVideoSource(videoSourceMatchedUserQuality || source)
+    // }
 
     // gets last time position of episode
     async function getUserLastStopOnCurrentEpisode(user: DocumentSnapshot<DocumentData, DocumentData>) {
@@ -206,12 +220,20 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
             }
         }
 
-        if (user && (currentTime % 30 === 0)) {
-            addToKeepWatching(currentTime, duration)
+        // saves video progress on DB
+        if (user && (currentTime % 30 === 0)) addToKeepWatching(currentTime, duration)
+
+        // show next episode button
+        if (nextEpisode && Math.round((currentTime / duration) * 100) > 95) {
+            setShowActionButtons(true)
+        }
+        else {
+            if (showActionButtons != false) setShowActionButtons(false)
         }
 
-        if (nextEpisodeSrc && currentTime > 1 && (currentTime >= (duration - 4))) {
-            setVideoSource(nextEpisodeSrc)
+        // auto redirects to next episode
+        if (nextEpisode && ((currentTime / duration) * 100) > 99.7) {
+            nextEpisodeAction()
         }
     }
 
@@ -222,14 +244,66 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     }
 
+    // get video source to next episode
+    async function getNextEpisode() {
+
+        if (!mediaEpisodes) return
+
+        let fetchNextEpisode: any = mediaEpisodes.find((item: { number: number; }) => item.number == (Number(episodeNumber) + 1))
+
+        let nextEpisodId
+
+        if (fetchNextEpisode) {
+
+            if (mediaSource == "gogoanime") {
+
+                nextEpisodId = (fetchNextEpisode as any).id
+
+                fetchNextEpisode = await gogoanime.getLinksForThisEpisode(fetchNextEpisode.id) as EpisodeLinksGoGoAnime
+
+                fetchNextEpisode = (fetchNextEpisode as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
+
+                if (!fetchNextEpisode) fetchNextEpisode = (fetchNextEpisode as EpisodeLinksGoGoAnime).sources[0].url
+
+            }
+            else {
+
+                nextEpisodId = (fetchNextEpisode as EpisodeAnimeWatch).episodeId
+
+                fetchNextEpisode = await aniwatch.episodesLinks(fetchNextEpisode.episodeId) as EpisodeLinksAnimeWatch
+
+                fetchNextEpisode = fetchNextEpisode.sources[0].url
+
+            }
+
+        }
+
+        if (nextEpisodId && fetchNextEpisode) setNextEpisode({ id: nextEpisodId, src: fetchNextEpisode })
+
+    }
+
+    function nextEpisodeAction() {
+
+        router.push(`/watch/${media.id}?source=${mediaSource}&episode=${Number(episodeNumber) + 1}&q=${nextEpisode.id}`)
+        setVideoSource(nextEpisode.src)
+
+    }
+
     useEffect(() => {
 
         getUserPreferences()
 
     }, [user, loading, episodeId])
 
+
+    useEffect(() => {
+
+        getNextEpisode()
+
+    }, [videoSource, episodeNumber])
+
     return (
-        (!loading && subList && videoSource) && (
+        (!loading && subList) && (
             <MediaPlayer
                 className={styles.container}
                 title={media.title.romaji}
@@ -256,6 +330,21 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
                     )}
                 </AnimatePresence>
+
+                {(nextEpisode && showActionButtons) && (
+
+                    <motion.button
+                        id={styles.next_episode_btn}
+                        onClick={() => nextEpisodeAction()}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1, transition: { animation: 1.5 } }}
+                        exit={{ opacity: 0 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        Next Episode
+                    </motion.button>
+
+                )}
 
                 <MediaProvider >
                     {subList.map((item) => (

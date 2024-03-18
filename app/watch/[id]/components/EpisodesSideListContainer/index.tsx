@@ -23,7 +23,7 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
         animate: {
             scale: 1,
             transition: {
-                staggerChildren: 0.1,
+                staggerChildren: 0.02,
             },
         },
     }

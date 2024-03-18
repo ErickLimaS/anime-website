@@ -112,28 +112,6 @@ async function WatchEpisode({ params, searchParams }: {
 
     episodes = response!.episodes
 
-    let nextEpisodeSrc
-    // find next episode
-    if (episodes) {
-
-        nextEpisodeSrc = episodes.find(item => item.number == (Number(searchParams.episode) + 1))
-
-        if (nextEpisodeSrc) {
-
-            if (searchParams.source == "gogoanime") {
-
-                nextEpisodeSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
-
-                if (!nextEpisodeSrc) nextEpisodeSrc = (episodeData as EpisodeLinksGoGoAnime).sources[0].url
-
-            }
-            else {
-                nextEpisodeSrc = episodeData.sources[0].url
-            }
-        }
-
-    }
-
     return (
         <main id={styles.container}>
 
@@ -148,7 +126,7 @@ async function WatchEpisode({ params, searchParams }: {
                         episodeIntro={(episodeData as EpisodeLinksAnimeWatch)?.intro}
                         episodeOutro={(episodeData as EpisodeLinksAnimeWatch)?.outro}
                         episodeNumber={searchParams.episode}
-                        nextEpisodeSrc={nextEpisodeSrc}
+                        mediaEpisodes={episodes}
                         episodeId={searchParams.q}
                         subtitles={searchParams.source == "gogoanime" ? undefined : (episodeData as EpisodeLinksAnimeWatch).tracks}
                         videoQualities={searchParams.source == "gogoanime" ? (episodeData as EpisodeLinksGoGoAnime).sources : undefined}
