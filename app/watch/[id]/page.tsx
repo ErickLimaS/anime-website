@@ -68,7 +68,9 @@ async function WatchEpisode({ params, searchParams }: {
                         currentLastStop={searchParams.t || undefined}
                         mediaSource={searchParams.source}
                         media={mediaData}
-                        episode={searchParams.episode}
+                        episodeIntro={(episodeData as EpisodeLinksAnimeWatch)?.intro}
+                        episodeOutro={(episodeData as EpisodeLinksAnimeWatch)?.outro}
+                        episodeNumber={searchParams.episode}
                         episodeId={searchParams.q}
                         subtitles={searchParams.source == "gogoanime" ? undefined : (episodeData as EpisodeLinksAnimeWatch).tracks}
                         videoQualities={searchParams.source == "gogoanime" ? (episodeData as EpisodeLinksGoGoAnime).sources : undefined}

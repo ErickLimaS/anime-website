@@ -15,14 +15,17 @@ import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/l
 import { CaptionsFileFormat, CaptionsParserFactory } from 'media-captions';
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
+import { AnimatePresence, motion } from "framer-motion";
 
 type VideoPlayerType = {
     source: string,
     currentLastStop?: string,
     mediaSource: string,
     media: ApiMediaResults,
-    episode: string,
+    episodeNumber: string,
     episodeId: string,
+    episodeIntro?: { start: number, end: number },
+    episodeOutro?: { start: number, end: number },
     subtitles?: {
         kind: string,
         default: boolean | undefined,
@@ -45,11 +48,13 @@ type SubtitlesType = {
     default: boolean | undefined,
 }
 
-function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episode, currentLastStop }: VideoPlayerType) {
+function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episodeNumber, currentLastStop, episodeIntro, episodeOutro }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
 
-    const [episodeLastStop, setEpisodeLastStop] = useState<number>(0)
+    const [episodeLastStop, setEpisodeLastStop] = useState<number>(Number(currentLastStop) || 0)
+
+    const [timeskip, setTimeskip] = useState<number | null>(null)
 
     const auth = getAuth()
 
@@ -58,7 +63,6 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
     const [videoSource, setVideoSource] = useState<string>()
 
     const db = getFirestore(initFirebase());
-
 
     // get user preferred languag
     async function getUserPreferedLanguage() {
@@ -162,7 +166,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                             extraLarge: media.coverImage.extraLarge,
                             large: media.coverImage.large
                         },
-                        episode: episode,
+                        episode: episodeNumber,
                         episodeId: episodeId,
                         episodeTimeLastStop: currentEpisodeTime,
                         episodeDuration: videoDuration,
@@ -173,6 +177,34 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
             } as unknown as FieldPath,
             { merge: true }
         )
+
+    }
+
+    function checkSecondsAndSetSkipAndNextEpisode(e: any) {
+
+        const currentTime = Math.round(e.currentTime)
+        const duration = Math.round(e.duration)
+
+        if (episodeIntro) {
+            if (currentTime >= episodeIntro.start && currentTime < episodeIntro.end) {
+                if (timeskip == null) setTimeskip(() => episodeIntro.end)
+            }
+            else {
+                if (timeskip != episodeOutro?.end) setTimeskip(null)
+            }
+        }
+        if (episodeOutro) {
+            if (currentTime >= episodeOutro.start && currentTime < episodeOutro.end) {
+                if (timeskip == null) setTimeskip(() => episodeOutro.end)
+            }
+            else {
+                if (timeskip != episodeIntro?.end) setTimeskip(null)
+            }
+        }
+
+        if (user && (currentTime % 30 === 0)) {
+            addToKeepWatching(currentTime, duration)
+        }
 
     }
 
@@ -190,14 +222,30 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                 className={styles.container}
                 title={media.title.romaji}
                 src={videoSource}
-                currentTime={Number(currentLastStop) || episodeLastStop}
+                currentTime={episodeLastStop}
                 autoPlay
                 volume={0.5}
-                onProgressCapture={(e: any) =>
-                    (user && (Math.round(e.target.currentTime) % 30 === 0)) &&
-                    addToKeepWatching(Math.round(e.target.currentTime), Math.round(e.target.duration))
-                }
+                onProgressCapture={(e) => checkSecondsAndSetSkipAndNextEpisode(e.target)}
+                onEnded={() => console.log("aaaa")}
             >
+
+                <AnimatePresence>
+                    {timeskip && (
+
+                        <motion.button
+                            id={styles.skip_btn}
+                            onClick={() => setEpisodeLastStop(timeskip)}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1, transition: { animation: 1.5 } }}
+                            exit={{ opacity: 0 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            Skip
+                        </motion.button>
+
+                    )}
+                </AnimatePresence>
+
                 <MediaProvider >
                     {subList.map((item) => (
                         <Track

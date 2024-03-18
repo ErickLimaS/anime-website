@@ -2,5 +2,41 @@
 
     border: none;
     border-radius: 0;
+    z-index: 0;
+
+}
+
+.container #skip_btn {
+
+    transition: all ease-in-out 100ms;
+
+    position: absolute;
+    z-index: 2;
+    bottom: 25%;
+    right: 5%;
+
+    background-color: var(--black-75);
+    border: 2px solid var(--white-50);
+
+    padding: 8px 24px;
+
+    border-radius: 4px;
+
+    font-family: var(--font-family-sans-serif);
+    font-weight: 600;
+    color: var(--white-100);
+
+}
+
+@media(min-width: 620px) {
+    .container #skip_btn {
+        padding: 12px 40px;
+    }
+}
+
+.container #skip_btn:hover {
+
+    background-color: var(--black-100);
+    border-color: var(--white-75);
 
 }
