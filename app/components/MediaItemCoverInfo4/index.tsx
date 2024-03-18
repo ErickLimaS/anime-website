@@ -77,7 +77,7 @@ function MediaItemCoverInfo4({ data, darkMode }: ComponentTypes) {
 
                     <Link href={`/media/${data.id}`}>SEE MORE</Link>
 
-                    <Link href={`/watch/${data.id}?source=${data.source}&episode=${data.episode}&q=${data.episodeId}`}>
+                    <Link href={`/watch/${data.id}?source=${data.source}&episode=${data.episode}&q=${data.episodeId}&t=${data.episodeTimeLastStop || 0}`}>
                         {data.format != "MOVIE" ? "CONTINUE EPISODE" : "CONTINUE"}
                     </Link>
 

@@ -18,6 +18,7 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 
 type VideoPlayerType = {
     source: string,
+    currentLastStop?: string,
     mediaSource: string,
     media: ApiMediaResults,
     episode: string,
@@ -44,11 +45,11 @@ type SubtitlesType = {
     default: boolean | undefined,
 }
 
-function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episode }: VideoPlayerType) {
+function Player({ source, mediaSource, subtitles, videoQualities, media, episodeId, episode, currentLastStop }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
 
-    const [addOnKeepWatching, setAddOnKeepWatching] = useState<boolean>(false)
+    const [episodeLastStop, setEpisodeLastStop] = useState<number>(0)
 
     const auth = getAuth()
 
@@ -58,6 +59,8 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
 
     const db = getFirestore(initFirebase());
 
+
+    // get user preferred languag
     async function getUserPreferedLanguage() {
 
         let preferredLanguage: string | null = null
@@ -94,6 +97,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
         setSubList(subListMap)
     }
 
+    // get user preferred quality
     async function getUserVideoQuality() {
 
         let userVideoQuality: string | null = null
@@ -120,11 +124,30 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
         setVideoSource(videoSourceMatchedUserQuality || source)
     }
 
-    // adds media to keep watching
-    // every time user watchs this episode, it will update time on DOC
-    async function addToKeepWatching() {
+    // gets last time position of episode
+    async function getUserLastStopOnCurrentEpisode() {
 
-        if (addOnKeepWatching) return
+        if (!user || currentLastStop) return
+
+        let keepWatchingList = await getDoc(doc(db, 'users', user.uid)).then(doc => doc.get("keepWatching"))
+
+        let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
+
+            return keepWatchingList[key]
+
+        })
+
+        keepWatchingList = listFromObjectToArray
+            .filter(item => item.length != 0 && item)
+            .find((item: KeepWatchingItem) => item.id == media.id)
+
+        if (keepWatchingList) return setEpisodeLastStop(keepWatchingList.episodeTimeLastStop)
+
+    }
+
+    // adds media to keep watching
+    // updates DOC every 30 secs
+    async function addToKeepWatching(currentEpisodeTime: number) {
 
         await setDoc(doc(db, "users", user!.uid),
             {
@@ -141,6 +164,7 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                         },
                         episode: episode,
                         episodeId: episodeId,
+                        episodeTimeLastStop: currentEpisodeTime,
                         source: mediaSource,
                         updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
                     }
@@ -149,14 +173,13 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
             { merge: true }
         )
 
-        setAddOnKeepWatching(true)
-
     }
 
     useEffect(() => {
 
         getUserPreferedLanguage()
         getUserVideoQuality()
+        getUserLastStopOnCurrentEpisode()
 
     }, [user, loading, source])
 
@@ -166,16 +189,12 @@ function Player({ source, mediaSource, subtitles, videoQualities, media, episode
                 className={styles.container}
                 title={media.title.romaji}
                 src={videoSource}
+                currentTime={Number(currentLastStop) || episodeLastStop}
                 autoPlay
                 volume={0.5}
                 onProgressCapture={(e: any) =>
-                    (
-                        user &&
-                        (Math.round(e.target.currentTime) > 25) &&
-                        (Math.round(e.target.currentTime) % 2) &&
-                        !addOnKeepWatching
-                    ) &&
-                    addToKeepWatching()
+                    (user && (Math.round(e.target.currentTime) % 30 === 0)) &&
+                    addToKeepWatching(Math.round(e.target.currentTime))
                 }
             >
                 <MediaProvider >
