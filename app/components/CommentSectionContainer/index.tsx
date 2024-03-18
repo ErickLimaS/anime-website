@@ -17,7 +17,7 @@ import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
 import UserModal from '../UserLoginModal';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 type CommetsSectionTypes = {
     media: ApiMediaResults | ApiDefaultResult,
@@ -38,7 +38,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
     const auth = getAuth()
 
-    const [user, loading] = useAuthState(auth)
+    const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase());
 
@@ -53,35 +53,36 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
         let sorted
 
-        if (!data) await loadComments()
-
         setIsLoading(true)
+
+        if (!data) data = await loadComments()
+
 
         switch (sort) {
             case "date":
 
-                sorted = (data || comments).sort((x, y) => y.createdAt - x.createdAt)
+                sorted = data!.sort((x, y) => y.createdAt - x.createdAt)
                 setComments(sorted)
 
                 break
 
             case "likes":
 
-                sorted = (data || comments).sort((x, y) => y.likes - x.likes)
+                sorted = data!.sort((x, y) => y.likes - x.likes)
                 setComments(sorted)
 
                 break
 
             case "dislikes":
 
-                sorted = (data || comments).sort((x, y) => y.dislikes - x.dislikes)
+                sorted = data!.sort((x, y) => y.dislikes - x.dislikes)
                 setComments(sorted)
 
                 break
 
             default:
 
-                sorted = (data || comments).sort((x, y) => y.createdAt - x.createdAt)
+                sorted = data!.sort((x, y) => y.createdAt - x.createdAt)
                 setComments(sorted)
 
                 break
@@ -130,6 +131,8 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
         setIsLoading(false)
 
+        return data
+
     }
 
     // CREATES DOCUMENT ON THIS MEDIA COLLECTION, AND UPDATES USER DOC WITH INFO THE REF THIS COMMENT DOC
@@ -153,7 +156,6 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
             username: user.displayName,
             userPhoto: user.photoURL,
             createdAt: timeStamp,
-            // createdAt: serverTimestamp() as FieldValue,
             comment: form.comment.value,
             isSpoiler: form.spoiler.checked,
             likes: 0,
@@ -248,6 +250,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
                                 name='comment'
                                 onChange={() => setCommentSaved(false)}
                                 placeholder='Your comment here'
+                                required
                             ></textarea>
                         </label>
 
@@ -256,13 +259,22 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
                             <input type='checkbox' name='spoiler' value="true"></input>
                         </label>
 
-                        <button type='submit' disabled={isLoading}>
-                            {commentSaved ? <><SvgCheck width={16} height={16} alt="Check" /> Comment Done</> : "Comment"}
-                        </button>
+                        <motion.button
+                            type='submit'
+                            disabled={isLoading}
+                            whileTap={{ scale: 0.9 }}
+                        >
+                            {commentSaved ?
+                                <><SvgCheck width={16} height={16} alt="Check" /> Comment Done</>
+                                :
+                                "Comment!"
+                            }
+                        </motion.button>
                     </form>
 
                 </div>
 
+                {/* ALL COMMENTS FROM DB FOR THIS MEDIA */}
                 <div id={styles.all_comments_container}>
 
                     {comments.length > 0 && (
@@ -285,7 +297,11 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
                             <ul>
                                 {!isLoading ? (
                                     comments.slice(0, commentsSliceRange).map((item, key) => (
-                                        <Comment key={key} item={item as Comment} mediaId={media.id} />
+                                        <Comment
+                                            key={item.createdAt}
+                                            item={item as Comment}
+                                            mediaId={media.id}
+                                        />
                                     ))
                                 ) : (
                                     <></>
