@@ -21,12 +21,11 @@
 
     gap: 24px 0;
 
-    width: 96%;
+    width: 100%;
 
     max-width: 500px;
 
-    min-height: 500px;
-    max-height: 80vh;
+    height: 100vh;
 
     overflow-y: auto;
 
@@ -34,10 +33,20 @@
 
     padding: 24px;
 
-    border-radius: 8px;
-
     box-shadow: 0px 0px 3px var(--black-100);
 
+}
+
+@media(min-width:700px) {
+    #modal {
+        border-radius: 8px;
+
+        height: auto;
+        min-height: 500px;
+        max-height: 80vh;
+
+        width: 96%;
+    }
 }
 
 #modal::-webkit-scrollbar {
