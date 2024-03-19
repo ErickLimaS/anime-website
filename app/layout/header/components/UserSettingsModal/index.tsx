@@ -55,6 +55,8 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
     const [currentSource, setCurrentSource] = useState<string | null>(null)
     const [currentQuality, setCurrentQuality] = useState<string | null>(null)
     const [currentShowAdultContent, setCurrentShowAdultContent] = useState<boolean | null>(null)
+    const [currentSkipIntroAndOutro, setCurrentSkipIntroAndOutro] = useState<boolean | null>(null)
+    const [currentNextEpisode, setCurrentNextEpisode] = useState<boolean | null>(null)
 
     const db = getFirestore(initFirebase());
 
@@ -163,7 +165,9 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                 videoSubtitleLanguage: form.language.value,
                 videoSource: form.source.value,
                 videoQuality: form.quality.value,
-                showAdultContent: form.showAdultContent.value == "true"
+                showAdultContent: form.showAdultContent.checked,
+                autoNextEpisode: form.autoNextEpisode.checked,
+                autoSkipIntroAndOutro: form.skipIntroAndOutro.checked
             }
         )
 
@@ -247,6 +251,8 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
         setCurrentSource(await data.get("videoSource") as string || "crunchyroll")
         setCurrentQuality(await data.get("videoQuality") as string || "auto")
         setCurrentShowAdultContent(await data.get("showAdultContent") || false)
+        setCurrentSkipIntroAndOutro(await data.get("autoSkipIntroAndOutro") || false)
+        setCurrentNextEpisode(await data.get("autoNextEpisode") || false)
 
     }())
 
@@ -418,29 +424,53 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                             </small>
                         </div>
 
-                    </div>
+                        <div>
+                            {(currentSkipIntroAndOutro != null) && (
+                                <>
+                                    <div className={styles.checkbox_container}>
 
-                    <div className={styles.group_container}>
-                        <h5><span><SourceSvg alt="Globe" width={16} height={16} /></span> Source</h5>
+                                        <label>
+                                            <input
+                                                type='checkbox'
+                                                name='skipIntroAndOutro'
+                                                defaultChecked={(currentSkipIntroAndOutro == true) as boolean}
+                                            ></input>
+                                            <span />
+
+                                        </label>
+                                        <p>Skip Openings And Endings</p>
+                                    </div>
+
+                                    <small style={{ marginTop: "16px", display: "block" }}>Only works with <b>Aniwatch</b></small>
+                                </>
+                            )}
+                        </div>
 
                         <div>
-                            {currentSource && (
+                            {(currentNextEpisode != null) && (
                                 <>
-                                    <p>Show Adult Content (+18)</p>
-                                    <div className={styles.radio_container}>
-                                        <label>
-                                            Yes
-                                            <input type='radio' name='showAdultContent' value={"true"} defaultChecked={(currentShowAdultContent == true) as boolean}></input>
-                                        </label>
+                                    <div className={styles.checkbox_container}>
 
                                         <label>
-                                            No
-                                            <input type='radio' name='showAdultContent' value={"false"} defaultChecked={(currentShowAdultContent == false) as boolean}></input>
+                                            <input
+                                                type='checkbox'
+                                                name='autoNextEpisode'
+                                                defaultChecked={(currentNextEpisode == true) as boolean}
+                                            ></input>
+                                            <span />
+
                                         </label>
+                                        <p>Auto Play Next Episode</p>
+
                                     </div>
                                 </>
                             )}
                         </div>
+
+                    </div>
+
+                    <div className={styles.group_container}>
+                        <h5><span><SourceSvg alt="Globe" width={16} height={16} /></span> Source</h5>
 
                         <div>
                             {currentSource && (
@@ -457,6 +487,27 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                         </select>
                                     </label>
                                     <small>Focus the anime episodes to the source selected. <b>You can still use the others sources.</b></small>
+                                </>
+                            )}
+                        </div>
+
+                        <div>
+                            {(currentSource != null) && (
+                                <>
+                                    <div className={styles.checkbox_container}>
+
+                                        <label>
+                                            <input
+                                                type='checkbox'
+                                                name='showAdultContent'
+                                                defaultChecked={(currentShowAdultContent == true) as boolean}
+                                            ></input>
+                                            <span />
+
+                                        </label>
+                                        <p>Show Adult Content (+18)</p>
+
+                                    </div>
                                 </>
                             )}
                         </div>

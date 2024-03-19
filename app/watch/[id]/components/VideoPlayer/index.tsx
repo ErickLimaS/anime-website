@@ -76,6 +76,9 @@ function Player({
 
     const [videoSource, setVideoSource] = useState<string>(source)
 
+    const [autoSkipIntroAndOutro, setAutoSkipIntroAndOutro] = useState<boolean>(false)
+    const [autoNextEpisode, setAutoNextEpisode] = useState<boolean>(false)
+
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
@@ -90,32 +93,26 @@ function Player({
         let userDoc = undefined
         if (user) userDoc = await getDoc(doc(db, "users", user.uid))
 
-        // getUserAutoSkip(userDoc)
+        getUserAutoSkip(userDoc)
         getUserPreferredLanguage(userDoc)
         getUserVideoQuality(userDoc)
         getUserLastStopOnCurrentEpisode(userDoc)
 
     }
 
-    // async function getUserAutoSkip(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
+    // get user Auto Skip and Auto Next Episode
+    async function getUserAutoSkip(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
 
-    //     let userVideoQuality: string | null = null
+        let userAutoSkipIntroAndOutro: boolean | null = null
+        let userNextEpisode: boolean | null = null
 
-    //     // userVideoQuality = await userDoc?.get("videoQuality")
+        userAutoSkipIntroAndOutro = await userDoc?.get("autoSkipIntroAndOutro") == true || false
+        userNextEpisode = await userDoc?.get("autoNextEpisode") == true || false
 
-    //     if (!userVideoQuality) return setVideoSource(source)
+        setAutoSkipIntroAndOutro(userAutoSkipIntroAndOutro)
+        setAutoNextEpisode(userNextEpisode)
 
-    //     // get which that matches the available qualities of this media
-    //     // let videoSourceMatchedUserQuality
-
-    //     // videoQualities?.map((item) => {
-
-    //     //     if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
-
-    //     // })
-
-    //     // setVideoSource(videoSourceMatchedUserQuality || source)
-    // }
+    }
 
     // get user preferred language
     async function getUserPreferredLanguage(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
@@ -231,9 +228,11 @@ function Player({
         if (episodeIntro || episodeOutro) {
             if (episodeIntro && currentTime >= episodeIntro.start && currentTime < episodeIntro.end) {
                 if (timeskip == null) setTimeskip(() => episodeIntro.end)
+                if (user && autoSkipIntroAndOutro && timeskip != null) skipEpisodeIntroOrOutro()
             }
             else if (episodeOutro && currentTime >= episodeOutro.start && currentTime < episodeOutro.end) {
                 if (timeskip == null) setTimeskip(() => episodeOutro.end)
+                if (user && autoSkipIntroAndOutro && timeskip != null) skipEpisodeIntroOrOutro()
             }
             else {
                 setTimeskip(null)
@@ -330,7 +329,7 @@ function Player({
                 // saves state of video every 45 secs, and shows SKIP btn on intros/outros
                 onProgressCapture={(e) => checkSecondsAndSetSkipAndNextEpisode(e.target)}
                 // when video ends, goes to next episode                 
-                onEnded={() => nextEpisodeAction()}
+                onEnded={() => autoNextEpisode && nextEpisodeAction()}
             >
 
                 <AnimatePresence>
@@ -344,7 +343,7 @@ function Player({
                             exit={{ opacity: 0 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <SkipSvg width={16} height={16} /> Skip
+                            <SkipSvg width={16} height={16} /> {autoSkipIntroAndOutro ? "Auto Skip" : "Skip"}
                         </motion.button>
 
                     )}

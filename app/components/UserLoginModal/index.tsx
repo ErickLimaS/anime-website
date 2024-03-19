@@ -100,6 +100,8 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                     episodesWatchedBySource: {},
                     videoSource: "crunchyroll",
                     showAdultContent: false,
+                    autoNextEpisode: true,
+                    autoSkipIntroAndOutro: false,
                     videoQuality: "auto",
                     videoSubtitleLanguage: "English",
                 })
