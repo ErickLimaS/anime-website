@@ -23,6 +23,8 @@ import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from "@/app/ts/interfaces/a
 import gogoanime from "@/api/gogoanime";
 import aniwatch from "@/api/aniwatch";
 import { useRouter } from "next/navigation";
+import SkipSvg from "@/public/assets/chevron-double-right.svg"
+import NextSvg from "@/public/assets/play.svg"
 
 type VideoPlayerType = {
     source: string,
@@ -85,26 +87,42 @@ function Player({
     // get user preferences 
     async function getUserPreferences() {
 
-        if (user) {
+        let userDoc = undefined
+        if (user) userDoc = await getDoc(doc(db, "users", user.uid))
 
-            const data = await getDoc(doc(db, "users", user.uid))
-
-            getUserPreferredLanguage(data)
-            // getUserVideoQuality(data)
-            getUserLastStopOnCurrentEpisode(data)
-
-        }
-
-        return
+        // getUserAutoSkip(userDoc)
+        getUserPreferredLanguage(userDoc)
+        getUserVideoQuality(userDoc)
+        getUserLastStopOnCurrentEpisode(userDoc)
 
     }
 
+    // async function getUserAutoSkip(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
+
+    //     let userVideoQuality: string | null = null
+
+    //     // userVideoQuality = await userDoc?.get("videoQuality")
+
+    //     if (!userVideoQuality) return setVideoSource(source)
+
+    //     // get which that matches the available qualities of this media
+    //     // let videoSourceMatchedUserQuality
+
+    //     // videoQualities?.map((item) => {
+
+    //     //     if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
+
+    //     // })
+
+    //     // setVideoSource(videoSourceMatchedUserQuality || source)
+    // }
+
     // get user preferred language
-    async function getUserPreferredLanguage(user: DocumentSnapshot<DocumentData, DocumentData>) {
+    async function getUserPreferredLanguage(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
 
         let preferredLanguage: string | null = null
 
-        preferredLanguage = await user.get("videoSubtitleLanguage")
+        preferredLanguage = await userDoc?.get("videoSubtitleLanguage")
 
         // get user language and filter through the available subtitles to this media
         let subListMap: SubtitlesType[] = []
@@ -116,14 +134,16 @@ function Player({
                 :
                 item.default || item.label == "English"
 
-            subListMap.push({
-                kind: item.kind,
-                srcLang: item.label,
-                src: item.file,
-                default: isDefaultLang,
-                label: item.label,
-                type: item.kind
-            })
+            subListMap.push(
+                {
+                    kind: item.kind,
+                    srcLang: item.label,
+                    src: item.file,
+                    default: isDefaultLang,
+                    label: item.label,
+                    type: item.kind
+                }
+            )
 
         })
 
@@ -131,32 +151,32 @@ function Player({
     }
 
     // get user preferred quality
-    // async function getUserVideoQuality(user: DocumentSnapshot<DocumentData, DocumentData>) {
+    async function getUserVideoQuality(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
 
-    //     let userVideoQuality: string | null = null
+        let userVideoQuality: string | null = null
 
-    //     userVideoQuality = await user.get("videoQuality")
+        // userVideoQuality = await userDoc?.get("videoQuality")
 
-    //     if (!userVideoQuality) return setVideoSource(source)
+        if (!userVideoQuality) return setVideoSource(source)
 
-    //     // get which that matches the available qualities of this media
-    //     let videoSourceMatchedUserQuality
+        // get which that matches the available qualities of this media
+        // let videoSourceMatchedUserQuality
 
-    //     videoQualities?.map((item) => {
+        // videoQualities?.map((item) => {
 
-    //         if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
+        //     if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
 
-    //     })
+        // })
 
-    //     setVideoSource(videoSourceMatchedUserQuality || source)
-    // }
+        // setVideoSource(videoSourceMatchedUserQuality || source)
+    }
 
     // gets last time position of episode
-    async function getUserLastStopOnCurrentEpisode(user: DocumentSnapshot<DocumentData, DocumentData>) {
+    async function getUserLastStopOnCurrentEpisode(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
 
         if (currentLastStop) return
 
-        let keepWatchingList = user.get("keepWatching")
+        let keepWatchingList = userDoc?.get("keepWatching")
 
         let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
 
@@ -173,7 +193,7 @@ function Player({
     }
 
     // adds media to keep watching
-    // updates DOC every 30 secs
+    // updates DOC every 45 secs
     async function addToKeepWatching(currentEpisodeTime: number, videoDuration: number) {
 
         await setDoc(doc(db, "users", user!.uid),
@@ -220,8 +240,8 @@ function Player({
             }
         }
 
-        // saves video progress on DB
-        if (user && (currentTime % 30 === 0)) addToKeepWatching(currentTime, duration)
+        // saves video progress on DB, when every 45 seconds passes
+        if (user && (currentTime % 45 === 0)) addToKeepWatching(currentTime, duration)
 
         // show next episode button
         if (nextEpisode && Math.round((currentTime / duration) * 100) > 95) {
@@ -231,10 +251,6 @@ function Player({
             if (showActionButtons != false) setShowActionButtons(false)
         }
 
-        // auto redirects to next episode
-        if (nextEpisode && ((currentTime / duration) * 100) > 99.7) {
-            nextEpisodeAction()
-        }
     }
 
     function skipEpisodeIntroOrOutro() {
@@ -311,7 +327,10 @@ function Player({
                 currentTime={episodeLastStop}
                 autoPlay
                 volume={0.5}
+                // saves state of video every 45 secs, and shows SKIP btn on intros/outros
                 onProgressCapture={(e) => checkSecondsAndSetSkipAndNextEpisode(e.target)}
+                // when video ends, goes to next episode                 
+                onEnded={() => nextEpisodeAction()}
             >
 
                 <AnimatePresence>
@@ -325,7 +344,7 @@ function Player({
                             exit={{ opacity: 0 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            Skip
+                            <SkipSvg width={16} height={16} /> Skip
                         </motion.button>
 
                     )}
@@ -341,7 +360,7 @@ function Player({
                         exit={{ opacity: 0 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        Next Episode
+                        <NextSvg width={16} height={16} /> Next Episode
                     </motion.button>
 
                 )}
