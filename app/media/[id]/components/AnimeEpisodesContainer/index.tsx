@@ -5,7 +5,6 @@ import NavButtons from '../../../../components/NavButtons';
 import gogoanime from '@/api/gogoanime';
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
-import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import aniwatch from '@/api/aniwatch';
@@ -24,6 +23,7 @@ import GoGoAnimeEpisode from '../GoGoAnimeEpisodeContainer';
 import AniwatchEpisode from '../AniwatchEpisodeContainer';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
+import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
 
 function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, mediaId: number, totalEpisodes: number }) {
 
@@ -98,7 +98,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         break
 
-      // get data from gogoanime as default
+      // get data from GOGOANIME as default
       case "gogoanime":
 
         mediaEpisodes = await gogoanime.getInfoFromThisMedia(query, "anime") as MediaInfo
@@ -107,12 +107,8 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         // if the name dont match any results, it will search for the query on the api, than make a new request by the ID of the first result 
         if (mediaEpisodes == null) {
-          const searchResultsForMedia = await gogoanime.searchMedia(stringToUrlFriendly(query), "anime") as MediaSearchResult[]
 
-          // try to found a result that matches the title from anilist on gogoanime (might work in some cases)
-          const closestResult = searchResultsForMedia.find((item) => item.id.includes(query + "-tv"))
-
-          mediaEpisodes = await gogoanime.getInfoFromThisMedia(closestResult?.id || searchResultsForMedia[0]?.id, "anime") as MediaInfo || null
+          mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
 
           if (mediaEpisodes == null) {
             setLoading(false)
@@ -121,42 +117,17 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
           }
         }
 
-        // if theres no episodes on data, it simulates filling a array with episodes 
-        if (mediaEpisodes.episodes.length == 0) {
+        setEpisodesDataFetched(mediaEpisodes as MediaEpisodes[])
 
-          const episodes: MediaEpisodes[] = []
-
-          simulateRange(props.totalEpisodes).map((item, key) => (
-
-            episodes.push({
-              number: key + 1,
-              id: `${mediaEpisodes!.id.toLowerCase()}-episode-${key + 1}` || `${(searchResultsForMedia as any)[0].id.toLowerCase()}-episode-${key + 1}`,
-              url: ""
-            })
-
-          ))
-
-          setEpisodesDataFetched(episodes)
-
-          setCurrentItems(episodes.slice(itemOffset, endOffset))
-          setPageCount(Math.ceil(episodes.length / rangeEpisodesPerPage))
-
-        }
-        else {
-
-          setEpisodesDataFetched(mediaEpisodes.episodes)
-
-          setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset))
-          setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage))
-
-        }
+        setCurrentItems((mediaEpisodes as MediaEpisodes[]).slice(itemOffset, endOffset))
+        setPageCount(Math.ceil((mediaEpisodes as MediaEpisodes[]).length / rangeEpisodesPerPage))
 
         setLoading(false)
 
         break
 
-      // get data from aniwatch
-      default: // aniwatch
+      // get data from ANIWATCH
+      default:
 
         setEpisodeSource(chooseSource)
 
@@ -164,14 +135,14 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         setMediaResultsInfoArray(searchResultsForMedia.animes)
 
-        const closestResult = searchResultsForMedia.animes.find((item) => item.name.toUpperCase().includes(query)) || searchResultsForMedia.animes[0]
+        setEpisodeSource(chooseSource)
 
-        mediaEpisodes = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
+        mediaEpisodes = await fetchWithAniWatch(query, "episodes") as EpisodesFetchedAnimeWatch["episodes"]
 
-        setEpisodesDataFetched(mediaEpisodes.episodes)
+        setEpisodesDataFetched(mediaEpisodes)
 
-        setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+        setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage));
 
         setLoading(false)
 
