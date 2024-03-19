@@ -18,6 +18,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     const [movieId, setMovieId] = useState<string>("")
     const [episodeNumber, setEpisodeNumber] = useState<number>()
+    const [episodeTime, setEpisodeTime] = useState<number>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const [source, setSource] = useState<string>()
@@ -117,6 +118,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         setSource(lastWatchedEpisode.source)
         setMovieId(lastWatchedEpisode.episodeId)
         setEpisodeNumber(Number(lastWatchedEpisode.episode))
+        setEpisodeTime(lastWatchedEpisode.episodeTimeLastStop)
 
         return lastWatchedEpisode
 
@@ -206,7 +208,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
     // redirect to watch page
     function redirectTo() {
 
-        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}`)
+        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeTime}` : ""}`)
 
     }
 
