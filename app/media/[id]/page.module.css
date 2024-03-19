@@ -480,8 +480,7 @@ h2.heading_style {
     font-weight: 400;
 }
 
-#cast_container ul li h3,
-#cast_container ul li h3 a {
+#cast_container ul li h3 {
 
     display: -webkit-box;
     -webkit-box-orient: vertical;

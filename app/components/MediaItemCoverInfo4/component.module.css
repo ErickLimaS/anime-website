@@ -17,18 +17,6 @@
     }
 }
 
-.media_item_container[data-deleted=true] {
-
-    opacity: 0;
-
-}
-
-.media_item_container:hover #img_container {
-
-    filter: brightness(85%);
-
-}
-
 .media_item_container #img_container {
 
     position: relative;
@@ -234,6 +222,26 @@
 
 .media_item_container:hover span.episode_name_span {
     background: transparent;
+}
+
+/* PROGRESS BAR */
+.progress_bar {
+
+    background-color: var(--black-75);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 2;
+
+}
+
+.progress_bar>div {
+    top: 0;
+    left: 0;
+    background: var(--brand-color);
+    width: 100%;
+    height: 6px;
+    transform-origin: 0 0;
 }
 
 /*  */

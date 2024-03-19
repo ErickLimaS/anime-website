@@ -103,11 +103,20 @@
     gap: 16px;
 }
 
+#login_buttons_container>div {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#login_buttons_container #anonymous_button,
 #login_buttons_container #google_button,
 #login_buttons_container #github_button {
 
     transition: all ease-in-out 100ms;
-
 
     display: flex;
     align-items: center;
@@ -121,6 +130,11 @@
 
 }
 
+#login_buttons_container #anonymous_button {
+    background-color: transparent;
+    border-color: var(--black-50);
+}
+
 #login_buttons_container #google_button {
     background-color: var(--white-100);
 }
@@ -129,6 +143,7 @@
     background-color: #000;
 }
 
+#login_buttons_container #anonymous_button svg,
 #login_buttons_container #google_button svg,
 #login_buttons_container #github_button svg {
 
@@ -138,10 +153,15 @@
 
 }
 
+#login_buttons_container #anonymous_button svg {
+    fill: var(--black-50);
+}
+
 #login_buttons_container #github_button svg {
     fill: #fff;
 }
 
+#login_buttons_container #anonymous_button:hover svg,
 #login_buttons_container #google_button:hover svg,
 #login_buttons_container #github_button:hover svg {
 

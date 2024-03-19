@@ -2,6 +2,14 @@
     display: flex;
 }
 
+@media(min-width: 550px) {
+    #search_container #form_mobile_search {
+
+        display: none;
+
+    }
+}
+
 /* SEARCH BUTTON SECTION ---> DESKTOP and MOBILE */
 #search_container #form_search form input,
 #search_container #form_mobile_search form input {

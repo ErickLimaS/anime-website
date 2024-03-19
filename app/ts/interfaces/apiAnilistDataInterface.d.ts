@@ -8,6 +8,11 @@ export interface ApiDefaultResult {
         month: number,
         day: number,
     },
+    endDate: {
+        year: number,
+        month: number,
+        day: number,
+    },
     description: string,
     episodes: number,
     duration: number,

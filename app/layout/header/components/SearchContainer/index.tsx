@@ -157,7 +157,7 @@ function SearchContainer() {
                             <SearchResultItemCard
                                 key={key}
                                 item={item}
-                                onClick={() => setSearchResults(null)}
+                                onClick={() => toggleSearchBarMobile()}
                             />
                         ))}
                     </ul>

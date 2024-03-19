@@ -150,7 +150,7 @@ function UserSideMenu() {
                                         </Link>
                                     </li>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                        <button onClick={() => setIsUserSettingsOpen(true)}>
+                                        <button onClick={() => setIsUserSettingsOpen(true)} disabled={user.isAnonymous}>
                                             <SettingsSvg width={16} height={16} alt={"Settings Icon"} /> Settings
                                         </button>
                                     </li>

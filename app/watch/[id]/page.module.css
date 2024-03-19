@@ -167,7 +167,7 @@
 }
 
 #heading_info_container>div>a {
-    box-shadow: 7px 0px 13px 0px;
+    box-shadow: 7px 0px 13px 0px rgb(0 0 0 / 75%);
 }
 
 @media(max-width: 1020px) {
