@@ -320,6 +320,7 @@ function Player({
     return (
         (!loading && subList) && (
             <MediaPlayer
+                crossOrigin={"use-credentials"}
                 className={styles.container}
                 title={media.title.romaji}
                 src={videoSource}
@@ -365,7 +366,7 @@ function Player({
                 )}
 
                 <MediaProvider >
-                    {subList.map((item) => (
+                    {subList.map((item, key) => (
                         <Track
                             key={item.src}
                             src={item.src}

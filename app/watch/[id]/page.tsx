@@ -39,7 +39,7 @@ async function WatchEpisode({ params, searchParams }: {
     if (searchParams.source == "gogoanime") {
 
         // fetch episode data
-        episodeData = await gogoanime.getLinksForThisEpisode(mediaData.title.romaji) as EpisodeLinksGoGoAnime
+        episodeData = await gogoanime.getLinksForThisEpisode(searchParams.q) as EpisodeLinksGoGoAnime
 
         // fetch episode link source
         videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
@@ -59,9 +59,7 @@ async function WatchEpisode({ params, searchParams }: {
 
         // fetch episodes for this media
         const mediaTitle = searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)
-        // episodes = await fetchWithAniWatch(mediaTitle, "episodes") as EpisodeAnimeWatch[]
         episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch).episodes)
-
 
     }
 
