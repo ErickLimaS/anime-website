@@ -6,14 +6,14 @@ import placeholderImg from "@/public/photo-placeholder.jpg"
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function AniwatchEpisode({ data, mediaId }: { data: EpisodeAnimeWatch, mediaId: number }) {
+function AniwatchEpisode({ data, mediaId, backgroundImg }: { data: EpisodeAnimeWatch, mediaId: number, backgroundImg?: string }) {
 
     return (
         <li className={styles.container}>
 
             <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`} className={styles.img_container}>
                 <Image
-                    src={placeholderImg}
+                    src={backgroundImg || placeholderImg}
                     data-other-source={true}
                     fill
                     sizes='100%'

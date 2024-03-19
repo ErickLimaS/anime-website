@@ -6,14 +6,14 @@ import placeholderImg from "@/public/photo-placeholder.jpg"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
 
-function GoGoAnimeEpisode({ data, mediaId }: { data: MediaEpisodes, mediaId: number }) {
+function GoGoAnimeEpisode({ data, mediaId, backgroundImg }: { data: MediaEpisodes, mediaId: number, backgroundImg?: string }) {
 
     return (
         <li className={styles.container}>
 
             <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`} className={styles.img_container}>
                 <Image
-                    src={placeholderImg}
+                    src={backgroundImg || placeholderImg}
                     data-other-source={true}
                     fill
                     sizes='100%'

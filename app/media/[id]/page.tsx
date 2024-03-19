@@ -13,8 +13,6 @@ import CalendarSvg from "@/public/assets/calendar3.svg"
 import ClockSvg from "@/public/assets/clock.svg"
 import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
-import AnilistSvg from "@/public/assets/anilist.svg"
-import SwipeSvg from "@/public/assets/swipe.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
@@ -41,6 +39,14 @@ async function MediaPage({ params }: { params: { id: number } }) {
   const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
 
   const isMobileScreen = checkDeviceIsMobile(headers()) || false
+
+  const episodesFromCrunchyroll = mediaData.streamingEpisodes.sort((a, b) => {
+    const numA = Number(a.title.slice(a.title?.search(/\b \b/), a.title?.search(/\b - \b/)))
+    const numB = Number(b.title.slice(b.title?.search(/\b \b/), b.title?.search(/\b - \b/)))
+
+    return numA - numB
+
+  })
 
   return (
     <main id={styles.container}>
@@ -298,7 +304,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 <h2 className={styles.heading_style}>EPISODES</h2>
 
                 <EpisodesContainer
-                  data={mediaData.streamingEpisodes}
+                  data={episodesFromCrunchyroll}
                   mediaTitle={mediaData.title.romaji}
                   mediaId={mediaData.id}
                   totalEpisodes={mediaData.nextAiringEpisode ?

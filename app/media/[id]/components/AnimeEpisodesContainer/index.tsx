@@ -9,7 +9,10 @@ import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import aniwatch from '@/api/aniwatch';
-import { EpisodeAnimeWatch, EpisodesFetchedAnimeWatch, MediaInfoAniwatch, MediaInfoFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface';
+import {
+  EpisodeAnimeWatch, EpisodesFetchedAnimeWatch,
+  MediaInfoAniwatch, MediaInfoFetchedAnimeWatch
+} from '@/app/ts/interfaces/apiAnimewatchInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
@@ -52,7 +55,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
     const newOffset = event.selected * rangeEpisodesPerPage % episodesDataFetched.length;
 
     setItemOffset(newOffset);
-  };
+  }
 
   const setEpisodesSource: (parameter: string) => void = async (parameter: string) => {
 
@@ -298,13 +301,13 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
               ||
               episodeSource == "gogoanime" && (
 
-                <GoGoAnimeEpisode key={key} data={item as MediaEpisodes} mediaId={props.mediaId} />
+                <GoGoAnimeEpisode key={key} data={item as MediaEpisodes} backgroundImg={data[key + itemOffset]?.thumbnail} mediaId={props.mediaId} />
 
               )
               ||
               episodeSource == "aniwatch" && (
 
-                <AniwatchEpisode key={key} data={item as EpisodeAnimeWatch} mediaId={props.mediaId} />
+                <AniwatchEpisode key={key} data={item as EpisodeAnimeWatch} backgroundImg={data[key + itemOffset]?.thumbnail} mediaId={props.mediaId} />
 
               )
             )
