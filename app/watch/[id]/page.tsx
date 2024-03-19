@@ -4,14 +4,13 @@ import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilis
 import gogoanime from '@/api/gogoanime'
 import anilist from '@/api/anilist'
 import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
-import { EpisodeLinksGoGoAnime, MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
+import { EpisodeLinksGoGoAnime, MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import EpisodesSideListContainer from './components/EpisodesSideListContainer'
 import CommentSectionContainer from '@/app/components/CommentSectionContainer'
 import aniwatch from '@/api/aniwatch'
 import Player from './components/VideoPlayer'
-import { EpisodeLinksAnimeWatch, EpisodesFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
-import simulateRange from '@/app/lib/simulateRange'
-import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
+import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch, EpisodesFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import { fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
@@ -34,83 +33,37 @@ async function WatchEpisode({ params, searchParams }: {
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
     let episodeData
-
-    // fetch episode data
-    if (searchParams.source == "gogoanime") {
-
-        episodeData = await gogoanime.getLinksForThisEpisode(searchParams.q) as EpisodeLinksGoGoAnime
-
-    }
-    else {
-
-        episodeData = await aniwatch.episodesLinks(searchParams.q) as EpisodeLinksAnimeWatch
-
-    }
-
+    let episodes: EpisodeAnimeWatch[] | MediaEpisodes[]
     let videoSrc: string
 
-    // fetch episode link source
     if (searchParams.source == "gogoanime") {
 
-        videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
+        // fetch episode data
+        episodeData = await gogoanime.getLinksForThisEpisode(mediaData.title.romaji) as EpisodeLinksGoGoAnime
 
+        // fetch episode link source
+        videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
         if (!videoSrc) videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources[0].url
 
+        // fetch episodes for this media
+        episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
+
     }
     else {
+
+        // fetch episode data
+        episodeData = await aniwatch.episodesLinks(searchParams.q) as EpisodeLinksAnimeWatch
+
+        // fetch episode link source
         videoSrc = episodeData.sources[0].url
-    }
 
-    let episodes
-    // fetch episodes for this media
-    let response: MediaInfo | EpisodesFetchedAnimeWatch | { episodes: MediaEpisodes[] } | null
+        // fetch episodes for this media
+        const mediaTitle = searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)
+        // episodes = await fetchWithAniWatch(mediaTitle, "episodes") as EpisodeAnimeWatch[]
+        episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch).episodes)
 
-    if (searchParams.source == "gogoanime") {
-
-        response = await gogoanime.getInfoFromThisMedia(mediaData.title.romaji, "anime") as MediaInfo
-        let searchResultsForMedia: any[]
-        let closestResult: MediaSearchResult | undefined
-
-        if (response == null) {
-            searchResultsForMedia = await gogoanime.searchMedia(stringToUrlFriendly(mediaData.title.romaji), "anime") as MediaSearchResult[]
-
-            // try to found a result that matches the title from anilist on gogoanime (might work in some cases)
-            closestResult = searchResultsForMedia.find((item) => item.id.includes(mediaData.title.romaji + "-tv"))
-
-            response = await gogoanime.getInfoFromThisMedia(closestResult?.id || searchResultsForMedia[0].id, "anime") as MediaInfo
-
-        }
-
-        // work around the api not return episodes
-        if (response.episodes.length == 0) {
-
-            const episodes: MediaEpisodes[] = []
-
-            simulateRange(mediaData.nextAiringEpisode ?
-                mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes as number)
-                .map((item, key) => (
-
-                    episodes.push({
-                        number: key + 1,
-                        id: `${((response as MediaInfo)?.id || closestResult?.id || searchResultsForMedia[0].id).toLowerCase()}-episode-${key + 1}`,
-                        url: ""
-                    })
-
-                ))
-
-            response = { episodes: episodes }
-
-        }
-    }
-    else {
-
-        response = await aniwatch.getEpisodes(
-            searchParams.q.slice(0, searchParams?.q.search(/\bep\b/))
-                .slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)) as EpisodesFetchedAnimeWatch
 
     }
-
-    episodes = response!.episodes
 
     return (
         <main id={styles.container}>

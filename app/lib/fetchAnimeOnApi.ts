@@ -9,33 +9,39 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
     const regexMediaTitle = regexOnlyAlphabetic(textSearch).toLowerCase()
 
-    const searchResultsForMedia = await gogoanime.searchMedia(regexMediaTitle, "anime") as MediaSearchResult[]
+    let mediaSearched = await gogoanime.getInfoFromThisMedia(textSearch, "anime") as MediaInfo
+    let searchResultsForMedia
+    let filterBestResult
 
-    const filterBestResult = searchResultsForMedia.filter(item =>
-        regexOnlyAlphabetic(item.title).toLowerCase().indexOf(regexMediaTitle) !== -1
-    )
+    if (!mediaSearched) {
+        searchResultsForMedia = await gogoanime.searchMedia(regexMediaTitle, "anime") as MediaSearchResult[]
 
-    const res = await gogoanime.getInfoFromThisMedia(filterBestResult[0]?.id || searchResultsForMedia[0]?.id, "anime") as MediaInfo || null
+        filterBestResult = searchResultsForMedia.filter(item =>
+            regexOnlyAlphabetic(item.title).toLowerCase().indexOf(regexMediaTitle) !== -1
+        )
 
-    if (!res) return null
+        mediaSearched = await gogoanime.getInfoFromThisMedia(filterBestResult[0]?.id || searchResultsForMedia![0]?.id, "anime") as MediaInfo || null
+    }
+
+    if (!mediaSearched) return null
 
     if (only == "episodes") {
 
         let episodes: any[] = []
 
-        simulateRange(res.totalEpisodes).map((item, key) => {
+        simulateRange(mediaSearched.totalEpisodes).map((item, key) => {
             episodes.push({
                 number: key + 1,
-                id: `${res!.id.toLowerCase()}-episode-${key + 1}`,
+                id: `${mediaSearched!.id.toLowerCase()}-episode-${key + 1}`,
                 url: ""
             })
         })
 
-        return res.episodes.length == 0 ? episodes as MediaEpisodes[] : res.episodes
+        return mediaSearched.episodes.length == 0 ? episodes as MediaEpisodes[] : mediaSearched.episodes
 
     }
 
-    return res
+    return mediaSearched
 
 }
 

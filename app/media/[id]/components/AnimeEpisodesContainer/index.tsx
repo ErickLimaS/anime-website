@@ -101,20 +101,14 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
       // get data from GOGOANIME as default
       case "gogoanime":
 
-        mediaEpisodes = await gogoanime.getInfoFromThisMedia(query, "anime") as MediaInfo
-
         setEpisodeSource(chooseSource)
+        mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
 
-        // if the name dont match any results, it will search for the query on the api, than make a new request by the ID of the first result 
         if (mediaEpisodes == null) {
+          setLoading(false)
+          setEpisodesDataFetched([])
+          return
 
-          mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
-
-          if (mediaEpisodes == null) {
-            setLoading(false)
-            setEpisodesDataFetched([])
-            return
-          }
         }
 
         setEpisodesDataFetched(mediaEpisodes as MediaEpisodes[])
