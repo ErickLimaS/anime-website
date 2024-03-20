@@ -39,7 +39,10 @@ Front-end (on netlify.com):
 - `Consumet API`
 - `Aniwatch API`
 
-Back-End (Firebase and Next.js API routes)
+Back-End:
+
+- `Firebase`
+- `Next.js API routes`
 
 ## :computer: How Can I Run It?
 
