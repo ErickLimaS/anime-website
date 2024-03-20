@@ -11,6 +11,8 @@ import aniwatch from '@/api/aniwatch'
 import Player from './components/VideoPlayer'
 import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch, EpisodesFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
+import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
+import { getMediaInfo } from '@/api/imdb'
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
@@ -35,6 +37,7 @@ async function WatchEpisode({ params, searchParams }: {
     let episodeData
     let episodes: EpisodeAnimeWatch[] | MediaEpisodes[]
     let videoSrc: string
+    let imdbEpisodes: ImdbEpisode[] = []
 
     if (searchParams.source == "gogoanime") {
 
@@ -47,6 +50,12 @@ async function WatchEpisode({ params, searchParams }: {
 
         // fetch episodes for this media
         episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
+
+        // get media info on imdb
+        const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
+
+        // get episodes on imdb
+        imdbMediaInfo.seasons?.map(itemA => itemA.episodes.map(itemB => imdbEpisodes.push(itemB)))
 
     }
     else {
@@ -130,6 +139,7 @@ async function WatchEpisode({ params, searchParams }: {
                         <EpisodesSideListContainer
                             source={searchParams.source}
                             episodesList={episodes}
+                            episodesOnImdb={imdbEpisodes.length > 0 ? imdbEpisodes : undefined}
                             mediaId={params.id}
                             activeEpisodeNumber={Number(searchParams.episode)}
                         />

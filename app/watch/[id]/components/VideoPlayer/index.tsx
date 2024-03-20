@@ -320,6 +320,7 @@ function Player({
     return (
         (!loading && subList) && (
             <MediaPlayer
+                playsInline
                 crossOrigin={"use-credentials"}
                 className={styles.container}
                 title={media.title.romaji}

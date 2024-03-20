@@ -6,15 +6,17 @@ import Link from 'next/link'
 import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { motion } from 'framer-motion'
+import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
 
 type ComponentTypes = {
     source: string,
     mediaId: number,
     activeEpisodeNumber: number,
-    episodesList: MediaEpisodes[] | EpisodeAnimeWatch[]
+    episodesList: MediaEpisodes[] | EpisodeAnimeWatch[],
+    episodesOnImdb: ImdbEpisode[] | undefined
 }
 
-function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episodesList }: ComponentTypes) {
+function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episodesList, episodesOnImdb }: ComponentTypes) {
 
     const loadingEpisodesMotion = {
         initial: {
@@ -83,7 +85,12 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
                                     (item as MediaEpisodes).id : (item as EpisodeAnimeWatch).episodeId}`
                                 }
                             >
-                                <h4>{source == "gogoanime" ? `Episode ${(item as MediaEpisodes).number}` : (item as EpisodeAnimeWatch).title}</h4>
+                                <h4>
+                                    {source == "gogoanime" ?
+                                        episodesOnImdb ? episodesOnImdb[key].title : `Episode ${(item as MediaEpisodes).number}`
+                                        :
+                                        (item as EpisodeAnimeWatch).title}
+                                </h4>
                             </Link>
 
                             <ButtonMarkEpisodeAsWatched
