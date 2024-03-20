@@ -50,8 +50,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   })
 
+  // get media info on imdb
   const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
 
+  // get episodes on imdb
   let imdbEpisodes: ImdbEpisode[] = []
   imdbMediaInfo.seasons?.map(itemA => itemA.episodes.map(itemB => imdbEpisodes.push(itemB)))
 
@@ -74,7 +76,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
       </div>
 
       {/* MEDIA INFO */}
-      <div id={styles.media_info_container}>
+      <div id={styles.media_info_container} className={(imdbMediaInfo.logos && imdbMediaInfo.logos[0]) ? `${styles.custom_position}` : ``}>
 
         <section id={styles.media_title_container}>
           {imdbMediaInfo.logos ? (
@@ -85,15 +87,13 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
           {imdbMediaInfo.logos ? (
             <div
+              className={styles.heading_img_container}
               style={{
-                position: "relative",
-                aspectRatio: imdbMediaInfo.logos[0].aspectRatio,
-                maxWidth: "280px",
-                margin: "24px 0"
+                aspectRatio: imdbMediaInfo.logos[0]?.aspectRatio
               }}
             >
               <Image
-                src={imdbMediaInfo.logos[0].url}
+                src={imdbMediaInfo.logos[0]?.url}
                 fill
                 sizes='100%'
                 alt={mediaData.title.native}
@@ -103,11 +103,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
             <h1 id={styles.heading_title}>{(mediaData.title?.romaji).toUpperCase()}</h1>
           )}
 
-          <div id={styles.genres_and_type_container} className='display_flex_row'>
+          <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>
 
             <div className='display_flex_row align_items_center'>
               {mediaData.genres && (
-                <ul className='display_flex_row'>
+                <ul>
                   {mediaData.genres.slice(0, 3).map((item, key: number) => (
                     <li key={key}>
                       <Link href={`/search?genre=[${item.toLowerCase()}]`}>{item}</Link>
@@ -459,7 +459,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <ul>
 
-                {mediaData.endDate && (
+                {mediaData.endDate?.year && (
                   <li>
                     <p>Ended in
                       <span>
