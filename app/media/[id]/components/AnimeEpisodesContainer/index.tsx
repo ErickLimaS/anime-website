@@ -24,13 +24,16 @@ import AniwatchEpisode from '../AniwatchEpisodeContainer';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
+import regexOnlyAlphabetic from '@/app/lib/regexOnlyAlphabetic';
+import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface';
 
-function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, mediaId: number, totalEpisodes: number }) {
+function EpisodesContainer(props: { dataCrunchyroll: EpisodesType[], dataImdb: ImdbEpisode[], mediaTitle: string, mediaId: number, totalEpisodes: number }) {
 
-  const { data } = props
+  const { dataCrunchyroll } = props
+  const { dataImdb } = props
 
   const [loading, setLoading] = useState(false)
-  const [episodesDataFetched, setEpisodesDataFetched] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[]>(data)
+  const [episodesDataFetched, setEpisodesDataFetched] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[]>(dataCrunchyroll)
 
   const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<MediaInfoAniwatch[]>([])
 
@@ -89,10 +92,10 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         setEpisodeSource(chooseSource)
 
-        setEpisodesDataFetched(data)
+        setEpisodesDataFetched(dataCrunchyroll)
 
-        setCurrentItems(data.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(data.length / rangeEpisodesPerPage));
+        setCurrentItems(dataCrunchyroll.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(dataCrunchyroll.length / rangeEpisodesPerPage));
 
         setLoading(false)
 
@@ -125,7 +128,9 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
         setEpisodeSource(chooseSource)
 
-        const searchResultsForMedia = await aniwatch.searchMedia(query) as MediaInfoFetchedAnimeWatch
+        const searchResultsForMedia = await aniwatch.searchMedia(regexOnlyAlphabetic(query)) as MediaInfoFetchedAnimeWatch
+
+        console.log(searchResultsForMedia)
 
         setMediaResultsInfoArray(searchResultsForMedia.animes)
 
@@ -184,7 +189,7 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
     }
     else {
       // if there's no episodes coming from crunchyroll, gets episodes from other source
-      getEpisodesFromNewSource(data.length == 0 ? "gogoanime" : "crunchyroll")
+      getEpisodesFromNewSource(dataCrunchyroll.length == 0 ? "gogoanime" : "crunchyroll")
     }
 
   }, [user])
@@ -196,13 +201,13 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
     // if theres episodes from crunchyroll, sets the pagination pages
     if (episodeSource == "crunchyroll") {
 
-      setPageCount(Math.ceil(data.length / rangeEpisodesPerPage));
+      setPageCount(Math.ceil(dataCrunchyroll.length / rangeEpisodesPerPage));
 
     }
 
     setCurrentItems(episodesDataFetched.slice(itemOffset, endOffset));
 
-  }, [episodesDataFetched, itemOffset, data, episodeSource])
+  }, [episodesDataFetched, itemOffset, dataCrunchyroll, episodeSource])
 
   const loadingEpisodesMotion = {
     initial: {
@@ -260,19 +265,34 @@ function EpisodesContainer(props: { data: EpisodesType[], mediaTitle: string, me
 
               episodeSource == "crunchyroll" && (
 
-                <CrunchyrollEpisode key={key} data={item as EpisodesType} mediaId={props.mediaId} />
+                <CrunchyrollEpisode
+                  key={key}
+                  data={item as EpisodesType}
+                  mediaId={props.mediaId}
+                />
 
               )
               ||
               episodeSource == "gogoanime" && (
 
-                <GoGoAnimeEpisode key={key} data={item as MediaEpisodes} backgroundImg={data[key + itemOffset]?.thumbnail} mediaId={props.mediaId} />
+                <GoGoAnimeEpisode
+                  key={key}
+                  data={item as MediaEpisodes}
+                  title={dataImdb[key + itemOffset]?.title}
+                  backgroundImg={dataImdb[key + itemOffset]?.img?.hd}
+                  mediaId={props.mediaId}
+                />
 
               )
               ||
               episodeSource == "aniwatch" && (
 
-                <AniwatchEpisode key={key} data={item as EpisodeAnimeWatch} backgroundImg={data[key + itemOffset]?.thumbnail} mediaId={props.mediaId} />
+                <AniwatchEpisode
+                  key={key}
+                  data={item as EpisodeAnimeWatch}
+                  backgroundImg={dataImdb[key + itemOffset]?.img?.hd}
+                  mediaId={props.mediaId}
+                />
 
               )
             )

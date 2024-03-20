@@ -26,7 +26,7 @@ export const revalidate = 1800 // revalidate the data every 30 min
 
 export default async function Home() {
 
-  const isMobileScreen = checkDeviceIsMobile(headers())
+  const isMobileScreen = checkDeviceIsMobile(headers()) || false
 
   // section 1
   const popularData = await API.getNewReleases("ANIME", undefined, "TRENDING_DESC").then(

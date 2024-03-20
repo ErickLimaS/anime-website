@@ -23,6 +23,8 @@ import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import CommentSectionContainer from '../../components/CommentSectionContainer'
+import { getMediaInfo } from '@/api/imdb'
+import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -48,6 +50,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   })
 
+  const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
+
+  let imdbEpisodes: ImdbEpisode[] = []
+  imdbMediaInfo.seasons?.map(itemA => itemA.episodes.map(itemB => imdbEpisodes.push(itemB)))
+
   return (
     <main id={styles.container}>
 
@@ -58,7 +65,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
           background: isMobileScreen ?
             `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData?.coverImage?.extraLarge})`
             :
-            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.bannerImage})`
+            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.format == "MANGA" ?
+              mediaData.bannerImage
+              :
+              imdbMediaInfo.cover || mediaData.bannerImage})`
         }}
       >
       </div>
@@ -67,12 +77,30 @@ async function MediaPage({ params }: { params: { id: number } }) {
       <div id={styles.media_info_container}>
 
         <section id={styles.media_title_container}>
-
-          {mediaData.title.romaji && (<small>{mediaData.title.native}</small>)}
-          {mediaData.title.romaji ? (
-            <h1>{(mediaData.title.romaji).toUpperCase()}</h1>
+          {imdbMediaInfo.logos ? (
+            <h1>{(mediaData.title?.romaji).toUpperCase() || mediaData.title.native}</h1>
           ) : (
-            <h1>{mediaData.title.native}</h1>
+            <small>{mediaData.title.native}</small>
+          )}
+
+          {imdbMediaInfo.logos ? (
+            <div
+              style={{
+                position: "relative",
+                aspectRatio: imdbMediaInfo.logos[0].aspectRatio,
+                maxWidth: "280px",
+                margin: "24px 0"
+              }}
+            >
+              <Image
+                src={imdbMediaInfo.logos[0].url}
+                fill
+                sizes='100%'
+                alt={mediaData.title.native}
+              />
+            </div>
+          ) : (
+            <h1 id={styles.heading_title}>{(mediaData.title?.romaji).toUpperCase()}</h1>
           )}
 
           <div id={styles.genres_and_type_container} className='display_flex_row'>
@@ -304,7 +332,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 <h2 className={styles.heading_style}>EPISODES</h2>
 
                 <EpisodesContainer
-                  data={episodesFromCrunchyroll}
+                  dataCrunchyroll={episodesFromCrunchyroll}
+                  dataImdb={imdbEpisodes}
                   mediaTitle={mediaData.title.romaji}
                   mediaId={mediaData.id}
                   totalEpisodes={mediaData.nextAiringEpisode ?
