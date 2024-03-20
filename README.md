@@ -101,11 +101,11 @@ npm run dev
 
 ### Anime/Manga Page
 
-![Anime/Manga Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/42fc035e-2f06-4c7b-96aa-884ac3666d7d)
-![Anime/Manga Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/675d5978-ed6c-453c-81e0-399b5439597b)
-![Anime/Manga Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/37d37ea5-279c-4988-9cfa-ae06961c9925)
-![Anime/Manga Page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/c60d8747-8fb6-4554-8d7d-f78be87455b4)
-![Anime/Manga Page 5](https://github.com/ErickLimaS/anime-website/assets/69987890/520a1c99-1392-429b-b4ef-b392288ea421)
+![Anime/Manga Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/516197d1-b1d3-48da-bac0-415f0e18c232)
+![Anime/Manga Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/f18100b7-29bb-4e4e-9177-02c0fdd49c5e)
+![Anime/Manga Page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/e57ef335-b093-43bd-bd0e-2a97840eb002)
+![Anime/Manga Page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/e971891e-7dd3-4079-89be-e0e34489389d)
+![Anime/Manga Page 5](https://github.com/ErickLimaS/anime-website/assets/69987890/3c4f78fe-e36e-4534-bec0-f5aa8959b7cb)
 
 ### Watch Episode Page
 

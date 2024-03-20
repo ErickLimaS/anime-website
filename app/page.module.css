@@ -264,6 +264,7 @@ span#box_shadow_end_section {
 .medias_sections_container {
 
     padding-top: 62px;
+    padding-bottom: 62px;
     min-height: 396px;
 
     background-color: var(--white-100);

@@ -6,6 +6,24 @@
 
 }
 
+.container #next_episode_btn,
+.container #skip_btn {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0 8px;
+
+}
+
+.container #next_episode_btn svg,
+.container #skip_btn svg {
+
+    transform: scale(1.4);
+
+}
+
 .container #skip_btn {
 
     transition: all ease-in-out 100ms;
@@ -31,8 +49,8 @@
 @media(min-width: 620px) {
     .container #skip_btn {
         padding: 12px 40px;
-        width: 20%;
-        max-width: 180px;
+        width: 38%;
+        max-width: 220px;
     }
 }
 
@@ -41,7 +59,7 @@
 
     position: absolute;
     z-index: 2;
-    bottom: 30%;
+    bottom: 33%;
     right: 5%;
 
     background-color: var(--black-75);
@@ -60,7 +78,7 @@
 @media(min-width: 620px) {
     .container #next_episode_btn {
         padding: 12px 40px;
-        width: 20%;
+        width: 38%;
         max-width: 220px;
     }
 }

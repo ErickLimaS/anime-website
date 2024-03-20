@@ -4,6 +4,14 @@
     max-width: var(--breakpoint-xxl);
     margin: auto;
 
+    margin-bottom: 24px;
+
+}
+
+@media(min-width: 876px) {
+    #nav_tabs_container {
+        margin-bottom: auto;
+    }
 }
 
 #nav_tabs_container>ul {
@@ -13,7 +21,7 @@
 
 }
 
-@media(min-width: 990px) {
+@media(min-width: 876px) {
     #nav_tabs_container>ul {
 
         margin: 0;
@@ -68,7 +76,6 @@
         "item1 item2"
         "item3 item4"
         "item5 item6"
-        "item7 item8"
     ;
     grid-gap: 32px 16px;
     gap: 32px 16px;
@@ -84,17 +91,26 @@
             "button_and_title button_and_title button_and_title"
             "item1 item2 item3"
             "item4 item5 item6"
-            "item7 item8 item9"
+        ;
+    }
+}
+
+@media(min-width: 620px) {
+    #itens_container {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-areas:
+            "button_and_title button_and_title button_and_title button_and_title"
+            "item1 item2 item3 item4"
+            "item5 item6 item7 item8"
         ;
     }
 }
 
 @media(min-width: 876px) {
     #itens_container {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(7, 1fr);
         grid-template-areas:
-            "item1 item2 item3 item4 button_and_title button_and_title"
-            "item5 item6 item7 item8 button_and_title button_and_title"
+            "item1 item2 item3 item4 item5 button_and_title button_and_title"
         ;
         grid-template-rows: repeat(1, 1fr);
         grid-auto-rows: 0;
@@ -108,19 +124,6 @@
         grid-template-areas:
             "button_and_title button_and_title item1 item2 item3 item4"
             "button_and_title button_and_title item5 item6 item7 item8"
-        ;
-        grid-template-rows: repeat(1, 1fr);
-        grid-auto-rows: 0;
-        overflow-y: hidden;
-    }
-}
-
-@media(min-width: 1200px) {
-    #itens_container {
-        grid-template-columns: repeat(7, 1fr);
-        grid-template-areas:
-            "item1 item2 item3 item4 item5 button_and_title button_and_title"
-            "item6 item7 item8 item9 item10 button_and_title button_and_title"
         ;
     }
 }

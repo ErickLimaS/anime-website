@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./layout/header";
 import Footer from "./layout/footer";
-import { Suspense } from "react";
-import LoadingPlaceholder from "./loading";
 import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({ subsets: ["latin"] });

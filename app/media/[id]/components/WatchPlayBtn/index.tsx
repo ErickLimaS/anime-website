@@ -2,22 +2,18 @@
 import React, { useEffect, useState } from 'react'
 import PlaySvg from "@/public/assets/play2.svg"
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
-import gogoanime from '@/api/gogoanime'
-import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
-import { MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import { useRouter } from 'next/navigation'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/firebase/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
-import aniwatch from '@/api/aniwatch'
-import { EpisodesFetchedAnimeWatch, MediaInfoFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
-import simulateRange from '@/app/lib/simulateRange'
+import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
 
 function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
     const [movieId, setMovieId] = useState<string>("")
     const [episodeNumber, setEpisodeNumber] = useState<number>()
+    const [episodeTime, setEpisodeTime] = useState<number>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const [source, setSource] = useState<string>()
@@ -117,53 +113,30 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         setSource(lastWatchedEpisode.source)
         setMovieId(lastWatchedEpisode.episodeId)
         setEpisodeNumber(Number(lastWatchedEpisode.episode))
+        setEpisodeTime(lastWatchedEpisode.episodeTimeLastStop)
 
         return lastWatchedEpisode
 
     }
 
-    async function fetchWithGoGoAnime() {
+    async function fetchOnGoGoAnime() {
 
-        const searchResultsForMedia = await gogoanime.searchMedia(stringToUrlFriendly(mediaTitle), "anime").then((res) => {
-            setSource("gogoanime")
-            return res
-        }) as MediaSearchResult[]
+        const searchResultsForMedia = fetchWithGoGoAnime(mediaTitle, "episodes")
 
-        const res = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0]?.id, "anime") as MediaInfo || null
+        setSource("gogoanime")
 
-        if (!res) return null
-
-        let episodes: any[] = []
-
-        simulateRange(res.totalEpisodes).map((item, key) => {
-            episodes.push({
-                number: key + 1,
-                id: `${res!.id.toLowerCase()}-episode-${key + 1}`,
-                url: ""
-            })
-        })
-
-        return res.episodes.length == 0 ?
-            episodes
-            :
-            res.episodes
+        return searchResultsForMedia
 
     }
 
-    async function fetchWithAniWatch() {
+    async function fetchOnAniWatch() {
 
-        const searchResultsForMedia = await aniwatch.searchMedia(mediaTitle).then(
-            (res: void | MediaInfoFetchedAnimeWatch) => {
-                setSource("aniwatch")
-                return res!.animes
-            }
-        )
+        const searchResultsForMedia = fetchWithAniWatch(mediaTitle, "episodes")
 
-        const closestResult = searchResultsForMedia.find((item) => item.name.includes(mediaTitle)) || searchResultsForMedia[0]
+        setSource("aniwatch")
 
-        const res = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
-
-        return res.episodes.length == 0 ? null : res.episodes
+        return searchResultsForMedia
+    
     }
 
     // if ANIME, get ID for the first episode of this media / if MOVIE, get movie ID  
@@ -172,10 +145,10 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         setIsLoading(true)
 
         // try first with animewatch
-        let media: any = await fetchWithGoGoAnime()
+        let media: any = await fetchOnGoGoAnime()
 
         // if media is null, try with gogoanime
-        if (!media) media = await fetchWithAniWatch() // High chances of getting the wrong media
+        if (!media) media = await fetchOnAniWatch() // High chances of getting the wrong media
 
         // if user has watched a episode and the episode is NOT the last, redirects to next episode
         if (media && lastEpisodeWatched && (media.length > lastEpisodeWatched)) {
@@ -206,7 +179,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
     // redirect to watch page
     function redirectTo() {
 
-        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}`)
+        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeTime}` : ""}`)
 
     }
 

@@ -112,8 +112,8 @@
 
 .item_info_container .buttons_container {
 
-    display: grid;
-    grid-template-columns: 120px 120px;
+    display: flex;
+    flex-wrap: wrap;
 
     justify-content: center;
 
@@ -125,6 +125,8 @@
 
 @media(min-width: 580px) {
     .item_info_container .buttons_container {
+        display: grid;
+        grid-template-columns: 120px 120px;
         justify-content: initial;
     }
 }

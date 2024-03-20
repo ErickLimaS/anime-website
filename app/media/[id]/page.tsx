@@ -13,8 +13,6 @@ import CalendarSvg from "@/public/assets/calendar3.svg"
 import ClockSvg from "@/public/assets/clock.svg"
 import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
-import AnilistSvg from "@/public/assets/anilist.svg"
-import SwipeSvg from "@/public/assets/swipe.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
@@ -25,6 +23,8 @@ import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import CommentSectionContainer from '../../components/CommentSectionContainer'
+import { getMediaInfo } from '@/api/imdb'
+import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
@@ -42,6 +42,21 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   const isMobileScreen = checkDeviceIsMobile(headers()) || false
 
+  const episodesFromCrunchyroll = mediaData.streamingEpisodes.sort((a, b) => {
+    const numA = Number(a.title.slice(a.title?.search(/\b \b/), a.title?.search(/\b - \b/)))
+    const numB = Number(b.title.slice(b.title?.search(/\b \b/), b.title?.search(/\b - \b/)))
+
+    return numA - numB
+
+  })
+
+  // get media info on imdb
+  const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
+
+  // get episodes on imdb
+  let imdbEpisodes: ImdbEpisode[] = []
+  imdbMediaInfo.seasons?.map(itemA => itemA.episodes.map(itemB => imdbEpisodes.push(itemB)))
+
   return (
     <main id={styles.container}>
 
@@ -52,28 +67,47 @@ async function MediaPage({ params }: { params: { id: number } }) {
           background: isMobileScreen ?
             `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData?.coverImage?.extraLarge})`
             :
-            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.bannerImage})`
+            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.format == "MANGA" ?
+              mediaData.bannerImage
+              :
+              imdbMediaInfo.cover || mediaData.bannerImage})`
         }}
       >
       </div>
 
       {/* MEDIA INFO */}
-      <div id={styles.media_info_container}>
+      <div id={styles.media_info_container} className={(imdbMediaInfo.logos && imdbMediaInfo.logos[0]) ? `${styles.custom_position}` : ``}>
 
         <section id={styles.media_title_container}>
-
-          {mediaData.title.romaji && (<small>{mediaData.title.native}</small>)}
-          {mediaData.title.romaji ? (
-            <h1>{(mediaData.title.romaji).toUpperCase()}</h1>
+          {imdbMediaInfo.logos ? (
+            <h1>{(mediaData.title?.romaji).toUpperCase() || mediaData.title.native}</h1>
           ) : (
-            <h1>{mediaData.title.native}</h1>
+            <small>{mediaData.title.native}</small>
           )}
 
-          <div id={styles.genres_and_type_container} className='display_flex_row'>
+          {imdbMediaInfo.logos ? (
+            <div
+              className={styles.heading_img_container}
+              style={{
+                aspectRatio: imdbMediaInfo.logos[0]?.aspectRatio
+              }}
+            >
+              <Image
+                src={imdbMediaInfo.logos[0]?.url}
+                fill
+                sizes='100%'
+                alt={mediaData.title.native}
+              />
+            </div>
+          ) : (
+            <h1 id={styles.heading_title}>{(mediaData.title?.romaji).toUpperCase()}</h1>
+          )}
+
+          <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>
 
             <div className='display_flex_row align_items_center'>
               {mediaData.genres && (
-                <ul className='display_flex_row'>
+                <ul>
                   {mediaData.genres.slice(0, 3).map((item, key: number) => (
                     <li key={key}>
                       <Link href={`/search?genre=[${item.toLowerCase()}]`}>{item}</Link>
@@ -298,7 +332,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 <h2 className={styles.heading_style}>EPISODES</h2>
 
                 <EpisodesContainer
-                  data={mediaData.streamingEpisodes}
+                  dataCrunchyroll={episodesFromCrunchyroll}
+                  dataImdb={imdbEpisodes}
                   mediaTitle={mediaData.title.romaji}
                   mediaId={mediaData.id}
                   totalEpisodes={mediaData.nextAiringEpisode ?
@@ -424,7 +459,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <ul>
 
-                {mediaData.endDate && (
+                {mediaData.endDate?.year && (
                   <li>
                     <p>Ended in
                       <span>
