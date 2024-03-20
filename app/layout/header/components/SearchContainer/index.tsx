@@ -76,9 +76,9 @@ function SearchContainer() {
 
     // when clicked, shows serch bar and results, 
     // if clicked again, hide both and erase search results
-    function toggleSearchBarMobile() {
+    function toggleSearchBarMobile(action: boolean) {
 
-        setIsMobileSearchBarOpen(!isMobileSearchBarOpen)
+        setIsMobileSearchBarOpen(action)
         setSearchResults(null)
 
     }
@@ -89,7 +89,7 @@ function SearchContainer() {
 
                 <button
                     id={styles.btn_open_search_form_mobile}
-                    onClick={() => toggleSearchBarMobile()}
+                    onClick={() => toggleSearchBarMobile(true)}
                     aria-controls={styles.input_search_bar}
                     aria-label={isMobileSearchBarOpen ? 'Click to Hide Search Bar' : 'Click to Show Search Bar'}
                     className={styles.heading_btn}
@@ -157,7 +157,7 @@ function SearchContainer() {
                             <SearchResultItemCard
                                 key={key}
                                 item={item}
-                                onClick={() => toggleSearchBarMobile()}
+                                onClick={() => toggleSearchBarMobile(false)}
                             />
                         ))}
                     </ul>
