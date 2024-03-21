@@ -4,7 +4,7 @@ import React from "react";
 import HeroCarousel from "./components/HomePage/HeroCarouselHomePage";
 import MediaItemCoverInfo from "./components/MediaItemCoverInfo";
 import ChevronRightIcon from '../public/assets/chevron-right.svg';
-import API from '../api/anilist';
+import anilist from '../api/anilist';
 import NavThoughMedias from "./components/HomePage/NavThoughMedias";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/HomePage/NewestMediaSection";
@@ -26,26 +26,26 @@ export const revalidate = 1800 // revalidate the data every 30 min
 
 export default async function Home() {
 
-  const isMobileScreen = checkDeviceIsMobile(headers()) || false
+  const isMobileScreen = checkDeviceIsMobile(headers())
 
   // section 1
-  const popularData = await API.getNewReleases("ANIME", undefined, "TRENDING_DESC").then(
+  const popularData = await anilist.getNewReleases("ANIME", undefined, "TRENDING_DESC", false, "NOT_YET_RELEASED").then(
     res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false && item.bannerImage)
   )
 
   // section 2
-  const trendingData = await API.getNewReleases("ANIME").then(
-    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
+  const trendingData = await anilist.getNewReleases("ANIME", undefined, undefined, false, "NOT_YET_RELEASED").then(
+    res => (res as ApiDefaultResult[])
   )
 
   // section 3
-  const mediaBannerData = await API.getMediaForThisFormat("ANIME", "SCORE_DESC").then(
+  const mediaBannerData = await anilist.getMediaForThisFormat("ANIME", "SCORE_DESC").then(
     res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
   )
 
   // section 4
-  const mediaRankingData = await API.getMediaForThisFormat("ANIME")
-  const newestMediaData = await API.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
+  const mediaRankingData = await anilist.getMediaForThisFormat("ANIME")
+  const newestMediaData = await anilist.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
     res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
   ).then(res => res.map((item) => item.media))
 

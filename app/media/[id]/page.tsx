@@ -1,6 +1,6 @@
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import React from 'react'
-import API from "@/api/anilist"
+import anilist from "@/api/anilist"
 import styles from "./page.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
@@ -28,7 +28,7 @@ import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
-  const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
+  const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
   return {
     title: `${mediaData.title.romaji || mediaData.title.native} | AniProject`,
@@ -38,10 +38,11 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 
 async function MediaPage({ params }: { params: { id: number } }) {
 
-  const mediaData = await API.getMediaInfo(params.id) as ApiMediaResults
+  const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
   const isMobileScreen = checkDeviceIsMobile(headers()) || false
 
+  // sort ASC episodes number
   const episodesFromCrunchyroll = mediaData.streamingEpisodes.sort((a, b) => {
     const numA = Number(a.title.slice(a.title?.search(/\b \b/), a.title?.search(/\b - \b/)))
     const numB = Number(b.title.slice(b.title?.search(/\b \b/), b.title?.search(/\b - \b/)))
@@ -167,7 +168,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </li>
             )}
 
-            {(mediaData.type == "ANIME" && mediaData.format != "MOVIE") && (
+            {(mediaData.type == "ANIME" && mediaData.format != "MOVIE" && mediaData.status != "NOT_YET_RELEASED") && (
               <li className={`${styles.info_item}`}>
 
                 <span>
@@ -176,7 +177,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2>EPISODES</h2>
 
-                <p>{mediaData.episodes || "Not Available"}</p>
+                <p>{imdbEpisodes.length || mediaData.episodes || "Not Available"}</p>
               </li>
             )}
 
@@ -326,7 +327,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
             )}
 
             {/* EPISODES ONLY IF ANIME */}
-            {(mediaData.type == "ANIME" && mediaData.format != "MOVIE") && (
+            {(mediaData.type == "ANIME" && mediaData.format != "MOVIE" && mediaData.status != "NOT_YET_RELEASED") && (
               <section id={styles.episodes_container}>
 
                 <h2 className={styles.heading_style}>EPISODES</h2>
