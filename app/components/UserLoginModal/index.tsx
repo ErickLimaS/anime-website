@@ -11,7 +11,8 @@ import {
     GithubAuthProvider, Auth, signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     updateProfile,
-    signInAnonymously
+    signInAnonymously,
+    User
 } from 'firebase/auth'
 import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
 import { initFirebase } from '@/firebase/firebaseApp'
@@ -52,12 +53,48 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
     }
 
+    async function newUserDoc(user: User) {
+
+        await setDoc(doc(collection(db, "users"), user?.uid), {
+            bookmarks: [],
+            keepWatching: [],
+            comments: {},
+            episodesWatchedBySource: {},
+            videoSource: "gogoanime",
+            showAdultContent: false,
+            autoNextEpisode: true,
+            autoSkipIntroAndOutro: false,
+            videoQuality: "auto",
+            videoSubtitleLanguage: "English",
+        })
+
+    }
+
     const signInGoogle = async () => {
         await signInWithPopup(auth, googleProvider)
+            .then(async (res) => await newUserDoc(res.user))
+            .catch((err: any) => {
+
+                setLoginError({
+                    code: err.code,
+                    message: err.message
+                })
+
+            })
+
     }
 
     const signInGithub = async () => {
         await signInWithPopup(auth, githubProvider)
+            .then(async (res) => await newUserDoc(res.user))
+            .catch((err: any) => {
+
+                setLoginError({
+                    code: err.code,
+                    message: err.message
+                })
+
+            })
     }
 
 
@@ -93,18 +130,7 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                 const res = await createUserWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
 
                 // add default values to user doc
-                await setDoc(doc(collection(db, "users"), res.user?.uid), {
-                    bookmarks: [],
-                    keepWatching: [],
-                    comments: {},
-                    episodesWatchedBySource: {},
-                    videoSource: "crunchyroll",
-                    showAdultContent: false,
-                    autoNextEpisode: true,
-                    autoSkipIntroAndOutro: false,
-                    videoQuality: "auto",
-                    videoSubtitleLanguage: "English",
-                })
+                await newUserDoc(res.user)
 
                 // update user info
                 await updateProfile(res.user, {
