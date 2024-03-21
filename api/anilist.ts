@@ -44,14 +44,20 @@ function filterAdultContent(data: any[], reponseType?: "mediaByFormat") {
 export default {
 
     // HOME PAGE
-    getNewReleases: cache(async (type: string, format?: string, sort?: string, showAdultContent?: boolean) => {
+    getNewReleases: cache(async (
+        type: string,
+        format?: string,
+        sort?: string,
+        showAdultContent?: boolean,
+        status?: "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS"
+    ) => {
 
         const season: string = getCurrentSeason()
 
         try {
 
             const graphqlQuery = {
-                "query": defaultApiQueryRequest(),
+                "query": defaultApiQueryRequest(status ? ", $status: MediaStatus" : undefined, status ? ', status: $status' : undefined),
                 "variables": {
                     'type': `${type}`,
                     'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
@@ -59,6 +65,7 @@ export default {
                     'sort': sort || 'POPULARITY_DESC',
                     'perPage': 20,
                     'season': `${season}`,
+                    'status': status,
                     'seasonYear': `${new Date().getFullYear()}`,
                     'showAdultContent': showAdultContent || false
                 }

@@ -11,7 +11,7 @@ import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi
 
 function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
-    const [movieId, setMovieId] = useState<string>("")
+    const [movieId, setMovieId] = useState<string | null>("")
     const [episodeNumber, setEpisodeNumber] = useState<number>()
     const [episodeTime, setEpisodeTime] = useState<number>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -136,7 +136,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         setSource("aniwatch")
 
         return searchResultsForMedia
-    
+
     }
 
     // if ANIME, get ID for the first episode of this media / if MOVIE, get movie ID  
@@ -170,7 +170,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         }
 
         if (media) {
-            setMovieId(source == "aniwatch" ? media[0].episodeId : media[0].id)
+            setMovieId(source == "aniwatch" ? media[0]?.episodeId : media[0]?.id || null)
         }
 
         setIsLoading(false)
@@ -199,11 +199,14 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         <button
             role='link'
             onClick={() => redirectTo()}
-            disabled={isLoading || movieId?.length == 0}
+            disabled={isLoading || movieId == null}
             title={isLoading ?
                 "Wait the Loading"
                 :
-                `Watch ${mediaTitle} ${episodeNumber ? ` - EP ${episodeNumber}` : ""}`
+                movieId == null ?
+                    "Not Available At This Moment"
+                    :
+                    `Watch ${mediaTitle} ${episodeNumber ? ` - EP ${episodeNumber}` : ""}`
             }
         >
 
