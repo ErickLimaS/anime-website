@@ -24,7 +24,7 @@ import gogoanime from "@/api/gogoanime";
 import aniwatch from "@/api/aniwatch";
 import { useRouter } from "next/navigation";
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
-import NextSvg from "@/public/assets/play.svg"
+import PlaySvg from "@/public/assets/play.svg"
 
 type VideoPlayerType = {
     source: string,
@@ -230,11 +230,15 @@ function Player({
         if (episodeIntro || episodeOutro) {
             if (episodeIntro && currentTime >= episodeIntro.start && currentTime < episodeIntro.end) {
                 if (timeskip == null) setTimeskip(() => episodeIntro.end)
-                if (user && autoSkipIntroAndOutro && timeskip != null) skipEpisodeIntroOrOutro()
+                if (user && autoSkipIntroAndOutro && timeskip != null && (currentTime >= episodeIntro.start + 4)) { // adds 4 seconds to show btn animation
+                    skipEpisodeIntroOrOutro()
+                }
             }
             else if (episodeOutro && currentTime >= episodeOutro.start && currentTime < episodeOutro.end) {
                 if (timeskip == null) setTimeskip(() => episodeOutro.end)
-                if (user && autoSkipIntroAndOutro && timeskip != null) skipEpisodeIntroOrOutro()
+                if (user && autoSkipIntroAndOutro && timeskip != null && (currentTime >= episodeOutro.start + 4)) { // adds 4 seconds to show btn animation
+                    skipEpisodeIntroOrOutro()
+                }
             }
             else {
                 setTimeskip(null)
@@ -312,8 +316,6 @@ function Player({
 
     }, [user, loading, episodeId])
 
-    console.log(episodeImg)
-
     useEffect(() => {
 
         getNextEpisode()
@@ -324,7 +326,6 @@ function Player({
         (!loading && subList) && (
             <MediaPlayer
                 playsInline
-                crossOrigin={"use-credentials"}
                 className={styles.container}
                 title={media.title.romaji}
                 src={videoSource}
@@ -344,11 +345,22 @@ function Player({
                             id={styles.skip_btn}
                             onClick={() => skipEpisodeIntroOrOutro()}
                             initial={{ opacity: 0 }}
-                            animate={{ opacity: 1, transition: { animation: 1.5 } }}
+                            animate={{ opacity: 1, transition: { duration: 1.5 } }}
                             exit={{ opacity: 0 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <SkipSvg width={16} height={16} /> {autoSkipIntroAndOutro ? "Auto Skip" : "Skip"}
+                            <motion.span
+                                className={styles.moving_bar}
+                                initial={{ scaleX: 0 }}
+                                animate={autoSkipIntroAndOutro ?
+                                    { scaleX: 1, transition: { duration: 4 } }
+                                    :
+                                    { scaleX: 1, backgroundColor: "transparent" }
+                                }
+                            />
+                            <motion.span className={styles.btn_text}>
+                                {autoSkipIntroAndOutro ? "Auto Skip" : "Skip"} <SkipSvg width={16} height={16} />
+                            </motion.span>
                         </motion.button>
 
                     )}
@@ -360,11 +372,11 @@ function Player({
                         id={styles.next_episode_btn}
                         onClick={() => nextEpisodeAction()}
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1, transition: { animation: 1.5 } }}
+                        animate={{ opacity: 1, transition: { duration: 1.5 } }}
                         exit={{ opacity: 0 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <NextSvg width={16} height={16} /> Next Episode
+                        <PlaySvg width={16} height={16} /> Next Episode
                     </motion.button>
 
                 )}
