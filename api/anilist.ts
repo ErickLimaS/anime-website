@@ -28,9 +28,7 @@ function filterAdultContent(data: any[], reponseType?: "mediaByFormat") {
     let filtered
 
     if (reponseType == "mediaByFormat") {
-
         filtered = data.filter((item) => item.isAdult == false)
-
     }
     else {
         filtered = data.filter((item) => item.media.isAdult == false)
@@ -98,7 +96,7 @@ export default {
                 "variables": {
                     'page': 1,
                     'sort': 'TRENDING_DESC',
-                    'perPage': 10,
+                    'perPage': 15,
                     'showAdultContent': showAdultContent == true ? undefined : false,
                     'search': query
                 }
@@ -112,7 +110,7 @@ export default {
             })
 
             return showAdultContent ?
-                data.data.Page.media as ApiDefaultResult[] : filterAdultContent(data.data.Page.media)
+                data.data.Page.media as ApiDefaultResult[] : filterAdultContent(data.data.Page.media, "mediaByFormat")
 
         }
         catch (error) {

@@ -74,12 +74,14 @@ function SearchContainer() {
 
     }
 
-    // when clicked, shows serch bar and results, 
-    // if clicked again, hide both and erase search results
+    // when clicked, shows serch bar and results
     function toggleSearchBarMobile(action: boolean) {
 
         setIsMobileSearchBarOpen(action)
-        setSearchResults(null)
+
+        if (action == false) {
+            setSearchResults(null)
+        }
 
     }
 
@@ -89,7 +91,7 @@ function SearchContainer() {
 
                 <button
                     id={styles.btn_open_search_form_mobile}
-                    onClick={() => toggleSearchBarMobile(true)}
+                    onClick={() => toggleSearchBarMobile(!isMobileSearchBarOpen)}
                     aria-controls={styles.input_search_bar}
                     aria-label={isMobileSearchBarOpen ? 'Click to Hide Search Bar' : 'Click to Show Search Bar'}
                     className={styles.heading_btn}
@@ -100,9 +102,22 @@ function SearchContainer() {
                 {/* TABLET AND DESKTOP */}
                 <div id={styles.form_search}>
 
-                    <form onSubmit={(e) => searchValue(e as HTMLFormElement | ChangeEvent<HTMLFormElement>)} className={`${styles.search_form} display_flex_row`}>
-                        <input type="text" placeholder='Search...' name='searchField' disabled={isLoading} onChange={(e) => setSearchInput(e.target.value)}></input>
-                        <button type='submit' disabled={isLoading} aria-label='Begin Search'>
+                    <form
+                        onSubmit={(e) => searchValue(e as HTMLFormElement | ChangeEvent<HTMLFormElement>)}
+                        className={`${styles.search_form} display_flex_row`}
+                    >
+                        <input
+                            type="text"
+                            placeholder='Search...'
+                            name='searchField'
+                            disabled={isLoading}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                        />
+                        <button
+                            type='submit'
+                            disabled={isLoading}
+                            aria-label='Begin Search'
+                        >
                             {isLoading ?
                                 (<LoadingIcon alt="Loading Icon" width={16} height={16} />) :
                                 (<SearchIcon alt="Search Icon" width={16} height={16} />)
@@ -153,7 +168,7 @@ function SearchContainer() {
                     </button>
 
                     <ul>
-                        {searchResults.slice(0, 6).map((item: ApiDefaultResult, key: number) => (
+                        {searchResults.map((item: ApiDefaultResult, key: number) => (
                             <SearchResultItemCard
                                 key={key}
                                 item={item}
