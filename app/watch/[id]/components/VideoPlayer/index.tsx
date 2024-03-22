@@ -36,6 +36,7 @@ type VideoPlayerType = {
     episodeId: string,
     episodeIntro?: { start: number, end: number },
     episodeOutro?: { start: number, end: number },
+    episodeImg: string,
     subtitles?: {
         kind: string,
         default: boolean | undefined,
@@ -62,7 +63,7 @@ function Player({
     source, mediaSource, subtitles,
     videoQualities, media, episodeId,
     episodeNumber, currentLastStop, episodeIntro,
-    episodeOutro, mediaEpisodes }: VideoPlayerType) {
+    episodeOutro, mediaEpisodes, episodeImg }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
 
@@ -208,6 +209,7 @@ function Player({
                         },
                         episode: episodeNumber,
                         episodeId: episodeId,
+                        episodeImg: episodeImg || null,
                         episodeTimeLastStop: currentEpisodeTime,
                         episodeDuration: videoDuration,
                         source: mediaSource,
@@ -310,6 +312,7 @@ function Player({
 
     }, [user, loading, episodeId])
 
+    console.log(episodeImg)
 
     useEffect(() => {
 

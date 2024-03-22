@@ -81,6 +81,12 @@ function KeepWatchingSection() {
                         <SwiperListContainer
                             keepWatchingVariant={true}
                             data={watchingList}
+                            options={{
+                                slidesPerView: 2.2,
+                                bp480: 2.2,
+                                bp740: 3.2,
+                                bp1275: 4.2
+                            }}
                         />
 
                     </div>

@@ -2,7 +2,7 @@
 import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import MediaItemCoverInfo from '../MediaItemCoverInfo';
-import MediaItemCoverInfo4 from '../MediaItemCoverInfo4';
+import EpisodeCoverInfo from '../EpisodeCoverInfo';
 import { A11y, Navigation, Pagination } from 'swiper/modules';
 import styles from "./styles.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface';
@@ -40,7 +40,7 @@ function SwiperListContainer({ data, options, customHeroSection, keepWatchingVar
 
                     {keepWatchingVariant ? (
 
-                        <MediaItemCoverInfo4 darkMode={true} data={item as KeepWatchingItem} />
+                        <EpisodeCoverInfo darkMode={true} data={item as KeepWatchingItem} />
 
                     ) : (
 

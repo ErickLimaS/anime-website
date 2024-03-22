@@ -19,17 +19,26 @@
 
 .media_item_container #img_container {
 
+    box-shadow: 0px 0px 4px 3px var(--black-50);
+
     position: relative;
     top: 0;
 
     width: inherit;
 
-    aspect-ratio: 46 / 65;
+    aspect-ratio: 16 / 9;
+
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
 
     transition: all ease-in-out 190ms;
 
     margin-bottom: 4px;
 
+}
+
+.media_item_container #img_container img {
+    object-fit: cover;
 }
 
 /* SPAN TYPE MEDIA OVER IMG */
@@ -145,11 +154,17 @@
 @media(min-width: 460px) {
     .media_item_container:hover .overlay_info_container>a {
 
-        font-size: var(--font-size--small-1);
-
         padding: 8px;
 
         width: 96%;
+
+    }
+}
+
+@media(min-width: 1020px) {
+    .media_item_container:hover .overlay_info_container>a {
+
+        font-size: var(--font-size--small-1);
 
     }
 }
@@ -160,31 +175,14 @@
 
 }
 
-.media_item_container:hover .overlay_info_container>a:first-child {
-
-    display: none;
-
-}
-
-@media(min-width: 920px) {
-    .media_item_container:hover .overlay_info_container>a:first-child {
-
-        display: block;
-
-        background-color: var(--brand-color);
-        color: var(--white-100);
-
-    }
-}
-
-.media_item_container:hover .overlay_info_container>a:last-child {
+.media_item_container:hover .overlay_info_container>a {
 
     color: var(--white-100);
 
 }
 
 @media(min-width: 920px) {
-    .media_item_container:hover .overlay_info_container>a:last-child {
+    .media_item_container:hover .overlay_info_container>a {
 
         border: 1px solid var(--white-100);
         background-color: var(--black-75);
@@ -214,7 +212,7 @@
     bottom: 0;
 
     width: inherit;
-    height: 33%;
+    height: 40%;
 
     margin: auto;
 
@@ -260,6 +258,9 @@
 }
 
 .media_item_container a {
+
+    transition: all ease-in-out 100ms;
+
     margin-top: 4px;
 
     color: var(--black-100);
@@ -273,18 +274,35 @@
 
 }
 
+.media_item_container a:hover,
+.media_item_container.darkMode a:hover {
+
+    color: var(--brand-color);
+
+}
+
 .media_item_container.darkMode a {
     color: var(--white-100);
     font-weight: 500;
 }
 
-.media_item_container>div {
+.media_item_container .info_bottom {
 
+    margin-top: 4px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
     gap: 8px;
 
 }
 
-.media_item_container>div>button {
+.media_item_container .info_bottom a {
+    margin-top: 0;
+}
+
+.media_item_container .info_bottom button {
 
     background-color: transparent;
 
@@ -295,19 +313,19 @@
     padding: 4px;
 }
 
-.media_item_container>div>button:hover {
+.media_item_container .info_bottom button:hover {
 
     background-color: var(--error);
 
 }
 
-.media_item_container>div>button svg {
+.media_item_container .info_bottom button svg {
 
     fill: var(--error);
 
 }
 
-.media_item_container>div>button:hover svg {
+.media_item_container .info_bottom button:hover svg {
 
     fill: var(--white-100);
 
