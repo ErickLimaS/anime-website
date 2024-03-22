@@ -36,9 +36,8 @@
     background-color: var(--black-75);
     border: 2px solid var(--white-50);
 
-    padding: 8px 24px;
-
     border-radius: 4px;
+
 
     font-family: var(--font-family-sans-serif);
     font-weight: 600;
@@ -48,9 +47,32 @@
 
 @media(min-width: 620px) {
     .container #skip_btn {
-        padding: 12px 40px;
-        width: 38%;
         max-width: 220px;
+        width: 38%;
+    }
+}
+
+.container #skip_btn span.moving_bar {
+
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+
+    background-color: var(--brand-dark-color);
+
+    height: 100%;
+    width: 100%;
+    transform-origin: 0 0;
+}
+
+.container #skip_btn span.btn_text {
+    padding: 8px 24px;
+}
+
+@media(min-width: 620px) {
+    .container #skip_btn span.btn_text {
+        padding: 12px 40px;
     }
 }
 
