@@ -336,6 +336,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   dataCrunchyroll={episodesFromCrunchyroll}
                   dataImdb={imdbEpisodes}
                   mediaTitle={mediaData.title.romaji}
+                  mediaFormat={mediaData.format}
                   mediaId={mediaData.id}
                   totalEpisodes={mediaData.nextAiringEpisode ?
                     mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes // work around to api gogoanime not showing episodes

@@ -26,8 +26,18 @@ import simulateRange from '@/app/lib/simulateRange';
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
 import regexOnlyAlphabetic from '@/app/lib/regexOnlyAlphabetic';
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface';
+import { checkApiMisspellingMedias } from '@/app/lib/checkApiMediaMisspelling';
 
-function EpisodesContainer(props: { dataCrunchyroll: EpisodesType[], dataImdb: ImdbEpisode[], mediaTitle: string, mediaId: number, totalEpisodes: number }) {
+type EpisodesContainerTypes = {
+  dataCrunchyroll: EpisodesType[],
+  dataImdb: ImdbEpisode[],
+  mediaTitle: string,
+  mediaFormat: string,
+  mediaId: number,
+  totalEpisodes: number
+}
+
+function EpisodesContainer(props: EpisodesContainerTypes) {
 
   const { dataCrunchyroll } = props
   const { dataImdb } = props
@@ -130,13 +140,11 @@ function EpisodesContainer(props: { dataCrunchyroll: EpisodesType[], dataImdb: I
 
         const searchResultsForMedia = await aniwatch.searchMedia(regexOnlyAlphabetic(query)) as MediaInfoFetchedAnimeWatch
 
-        console.log(searchResultsForMedia)
-
-        setMediaResultsInfoArray(searchResultsForMedia.animes)
+        setMediaResultsInfoArray(searchResultsForMedia.animes.filter(item => item.type.toLowerCase() == props.mediaFormat.toLowerCase()))
 
         setEpisodeSource(chooseSource)
 
-        mediaEpisodes = await fetchWithAniWatch(query, "episodes") as EpisodesFetchedAnimeWatch["episodes"]
+        mediaEpisodes = await fetchWithAniWatch(query, "episodes", props.mediaFormat, dataImdb.length) as EpisodesFetchedAnimeWatch["episodes"]
 
         setEpisodesDataFetched(mediaEpisodes)
 
@@ -244,9 +252,17 @@ function EpisodesContainer(props: { dataCrunchyroll: EpisodesType[], dataImdb: I
 
             <small>Wrong Episodes? Select bellow!</small>
 
-            <select onChange={(e) => getEpisodesToThisMediaFromAniwatch(e.target.value)}>
+            <select
+              onChange={(e) => getEpisodesToThisMediaFromAniwatch(e.target.value)}
+              defaultValue={checkApiMisspellingMedias(props.mediaTitle).toLowerCase()}
+            >
               {mediaResultsInfoArray.length > 0 && mediaResultsInfoArray?.map((item, key) => (
-                <option key={key} value={item.id}>{item.name}</option>
+                <option
+                  key={key}
+                  value={item.id.toLowerCase()}
+                >
+                  {item.name}
+                </option>
               ))}
             </select>
 

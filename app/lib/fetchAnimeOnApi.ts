@@ -4,10 +4,11 @@ import regexOnlyAlphabetic from "./regexOnlyAlphabetic"
 import simulateRange from "./simulateRange"
 import gogoanime from "@/api/gogoanime"
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from "../ts/interfaces/apiGogoanimeDataInterface"
+import { checkApiMisspellingMedias } from "./checkApiMediaMisspelling"
 
 export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") {
 
-    const regexMediaTitle = regexOnlyAlphabetic(textSearch).toLowerCase()
+    const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
 
     let mediaSearched = await gogoanime.getInfoFromThisMedia(textSearch, "anime") as MediaInfo
     let searchResultsForMedia
@@ -45,16 +46,30 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
 }
 
-export async function fetchWithAniWatch(textSearch: string, only?: "episodes") {
+export async function fetchWithAniWatch(textSearch: string, only?: "episodes", format?: string, mediaTotalEpisodes?: number) {
 
-    const regexMediaTitle = regexOnlyAlphabetic(textSearch).toLowerCase()
+    const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
 
-    const searchResultsForMedia = await aniwatch.searchMedia(regexMediaTitle).then((res: void | MediaInfoFetchedAnimeWatch) => res!.animes) as MediaInfoAniwatch[]
+    let searchResultsForMedia = await aniwatch.searchMedia(regexMediaTitle).then((res: void | MediaInfoFetchedAnimeWatch) => res!.animes) as MediaInfoAniwatch[]
 
-    const closestResult: MediaInfoAniwatch = searchResultsForMedia.find((item) => regexOnlyAlphabetic(item.name).toLowerCase().includes(regexMediaTitle)) || searchResultsForMedia[0]
+    if (format) {
+        searchResultsForMedia = searchResultsForMedia.filter(item => item.type.toLowerCase() == format.toLowerCase())
+    }
+
+    let closestResult: MediaInfoAniwatch | undefined
+
+    if (mediaTotalEpisodes) {
+        closestResult = searchResultsForMedia.find(
+            (item) => item.episodes.sub == mediaTotalEpisodes
+        )
+    }
+
+    if (!closestResult) closestResult = searchResultsForMedia.find(
+        (item) => regexOnlyAlphabetic(item.name).toLowerCase().includes(regexMediaTitle) || searchResultsForMedia[0]
+    )
 
     if (only == "episodes") {
-        const res = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
+        const res = await aniwatch.getEpisodes(closestResult!.id) as EpisodesFetchedAnimeWatch
 
         return res.episodes.length == 0 ? null : res.episodes
     }
