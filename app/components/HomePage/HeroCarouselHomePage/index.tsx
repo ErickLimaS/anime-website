@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "./carouselComponent.module.css"
 import Link from 'next/link'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
@@ -8,10 +8,14 @@ import { AnimatePresence, motion } from 'framer-motion'
 import AddToPlaylistButton from '../../AddToPlaylistButton'
 import SwiperListContainer from '../../SwiperListContainer'
 import ListCarousel from '../HeroListCarousel'
+import EyeSvg from "@/public/assets/eye-fill.svg"
+import EyeSlashSvg from "@/public/assets/eye-slash-fill.svg"
 
 function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: boolean }) {
 
-    const [[page, direction], setPage] = useState([0, 0]);
+    const [[page, direction], setPage] = useState([0, 0])
+
+    const [autoPlayTrailer, setAutoPlayTrailer] = useState<boolean>(true)
 
     const variants = {
         enter: (direction: number) => {
@@ -32,12 +36,12 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                 opacity: 0
             };
         }
-    };
+    }
 
     const swipeConfidenceThreshold = 10000;
     const swipePower = (offset: number, velocity: number) => {
         return Math.abs(offset) * velocity;
-    };
+    }
 
     const imageIndex = wrap(0, data.length, page);
 
@@ -59,6 +63,20 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat"
     }
+
+    // change auto play trailer state 
+    function changeTrailerState() {
+
+        localStorage.setItem("autoPlayTrailer", `${!autoPlayTrailer}`)
+        setAutoPlayTrailer(!autoPlayTrailer)
+
+    }
+
+    useEffect(() => {
+
+        setAutoPlayTrailer(localStorage.getItem("autoPlayTrailer") == "true" ? true : false)
+
+    }, [])
 
     return (
         <>
@@ -94,6 +112,22 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                                 }
                             }}
                         >
+
+                            {autoPlayTrailer && data[imageIndex]?.trailer && (
+                                <AnimatePresence>
+                                    <motion.div className={styles.video_container}>
+                                        <motion.iframe
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ delay: 3 }}
+                                            src={`https://www.youtube.com/embed/${data[imageIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0`}
+                                            frameBorder={0}
+                                            title={data[imageIndex].title.romaji + " Trailer"}
+                                        />
+                                    </motion.div>
+                                </AnimatePresence>
+                            )}
+
                             <div className={styles.item_info}>
 
                                 <h2><Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex]?.title.romaji}</Link></h2>
@@ -172,6 +206,18 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                 </ul>
 
             </div>
+
+            <motion.button
+                id={styles.stop_trailer_btn}
+                onClick={() => changeTrailerState()}
+                whileTap={{ scale: 0.9 }}
+            >
+                {autoPlayTrailer ? (
+                    <><EyeSlashSvg width={16} height={16} /> Stop Auto Play Trailer</>
+                ) : (
+                    <><EyeSvg width={16} height={16} /> Auto Play Trailer</>
+                )}
+            </motion.button>
 
         </>
     )

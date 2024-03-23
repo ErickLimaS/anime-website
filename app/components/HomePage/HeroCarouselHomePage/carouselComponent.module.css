@@ -51,6 +51,50 @@ ul.carousel_container li.carousel_item {
     }
 }
 
+.video_container {
+
+    position: relative;
+
+}
+
+li.carousel_item iframe {
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    /* transform: translate(-50%, -50%); */
+    transform: translate(-50%, -25%);
+    pointer-events: none;
+
+    overflow: hidden;
+
+}
+
+li.carousel_item iframe::-webkit-scrollbar {
+    display: none;
+}
+
+@media((min-width: 1200px)) {
+    #recomendations_container ul li {
+        height: auto;
+    }
+}
+
+/* @media (min-height: 600px) {
+    li.carousel_item iframe {
+        transform: translate(-50%, -25%);
+    }
+} */
+
+@media (max-aspect-ratio: 16/9) {
+    li.carousel_item iframe {
+        /* width: 177.78vh; */
+        width: 134.78vh;
+    }
+}
+
 ul.carousel_container li.carousel_item div.item_info {
 
     position: relative;
@@ -64,7 +108,7 @@ ul.carousel_container li.carousel_item div.item_info {
 @media((max-width: 1199px)) {
 
     ul.carousel_container li.carousel_item div.item_info {
-       margin: auto;
+        margin: auto;
     }
 }
 
@@ -245,7 +289,8 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
     margin-top: 24px;
 
     position: absolute;
-    bottom: 24px;
+    /* bottom: 24px; */
+    bottom: 120px;
     left: 2%;
     width: 96%;
     padding: 0 15px;
@@ -379,5 +424,65 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 #recomendations_container ul li:hover {
 
     filter: brightness(80%);
+
+}
+
+/* STOP TRAILER AUTOPLAY */
+#stop_trailer_btn {
+
+    transition: all ease-in-out 100ms;
+
+    margin: 24px auto;
+    padding: 12px 24px;
+
+    width: 96%;
+
+    background-color: transparent;
+    border: 2px solid var(--white-25);
+    border-radius: 8px;
+
+    font-family: var(--font-family-sans-sarif);
+    font-size: var(--font-size--small-1);
+    font-weight: 600;
+    color: var(--white-75);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 16px;
+
+}
+
+@media((min-width: 580px)) {
+    #stop_trailer_btn {
+
+        justify-content: initial;
+        width: initial;
+
+        margin-left: calc(var(--breakpoint-sm) / 32);
+
+    }
+}
+
+@media((min-width: 1021px)) {
+    #stop_trailer_btn {
+
+        margin-left: calc(var(--breakpoint-xl) / 6);
+
+    }
+}
+
+#stop_trailer_btn:hover {
+
+    background-color: var(--black-50);
+    color: var(--brand-color);
+    border-color: var(--brand-color);
+
+}
+
+#stop_trailer_btn svg {
+
+    fill: var(--brand-color);
+    transform: scale(1.5);
 
 }
