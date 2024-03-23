@@ -14,7 +14,7 @@ import {
     signInAnonymously,
     User
 } from 'firebase/auth'
-import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
 import { initFirebase } from '@/firebase/firebaseApp'
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 
@@ -55,7 +55,11 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
     async function newUserDoc(user: User) {
 
-        await setDoc(doc(collection(db, "users"), user?.uid), {
+        const userHasDoc = await getDoc(doc(db, "users", user.uid))
+
+        if (userHasDoc) return
+
+        await setDoc(doc(collection(db, "users"), user.uid), {
             bookmarks: [],
             keepWatching: [],
             comments: {},
