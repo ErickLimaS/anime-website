@@ -143,7 +143,7 @@ export default async function Home() {
               {(mediaBannerData[randomNumber].trailer) && (
                 <iframe
                   className="yt_embed_video"
-                  src={`https://www.youtube.com/embed/${mediaBannerData[randomNumber].trailer.id}`}
+                  src={`https://www.youtube.com/embed/${mediaBannerData[randomNumber].trailer.id}?controls=0&showinfo=0`}
                   frameBorder={0}
                   title={mediaBannerData[randomNumber].title.romaji + " Trailer"}
                   allow="accelerometer; autoplay; encrypted-media; gyroscope;"
