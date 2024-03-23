@@ -74,6 +74,14 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
 
     useEffect(() => {
 
+        if (localStorage.getItem("autoPlayTrailer") == undefined) {
+
+            setAutoPlayTrailer(true)
+            localStorage.setItem("autoPlayTrailer", "true")
+
+            return
+        }
+
         setAutoPlayTrailer(localStorage.getItem("autoPlayTrailer") == "true" ? true : false)
 
     }, [])
