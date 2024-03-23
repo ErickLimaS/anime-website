@@ -24,7 +24,7 @@ export default {
 
             console.log(err)
 
-            return err
+            return null
 
         }
 
@@ -47,7 +47,7 @@ export default {
 
             console.log(err)
 
-            return err
+            return null
 
         }
 

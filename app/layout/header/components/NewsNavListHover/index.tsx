@@ -10,7 +10,7 @@ import Image from 'next/image'
 
 function AnimeNavListHover() {
 
-    const [animeData, setAnimeData] = useState<News[]>()
+    const [animeData, setAnimeData] = useState<News[] | null>(null)
 
     const loadData = async () => {
 
@@ -39,14 +39,14 @@ function AnimeNavListHover() {
                         <li key={key}>
 
                             <div className={styles.image_container}>
-                                <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "") }`}>
+                                <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
                                     <Image fill src={item.thumbnail} alt={item.title}></Image>
                                 </Link>
                             </div>
 
                             <div className={styles.title_container}>
 
-                                <h5><Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "") }`}>{item.title}</Link></h5>
+                                <h5><Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>{item.title}</Link></h5>
 
                                 <small><SvgCalendar width={16} height={16} alt="Calendar" /> {item.uploadedAt}</small>
 

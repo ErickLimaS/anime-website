@@ -51,12 +51,6 @@ async function WatchEpisode({ params, searchParams }: {
         // fetch episodes for this media
         episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
 
-        // get media info on imdb
-        const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
-
-        // get episodes on imdb
-        imdbMediaInfo.seasons?.map(itemA => itemA.episodes.map(itemB => imdbEpisodes.push(itemB)))
-
     }
     else {
 
@@ -71,6 +65,12 @@ async function WatchEpisode({ params, searchParams }: {
         episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch).episodes)
 
     }
+
+    // get media info on imdb
+    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
+
+    // get episodes on imdb
+    imdbMediaInfo.seasons?.map(itemA => itemA.episodes.map(itemB => imdbEpisodes.push(itemB)))
 
     return (
         <main id={styles.container}>
