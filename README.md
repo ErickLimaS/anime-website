@@ -94,13 +94,13 @@ npm run dev
 
 ### Home
 
-![Home page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/9500407a-86d1-4204-b658-aa8cebd33c1a)
-![Home page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/c5db2826-1dec-482f-a59b-64c57d9efa3c)
-![Home page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/3984c900-e0b3-4f55-b6bf-bb88011ae0d4)
-![Home page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/44ee6d2d-e2cd-43ee-814a-77f683006767)
-![Home page 5](https://github.com/ErickLimaS/anime-website/assets/69987890/9f9f95fa-cc45-4108-883d-34da0e91e3fd)
-![Home page 6](https://github.com/ErickLimaS/anime-website/assets/69987890/08f8473b-85ec-4a23-b05b-edbef77f5cbe)
-![Home page 7](https://github.com/ErickLimaS/anime-website/assets/69987890/6a86f624-3e25-4de6-902d-5cf23c444422)
+![Home page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/a5afa4c6-4414-40ac-948a-bf09fd9057cf)
+![Home page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/82def7e4-41b7-4d3d-a12e-e9b19c947385)
+![Home page 3](https://github.com/ErickLimaS/anime-website/assets/69987890/942a3868-e618-4e78-bc6f-b1e27dc93e3d)
+![Home page 4](https://github.com/ErickLimaS/anime-website/assets/69987890/c3547111-ef51-4289-aca8-f12cf7639a1a)
+![Home page 5](https://github.com/ErickLimaS/anime-website/assets/69987890/b997120e-7006-4912-bbb2-212f31532d5a)
+![Home page 6](https://github.com/ErickLimaS/anime-website/assets/69987890/c2f63bc5-1d56-495f-a262-3f638f7cc8f8)
+![Home page 7](https://github.com/ErickLimaS/anime-website/assets/69987890/8e5be52c-5bcd-4149-afc9-794a534f6b66)
 
 ### Anime/Manga Page
 
