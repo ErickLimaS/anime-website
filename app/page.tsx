@@ -44,7 +44,7 @@ export default async function Home() {
   )
 
   // section 4
-  const mediaRankingData = await anilist.getMediaForThisFormat("ANIME")
+  const mediaRankingData = await anilist.getMediaForThisFormat("ANIME") as ApiDefaultResult[]
   const newestMediaData = await anilist.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
     res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
   ).then(res => res.map((item) => item.media))

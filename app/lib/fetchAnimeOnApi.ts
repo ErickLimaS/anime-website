@@ -50,7 +50,7 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes", f
 
     const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
 
-    let searchResultsForMedia = await aniwatch.searchMedia(regexMediaTitle).then((res: void | MediaInfoFetchedAnimeWatch) => res!.animes) as MediaInfoAniwatch[]
+    let searchResultsForMedia = await aniwatch.searchMedia(regexMediaTitle).then((res) => res!.animes) as MediaInfoAniwatch[]
 
     if (format) {
         searchResultsForMedia = searchResultsForMedia.filter(item => item.type.toLowerCase() == format.toLowerCase())
