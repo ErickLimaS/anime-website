@@ -3,7 +3,7 @@ import React, { SetStateAction, useEffect, useState } from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import API from '@/api/anilist'
+import anilist from '@/api/anilist'
 import ChevronLeftIcon from '@/public/assets/chevron-left.svg'
 import ChevronRightIcon from '@/public/assets/chevron-right.svg'
 import CloseSvg from '@/public/assets/x.svg'
@@ -86,13 +86,13 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
         if (sort == "RELEASE") {
 
             // gets the range of days than parse it to unix and get any media releasing in the selected range
-            response = await API.getReleasingByDaysRange(
+            response = await anilist.getReleasingByDaysRange(
                 "ANIME",
                 days!,
                 newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined,
                 undefined,
                 showAdultContent
-            )
+            ) as ApiAiringMidiaResults[]
 
             const responseMap = (response as ApiAiringMidiaResults[]).map((item) => item.media)
             response = responseMap
@@ -102,7 +102,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
         }
         else {
 
-            response = await API.getMediaForThisFormat(
+            response = await anilist.getMediaForThisFormat(
                 "ANIME",
                 sort,
                 newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined,

@@ -5,7 +5,7 @@ import MediaListCoverInfo from '../../MediaItemCoverInfo2'
 import CardMediaCoverAndDescription from '../../CardMediaCoverAndDescription'
 import NavButtons from '../../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import API from "@/api/anilist"
+import anilist from "@/api/anilist"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/firebase/firebaseApp'
@@ -56,7 +56,7 @@ function NewestMediaSection(props: PropsTypes) {
 
         setIsLoading(true)
 
-        const response = await API.getReleasingByDaysRange("ANIME", days, undefined, 11, showAdultContent).then(
+        const response = await anilist.getReleasingByDaysRange("ANIME", days, undefined, 11, showAdultContent).then(
             res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
         ).then(res => res.map((item) => item.media))
 
