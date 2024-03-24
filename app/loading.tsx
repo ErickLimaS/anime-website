@@ -16,13 +16,11 @@ function LoadingPlaceholder() {
         <div style={{ height: "80vh", width: "100%", margin: "auto", display: "flex" }}>
             <div style={{ margin: "auto", display: "flex", flexDirection: "column" }}>
 
-                <div
-                    style={styles}
-                >
+                <div style={styles}>
                     <Image fill alt="Logo" src={Logo} />
                 </div>
 
-                <LoadingSvg width={64} height={82} alt="Loading"/>
+                <LoadingSvg width={64} height={82} alt="Loading" />
 
                 <p style={{ margin: "auto", marginTop: "16px", fontSize: "var(--font-size--h5)", color: "var(--white-50)", fontWeight: 600 }}>
                     Loading...

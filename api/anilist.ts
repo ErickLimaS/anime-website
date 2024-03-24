@@ -81,7 +81,9 @@ export default {
         }
         catch (error) {
 
-            return console.log((error as ErrorTypes).response.data.errors)
+            console.log((error as ErrorTypes).response.data.errors)
+
+            return null
 
         }
     }),
@@ -114,8 +116,9 @@ export default {
 
         }
         catch (error) {
+            console.log((error as ErrorTypes).response.data.errors)
 
-            return console.log((error as ErrorTypes).response.data.errors)
+            return null
 
         }
     }),
@@ -152,7 +155,9 @@ export default {
         }
         catch (error) {
 
-            return console.log((error as ErrorTypes).response.data.errors)
+            console.log((error as ErrorTypes).response.data.errors)
+
+            return null
 
         }
 
@@ -194,7 +199,9 @@ export default {
         }
         catch (error) {
 
-            return console.log((error as ErrorTypes).response.data.errors)
+            console.log((error as ErrorTypes).response.data.errors)
+
+            return null
 
         }
 
@@ -231,7 +238,9 @@ export default {
         }
         catch (error) {
 
-            return console.log((error as ErrorTypes).response.data.errors)
+            console.log((error as ErrorTypes).response.data.errors)
+
+            return null
 
         }
 
@@ -266,7 +275,10 @@ export default {
         }
         catch (error) {
 
-            return console.log((error as ErrorTypes).response.data.errors)
+            console.log((error as ErrorTypes).response.data.errors)
+
+            return null
+
         }
 
     }),
@@ -295,7 +307,9 @@ export default {
         }
         catch (error) {
 
-            return console.log((error as ErrorTypes).response.data.errors)
+            console.log((error as ErrorTypes).response.data.errors)
+
+            return null
 
         }
     }),

@@ -21,7 +21,9 @@ export default {
         }
         catch (error: any) {
 
-            return console.log(error?.response.data.errors)
+            console.log(error?.response.data.errors)
+
+            return null
 
         }
     }),
@@ -40,7 +42,9 @@ export default {
         }
         catch (error: any) {
 
-            return console.log(error?.response.data.errors)
+            console.log(error?.response.data.errors)
+
+            return null
 
         }
     }),
@@ -59,7 +63,9 @@ export default {
         }
         catch (error: any) {
 
-            return console.log(error?.response.data.errors)
+            console.log(error?.response.data.errors)
+
+            return null
 
         }
     }),

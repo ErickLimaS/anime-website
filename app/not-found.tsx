@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React, { DetailedHTMLProps, HTMLAttributes } from 'react'
 import ErrorImg from "@/public/error-img-1.png"
 import Image from 'next/image'

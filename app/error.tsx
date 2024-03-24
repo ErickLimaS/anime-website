@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React, { DetailedHTMLProps, HTMLAttributes, useEffect } from 'react'
 import ErrorImg from "@/public/error-img-4.png"
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 
 function ErrorPage({ error, reset }: {
     error: Error & { digest?: string }
@@ -104,16 +105,25 @@ function ErrorPage({ error, reset }: {
                 <h1 style={errorH1Styles}>Something went wrong!</h1>
 
                 <p style={errorPStyles}>{error.name}: {error.message}</p>
+
+                <span style={{background: "var(--black-05)", padding: "8px", margin:"0 16px"}}>{error.stack}</span>
             </div>
 
             <div style={errorButtonContainerStyles}>
-                <button onClick={() => reset()} style={errorRetryBtnContainerStyles as any}>
+                <motion.button
+                    onClick={() => reset()} style={errorRetryBtnContainerStyles as any}
+                    whileTap={{ scale: 0.9 }}
+                >
                     Try again
-                </button>
+                </motion.button>
 
-                <a href={"/"} style={errorReturnHomeContainerStyles}>
+                <motion.a
+                    href={"/"}
+                    style={errorReturnHomeContainerStyles}
+                    whileTap={{ scale: 0.9 }}
+                >
                     Return to Home Page
-                </a>
+                </motion.a>
 
             </div>
 

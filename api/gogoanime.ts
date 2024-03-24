@@ -25,6 +25,8 @@ export default {
 
             console.log(error)
 
+            return null
+
         }
 
     },
@@ -47,6 +49,8 @@ export default {
 
             console.log(error)
 
+            return null
+
         }
 
     },
@@ -66,6 +70,8 @@ export default {
 
             console.log(error)
 
+            return null
+
         }
 
     },
@@ -83,7 +89,9 @@ export default {
         }
         catch (error) {
 
-            return error
+            console.log(error)
+
+            return null
 
         }
 
@@ -102,7 +110,9 @@ export default {
         }
         catch (error) {
 
-            return error
+            console.log(error)
+
+            return null
 
         }
 
