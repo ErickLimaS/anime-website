@@ -4,7 +4,7 @@ import styles from "./component.module.css"
 import MediaListCoverInfo from '../../MediaItemCoverInfo2'
 import NavButtons from '../../NavButtons'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import API from "@/api/anilist"
+import anilist from "@/api/anilist"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/firebase/firebaseApp'
@@ -46,7 +46,7 @@ function MediaRankingSection(props: PropsTypes) {
 
         }
 
-        const response: ApiDefaultResult[] | void = await API.getMediaForThisFormat(parameter, undefined, undefined, undefined, showAdultContent)
+        const response = await anilist.getMediaForThisFormat(parameter, undefined, undefined, undefined, showAdultContent) as ApiDefaultResult[]
 
         currentQueryValue = parameter
 
