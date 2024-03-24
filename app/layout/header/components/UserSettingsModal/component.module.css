@@ -63,10 +63,25 @@
     border-radius: 6px;
 }
 
+#modal .settings_heading {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+#modal .settings_heading h2 {
+
+    font-size: var(--font-size--p);
+    font-weight: 600;
+
+}
+
 #modal #close_menu_btn {
 
     display: flex;
-    margin-left: auto;
     padding: 16px;
     background: transparent;
     border: 0;

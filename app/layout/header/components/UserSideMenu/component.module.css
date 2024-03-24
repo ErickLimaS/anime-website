@@ -72,6 +72,12 @@
 
 }
 
+#user_container #user_btn.active svg{
+
+    fill: var(--brand-color);
+
+}
+
 #user_container #user_btn>span {
     display: flex;
 }

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './component.module.css'
 import PersonIcon from '@/public/assets/person-circle.svg'
 import ChevronDownSvg from '@/public/assets/chevron-down.svg'
@@ -10,7 +10,6 @@ import HistorySvg from '@/public/assets/clock-history.svg'
 import BookmarkSvg from '@/public/assets/bookmark-check-fill.svg'
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg'
 import { getAuth } from 'firebase/auth'
-import { initFirebase } from "@/firebase/firebaseApp";
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
 import Link from 'next/link'
@@ -22,10 +21,9 @@ import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 function UserSideMenu() {
 
     const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false)
+    const [isUserLoginOpen, setIsUserLoginOpen] = useState<boolean>(false)
     const [isUserSettingsOpen, setIsUserSettingsOpen] = useState<boolean>(false)
 
-    // FIREBASE LOGIN 
-    const app = initFirebase()
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
@@ -53,17 +51,29 @@ function UserSideMenu() {
 
     }
 
-    useEffect(() => {
-        setIsUserMenuOpen(false)
-    }, [user])
-
     return (
         <div id={styles.user_container}>
+
+            <AnimatePresence
+                initial={false}
+                mode='wait'
+            >
+                {(isUserLoginOpen) && (
+
+                    <UserModal
+                        onClick={() => setIsUserLoginOpen(!isUserLoginOpen)}
+                        auth={auth}
+                        aria-expanded={isUserMenuOpen}
+                    />
+
+                )}
+
+            </AnimatePresence>
 
             {!user ? (
                 <>
                     <button
-                        onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                        onClick={() => setIsUserLoginOpen(!isUserLoginOpen)}
                         aria-controls={styles.user_menu_list}
                         aria-label={isUserMenuOpen ? 'Click to Hide User Menu' : 'Click to Show User Menu'}
                         className={`display_flex_row align_items_center ${styles.heading_btn}`}
@@ -83,21 +93,6 @@ function UserSideMenu() {
                         )}
                     </button>
 
-                    <AnimatePresence
-                        initial={false}
-                        mode='wait'
-                    >
-                        {isUserMenuOpen && (
-
-                            <UserModal
-                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                auth={auth}
-                                aria-expanded={isUserMenuOpen}
-                            />
-
-                        )}
-
-                    </AnimatePresence>
                 </>
             ) : (
                 <>
@@ -105,7 +100,7 @@ function UserSideMenu() {
                         onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                         aria-controls={styles.user_menu_list}
                         aria-label={isUserMenuOpen ? 'Click to Hide User Menu' : 'Click to Show User Menu'}
-                        className={`display_flex_row align_items_center ${styles.heading_btn}`}
+                        className={`display_flex_row align_items_center ${styles.heading_btn} ${isUserMenuOpen ? `${styles.active}` : ""}`}
                         id={styles.user_btn}
                         data-useractive={true}
                     >
