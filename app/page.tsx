@@ -17,12 +17,12 @@ import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";
 import { headers } from "next/headers";
 import KeepWatchingSection from "./components/HomePage/KeepWatchingSection";
 
+export const revalidate = 21600 // revalidate cached data every 6 hours
+
 export const metadata: Metadata = {
   title: 'Home | AniProject',
   description: 'A website which shows a variety of info about animes, mangas and movies.',
 }
-
-export const revalidate = 1800 // revalidate the data every 30 min
 
 export default async function Home() {
 

@@ -14,6 +14,8 @@ import { fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import { getMediaInfo } from '@/api/imdb'
 
+export const revalidate = 900 // revalidate cached data every 15 minutes
+
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
     searchParams: { episode: string, source: string, q: string } // EPISODE NUMBER, SOURCE, EPISODE ID

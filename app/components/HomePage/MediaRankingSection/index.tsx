@@ -17,6 +17,8 @@ type PropsTypes = {
 
 }
 
+export const revalidate = 1800 // revalidate cached data every 30 min
+
 function MediaRankingSection(props: PropsTypes) {
 
     const [mediaList, setMediaList] = useState<ApiDefaultResult[] | ApiDefaultResult | null>(null)

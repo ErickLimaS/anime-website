@@ -18,6 +18,8 @@ type PropsTypes = {
 
 }
 
+export const revalidate = 1800 // revalidate the data every 30 min
+
 function NewestMediaSection(props: PropsTypes) {
 
     const [mediaList, setMediaList] = useState<ApiAiringMidiaResults[] | ApiDefaultResult[]>([])

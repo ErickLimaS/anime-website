@@ -21,7 +21,6 @@ import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/firebase/firebaseApp'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 
-
 type Component = {
 
     title: string,
@@ -33,7 +32,7 @@ type Component = {
 
 }
 
-export const revalidate = 1800 // revalidate the data every 30 min
+export const revalidate = 1800 // revalidate cached data every 30 min
 
 function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layoutInverted }: Component) {
 

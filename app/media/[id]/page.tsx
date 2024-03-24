@@ -26,6 +26,8 @@ import CommentSectionContainer from '../../components/CommentSectionContainer'
 import { getMediaInfo } from '@/api/imdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 
+export const revalidate = 43200 // revalidate cached data every 12 hours
+
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
   const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults

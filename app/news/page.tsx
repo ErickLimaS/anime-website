@@ -9,12 +9,12 @@ import SvgCalendar from "@/public/assets/calendar3.svg"
 import { News } from '../ts/interfaces/newsInterface'
 import NewsCard1 from './components/NewsCard1'
 
+export const revalidate = 1800 // revalidate cached data every 30 min
+
 export const metadata: Metadata = {
     title: 'News | AniProject',
     description: 'See the latest news about a variety of animes, mangas and movies.',
 }
-
-export const revalidate = 1800 // revalidate the data every 30 min
 
 async function NewsHomePage() {
 
