@@ -22,8 +22,7 @@ export async function searchMedia(mediaTitle: string) {
 
         console.log(err)
 
-        return err
-
+        return null
     }
 
 }
@@ -59,7 +58,7 @@ export async function getMediaInfo(search: boolean, mediaId?: string, type?: "TV
 
         console.log(err)
 
-        return err
+        return null
 
     }
 

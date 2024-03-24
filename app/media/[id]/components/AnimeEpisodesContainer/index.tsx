@@ -247,27 +247,34 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           sepateWithSpan={true}
         />
 
-        {episodeSource == "aniwatch" && (
-          <div id={styles.select_media_container}>
-
-            <small>Wrong Episodes? Select bellow!</small>
-
-            <select
-              onChange={(e) => getEpisodesToThisMediaFromAniwatch(e.target.value)}
-              defaultValue={checkApiMisspellingMedias(props.mediaTitle).toLowerCase()}
+        <AnimatePresence>
+          {episodeSource == "aniwatch" && (
+            <motion.div
+              id={styles.select_media_container}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
             >
-              {mediaResultsInfoArray.length > 0 && mediaResultsInfoArray?.map((item, key) => (
-                <option
-                  key={key}
-                  value={item.id.toLowerCase()}
-                >
-                  {item.name}
-                </option>
-              ))}
-            </select>
 
-          </div>
-        )}
+              <small>Wrong Episodes? Select bellow!</small>
+
+              <select
+                onChange={(e) => getEpisodesToThisMediaFromAniwatch(e.target.value)}
+                defaultValue={checkApiMisspellingMedias(props.mediaTitle).toLowerCase()}
+              >
+                {mediaResultsInfoArray.length > 0 && mediaResultsInfoArray?.map((item, key) => (
+                  <option
+                    key={key}
+                    value={item.id.toLowerCase()}
+                  >
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
 

@@ -17,15 +17,25 @@ import {
 import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
 import { initFirebase } from '@/firebase/firebaseApp'
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
+import { useAuthState } from 'react-firebase-hooks/auth'
+import UserSettingsModal from '@/app/layout/header/components/UserSettingsModal'
 
-function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElement>, auth: Auth }) {
+type ModalTypes = {
+    onClick?: MouseEventHandler<HTMLDivElement>,
+    auth: Auth
+}
+
+function UserModal({ onClick, auth, }: ModalTypes) {
 
     const googleProvider = new GoogleAuthProvider()
     const githubProvider = new GithubAuthProvider()
 
-    const db = getFirestore(initFirebase());
+    const db = getFirestore(initFirebase())
+
+    const [user] = useAuthState(auth)
 
     const [isLoading, setIsLoading] = useState(false)
+    const [showSettingsMenu, setShowSettingsMenu] = useState(false)
 
     const [alternativeForm, setAlternativeForm] = useState(false)
     const [loginError, setLoginError] = useState<{ code: string, message: string } | null>(null)
@@ -55,9 +65,12 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
     async function newUserDoc(user: User) {
 
-        const userHasDoc = await getDoc(doc(db, "users", user.uid))
-
+        const userHasDoc = await getDoc(doc(db, "users", user.uid)).then(res => res.data())
+        
         if (userHasDoc) return
+
+        // shows settings to new user
+        setShowSettingsMenu(true)
 
         await setDoc(doc(collection(db, "users"), user.uid), {
             bookmarks: [],
@@ -85,7 +98,6 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                 })
 
             })
-
     }
 
     const signInGithub = async () => {
@@ -133,14 +145,14 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
                 const res = await createUserWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
 
-                // add default values to user doc
-                await newUserDoc(res.user)
-
                 // update user info
                 await updateProfile(res.user, {
                     displayName: form.username.value,
                     photoURL: ProfileFallbackImg.src as string
                 })
+
+                // add default values to user doc
+                await newUserDoc(res.user)
 
                 setLoginError(null)
             }
@@ -173,7 +185,12 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
 
     }
 
-    return (
+    // only opens when user has created a account
+    if (user && showSettingsMenu) {
+        return <UserSettingsModal auth={auth} onClick={onClick} newUser />
+    }
+
+    return !user && (
         <motion.div
             id={styles.backdrop}
             onClick={onClick}
@@ -181,7 +198,7 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
         >
-            <motion.div
+            < motion.div
                 onClick={(e) => e.stopPropagation()}
                 id={styles.modal}
                 variants={dropIn}
@@ -354,9 +371,9 @@ function UserModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElem
                 </motion.button>
 
             </motion.div>
-        </motion.div>
-    )
+        </motion.div >
 
+    )
 }
 
 export default UserModal

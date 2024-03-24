@@ -25,6 +25,8 @@ export default {
 
             console.log(error)
 
+            return null
+
         }
 
     },
@@ -47,6 +49,8 @@ export default {
 
             console.log(error)
 
+            return null
+
         }
 
     },
@@ -66,6 +70,8 @@ export default {
 
             console.log(error)
 
+            return null
+
         }
 
     },
@@ -83,7 +89,9 @@ export default {
         }
         catch (error) {
 
-            return error
+            console.log(error)
+
+            return null
 
         }
 
@@ -98,11 +106,13 @@ export default {
                 method: 'GET'
             })
 
-            return data as EpisodeLinksGoGoAnime[];
+            return data as EpisodeLinksGoGoAnime;
         }
         catch (error) {
 
-            return error
+            console.log(error)
+
+            return null
 
         }
 

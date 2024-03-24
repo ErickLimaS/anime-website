@@ -26,6 +26,8 @@ import CommentSectionContainer from '../../components/CommentSectionContainer'
 import { getMediaInfo } from '@/api/imdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 
+export const revalidate = 43200 // revalidate cached data every 12 hours
+
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
   const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
@@ -43,7 +45,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
   const isMobileScreen = checkDeviceIsMobile(headers()) || false
 
   // sort ASC episodes number
-  const episodesFromCrunchyroll = mediaData.streamingEpisodes.sort((a, b) => {
+  const episodesFromCrunchyroll = mediaData?.streamingEpisodes?.sort((a, b) => {
     const numA = Number(a.title.slice(a.title?.search(/\b \b/), a.title?.search(/\b - \b/)))
     const numB = Number(b.title.slice(b.title?.search(/\b \b/), b.title?.search(/\b - \b/)))
 
@@ -51,12 +53,16 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   })
 
+  let imdbEpisodes: ImdbEpisode[] = []
+
   // get media info on imdb
   const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
 
   // get episodes on imdb
-  let imdbEpisodes: ImdbEpisode[] = []
-  imdbMediaInfo.seasons?.map(itemA => itemA.episodes.map(itemB => imdbEpisodes.push(itemB)))
+  imdbMediaInfo?.seasons?.map(
+    itemA => itemA.episodes?.map(
+      itemB => imdbEpisodes.push(itemB))
+  )
 
   return (
     <main id={styles.container}>
@@ -71,22 +77,22 @@ async function MediaPage({ params }: { params: { id: number } }) {
             `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.format == "MANGA" ?
               mediaData.bannerImage
               :
-              imdbMediaInfo.cover || mediaData.bannerImage})`
+              imdbMediaInfo?.cover || mediaData.bannerImage})`
         }}
       >
       </div>
 
       {/* MEDIA INFO */}
-      <div id={styles.media_info_container} className={(imdbMediaInfo.logos && imdbMediaInfo.logos[0]) ? `${styles.custom_position}` : ``}>
+      <div id={styles.media_info_container} className={(imdbMediaInfo?.logos && imdbMediaInfo?.logos[0]) ? `${styles.custom_position}` : ``}>
 
         <section id={styles.media_title_container}>
-          {imdbMediaInfo.logos ? (
+          {imdbMediaInfo?.logos ? (
             <h1>{(mediaData.title?.romaji).toUpperCase() || mediaData.title.native}</h1>
           ) : (
             <small>{mediaData.title.native}</small>
           )}
 
-          {imdbMediaInfo.logos ? (
+          {imdbMediaInfo?.logos ? (
             <div
               className={styles.heading_img_container}
               style={{

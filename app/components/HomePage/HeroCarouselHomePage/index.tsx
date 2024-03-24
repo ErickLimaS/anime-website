@@ -128,7 +128,7 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             transition={{ delay: 3 }}
-                                            src={`https://www.youtube.com/embed/${data[imageIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0`}
+                                            src={`https://www.youtube.com/embed/${data[imageIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0&playlist=${data[imageIndex].trailer.id}`}
                                             frameBorder={0}
                                             title={data[imageIndex].title.romaji + " Trailer"}
                                         />

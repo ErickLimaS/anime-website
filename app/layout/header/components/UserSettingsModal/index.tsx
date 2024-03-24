@@ -14,7 +14,13 @@ import { initFirebase } from '@/firebase/firebaseApp'
 import { Auth, deleteUser, updateProfile } from 'firebase/auth'
 import Image from 'next/image'
 
-function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTMLDivElement>, auth: Auth }) {
+type SettingsTypes = {
+    onClick?: MouseEventHandler<HTMLDivElement> | MouseEventHandler<HTMLButtonElement> | ((value: void) => void | PromiseLike<void>) | null | undefined,
+    auth: Auth,
+    newUser?: boolean
+}
+
+function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
     const dropIn = {
 
@@ -140,11 +146,11 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
     const qualityOptions = [
 
         { name: "Auto", value: "auto" },
-        { name: "1080p", value: "1080p" },
-        { name: "720p", value: "720p" },
-        { name: "480p", value: "480p" },
-        { name: "360p", value: "360p" },
-        { name: "144p", value: "144p" },
+        { name: "1080p", value: "1080" },
+        { name: "720p", value: "720" },
+        { name: "480p", value: "480" },
+        { name: "360p", value: "360" },
+        { name: "144p", value: "144" },
 
     ]
 
@@ -160,17 +166,6 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
 
         const form: any = e.target
 
-        await updateDoc(doc(db, 'users', user.uid),
-            {
-                videoSubtitleLanguage: form.language.value,
-                videoSource: form.source.value,
-                videoQuality: form.quality.value,
-                showAdultContent: form.showAdultContent.checked,
-                autoNextEpisode: form.autoNextEpisode.checked,
-                autoSkipIntroAndOutro: form.skipIntroAndOutro.checked
-            }
-        )
-
         // update user info
         if (newImgProfileSelected || form.username.value) {
 
@@ -180,6 +175,17 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
             })
 
         }
+
+        await updateDoc(doc(db, 'users', user.uid),
+            {
+                videoSubtitleLanguage: form.language.value,
+                videoSource: form.source.value,
+                videoQuality: form.quality.value,
+                showAdultContent: form.showAdultContent.checked,
+                autoNextEpisode: form.autoNextEpisode.checked,
+                autoSkipIntroAndOutro: form.skipIntroAndOutro.checked
+            }
+        ).then(onClick as ((value: void) => void | PromiseLike<void>) | null | undefined)
 
         setIsLoading(false)
         setWasSuccessfull(true)
@@ -259,7 +265,7 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
     return (
         <motion.div
             id={styles.backdrop}
-            onClick={onClick}
+            onClick={!newUser ? (onClick as MouseEventHandler<HTMLDivElement>) : undefined}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -272,21 +278,26 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                 animate="visible"
                 exit="exit"
             >
+                <div className={styles.settings_heading}>
+                    <h2>Configure Your Account</h2>
 
-                <motion.button
-                    title="Close Settings"
-                    onClick={onClick as any}
-                    id={styles.close_menu_btn}
-                    variants={btnVariants}
-                    whileTap={"tap"}
-                >
-                    <CloseSvg alt="Close" width={16} height={16} />
-                </motion.button>
+                    {!newUser && (
+                        <motion.button
+                            title="Close Settings"
+                            onClick={onClick as MouseEventHandler<HTMLButtonElement>}
+                            id={styles.close_menu_btn}
+                            variants={btnVariants}
+                            whileTap={"tap"}
+                        >
+                            <CloseSvg alt="Close" width={16} height={16} />
+                        </motion.button>
+                    )}
+                </div>
 
                 <form onSubmit={(e) => changeSettings(e)}>
 
                     <div className={styles.group_container}>
-                        <h5><span><UserSvg alt="Person" width={16} height={16} /></span> User Account</h5>
+                        <h5><span><UserSvg alt="Person" width={16} height={16} /></span> User</h5>
 
                         <div className={`${styles.user_acc_info_container}`}>
                             <div>
@@ -300,7 +311,6 @@ function UserSettingsModal({ onClick, auth, }: { onClick?: MouseEventHandler<HTM
                                             <Image
                                                 src={user.photoURL as string}
                                                 alt={user.displayName as string}
-                                                // height={140} width={140}
                                                 fill
                                             />
                                         </label>
