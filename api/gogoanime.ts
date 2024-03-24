@@ -106,7 +106,7 @@ export default {
                 method: 'GET'
             })
 
-            return data as EpisodeLinksGoGoAnime[];
+            return data as EpisodeLinksGoGoAnime;
         }
         catch (error) {
 
