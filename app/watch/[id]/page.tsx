@@ -106,14 +106,26 @@ async function WatchEpisode({ params, searchParams }: {
                         {mediaData.format == "MOVIE" ? (
                             <h1 className='display_flex_row align_items_center'>{mediaData.title.romaji || mediaData.title.native}</h1>
                         ) : (
-                            <h1 className='display_flex_row align_items_center'>
-                                Episode {searchParams.episode}
+                            <h1>
+                                {`Episode ${searchParams.episode}`}
                                 <span>{" "}-{" "}</span>
-                                <span>{mediaData.title.romaji || mediaData.title.native}</span>
+                                <span>
+                                    {
+                                        imdbEpisodes?.find(item => item.episode == Number(searchParams.episode))?.title
+                                        ||
+                                        mediaData.title.romaji
+                                        ||
+                                        mediaData.title.native
+                                    }
+                                </span>
                             </h1>
                         )}
 
-                        <CardMediaCoverAndDescription data={mediaData as ApiDefaultResult} showButtons={false} />
+                        <CardMediaCoverAndDescription
+                            data={mediaData as ApiDefaultResult}
+                            showButtons={false}
+                            customDescription={imdbEpisodes?.find(item => item.episode == Number(searchParams.episode))?.description || undefined}
+                        />
 
                     </div>
 

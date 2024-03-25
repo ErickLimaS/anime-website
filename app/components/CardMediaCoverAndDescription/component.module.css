@@ -73,7 +73,9 @@
     .item_info_container {
 
         margin: auto;
-        margin-left: 48px;
+
+        width: 88%;
+        /* margin-left: 48px; */
 
     }
 }
