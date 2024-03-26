@@ -13,6 +13,9 @@ import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch, EpisodesFetchedAnimeWatch } 
 import { fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import { getMediaInfo } from '@/api/imdb'
+import Image from 'next/image'
+import ErrorImg from "@/public/error-img-4.png"
+import Link from 'next/link'
 
 export const revalidate = 900 // revalidate cached data every 15 minutes
 
@@ -40,6 +43,7 @@ async function WatchEpisode({ params, searchParams }: {
     let episodes: EpisodeAnimeWatch[] | MediaEpisodes[]
     let videoSrc: string
     let imdbEpisodes: ImdbEpisode[] = []
+    let error = false
 
     if (searchParams.source == "gogoanime") {
 
@@ -53,6 +57,9 @@ async function WatchEpisode({ params, searchParams }: {
         // fetch episodes for this media
         episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
 
+        // if episode on params dont match any of EPISODES results, it shows a error
+        if (episodes.find(item => item.id == searchParams.q) == undefined) error = true
+
     }
     else {
 
@@ -64,7 +71,10 @@ async function WatchEpisode({ params, searchParams }: {
 
         // fetch episodes for this media
         const mediaTitle = searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)
-        episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch).episodes)
+        episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch).episodes) as EpisodeAnimeWatch[]
+
+        // if episode on params dont match any of EPISODES results, it shows a error
+        if (episodes.find(item => item.episodeId == searchParams.q) == undefined) error = true
 
     }
 
@@ -73,6 +83,37 @@ async function WatchEpisode({ params, searchParams }: {
 
     // get episodes on imdb
     imdbMediaInfo.seasons?.map(itemA => itemA.episodes.map(itemB => imdbEpisodes.push(itemB)))
+
+    // ERROR MENSSAGE
+    if (error) {
+        return (
+            <div id={styles.error_modal_container}>
+
+                <div id={styles.heading_text_container}>
+                    <div>
+                        <Image src={ErrorImg} height={330} alt={'Error'} />
+                    </div>
+
+                    <h1>ERROR!</h1>
+
+                    <p>{`The Media ID doesn't match episode ID.`}</p>
+                </div>
+
+
+                <div id={styles.redirect_btns_container}>
+                    <Link href={`/media/${params.id}`}>
+                        Return To Media Page
+                    </Link>
+
+                    <Link href={"/"}>
+                        Return to Home Page
+                    </Link>
+
+                </div>
+
+            </div>
+        )
+    }
 
     return (
         <main id={styles.container}>
