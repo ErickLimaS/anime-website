@@ -14,10 +14,17 @@
 
     display: flex;
     flex-direction: column-reverse;
-    align-items: center;
+
+    overflow-x: auto;
 
     gap: 16px 0;
 
+}
+
+@media(min-width: 490px) {
+    #container_heading {
+        align-items: center;
+    }
 }
 
 @media(min-width: 540px) {

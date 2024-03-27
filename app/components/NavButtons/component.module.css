@@ -10,6 +10,8 @@
     background-color: transparent;
     border: none;
 
+    text-wrap: nowrap;
+
     color: var(--white-50);
 
     font-size: var(--font-size--small-1);

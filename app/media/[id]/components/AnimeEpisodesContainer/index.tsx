@@ -27,6 +27,7 @@ import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi
 import regexOnlyAlphabetic from '@/app/lib/regexOnlyAlphabetic';
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface';
 import { checkApiMisspellingMedias } from '@/app/lib/checkApiMediaMisspelling';
+import VidsrcEpisodeContainer from '../VidsrcEpisodeContainer';
 
 type EpisodesContainerTypes = {
   dataCrunchyroll: EpisodesType[],
@@ -34,7 +35,8 @@ type EpisodesContainerTypes = {
   mediaTitle: string,
   mediaFormat: string,
   mediaId: number,
-  totalEpisodes: number
+  totalEpisodes: number,
+  vidsrcId: number | null
 }
 
 function EpisodesContainer(props: EpisodesContainerTypes) {
@@ -134,7 +136,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         break
 
       // get data from ANIWATCH
-      default:
+      case "aniwatch":
 
         setEpisodeSource(chooseSource)
 
@@ -150,6 +152,31 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage));
+
+        setLoading(false)
+
+        break
+
+      // get data from VIDSRC
+      default:
+
+        // VIDSRC has no episodes INFO
+        // it fetchs GOGOANIME episodes, but the LINK will be to VIDSRC API
+
+        setEpisodeSource(chooseSource)
+        mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
+
+        if (mediaEpisodes == null) {
+          setLoading(false)
+          setEpisodesDataFetched([])
+          return
+
+        }
+
+        setEpisodesDataFetched(mediaEpisodes as MediaEpisodes[])
+
+        setCurrentItems((mediaEpisodes as MediaEpisodes[]).slice(itemOffset, endOffset))
+        setPageCount(Math.ceil((mediaEpisodes as MediaEpisodes[]).length / rangeEpisodesPerPage))
 
         setLoading(false)
 
@@ -241,7 +268,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
             [
               { name: "Crunchyroll", value: "crunchyroll" },
               { name: "GoGoAnime", value: "gogoanime" },
-              { name: "Aniwatch", value: "aniwatch" }
+              { name: "Aniwatch", value: "aniwatch" },
+              { name: "VidSrc (unstable)", value: "vidsrc" }
             ]
           }
           sepateWithSpan={true}
@@ -313,6 +341,19 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                 <AniwatchEpisode
                   key={key}
                   data={item as EpisodeAnimeWatch}
+                  backgroundImg={dataImdb[key + itemOffset]?.img?.hd}
+                  mediaId={props.mediaId}
+                />
+
+              )
+              ||
+              episodeSource == "vidsrc" && (
+
+                <VidsrcEpisodeContainer
+                  key={key}
+                  data={item as MediaEpisodes}
+                  vidsrcData={`${props.vidsrcId}?s=1`}
+                  title={dataImdb[key + itemOffset]?.title}
                   backgroundImg={dataImdb[key + itemOffset]?.img?.hd}
                   mediaId={props.mediaId}
                 />

@@ -16,6 +16,8 @@ import { getMediaInfo } from '@/api/imdb'
 import Image from 'next/image'
 import ErrorImg from "@/public/error-img-4.png"
 import Link from 'next/link'
+import { getVideoSrcLink } from '@/api/vidsrc'
+import { VidsrcEpisodeLink } from '@/app/ts/interfaces/apiVidsrcInterface'
 
 export const revalidate = 900 // revalidate cached data every 15 minutes
 
@@ -40,9 +42,11 @@ async function WatchEpisode({ params, searchParams }: {
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
     let episodeData
-    let episodes: EpisodeAnimeWatch[] | MediaEpisodes[]
-    let videoSrc: string
+    let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | VidsrcEpisodeLink["subtitles"] | undefined
+    let episodes: EpisodeAnimeWatch[] | MediaEpisodes[] = []
+    let videoSrc: string | undefined = undefined
     let imdbEpisodes: ImdbEpisode[] = []
+    let vidsrcId: number | undefined = undefined
     let error = false
 
     if (searchParams.source == "gogoanime") {
@@ -61,7 +65,7 @@ async function WatchEpisode({ params, searchParams }: {
         if (episodes.find(item => item.id == searchParams.q) == undefined) error = true
 
     }
-    else {
+    else if (searchParams.source == "aniwatch") {
 
         // fetch episode data
         episodeData = await aniwatch.episodesLinks(searchParams.q) as EpisodeLinksAnimeWatch
@@ -73,8 +77,27 @@ async function WatchEpisode({ params, searchParams }: {
         const mediaTitle = searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)
         episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch).episodes) as EpisodeAnimeWatch[]
 
+        episodeSubtitles = episodeData.tracks
+
         // if episode on params dont match any of EPISODES results, it shows a error
         if (episodes.find(item => item.episodeId == searchParams.q) == undefined) error = true
+
+    }
+    else if (searchParams.source == "vidsrc") {
+
+        // fetch episode data
+        episodeData = await getVideoSrcLink(`${searchParams.q}&e=${searchParams.episode}`) as VidsrcEpisodeLink
+
+        // fetch episode link source
+        videoSrc = episodeData.source
+
+        // vidsrc ID to be used on url
+        vidsrcId = Number(searchParams.q.slice(0, searchParams?.q.search(/\bq\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bq\b/)).length - 3))
+
+        // fetch episodes for this media
+        episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
+
+        episodeSubtitles = episodeData.subtitles
 
     }
 
@@ -122,9 +145,10 @@ async function WatchEpisode({ params, searchParams }: {
             <div className={styles.background}>
                 <section id={styles.video_container}>
                     <Player
-                        source={videoSrc}
+                        source={videoSrc as string}
                         currentLastStop={searchParams.t || undefined}
                         mediaSource={searchParams.source}
+                        vidsrcId={vidsrcId}
                         media={mediaData}
                         episodeIntro={(episodeData as EpisodeLinksAnimeWatch)?.intro}
                         episodeOutro={(episodeData as EpisodeLinksAnimeWatch)?.outro}
@@ -132,7 +156,7 @@ async function WatchEpisode({ params, searchParams }: {
                         episodeImg={imdbEpisodes[Number(searchParams.episode) - 1]?.img?.hd || mediaData.bannerImage || null}
                         mediaEpisodes={episodes}
                         episodeId={searchParams.q}
-                        subtitles={searchParams.source == "gogoanime" ? undefined : (episodeData as EpisodeLinksAnimeWatch).tracks}
+                        subtitles={episodeSubtitles}
                         videoQualities={searchParams.source == "gogoanime" ? (episodeData as EpisodeLinksGoGoAnime).sources : undefined}
                     />
                 </section>
@@ -195,6 +219,7 @@ async function WatchEpisode({ params, searchParams }: {
                         <EpisodesSideListContainer
                             source={searchParams.source}
                             episodesList={episodes}
+                            vidsrcId={vidsrcId}
                             episodesOnImdb={imdbEpisodes.length > 0 ? imdbEpisodes : undefined}
                             mediaId={params.id}
                             activeEpisodeNumber={Number(searchParams.episode)}
