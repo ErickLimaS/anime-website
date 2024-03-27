@@ -140,6 +140,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
         { name: "Crunchyroll", value: "crunchyroll" },
         { name: "GoGoAnime", value: "gogoanime" },
         { name: "Aniwatch", value: "aniwatch" },
+        { name: "VidSrc (unstable)", value: "vidsrc" },
 
     ]
 
@@ -325,6 +326,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                         <input
                                             type='text'
                                             name='username'
+                                            defaultValue={user.displayName as string}
                                             placeholder={user.displayName as string}
                                         ></input>
                                     </label>
@@ -410,7 +412,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                     </select>
                                 </label>
                             )}
-                            <small>Only works with <b>Aniwatch</b></small>
+                            <small>Only works with <b>Aniwatch</b> and <b>VidSrc (unstable)</b></small>
 
                         </div>
 

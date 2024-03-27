@@ -54,51 +54,66 @@ async function WatchEpisode({ params, searchParams }: {
         // fetch episode data
         episodeData = await gogoanime.getLinksForThisEpisode(searchParams.q) as EpisodeLinksGoGoAnime
 
-        // fetch episode link source
-        videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
-        if (!videoSrc) videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources[0].url
+        if (!episodeData) error = true
 
-        // fetch episodes for this media
-        episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
+        if (episodeData) {
 
-        // if episode on params dont match any of EPISODES results, it shows a error
-        if (episodes.find(item => item.id == searchParams.q) == undefined) error = true
+            // fetch episode link source
+            videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
+            if (!videoSrc) videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources[0].url
 
+            // fetch episodes for this media
+            episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
+
+            // if episode on params dont match any of EPISODES results, it shows a error
+            if (episodes.find(item => item.id == searchParams.q) == undefined) error = true
+
+        }
     }
     else if (searchParams.source == "aniwatch") {
 
         // fetch episode data
         episodeData = await aniwatch.episodesLinks(searchParams.q) as EpisodeLinksAnimeWatch
 
-        // fetch episode link source
-        videoSrc = episodeData.sources[0].url
+        if (!episodeData) error = true
 
-        // fetch episodes for this media
-        const mediaTitle = searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)
-        episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch).episodes) as EpisodeAnimeWatch[]
+        if (episodeData) {
 
-        episodeSubtitles = episodeData.tracks
+            // fetch episode link source
+            videoSrc = episodeData.sources[0].url
 
-        // if episode on params dont match any of EPISODES results, it shows a error
-        if (episodes.find(item => item.episodeId == searchParams.q) == undefined) error = true
+            // fetch episodes for this media
+            const mediaTitle = searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)
+            episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch).episodes) as EpisodeAnimeWatch[]
 
+            episodeSubtitles = episodeData.tracks
+
+            // if episode on params dont match any of EPISODES results, it shows a error
+            if (episodes.find(item => item.episodeId == searchParams.q) == undefined) error = true
+
+        }
     }
     else if (searchParams.source == "vidsrc") {
 
         // fetch episode data
         episodeData = await getVideoSrcLink(`${searchParams.q}&e=${searchParams.episode}`) as VidsrcEpisodeLink
 
-        // fetch episode link source
-        videoSrc = episodeData.source
+        if (!episodeData) error = true
 
-        // vidsrc ID to be used on url
-        vidsrcId = Number(searchParams.q.slice(0, searchParams?.q.search(/\bq\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bq\b/)).length - 3))
+        if (episodeData) {
 
-        // fetch episodes for this media
-        episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
+            // fetch episode link source
+            videoSrc = episodeData.source
 
-        episodeSubtitles = episodeData.subtitles
+            // vidsrc ID to be used on url
+            vidsrcId = Number(searchParams.q.slice(0, searchParams?.q.search(/\bq\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bq\b/)).length - 3))
 
+            // fetch episodes for this media
+            episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
+
+            episodeSubtitles = episodeData.subtitles
+
+        }
     }
 
     // get media info on imdb
@@ -119,7 +134,14 @@ async function WatchEpisode({ params, searchParams }: {
 
                     <h1>ERROR!</h1>
 
-                    <p>{`The Media ID doesn't match episode ID.`}</p>
+                    <p>What could have happened: </p>
+
+                    <ul>
+                        <li>{`The Media ID doesn't match episode ID.`}</li>
+                        <li>{`The Video Source doesn't have this media available.`}</li>
+                        <li>{`Problems With Server.`}</li>
+                        <li>{`API changes or not available.`}</li>
+                    </ul>
                 </div>
 
 
