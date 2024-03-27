@@ -211,9 +211,9 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     const userSource = await userData.get("videoSource").toLowerCase() || "crunchyroll"
 
-    getEpisodesFromNewSource(userSource)
+    getEpisodesFromNewSource(userSource == "vidsrc" ? ((props.vidsrcId) ? userSource : "crunchyroll") : userSource)
 
-    setEpisodeSource(userSource)
+    setEpisodeSource(userSource == "vidsrc" ? ((props.vidsrcId) ? userSource : "crunchyroll") : userSource)
 
   }
 
@@ -347,7 +347,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
               )
               ||
-              episodeSource == "vidsrc" && (
+              (episodeSource == "vidsrc" && props.vidsrcId != null) && (
 
                 <VidsrcEpisodeContainer
                   key={key}
@@ -390,7 +390,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         </motion.div>
       )}
 
-      {(episodesDataFetched.length == 0 && !loading) && (
+      {((episodesDataFetched.length == 0 || props.vidsrcId == null) && !loading) && (
         <div id={styles.no_episodes_container}>
 
           <Image src={ErrorImg} alt='Error' height={200} />
