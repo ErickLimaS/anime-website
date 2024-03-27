@@ -60,6 +60,12 @@
 
 }
 
+#anime_card_container>div {
+    
+    grid-template-columns: minmax(110px, 160px) 1fr;
+
+}
+
 #anime_header_nav_container>li>div#anime_genres_container {
 
     padding: 0 16px;

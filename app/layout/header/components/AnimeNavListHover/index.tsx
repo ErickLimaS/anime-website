@@ -48,7 +48,7 @@ function AnimeNavListHover() {
                         <li><Link href={`/search?type=tv&genre=[thriller]`}>Thriller</Link></li>
                         <li><Link href={`/search?type=tv&genre=[romance]`}>Romance</Link></li>
                         <li><Link href={`/search?type=tv&genre=[slice-of-life]`}>Slice of Life</Link></li>
-                        <li><Link href={`/search?type=tv&genre=[mistery]`}>Mistery</Link></li>
+                        <li><Link href={`/search?type=tv&genre=[mystery]`}>Mystery</Link></li>
                         <li><Link href={`/search?type=tv&genre=[sports]`}>Sports</Link></li>
                     </ul>
                 </div>

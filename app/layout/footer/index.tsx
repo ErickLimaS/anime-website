@@ -50,7 +50,7 @@ async function Footer() {
                             <li><Link href="/search?genre=[sci-fi]">Sci-fi</Link></li>
                             <li><Link href="/search?genre=[comedy]">Comedy</Link></li>
                             <li><Link href="/search?genre=[slice-of-life]">Slice of Life</Link></li>
-                            <li><Link href="/search?genre=[mistery]">Mistery</Link></li>
+                            <li><Link href="/search?genre=[mystery]">Mystery</Link></li>
                             <li><Link href="/search?genre=[supernatural]">Supernatural</Link></li>
                             <li><Link href="/search?genre=[romance]">Romance</Link></li>
                             <li><Link href="/search?genre=[sports]">Sports</Link></li>
