@@ -390,7 +390,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         </motion.div>
       )}
 
-      {((episodesDataFetched.length == 0 || props.vidsrcId == null) && !loading) && (
+      {((episodesDataFetched.length == 0 || (episodeSource == "vidsrc" && props.vidsrcId == null)) && !loading) && (
         <div id={styles.no_episodes_container}>
 
           <Image src={ErrorImg} alt='Error' height={200} />
