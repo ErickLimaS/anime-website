@@ -10,10 +10,16 @@ import { initFirebase } from '@/firebase/firebaseApp'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import styles from "./component.module.css"
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
 
-function ButtonMarkEpisodeAsWatched(
-    { data, mediaId, source, hasText }:
-        { data: EpisodesType | MediaEpisodes | EpisodeAnimeWatch, mediaId: number, source: string, hasText?: boolean }) {
+type BtnTypes = {
+    data: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode,
+    mediaId: number,
+    source: string,
+    hasText?: boolean
+}
+
+function ButtonMarkEpisodeAsWatched({ data, mediaId, source, hasText }: BtnTypes) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -42,6 +48,8 @@ function ButtonMarkEpisodeAsWatched(
                 source == "gogoanime" && (data as MediaEpisodes).id
                 ||
                 source == "aniwatch" && (data as EpisodeAnimeWatch).episodeId
+                ||
+                source == "vidsrc" && (data as ImdbEpisode).episode
             )
         )
 
@@ -68,6 +76,8 @@ function ButtonMarkEpisodeAsWatched(
                 ||
                 source == "aniwatch" &&
                 (data as EpisodeAnimeWatch).episodeId
+                ||
+                source == "vidsrc" && (data as ImdbEpisode).episode
             ),
             episodeTitle: (source == "crunchyroll" &&
                 (data as EpisodesType).title
@@ -77,6 +87,8 @@ function ButtonMarkEpisodeAsWatched(
                 ||
                 source == "aniwatch" &&
                 (data as EpisodeAnimeWatch).number // its used NUMBER to compare better on Media Page
+                ||
+                source == "vidsrc" && (data as ImdbEpisode).episode
             )
 
         }

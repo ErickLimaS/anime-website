@@ -53,7 +53,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   })
 
-  let imdbEpisodes: ImdbEpisode[] = []
+  let imdbEpisodesMapped: ImdbEpisode[] = []
 
   // get media info on imdb
   const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
@@ -61,7 +61,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
   // get episodes on imdb
   imdbMediaInfo?.seasons?.map(
     itemA => itemA.episodes?.map(
-      itemB => imdbEpisodes.push(itemB))
+      itemB => imdbEpisodesMapped.push(itemB))
   )
 
   return (
@@ -183,7 +183,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2>EPISODES</h2>
 
-                <p>{imdbEpisodes.length || mediaData.episodes || "Not Available"}</p>
+                <p>{imdbEpisodesMapped.length || mediaData.episodes || "Not Available"}</p>
               </li>
             )}
 
@@ -340,7 +340,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <EpisodesContainer
                   dataCrunchyroll={episodesFromCrunchyroll}
-                  dataImdb={imdbEpisodes}
+                  dataImdb={imdbMediaInfo.seasons}
+                  dataImdbMapped={imdbEpisodesMapped}
                   vidsrcId={imdbMediaInfo?.vidsrcId || null}
                   mediaTitle={mediaData.title.romaji}
                   mediaFormat={mediaData.format}

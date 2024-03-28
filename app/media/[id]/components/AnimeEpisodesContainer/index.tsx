@@ -24,13 +24,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
 import regexOnlyAlphabetic from '@/app/lib/regexOnlyAlphabetic';
-import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface';
+import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { checkApiMisspellingMedias } from '@/app/lib/checkApiMediaMisspelling';
 import VidsrcEpisodeContainer from '../VidsrcEpisodeContainer';
 
 type EpisodesContainerTypes = {
   dataCrunchyroll: EpisodesType[],
-  dataImdb: ImdbEpisode[],
+  dataImdb: ImdbMediaInfo["seasons"],
+  dataImdbMapped: ImdbEpisode[],
   mediaTitle: string,
   mediaFormat: string,
   mediaId: number,
@@ -41,14 +42,15 @@ type EpisodesContainerTypes = {
 function EpisodesContainer(props: EpisodesContainerTypes) {
 
   const { dataCrunchyroll } = props
+  const { dataImdbMapped } = props
   const { dataImdb } = props
 
   const [loading, setLoading] = useState(false)
-  const [episodesDataFetched, setEpisodesDataFetched] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[]>(dataCrunchyroll)
+  const [episodesDataFetched, setEpisodesDataFetched] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]>(dataCrunchyroll)
 
   const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<MediaInfoAniwatch[]>([])
 
-  const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | null>(null);
+  const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
   const [itemOffset, setItemOffset] = useState<number>(0);
 
   const [episodeSource, setEpisodeSource] = useState<string>("")
@@ -57,18 +59,18 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   const [user] = useAuthState(auth)
 
-  const db = getFirestore(initFirebase());
+  const db = getFirestore(initFirebase())
+
+  const [pageCount, setPageCount] = useState<number>(0)
 
   // the length os episodes array will be divided by 25, getting the range of pagination
   const rangeEpisodesPerPage = 25
 
-  const [pageCount, setPageCount] = useState<number>(0);
-
   // Invoke when user click to request another page.
   const handlePageClick = (event: { selected: number }) => {
-    const newOffset = event.selected * rangeEpisodesPerPage % episodesDataFetched.length;
+    const newOffset = event.selected * rangeEpisodesPerPage % episodesDataFetched.length
 
-    setItemOffset(newOffset);
+    setItemOffset(newOffset)
   }
 
   const setEpisodesSource: (parameter: string) => void = async (parameter: string) => {
@@ -105,8 +107,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setEpisodesDataFetched(dataCrunchyroll)
 
-        setCurrentItems(dataCrunchyroll.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(dataCrunchyroll.length / rangeEpisodesPerPage));
+        setCurrentItems(dataCrunchyroll.slice(itemOffset, endOffset))
+        setPageCount(Math.ceil(dataCrunchyroll.length / rangeEpisodesPerPage))
 
         setLoading(false)
 
@@ -145,12 +147,12 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setEpisodeSource(chooseSource)
 
-        mediaEpisodes = await fetchWithAniWatch(query, "episodes", props.mediaFormat, dataImdb.length) as EpisodesFetchedAnimeWatch["episodes"]
+        mediaEpisodes = await fetchWithAniWatch(query, "episodes", props.mediaFormat, dataImdbMapped.length) as EpisodesFetchedAnimeWatch["episodes"]
 
         setEpisodesDataFetched(mediaEpisodes)
 
-        setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage));
+        setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
+        setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
 
         setLoading(false)
 
@@ -160,10 +162,13 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
       default:
 
         // VIDSRC has no episodes INFO
-        // it fetchs GOGOANIME episodes, but the LINK will be to VIDSRC API
+        // so it will use IMDB info data, and redirect it to a url with episode and season number.
 
         setEpisodeSource(chooseSource)
-        mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
+
+        mediaEpisodes = dataImdb.find((item) => item.season == 1)?.episodes
+
+        if (!mediaEpisodes) return
 
         if (mediaEpisodes == null) {
           setLoading(false)
@@ -172,10 +177,10 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         }
 
-        setEpisodesDataFetched(mediaEpisodes as MediaEpisodes[])
+        setEpisodesDataFetched(mediaEpisodes as ImdbEpisode[])
 
-        setCurrentItems((mediaEpisodes as MediaEpisodes[]).slice(itemOffset, endOffset))
-        setPageCount(Math.ceil((mediaEpisodes as MediaEpisodes[]).length / rangeEpisodesPerPage))
+        setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
+        setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
 
         setLoading(false)
 
@@ -198,6 +203,25 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+
+    setLoading(false)
+
+  }
+
+  const vidsrcEpisodesBySeason = (seasonNumber: number) => {
+
+    setLoading(true)
+
+    const thisSeasonEpisodes = dataImdb.find((item) => item.season == seasonNumber)?.episodes
+
+    if (!thisSeasonEpisodes) return
+
+    const endOffset = itemOffset + rangeEpisodesPerPage
+
+    setEpisodesDataFetched(thisSeasonEpisodes)
+
+    setCurrentItems(thisSeasonEpisodes.slice(itemOffset, endOffset))
+    setPageCount(Math.ceil(thisSeasonEpisodes.length / rangeEpisodesPerPage))
 
     setLoading(false)
 
@@ -239,7 +263,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     }
 
-    setCurrentItems(episodesDataFetched.slice(itemOffset, endOffset));
+    setCurrentItems(episodesDataFetched.slice(itemOffset, endOffset))
 
   }, [episodesDataFetched, itemOffset, dataCrunchyroll, episodeSource])
 
@@ -274,6 +298,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           sepateWithSpan={true}
         />
 
+        {/* SHOWS A SELECT WITH OTHER RESULTS FOR THIS MEDIA */}
+        {/* ANIWATCH DONT GET THE RIGHT RESULT MOST OF TIMES */}
         <AnimatePresence>
           {episodeSource == "aniwatch" && (
             <motion.div
@@ -303,13 +329,49 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           )}
         </AnimatePresence>
 
+        {/* SHOWS SEASONS FOR THIS MEDIA */}
+        {/* VIDSRC NEEDS THE SEASON NUMBER */}
+        <AnimatePresence>
+          {episodeSource == "vidsrc" && (
+            <motion.div
+              id={styles.select_media_container}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+            >
+
+              <small style={{
+                display: "block",
+                textAlign: "center"
+              }}>
+                Season
+              </small>
+
+              <select
+                onChange={(e) => vidsrcEpisodesBySeason(Number(e.target.value))}
+                defaultValue={1}
+              >
+                {dataImdb?.map((item, key) => (
+                  <option
+                    key={key}
+                    value={item.season}
+                  >
+                    {item.season}
+                  </option>
+                ))}
+              </select>
+
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
 
       <ol id={styles.container} data-loading={loading}>
 
         <AnimatePresence>
 
-          {currentItems && currentItems.map((item: EpisodesType | MediaEpisodes | EpisodeAnimeWatch, key: number) => (
+          {currentItems && currentItems.map((item: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode, key: number) => (
 
             !loading && (
 
@@ -328,8 +390,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                 <GoGoAnimeEpisode
                   key={key}
                   data={item as MediaEpisodes}
-                  title={dataImdb[key + itemOffset]?.title}
-                  backgroundImg={dataImdb[key + itemOffset]?.img?.hd}
+                  title={dataImdbMapped[key + itemOffset]?.title}
+                  backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd}
                   mediaId={props.mediaId}
                 />
 
@@ -340,7 +402,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                 <AniwatchEpisode
                   key={key}
                   data={item as EpisodeAnimeWatch}
-                  backgroundImg={dataImdb[key + itemOffset]?.img?.hd}
+                  backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd}
                   mediaId={props.mediaId}
                 />
 
@@ -350,10 +412,11 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
                 <VidsrcEpisodeContainer
                   key={key}
-                  data={item as MediaEpisodes}
-                  vidsrcData={`${props.vidsrcId}?s=1`}
-                  title={dataImdb[key + itemOffset]?.title}
-                  backgroundImg={dataImdb[key + itemOffset]?.img?.hd}
+                  episodeNumber={key + 1 + itemOffset}
+                  data={currentItems[key] as ImdbEpisode}
+                  vidsrcData={`${props.vidsrcId}?s=${(currentItems[key] as ImdbEpisode)?.season}`}
+                  title={(currentItems[key] as ImdbEpisode)?.title}
+                  backgroundImg={(currentItems[key] as ImdbEpisode)?.img?.hd}
                   mediaId={props.mediaId}
                 />
 
