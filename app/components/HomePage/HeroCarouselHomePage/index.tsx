@@ -215,17 +215,18 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
 
             </div>
 
-            <motion.button
-                id={styles.stop_trailer_btn}
-                onClick={() => changeTrailerState()}
-                whileTap={{ scale: 0.9 }}
-            >
-                {autoPlayTrailer ? (
-                    <><EyeSlashSvg width={16} height={16} /> Stop Auto Play Trailer</>
-                ) : (
-                    <><EyeSvg width={16} height={16} /> Auto Play Trailer</>
-                )}
-            </motion.button>
+            <div id={styles.stop_trailer_btn_container}>
+                <motion.button
+                    onClick={() => changeTrailerState()}
+                    whileTap={{ scale: 0.9 }}
+                >
+                    {autoPlayTrailer ? (
+                        <><EyeSlashSvg width={16} height={16} /> Stop Auto Play Trailer</>
+                    ) : (
+                        <><EyeSvg width={16} height={16} /> Auto Play Trailer</>
+                    )}
+                </motion.button>
+            </div>
 
         </>
     )

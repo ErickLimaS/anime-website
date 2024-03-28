@@ -63,7 +63,7 @@ export default {
                     'sort': sort || 'POPULARITY_DESC',
                     'perPage': 20,
                     'season': `${season}`,
-                    'status': status,
+                    'status': status ? status : undefined,
                     'seasonYear': `${new Date().getFullYear()}`,
                     'showAdultContent': showAdultContent || false
                 }

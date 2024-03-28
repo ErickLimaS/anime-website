@@ -105,9 +105,19 @@ ul.carousel_container li.carousel_item div.item_info {
 
     position: relative;
 
-    /* top: 10%; */
+    top: initial;
     bottom: calc(-20% - 2vh);
+
     width: 92%;
+
+}
+
+@media((min-width: 520px)) {
+
+    ul.carousel_container li.carousel_item div.item_info {
+        top: 15%;
+        bottom: 0;
+    }
 
 }
 
@@ -116,6 +126,7 @@ ul.carousel_container li.carousel_item div.item_info {
     ul.carousel_container li.carousel_item div.item_info {
         margin: auto;
     }
+
 }
 
 @media((min-width: 1200px)) {
@@ -137,6 +148,16 @@ ul.carousel_container li.carousel_item div.item_info {
     ul.carousel_container li.carousel_item div.item_info {
 
         left: calc(var(--breakpoint-md) / 4);
+
+    }
+
+}
+
+@media((min-width: 1400px)) {
+
+    ul.carousel_container li.carousel_item div.item_info {
+
+        left: calc(var(--breakpoint-md) / 3.5);
 
     }
 
@@ -335,7 +356,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
 @media((min-width: 1620px)) {
     #recomendations_container {
-        right: calc(var(--breakpoint-xl) / 4);
+        right: calc(var(--breakpoint-md) / 3.5);
     }
 }
 
@@ -434,14 +455,56 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 }
 
 /* STOP TRAILER AUTOPLAY */
-#stop_trailer_btn {
+#stop_trailer_btn_container {
+
+    margin: auto;
+
+    width: 96%;
+
+    max-width: var(--breakpoint-sm);
+
+}
+
+@media((min-width: 580px)) {
+    #stop_trailer_btn_container {
+
+        max-width: var(--breakpoint-md);
+
+    }
+}
+
+@media((min-width: 825px)) {
+    #stop_trailer_btn_container {
+
+        width: 100%;
+
+    }
+}
+
+@media((min-width: 1201px)) {
+    #stop_trailer_btn_container {
+
+        max-width: var(--breakpoint-xl);
+
+    }
+}
+
+@media((min-width: 1441px)) {
+    #stop_trailer_btn_container {
+
+        max-width: var(--breakpoint-xxl);
+
+    }
+}
+
+#stop_trailer_btn_container button {
 
     transition: all ease-in-out 100ms;
 
-    margin: 24px auto;
-    padding: 12px 24px;
+    width: 100%;
 
-    width: 96%;
+    margin: 24px 0;
+    padding: 12px 24px;
 
     background-color: transparent;
     border: 2px solid var(--white-25);
@@ -460,25 +523,14 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 }
 
 @media((min-width: 580px)) {
-    #stop_trailer_btn {
+    #stop_trailer_btn_container button {
 
-        justify-content: initial;
         width: initial;
 
-        margin-left: calc(var(--breakpoint-sm) / 32);
-
     }
 }
 
-@media((min-width: 1021px)) {
-    #stop_trailer_btn {
-
-        margin-left: calc(var(--breakpoint-xl) / 6);
-
-    }
-}
-
-#stop_trailer_btn:hover {
+#stop_trailer_btn_container button:hover {
 
     background-color: var(--black-50);
     color: var(--brand-color);
@@ -486,7 +538,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
 }
 
-#stop_trailer_btn svg {
+#stop_trailer_btn_container button svg {
 
     fill: var(--brand-color);
     transform: scale(1.5);

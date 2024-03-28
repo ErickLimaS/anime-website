@@ -28,11 +28,6 @@ export default async function Home() {
 
   const isMobileScreen = checkDeviceIsMobile(headers())
 
-  // section 1
-  const popularData = await anilist.getNewReleases("ANIME", undefined, "TRENDING_DESC", false, "NOT_YET_RELEASED").then(
-    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false && item.bannerImage)
-  )
-
   // section 2
   const trendingData = await anilist.getNewReleases("ANIME", undefined, undefined, false, "NOT_YET_RELEASED").then(
     res => (res as ApiDefaultResult[])
@@ -48,6 +43,9 @@ export default async function Home() {
   const newestMediaData = await anilist.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
     res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
   ).then(res => res.map((item) => item.media))
+
+  // section 1 => uses same data, but filtered to the ones that has bannerimg
+  const popularData = mediaRankingData.filter(item => item.bannerImage)
 
   // used on banner section
   const randomNumber = Math.floor(Math.random() * (mediaBannerData?.length || 10)) + 1
