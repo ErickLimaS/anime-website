@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import NavButtons from '../../../../components/NavButtons';
-import gogoanime from '@/api/gogoanime';
-import { MediaEpisodes, MediaInfo, MediaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
+import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';

@@ -1,3 +1,13 @@
+.nav_button_container {
+    overflow-x: auto;
+}
+
+.nav_button_container::-webkit-scrollbar{
+
+    height: 0;
+
+}
+
 .nav_button_container,
 #dynamic_container {
     display: flex;

@@ -8,14 +8,22 @@
 
 }
 
+@media((min-width: 700px) and (max-width: 800px)) {
+
+    #container {
+
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+
+    }
+
+}
+
 #container_heading {
 
     margin: 32px 0;
 
     display: flex;
     flex-direction: column-reverse;
-
-    overflow-x: auto;
 
     gap: 16px 0;
 
@@ -62,10 +70,22 @@
 
 #container_heading #select_media_container {
 
+    width: fit-content;
+
+    margin: 0 auto;
+
     display: flex;
     flex-direction: column;
     gap: 8px 0;
 
+}
+
+@media(min-width: 540px) {
+    #container_heading #select_media_container {
+
+        margin: 0;
+
+    }
 }
 
 #container_heading #select_media_container small {
