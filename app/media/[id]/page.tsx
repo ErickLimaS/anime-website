@@ -340,7 +340,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <EpisodesContainer
                   dataCrunchyroll={episodesFromCrunchyroll}
-                  dataImdb={imdbMediaInfo.seasons}
+                  dataImdb={imdbMediaInfo?.seasons}
                   dataImdbMapped={imdbEpisodesMapped}
                   vidsrcId={imdbMediaInfo?.vidsrcId || null}
                   mediaTitle={mediaData.title.romaji}

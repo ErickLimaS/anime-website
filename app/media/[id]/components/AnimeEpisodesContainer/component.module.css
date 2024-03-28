@@ -97,6 +97,9 @@
 
 #container_heading #select_media_container select {
 
+    font-weight: 500;
+    font-family: var(--font-family-sans-serif);
+
     padding: 8px 16px;
     border-radius: 4px;
 

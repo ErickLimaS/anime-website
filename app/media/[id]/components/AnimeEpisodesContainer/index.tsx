@@ -30,7 +30,7 @@ import VidsrcEpisodeContainer from '../VidsrcEpisodeContainer';
 
 type EpisodesContainerTypes = {
   dataCrunchyroll: EpisodesType[],
-  dataImdb: ImdbMediaInfo["seasons"],
+  dataImdb?: ImdbMediaInfo["seasons"],
   dataImdbMapped: ImdbEpisode[],
   mediaTitle: string,
   mediaFormat: string,
@@ -166,11 +166,9 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setEpisodeSource(chooseSource)
 
-        mediaEpisodes = dataImdb.find((item) => item.season == 1)?.episodes
+        mediaEpisodes = dataImdb?.find((item) => item.season == 1)?.episodes
 
-        if (!mediaEpisodes) return
-
-        if (mediaEpisodes == null) {
+        if (mediaEpisodes == null || mediaEpisodes == undefined) {
           setLoading(false)
           setEpisodesDataFetched([])
           return
@@ -212,7 +210,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     setLoading(true)
 
-    const thisSeasonEpisodes = dataImdb.find((item) => item.season == seasonNumber)?.episodes
+    const thisSeasonEpisodes = dataImdb?.find((item) => item.season == seasonNumber)?.episodes
 
     if (!thisSeasonEpisodes) return
 
@@ -332,20 +330,13 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         {/* SHOWS SEASONS FOR THIS MEDIA */}
         {/* VIDSRC NEEDS THE SEASON NUMBER */}
         <AnimatePresence>
-          {episodeSource == "vidsrc" && (
+          {(episodeSource == "vidsrc" && dataImdb) && (
             <motion.div
               id={styles.select_media_container}
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
             >
-
-              <small style={{
-                display: "block",
-                textAlign: "center"
-              }}>
-                Season
-              </small>
 
               <select
                 onChange={(e) => vidsrcEpisodesBySeason(Number(e.target.value))}
@@ -356,7 +347,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                     key={key}
                     value={item.season}
                   >
-                    {item.season}
+                    Season {item.season}
                   </option>
                 ))}
               </select>
@@ -452,15 +443,20 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         </motion.div>
       )}
 
-      {((episodesDataFetched.length == 0 || (episodeSource == "vidsrc" && props.vidsrcId == null)) && !loading) && (
-        <div id={styles.no_episodes_container}>
+      {((
+        episodesDataFetched.length == 0 || (episodeSource == "vidsrc" && props.vidsrcId == null)
+        ||
+        (episodeSource == "vidsrc" && dataImdb == undefined))
+        && !loading
+      ) && (
+          <div id={styles.no_episodes_container}>
 
-          <Image src={ErrorImg} alt='Error' height={200} />
+            <Image src={ErrorImg} alt='Error' height={200} />
 
-          <p>Not available on <span>{episodeSource}</span></p>
+            <p>Not available on <span>{episodeSource}</span></p>
 
-        </div>
-      )}
+          </div>
+        )}
 
       <nav id={styles.pagination_buttons_container}>
 
