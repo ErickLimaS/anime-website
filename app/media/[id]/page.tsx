@@ -431,7 +431,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </div>
             )}
 
-            {mediaData.averageScore && (
+            {(mediaData.averageScore || imdbMediaInfo?.rating) && (
               <div id={styles.score_container}>
                 <h2 className={styles.heading_style}>
                   SCORE
@@ -439,12 +439,20 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <ul>
 
-                  <li className='display_flex_row align_items_center'>
-                    <ScoreInStars score={(mediaData.averageScore / 2) / 10} source='anilist' />
-                    <span>
-                      {`(${(mediaData.averageScore / 2) / 10}/5)`}
-                    </span>
-                  </li>
+                  {mediaData.averageScore && (
+                    <li className='display_flex_row align_items_center'>
+                      <ScoreInStars score={(mediaData.averageScore / 2) / 10} source='anilist' />
+                      <span style={{ marginLeft: "64px" }}>
+                        {`(${(mediaData.averageScore / 2) / 10}/5)`}
+                      </span>
+                    </li>
+                  )}
+
+                  {imdbMediaInfo?.rating && (
+                    <li className='display_flex_row align_items_center'>
+                      <ScoreInStars score={imdbMediaInfo.rating} source='imdb' type='string' />
+                    </li>
+                  )}
 
                 </ul>
               </div>

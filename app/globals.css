@@ -78,7 +78,7 @@ h2,
 h3,
 h4,
 h5 {
-    font-family: var(--font-family-sans-serif);
+  font-family: var(--font-family-sans-serif);
 }
 
 p,
@@ -158,7 +158,7 @@ li {
   display: grid;
 }
 
-.display_wrap{
+.display_wrap {
   flex-wrap: wrap;
 }
 
