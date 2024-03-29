@@ -1,6 +1,6 @@
 {
   "name": "aniproject",
-  "version": "2.5.5",
+  "version": "2.5.7",
   "private": true,
   "scripts": {
     "dev": "next dev",
