@@ -2,8 +2,6 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import React from "react";
 import HeroCarousel from "./components/HomePage/HeroCarouselHomePage";
-import MediaItemCoverInfo from "./components/MediaItemCoverInfo";
-import ChevronRightIcon from '../public/assets/chevron-right.svg';
 import anilist from '../api/anilist';
 import NavThoughMedias from "./components/HomePage/NavThoughMedias";
 import parse from "html-react-parser"
@@ -12,10 +10,10 @@ import MediaRankingSection from "./components/HomePage/MediaRankingSection";
 import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 import AddToPlaylistButton from "./components/AddToPlaylistButton";
-import SwiperListContainer from "./components/SwiperListContainer";
 import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";
 import { headers } from "next/headers";
 import KeepWatchingSection from "./components/HomePage/KeepWatchingSection";
+import PopularMediaSection from "./components/HomePage/PopularMediaSection";
 
 export const revalidate = 21600 // revalidate cached data every 6 hours
 
@@ -28,13 +26,8 @@ export default async function Home() {
 
   const isMobileScreen = checkDeviceIsMobile(headers())
 
-  // section 1
-  const popularData = await anilist.getNewReleases("ANIME", undefined, "TRENDING_DESC", false, "NOT_YET_RELEASED").then(
-    res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false && item.bannerImage)
-  )
-
   // section 2
-  const trendingData = await anilist.getNewReleases("ANIME", undefined, undefined, false, "NOT_YET_RELEASED").then(
+  const trendingData = await anilist.getNewReleases("ANIME", undefined, undefined, false, "RELEASING", 1, 12).then(
     res => (res as ApiDefaultResult[])
   )
 
@@ -48,6 +41,9 @@ export default async function Home() {
   const newestMediaData = await anilist.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
     res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
   ).then(res => res.map((item) => item.media))
+
+  // section 1 => uses same data, but filtered to the ones that has bannerimg
+  const popularData = mediaRankingData.filter(item => item.bannerImage)
 
   // used on banner section
   const randomNumber = Math.floor(Math.random() * (mediaBannerData?.length || 10)) + 1
@@ -65,44 +61,7 @@ export default async function Home() {
       <KeepWatchingSection />
 
       {/* POPULAR MEDIA  SECTION*/}
-      <section id={styles.popular_container} >
-
-        <div id={styles.title_container}>
-
-          <h2>Popular Animes to Watch Now</h2>
-
-          <p>Most watched animes by days</p>
-
-          <span></span>
-
-          <Link href={'#'}>VIEW ALL <ChevronRightIcon width={16} height={16} /></Link>
-
-        </div>
-
-        {/* SHOWS ONLY ON MOBILE */}
-        <div id={styles.popular_list_container}>
-          <SwiperListContainer
-            data={trendingData}
-          />
-        </div>
-
-        {/* SHOWS ON DESKTOP*/}
-        {trendingData != undefined &&
-          (trendingData.slice(0, 12).map((item, key: number) => (
-            <MediaItemCoverInfo data={item} key={key} positionIndex={key + 1} darkMode={true} hiddenOnDesktop />
-          ))
-          )
-        }
-
-      </section>
-
-      <div id={styles.navigation_link_container}>
-
-        <span id={styles.line}></span>
-
-        <Link href="/popular">+ View more</Link>
-
-      </div>
+      <PopularMediaSection initialData={trendingData} />
 
       {/* SECTION => SHOWS MEDIA RELEASED BY A SELECTED TIME (today, 7 days, 30 days)  */}
       <section className={styles.medias_sections_container}>

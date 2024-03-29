@@ -6,7 +6,7 @@ import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import parse from "html-react-parser"
 import AddToPlaylistButton from '../AddToPlaylistButton'
 
-function CardMediaCoverAndDescription({ data, showButtons }: { data: ApiDefaultResult, showButtons?: boolean }) {
+function CardMediaCoverAndDescription({ data, customDescription, showButtons }: { data: ApiDefaultResult, customDescription?: string, showButtons?: boolean }) {
     return (
 
         <div
@@ -25,7 +25,9 @@ function CardMediaCoverAndDescription({ data, showButtons }: { data: ApiDefaultR
                 <h4><Link href={`/media/${data.id}`}>{data.title && data.title.romaji || data.title.native}</Link></h4>
 
                 {data.description && (
-                    <span className={styles.paragrath_container}>{parse(data.description)}</span>
+                    <span className={styles.paragrath_container}>
+                        {customDescription || parse(data?.description) || "Description Not Available"}
+                    </span>
                 )}
 
                 {showButtons == undefined && (
@@ -33,7 +35,7 @@ function CardMediaCoverAndDescription({ data, showButtons }: { data: ApiDefaultR
 
                         <Link href={`/media/${data.id}`}>{data.format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
 
-                        <AddToPlaylistButton data={data}/>
+                        <AddToPlaylistButton data={data} />
 
                     </div>
                 )}

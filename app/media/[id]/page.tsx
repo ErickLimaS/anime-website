@@ -16,7 +16,7 @@ import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
-import ScoreInStars from '@/app/components/ScoreInStars'
+import ScoreRating from '@/app/components/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
 import SwiperListContainer from '@/app/components/SwiperListContainer'
 import { headers } from 'next/headers'
@@ -53,7 +53,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   })
 
-  let imdbEpisodes: ImdbEpisode[] = []
+  let imdbEpisodesMapped: ImdbEpisode[] = []
 
   // get media info on imdb
   const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
@@ -61,7 +61,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
   // get episodes on imdb
   imdbMediaInfo?.seasons?.map(
     itemA => itemA.episodes?.map(
-      itemB => imdbEpisodes.push(itemB))
+      itemB => imdbEpisodesMapped.push(itemB))
   )
 
   return (
@@ -72,9 +72,9 @@ async function MediaPage({ params }: { params: { id: number } }) {
         id={styles.banner_background_container}
         style={{
           background: isMobileScreen ?
-            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData?.coverImage?.extraLarge})`
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${mediaData?.coverImage?.extraLarge})`
             :
-            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.format == "MANGA" ?
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${mediaData.format == "MANGA" ?
               mediaData.bannerImage
               :
               imdbMediaInfo?.cover || mediaData.bannerImage})`
@@ -183,7 +183,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2>EPISODES</h2>
 
-                <p>{imdbEpisodes.length || mediaData.episodes || "Not Available"}</p>
+                <p>{imdbEpisodesMapped.length || mediaData.episodes || "Not Available"}</p>
               </li>
             )}
 
@@ -340,7 +340,9 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <EpisodesContainer
                   dataCrunchyroll={episodesFromCrunchyroll}
-                  dataImdb={imdbEpisodes}
+                  dataImdb={imdbMediaInfo?.seasons}
+                  dataImdbMapped={imdbEpisodesMapped}
+                  vidsrcId={imdbMediaInfo?.vidsrcId || null}
                   mediaTitle={mediaData.title.romaji}
                   mediaFormat={mediaData.format}
                   mediaId={mediaData.id}
@@ -429,7 +431,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </div>
             )}
 
-            {mediaData.averageScore && (
+            {(mediaData.averageScore || imdbMediaInfo?.rating) && (
               <div id={styles.score_container}>
                 <h2 className={styles.heading_style}>
                   SCORE
@@ -437,12 +439,20 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <ul>
 
-                  <li className='display_flex_row align_items_center'>
-                    <ScoreInStars score={(mediaData.averageScore / 2) / 10} source='anilist' />
-                    <span>
-                      {`(${(mediaData.averageScore / 2) / 10}/5)`}
-                    </span>
-                  </li>
+                  {mediaData.averageScore && (
+                    <li className='display_flex_row align_items_center'>
+                      <ScoreRating score={(mediaData.averageScore / 2) / 10} source='anilist' />
+                      <span style={{ marginLeft: "64px" }}>
+                        {`(${(mediaData.averageScore / 2) / 10}/5)`}
+                      </span>
+                    </li>
+                  )}
+
+                  {imdbMediaInfo?.rating && (
+                    <li className='display_flex_row align_items_center'>
+                      <ScoreRating score={Number(imdbMediaInfo.rating.toFixed(1))} source='imdb' type='string' />
+                    </li>
+                  )}
 
                 </ul>
               </div>

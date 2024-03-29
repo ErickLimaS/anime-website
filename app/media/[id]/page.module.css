@@ -50,7 +50,7 @@ h2.heading_style {
 
     top: calc(-140px - 2vw);
 
-    background: linear-gradient(transparent, #181818 17%);
+    background: linear-gradient(transparent, var(--background) 17%);
 
 }
 
@@ -646,8 +646,19 @@ h2.heading_style {
 
 }
 
+#score_container ul {
+
+    padding-top: 8px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+
+}
+
 #score_container ul li {
     flex-wrap: wrap;
+    flex-direction: column;
 }
 
 #score_container ul li span:first-child span:first-child svg {
@@ -661,7 +672,7 @@ h2.heading_style {
 
     font-size: var(--font-size--small-2);
     width: max-content;
-    margin-left: 32px;
+    /* margin-left: 32px; */
 
 }
 

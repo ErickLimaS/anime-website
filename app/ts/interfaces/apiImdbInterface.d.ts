@@ -11,6 +11,8 @@ export interface ImdbSearchItem {
 
 export interface ImdbMediaInfo {
 
+    rating: number,
+    vidsrcId: number,
     id: string,
     title: string,
     type: string,

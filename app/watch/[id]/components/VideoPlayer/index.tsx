@@ -25,24 +25,22 @@ import aniwatch from "@/api/aniwatch";
 import { useRouter } from "next/navigation";
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
+import { VidsrcEpisodeLink } from "@/app/ts/interfaces/apiVidsrcInterface";
+import { getVideoSrcLink } from "@/api/vidsrc";
 
 type VideoPlayerType = {
     source: string,
     currentLastStop?: string,
     mediaSource: string,
     media: ApiMediaResults,
+    vidsrcId?: number,
     mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[],
     episodeNumber: string,
     episodeId: string,
     episodeIntro?: { start: number, end: number },
     episodeOutro?: { start: number, end: number },
     episodeImg: string,
-    subtitles?: {
-        kind: string,
-        default: boolean | undefined,
-        file: string,
-        label: string
-    }[],
+    subtitles?: VidsrcEpisodeLink["subtitles"] | EpisodeLinksAnimeWatch["tracks"] | undefined,
     videoQualities?: {
         url: string,
         quality: "360p" | "480p" | "720p" | "1080p" | "default" | "backup",
@@ -63,7 +61,7 @@ function Player({
     source, mediaSource, subtitles,
     videoQualities, media, episodeId,
     episodeNumber, currentLastStop, episodeIntro,
-    episodeOutro, mediaEpisodes, episodeImg }: VideoPlayerType) {
+    episodeOutro, mediaEpisodes, episodeImg, vidsrcId }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
 
@@ -130,7 +128,7 @@ function Player({
             const isDefaultLang = (preferredLanguage && item.label) ?
                 item.label.toLowerCase().includes(preferredLanguage.toLowerCase())
                 :
-                item.default || item.label == "English"
+                item.default || item.label?.includes("English")
 
             subListMap.push(
                 {
@@ -278,7 +276,7 @@ function Player({
 
             if (mediaSource == "gogoanime") {
 
-                nextEpisodId = (fetchNextEpisode as any).id
+                nextEpisodId = (fetchNextEpisode as MediaEpisodes).id
 
                 fetchNextEpisode = await gogoanime.getLinksForThisEpisode(fetchNextEpisode.id) as EpisodeLinksGoGoAnime
 
@@ -287,13 +285,22 @@ function Player({
                 if (!fetchNextEpisode) fetchNextEpisode = (fetchNextEpisode as EpisodeLinksGoGoAnime).sources[0].url
 
             }
-            else {
+            else if (mediaSource == "aniwatch") {
 
                 nextEpisodId = (fetchNextEpisode as EpisodeAnimeWatch).episodeId
 
                 fetchNextEpisode = await aniwatch.episodesLinks(fetchNextEpisode.episodeId) as EpisodeLinksAnimeWatch
 
                 fetchNextEpisode = fetchNextEpisode.sources[0].url
+
+            }
+            else if (mediaSource == "vidsrc") {
+
+                nextEpisodId = `${vidsrcId}?s=1&e=${fetchNextEpisode.number}`
+
+                fetchNextEpisode = await getVideoSrcLink(nextEpisodId) as VidsrcEpisodeLink
+
+                fetchNextEpisode = fetchNextEpisode.source
 
             }
 

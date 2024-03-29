@@ -306,7 +306,7 @@
 
     background-color: transparent;
 
-    border: 1px solid var(--error);
+    border: none;
     border-radius: 4px;
     display: flex;
 

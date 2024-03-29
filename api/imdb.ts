@@ -51,6 +51,9 @@ export async function getMediaInfo(search: boolean, mediaId?: string, type?: "TV
             method: "GET"
         })
 
+        // adds ID to be used by Vidsrc API
+        data.vidsrcId = mediaSearchedId
+
         return data as ImdbMediaInfo
 
     }
