@@ -47,7 +47,9 @@ export default {
         format?: string,
         sort?: string,
         showAdultContent?: boolean,
-        status?: "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS"
+        status?: "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS",
+        page?: number,
+        perPage?: number
     ) => {
 
         const season: string = getCurrentSeason()
@@ -59,10 +61,10 @@ export default {
                 "variables": {
                     'type': `${type}`,
                     'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
-                    'page': 1,
+                    'page': page || 1,
                     'sort': sort || 'POPULARITY_DESC',
-                    'perPage': 20,
-                    'season': `${season}`,
+                    'perPage': perPage || 20,
+                    'season': status ? undefined : `${season}`,
                     'status': status ? status : undefined,
                     'seasonYear': `${new Date().getFullYear()}`,
                     'showAdultContent': showAdultContent || false
