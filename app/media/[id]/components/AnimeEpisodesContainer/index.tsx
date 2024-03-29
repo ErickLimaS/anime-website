@@ -330,7 +330,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         {/* SHOWS SEASONS FOR THIS MEDIA */}
         {/* VIDSRC NEEDS THE SEASON NUMBER */}
         <AnimatePresence>
-          {(episodeSource == "vidsrc" && dataImdb) && (
+          {(episodeSource == "vidsrc" && dataImdb && dataImdb[0]?.season) && (
             <motion.div
               id={styles.select_media_container}
               initial={{ height: 0, opacity: 0 }}
@@ -399,7 +399,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
               )
               ||
-              (episodeSource == "vidsrc" && props.vidsrcId != null) && (
+              (episodeSource == "vidsrc" && props.vidsrcId != null && dataImdb && dataImdb[0]?.season) && (
 
                 <VidsrcEpisodeContainer
                   key={key}
@@ -444,7 +444,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
       )}
 
       {((
-        episodesDataFetched.length == 0 || (episodeSource == "vidsrc" && props.vidsrcId == null)
+        episodesDataFetched.length == 0 || (episodeSource == "vidsrc" && props.vidsrcId == null && (!dataImdb || dataImdb[0]?.season == undefined))
         ||
         (episodeSource == "vidsrc" && dataImdb == undefined))
         && !loading

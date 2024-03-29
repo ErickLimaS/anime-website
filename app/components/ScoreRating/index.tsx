@@ -6,7 +6,7 @@ import AnilistSvg from "@/public/assets/anilist.svg"
 import ImdbSvg from "@/public/assets/imdb.svg"
 import styles from "./component.module.css"
 
-function ScoreInStars({ score, type, source }: { score: number, type?: "stars" | "string", source?: "anilist" | "imdb" }) {
+function ScoreRating({ score, type, source }: { score: number, type?: "stars" | "string", source?: "anilist" | "imdb" }) {
 
     return (
         <span className={styles.container} title={`${source} score: ${score} out of ${source == "anilist" ? "5" : "10"}`}>
@@ -160,4 +160,4 @@ function ScoreInStars({ score, type, source }: { score: number, type?: "stars" |
 
 }
 
-export default ScoreInStars
+export default ScoreRating

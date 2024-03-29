@@ -50,7 +50,7 @@ h2.heading_style {
 
     top: calc(-140px - 2vw);
 
-    background: linear-gradient(transparent, #181818 17%);
+    background: linear-gradient(transparent, var(--background) 17%);
 
 }
 

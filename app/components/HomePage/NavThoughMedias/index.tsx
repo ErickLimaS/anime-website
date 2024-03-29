@@ -14,7 +14,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import AddToPlaylistButton from '../../AddToPlaylistButton'
 import parse from "html-react-parser"
-import ScoreInStars from '../../ScoreInStars'
+import ScoreRating from '../../ScoreRating'
 import MediaFormatIcon from '../../MediaFormatIcon'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
@@ -257,7 +257,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
                                         {mediaSelect.averageScore && (
                                             <motion.p>
-                                                <ScoreInStars score={(mediaSelect.averageScore / 2) / 10} source='anilist' />
+                                                <ScoreRating score={(mediaSelect.averageScore / 2) / 10} source='anilist' />
                                             </motion.p>
                                         )}
 

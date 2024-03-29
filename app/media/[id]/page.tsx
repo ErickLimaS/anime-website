@@ -16,7 +16,7 @@ import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
-import ScoreInStars from '@/app/components/ScoreInStars'
+import ScoreRating from '@/app/components/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
 import SwiperListContainer from '@/app/components/SwiperListContainer'
 import { headers } from 'next/headers'
@@ -72,9 +72,9 @@ async function MediaPage({ params }: { params: { id: number } }) {
         id={styles.banner_background_container}
         style={{
           background: isMobileScreen ?
-            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData?.coverImage?.extraLarge})`
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${mediaData?.coverImage?.extraLarge})`
             :
-            `linear-gradient(rgba(0, 0, 0, 0.05), #181818 100%), url(${mediaData.format == "MANGA" ?
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${mediaData.format == "MANGA" ?
               mediaData.bannerImage
               :
               imdbMediaInfo?.cover || mediaData.bannerImage})`
@@ -441,7 +441,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                   {mediaData.averageScore && (
                     <li className='display_flex_row align_items_center'>
-                      <ScoreInStars score={(mediaData.averageScore / 2) / 10} source='anilist' />
+                      <ScoreRating score={(mediaData.averageScore / 2) / 10} source='anilist' />
                       <span style={{ marginLeft: "64px" }}>
                         {`(${(mediaData.averageScore / 2) / 10}/5)`}
                       </span>
@@ -450,7 +450,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                   {imdbMediaInfo?.rating && (
                     <li className='display_flex_row align_items_center'>
-                      <ScoreInStars score={imdbMediaInfo.rating} source='imdb' type='string' />
+                      <ScoreRating score={Number(imdbMediaInfo.rating.toFixed(1))} source='imdb' type='string' />
                     </li>
                   )}
 
