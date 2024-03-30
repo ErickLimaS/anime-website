@@ -46,9 +46,7 @@ Back-End:
 
 ## :computer: How Can I Run It?
 
-Its simple!
-
-1. `Clone` this repository
+1. `Fork` (recommended) or `Clone` this repository
 
 ```javascript
   git clone https://github.com/ErickLimaS/anime-website.git
@@ -60,27 +58,30 @@ Its simple!
 npm install
 ```
 
-3. Now you need to create a `.env.local` file inside the `directory` with the url to where your Consumet API server is setted and configs for your Firebase.
+3. Now you will need to create a `.env.local` file on the `project root folder` with the url to where your Consumet, Aniwatch and Vidscr API is setted and the settings to your Firebase Account.
+
    - Check the <a href='https://github.com/consumet/api.consumet.org'>repository of Consumet API</a> and host your own server.
    - Do the same with <a href='https://github.com/ghoshRitesh12/aniwatch-api'>Aniwatch API</a> and <a href='https://github.com/cool-dev-guy/vidsrc-api'>VidSrc API</a>.
-   - Go to <a href='https://github.com/manami-project/anime-offline-database'>this repository</a> and get a JSON file filled with Animes info to use.
-   - This repository already has this json file, but it might be outdated. So get a new file there and put it under the `/app/api/anime-info` directory.
+   - This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
+     - Go to <a href='https://github.com/manami-project/anime-offline-database'>this repository</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
+     - With the file downloaded, put it in the `/app/api/anime-info` directory, replacing the previous one.
    - On Firebase, get your configs to use the Authentication and Firestore Database.
-   Your file should look like example:
+
+  With all that done, you will need to fill the `.env.local` like the example bellow:
 
 ```javascript
 NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
 NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.com
 NEXT_PUBLIC_VIDSRC_API_URL=https://your-hosted-vidsrc-api-url.com
 NEXT_PUBLIC_INSIDE_API_URL=https://url-to-where-your-website-is-hosted.com/api/anime-info
-NEXT_PUBLIC_FIREBASE_API_KEY=[YOUR-FIREBASE-SETTINGS]
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=[YOUR-FIREBASE-SETTINGS]
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=[YOUR-FIREBASE-SETTINGS]
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=[YOUR-FIREBASE-SETTINGS]
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER=[YOUR-FIREBASE-SETTINGS]
-NEXT_PUBLIC_FIREBASE_APP_ID=[YOUR-FIREBASE-SETTINGS]
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=[YOUR-FIREBASE-SETTINGS]
-NEXT_PUBLIC_FIREBASE_DATABASE_URL=[YOUR-FIREBASE-SETTINGS]
+NEXT_PUBLIC_FIREBASE_API_KEY=firebase-setting-related-to-this-field
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase-setting-related-to-this-field
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase-setting-related-to-this-field
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=firebase-setting-related-to-this-field
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER=firebase-setting-related-to-this-field
+NEXT_PUBLIC_FIREBASE_APP_ID=firebase-setting-related-to-this-field
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=firebase-setting-related-to-this-field
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=firebase-setting-related-to-this-field
 ```
 
 4. Now run `npm run dev` to initialize the website
