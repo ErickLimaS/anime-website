@@ -40,7 +40,12 @@ function AnimeNavListHover() {
 
                             <div className={styles.image_container}>
                                 <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
-                                    <Image fill src={item.thumbnail} alt={item.title}></Image>
+                                    <Image
+                                        src={item.thumbnail}
+                                        alt={item.title}
+                                        fill
+                                        sizes='(max-width: 1439px) 20vw, 231px'
+                                    ></Image>
                                 </Link>
                             </div>
 

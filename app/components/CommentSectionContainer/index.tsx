@@ -237,7 +237,12 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
                     <div className={styles.img_container}>
                         {user ? (
-                            <Image src={user.photoURL || ProfileFallbackImg} alt={user.displayName!} fill sizes='100%' />
+                            <Image
+                                src={user.photoURL || ProfileFallbackImg}
+                                alt={user.displayName!}
+                                fill
+                                sizes='60px'
+                            />
                         ) : (
                             <span></span>
                         )}

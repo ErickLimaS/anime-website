@@ -4,7 +4,7 @@ import styles from "./page.module.css"
 import newsApi from '@/api/news'
 import Image from 'next/image'
 import Link from 'next/link'
-import SwiperContainer from './components/SwiperContainer'
+import NewsSwiperContainer from './components/NewsSwiperContainer'
 import SvgCalendar from "@/public/assets/calendar3.svg"
 import { News } from '../ts/interfaces/newsInterface'
 import NewsCard1 from './components/NewsCard1'
@@ -38,7 +38,12 @@ async function NewsHomePage() {
                         <div id={styles.main_news}>
 
                             <div className={styles.image_container}>
-                                <Image src={news[0]?.thumbnail || ""} fill alt={news[0].title} />
+                                <Image
+                                    src={news[0]?.thumbnail || ""}
+                                    alt={news[0].title}
+                                    fill
+                                    sizes='(max-width: 529px) 100vw, (max-width: 1019px) 40vw, (max-width: 1019px) 35vw, (max-width: 1259px) 30vw, 289px'
+                                />
                             </div>
 
                             <div className={styles.highlight_title}>
@@ -56,7 +61,14 @@ async function NewsHomePage() {
                                 <div className={styles.hero_news_container} key={key}>
 
                                     <div className={styles.image_container}>
-                                        <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}><Image src={item.thumbnail} fill alt={item.title} /></Link>
+                                        <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
+                                            <Image
+                                                src={item.thumbnail}
+                                                alt={item.title}
+                                                fill
+                                                sizes='(max-width: 1020px) 33vw, (max-width: 1259px) 11vw, 239px'
+                                            />
+                                        </Link>
                                     </div>
 
                                     <div className={styles.highlight_title}>
@@ -87,7 +99,7 @@ async function NewsHomePage() {
 
                     <h2>Recent Animes News</h2>
 
-                    <SwiperContainer data={animesNews}
+                    <NewsSwiperContainer data={animesNews}
                         options={{
                             slidesPerView: 1.2,
                             bp480: 2.2,
@@ -108,7 +120,12 @@ async function NewsHomePage() {
 
                             <div className={styles.image_container}>
                                 <Link href={`/news/${mangasNews[0].id.replace(/\/?daily-briefs\//, "")}`}>
-                                    <Image src={mangasNews[0].thumbnail || ""} fill alt={mangasNews[0].title} />
+                                    <Image
+                                        src={mangasNews[0].thumbnail || ""}
+                                        alt={mangasNews[0].title}
+                                        fill
+                                        sizes='(max-width: 599px) 100vw, (max-width: 1259px) 33vw, 379px'
+                                    />
                                 </Link>
                             </div>
 
@@ -131,7 +148,12 @@ async function NewsHomePage() {
 
                                 <div className={styles.image_container}>
                                     <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
-                                        <Image src={item.thumbnail || ""} fill alt={item.title} />
+                                        <Image
+                                            src={item.thumbnail || ""}
+                                            alt={item.title}
+                                            fill
+                                            sizes='(max-width: 599px) 40vw, (max-width: 1259px) 15vw, 133px'
+                                        />
                                     </Link>
                                 </div>
 
@@ -161,7 +183,12 @@ async function NewsHomePage() {
 
                             <div className={styles.image_container}>
                                 <Link href={`/news/${gamesNews[0].id.replace(/\/?daily-briefs\//, "")}`}>
-                                    <Image src={gamesNews[0].thumbnail || ""} fill alt={gamesNews[0].title} />
+                                    <Image
+                                        src={gamesNews[0].thumbnail || ""}
+                                        alt={gamesNews[0].title}
+                                        fill
+                                        sizes='(max-width: 599px) 100vw, (max-width: 1259px) 33vw, 379px'
+                                    />
                                 </Link>
                             </div>
 
@@ -182,7 +209,12 @@ async function NewsHomePage() {
 
                                 <div className={styles.image_container}>
                                     <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
-                                        <Image src={item.thumbnail || ""} fill alt={item.title} />
+                                        <Image
+                                            src={item.thumbnail || ""}
+                                            alt={item.title}
+                                            fill
+                                            sizes='(max-width: 599px) 40vw, (max-width: 1259px) 15vw, 133px'
+                                        />
                                     </Link>
                                 </div>
 
@@ -208,7 +240,12 @@ async function NewsHomePage() {
 
                             <div className={styles.image_container}>
                                 <Link href={`/news/${industryNews[0].id.replace(/\/?daily-briefs\//, "")}`}>
-                                    <Image src={industryNews[0].thumbnail || ""} fill alt={industryNews[0].title} />
+                                    <Image
+                                        src={industryNews[0].thumbnail || ""}
+                                        alt={industryNews[0].title}
+                                        fill
+                                        sizes='(max-width: 599px) 100vw, (max-width: 1259px) 33vw, 379px'
+                                    />
                                 </Link>
                             </div>
 
@@ -229,7 +266,12 @@ async function NewsHomePage() {
 
                                 <div className={styles.image_container}>
                                     <Link href={`/news/${item.id.replace(/\/?daily-briefs\//, "")}`}>
-                                        <Image src={item.thumbnail || ""} fill alt={item.title} />
+                                        <Image
+                                            src={item.thumbnail || ""}
+                                            alt={item.title}
+                                            fill
+                                            sizes='(max-width: 599px) 40vw, (max-width: 1259px) 15vw, 133px'
+                                        />
                                     </Link>
                                 </div>
 

@@ -101,9 +101,9 @@ async function MediaPage({ params }: { params: { id: number } }) {
             >
               <Image
                 src={imdbMediaInfo.logos[0]?.url}
-                fill
-                sizes='100%'
                 alt={mediaData.title.native}
+                fill
+                sizes='(max-width: 520px) 100%, 280px'
               />
             </div>
           ) : (
@@ -300,14 +300,14 @@ async function MediaPage({ params }: { params: { id: number } }) {
                             <Image
                               src={item.node.image.large}
                               alt={item.node.name.full}
-                              sizes='100%'
                               fill
+                              sizes='90px'
                             ></Image>
                           </div>
                           <h3>{item.node.name.full}</h3>
                         </div>
 
-                        {/* SHOWS ONLY FOR ANIMES  */}
+                        {/* SHOWS ACTOR ONLY FOR ANIMES  */}
                         {(mediaData.type == "ANIME" && item.voiceActorRoles[0]) && (
 
                           <div className={styles.actor_container}>
@@ -315,8 +315,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
                               <Image
                                 src={item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.image.large}
                                 alt={(`${item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.name.full} voiceover for ${item.node.name.full}`) || "No Name Actor"}
-                                sizes='100%'
                                 fill
+                                sizes='90px'
                               ></Image>
                             </div>
                             <h3>{item.voiceActorRoles[0] && item.voiceActorRoles[0].voiceActor.name.full}</h3>

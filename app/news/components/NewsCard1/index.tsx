@@ -10,7 +10,12 @@ function NewsCard1({ data }: { data: News }) {
 
             <div className={styles.image_container}>
                 <Link href={`/news/${data.id.replace(/\/?daily-briefs\//, "")}`}>
-                    <Image src={data.thumbnail} fill alt={data.title} />
+                    <Image
+                        src={data.thumbnail}
+                        alt={data.title}
+                        fill
+                        sizes='(max-width: 1020px) 25vw, (max-width: 1259px) 10vw, 94px'
+                    />
                 </Link>
             </div>
 

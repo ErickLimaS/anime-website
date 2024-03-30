@@ -41,7 +41,8 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
                     blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
                     alt={`Cover Art for ${fromOfflineDb ? (data as MediaDbOffline).title : (data as ApiDefaultResult).title && (data as ApiDefaultResult).title.romaji || "Not Available"}`}
                     fill
-                    sizes='100%'
+                    sizes='(max-width: 520px) 45vw, (max-width: 772px) 33vw, (max-width: 1200px) 141px, 192px'
+                    // sizes='100%'
                     title={fromOfflineDb ? (data as MediaDbOffline).title : (data as ApiDefaultResult).title.romaji || (data as ApiDefaultResult).title.native}
                 ></Image>
 

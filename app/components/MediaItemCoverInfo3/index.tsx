@@ -42,13 +42,13 @@ function MediaItemCoverInfo3({ positionIndex, data, darkMode, loading, hiddenOnD
             <div id={styles.img_container}>
 
                 <Image
+                    title={data.title.romaji || data.title.native}
                     src={data.coverImage && data.coverImage.large}
+                    alt={`Cover Art for ${data.title && data.title.romaji || "Not Available"}`}
                     placeholder='blur'
                     blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
-                    alt={`Cover Art for ${data.title && data.title.romaji || "Not Available"}`}
                     fill
-                    sizes='100%'
-                    title={data.title.romaji || data.title.native}
+                    sizes='(max-width: 400px) 40vw, 140px'
                 ></Image>
 
                 <motion.span className={styles.media_type_icon}>

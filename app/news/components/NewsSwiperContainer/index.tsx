@@ -37,7 +37,12 @@ function SwiperContainer({ data, options }: {
                     <div className={styles.news_container}>
 
                         <div className={styles.img_container}>
-                            <Image fill src={item.thumbnail} alt={item.title} />
+                            <Image
+                                src={item.thumbnail}
+                                alt={item.title}
+                                fill
+                                sizes='(max-width: 520px) 85vw, (max-width: 1259px) 30vw, 364px'
+                            />
                         </div>
 
                         <div className={styles.title_container}>

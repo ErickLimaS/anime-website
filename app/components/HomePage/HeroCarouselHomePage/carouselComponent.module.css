@@ -448,12 +448,6 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
     }
 }
 
-#recomendations_container ul li:hover {
-
-    filter: brightness(80%);
-
-}
-
 /* STOP TRAILER AUTOPLAY */
 #stop_trailer_btn_container {
 
