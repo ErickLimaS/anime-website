@@ -4,7 +4,7 @@
 
 Project of animes and mangas website, utilizing the <a href='https://anilist.gitbook.io/anilist-apiv2-docs/'>AniList</a> API which has info of animes and mangas released, data of the cast of that media, and many other things.
 
-<p align="center">You can access it <a href='https://aniproject.netlify.app/'>here</a>.</p>
+<p align="center">You can access it <a href='https://aniproject.netlify.app/'>on netlify</a>, <a href='https://aniproject-website.onrender.com'>on render</a> or <a href='https://aniproject-dev.vercel.app/'>vercel</a>.</p>
 
 ## :hammer: Features
 
