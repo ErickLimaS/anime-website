@@ -57,13 +57,13 @@ function EpisodeCoverInfo({ data, darkMode }: ComponentTypes) {
                     <div id={styles.img_container}>
 
                         <Image
+                            title={data.title.romaji}
                             src={data.episodeImg || fallbackImg}
                             placeholder='blur'
                             blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
                             alt={data.title && data.title.romaji || "Not Available"}
                             fill
-                            sizes='100%'
-                            title={data.title.romaji}
+                            sizes='(max-width: 324px) 100vw, (max-width: 495px) 50vw, (max-width: 1025px) 200px, (max-width: 1479px) 180px, 174px'
                         ></Image>
 
                         <span className={styles.media_type_icon}>

@@ -313,6 +313,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                                 src={user.photoURL as string}
                                                 alt={user.displayName as string}
                                                 fill
+                                                sizes='(max-width: 400px) 95vw, (max-width: 520px) 109px, 140px'
                                             />
                                         </label>
                                     </>
@@ -384,6 +385,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                                 src={item.value}
                                                 alt={item.name}
                                                 fill
+                                                sizes='(max-width: 479px) 30vw, 101px'
                                             />
                                         </motion.div>
 

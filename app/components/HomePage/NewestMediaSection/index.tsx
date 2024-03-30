@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import MediaListCoverInfo from '../../MediaItemCoverInfo2'
+import MediaListCoverInfo2 from '../../MediaItemCoverInfo2'
 import CardMediaCoverAndDescription from '../../CardMediaCoverAndDescription'
 import NavButtons from '../../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
@@ -104,7 +104,7 @@ function NewestMediaSection(props: PropsTypes) {
                         </li>
 
                         {(mediaList as ApiDefaultResult[]).slice(1, 11).map((item, key: number) => (
-                            <MediaListCoverInfo key={key} positionIndex={key + 1} data={item} showCoverArt={true} alternativeBorder={true} />
+                            <MediaListCoverInfo2 key={key} positionIndex={key + 1} data={item} showCoverArt={true} alternativeBorder={true} />
                         ))}
                     </>
                 )}

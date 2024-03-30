@@ -237,7 +237,12 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
                     <div className={styles.user_img_container}>
 
-                        <Image src={item.userPhoto} alt={item.username} fill sizes='100%' />
+                        <Image
+                            src={item.userPhoto}
+                            alt={item.username}
+                            fill
+                            sizes='72px'
+                        />
 
                     </div>
 

@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import MediaListCoverInfo from '../../MediaItemCoverInfo2'
+import MediaListCoverInfo2 from '../../MediaItemCoverInfo2'
 import NavButtons from '../../NavButtons'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from "@/api/anilist"
@@ -72,7 +72,7 @@ function MediaRankingSection(props: PropsTypes) {
 
             <ol>
                 {((mediaList as ApiDefaultResult[]) || (data as ApiDefaultResult[])).slice(0, 10).map((item: ApiDefaultResult, key: number) => (
-                    <MediaListCoverInfo key={key} positionIndex={key + 1} data={item} showCoverArt={false} />
+                    <MediaListCoverInfo2 key={key} positionIndex={key + 1} data={item} showCoverArt={false} />
                 ))}
             </ol>
 

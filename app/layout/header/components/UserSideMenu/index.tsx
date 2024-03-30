@@ -107,9 +107,10 @@ function UserSideMenu() {
                         <span id={styles.img_container}>
                             <Image
                                 src={user.photoURL ? user.photoURL as string : ProfileFallbackImg as unknown as string}
+                                alt={user.displayName as string}
                                 fill
-                                sizes='100%'
-                                alt={user.displayName as string}>
+                                sizes='32px'
+                            >
                             </Image>
                         </span>
                         <span>

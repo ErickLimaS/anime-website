@@ -18,7 +18,12 @@ function MediaListCoverInfo({ positionIndex, data, showCoverArt, alternativeBord
             {showCoverArt ? (
                 <div className={styles.img_container}>
                     <Link href={`/media/${data.id}`}>
-                        <Image src={data.coverImage.large} alt={`Cover Art For ${data.title.romaji}`} fill sizes='100%' />
+                        <Image
+                            src={data.coverImage.large}
+                            alt={`Cover Art For ${data.title.romaji}`}
+                            fill
+                            sizes='100%'
+                        />
                     </Link>
                 </div>
             ) : (

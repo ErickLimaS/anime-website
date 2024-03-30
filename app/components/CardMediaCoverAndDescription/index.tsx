@@ -13,7 +13,12 @@ function CardMediaCoverAndDescription({ data, customDescription, showButtons }: 
             className={`${styles.midia_item_container}`}
         >
             <Link id={styles.img_container} href={`/media/${data.id}`}>
-                <Image src={data.coverImage && data.coverImage.extraLarge} alt={`Cover Art for ${data.title && data.title.romaji || data.title.native}`} fill></Image>
+                <Image
+                    src={data.coverImage && data.coverImage.extraLarge}
+                    alt={`Cover Art for ${data.title && data.title.romaji || data.title.native}`}
+                    fill
+                    sizes='(max-width: 580px) 25vw, (max-width: 820px) 15vw, 220px'
+                ></Image>
             </Link>
 
             <div className={styles.item_info_container}>

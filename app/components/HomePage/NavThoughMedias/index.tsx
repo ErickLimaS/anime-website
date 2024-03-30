@@ -240,6 +240,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                             src={mediaSelect.coverImage.large}
                                             alt={mediaSelect.title.romaji}
                                             fill
+                                            sizes='(max-width: 430px) 45vw, (max-width: 620px) 33vw, (max-width: 876px) 15vw, 10vw'
                                         />
 
                                     </motion.div>

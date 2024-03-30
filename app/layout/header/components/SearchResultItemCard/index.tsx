@@ -30,7 +30,12 @@ function SearchResultItemCard({ onClick, item }: { onClick?: MouseEventHandler<H
                 onClick={onClick}
             >
                 <Link href={`/media/${item.id}`}>
-                    <Image src={item.coverImage.large} alt={`Cover Art for ${item.title.romaji}`} fill ></Image>
+                    <Image
+                        src={item.coverImage.large}
+                        alt={`Cover Art for ${item.title.romaji}`}
+                        fill
+                        sizes='90px'
+                    ></Image>
                 </Link>
             </div>
 

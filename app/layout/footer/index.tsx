@@ -7,7 +7,6 @@ import Instagram from "../../../public/assets/instagram.svg"
 import Youtube from "../../../public/assets/youtube.svg"
 import Twitter from "../../../public/assets/twitter-x.svg"
 import API from '../../../api/anilist'
-import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
 async function Footer() {
 
@@ -21,7 +20,12 @@ async function Footer() {
                 <div id={styles.social_links_container} className='display_flex_row'>
 
                     <Link id={styles.img_container} href="/">
-                        <Image src='/logo.png' alt="Aniproject Site Logo" fill></Image>
+                        <Image
+                            src='/logo.png'
+                            alt="Aniproject Site Logo"
+                            fill
+                            sizes='91px'
+                        ></Image>
                     </Link>
 
                     <div id={styles.social_media_container}>

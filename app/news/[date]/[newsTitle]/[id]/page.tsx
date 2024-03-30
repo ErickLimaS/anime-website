@@ -33,7 +33,12 @@ async function NewPage({ params }: { params: { id: string } }) {
                     <div id={styles.img_intro_container}>
 
                         <div id={styles.img_container}>
-                            <Image fill src={newsData.thumbnail} alt={newsData.intro} />
+                            <Image
+                                src={newsData.thumbnail}
+                                alt={newsData.intro}
+                                fill
+                                sizes='(max-width: 440px) 100vw, 120px'
+                            />
                         </div>
 
                         <small>{newsData.intro}</small>
