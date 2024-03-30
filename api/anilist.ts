@@ -83,7 +83,7 @@ export default {
         }
         catch (error) {
 
-            console.log((error as ErrorTypes).response.data.errors)
+            console.log(error as ErrorTypes)
 
             return null
 
@@ -118,7 +118,8 @@ export default {
 
         }
         catch (error) {
-            console.log((error as ErrorTypes).response.data.errors)
+
+            console.log(error as ErrorTypes)
 
             return null
 
@@ -157,7 +158,7 @@ export default {
         }
         catch (error) {
 
-            console.log((error as ErrorTypes).response.data.errors)
+            console.log(error as ErrorTypes)
 
             return null
 
@@ -201,7 +202,7 @@ export default {
         }
         catch (error) {
 
-            console.log((error as ErrorTypes).response.data.errors)
+            console.log(error as ErrorTypes)
 
             return null
 
@@ -240,7 +241,7 @@ export default {
         }
         catch (error) {
 
-            console.log((error as ErrorTypes).response.data.errors)
+            console.log(error as ErrorTypes)
 
             return null
 
@@ -277,7 +278,7 @@ export default {
         }
         catch (error) {
 
-            console.log((error as ErrorTypes).response.data.errors)
+            console.log(error as ErrorTypes)
 
             return null
 
@@ -309,7 +310,7 @@ export default {
         }
         catch (error) {
 
-            console.log((error as ErrorTypes).response.data.errors)
+            console.log(error as ErrorTypes)
 
             return null
 
