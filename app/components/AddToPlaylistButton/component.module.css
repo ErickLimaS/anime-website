@@ -7,10 +7,10 @@
     text-align: center;
 
     font-weight: 600;
-    
+
 }
 
-#container svg{
+#container svg {
 
     transform: scale(1.2);
 
@@ -30,8 +30,10 @@
 
 #container[data-added=true] {
 
-    background-color: var(--white-100);
-    color: var(--black-75);
-    border: 1px solid var(--black-100);
+    gap: 0 8px;
+
+    background-color: var(--white-100) !important;
+    color: var(--black-100) !important;
+    border: 1px solid var(--black-100) !important;
 
 }

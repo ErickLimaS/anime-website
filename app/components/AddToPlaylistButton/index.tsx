@@ -2,13 +2,14 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
+import LoadingsssSvg from "@/public/assets/bookmark-check-fill.svg"
 import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc, FieldPath, setDoc, DocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { initFirebase } from "@/firebase/firebaseApp"
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import UserModal from '@/app/components/UserLoginModal';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, customText?: any[] }) {
 
@@ -133,7 +134,8 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
                 )}
             </AnimatePresence>
 
-            <button
+            <motion.button
+                whileTap={{ scale: 0.85 }}
                 id={styles.container}
                 onClick={() => addThisMedia()}
                 disabled={isLoading}
@@ -144,9 +146,12 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
                 {isLoading ?
                     <LoadingSvg alt="Loading Icon" width={16} height={16} />
                     :
-                    (wasAddedToPlaylist ? (customText ? customText[0] : "ON PLAYLIST") : (customText ? customText[1] : "+ PLAYLIST"))
+                    (wasAddedToPlaylist ?
+                        (customText ? customText[0] : (<><LoadingsssSvg width={16} height={16} /> ON PLAYLIST</>))
+                        :
+                        (customText ? customText[1] : "+ PLAYLIST"))
                 }
-            </button>
+            </motion.button>
 
         </>
     )
