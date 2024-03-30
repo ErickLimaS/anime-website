@@ -76,7 +76,7 @@
 
     font-size: var(--font-size--p);
     font-weight: 600;
-    color: var(--black-75);
+    color: var(--black-100);
 
 }
 
@@ -134,6 +134,30 @@
 #modal form h5:last-child {
 
     color: var(--error);
+
+}
+
+/* ANONYMOUS DISCLAIMER */
+#anonymous_disclaimer_container {
+
+    border: 2px solid var(--brand-color);
+    border-radius: 8px;
+
+    padding: 16px 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px 0;
+
+}
+
+#anonymous_disclaimer_container h5 {
+
+    color: var(--brand-color);
+    font-weight: 600;
+
+    border-bottom: 2px solid;
 
 }
 

@@ -14,14 +14,6 @@ const headers = {
     'Content-Type': 'application/json',
 }
 
-type ErrorTypes = {
-    response: {
-        data: {
-            errors: unknown
-        }
-    }
-}
-
 // returns medias which is adult
 function filterAdultContent(data: any[], reponseType?: "mediaByFormat") {
 
@@ -81,9 +73,9 @@ export default {
             return data.data.Page.media as ApiDefaultResult[]
 
         }
-        catch (error) {
+        catch (error: any) {
 
-            console.log(error as ErrorTypes)
+            console.log(error.response.data)
 
             return null
 
@@ -117,9 +109,9 @@ export default {
                 data.data.Page.media as ApiDefaultResult[] : filterAdultContent(data.data.Page.media, "mediaByFormat")
 
         }
-        catch (error) {
+        catch (error: any) {
 
-            console.log(error as ErrorTypes)
+            console.log(error.response.data)
 
             return null
 
@@ -156,9 +148,9 @@ export default {
             return data.data.Page.media as ApiDefaultResult[]
 
         }
-        catch (error) {
+        catch (error: any) {
 
-            console.log(error as ErrorTypes)
+            console.log(error.response.data)
 
             return null
 
@@ -200,9 +192,9 @@ export default {
                 data.data.Page.airingSchedules as ApiAiringMidiaResults[] : filterAdultContent(data.data.Page.airingSchedules) as ApiAiringMidiaResults[]
 
         }
-        catch (error) {
+        catch (error: any) {
 
-            console.log(error as ErrorTypes)
+            console.log(error.response.data)
 
             return null
 
@@ -239,9 +231,9 @@ export default {
             return data.data.Page.mediaTrends as ApiTrendingMidiaResults[]
 
         }
-        catch (error) {
+        catch (error: any) {
 
-            console.log(error as ErrorTypes)
+            console.log(error.response.data)
 
             return null
 
@@ -276,9 +268,9 @@ export default {
                 data.data.Page.media as ApiDefaultResult[] : filterAdultContent(data.data.Page.media, "mediaByFormat") as ApiDefaultResult[]
 
         }
-        catch (error) {
+        catch (error: any) {
 
-            console.log(error as ErrorTypes)
+            console.log(error.response.data)
 
             return null
 
@@ -308,9 +300,9 @@ export default {
             return data.data.Media as ApiDefaultResult
 
         }
-        catch (error) {
+        catch (error: any) {
 
-            console.log(error as ErrorTypes)
+            console.log(error.response.data)
 
             return null
 

@@ -66,8 +66,11 @@ function UserModal({ onClick, auth, }: ModalTypes) {
     async function newUserDoc(user: User) {
 
         const userHasDoc = await getDoc(doc(db, "users", user.uid)).then(res => res.data())
-        
+
         if (userHasDoc) return
+
+        // if user is anonymous, set a placeholder Name and Photo
+        if (user.isAnonymous) await updateProfile(user, { displayName: "Anonymous", photoURL: "https://i.pinimg.com/736x/7d/6e/eb/7d6eeb79b0b43bb0987bf4c6935fa148.jpg" })
 
         // shows settings to new user
         setShowSettingsMenu(true)
@@ -116,6 +119,15 @@ function UserModal({ onClick, auth, }: ModalTypes) {
 
     const signAnonymously = async () => {
         await signInAnonymously(auth)
+            .then(async (res) => await newUserDoc(res.user))
+            .catch((err: any) => {
+
+                setLoginError({
+                    code: err.code,
+                    message: err.message
+                })
+
+            })
     }
 
     async function handleLoginForm(e: React.FormEvent<HTMLFormElement>, action: "login" | "signup") {

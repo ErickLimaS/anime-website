@@ -34,7 +34,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
 
     const auth = getAuth()
-    const [user, loading] = useAuthState(auth)
+    const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase());
 
@@ -58,6 +58,8 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     async function likeOrDislikeIncrease(button: string, add: boolean) {
 
         if (!user) return setIsUserModalOpen(true)
+
+        if (user.isAnonymous) return
 
         const query = await queryCommentDoc()
 
