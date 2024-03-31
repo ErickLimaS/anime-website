@@ -2,15 +2,6 @@ main#container {
     background: var(--background);
 }
 
-#hero_section {
-
-    overflow-x: hidden;
-
-    position: relative;
-    top: 0;
-
-}
-
 /* SPAN BOX SHADOW */
 span#box_shadow_end_section {
     background-image: linear-gradient(#ff000000, var(--background) 50%);

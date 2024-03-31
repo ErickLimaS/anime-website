@@ -2,8 +2,6 @@ import React from 'react'
 import styles from './page.module.css'
 import NavSideBar from './components/NavSideBar'
 import ResultsContainer from './components/ResultsContainer'
-import { headers } from 'next/headers'
-import { checkDeviceIsMobile } from '../lib/checkMobileOrDesktop'
 import { Metadata } from 'next'
 import axios from 'axios'
 
@@ -25,8 +23,6 @@ async function SearchPage({ searchParams }: {
     }
 }) {
 
-    const isMobile = checkDeviceIsMobile(headers())
-
     const sort = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
 
     // GET ANILIST ID FOR THIS MEDIA
@@ -44,7 +40,7 @@ async function SearchPage({ searchParams }: {
 
             <div id={styles.side_nav}>
 
-                <NavSideBar isMobile={isMobile || false} />
+                <NavSideBar />
 
             </div>
 

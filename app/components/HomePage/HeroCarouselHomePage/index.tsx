@@ -10,8 +10,9 @@ import SwiperListContainer from '../../SwiperListContainer'
 import ListCarousel from '../HeroListCarousel'
 import EyeSvg from "@/public/assets/eye-fill.svg"
 import EyeSlashSvg from "@/public/assets/eye-slash-fill.svg"
+import styled from 'styled-components'
 
-function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: boolean }) {
+function HeroCarousel({ data }: { data: ApiDefaultResult[] }) {
 
     const [[page, direction], setPage] = useState([0, 0])
 
@@ -49,20 +50,22 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
         setPage([page + newDirection, newDirection]);
     };
 
-    let styledList = {
-        background: isMobile ?
-            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${data[imageIndex]?.coverImage.extraLarge})`
-            :
-            `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage})`
-        ,
-        backgroundPosition: isMobile ?
-            "top"
-            :
-            "center"
-        ,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat"
-    }
+    let CarouselItem = styled.li`
+
+        background: linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${data[imageIndex]?.coverImage.extraLarge});
+        background-position: top;
+
+        @media (min-width: 930px) {
+
+            background: linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage});
+            background-position: center;
+
+        }
+
+        background-size: cover!important;
+        background-repeat: no-repeat!important;
+
+    `
 
     // change auto play trailer state 
     function changeTrailerState() {
@@ -87,17 +90,17 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
     }, [])
 
     return (
-        <>
+        <section id={styles.hero_section}>
             {data != undefined && (
 
                 <AnimatePresence initial={true} custom={direction} mode='sync'>
 
                     <ul id="carousel" className={`${styles.carousel_container} display_flex_row`}>
 
-                        <motion.li
+                        <CarouselItem
+                            as={motion.li}
                             key={page}
                             className={styles.carousel_item}
-                            style={styledList}
                             custom={direction}
                             variants={variants}
                             initial="enter"
@@ -175,7 +178,7 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
 
                             </div>
 
-                        </motion.li>
+                        </CarouselItem>
 
                     </ul >
 
@@ -228,7 +231,7 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                 </motion.button>
             </div>
 
-        </>
+        </section>
     )
 }
 

@@ -80,7 +80,7 @@
     margin: auto;
 
     position: absolute;
-    z-index: 1;
+    /* z-index: 1; */
 
     background-color: var(--black-75);
 

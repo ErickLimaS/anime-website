@@ -1,3 +1,12 @@
+#hero_section {
+
+    overflow-x: hidden;
+
+    position: relative;
+    top: 0;
+
+}
+
 ul.carousel_container {
 
     transition: all ease-in-out 170ms;
