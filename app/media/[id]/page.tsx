@@ -19,11 +19,12 @@ import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
 import ScoreRating from '@/app/components/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
 import SwiperListContainer from '@/app/components/SwiperListContainer'
+import { headers } from 'next/headers'
+import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import CommentSectionContainer from '../../components/CommentSectionContainer'
 import { getMediaInfo } from '@/api/imdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
-import BcgImgBanner from './components/BcgImgBanner'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -40,6 +41,8 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 async function MediaPage({ params }: { params: { id: number } }) {
 
   const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
+
+  const isMobileScreen = checkDeviceIsMobile(headers()) || false
 
   // sort ASC episodes number
   const episodesFromCrunchyroll = mediaData?.streamingEpisodes?.sort((a, b) => {
@@ -61,14 +64,23 @@ async function MediaPage({ params }: { params: { id: number } }) {
       itemB => imdbEpisodesMapped.push(itemB))
   )
 
-  // selects the img for the banner on desktops
-  const bcgForDesktop = mediaData.format == "MANGA" ? mediaData.bannerImage : (imdbMediaInfo?.cover || mediaData?.bannerImage)
-
   return (
     <main id={styles.container}>
 
-      {/* IMAGE BANNER ON BACKGROUND */}
-      <BcgImgBanner mediaData={mediaData} bcgForDesktop={bcgForDesktop} />
+      {/* BANNER or BACKGROUND COLOR*/}
+      <div
+        id={styles.banner_background_container}
+        style={{
+          background: isMobileScreen ?
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${mediaData?.coverImage?.extraLarge})`
+            :
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${mediaData.format == "MANGA" ?
+              mediaData.bannerImage
+              :
+              imdbMediaInfo?.cover || mediaData.bannerImage})`
+        }}
+      >
+      </div>
 
       {/* MEDIA INFO */}
       <div id={styles.media_info_container} className={(imdbMediaInfo?.logos && imdbMediaInfo?.logos[0]) ? `${styles.custom_position}` : ``}>
@@ -243,8 +255,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
           <div id={styles.description_episodes_related_container}>
 
             {/* NEXT EPISODE */}
-            {(mediaData.nextAiringEpisode && mediaData.format != "MOVIE") && (
-              <div id={styles.next_episode_mobile_container}>
+            {(isMobileScreen == true && mediaData.nextAiringEpisode && mediaData.format != "MOVIE") && (
+              <div id={styles.next_episode_container}>
 
                 <h2 className={styles.heading_style}>
                   NEXT EPISODE
@@ -405,8 +417,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
           <div id={styles.hype_container}>
 
             {/* NEXT EPISODE */}
-            {(mediaData.nextAiringEpisode && mediaData.format != "MOVIE") && (
-              <div id={styles.next_episode_desktop_container}>
+            {(isMobileScreen == false && mediaData.nextAiringEpisode && mediaData.format != "MOVIE") && (
+              <div id={styles.next_episode_container}>
 
                 <h2 className={styles.heading_style}>
                   NEXT EPISODE

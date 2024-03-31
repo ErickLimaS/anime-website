@@ -17,6 +17,18 @@ h2.heading_style {
     font-size: var(--font-size--h5);
 }
 
+#banner_background_container {
+
+    background-position: 100% 30% !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+
+    min-height: 400px;
+    height: calc(400px + 5vw);
+    max-height: 60vh;
+
+}
+
 .heading_img_container {
 
     position: relative;
@@ -605,48 +617,25 @@ h2.heading_style {
 
 }
 
-/* NEXT EPISODE TEXT */
-#next_episode_desktop_container,
-#next_episode_mobile_container {
+/* NEXT EPISODE */
+#next_episode_container {
 
     margin-bottom: 32px;
 
 }
 
-#next_episode_desktop_container p,
-#next_episode_mobile_container p {
+#next_episode_container p {
 
     color: var(--white-100);
     font-weight: 600;
 
 }
 
-#next_episode_desktop_container p span,
-#next_episode_mobile_container p span {
+#next_episode_container p span {
 
     font-size: var(--font-size--p);
     color: var(--brand-color);
 
-}
-
-#next_episode_mobile_container {
-    display: block;
-}
-
-@media (min-width: 700px) {
-    #next_episode_mobile_container {
-        display: none;
-    }
-}
-
-#next_episode_desktop_container {
-    display: none;
-}
-
-@media (min-width: 700px) {
-    #next_episode_desktop_container {
-        display: block;
-    }
 }
 
 /* SCORE */

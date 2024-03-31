@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "./layout/header";
 import Footer from "./layout/footer";
 import NextTopLoader from 'nextjs-toploader';
-import StyledComponentsRegistry from "./lib/registry";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,9 +29,7 @@ export default function RootLayout({
           showSpinner={false}
         />
 
-        <StyledComponentsRegistry>
-          {children}
-        </StyledComponentsRegistry>
+        {children}
 
         <Footer />
 

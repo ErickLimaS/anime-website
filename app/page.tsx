@@ -10,6 +10,8 @@ import MediaRankingSection from "./components/HomePage/MediaRankingSection";
 import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 import AddToPlaylistButton from "./components/AddToPlaylistButton";
+import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";
+import { headers } from "next/headers";
 import KeepWatchingSection from "./components/HomePage/KeepWatchingSection";
 import PopularMediaSection from "./components/HomePage/PopularMediaSection";
 
@@ -21,6 +23,8 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
+
+  const isMobileScreen = checkDeviceIsMobile(headers())
 
   // section 2
   const trendingData = await anilist.getNewReleases("ANIME", undefined, undefined, false, "RELEASING", 1, 12).then(
@@ -47,8 +51,11 @@ export default async function Home() {
   return (
     <main id={styles.container} className={styles.main}>
 
-      {/* HERO */}
-      <HeroCarousel data={popularData} />
+      <section id={styles.hero_section}>
+
+        <HeroCarousel data={popularData} isMobile={isMobileScreen || false} />
+
+      </section>
 
       {/* Keep Watching  */}
       <KeepWatchingSection />

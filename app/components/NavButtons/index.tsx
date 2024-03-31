@@ -43,7 +43,7 @@ function NavButtons(props: PropsType) {
             {props.options.map((item, key: number) => (
                 <>
                     <button
-                        key={item.value}
+                        key={key}
                         data-active={lastValueReceived == (item.value)}
                         onClick={() => toggleStateAndReturnValue(item.value)}
                         aria-label={item.name}
