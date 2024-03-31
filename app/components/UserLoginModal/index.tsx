@@ -15,7 +15,7 @@ import {
     User
 } from 'firebase/auth'
 import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
-import { initFirebase } from '@/firebase/firebaseApp'
+import { initFirebase } from '@/app/firebaseApp'
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import UserSettingsModal from '@/app/layout/header/components/UserSettingsModal'

@@ -4,7 +4,7 @@ import PlaySvg from "@/public/assets/play2.svg"
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
 import { useRouter } from 'next/navigation'
 import { getAuth } from 'firebase/auth'
-import { initFirebase } from '@/firebase/firebaseApp'
+import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'

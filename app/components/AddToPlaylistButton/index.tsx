@@ -4,7 +4,7 @@ import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import LoadingsssSvg from "@/public/assets/bookmark-check-fill.svg"
 import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc, FieldPath, setDoc, DocumentSnapshot, DocumentData } from 'firebase/firestore';
-import { initFirebase } from "@/firebase/firebaseApp"
+import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'

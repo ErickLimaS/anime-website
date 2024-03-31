@@ -8,7 +8,7 @@ import {
     addDoc, collection, getDocs, QuerySnapshot,
     where, query
 } from 'firebase/firestore';
-import { initFirebase } from "@/firebase/firebaseApp"
+import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
