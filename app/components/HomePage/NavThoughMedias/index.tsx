@@ -292,7 +292,7 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
                                 ) : (
                                     mediaSelect.description && (
                                         <motion.div className={styles.description_container}>
-                                            <motion.p>{parse(mediaSelect.description)}</motion.p>
+                                            <motion.p>{parse(mediaSelect.description.replace(new RegExp(`<br[^>]*>|<\/br>`, 'gi'), " "))}</motion.p>
                                         </motion.div>
                                     )
                                 )}

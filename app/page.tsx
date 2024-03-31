@@ -85,7 +85,7 @@ export default async function Home() {
               )}
 
               {mediaBannerData[randomNumber]?.description && (
-                <span>{parse(mediaBannerData[randomNumber].description)}</span>
+                <span>{parse(mediaBannerData[randomNumber].description.replace(new RegExp(`<br[^>]*>|<\/br>`, 'gi'), " "))}</span>
               )}
 
               <div className={styles.item_buttons}>
@@ -114,7 +114,6 @@ export default async function Home() {
 
         </section>
       )}
-
 
       {/* SECTION => SHOWS MEDIAS SORTED BY FAVOURITES */}
       <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>

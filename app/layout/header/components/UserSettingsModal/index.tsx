@@ -295,6 +295,13 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                     )}
                 </div>
 
+                {user!.isAnonymous && (
+                    <div id={styles.anonymous_disclaimer_container}>
+                        <h5>You are in Anonymous Mode!</h5>
+                        <p>In this mode you <b>can not</b> make Comments and change your Username.</p>
+                    </div>
+                )}
+
                 <form onSubmit={(e) => changeSettings(e)}>
 
                     <div className={styles.group_container}>
@@ -322,15 +329,21 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
                             <div>
                                 {user && (
-                                    <label>
-                                        Change Username
-                                        <input
-                                            type='text'
-                                            name='username'
-                                            defaultValue={user.displayName as string}
-                                            placeholder={user.displayName as string}
-                                        ></input>
-                                    </label>
+                                    <React.Fragment>
+                                        <label>
+                                            Change Username
+                                            <input
+                                                type='text'
+                                                name='username'
+                                                disabled={user.isAnonymous}
+                                                defaultValue={user.displayName as string}
+                                                placeholder={user.displayName as string}
+                                            ></input>
+                                        </label>
+                                        {user.isAnonymous && (
+                                            <small>Can not change while <b>Anonymous</b></small>
+                                        )}
+                                    </React.Fragment>
                                 )}
                                 <AnimatePresence
                                     initial={false}
@@ -528,102 +541,104 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
                     </div>
 
-                    <div >
-                        <h5 style={{ marginBottom: "16px" }}>
-                            <span><DeleteSvg alt="Play" width={16} height={16} /></span> Delete <span style={{ color: "var(--white-75)" }}>(can not be reverted!)</span>
-                        </h5>
+                    {!newUser && (
+                        <div >
+                            <h5 style={{ marginBottom: "16px" }}>
+                                <span><DeleteSvg alt="Play" width={16} height={16} /></span> Delete <span style={{ color: "var(--white-75)" }}>(can not be reverted!)</span>
+                            </h5>
 
-                        <div className={styles.btns_container}>
-                            <label>
-                                <motion.button
-                                    type='button'
-                                    onClick={() => setDeleteBookmarksClick(!deleteBookmarksClick)}
-                                    variants={btnVariants}
-                                    whileTap="tap"
-                                    data-active={deleteBookmarksClick}
-                                >
-                                    Delete Watchlist
-                                </motion.button>
-
-                            </label>
-                            <AnimatePresence
-                                initial={false}
-                                mode='wait'
-                            >
-                                {deleteBookmarksClick && (
-                                    <motion.div
-                                        initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
-                                        animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
-                                        exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
-                                        className={styles.confirm_delete_container}
+                            <div className={styles.btns_container}>
+                                <label>
+                                    <motion.button
+                                        type='button'
+                                        onClick={() => setDeleteBookmarksClick(!deleteBookmarksClick)}
+                                        variants={btnVariants}
+                                        whileTap="tap"
+                                        data-active={deleteBookmarksClick}
                                     >
-                                        <p>Are you Sure?</p>
-                                        <button type='button' onClick={() => setDeleteBookmarksClick(false)}>Cancel</button>
-                                        <button onClick={() => deleteAccountInfo("bookmarks")}>Delete!</button>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                        Delete Watchlist
+                                    </motion.button>
 
-                            <label>
-                                <motion.button
-                                    type='button'
-                                    onClick={() => setDeleteEpisodessClick(!deleteEpisodesClick)}
-                                    variants={btnVariants}
-                                    whileTap="tap"
-                                    data-active={deleteEpisodesClick}
+                                </label>
+                                <AnimatePresence
+                                    initial={false}
+                                    mode='wait'
                                 >
-                                    Delete Episodes Watched
-                                </motion.button>
-                            </label>
-                            <AnimatePresence
-                                initial={false}
-                                mode='wait'
-                            >
-                                {deleteEpisodesClick && (
-                                    <motion.div
-                                        initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
-                                        animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
-                                        exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
-                                        className={styles.confirm_delete_container}
-                                    >
-                                        <p>Are you Sure?</p>
-                                        <button type='button' onClick={() => setDeleteEpisodessClick(false)}>Cancel</button>
-                                        <button onClick={() => deleteAccountInfo("episodes")}>Delete!</button>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                    {deleteBookmarksClick && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                            animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                            exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                            className={styles.confirm_delete_container}
+                                        >
+                                            <p>Are you Sure?</p>
+                                            <button type='button' onClick={() => setDeleteBookmarksClick(false)}>Cancel</button>
+                                            <button onClick={() => deleteAccountInfo("bookmarks")}>Delete!</button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
 
-                            <label>
-                                <motion.button
-                                    type='button'
-                                    onClick={() => setDeleteAccountClick(!deleteAccountClick)}
-                                    variants={btnVariants}
-                                    whileTap="tap"
-                                    data-active={deleteAccountClick}
+                                <label>
+                                    <motion.button
+                                        type='button'
+                                        onClick={() => setDeleteEpisodessClick(!deleteEpisodesClick)}
+                                        variants={btnVariants}
+                                        whileTap="tap"
+                                        data-active={deleteEpisodesClick}
+                                    >
+                                        Delete Episodes Watched
+                                    </motion.button>
+                                </label>
+                                <AnimatePresence
+                                    initial={false}
+                                    mode='wait'
                                 >
-                                    Delete All Account Info
-                                </motion.button>
-                            </label>
-                            <AnimatePresence
-                                initial={false}
-                                mode='wait'
-                            >
-                                {deleteAccountClick && (
-                                    <motion.div
-                                        initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
-                                        animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
-                                        exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
-                                        className={styles.confirm_delete_container}
-                                    >
-                                        <p>Are you Sure?</p>
-                                        <button type='button' onClick={() => setDeleteAccountClick(false)}>Cancel</button>
-                                        <button onClick={() => deleteAccountInfo("account")}>Delete!</button>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                    {deleteEpisodesClick && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                            animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                            exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                            className={styles.confirm_delete_container}
+                                        >
+                                            <p>Are you Sure?</p>
+                                            <button type='button' onClick={() => setDeleteEpisodessClick(false)}>Cancel</button>
+                                            <button onClick={() => deleteAccountInfo("episodes")}>Delete!</button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
 
+                                <label>
+                                    <motion.button
+                                        type='button'
+                                        onClick={() => setDeleteAccountClick(!deleteAccountClick)}
+                                        variants={btnVariants}
+                                        whileTap="tap"
+                                        data-active={deleteAccountClick}
+                                    >
+                                        Delete All Account Info
+                                    </motion.button>
+                                </label>
+                                <AnimatePresence
+                                    initial={false}
+                                    mode='wait'
+                                >
+                                    {deleteAccountClick && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0, marginTop: "8px", marginBottom: "40px" }}
+                                            animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
+                                            exit={{ opacity: 0, height: 0, marginTop: "0", marginBottom: "0" }}
+                                            className={styles.confirm_delete_container}
+                                        >
+                                            <p>Are you Sure?</p>
+                                            <button type='button' onClick={() => setDeleteAccountClick(false)}>Cancel</button>
+                                            <button onClick={() => deleteAccountInfo("account")}>Delete!</button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <button
                         type='submit'
