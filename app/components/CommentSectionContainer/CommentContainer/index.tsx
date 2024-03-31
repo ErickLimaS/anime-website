@@ -14,7 +14,7 @@ import {
     arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs,
     getFirestore, query, setDoc, updateDoc, where
 } from 'firebase/firestore';
-import { initFirebase } from '@/firebase/firebaseApp';
+import { initFirebase } from '@/app/firebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { AnimatePresence } from 'framer-motion';

@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import { initFirebase } from '@/firebase/firebaseApp'
+import { initFirebase } from '@/app/firebaseApp'
 
 function KeepWatchingSection() {
 

@@ -1,13 +1,26 @@
-import { EpisodeLinksGoGoAnime, MangaInfo, MangaPages, MangaSearchResult, MediaInfo, MediaSearchResult } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import {
+    EpisodeLinksGoGoAnime, MangaInfo,
+    MangaPages, MangaSearchResult,
+    MediaInfo, MediaSearchResult
+} from "@/app/ts/interfaces/apiGogoanimeDataInterface";
 import Axios from "axios"
+import axiosRetry from "axios-retry";
+import { cache } from "react";
 
 const CONSUMET_API_URL = process.env.NEXT_PUBLIC_CONSUMET_API_URL
+
+// HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
+axiosRetry(Axios, {
+    retries: 3,
+    retryDelay: (retryAttempt) => retryAttempt * 2500,
+    retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503
+})
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
 
     // SEARCH ANIME AND MANGA BY QUERY
-    searchMedia: async (query: string, type: string, page?: number) => {
+    searchMedia: cache(async (query: string, type: string, page?: number) => {
 
         const serverSelected = type == "anime" ? "gogoanime" : "mangahere"
 
@@ -29,10 +42,10 @@ export default {
 
         }
 
-    },
+    }),
 
     // GET ANIME AND MANGA INFO
-    getInfoFromThisMedia: async (id: string | number, type: string) => {
+    getInfoFromThisMedia: cache(async (id: string | number, type: string) => {
 
         const route = type == "anime" ? `gogoanime/info/${id}` : `mangahere/info?id=${id}`
 
@@ -53,10 +66,10 @@ export default {
 
         }
 
-    },
+    }),
 
     // GET EPISODES FOR ANIMES AND MOVIES
-    getEpisodeStreamingLinks: async (episodeId: string | number, serverName?: string) => {
+    getEpisodeStreamingLinks: cache(async (episodeId: string | number, serverName?: string) => {
 
         try {
             const { data } = await Axios({
@@ -74,10 +87,10 @@ export default {
 
         }
 
-    },
+    }),
 
     // GET PAGES FOR MANGA CHAPTER
-    getChapterPages: async (chapterId: string) => {
+    getChapterPages: cache(async (chapterId: string) => {
 
         try {
             const { data } = await Axios({
@@ -95,10 +108,10 @@ export default {
 
         }
 
-    },
+    }),
 
     // GET LINKS FOR THIS EPISODE
-    getLinksForThisEpisode: async (episodeId: string) => {
+    getLinksForThisEpisode: cache(async (episodeId: string) => {
 
         try {
             const { data } = await Axios({
@@ -116,5 +129,5 @@ export default {
 
         }
 
-    }
+    })
 }

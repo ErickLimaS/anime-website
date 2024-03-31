@@ -2,9 +2,9 @@
 
 ![AniProject Website Logo](https://user-images.githubusercontent.com/69987890/177884319-0678f842-f3ca-4f62-8d31-7638ca954057.png)
 
-Project of animes and mangas website, utilizing the <a href='https://anilist.gitbook.io/anilist-apiv2-docs/'>AniList</a> API which has info of animes and mangas released, data of the cast of that media, and many other things.
+Project of animes and mangas website, utilizing the AniList, Consumet and Aniwatch API, which has info of animes and mangas released, data of the cast of that media, and many other things.
 
-<p align="center">You can access it <a href='https://aniproject.netlify.app/'>on netlify</a>, <a href='https://aniproject-website.onrender.com'>on render</a> or <a href='https://aniproject-dev.vercel.app/'>vercel</a>.</p>
+<p align="center">You can access this website on <a href='https://aniproject.netlify.app/'>netlify</a>, on <a href='https://aniproject-website.onrender.com'>render (really slow)</a> or <a href='https://aniproject-dev.vercel.app/'>vercel</a>.</p>
 
 ## :hammer: Features
 
@@ -66,8 +66,9 @@ npm install
      - Go to <a href='https://github.com/manami-project/anime-offline-database'>this repository</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
      - With the file downloaded, put it in the `/app/api/anime-info` directory, replacing the previous one.
    - On Firebase, get your configs to use the Authentication and Firestore Database.
+     - IMPORTANT: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
 
-  With all that done, you will need to fill the `.env.local` like the example bellow:
+With all that done, you will need to fill the `.env.local` like the example bellow:
 
 ```javascript
 NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com

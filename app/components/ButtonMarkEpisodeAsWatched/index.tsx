@@ -6,7 +6,7 @@ import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { DocumentData, DocumentSnapshot, FieldPath, arrayRemove, arrayUnion, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
-import { initFirebase } from '@/firebase/firebaseApp'
+import { initFirebase } from '@/app/firebaseApp'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import styles from "./component.module.css"
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'

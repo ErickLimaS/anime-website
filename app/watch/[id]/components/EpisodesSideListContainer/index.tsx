@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styles from "./component.module.css"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import Link from 'next/link'

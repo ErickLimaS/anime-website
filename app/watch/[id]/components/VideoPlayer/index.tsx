@@ -1,7 +1,7 @@
 "use client"
 import styles from "./component.module.css"
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import { initFirebase } from '@/firebase/firebaseApp';
+import { initFirebase } from '@/app/firebaseApp';
 import { getAuth } from 'firebase/auth';
 import {
     DocumentData,

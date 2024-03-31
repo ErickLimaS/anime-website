@@ -10,7 +10,7 @@ import CloseSvg from '@/public/assets/x.svg'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
-import { initFirebase } from '@/firebase/firebaseApp'
+import { initFirebase } from '@/app/firebaseApp'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 
 function SearchContainer() {

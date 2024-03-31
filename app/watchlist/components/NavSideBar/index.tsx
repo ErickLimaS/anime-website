@@ -5,7 +5,7 @@ import styles from "./component.module.css"
 import { User, getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import { initFirebase } from '@/firebase/firebaseApp'
+import { initFirebase } from '@/app/firebaseApp'
 
 function NavSideBar({ params }: { params?: { format: string } }) {
 

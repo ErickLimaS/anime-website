@@ -14,7 +14,7 @@ import {
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
-import { initFirebase } from '@/firebase/firebaseApp';
+import { initFirebase } from '@/app/firebaseApp';
 import ErrorImg from "@/public/error-img-2.png"
 import Image from 'next/image';
 import CrunchyrollEpisode from '../CrunchyrollEpisodeContainer';

@@ -10,9 +10,9 @@ import SourceSvg from '@/public/assets/globe2.svg'
 import DeleteSvg from '@/public/assets/trash.svg'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { deleteDoc, deleteField, doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore'
-import { initFirebase } from '@/firebase/firebaseApp'
 import { Auth, deleteUser, updateProfile } from 'firebase/auth'
 import Image from 'next/image'
+import { initFirebase } from '@/app/firebaseApp'
 
 type SettingsTypes = {
     onClick?: MouseEventHandler<HTMLDivElement> | MouseEventHandler<HTMLButtonElement> | ((value: void) => void | PromiseLike<void>) | null | undefined,

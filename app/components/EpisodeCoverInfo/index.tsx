@@ -8,7 +8,7 @@ import DeleteSvg from "@/public/assets/trash.svg"
 import { arrayRemove, doc, getFirestore, FieldPath, setDoc } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { initFirebase } from '@/firebase/firebaseApp'
+import { initFirebase } from '@/app/firebaseApp'
 import { AnimatePresence, motion } from 'framer-motion'
 import fallbackImg from '@/public/photo-placeholder.jpg'
 
