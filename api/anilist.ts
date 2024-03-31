@@ -7,6 +7,7 @@ import {
     mediaTrendingApiQueryRequest
 } from './anilistQueryFunctions'
 import { cache } from 'react'
+import axiosRetry from 'axios-retry'
 
 const BASE_URL: string = 'https://graphql.anilist.co/'
 
@@ -15,20 +16,27 @@ const headers = {
 }
 
 // returns medias which is adult
-function filterAdultContent(data: any[], reponseType?: "mediaByFormat") {
+function filterAdultContent(data: ApiDefaultResult[] | ApiAiringMidiaResults[], reponseType?: "mediaByFormat") {
 
     let filtered
 
     if (reponseType == "mediaByFormat") {
-        filtered = data.filter((item) => item.isAdult == false)
+        filtered = (data as ApiDefaultResult[]).filter((item) => item.isAdult == false)
     }
     else {
-        filtered = data.filter((item) => item.media.isAdult == false)
+        filtered = (data as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
     }
 
     return filtered
 
 }
+
+// HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
+axiosRetry(Axios, {
+    retries: 3,
+    retryDelay: (retryAttempt) => retryAttempt * 2500,
+    retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503
+})
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
