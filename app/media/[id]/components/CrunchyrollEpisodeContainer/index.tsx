@@ -27,7 +27,12 @@ function CrunchyrollEpisode({ data, mediaId }: { data: EpisodesType, mediaId: nu
                     </Link>
                 </h3>
 
-                <ButtonMarkEpisodeAsWatched data={data} mediaId={mediaId} source="crunchyroll"/>
+                <ButtonMarkEpisodeAsWatched
+                    episodeId={data.title}
+                    episodeTitle={data.title}
+                    mediaId={mediaId}
+                    source="crunchyroll"
+                />
 
             </div>
         </li>

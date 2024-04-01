@@ -191,3 +191,10 @@
     overflow: hidden;
 
 }
+
+/* "MARK AS WATCHED" btn */
+#list_container li .episode_info_container>div {
+
+    min-width: 50px;
+
+}

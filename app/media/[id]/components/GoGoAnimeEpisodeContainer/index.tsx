@@ -30,7 +30,12 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg }: { data: Media
                     </Link>
                 </h3>
 
-                <ButtonMarkEpisodeAsWatched data={data} mediaId={mediaId} source="gogoanime" />
+                <ButtonMarkEpisodeAsWatched
+                    episodeId={data.id}
+                    episodeTitle={`${data.number}`}
+                    mediaId={mediaId}
+                    source="gogoanime"
+                />
 
             </div>
 

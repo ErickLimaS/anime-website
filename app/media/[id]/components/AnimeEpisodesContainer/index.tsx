@@ -68,9 +68,15 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   // Invoke when user click to request another page.
   const handlePageClick = (event: { selected: number }) => {
+
+    setLoading(true) // needed to refresh episodes "Marked as Watched"
+
     const newOffset = event.selected * rangeEpisodesPerPage % episodesDataFetched.length
 
     setItemOffset(newOffset)
+
+    setTimeout(() => setLoading(false), 1000)  // needed to refresh episodes "Marked as Watched"
+
   }
 
   const setEpisodesSource: (parameter: string) => void = async (parameter: string) => {

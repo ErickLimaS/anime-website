@@ -39,7 +39,12 @@ function VidsrcEpisodeContainer({ data, vidsrcData, mediaId, title, episodeNumbe
                     </Link>
                 </h3>
 
-                <ButtonMarkEpisodeAsWatched data={data} mediaId={mediaId} source="vidsrc" />
+                <ButtonMarkEpisodeAsWatched
+                    episodeId={data.id}
+                    episodeTitle={data.title}
+                    mediaId={mediaId}
+                    source="vidsrc"
+                />
 
             </div>
 

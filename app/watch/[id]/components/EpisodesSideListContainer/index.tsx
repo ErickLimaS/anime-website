@@ -13,7 +13,7 @@ type ComponentTypes = {
     mediaId: number,
     vidsrcId?: number,
     activeEpisodeNumber: number,
-    episodesList: MediaEpisodes[] | EpisodeAnimeWatch[],
+    episodesList: MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[],
     episodesOnImdb: ImdbEpisode[] | undefined
 }
 
@@ -95,12 +95,12 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                     >
 
                         <Link
-                            title={`Episode ${item.number}`}
-                            href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${queryLinkBySource(item, source)}`}
+                            title={`Episode ${(item as MediaEpisodes).number}`}
+                            href={`/watch/${mediaId}?source=${source}&episode=${(item as MediaEpisodes).number}&q=${queryLinkBySource((item as MediaEpisodes), source)}`}
                         >
 
                             <div className={styles.img_container}>
-                                <span>{item.number}</span>
+                                <span>{(item as MediaEpisodes).number}</span>
                             </div>
 
                         </Link>
@@ -108,7 +108,7 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                         <div className={styles.episode_info_container}>
 
                             <Link
-                                href={`/watch/${mediaId}?source=${source}&episode=${item.number}&q=${queryLinkBySource(item, source)}`
+                                href={`/watch/${mediaId}?source=${source}&episode=${(item as MediaEpisodes).number}&q=${queryLinkBySource((item as MediaEpisodes), source)}`
                                 }
                             >
                                 <h4>
@@ -121,7 +121,8 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                             </Link>
 
                             <ButtonMarkEpisodeAsWatched
-                                data={item}
+                                episodeId={source == "aniwatch" ? `${(item as MediaEpisodes).number}` : (item as MediaEpisodes).id}
+                                episodeTitle={source == "vidsrc" || source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
                                 mediaId={mediaId}
                                 source={source}
                                 hasText={true}

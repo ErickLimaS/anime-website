@@ -30,8 +30,12 @@ function AniwatchEpisode({ data, mediaId, backgroundImg }: { data: EpisodeAnimeW
                     </Link>
                 </h3>
 
-                <ButtonMarkEpisodeAsWatched data={data} mediaId={mediaId} source="aniwatch" />
-
+                <ButtonMarkEpisodeAsWatched
+                    episodeId={`${data.number}`}
+                    episodeTitle={data.title}
+                    mediaId={mediaId}
+                    source="aniwatch"
+                />
             </div>
 
         </li>
