@@ -388,7 +388,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                   key={key}
                   data={item as MediaEpisodes}
                   title={dataImdbMapped[key + itemOffset]?.title}
-                  backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd}
+                  backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
                   mediaId={props.mediaId}
                 />
 
@@ -399,7 +399,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                 <AniwatchEpisode
                   key={key}
                   data={item as EpisodeAnimeWatch}
-                  backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd}
+                  backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
                   mediaId={props.mediaId}
                 />
 
@@ -413,7 +413,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                   data={currentItems[key] as ImdbEpisode}
                   vidsrcData={`${props.vidsrcId}?s=${(currentItems[key] as ImdbEpisode)?.season}`}
                   title={(currentItems[key] as ImdbEpisode)?.title}
-                  backgroundImg={(currentItems[key] as ImdbEpisode)?.img?.hd}
+                  backgroundImg={(currentItems[key] as ImdbEpisode)?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
                   mediaId={props.mediaId}
                 />
 

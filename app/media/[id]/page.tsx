@@ -455,7 +455,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                     </li>
                   )}
 
-                  {imdbMediaInfo?.rating != 0 && (
+                  {(imdbMediaInfo?.rating != 0 && imdbMediaInfo?.rating != null) && (
                     <li className='display_flex_row align_items_center'>
                       <ScoreRating score={Number(imdbMediaInfo.rating.toFixed(1))} source='imdb' type='string' />
                     </li>

@@ -41,10 +41,10 @@
 .container a.img_container img {
 
     object-fit: cover;
-    
+
     transition: all ease-in-out 100ms;
 
-    background: linear-gradient(45deg, var(--brand-color), transparent);
+    background: var(--background);
 
 }
 
