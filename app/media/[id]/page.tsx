@@ -437,7 +437,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </div>
             )}
 
-            {(mediaData.averageScore || imdbMediaInfo?.rating) && (
+            {/* SCORE */}
+            {(mediaData.averageScore || imdbMediaInfo?.rating != 0) && (
               <div id={styles.score_container}>
                 <h2 className={styles.heading_style}>
                   SCORE
@@ -454,7 +455,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                     </li>
                   )}
 
-                  {imdbMediaInfo?.rating && (
+                  {imdbMediaInfo?.rating != 0 && (
                     <li className='display_flex_row align_items_center'>
                       <ScoreRating score={Number(imdbMediaInfo.rating.toFixed(1))} source='imdb' type='string' />
                     </li>
@@ -464,6 +465,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </div>
             )}
 
+            {/* TRAILER */}
             {(mediaData.trailer) && (
               <div id={styles.yt_video_container}>
                 <h2 className={styles.heading_style}>TRAILER</h2>

@@ -150,6 +150,13 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         // if media is null, try with gogoanime
         if (!media) media = await fetchOnAniWatch() // High chances of getting the wrong media
 
+        if (!media) {
+            setIsLoading(false)
+            setMovieId(null)
+
+            return
+        }
+
         // if user has watched a episode and the episode is NOT the last, redirects to next episode
         if (media && lastEpisodeWatched && (media.length > lastEpisodeWatched)) {
 
