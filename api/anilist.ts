@@ -35,7 +35,8 @@ function filterAdultContent(data: ApiDefaultResult[] | ApiAiringMidiaResults[], 
 axiosRetry(Axios, {
     retries: 3,
     retryDelay: (retryAttempt) => retryAttempt * 2500,
-    retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503
+    retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503,
+    onRetry: (retryNumber) => console.log(`retry: ${retryNumber}`)
 })
 
 // eslint-disable-next-line import/no-anonymous-default-export

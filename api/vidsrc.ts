@@ -8,7 +8,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_VIDSRC_API_URL
 axiosRetry(axios, {
     retries: 3,
     retryDelay: (retryAttempt) => retryAttempt * 2500,
-    retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503
+    retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503,
+    onRetry: (retryNumber) => console.log(`retry: ${retryNumber}`)
 })
 
 export const getVideoSrcLink = cache(async (query: string) => {

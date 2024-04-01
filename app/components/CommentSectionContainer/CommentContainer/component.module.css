@@ -92,7 +92,7 @@
     width: 0;
     height: 0;
     border: 10px solid transparent;
-    border-color: rgb(82, 82, 82) transparent transparent transparent;
+    border-color: #424b50 transparent transparent transparent;
 }
 
 .comment_container[data-has-spoiler=true] .comment_text_container p {

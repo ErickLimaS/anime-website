@@ -64,14 +64,19 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes", f
         )
     }
 
-    if (!closestResult) closestResult = searchResultsForMedia.find(
-        (item) => regexOnlyAlphabetic(item.name).toLowerCase().includes(regexMediaTitle) || searchResultsForMedia[0]
-    )
+    if (!closestResult) {
+        closestResult = searchResultsForMedia.find((item) =>
+            regexOnlyAlphabetic(item.name).toLowerCase().includes(regexMediaTitle) || searchResultsForMedia[0]
+        )
+    }
 
     if (only == "episodes") {
-        const res = await aniwatch.getEpisodes(closestResult!.id) as EpisodesFetchedAnimeWatch
 
-        return res.episodes.length == 0 ? null : res.episodes
+        if (!closestResult) return null
+
+        const res = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
+
+        return res?.episodes?.length == 0 ? null : res.episodes
     }
 
     return closestResult

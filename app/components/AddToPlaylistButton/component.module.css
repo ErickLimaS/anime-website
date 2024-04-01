@@ -8,6 +8,8 @@
 
     font-weight: 600;
 
+    border: 1px solid transparent;
+
 }
 
 #container svg {
@@ -34,6 +36,6 @@
 
     background-color: var(--white-100) !important;
     color: var(--black-100) !important;
-    border: 1px solid var(--black-100) !important;
 
+    border-color: var(--black-100) !important;
 }
