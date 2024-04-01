@@ -6,7 +6,6 @@ import { getAuth } from 'firebase/auth';
 import {
     DocumentData,
     DocumentSnapshot,
-    FieldPath,
     doc, getDoc,
     getFirestore, setDoc
 } from 'firebase/firestore';
@@ -65,7 +64,7 @@ function Player({
 
     const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
 
-    const [nextEpisode, setNextEpisode] = useState<any | undefined>(undefined)
+    const [nextEpisode, setNextEpisode] = useState<{ id: string, src: string } | undefined>(undefined)
 
     const [showActionButtons, setShowActionButtons] = useState<boolean>(false)
 
@@ -146,7 +145,7 @@ function Player({
         setSubList(subListMap)
     }
 
-    // get user preferred quality
+    // CURRENTLY DISABLED (im trying to understand the player api): get user preferred quality
     async function getUserVideoQuality(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
 
         let userVideoQuality: string | null = null
@@ -192,6 +191,13 @@ function Player({
     // updates DOC every 45 secs
     async function addToKeepWatching(currentEpisodeTime: number, videoDuration: number) {
 
+        // if episode is ending and it has a next episode after, it saves to Keep Watching the next episode
+        let saveNextEpisodeInfo = false
+
+        if (Math.round((currentEpisodeTime / videoDuration) * 100) > 95) {
+            if (nextEpisode) saveNextEpisodeInfo = true
+        }
+
         await setDoc(doc(db, "users", user!.uid),
             {
                 keepWatching: {
@@ -205,16 +211,16 @@ function Player({
                             extraLarge: media.coverImage.extraLarge,
                             large: media.coverImage.large
                         },
-                        episode: episodeNumber,
-                        episodeId: episodeId,
+                        episode: saveNextEpisodeInfo ? episodeNumber + 1 : episodeNumber,
+                        episodeId: saveNextEpisodeInfo ? nextEpisode!.id : episodeId,
                         episodeImg: episodeImg || null,
-                        episodeTimeLastStop: currentEpisodeTime,
+                        episodeTimeLastStop: saveNextEpisodeInfo ? 0 : currentEpisodeTime,
                         episodeDuration: videoDuration,
                         source: mediaSource,
                         updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
                     }
                 }
-            } as unknown as FieldPath,
+            },
             { merge: true }
         )
 
@@ -311,6 +317,8 @@ function Player({
     }
 
     function nextEpisodeAction() {
+
+        if (!nextEpisode) return
 
         router.push(`/watch/${media.id}?source=${mediaSource}&episode=${Number(episodeNumber) + 1}&q=${nextEpisode.id}`)
         setVideoSource(nextEpisode.src)
