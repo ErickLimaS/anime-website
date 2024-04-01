@@ -1,3 +1,12 @@
+#hero_section_container {
+
+    overflow-x: hidden;
+
+    position: relative;
+    top: 0;
+
+}
+
 ul.carousel_container {
 
     transition: all ease-in-out 170ms;
@@ -77,17 +86,12 @@ li.carousel_item iframe::-webkit-scrollbar {
     display: none;
 }
 
-@media((min-width: 1200px)) {
+@media((min-width: 1220px)) {
     #recomendations_container ul li {
         height: auto;
     }
 }
 
-/* @media (min-height: 600px) {
-    li.carousel_item iframe {
-        transform: translate(-50%, -25%);
-    }
-} */
 @media (min-aspect-ratio: 16/9) {
     .video-container iframe {
         height: 56.25vw;
@@ -103,11 +107,6 @@ li.carousel_item iframe::-webkit-scrollbar {
 
 ul.carousel_container li.carousel_item div.item_info {
 
-    position: relative;
-
-    top: initial;
-    bottom: calc(-20% - 2vh);
-
     width: 92%;
 
 }
@@ -121,7 +120,7 @@ ul.carousel_container li.carousel_item div.item_info {
 
 }
 
-@media((max-width: 1199px)) {
+@media((max-width: 1220px)) {
 
     ul.carousel_container li.carousel_item div.item_info {
         margin: auto;
@@ -129,11 +128,11 @@ ul.carousel_container li.carousel_item div.item_info {
 
 }
 
-@media((min-width: 1200px)) {
+@media((min-width: 1220px)) {
 
     ul.carousel_container li.carousel_item div.item_info {
 
-        left: calc(var(--breakpoint-sm) / 4);
+        left: 0;
 
         bottom: auto;
         top: 40%;
@@ -143,37 +142,60 @@ ul.carousel_container li.carousel_item div.item_info {
 
 }
 
-@media((min-width: 1400px)) {
-
-    ul.carousel_container li.carousel_item div.item_info {
-
-        left: calc(var(--breakpoint-md) / 4);
-
-    }
-
-}
-
-@media((min-width: 1400px)) {
-
-    ul.carousel_container li.carousel_item div.item_info {
-
-        left: calc(var(--breakpoint-md) / 3.5);
-
-    }
-
-}
-
-@media((min-width: 1980px)) {
-
-    ul.carousel_container li.carousel_item div.item_info {
-
-        left: calc(var(--breakpoint-xl) / 4);
-
-    }
-
-}
-
 /* ITEM INFO */
+.carousel_position_wrapper {
+
+    position: relative;
+    top: -40px;
+    right: 0;
+    left: 0;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    max-width: 96%;
+
+    margin: auto;
+
+}
+
+@media((min-width: 576px) and (max-width: 768px)) {
+    .carousel_position_wrapper {
+        max-width: var(--breakpoint-sm);
+        min-height: 520px;
+    }
+}
+
+@media((min-width: 992px) and (max-width: 1220px)) {
+    .carousel_position_wrapper {
+        max-width: var(--breakpoint-md);
+        max-height: 810px;
+    }
+}
+
+@media(min-width: 1220px) {
+    .carousel_position_wrapper {
+        top: 16px;
+    }
+}
+
+@media((min-width: 1221px) and (max-width: 1400px)) {
+    .carousel_position_wrapper {
+        max-width: var(--breakpoint-xl);
+        max-height: 810px;
+    }
+}
+
+@media((min-width: 1441px)) {
+    .carousel_position_wrapper {
+        max-width: var(--breakpoint-xxl);
+        max-height: 810px;
+    }
+}
+
 ul.carousel_container li.carousel_item div.item_info {
 
     display: grid;
@@ -284,8 +306,9 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
     ul.carousel_container li.carousel_item div.item_info .item_buttons>a,
     ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
-        padding: 20px 38px 16px 38px;
+        padding: 20px 28px 16px 28px;
     }
+
 }
 
 ul.carousel_container li.carousel_item div.item_info .item_buttons>a {
@@ -309,6 +332,59 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 }
 
 /* RECOMENDATIONS */
+#recomendations_position_wrapper {
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    min-height: 520px;
+    max-height: 520px;
+
+    max-width: 96%;
+
+    margin: auto;
+}
+
+@media((min-width: 576px) and (max-width: 768px)) {
+    #recomendations_position_wrapper {
+        max-width: var(--breakpoint-sm);
+    }
+}
+
+@media((min-width: 992px) and (max-width: 1220px)) {
+    #recomendations_position_wrapper {
+        max-width: var(--breakpoint-md);
+        height: calc(450px + 10vw);
+        max-height: 810px;
+    }
+}
+
+@media((min-width: 1221px) and (max-width: 1440px)) {
+    #recomendations_position_wrapper {
+        max-width: var(--breakpoint-xl);
+        height: calc(450px + 10vw);
+        max-height: 595px;
+    }
+}
+
+@media((min-width: 1441px)) {
+    #recomendations_position_wrapper {
+        max-width: var(--breakpoint-xxl);
+        height: calc(450px + 15vw);
+        max-height: 644px;
+    }
+}
+
+@media(min-width: 1921px) {
+    #recomendations_position_wrapper {
+        max-height: 750px;
+    }
+}
+
 #recomendations_container {
 
     z-index: 1;
@@ -316,16 +392,17 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
     margin-top: 24px;
 
     position: absolute;
-    /* bottom: 24px; */
-    bottom: 120px;
+    bottom: 4px;
     left: 2%;
+    right: 0;
     width: 96%;
-    padding: 0 15px;
+    /* padding: 0 15px; */
 
     height: fit-content;
+    
 }
 
-@media((min-width: 1200px)) {
+@media((min-width: 1220px)) {
     #recomendations_container {
 
         margin-top: 0;
@@ -336,27 +413,14 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
     }
 }
 
-@media((min-width: 1200px)) {
+@media((min-width: 1220px)) {
     #recomendations_container {
 
         left: auto;
-        right: calc(var(--breakpoint-sm) / 4);
-        max-width: 35%;
+        max-width: 45%;
         bottom: 2%;
         top: 30%;
 
-    }
-}
-
-@media((min-width: 1400px)) {
-    #recomendations_container {
-        right: calc(var(--breakpoint-md) / 4);
-    }
-}
-
-@media((min-width: 1620px)) {
-    #recomendations_container {
-        right: calc(var(--breakpoint-md) / 3.5);
     }
 }
 
@@ -386,7 +450,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
 }
 
-@media((min-width: 1200px)) {
+@media((min-width: 1220px)) {
     #recomendations_container #swiper_list_container {
         display: none;
     }
@@ -401,7 +465,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
 }
 
-@media((min-width: 1200px)) {
+@media((min-width: 1220px)) {
     #recomendations_container ul {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -442,7 +506,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
 }
 
-@media((min-width: 1200px)) {
+@media((min-width: 1220px)) {
     #recomendations_container ul li {
         height: auto;
     }
