@@ -86,13 +86,17 @@ async function MediaPage({ params }: { params: { id: number } }) {
       <div id={styles.media_info_container} className={(imdbMediaInfo?.logos && imdbMediaInfo?.logos[0]) ? `${styles.custom_position}` : ``}>
 
         <section id={styles.media_title_container}>
-          {imdbMediaInfo?.logos ? (
-            <h1>{(mediaData.title?.romaji).toUpperCase() || mediaData.title.native}</h1>
+          {(imdbMediaInfo && imdbMediaInfo?.logos.length > 0) ? (
+            <h1>
+              {(mediaData.title?.romaji).toUpperCase() || mediaData.title.native}
+            </h1>
           ) : (
-            <small>{mediaData.title.native}</small>
+            <small>
+              {mediaData.title.native}
+            </small>
           )}
 
-          {imdbMediaInfo?.logos ? (
+          {(imdbMediaInfo && imdbMediaInfo?.logos.length > 0) ? (
             <div
               className={styles.heading_img_container}
               style={{
@@ -101,13 +105,15 @@ async function MediaPage({ params }: { params: { id: number } }) {
             >
               <Image
                 src={imdbMediaInfo.logos[0]?.url}
-                alt={mediaData.title.native}
+                alt={mediaData.title.romaji}
                 fill
                 sizes='(max-width: 520px) 100%, 280px'
               />
             </div>
           ) : (
-            <h1 id={styles.heading_title}>{(mediaData.title?.romaji).toUpperCase()}</h1>
+            <h1 id={styles.heading_title}>
+              {(mediaData.title?.romaji).toUpperCase()}
+            </h1>
           )}
 
           <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>

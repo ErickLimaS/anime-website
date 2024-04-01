@@ -73,10 +73,10 @@
 /* CHAPTER ITEM RESULT */
 .chapter_container {
 
-    background: linear-gradient(to right, var(--brand-color), var(--white-25));
+    background: var(--brand-color);
 
     display: grid;
-    grid-template-columns: 15% 85%;
+    grid-template-columns: 15% 75% 10%;
     align-items: center;
     justify-items: start;
 
@@ -84,7 +84,7 @@
 
 @media(min-width: 520px) {
     .chapter_container {
-        grid-template-columns: 10% 90%;
+        grid-template-columns: 10% 80% 10%;
     }
 }
 
@@ -118,8 +118,12 @@
 .chapter_container .info_container h3 {
 
     font-size: var(--font-size--p);
-    display: block;
     color: var(--white-100);
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
 
 }
 

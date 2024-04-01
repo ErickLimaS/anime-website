@@ -5,9 +5,11 @@ import Link from 'next/link';
 import gogoanime from '@/api/gogoanime';
 import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import BookSvg from "@/public/assets/book.svg"
+import OutsideLinkSvg from "@/public/assets/box-arrow-up-right.svg"
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import Image from 'next/image';
 import ErrorImg from "@/public/error-img-2.png"
+import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 
 function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
@@ -33,7 +35,7 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
     let mangaInfo
 
-    const query = mangaTitle.replace(/[^a-z]+/i, ' ').split(" ").join("_").toLowerCase()
+    const query = stringToUrlFriendly(mangaTitle).toLowerCase()
 
     mangaInfo = await gogoanime.getInfoFromThisMedia(query, "manga") as MangaInfo
 
@@ -42,7 +44,7 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
     if (mangaInfo.title == "") {
       const searchResultsForMedia = await gogoanime.searchMedia(query, "manga") as MangaSearchResult[]
 
-      mangaInfo = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0].id, "manga") as MangaInfo
+      mangaInfo = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0]?.id, "manga") as MangaInfo
     }
 
     // sort ASC chapters
@@ -79,10 +81,12 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
       <ol id={styles.container} data-loading={loading}>
 
+        {/* LOADING */}
         {loading && (
           <p>Loading...</p>
         )}
 
+        {/* SHOWS WHEN THERES NO RESULTS  */}
         {!loading && (chaptersDataFetched.length == 0 || currentItems == null) && (
           <div id={styles.no_chapters_container}>
 
@@ -94,8 +98,7 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
         )}
 
         {currentItems && currentItems.map((item: any, key: number) => (
-
-          <li key={key} >
+          <li key={key} title={item.title + " - " + mangaTitle}>
             <Link href={`http://www.mangahere.cc/manga/${item.id}/1.html`} className={styles.chapter_container} target='_blank'>
               <div className={styles.icon_container}>
                 <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
@@ -105,7 +108,13 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
                 <h3>{item.title || "Not Available"}</h3>
 
                 <p>{item.releasedDate}</p>
+
               </div>
+
+              <div className={styles.icon_container} style={{ transform: "scale(0.8)" }}>
+                <OutsideLinkSvg alt="Outside of this site Icon" width={16} heighy={16} />
+              </div>
+
             </Link>
           </li>
         ))}
