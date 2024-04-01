@@ -87,7 +87,9 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
     }, [])
 
     return (
-        <>
+        <section id={styles.hero_section_container}>
+
+            {/* CAROUSEL OF BCG IMG AND MEDIA TITLE*/}
             {data != undefined && (
 
                 <AnimatePresence initial={true} custom={direction} mode='sync'>
@@ -136,43 +138,46 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                                 </AnimatePresence>
                             )}
 
-                            <div className={styles.item_info}>
 
-                                <h2><Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex]?.title.romaji}</Link></h2>
+                            <div className={styles.carousel_position_wrapper}>
+                                <div className={styles.item_info}>
 
-                                <div className={`${styles.item_info_inside} display_flex_row`}>
+                                    <h2><Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex]?.title.romaji}</Link></h2>
 
-                                    {data[imageIndex]?.seasonYear != undefined && (
-                                        <p>{data[imageIndex].seasonYear.toString()}</p>
-                                    )}
-                                    {((data[imageIndex]?.genres != undefined) && (data[imageIndex]?.seasonYear != undefined)) && (
-                                        <span>|</span>
-                                    )}
-                                    {data[imageIndex]?.genres != undefined && (
-                                        <p><Link href={`/search?genre=[${data[imageIndex]?.genres[0].toLowerCase()}]`}>{data[imageIndex]?.genres[0]}</Link></p>
-                                    )}
-                                    {((data[imageIndex]?.seasonYear != undefined) && (data[imageIndex]?.episodes != undefined)) && (
-                                        <span>|</span>
-                                    )}
+                                    <div className={`${styles.item_info_inside} display_flex_row`}>
 
-                                    {data[imageIndex]?.episodes != undefined && data[imageIndex].format != "MOVIE" && (
-                                        <p>{data[imageIndex].episodes.toString()} {data[imageIndex].episodes > 1 ? "Episodes" : "Episode"}</p>
-                                    )}
+                                        {data[imageIndex]?.seasonYear != undefined && (
+                                            <p>{data[imageIndex].seasonYear.toString()}</p>
+                                        )}
+                                        {((data[imageIndex]?.genres != undefined) && (data[imageIndex]?.seasonYear != undefined)) && (
+                                            <span>|</span>
+                                        )}
+                                        {data[imageIndex]?.genres != undefined && (
+                                            <p><Link href={`/search?genre=[${data[imageIndex]?.genres[0].toLowerCase()}]`}>{data[imageIndex]?.genres[0]}</Link></p>
+                                        )}
+                                        {((data[imageIndex]?.seasonYear != undefined) && (data[imageIndex]?.episodes != undefined)) && (
+                                            <span>|</span>
+                                        )}
 
-                                    {data[imageIndex]?.duration && data[imageIndex].format == "MOVIE" && (
-                                        <p>{data[imageIndex].duration} Minutes</p>
-                                    )}
+                                        {data[imageIndex]?.episodes != undefined && data[imageIndex].format != "MOVIE" && (
+                                            <p>{data[imageIndex].episodes.toString()} {data[imageIndex].episodes > 1 ? "Episodes" : "Episode"}</p>
+                                        )}
+
+                                        {data[imageIndex]?.duration && data[imageIndex].format == "MOVIE" && (
+                                            <p>{data[imageIndex].duration} Minutes</p>
+                                        )}
+
+                                    </div>
+
+                                    <div className={styles.item_buttons}>
+
+                                        <Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex].format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
+
+                                        <AddToPlaylistButton data={data[imageIndex]} />
+
+                                    </div>
 
                                 </div>
-
-                                <div className={styles.item_buttons}>
-
-                                    <Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex].format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
-
-                                    <AddToPlaylistButton data={data[imageIndex]} />
-
-                                </div>
-
                             </div>
 
                         </motion.li>
@@ -180,41 +185,57 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                     </ul >
 
                 </AnimatePresence>
+
             )}
 
-            <div id={styles.recomendations_container}>
+            {/* RECOMENDATIONS GRID */}
+            <div id={styles.recomendations_position_wrapper}>
+                <div id={styles.recomendations_container}>
 
-                <h3>Todays Recomendation</h3>
+                    <h3>Todays Recomendation</h3>
 
-                {/* SHOWS ONLY ON MOBILE */}
-                <div id={styles.swiper_list_container}>
-                    {data != undefined && (
-                        <SwiperListContainer
-                            data={data.slice(0, 9)}
-                            options={{
-                                slidesPerView: 2,
-                                bp480: 2,
-                                bp740: 3,
-                                bp1275: 3
-                            }}
-                            customHeroSection
-                        />
-                    )}
+                    {/* SHOWS ONLY ON MOBILE */}
+
+                    <div id={styles.swiper_list_container}>
+                        {data != undefined && (
+                            <SwiperListContainer
+                                onClick={(e: { target: { outerText: string } }) => setPage(
+                                    [
+                                        data.findIndex((item) => item.title.romaji == e.target.outerText),
+                                        data.findIndex((item) => item.title.romaji == e.target.outerText)
+                                    ]
+                                )}
+                                data={data.slice(0, 9)}
+                                options={{
+                                    slidesPerView: 2,
+                                    bp480: 2,
+                                    bp740: 3,
+                                    bp1275: 3
+                                }}
+                                customHeroSection
+                            />
+                        )}
+                    </div>
+
+                    {/* SHOWS ONLY ON DESKTOP */}
+                    <ul>
+                        {data != undefined && (
+                            data.slice(0, 9).map((item, key: number) => (
+                                item.bannerImage && (
+                                    <ListCarousel
+                                        onClick={() => setPage([key, key])}
+                                        key={key}
+                                        data={item}
+                                    />
+                                ))
+                            )
+                        )}
+                    </ul>
+
                 </div>
-
-                {/* SHOWS ONLY ON DESKTOP */}
-                <ul>
-                    {data != undefined && (
-                        data.slice(0, 9).map((item, key: number) => (
-                            item.bannerImage && (
-                                <ListCarousel key={key} data={item} className={styles.desktop_list_item} />
-                            ))
-                        )
-                    )}
-                </ul>
-
             </div>
 
+            {/* STOP/PLAY TRAILER BUTTON */}
             <div id={styles.stop_trailer_btn_container}>
                 <motion.button
                     onClick={() => changeTrailerState()}
@@ -228,7 +249,7 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                 </motion.button>
             </div>
 
-        </>
+        </section>
     )
 }
 

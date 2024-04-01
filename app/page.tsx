@@ -51,11 +51,8 @@ export default async function Home() {
   return (
     <main id={styles.container} className={styles.main}>
 
-      <section id={styles.hero_section}>
-
-        <HeroCarousel data={popularData} isMobile={isMobileScreen || false} />
-
-      </section>
+      {/* PAGE HERO */}
+      <HeroCarousel data={popularData} isMobile={isMobileScreen || false} />
 
       {/* Keep Watching  */}
       <KeepWatchingSection />

@@ -1,14 +1,13 @@
-import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { AnimatePresence, motion } from 'framer-motion'
 
-function ListCarousel({ data, className }: { data: ApiDefaultResult, className?: string }) {
+function ListCarousel({ data, onClick }: { data: ApiDefaultResult, onClick?: any }) {
     return (
         <li className={styles.container}>
-            <Link href={`/media/${data.id}`} title={`Watch ${data.title.romaji}`}>
+            <div title={`Watch ${data.title.romaji}`} onClick={onClick}>
                 <Image
                     src={data.bannerImage}
                     alt={`Cover for ${data.title.romaji}`}
@@ -22,7 +21,7 @@ function ListCarousel({ data, className }: { data: ApiDefaultResult, className?:
                         </span>
                     </motion.span>
                 </AnimatePresence>
-            </Link>
+            </div>
         </li>
     )
 }
