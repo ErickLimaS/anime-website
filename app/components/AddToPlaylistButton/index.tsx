@@ -3,7 +3,13 @@ import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import LoadingsssSvg from "@/public/assets/bookmark-check-fill.svg"
-import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc, FieldPath, setDoc, DocumentSnapshot, DocumentData } from 'firebase/firestore';
+import {
+    getFirestore, doc,
+    updateDoc, arrayUnion,
+    arrayRemove, getDoc,
+    FieldPath, setDoc,
+    DocumentSnapshot, DocumentData
+} from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
@@ -49,32 +55,9 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
             }
         }
 
-        const notificationData = {
-            mediaId: data.id,
-            title: {
-                romaji: data.title.romaji
-            },
-            isComplete: data.status,
-            nextReleaseDate: data.nextAiringEpisode.airingAt,
-            episodeNumber: data.nextAiringEpisode.episode,
-            lastEpisode: data.nextAiringEpisode.episode == data.episodes,
-            coverImage: {
-                extraLarge: data.coverImage.extraLarge,
-                large: data.coverImage.large
-            }
-        }
-
         await updateDoc(doc(db, 'users', user.uid),
             {
                 bookmarks: !wasAddedToPlaylist ? arrayUnion(...[bookmarkData]) : arrayRemove(...[bookmarkData])
-
-            } as unknown as FieldPath,
-            { merge: true }
-        )
-
-        await updateDoc(doc(db, 'users', user.uid),
-            {
-                notifications: !wasAddedToPlaylist ? arrayUnion(...[notificationData]) : arrayRemove(...[notificationData])
 
             } as unknown as FieldPath,
             { merge: true }
