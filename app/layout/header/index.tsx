@@ -9,6 +9,7 @@ import UserSideMenu from './components/UserSideMenu'
 import NavListMenu from './components/NavListMenu'
 import SearchContainer from './components/SearchContainer'
 import NewsNavListHover from './components/NewsNavListHover'
+import NotificationsComponent from './components/Notifications'
 
 function Header() {
 
@@ -59,6 +60,9 @@ function Header() {
 
                     {/* SEARCH MOBILE AND DESKTOP, SEARCH RESULTS CONTAINER INSIDE*/}
                     <SearchContainer />
+
+                    {/* NOTIFICATIONS */}
+                    <NotificationsComponent />
 
                     {/* USER MENU -- RIGHT SIDE OF SCREEN */}
                     <UserSideMenu />

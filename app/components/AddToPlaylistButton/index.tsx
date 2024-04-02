@@ -36,52 +36,51 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
 
         setIsLoading(true)
 
-        if (!wasAddedToPlaylist) {
-
-            await updateDoc(doc(db, 'users', user.uid),
-                {
-                    bookmarks: arrayUnion({
-                        id: data.id,
-                        title: {
-                            romaji: data.title.romaji
-                        },
-                        format: data.format,
-                        description: data.description,
-                        coverImage: {
-                            extraLarge: data.coverImage.extraLarge,
-                            large: data.coverImage.large
-                        }
-                    })
-                } as unknown as FieldPath,
-                { merge: true }
-            )
-
-            setWasAddedToPlaylist(true)
-
+        const bookmarkData = {
+            id: data.id,
+            title: {
+                romaji: data.title.romaji
+            },
+            format: data.format,
+            description: data.description,
+            coverImage: {
+                extraLarge: data.coverImage.extraLarge,
+                large: data.coverImage.large
+            }
         }
-        else {
 
-            await updateDoc(doc(db, 'users', user.uid),
-                {
-                    bookmarks: arrayRemove({
-                        id: data.id,
-                        title: {
-                            romaji: data.title.romaji
-                        },
-                        format: data.format,
-                        description: data.description,
-                        coverImage: {
-                            extraLarge: data.coverImage.extraLarge,
-                            large: data.coverImage.large
-                        }
-                    })
-                } as unknown as FieldPath,
-                { merge: true }
-            )
-
-            setWasAddedToPlaylist(false)
-
+        const notificationData = {
+            mediaId: data.id,
+            title: {
+                romaji: data.title.romaji
+            },
+            isComplete: data.status,
+            nextReleaseDate: data.nextAiringEpisode.airingAt,
+            episodeNumber: data.nextAiringEpisode.episode,
+            lastEpisode: data.nextAiringEpisode.episode == data.episodes,
+            coverImage: {
+                extraLarge: data.coverImage.extraLarge,
+                large: data.coverImage.large
+            }
         }
+
+        await updateDoc(doc(db, 'users', user.uid),
+            {
+                bookmarks: !wasAddedToPlaylist ? arrayUnion(...[bookmarkData]) : arrayRemove(...[bookmarkData])
+
+            } as unknown as FieldPath,
+            { merge: true }
+        )
+
+        await updateDoc(doc(db, 'users', user.uid),
+            {
+                notifications: !wasAddedToPlaylist ? arrayUnion(...[notificationData]) : arrayRemove(...[notificationData])
+
+            } as unknown as FieldPath,
+            { merge: true }
+        )
+
+        !wasAddedToPlaylist ? setWasAddedToPlaylist(true) : setWasAddedToPlaylist(false)
 
         setIsLoading(false)
     }

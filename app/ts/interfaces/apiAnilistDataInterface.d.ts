@@ -13,6 +13,11 @@ export interface ApiDefaultResult {
         month: number,
         day: number,
     },
+    nextAiringEpisode: {
+        airingAt: number,
+        episode: number
+    },
+    status: string | null,
     description: string,
     episodes: number,
     duration: number,
@@ -73,14 +78,9 @@ export interface EpisodesType {
 
 export interface ApiMediaResults extends ApiDefaultResult {
 
-    nextAiringEpisode: {
-        airingAt: number,
-        episode: number
-    },
     hashtag: string,
     favourites: number,
     source: string,
-    status: string | null,
     duration: number | null,
     volumes: number | null,
     chapters: number | null,

@@ -50,3 +50,20 @@ interface KeepWatchingItem {
     id: number
 
 }
+
+interface NotificationFirebase {
+
+    mediaId: number,
+    title: {
+        romaji: string
+    },
+    isComplete: boolean,
+    nextReleaseDate: number,
+    lastEpisode: boolean,
+    episodeNumber: number,
+    coverImage: {
+        extraLarge: string,
+        large: string
+    }
+
+}
