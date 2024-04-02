@@ -25,7 +25,7 @@ import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import CommentSectionContainer from '../../components/CommentSectionContainer'
 import { getMediaInfo } from '@/api/imdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
-import AddToNotificationsList from './components/AddToNofications'
+import AddToNotificationsList from './components/AddToNotifications'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
