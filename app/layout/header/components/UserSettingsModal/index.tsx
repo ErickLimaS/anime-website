@@ -172,7 +172,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
             await updateProfile(user, {
                 photoURL: newImgProfileSelected || user.photoURL,
-                displayName: form.username.value || user.displayName
+                displayName: user.isAnonymous ? user.displayName : form.username.value || user.displayName
             })
 
         }

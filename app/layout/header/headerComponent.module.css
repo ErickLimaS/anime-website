@@ -89,6 +89,7 @@ header#background button svg {
 
 #user_and_search_container {
     position: static;
+    gap: 8px;
 }
 
 @media(min-width: 768px) {

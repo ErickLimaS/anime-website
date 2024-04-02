@@ -56,7 +56,7 @@ function Header() {
                     </ul>
                 </div>
 
-                <div id={styles.user_and_search_container} className='display_flex_row align_items_center gap_16px'>
+                <div id={styles.user_and_search_container} className='display_flex_row align_items_center'>
 
                     {/* SEARCH MOBILE AND DESKTOP, SEARCH RESULTS CONTAINER INSIDE*/}
                     <SearchContainer />

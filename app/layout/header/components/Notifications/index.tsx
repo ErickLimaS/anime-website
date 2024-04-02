@@ -115,86 +115,92 @@ function NotificationsComponent() {
 
     if (user) {
         return (
-            <div id={styles.notification_container}>
-                <button
-                    id={styles.notification_btn}
-                    onClick={() => openNotificationsMenu()}
-                    title={menuOpen ? "Close Notifications" : "Open Notifications"}
-                    data-active={menuOpen}
+            <AnimatePresence>
+                <motion.div
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    id={styles.notification_container}
                 >
-                    {hasNewNotifications ? (
-                        <BellFillSvg fill="white" width={16} height={16} />
-                    ) : (
-                        <BellSvg fill="white" width={16} height={16} />
+                    <button
+                        id={styles.notification_btn}
+                        onClick={() => openNotificationsMenu()}
+                        title={menuOpen ? "Close Notifications" : "Open Notifications"}
+                        data-active={menuOpen}
+                    >
+                        {hasNewNotifications ? (
+                            <BellFillSvg fill="white" width={16} height={16} />
+                        ) : (
+                            <BellSvg fill="white" width={16} height={16} />
+                        )}
+                    </button>
+
+                    {hasNewNotifications && (
+                        <span id={styles.notifications_badge}>{notifications.length}</span>
                     )}
-                </button>
 
-                {hasNewNotifications && (
-                    <span id={styles.notifications_badge}>{notifications.length}</span>
-                )}
+                    <AnimatePresence>
+                        {menuOpen && (
+                            <motion.div
+                                initial={{ y: "-20px", opacity: 0 }}
+                                animate={{ y: "0px", opacity: 1 }}
+                                exit={{ y: "-20px", opacity: 0 }}
+                                id={styles.results_container}
+                            >
 
-                <AnimatePresence>
-                    {menuOpen && (
-                        <motion.div
-                            initial={{ y: "-20px", opacity: 0 }}
-                            animate={{ y: "0px", opacity: 1 }}
-                            exit={{ y: "-20px", opacity: 0 }}
-                            id={styles.results_container}
-                        >
+                                <h4>Latest Notifications</h4>
 
-                            <h4>Latest Notifications</h4>
+                                {notifications.length == 0 ?
+                                    (
+                                        <div>
+                                            <p style={{ color: "var(--white-100)" }}>No New Notifications</p>
+                                        </div>
+                                    ) : (
+                                        <ul>
+                                            {notifications.map((item, key) => (
 
-                            {notifications.length == 0 ?
-                                (
-                                    <div>
-                                        <p style={{ color: "var(--white-100)" }}>No New Notifications</p>
-                                    </div>
-                                ) : (
-                                    <ul>
-                                        {notifications.map((item, key) => (
+                                                <li
+                                                    key={key}
+                                                    className={styles.notification_item_container}
+                                                    aria-label={`${item.title.romaji} new episode released`}
+                                                >
 
-                                            <li
-                                                key={key}
-                                                className={styles.notification_item_container}
-                                                aria-label={`${item.title.romaji} new episode released`}
-                                            >
+                                                    <div className={styles.img_container}>
+                                                        <Image
+                                                            src={item.coverImage.large}
+                                                            alt={item.title.romaji}
+                                                            fill
+                                                            sizes='100%'
+                                                        />
+                                                    </div>
 
-                                                <div className={styles.img_container}>
-                                                    <Image
-                                                        src={item.coverImage.large}
-                                                        alt={item.title.romaji}
-                                                        fill
-                                                        sizes='100%'
-                                                    />
-                                                </div>
+                                                    <div className={styles.notification_item_info}>
 
-                                                <div className={styles.notification_item_info}>
+                                                        <h5>Episode {item.episodeNumber} Released!</h5>
 
-                                                    <h5>Episode {item.episodeNumber} Released!</h5>
+                                                        <small>{item.title.romaji}</small>
 
-                                                    <small>{item.title.romaji}</small>
+                                                        {item.lastEpisode && (
+                                                            <p><b>Watch the Season Finale!</b></p>
+                                                        )}
 
-                                                    {item.lastEpisode && (
-                                                        <p><b>Watch the Season Finale!</b></p>
-                                                    )}
+                                                        <p>Released on {convertFromUnix(item.nextReleaseDate)}</p>
 
-                                                    <p>Released on {convertFromUnix(item.nextReleaseDate)}</p>
+                                                        <Link href={`/media/${item.mediaId}`}>SEE MORE</Link>
 
-                                                    <Link href={`/media/${item.mediaId}`}>SEE MORE</Link>
+                                                    </div>
 
-                                                </div>
+                                                </li>
 
-                                            </li>
-
-                                        ))}
-                                    </ul>
-                                )
-                            }
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-            </div >
+                                            ))}
+                                        </ul>
+                                    )
+                                }
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div >
+            </AnimatePresence>
         )
     }
 }

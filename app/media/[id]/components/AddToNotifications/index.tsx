@@ -49,9 +49,9 @@ function AddToNotificationsList({ data }: { data: ApiDefaultResult }) {
                 romaji: data.title.romaji
             },
             isComplete: data.status,
-            nextReleaseDate: data.nextAiringEpisode.airingAt,
-            episodeNumber: data.nextAiringEpisode.episode,
-            lastEpisode: data.nextAiringEpisode.episode == data.episodes,
+            nextReleaseDate: data.nextAiringEpisode?.airingAt,
+            episodeNumber: data.nextAiringEpisode?.episode,
+            lastEpisode: data.nextAiringEpisode?.episode == data.episodes,
             coverImage: {
                 extraLarge: data.coverImage.extraLarge,
                 large: data.coverImage.large
@@ -125,8 +125,11 @@ function AddToNotificationsList({ data }: { data: ApiDefaultResult }) {
                     onClick={() => addThisMedia()}
                     disabled={isLoading}
                     data-added={wasAddedToNotifications}
-                    aria-label={wasAddedToNotifications ? "Click To Remove from Notifications" : "Click To Add To Notifications"}
-                    title={wasAddedToNotifications ? `Remove ${data.title && data.title?.romaji} From Notifications` : `Add ${data.title && data.title?.romaji} To Be Notified`}
+                    title={wasAddedToNotifications ?
+                        `Remove ${data.title && data.title?.romaji} From Notifications`
+                        :
+                        `Get Notified When ${data.title && data.title?.romaji} Get a New Episode`
+                    }
                 >
                     {isLoading ?
                         <LoadingSvg alt="Loading Icon" width={16} height={16} />
