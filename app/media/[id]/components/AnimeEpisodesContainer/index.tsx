@@ -120,8 +120,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         break
 
-      // get data from GOGOANIME as default
-      case "gogoanime":
+      case "gogoanime": // get data from GOGOANIME as default
 
         setEpisodeSource(chooseSource)
         mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
@@ -142,8 +141,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         break
 
-      // get data from ANIWATCH
-      case "aniwatch":
+      case "aniwatch": // get data from ANIWATCH
 
         setEpisodeSource(chooseSource)
 
@@ -153,7 +151,9 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setEpisodeSource(chooseSource)
 
-        mediaEpisodes = await fetchWithAniWatch(query, "episodes", props.mediaFormat, dataImdbMapped.length) as EpisodesFetchedAnimeWatch["episodes"]
+        mediaEpisodes = await aniwatch.getEpisodes(searchResultsForMedia.animes[0].id).then(
+          (res) => res?.episodes || null
+        ) as EpisodesFetchedAnimeWatch["episodes"]
 
         setEpisodesDataFetched(mediaEpisodes)
 
@@ -164,8 +164,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         break
 
-      // get data from VIDSRC
-      default:
+      case "vidsrc": // get data from VIDSRC
 
         // VIDSRC has no episodes INFO
         // so it will use IMDB info data, and redirect it to a url with episode and season number.
@@ -187,6 +186,12 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
 
         setLoading(false)
+
+        break
+
+      default:
+
+        console.log("need to work on it")
 
         break
 

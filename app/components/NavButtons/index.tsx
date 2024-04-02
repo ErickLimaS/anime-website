@@ -40,10 +40,9 @@ function NavButtons(props: PropsType) {
     return (
         <div className={styles.nav_button_container}>
 
-            {props.options.map((item, key: number) => (
-                <>
+            {props.options.map((item) => (
+                <React.Fragment key={item.value}>
                     <button
-                        key={key}
                         data-active={lastValueReceived == (item.value)}
                         onClick={() => toggleStateAndReturnValue(item.value)}
                         aria-label={item.name}
@@ -53,7 +52,7 @@ function NavButtons(props: PropsType) {
                     {props.sepateWithSpan && (
                         <span> | </span>
                     )}
-                </>
+                </React.Fragment>
             ))}
 
         </div>

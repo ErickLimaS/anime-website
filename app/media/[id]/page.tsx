@@ -180,7 +180,15 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2>STATUS</h2>
 
-                <p>{mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED" : mediaData.status || "Not Available"}</p>
+                <p>
+                  {
+                    mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED"
+                      :
+                      mediaData.status == "FINISHED" ? "COMPLETE"
+                        :
+                        mediaData.status || "Not Available"
+                  }
+                </p>
 
               </li>
             )}
