@@ -121,7 +121,7 @@
 
     margin: 24px 0;
 
-    gap: 0 16px;
+    gap: 16px;
 
 }
 
@@ -135,9 +135,9 @@
 
 .buttons_container>* {
 
-    transition: all ease-in-out 190ms;
+    width: 100%;
 
-    padding: 16px 16px;
+    transition: all ease-in-out 190ms;
 
     font-size: var(--font-size--small-2);
     font-weight: 600;
@@ -145,13 +145,14 @@
     border: none;
     border-radius: 4px;
 
-
 }
 
 .buttons_container>a {
 
     background-color: var(--brand-color);
     color: var(--white-100);
+
+    padding: 16px 16px;
 
     text-align: center;
 
@@ -168,6 +169,16 @@
     background-color: transparent;
     color: var(--white-100);
 
+    padding: 16px 16px;
+
+}
+
+@media(min-width: 580px) {
+    .buttons_container>button {
+
+        padding: 16px 4px;
+
+    }
 }
 
 .buttons_container>button:hover {
