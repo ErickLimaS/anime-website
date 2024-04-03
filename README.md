@@ -14,6 +14,7 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 - [x] `Comment`: Write what you thougth of that episode or just tell something that every should know about.
 - [x] `Log In`: You can log in with Google, GitHub or Anonymously (with some restrictions).
 - [x] `Keep Watching`: Continue the episode from where you stop last time.
+- [x] `Be Notified`: When a New Episode is Released, you get a notification on the website.
 - [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.
 - [x] `Bookmark the episodes you watched`: And keep watching from there later
 - [x] `News Feed`: Keep up with the latest news of animes, mangas and the industry.
@@ -21,7 +22,6 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 ## :pushpin: Under Development
 
 - [ ] `Add Reply to Comments`
-- [ ] `Be notified when a new episode/chapter is released`
 
 ## :heavy_check_mark: Tecnologies Used
 

@@ -93,6 +93,7 @@ function SearchContainer() {
                     id={styles.btn_open_search_form_mobile}
                     onClick={() => toggleSearchBarMobile(!isMobileSearchBarOpen)}
                     aria-controls={styles.input_search_bar}
+                    data-active={isMobileSearchBarOpen}
                     aria-label={isMobileSearchBarOpen ? 'Click to Hide Search Bar' : 'Click to Show Search Bar'}
                     className={styles.heading_btn}
                 >
@@ -160,25 +161,35 @@ function SearchContainer() {
             </div>
 
             {/* SEARCH RESULTS */}
-            {searchResults != null && (
-                <div id={styles.search_results_container}>
+            <AnimatePresence
+                initial={false}
+                mode='wait'
+            >
+                {searchResults != null && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        id={styles.search_results_container}
+                    >
 
-                    <button onClick={() => setSearchResults(null)} title="Close Search Results">
-                        <CloseSvg alt="Close Icon" width={16} height={16} />
-                    </button>
+                        <button onClick={() => setSearchResults(null)} title="Close Search Results">
+                            <CloseSvg alt="Close Icon" width={16} height={16} />
+                        </button>
 
-                    <ul>
-                        {searchResults.map((item: ApiDefaultResult, key: number) => (
-                            <SearchResultItemCard
-                                key={key}
-                                item={item}
-                                onClick={() => toggleSearchBarMobile(false)}
-                            />
-                        ))}
-                    </ul>
+                        <ul>
+                            {searchResults.map((item: ApiDefaultResult, key: number) => (
+                                <SearchResultItemCard
+                                    key={key}
+                                    item={item}
+                                    onClick={() => toggleSearchBarMobile(false)}
+                                />
+                            ))}
+                        </ul>
 
-                </div>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     )
 }

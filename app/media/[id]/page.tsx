@@ -25,6 +25,7 @@ import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import CommentSectionContainer from '../../components/CommentSectionContainer'
 import { getMediaInfo } from '@/api/imdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
+import AddToNotificationsList from './components/AddToNotifications'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -133,13 +134,17 @@ async function MediaPage({ params }: { params: { id: number } }) {
               )}
             </div>
 
-            <div id={styles.add_playlist_container}>
+            <div id={styles.btns_actions_container}>
+
+              <AddToNotificationsList data={mediaData as ApiDefaultResult} />
+
               <AddToPlaylistButton
                 data={mediaData as ApiDefaultResult}
                 customText={
                   [<BookmarkFillSvg key={0} />, <BookmarkSvg key={1} />]
                 }
               />
+
             </div>
 
           </div>
@@ -175,7 +180,15 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2>STATUS</h2>
 
-                <p>{mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED" : mediaData.status || "Not Available"}</p>
+                <p>
+                  {
+                    mediaData.status == "NOT_YET_RELEASED" ? "TO BE RELEASED"
+                      :
+                      mediaData.status == "FINISHED" ? "COMPLETE"
+                        :
+                        mediaData.status || "Not Available"
+                  }
+                </p>
 
               </li>
             )}

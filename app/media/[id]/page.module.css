@@ -110,7 +110,15 @@ h2.heading_style {
 
 }
 
-#media_title_container #add_playlist_container>button {
+#media_title_container #btns_actions_container {
+
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+
+}
+
+#media_title_container #btns_actions_container>button {
 
     box-shadow: 3px 3px 4px var(--black-75);
 
@@ -127,7 +135,7 @@ h2.heading_style {
 
 }
 
-#media_title_container #add_playlist_container>button[data-added=true] {
+#media_title_container #btns_actions_container>button[data-added=true] {
 
     background-color: var(--brand-color);
 
@@ -162,12 +170,11 @@ h2.heading_style {
 #media_title_container #genres_and_type_container {
 
     gap: 16px;
-    /* flex-wrap: wrap; */
     justify-content: space-between;
 
 }
 
-#media_title_container #genres_and_type_container>div:not(#add_playlist_container) {
+#media_title_container #genres_and_type_container>div:not(#btns_actions_container) {
 
     margin: auto 0;
 
