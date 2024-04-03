@@ -123,6 +123,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
       case "gogoanime": // get data from GOGOANIME as default
 
         setEpisodeSource(chooseSource)
+        
         mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
 
         if (mediaEpisodes == null) {
@@ -145,15 +146,11 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setEpisodeSource(chooseSource)
 
-        const searchResultsForMedia = await aniwatch.searchMedia(regexOnlyAlphabetic(query)) as MediaInfoFetchedAnimeWatch
+        const searchResultsForMedia = await fetchWithAniWatch(query, "search_list", props.mediaFormat, dataImdbMapped.length) as MediaInfoAniwatch[]
 
-        setMediaResultsInfoArray(searchResultsForMedia.animes.filter(item => item.type.toLowerCase() == props.mediaFormat.toLowerCase()))
+        setMediaResultsInfoArray(searchResultsForMedia)
 
-        setEpisodeSource(chooseSource)
-
-        mediaEpisodes = await aniwatch.getEpisodes(searchResultsForMedia.animes[0].id).then(
-          (res) => res?.episodes || null
-        ) as EpisodesFetchedAnimeWatch["episodes"]
+        mediaEpisodes = await fetchWithAniWatch(query, "episodes", props.mediaFormat, dataImdbMapped.length) as EpisodesFetchedAnimeWatch["episodes"]
 
         setEpisodesDataFetched(mediaEpisodes)
 

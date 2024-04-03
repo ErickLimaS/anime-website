@@ -10,13 +10,15 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
     const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
 
-    let mediaSearched = await gogoanime.getInfoFromThisMedia(textSearch, "anime") as MediaInfo
+    let mediaSearched = await gogoanime.getInfoFromThisMedia(regexMediaTitle, "anime") as MediaInfo
     let searchResultsForMedia
     let filterBestResult
 
+    // if no results were found by matching the id, search the title 
     if (!mediaSearched) {
         searchResultsForMedia = await gogoanime.searchMedia(regexMediaTitle, "anime") as MediaSearchResult[]
 
+        // filter to closest title name to the query 
         filterBestResult = searchResultsForMedia.filter(item =>
             regexOnlyAlphabetic(item.title).toLowerCase().indexOf(regexMediaTitle) !== -1
         )
@@ -26,6 +28,7 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
     if (!mediaSearched) return null
 
+    // if only EPISODES is requested
     if (only == "episodes") {
 
         let episodes: any[] = []
@@ -46,35 +49,63 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
 }
 
-export async function fetchWithAniWatch(textSearch: string, only?: "episodes", format?: string, mediaTotalEpisodes?: number) {
+export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | "search_list", format?: string, mediaTotalEpisodes?: number) {
 
     const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
 
     let searchResultsForMedia = await aniwatch.searchMedia(regexMediaTitle).then((res) => res!.animes) as MediaInfoAniwatch[]
 
+    // filter the same format
     if (format) {
         searchResultsForMedia = searchResultsForMedia.filter(item => item.type.toLowerCase() == format.toLowerCase())
     }
 
-    let closestResult: MediaInfoAniwatch | undefined
+    let closestResult: MediaInfoAniwatch[] | undefined
 
-    if (mediaTotalEpisodes) {
-        closestResult = searchResultsForMedia.find(
-            (item) => item.episodes.sub == mediaTotalEpisodes
-        )
+    // filter to item which has the same media name 
+    closestResult = searchResultsForMedia.filter(
+        (item) => regexOnlyAlphabetic(item.name).toLowerCase() == regexMediaTitle
+    )
+
+    // if is only SEARCH LIST is requested
+    if (only == "search_list") {
+        if (closestResult.length != 0) {
+            return closestResult
+        }
+    }
+    else {
+        closestResult = closestResult.length == 0 ? searchResultsForMedia : closestResult
     }
 
+    // filter which has the same ammount of episodes
+    if (mediaTotalEpisodes) {
+        const filter = closestResult.filter(
+            (item) => item.episodes.sub == mediaTotalEpisodes
+        )
+
+        if (filter.length != 0) closestResult = filter
+    }
+
+    // if is only SEARCH LIST is requested
+    if (only == "search_list") {
+
+        return closestResult.length > 0 ? closestResult : searchResultsForMedia
+
+    }
+
+    // filter closest title result
     if (!closestResult) {
-        closestResult = searchResultsForMedia.find((item) =>
+        closestResult = searchResultsForMedia.filter((item) =>
             regexOnlyAlphabetic(item.name).toLowerCase().includes(regexMediaTitle) || searchResultsForMedia[0]
         )
     }
 
+    // if only EPISODES is requested
     if (only == "episodes") {
 
         if (!closestResult) return null
 
-        const res = await aniwatch.getEpisodes(closestResult.id) as EpisodesFetchedAnimeWatch
+        const res = await aniwatch.getEpisodes(closestResult[0].id) as EpisodesFetchedAnimeWatch
 
         return res?.episodes?.length == 0 ? null : res.episodes
     }
