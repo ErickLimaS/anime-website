@@ -15,7 +15,7 @@ export function convertToUnix(days: number) {
 }
 
 // receive a unix timestamp and converts to date 
-export function convertFromUnix(unixTimestamp: number, options?: { month: "numeric" | "2-digit" | "long" | "short" | "narrow" | undefined, year: "numeric" | undefined }) {
+export function convertFromUnix(unixTimestamp: number, options?: { month?: "numeric" | "2-digit" | "long" | "short" | "narrow" | undefined, year?: "numeric" | undefined }) {
 
     const date = new Date(unixTimestamp * 1000)
 
