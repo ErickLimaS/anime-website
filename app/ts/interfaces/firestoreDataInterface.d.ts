@@ -57,6 +57,7 @@ interface NotificationFirebase {
     title: {
         romaji: string
     },
+    notificationVisualized: boolean,
     isComplete: boolean,
     nextReleaseDate: number,
     lastEpisode: boolean,
