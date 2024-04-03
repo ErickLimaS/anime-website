@@ -78,6 +78,7 @@ function UserModal({ onClick, auth, }: ModalTypes) {
         await setDoc(doc(collection(db, "users"), user.uid), {
             bookmarks: [],
             keepWatching: [],
+            notifications: [],
             comments: {},
             episodesWatchedBySource: {},
             videoSource: "gogoanime",

@@ -170,7 +170,7 @@ function NotificationsComponent() {
                                                             src={item.coverImage.large}
                                                             alt={item.title.romaji}
                                                             fill
-                                                            sizes='100%'
+                                                            sizes='100px'
                                                         />
                                                     </div>
 
