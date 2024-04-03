@@ -29,6 +29,16 @@ function NotificationsComponent() {
     const [hasNewNotifications, setHasNewNotifications] = useState<boolean>(false)
     const [menuOpen, setMenuOpen] = useState<boolean>(false)
 
+    // compare last Update with additional 30 minutes with the current time. If TRUE, fetchs Notifications again
+    function isCurrDateBiggerThanLastUpdate() {
+
+        const dateNow = Number((new Date().getTime() / 1000).toFixed(0))
+        const dateLastUpdate = Number(Number(localStorage.getItem('notificationsLastUpdate')) + 1800) || 0
+
+        return dateNow >= dateLastUpdate
+
+    }
+
     // check if notifications already is setted on local storage
     async function checkNotificationsStored() {
 
@@ -49,11 +59,8 @@ function NotificationsComponent() {
         }
         else {
 
-            const dateNow = Number((new Date().getTime() / 1000).toFixed(0))
-            const dateLastUpdate = Number(Number(localStorage.getItem('notificationsLastUpdate')) + 1800) || 0
-
             // compare last Update with additional 30 minutes with the current time. If TRUE, fetchs Notifications again
-            if (dateNow >= dateLastUpdate) {
+            if (isCurrDateBiggerThanLastUpdate()) {
 
                 notificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
                     (res) => res.data()?.notifications || []
@@ -109,9 +116,9 @@ function NotificationsComponent() {
         if (!menuOpen == false && notifications.length > 0) {
 
             const mediaNotificationsStillReleasing = notifications.filter(item => item.lastEpisode == false)
-            const mediaFinishedNotifications = notifications.filter(item => item.isComplete == true)
+            const mediaFinishedNotifications = notifications.filter(item => item.lastEpisode == true)
 
-            if (mediaNotificationsStillReleasing.length == 0 && mediaFinishedNotifications.length == 0) return
+            if ((mediaNotificationsStillReleasing.length == 0 && mediaFinishedNotifications.length == 0) || isCurrDateBiggerThanLastUpdate() == false) return
 
             // map notifications shown and updates info to next episode
             if (mediaFinishedNotifications.length > 0) {
