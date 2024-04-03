@@ -12,10 +12,11 @@ type ContainerTypes = {
     mediaId: number,
     episodeNumber: number,
     title: string,
-    backgroundImg?: string
+    backgroundImg?: string,
+    episodeDescription?: string
 }
 
-function VidsrcEpisodeContainer({ data, vidsrcData, mediaId, title, episodeNumber, backgroundImg }: ContainerTypes) {
+function VidsrcEpisodeContainer({ data, vidsrcData, mediaId, title, episodeNumber, backgroundImg, episodeDescription }: ContainerTypes) {
 
     return (
         <li className={styles.container}>
@@ -47,6 +48,10 @@ function VidsrcEpisodeContainer({ data, vidsrcData, mediaId, title, episodeNumbe
                 />
 
             </div>
+
+            {episodeDescription && (
+                <span className={styles.episode_description_container}><p>{episodeDescription}</p></span>
+            )}
 
         </li>
     )

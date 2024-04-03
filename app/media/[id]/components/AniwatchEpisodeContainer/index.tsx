@@ -6,7 +6,9 @@ import placeholderImg from "@/public/photo-placeholder.jpg"
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function AniwatchEpisode({ data, mediaId, backgroundImg }: { data: EpisodeAnimeWatch, mediaId: number, backgroundImg?: string }) {
+type ComponentTypes = { data: EpisodeAnimeWatch, mediaId: number, backgroundImg?: string, episodeDescription?: string }
+
+function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription }: ComponentTypes) {
 
     return (
         <li className={styles.container}>
@@ -37,6 +39,10 @@ function AniwatchEpisode({ data, mediaId, backgroundImg }: { data: EpisodeAnimeW
                     source="aniwatch"
                 />
             </div>
+
+            {episodeDescription && (
+                <span className={styles.episode_description_container}><p>{episodeDescription}</p></span>
+            )}
 
         </li>
     )

@@ -21,9 +21,9 @@ export const getVideoSrcLink = cache(async (query: string) => {
         return data
 
     }
-    catch (error) {
+    catch (error: any) {
 
-        console.log(error)
+        console.log(error.response.data)
 
         return null
 
