@@ -67,6 +67,7 @@ npm install
      - With the file downloaded, put it in the `/app/api/anime-info` directory, replacing the previous one.
    - On Firebase, get your configs to use the Authentication and Firestore Database.
      - IMPORTANT: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
+     - All the Firebase info needed bellow can be found when you create a new project.
 
 With all that done, you will need to fill the `.env.local` like the example bellow:
 
