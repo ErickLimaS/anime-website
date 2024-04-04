@@ -8,8 +8,9 @@ import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import aniwatch from '@/api/aniwatch';
 import {
-  EpisodeAnimeWatch, EpisodesFetchedAnimeWatch,
-  MediaInfoAniwatch, MediaInfoFetchedAnimeWatch
+  EpisodeAnimeWatch,
+  EpisodesFetchedAnimeWatch,
+  MediaInfoAniwatch
 } from '@/app/ts/interfaces/apiAnimewatchInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
@@ -17,16 +18,15 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp';
 import ErrorImg from "@/public/error-img-2.png"
 import Image from 'next/image';
-import CrunchyrollEpisode from '../CrunchyrollEpisodeContainer';
-import GoGoAnimeEpisode from '../GoGoAnimeEpisodeContainer';
-import AniwatchEpisode from '../AniwatchEpisodeContainer';
+import CrunchyrollEpisode from '../Episode/crunchyroll';
+import GoGoAnimeEpisode from '../Episode/gogoanime';
+import AniwatchEpisode from '../Episode/aniwatch';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
-import regexOnlyAlphabetic from '@/app/lib/regexOnlyAlphabetic';
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { checkApiMisspellingMedias } from '@/app/lib/checkApiMediaMisspelling';
-import VidsrcEpisodeContainer from '../VidsrcEpisodeContainer';
+import VidsrcEpisodeContainer from '../Episode/vidsrc';
 
 type EpisodesContainerTypes = {
   dataCrunchyroll: EpisodesType[],
