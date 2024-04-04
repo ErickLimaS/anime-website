@@ -685,7 +685,8 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                         </div>
                     )}
 
-                    <button
+                    <motion.button
+                        whileTap={{ scale: 0.9 }}
                         type='submit'
                         data-change-success={wasSuccessfull}
                         disabled={isLoading}
@@ -701,7 +702,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                 :
                                 "Confirm Changes"
                         }
-                    </button>
+                    </motion.button>
 
                 </form>
 
