@@ -69,7 +69,7 @@
 
     background-color: var(--white-100);
 
-    padding: 8px 24px;
+    padding: 24px 24px;
 
     display: flex;
     flex-direction: row;
@@ -87,9 +87,13 @@
 }
 
 #modal #close_menu_btn {
+    
+    height: 32px;
+    width: 32px;
 
     display: flex;
-    padding: 16px;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     border: 0;
 
@@ -152,6 +156,8 @@
     border-radius: 8px;
 
     padding: 16px 8px;
+
+    margin: 0 24px;
 
     display: flex;
     flex-direction: column;
