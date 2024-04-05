@@ -1,5 +1,4 @@
 "use client"
-import Link from 'next/link'
 import React, { DetailedHTMLProps, HTMLAttributes, useEffect } from 'react'
 import ErrorImg from "@/public/error-img-4.png"
 import Image from 'next/image'
@@ -104,9 +103,13 @@ function ErrorPage({ error, reset }: {
             <div style={errorHeadingContainerStyles as any}>
                 <h1 style={errorH1Styles}>Something went wrong!</h1>
 
+                <p style={errorPStyles}>Sometimes is due to the API Hosting!</p>
+
+                <p style={errorPStyles}><b>Reloading Page Might Work!</b></p>
+
                 <p style={errorPStyles}>{error.name}: {error.message}</p>
 
-                <span style={{background: "var(--black-05)", padding: "8px", margin:"0 16px"}}>{error.stack}</span>
+                <span style={{ background: "var(--black-05)", padding: "8px", margin: "0 16px" }}>{error.stack}</span>
             </div>
 
             <div style={errorButtonContainerStyles}>
@@ -127,7 +130,7 @@ function ErrorPage({ error, reset }: {
 
             </div>
 
-        </div>
+        </div >
 
     )
 }
