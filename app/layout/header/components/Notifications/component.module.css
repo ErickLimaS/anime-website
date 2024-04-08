@@ -37,13 +37,17 @@
 
 span#notifications_badge {
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+
     font-size: var(--font-size--small-2);
 
     position: absolute;
     top: 20%;
     right: -5%;
-
-    padding: 3px 6px;
 
     border-radius: 50%;
     background: var(--brand-color);
@@ -56,13 +60,11 @@ span#notifications_badge {
 
     box-shadow: 4px 4px 12px 0px var(--black-100);
 
-    transform: translate(25%, 0%) !important;
-
-    width: calc(96vw - 32px);
+    width: 95vw;
     max-width: 400px;
 
     position: absolute;
-    right: 0;
+    right: calc(0px - 68px);
     top: 60px;
 
     background-color: var(--background);
@@ -96,6 +98,7 @@ span#notifications_badge {
 
     color: var(--white-100);
     font-size: var(--font-size--h5);
+    font-weight: 600;
 
     margin-bottom: 24px;
 
@@ -135,7 +138,7 @@ span#notifications_badge {
     color: var(--white-100);
 
     display: grid;
-    grid-template-columns: minmax(70px, 100px) 1fr;
+    grid-template-columns: minmax(70px, 120px) 1fr;
     gap: 0 16px;
 
 }
@@ -150,6 +153,10 @@ span#notifications_badge {
 }
 
 .notification_item_container .notification_item_info {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     margin: 6px 8px;
 
@@ -178,7 +185,7 @@ span#notifications_badge {
 
 .notification_item_container p {
 
-    margin: 16px 0;
+    margin: 12px 0;
 
     font-size: var(--font-size--small-1);
 

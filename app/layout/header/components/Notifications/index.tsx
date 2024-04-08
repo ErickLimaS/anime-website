@@ -4,13 +4,20 @@ import BellFillSvg from '@/public/assets/bell-fill.svg'
 import BellSvg from '@/public/assets/bell.svg'
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { doc, getDoc, getFirestore } from 'firebase/firestore'
+import {
+    arrayRemove, arrayUnion,
+    doc, FieldPath,
+    getDoc, getFirestore,
+    updateDoc
+} from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
+import anilist from '@/api/anilist'
+import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
 function NotificationsComponent() {
 
@@ -21,6 +28,16 @@ function NotificationsComponent() {
     const [notifications, setNotifications] = useState<NotificationFirebase[]>([])
     const [hasNewNotifications, setHasNewNotifications] = useState<boolean>(false)
     const [menuOpen, setMenuOpen] = useState<boolean>(false)
+
+    // compare last Update with additional 30 minutes with the current time. If TRUE, fetchs Notifications again
+    function isCurrDateBiggerThanLastUpdate() {
+
+        const dateNow = Number((new Date().getTime() / 1000).toFixed(0))
+        const dateLastUpdate = Number(Number(localStorage.getItem('notificationsLastUpdate')) + 1800) || 0
+
+        return dateNow >= dateLastUpdate
+
+    }
 
     // check if notifications already is setted on local storage
     async function checkNotificationsStored() {
@@ -42,11 +59,8 @@ function NotificationsComponent() {
         }
         else {
 
-            const dateNow = Number((new Date().getTime() / 1000).toFixed(0))
-            const dateLastUpdate = Number(Number(localStorage.getItem('notificationsLastUpdate')) + 1800) || 0
-
             // compare last Update with additional 30 minutes with the current time. If TRUE, fetchs Notifications again
-            if (dateNow >= dateLastUpdate) {
+            if (isCurrDateBiggerThanLastUpdate()) {
 
                 notificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
                     (res) => res.data()?.notifications || []
@@ -78,7 +92,8 @@ function NotificationsComponent() {
         let notificationsToBeShown: NotificationFirebase[] = []
 
         notificationsData.map((item) => {
-            currDateInUnix >= item.nextReleaseDate ? notificationsToBeShown.push(item) : undefined
+            (currDateInUnix >= item.nextReleaseDate && item.notificationVisualized == false)
+                ? notificationsToBeShown.push(item) : undefined
         })
 
         if (notificationsToBeShown.length > 0) {
@@ -97,6 +112,110 @@ function NotificationsComponent() {
         localStorage.setItem('notificationsVisualized', "true")
 
         setHasNewNotifications(false)
+
+        if (!menuOpen == false && notifications.length > 0) {
+
+            const mediaNotificationsStillReleasing = notifications.filter(item => item.lastEpisode == false)
+            const mediaFinishedNotifications = notifications.filter(item => item.lastEpisode == true)
+
+            if ((mediaNotificationsStillReleasing.length == 0 && mediaFinishedNotifications.length == 0) || isCurrDateBiggerThanLastUpdate() == false) return
+
+            // map notifications shown and updates info to next episode
+            if (mediaFinishedNotifications.length > 0) {
+                mediaNotificationsStillReleasing.map(async (item) => {
+
+                    // gets the update media's updated info
+                    const mediaData = await anilist.getMediaInfo(item.mediaId) as ApiMediaResults
+
+                    const updateNotificationData = {
+                        mediaId: mediaData.id,
+                        title: {
+                            romaji: mediaData.title.romaji
+                        },
+                        isComplete: mediaData.status,
+                        notificationVisualized: mediaData.nextAiringEpisode?.episode ? false : true,
+                        nextReleaseDate: mediaData.nextAiringEpisode?.airingAt,
+                        episodeNumber: mediaData.nextAiringEpisode?.episode,
+                        lastEpisode: mediaData.nextAiringEpisode?.episode == mediaData.episodes,
+                        coverImage: {
+                            extraLarge: mediaData.coverImage.extraLarge,
+                            large: mediaData.coverImage.large
+                        }
+                    }
+
+                    // removes older notication with previous data
+                    await updateDoc(doc(db, 'users', user!.uid),
+                        {
+                            notifications: arrayRemove(...[item])
+
+                        } as unknown as FieldPath,
+                        { merge: true }
+                    ).catch(
+                        err => { return console.log(err) }
+                    )
+
+                    // add new data to notificaion media
+                    await updateDoc(doc(db, 'users', user!.uid),
+                        {
+                            notifications: arrayUnion(...[updateNotificationData])
+
+                        } as unknown as FieldPath,
+                        { merge: true }
+                    ).catch(
+                        err => { return console.log(err) }
+                    )
+
+                })
+            }
+
+            // if theres medias that just FINISHED, it will set then to "notificationVisualized" true
+            if (mediaFinishedNotifications.length > 0) {
+
+                mediaFinishedNotifications.map(async (item) => {
+
+                    // removes older notication with previous data
+                    await updateDoc(doc(db, 'users', user!.uid),
+                        {
+                            notifications: arrayRemove(...[item])
+
+                        } as unknown as FieldPath,
+                        { merge: true }
+                    ).catch(
+                        err => { return console.log(err) }
+                    )
+
+                    // add field VISUALIZED to updated item
+                    item.notificationVisualized = true
+
+                    // add new data to notification media
+                    await updateDoc(doc(db, 'users', user!.uid),
+                        {
+                            notifications: arrayUnion(...[item])
+
+                        } as unknown as FieldPath,
+                        { merge: true }
+                    ).catch(
+                        err => { return console.log(err) }
+                    )
+
+                })
+
+            }
+
+            async function updateNotificationsOnLocal() {
+
+                const allNotificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
+                    (res) => res.data()?.notifications || []
+                )
+
+                localStorage.setItem('notifications', JSON.stringify(allNotificationsStored))
+                localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
+
+            }
+
+            updateNotificationsOnLocal()
+
+        }
 
     }
 

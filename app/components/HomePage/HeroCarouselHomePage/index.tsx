@@ -10,6 +10,7 @@ import SwiperListContainer from '../../SwiperListContainer'
 import ListCarousel from '../HeroListCarousel'
 import EyeSvg from "@/public/assets/eye-fill.svg"
 import EyeSlashSvg from "@/public/assets/eye-slash-fill.svg"
+import { convertFromUnix } from '@/app/lib/formatDateUnix'
 
 function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: boolean }) {
 
@@ -146,25 +147,36 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
 
                                     <div className={`${styles.item_info_inside} display_flex_row`}>
 
-                                        {data[imageIndex]?.seasonYear != undefined && (
+                                        {data[imageIndex]?.seasonYear && (
                                             <p>{data[imageIndex].seasonYear.toString()}</p>
                                         )}
-                                        {((data[imageIndex]?.genres != undefined) && (data[imageIndex]?.seasonYear != undefined)) && (
+                                        {((data[imageIndex]?.genres) && (data[imageIndex]?.seasonYear != undefined)) && (
                                             <span>|</span>
                                         )}
-                                        {data[imageIndex]?.genres != undefined && (
+
+                                        {data[imageIndex]?.genres && (
                                             <p><Link href={`/search?genre=[${data[imageIndex]?.genres[0].toLowerCase()}]`}>{data[imageIndex]?.genres[0]}</Link></p>
                                         )}
-                                        {((data[imageIndex]?.seasonYear != undefined) && (data[imageIndex]?.episodes != undefined)) && (
+                                        {((data[imageIndex]?.seasonYear != undefined) && (data[imageIndex]?.episodes != undefined && data[imageIndex]?.nextAiringEpisode == null)) && (
                                             <span>|</span>
                                         )}
 
-                                        {data[imageIndex]?.episodes != undefined && data[imageIndex].format != "MOVIE" && (
+                                        {(data[imageIndex]?.episodes && data[imageIndex].format != "MOVIE" && data[imageIndex]?.nextAiringEpisode == null) && (
                                             <p>{data[imageIndex].episodes.toString()} {data[imageIndex].episodes > 1 ? "Episodes" : "Episode"}</p>
                                         )}
-
                                         {data[imageIndex]?.duration && data[imageIndex].format == "MOVIE" && (
                                             <p>{data[imageIndex].duration} Minutes</p>
+                                        )}
+                                        {data[imageIndex]?.nextAiringEpisode && (
+                                            <span>|</span>
+                                        )}
+
+                                        {data[imageIndex]?.nextAiringEpisode && (
+                                            <p>
+                                                Ep {data[imageIndex]?.nextAiringEpisode.episode} on {convertFromUnix(
+                                                    data[imageIndex]?.nextAiringEpisode.airingAt, { month: "long", year: undefined })
+                                                }
+                                            </p>
                                         )}
 
                                     </div>

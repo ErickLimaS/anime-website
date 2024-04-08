@@ -1,5 +1,9 @@
 #container {
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     transition: all ease-in-out 200ms;
 
     height: inherit;

@@ -3,15 +3,17 @@ import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
-import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
+import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg }: { data: MediaEpisodes, mediaId: number, title: string, backgroundImg?: string }) {
+type ComponentTypes = { data: EpisodeAnimeWatch, mediaId: number, backgroundImg?: string, episodeDescription?: string }
+
+function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription }: ComponentTypes) {
 
     return (
         <li className={styles.container}>
 
-            <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`} className={styles.img_container}>
+            <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`} className={styles.img_container}>
                 <Image
                     src={backgroundImg || placeholderImg}
                     data-other-source={true}
@@ -25,22 +27,25 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg }: { data: Media
 
             <div className={styles.title_button_container}>
                 <h3>
-                    <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`}>
-                        {title ? `Episode ${data.number} - ${title}` : `Episode ${data.number}`}
+                    <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`}>
+                        {`Episode ${data.number} ${data.title && `- ${data.title}`}`}
                     </Link>
                 </h3>
 
                 <ButtonMarkEpisodeAsWatched
-                    episodeId={data.id}
-                    episodeTitle={`${data.number}`}
+                    episodeId={`${data.number}`}
+                    episodeTitle={data.title}
                     mediaId={mediaId}
-                    source="gogoanime"
+                    source="aniwatch"
                 />
-
             </div>
+
+            {episodeDescription && (
+                <span className={styles.episode_description_container}><p>{episodeDescription}</p></span>
+            )}
 
         </li>
     )
 }
 
-export default GoGoAnimeEpisode
+export default AniwatchEpisode

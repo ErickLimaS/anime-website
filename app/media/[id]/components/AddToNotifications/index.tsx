@@ -48,6 +48,7 @@ function AddToNotificationsList({ data }: { data: ApiDefaultResult }) {
             title: {
                 romaji: data.title.romaji
             },
+            notificationVisualized: false,
             isComplete: data.status,
             nextReleaseDate: data.nextAiringEpisode?.airingAt,
             episodeNumber: data.nextAiringEpisode?.episode,

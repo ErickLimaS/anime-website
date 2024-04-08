@@ -8,8 +8,9 @@ import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import aniwatch from '@/api/aniwatch';
 import {
-  EpisodeAnimeWatch, EpisodesFetchedAnimeWatch,
-  MediaInfoAniwatch, MediaInfoFetchedAnimeWatch
+  EpisodeAnimeWatch,
+  EpisodesFetchedAnimeWatch,
+  MediaInfoAniwatch
 } from '@/app/ts/interfaces/apiAnimewatchInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
@@ -17,16 +18,15 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp';
 import ErrorImg from "@/public/error-img-2.png"
 import Image from 'next/image';
-import CrunchyrollEpisode from '../CrunchyrollEpisodeContainer';
-import GoGoAnimeEpisode from '../GoGoAnimeEpisodeContainer';
-import AniwatchEpisode from '../AniwatchEpisodeContainer';
+import CrunchyrollEpisode from '../Episode/crunchyroll';
+import GoGoAnimeEpisode from '../Episode/gogoanime';
+import AniwatchEpisode from '../Episode/aniwatch';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
-import regexOnlyAlphabetic from '@/app/lib/regexOnlyAlphabetic';
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { checkApiMisspellingMedias } from '@/app/lib/checkApiMediaMisspelling';
-import VidsrcEpisodeContainer from '../VidsrcEpisodeContainer';
+import VidsrcEpisodeContainer from '../Episode/vidsrc';
 
 type EpisodesContainerTypes = {
   dataCrunchyroll: EpisodesType[],
@@ -123,7 +123,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
       case "gogoanime": // get data from GOGOANIME as default
 
         setEpisodeSource(chooseSource)
-        
+
         mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
 
         if (mediaEpisodes == null) {
@@ -390,6 +390,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                   key={key}
                   data={item as MediaEpisodes}
                   title={dataImdbMapped[key + itemOffset]?.title}
+                  episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
                   backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
                   mediaId={props.mediaId}
                 />
@@ -401,6 +402,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                 <AniwatchEpisode
                   key={key}
                   data={item as EpisodeAnimeWatch}
+                  episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
                   backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
                   mediaId={props.mediaId}
                 />
@@ -415,6 +417,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                   data={currentItems[key] as ImdbEpisode}
                   vidsrcData={`${props.vidsrcId}?s=${(currentItems[key] as ImdbEpisode)?.season}`}
                   title={(currentItems[key] as ImdbEpisode)?.title}
+                  episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
                   backgroundImg={(currentItems[key] as ImdbEpisode)?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
                   mediaId={props.mediaId}
                 />

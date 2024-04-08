@@ -8,6 +8,7 @@ import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
+import styles from "./component.module.css"
 
 function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
@@ -177,7 +178,9 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         }
 
         if (media) {
-            setMovieId(source == "aniwatch" ? media[0]?.episodeId : media[0]?.id || null)
+
+            setMovieId(media[0]?.episodeId || media[0]?.id || null)
+
         }
 
         setIsLoading(false)
@@ -206,6 +209,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     return (
         <button
+            id={styles.container}
             role='link'
             onClick={() => redirectTo()}
             disabled={isLoading || movieId == null}
@@ -220,13 +224,17 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         >
 
             {(user && episodeNumber) && (
-                <span>Continue from EP {episodeNumber}</span>
+                <span id={styles.continue_span}>Continue from EP {episodeNumber}</span>
             )}
 
             {isLoading ?
                 <LoadingSvg width={16} height={16} /> :
                 <PlaySvg fill="#fff" width={16} height={16} />
             }
+
+            {(movieId && source) && (
+                <span id={styles.source_span}>{source.toUpperCase()}</span>
+            )}
 
         </button>
     )
