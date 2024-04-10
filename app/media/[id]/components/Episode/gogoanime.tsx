@@ -5,13 +5,21 @@ import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
+import { motion } from 'framer-motion'
 
-type ComponentTypes = { data: MediaEpisodes, mediaId: number, title: string, backgroundImg?: string, episodeDescription?: string }
+type ComponentTypes = {
+    data: MediaEpisodes,
+    mediaId: number,
+    title: string,
+    backgroundImg?: string,
+    episodeDescription?: string,
+    motionStyle?: any
+}
 
-function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescription }: ComponentTypes) {
+function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescription, motionStyle }: ComponentTypes) {
 
     return (
-        <li className={styles.container}>
+        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
 
             <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`} className={styles.img_container}>
                 <Image
@@ -45,7 +53,7 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescript
                 <span className={styles.episode_description_container}><p>{episodeDescription}</p></span>
             )}
 
-        </li>
+        </motion.li>
     )
 }
 

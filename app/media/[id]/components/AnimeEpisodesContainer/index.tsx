@@ -39,6 +39,33 @@ type EpisodesContainerTypes = {
   vidsrcId: number | null
 }
 
+const loadingEpisodesMotion = {
+  initial: {
+    scale: 0
+  },
+  animate: {
+    scale: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+  exit: {
+    scale: 0
+  }
+}
+
+const episodePopupMotion = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 0.5
+    }
+  }
+}
+
 function EpisodesContainer(props: EpisodesContainerTypes) {
 
   const { dataCrunchyroll } = props
@@ -218,7 +245,10 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     setLoading(true)
 
-    const thisSeasonEpisodes = dataImdb?.find((item) => item.season == seasonNumber)?.episodes
+    const thisSeasonEpisodes = dataImdb?.find((item) =>
+      item.season == seasonNumber)?.episodes.filter((item) =>
+        Number(new Date(item.releaseDate).getTime() / 1000).toFixed(0) as unknown as number <= Number((new Date().getTime() / 1000).toFixed(0))
+      )
 
     if (!thisSeasonEpisodes) return
 
@@ -272,18 +302,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
     setCurrentItems(episodesDataFetched.slice(itemOffset, endOffset))
 
   }, [episodesDataFetched, itemOffset, dataCrunchyroll, episodeSource])
-
-  const loadingEpisodesMotion = {
-    initial: {
-      scale: 0,
-    },
-    animate: {
-      scale: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
 
   return (
     <div>
@@ -366,7 +384,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
       </div>
 
-      <ol id={styles.container} data-loading={loading}>
+      <motion.ol id={styles.container} data-loading={loading} animate={{ height: "auto" }}>
 
         <AnimatePresence>
 
@@ -377,6 +395,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
               episodeSource == "crunchyroll" && (
 
                 <CrunchyrollEpisode
+                  motionStyle={episodePopupMotion}
                   key={key}
                   data={item as EpisodesType}
                   mediaId={props.mediaId}
@@ -387,6 +406,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
               episodeSource == "gogoanime" && (
 
                 <GoGoAnimeEpisode
+                  motionStyle={episodePopupMotion}
                   key={key}
                   data={item as MediaEpisodes}
                   title={dataImdbMapped[key + itemOffset]?.title}
@@ -400,6 +420,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
               episodeSource == "aniwatch" && (
 
                 <AniwatchEpisode
+                  motionStyle={episodePopupMotion}
                   key={key}
                   data={item as EpisodeAnimeWatch}
                   episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
@@ -412,6 +433,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
               (episodeSource == "vidsrc" && props.vidsrcId != null && dataImdb && dataImdb[0]?.season) && (
 
                 <VidsrcEpisodeContainer
+                  motionStyle={episodePopupMotion}
                   key={key}
                   episodeNumber={key + 1 + itemOffset}
                   data={currentItems[key] as ImdbEpisode}
@@ -428,7 +450,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           ))}
 
         </AnimatePresence>
-      </ol>
+      </motion.ol>
 
       {loading && (
         <motion.div
@@ -436,9 +458,10 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           variants={loadingEpisodesMotion}
           initial="initial"
           animate="animate"
+          exit="exit"
         >
 
-          {simulateRange(15).map((item, key) => (
+          {simulateRange(25).map((item, key) => (
 
             <motion.div
               key={key}

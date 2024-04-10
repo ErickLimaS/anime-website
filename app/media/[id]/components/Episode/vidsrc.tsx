@@ -5,6 +5,7 @@ import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
+import { motion } from 'framer-motion'
 
 type ContainerTypes = {
     data: ImdbEpisode,
@@ -13,13 +14,14 @@ type ContainerTypes = {
     episodeNumber: number,
     title: string,
     backgroundImg?: string,
-    episodeDescription?: string
+    episodeDescription?: string,
+    motionStyle?: any
 }
 
-function VidsrcEpisodeContainer({ data, vidsrcData, mediaId, title, episodeNumber, backgroundImg, episodeDescription }: ContainerTypes) {
+function VidsrcEpisodeContainer({ data, vidsrcData, mediaId, title, episodeNumber, backgroundImg, episodeDescription, motionStyle }: ContainerTypes) {
 
     return (
-        <li className={styles.container}>
+        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
 
             <Link href={`/watch/${mediaId}?source=vidsrc&episode=${episodeNumber}&q=${vidsrcData}`} className={styles.img_container}>
                 <Image
@@ -53,7 +55,7 @@ function VidsrcEpisodeContainer({ data, vidsrcData, mediaId, title, episodeNumbe
                 <span className={styles.episode_description_container}><p>{episodeDescription}</p></span>
             )}
 
-        </li>
+        </motion.li>
     )
 }
 
