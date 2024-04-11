@@ -77,7 +77,7 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
 
                     {/* SHOWS ONLY ON MOBILE */}
                     <div id={styles.popular_list_container}>
-                        <SwiperListContainer data={fetchedData?.length > 0 ? fetchedData : initialData} />
+                        <SwiperListContainer data={fetchedData?.length > 0 ? [...initialData, ...fetchedData] : initialData} />
                     </div>
 
                     {initialData.map((item, key: number) => (
@@ -86,7 +86,6 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
 
 
                 </React.Fragment>
-
             </section>
 
             <AnimatePresence>
