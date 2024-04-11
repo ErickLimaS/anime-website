@@ -238,8 +238,10 @@
 
 #search_results_container>ul {
 
-    height: calc(100vh - 156px);
+    max-height: calc(100vh - 156px);
     overflow: auto;
+
+    padding: 8px 0;
 
     width: 96%;
     margin: auto;

@@ -51,6 +51,27 @@ export async function GET(request: NextRequest) {
 
     dataSort = dataSort.slice(0, pageLimit * Number(params.get("page") || 1))
 
+    // GET ANILIST ID FOR EACH MEDIA
+    if (dataSort) {
+
+        let sortHasAnilistId
+
+        sortHasAnilistId = dataSort.filter((item: { sources: string[]; anilistId: string }) => item.sources.map(a => {
+
+            if (a.includes("https://anilist.co/anime")) {
+                const foundUrl: string | null = a.slice(a.search(/\banime\b/))
+                item.anilistId = foundUrl!.slice(6)
+            }
+
+        }))
+
+        // filter only itens which has the anilist ID
+        sortHasAnilistId = sortHasAnilistId.filter((item: { anilistId: string }) => item.anilistId)
+
+        dataSort = sortHasAnilistId
+
+    }
+    
     return NextResponse.json(
         {
             data: dataSort,
