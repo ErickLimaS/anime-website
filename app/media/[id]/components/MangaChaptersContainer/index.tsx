@@ -2,16 +2,16 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import Link from 'next/link';
-import gogoanime from '@/api/gogoanime';
-import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
+import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface';
 import BookSvg from "@/public/assets/book.svg"
 import OutsideLinkSvg from "@/public/assets/box-arrow-up-right.svg"
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import Image from 'next/image';
 import ErrorImg from "@/public/error-img-2.png"
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
+import manga from '@/api/manga';
 
-function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
+function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, mediaId: number }) {
 
   const [loading, setLoading] = useState(true)
   const [chaptersDataFetched, setChaptersDataFetched] = useState<MangaChapters[]>([])
@@ -37,28 +37,21 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
     const query = stringToUrlFriendly(mangaTitle).toLowerCase()
 
-    mangaInfo = await gogoanime.getInfoFromThisMedia(query, "manga") as MangaInfo
+    mangaInfo = await manga.getInfoFromThisMedia(query) as MangaInfo
 
     // if the query dont match any id result, it will search results for this query,
     // than make the first request by the ID of the first search result 
-    if (mangaInfo.title == "") {
-      const searchResultsForMedia = await gogoanime.searchMedia(query, "manga") as MangaSearchResult[]
+    if (!mangaInfo) {
+      const searchResultsForMedia = await manga.searchMedia(query) as MangaSearchResult[]
 
-      mangaInfo = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0]?.id, "manga") as MangaInfo
+      mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia[0]?.id) as MangaInfo
     }
 
-    // sort ASC chapters
-    const data = mangaInfo.chapters.sort((a, b) => {
-      if (a.title < b.title) {
-        return -1 as any;
-      }
-    });
-
-    setChaptersDataFetched(data)
+    setChaptersDataFetched(mangaInfo.chapters)
 
     const endOffset = itemOffset + rangeChaptersPerPage;
-    setCurrentItems(data.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(data.length / rangeChaptersPerPage));
+    setCurrentItems(mangaInfo.chapters.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(mangaInfo.chapters.length / rangeChaptersPerPage));
 
     setLoading(false)
 
@@ -97,23 +90,25 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
           </div>
         )}
 
-        {currentItems && currentItems.map((item: any, key: number) => (
-          <li key={key} title={item.title + " - " + mangaTitle}>
-            <Link href={`http://www.mangahere.cc/manga/${item.id}/1.html`} className={styles.chapter_container} target='_blank'>
+        {currentItems && currentItems.map((item, key: number) => (
+          <li key={key} title={`Chapter ${item.chapterNumber} - ${mangaTitle}`}>
+            <Link href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`} className={styles.chapter_container}>
               <div className={styles.icon_container}>
                 <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
               </div>
 
               <div className={styles.info_container}>
-                <h3>{item.title || "Not Available"}</h3>
+                <h3>{item.title != item.chapterNumber ? `Chapter ${item.chapterNumber}: ${item.title}` : `Chapter ${item.chapterNumber}` || "Not Available"}</h3>
 
-                <p>{item.releasedDate}</p>
+                <p>{item.pages == 0 ? "No Pages Found!" : `${item.pages} Pages`}</p>
+
+                {/* <p>{item.releasedDate}</p> */}
 
               </div>
 
-              <div className={styles.icon_container} style={{ transform: "scale(0.8)" }}>
+              {/* <div className={styles.icon_container} style={{ transform: "scale(0.8)" }}>
                 <OutsideLinkSvg alt="Outside of this site Icon" width={16} heighy={16} />
-              </div>
+              </div> */}
 
             </Link>
           </li>

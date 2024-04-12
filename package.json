@@ -22,6 +22,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-firebase-hooks": "^5.1.1",
+    "react-pageflip": "^2.0.3",
     "react-paginate": "^8.2.0",
     "sharp": "^0.33.3",
     "swiper": "^11.0.6"

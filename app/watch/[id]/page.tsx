@@ -30,7 +30,7 @@ export async function generateMetadata({ params, searchParams }: {
 
     return {
         title: `Watching EP ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
-        description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}}`,
+        description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}`,
     }
 }
 
