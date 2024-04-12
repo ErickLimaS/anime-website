@@ -10,20 +10,20 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
     const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
 
-    let mediaSearched = await gogoanime.getInfoFromThisMedia(regexMediaTitle, "anime") as MediaInfo
+    let mediaSearched = await gogoanime.getInfoFromThisMedia(regexMediaTitle) as MediaInfo
     let searchResultsForMedia
     let filterBestResult
 
     // if no results were found by matching the id, search the title 
     if (!mediaSearched) {
-        searchResultsForMedia = await gogoanime.searchMedia(regexMediaTitle, "anime") as MediaSearchResult[]
+        searchResultsForMedia = await gogoanime.searchMedia(regexMediaTitle) as MediaSearchResult[]
 
         // filter to closest title name to the query 
         filterBestResult = searchResultsForMedia.filter(item =>
             regexOnlyAlphabetic(item.title).toLowerCase().indexOf(regexMediaTitle) !== -1
         )
 
-        mediaSearched = await gogoanime.getInfoFromThisMedia(filterBestResult[0]?.id || searchResultsForMedia![0]?.id, "anime") as MediaInfo || null
+        mediaSearched = await gogoanime.getInfoFromThisMedia(filterBestResult[0]?.id || searchResultsForMedia![0]?.id) as MediaInfo || null
     }
 
     if (!mediaSearched) return null
