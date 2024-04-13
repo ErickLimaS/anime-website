@@ -9,7 +9,7 @@ import { motion } from 'framer-motion'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
 
 type ComponentTypes = {
-    source: string,
+    source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime",
     mediaId: number,
     vidsrcId?: number,
     activeEpisodeNumber: number,
