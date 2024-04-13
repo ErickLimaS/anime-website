@@ -29,6 +29,18 @@
 
     margin: 24px 0;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+@media((min-width: 720px)) {
+    #heading_container {
+
+        align-items: flex-start;
+
+    }
 }
 
 #heading_container h1 {
@@ -52,13 +64,20 @@
 
 #heading_container small {
 
-    font-size: var(--font-size--h5);
+    font-size: var(--font-size--small-1);
     color: var(--white-50);
 
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     overflow: hidden;
+
+}
+
+#heading_container small:last-child {
+
+    margin-top: 16px;
+    font-size: var(--font-size--h5);
 
 }
 

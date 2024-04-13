@@ -102,7 +102,8 @@ async function ReadChapter({ params, searchParams }: {
 
             <div id={styles.heading_container}>
 
-                <h1>{currChapterInfo.title} <span>({currChapterInfo.pages} Pages)</span></h1>
+                <h1>{currChapterInfo.title}</h1>
+                <small>{currChapterInfo.pages} Pages</small>
                 <small>{mediaData.title.romaji}</small>
 
             </div>

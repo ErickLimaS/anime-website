@@ -35,17 +35,17 @@ function ChaptersPages({ data, initialPage }) {
                     <motion.div id={styles.pages_container} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <HTMLFlipBook
                             ref={pagesComponentRef}
-                            width={300}
-                            minWidth={300}
-                            height={500}
-                            maxHeight={700}
                             size='stretch'
                             autoSize
+                            width={550}
+                            height={933}
+                            minWidth={315}
+                            maxWidth={1000}
+                            minHeight={400}
+                            maxHeight={1533}
                             startZIndex={initialPage || 0}
-                            flippingTime={400}
+                            flippingTime={300}
                             onFlip={(e) => setCurrPage(e.data)}
-                            mobileScrollSupport={false}
-                        // showCover
                         >
 
                             {data.map((item, key) => (
@@ -65,12 +65,6 @@ function ChaptersPages({ data, initialPage }) {
                 )}
 
             </AnimatePresence>
-
-            {/* {initialPage && (
-                <button onClick={() => pagesComponentRef.current.pageFlip().turnToPage(currPage)}>
-                    Continue from Page {currPage}
-                </button>
-            )} */}
 
             <span>Page <b>{currPage + 1 >= data.length ? data.length : `${currPage + 1} -`} {currPage + 2 > data.length ? "" : currPage + 2}</b> out of <b>{data.length}</b></span>
 
