@@ -7,6 +7,39 @@ import ChevronUpIcon from '@/public/assets/chevron-up.svg'
 import ChevronDownIcon from '@/public/assets/chevron-down.svg'
 import { AnimatePresence, motion } from 'framer-motion'
 
+const showUpMotion = {
+
+    hidden: {
+        x: "-100vw",
+        opacity: 0
+    },
+    visible: {
+        x: "0",
+        opacity: 1,
+        transition: {
+            duration: 0.2
+        }
+    },
+    exit: {
+        x: "-100vw",
+        opacity: 0
+    }
+
+}
+
+const animesGenres = [
+    { name: "Action", value: "action" },
+    { name: "Adventure", value: "adventure" },
+    { name: "Comedy", value: "comedy" },
+    { name: "Drama", value: "drama" },
+    { name: "Sci-Fi", value: "sci-fi" },
+    { name: "Thriller", value: "thriller" },
+    { name: "Romance", value: "romance" },
+    { name: "Slice of Life", value: "slice-of-life" },
+    { name: "Mystery", value: "Mystery" },
+    { name: "Sports", value: "sports" },
+]
+
 function NavListMenu() {
 
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
@@ -14,26 +47,6 @@ function NavListMenu() {
     // TOGGLE VISIBILITY FOR THE SIDE LIST ON MOBILE SCREENS
     const [toggleListOne, setToggleListOne] = useState<boolean>(false)
     const [toggleListTwo, setToggleListTwo] = useState<boolean>(false)
-
-    const showUpMotion = {
-
-        hidden: {
-            x: "-100vw",
-            opacity: 0
-        },
-        visible: {
-            x: "0",
-            opacity: 1,
-            transition: {
-                duration: 0.2
-            }
-        },
-        exit: {
-            x: "-100vw",
-            opacity: 0
-        }
-
-    }
 
     return (
         <div id={styles.menu_container}>
@@ -81,16 +94,11 @@ function NavListMenu() {
                                 </h5>
 
                                 <ul data-visible={toggleListOne}>
-                                    <li><Link href={`/search?type=tv&genre=[action]`}>Action</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[adventure]`}>Adventure</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[comedy]`}>Comedy</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[drama]`}>Drama</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[sci-fi]`}>Sci-Fi</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[thriller]`}>Thriller</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[romance]`}>Romance</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[slice-of-life]`}>Slice of Life</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[mistery]`}>Mistery</Link></li>
-                                    <li><Link href={`/search?type=tv&genre=[sports]`}>Sports</Link></li>
+                                    {animesGenres.map((item) => (
+                                        <li key={item.value} onClick={() => setIsMenuOpen(false)}>
+                                            <Link href={`/search?type=tv&genre=[${item.value}]`}>{item.name}</Link>
+                                        </li>
+                                    ))}
                                 </ul>
                             </li>
 
@@ -109,17 +117,17 @@ function NavListMenu() {
                                 </h5>
 
                                 <ul data-visible={toggleListTwo}>
-                                    <li><Link href={`/search?type=manga&sort=trending_desc`}>Trending</Link></li>
-                                    <li><Link href={`/search?type=manga&sort=releases_desc`}>Lastest Releases</Link></li>
-                                    <li><Link href={`/search?type=manga&genre=[shounen]`}>Shounen</Link></li>
-                                    <li><Link href={`/search?type=manga&genre=[drama]`}>Genre: Drama</Link></li>
-                                    <li><Link href={`/search?type=manga&genre=[slice-of-life]`}>Genre: Slice of Life</Link></li>
-                                    <li><Link href={`/search?type=manga&genre=[comedy]`}>Genre: Comedy</Link></li>
-                                    <li><Link href={`/search?type=manga&sort=score_desc`}>Highest Rated</Link></li>
+                                    <li onClick={() => setIsMenuOpen(false)}><Link href={`/search?type=manga&sort=trending_desc`}>Trending</Link></li>
+                                    <li onClick={() => setIsMenuOpen(false)}><Link href={`/search?type=manga&sort=releases_desc`}>Lastest Releases</Link></li>
+                                    <li onClick={() => setIsMenuOpen(false)}><Link href={`/search?type=manga&genre=[shounen]`}>Shounen</Link></li>
+                                    <li onClick={() => setIsMenuOpen(false)}><Link href={`/search?type=manga&genre=[drama]`}>Genre: Drama</Link></li>
+                                    <li onClick={() => setIsMenuOpen(false)}><Link href={`/search?type=manga&genre=[slice-of-life]`}>Genre: Slice of Life</Link></li>
+                                    <li onClick={() => setIsMenuOpen(false)}><Link href={`/search?type=manga&genre=[comedy]`}>Genre: Comedy</Link></li>
+                                    <li onClick={() => setIsMenuOpen(false)}><Link href={`/search?type=manga&sort=score_desc`}>Highest Rated</Link></li>
                                 </ul>
                             </li>
 
-                            <li role='menuitem'>
+                            <li role='menuitem' onClick={() => setIsMenuOpen(false)}>
 
                                 <Link href={`/news`}>News</Link>
 

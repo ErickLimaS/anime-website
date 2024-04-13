@@ -56,7 +56,7 @@ async function ReadChapter({ params, searchParams }: {
 
     allChapters = mangaInfo.chapters
 
-    currChapterInfo = allChapters.filter((item) => item.chapterNumber == searchParams.chapter)[0]
+    currChapterInfo = allChapters.filter((item) => item.id == searchParams.q)[0]
 
     if (!chapters || !allChapters) error = true
 

@@ -21,6 +21,11 @@ const nextConfig = {
         hostname: "gogocdn.net",
         port: "",
         pathname: "/**",
+      }, {
+        protocol: "https",
+        hostname: "animenewsnetwork.com",
+        port: "",
+        pathname: "/**",
       },
       {
         protocol: "https",

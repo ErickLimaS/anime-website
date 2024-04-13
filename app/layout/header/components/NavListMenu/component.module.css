@@ -41,6 +41,8 @@ header#background #menu_container button#btn_open_menu {
     top: 0;
     bottom: 0;
 
+    overflow: auto;
+
 }
 
 /* DESKTOP MENU VIEW WIDTH */
@@ -90,10 +92,6 @@ header#background #menu_container button#btn_open_menu {
 
 }
 
-#menu_container>#menu_list>ul>li>ul {
-    box-shadow: 0px -7px 1px 1px var(--black-05);
-}
-
 #menu_container>#menu_list>ul>li {
 
     color: var(--brand-color);
@@ -101,6 +99,8 @@ header#background #menu_container button#btn_open_menu {
 }
 
 #menu_container>#menu_list ul ul li a {
+
+    color: var(--black-100);
 
     padding: 16px 0;
     padding-right: 8px;
