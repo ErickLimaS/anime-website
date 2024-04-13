@@ -18,7 +18,7 @@ type BtnTypes = {
     episodeId: string,
     episodeTitle: string,
     mediaId: number,
-    source: "crunchyroll" | "aniwatch" | "vidscr" | "gogoanime",
+    source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime",
     hasText?: boolean
 }
 
