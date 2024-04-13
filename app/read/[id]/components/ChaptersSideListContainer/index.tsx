@@ -7,11 +7,11 @@ import { motion } from 'framer-motion'
 
 type ComponentTypes = {
     mediaId: number,
-    currChapterNumber: number,
+    currChapterId: string,
     episodesList: MangaChapters[]
 }
 
-function ChaptersSideListContainer({ mediaId, currChapterNumber: activeEpisodeNumber, episodesList }: ComponentTypes) {
+function ChaptersSideListContainer({ mediaId, currChapterId, episodesList }: ComponentTypes) {
 
     const loadingEpisodesMotion = {
         initial: {
@@ -38,7 +38,7 @@ function ChaptersSideListContainer({ mediaId, currChapterNumber: activeEpisodeNu
 
         setTimeout(centerActiveEpisode, 500)
 
-    }, [activeEpisodeNumber])
+    }, [currChapterId])
 
     return (
         <div id={styles.episodes_list_container}>
@@ -57,13 +57,14 @@ function ChaptersSideListContainer({ mediaId, currChapterNumber: activeEpisodeNu
 
                 {episodesList?.map((item, key: number) => (
                     <motion.li
+                        title={`Chapter ${item.chapterNumber} - ${item.title}`}
                         key={key}
-                        data-active={Number(item.chapterNumber) == activeEpisodeNumber}
+                        data-active={item.id == currChapterId}
+                        data-disabled={item.pages == 0} // no pages for this chapter
                         variants={loadingEpisodesMotion}
                     >
 
                         <Link
-                            title={`Chapter ${item.chapterNumber}`}
                             href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}
                         >
 
@@ -78,7 +79,7 @@ function ChaptersSideListContainer({ mediaId, currChapterNumber: activeEpisodeNu
                             <Link
                                 href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}
                             >
-                                <h4>{item.title}</h4>
+                                <h4>{item.pages == 0 ? `${item.title} (Not Available)` : item.title}</h4>
                             </Link>
 
                             {/* <ButtonMarkEpisodeAsWatched

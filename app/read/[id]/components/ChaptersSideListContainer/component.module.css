@@ -160,6 +160,10 @@
     border: 2px solid var(--white-25);
 }
 
+#list_container li[data-disabled=true] {
+    opacity: 0.5;
+}
+
 #list_container li .episode_info_container {
 
     display: flex;

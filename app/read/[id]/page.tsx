@@ -121,7 +121,7 @@ async function ReadChapter({ params, searchParams }: {
 
                 <ChaptersSideListContainer
                     mediaId={params.id}
-                    currChapterNumber={Number(searchParams.chapter)}
+                    currChapterId={searchParams.q}
                     episodesList={allChapters}
                 />
             </div>
