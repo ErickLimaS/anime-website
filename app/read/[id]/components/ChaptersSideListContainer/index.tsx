@@ -4,6 +4,7 @@ import styles from "./component.module.css"
 import { MangaChapters } from '@/app/ts/interfaces/apiMangadexDataInterface'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead'
 
 type ComponentTypes = {
     mediaId: number,
@@ -41,7 +42,7 @@ function ChaptersSideListContainer({ mediaId, currChapterId, episodesList }: Com
     }, [currChapterId])
 
     return (
-        <div id={styles.episodes_list_container}>
+        <div id={styles.chapters_list_container}>
 
             <div className={styles.heading_container}>
                 <h3>CHAPTERS</h3>
@@ -74,21 +75,21 @@ function ChaptersSideListContainer({ mediaId, currChapterId, episodesList }: Com
 
                         </Link>
 
-                        <div className={styles.episode_info_container}>
+                        <div className={styles.chapter_info_container}>
 
                             <Link
                                 href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}
                             >
-                                <h4>{item.pages == 0 ? `${item.title} (Not Available)` : item.title}</h4>
+                                <h4>{item.pages == 0 ? `${item.title} (Not Available)` : item.title == item.chapterNumber ? `Chapter ${item.chapterNumber}` : item.title}</h4>
                             </Link>
 
-                            {/* <ButtonMarkEpisodeAsWatched
-                                episodeId={source == "aniwatch" ? `${(item as MediaEpisodes).number}` : (item as MediaEpisodes).id}
-                                episodeTitle={source == "vidsrc" || source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
+                            <ButtonMarkChapterAsRead
+                                chapterId={item.id}
+                                chapterTitle={item.title}
                                 mediaId={mediaId}
-                                source={source}
+                                source={"mangadex"}
                                 hasText={true}
-                            /> */}
+                            />
 
                         </div>
 

@@ -119,7 +119,7 @@
 
     cursor: pointer;
 
-    background-color: var(--pink-variant-2);
+    background-color: transparent;
     border: 0;
 
     padding: 16px 16px;
@@ -127,14 +127,18 @@
 
     font-size: var(--font-size--p);
     font-weight: 600;
-    color: var(--white-75);
+    color: var(--pink-variant-2);
 
-    border: 2px solid;
+    border: 1px solid var(--pink-variant-2);
     border-radius: 8px;
 
 }
 
 #container #fullscreen_btn:hover {
+
+    background-color: var(--pink-variant-2);
+    color: var(--white-100);
+
     opacity: 0.9;
 }
 

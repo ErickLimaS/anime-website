@@ -123,6 +123,10 @@
     }
 }
 
+.chapter_container a{
+    width: 100%;
+}
+
 .chapter_container .icon_container {
 
     margin: auto;
@@ -142,6 +146,8 @@
 }
 
 .chapter_container .info_container {
+
+    width: 100%;
 
     border-left: 2px solid var(--white-25);
 

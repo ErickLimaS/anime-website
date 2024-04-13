@@ -128,9 +128,7 @@ function ChaptersPages({ data, initialPage }) {
 
             <span className={styles.page_indicator_text}>Page <b>{currPage + 1 >= data.length ? data.length : `${currPage + 1} -`} {currPage + 2 > data.length ? "" : currPage + 2}</b> out of <b>{data.length}</b></span>
 
-            <p>Reading Direction is {`"Left to Right"`} Type</p>
-
-            <p>Use the ZOOM of your device for a better experience</p>
+            <p>Reading Direction: Left to Right</p>
 
         </section>
     )

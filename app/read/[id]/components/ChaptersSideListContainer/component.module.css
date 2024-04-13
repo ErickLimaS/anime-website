@@ -1,4 +1,4 @@
-#episodes_list_container {
+#chapters_list_container {
 
     background: var(--white-05);
 
@@ -6,7 +6,7 @@
 
 }
 
-#episodes_list_container .heading_container {
+#chapters_list_container .heading_container {
 
     display: flex;
     flex-direction: row;
@@ -15,7 +15,7 @@
     margin-bottom: 32px;
 }
 
-#episodes_list_container .heading_container h3 {
+#chapters_list_container .heading_container h3 {
 
     color: var(--white-75);
 
@@ -24,7 +24,7 @@
 
 }
 
-#episodes_list_container .heading_container p {
+#chapters_list_container .heading_container p {
 
     color: var(--white-50);
 
@@ -164,7 +164,7 @@
     opacity: 0.5;
 }
 
-#list_container li .episode_info_container {
+#list_container li .chapter_info_container {
 
     display: flex;
     gap: 0 16px;
@@ -177,12 +177,12 @@
 }
 
 @media((min-width: 768px) and (max-width: 1200px)) {
-    #list_container li .episode_info_container {
+    #list_container li .chapter_info_container {
         width: 85%;
     }
 }
 
-#list_container li .episode_info_container h4 {
+#list_container li .chapter_info_container h4 {
 
     font-size: var(--font-size--p);
     font-weight: 500;
@@ -197,7 +197,9 @@
 }
 
 /* "MARK AS WATCHED" btn */
-#list_container li .episode_info_container>div {
+#list_container li .chapter_info_container>div {
+
+    margin: 0;
 
     min-width: 50px;
 

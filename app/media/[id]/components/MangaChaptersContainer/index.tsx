@@ -11,6 +11,7 @@ import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 import manga from '@/api/manga';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
+import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead';
 
 const loadingChaptersMotion = {
   initial: {
@@ -139,13 +140,14 @@ function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, m
               key={key}
               title={`Chapter ${item.chapterNumber} - ${mangaTitle}`}
               variants={loadingChaptersMotion}
+              className={styles.chapter_container}
             >
 
-              <Link href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`} className={styles.chapter_container}>
-                <div className={styles.icon_container}>
-                  <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
-                </div>
+              <div className={styles.icon_container}>
+                <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
+              </div>
 
+              <Link href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}>
                 <div className={styles.info_container}>
 
                   <h3>{item.title != item.chapterNumber ? `Chapter ${item.chapterNumber}: ${item.title}` : `Chapter ${item.chapterNumber}` || "Not Available"}</h3>
@@ -155,6 +157,14 @@ function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, m
                 </div>
 
               </Link>
+
+              <ButtonMarkChapterAsRead
+                chapterId={item.id}
+                chapterTitle={item.title}
+                mediaId={mediaId}
+                source={"mangadex"}
+                hasText
+              />
 
             </motion.li>
           ))}

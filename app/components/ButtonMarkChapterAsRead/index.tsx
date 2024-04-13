@@ -15,16 +15,16 @@ import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 
 type BtnTypes = {
-    episodeId: string,
-    episodeTitle: string,
+    chapterId: string,
+    chapterTitle: string,
     mediaId: number,
-    source: "crunchyroll" | "aniwatch" | "vidscr" | "gogoanime",
+    source: "mangadex",
     hasText?: boolean
 }
 
-function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, hasText }: BtnTypes) {
+function ButtonMarkChapterAsRead({ chapterId, chapterTitle, mediaId, source, hasText }: BtnTypes) {
 
-    const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(false)
+    const [wasChapterRead, setWasChapterRead] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const auth = getAuth()
@@ -33,27 +33,27 @@ function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, 
 
     const db = getFirestore(initFirebase());
 
-    // CHECK IF EPISODE IS ON FIRESTORE, THEN CHANGE STATE
-    async function checkEpisodeMarkedAsWatched() {
+    // CHECK IF CHAPTER WAS ADDED ON FIRESTORE, THEN CHANGE STATE
+    async function checkChapterMarkedAsRead() {
 
         const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
 
         if (!userDoc) return
 
-        const isOnEpisodesList = userDoc.get("episodesWatchedBySource")?.[source]
+        const isOnChaptersList = userDoc.get("chaptersReadBySource")?.[source]
 
-        if (!isOnEpisodesList) return
+        if (!isOnChaptersList) return
 
-        const episodedWatched = isOnEpisodesList[mediaId]?.find(
-            (item: { episodeId: string }) => item.episodeId == episodeId
+        const chapterRead = isOnChaptersList[mediaId]?.find(
+            (item: { chapterId: string }) => item.chapterId == chapterId
         )
 
-        if (episodedWatched) setWasEpisodeWatched(true)
+        if (chapterRead) setWasChapterRead(true)
 
     }
 
-    // ADD OR REMOVE EPISODE FROM FIRESTORE
-    async function handleEpisodeWatch() {
+    // ADD OR REMOVE CHAPTER FROM FIRESTORE
+    async function handleChapterRead() {
 
         setIsLoading(true)
 
@@ -62,25 +62,24 @@ function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, 
         const episodeData = {
 
             mediaId: mediaId,
-            // crunchyroll has no ID for episodes, so it will be used its title
-            episodeId: episodeId,
-            episodeTitle: episodeTitle
+            chapterId: chapterId,
+            chapterTitle: chapterTitle
 
         }
 
         await setDoc(doc(db, 'users', user.uid),
             {
-                episodesWatchedBySource: {
+                chaptersReadBySource: {
                     [source]: {
-                        [mediaId]: !wasEpisodeWatched ? arrayUnion(...[episodeData]) : arrayRemove(...[episodeData])
+                        [mediaId]: !wasChapterRead ? arrayUnion(...[episodeData]) : arrayRemove(...[episodeData])
                     }
                 }
             } as unknown as FieldPath,
             { merge: true }
         )
 
-        if (!wasEpisodeWatched) setWasEpisodeWatched(true)
-        else setWasEpisodeWatched(false)
+        if (!wasChapterRead) setWasChapterRead(true)
+        else setWasChapterRead(false)
 
         setIsLoading(false)
     }
@@ -89,9 +88,9 @@ function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, 
 
         if (!user) return
 
-        checkEpisodeMarkedAsWatched()
+        checkChapterMarkedAsRead()
 
-    }, [user, source, episodeId])
+    }, [user, source, chapterId])
 
     return (
 
@@ -99,28 +98,28 @@ function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, 
             <div className={styles.button_container}>
 
                 <motion.button
-                    onClick={() => handleEpisodeWatch()}
-                    data-active={wasEpisodeWatched}
+                    onClick={() => handleChapterRead()}
+                    data-active={wasChapterRead}
                     disabled={isLoading}
-                    title={wasEpisodeWatched ? "Mark as Unwatched " : "Mark as Watched"}
+                    title={wasChapterRead ? "Mark as Unread" : "Mark as Read "}
                 >
-                    {wasEpisodeWatched ? (
-                        <CheckFillSvg width={16} height={16} alt="Check Episode as Watched" />
+                    {wasChapterRead ? (
+                        <CheckFillSvg width={16} height={16} alt="Check Chapter as Read" />
                     ) : (
-                        <CheckSvg width={16} height={16} alt="Check Episode as Not Watched" />
+                        <CheckSvg width={16} height={16} alt="Check Chapter as Unread" />
                     )}
 
                 </motion.button>
 
                 <AnimatePresence>
-                    {(hasText && wasEpisodeWatched) && (
+                    {(hasText && wasChapterRead) && (
                         <motion.span
                             className={styles.text_span}
                             initial={{ opacity: 0, y: "10px" }}
                             animate={{ opacity: 1, y: "0", transition: { duration: 0.2 } }}
                             exit={{ opacity: 0, y: "10px" }}
                         >
-                            Watched
+                            Read
                         </motion.span>
                     )}
                 </AnimatePresence>
@@ -130,4 +129,4 @@ function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, 
     )
 }
 
-export default ButtonMarkEpisodeAsWatched
+export default ButtonMarkChapterAsRead

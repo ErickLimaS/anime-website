@@ -47,6 +47,7 @@
 
     color: var(--brand-color);
 
+    text-align: center;
     font-size: var(--font-size--h4);
 
     display: -webkit-box;
