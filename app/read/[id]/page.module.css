@@ -74,13 +74,6 @@
 
 }
 
-#heading_container small:last-child {
-
-    margin-top: 16px;
-    font-size: var(--font-size--h5);
-
-}
-
 /* CHAPTERS */
 #all_chapters_container {
 

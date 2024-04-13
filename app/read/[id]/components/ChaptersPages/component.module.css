@@ -34,22 +34,118 @@
     }
 }
 
-#container>button {
+/* MODAL FULLSCREEN */
+#modal_chapter_pages_fullscreen_container {
 
-    cursor: pointer;
+    z-index: 2;
 
-    background-color: transparent;
-    border: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
 
-    margin-top: 32px;
 
-    font-size: var(--font-size--p);
-    color: var(--white-75);
-    border-bottom: 2px solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(8, 33, 48, 0.90);
 
 }
 
-#container>span {
+#modal_chapter_pages_fullscreen_container #close_btn_container {
+
+    margin: 8px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 90%;
+
+}
+
+#modal_chapter_pages_fullscreen_container #close_btn_container span {
+
+    margin: 0;
+
+}
+
+#modal_chapter_pages_fullscreen_container #close_btn_container button {
+
+    transition: all ease-in-out 100ms;
+
+    padding: 8px;
+
+    display: flex;
+
+    border: 1px solid var(--error);
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--error);
+
+}
+
+#modal_chapter_pages_fullscreen_container #close_btn_container button:hover {
+    background-color: var(--error);
+    color: var(--white-100);
+}
+
+#modal_chapter_pages_fullscreen_container #close_btn_container button svg {
+
+    transform: scale(1.4);
+
+}
+
+#modal_chapter_pages_fullscreen_container>div {
+
+    margin: auto;
+    z-index: 3;
+    max-height: 90vh;
+
+}
+
+/* FULLSCREEN BUTTON */
+#container #fullscreen_btn {
+
+    transition: all ease-in-out 100ms;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+
+    cursor: pointer;
+
+    background-color: var(--pink-variant-2);
+    border: 0;
+
+    padding: 16px 16px;
+    margin-top: 32px;
+
+    font-size: var(--font-size--p);
+    font-weight: 600;
+    color: var(--white-75);
+
+    border: 2px solid;
+    border-radius: 8px;
+
+}
+
+#container #fullscreen_btn:hover {
+    opacity: 0.9;
+}
+
+#container #fullscreen_btn svg {
+
+    transform: scale(1.15);
+
+}
+
+/* PAGE INDICATOR */
+#container .page_indicator_text {
 
     margin-top: 32px;
     margin-bottom: 24px;
@@ -59,7 +155,7 @@
 
 }
 
-#container>span>b {
+#container .page_indicator_text>b {
 
     color: var(--brand-color);
 
