@@ -70,6 +70,41 @@
     transform: scale(1.2);
 }
 
+/* LOADING */
+#loading_chapters_container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px 0;
+
+}
+
+#loading_chapters_container>div {
+
+    animation: 2.5s ease-in-out infinite alternate loopLoading;
+
+    height: 66px;
+    width: 100%;
+    background: var(--white-25);
+
+}
+
+@keyframes loopLoading {
+
+    0% {
+        background: var(--white-25);
+    }
+
+    50% {
+        background: var(--white-50);
+    }
+
+    100% {
+        background: var(--white-25);
+    }
+
+}
+
 /* CHAPTER ITEM RESULT */
 .chapter_container {
 
@@ -118,6 +153,7 @@
 .chapter_container .info_container h3 {
 
     font-size: var(--font-size--p);
+    font-weight: 500;
     color: var(--white-100);
 
     display: -webkit-box;

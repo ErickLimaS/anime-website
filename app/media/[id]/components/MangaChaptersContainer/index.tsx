@@ -1,15 +1,34 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import styles from "./component.module.css"
+import styles from "./component.module.css";
 import Link from 'next/link';
 import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface';
 import BookSvg from "@/public/assets/book.svg"
-import OutsideLinkSvg from "@/public/assets/box-arrow-up-right.svg"
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import Image from 'next/image';
 import ErrorImg from "@/public/error-img-2.png"
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 import manga from '@/api/manga';
+import { AnimatePresence, motion } from 'framer-motion';
+import simulateRange from '@/app/lib/simulateRange';
+
+const loadingChaptersMotion = {
+  initial: {
+    opacity: 0,
+    scale: 0
+  },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0
+  }
+}
 
 function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, mediaId: number }) {
 
@@ -72,50 +91,76 @@ function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, m
   return (
     <div>
 
-      <ol id={styles.container} data-loading={loading}>
+      <AnimatePresence>
+        <motion.ol
+          id={styles.container}
+          data-loading={loading}
+          variants={loadingChaptersMotion}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
 
-        {/* LOADING */}
-        {loading && (
-          <p>Loading...</p>
-        )}
+          {/* LOADING */}
+          {loading && (
+            <motion.div
+              id={styles.loading_chapters_container}
+              variants={loadingChaptersMotion}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
 
-        {/* SHOWS WHEN THERES NO RESULTS  */}
-        {!loading && (chaptersDataFetched.length == 0 || currentItems == null) && (
-          <div id={styles.no_chapters_container}>
+              {simulateRange(10).map((item, key) => (
 
-            <Image src={ErrorImg} alt='Error' height={200} />
+                <motion.div
+                  key={key}
+                  variants={loadingChaptersMotion}
+                />
 
-            <p>No chapters available.</p>
+              ))}
 
-          </div>
-        )}
+            </motion.div>
+          )}
 
-        {currentItems && currentItems.map((item, key: number) => (
-          <li key={key} title={`Chapter ${item.chapterNumber} - ${mangaTitle}`}>
-            <Link href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`} className={styles.chapter_container}>
-              <div className={styles.icon_container}>
-                <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
-              </div>
+          {/* SHOWS WHEN THERES NO RESULTS  */}
+          {!loading && (chaptersDataFetched.length == 0 || currentItems == null) && (
+            <div id={styles.no_chapters_container}>
 
-              <div className={styles.info_container}>
-                <h3>{item.title != item.chapterNumber ? `Chapter ${item.chapterNumber}: ${item.title}` : `Chapter ${item.chapterNumber}` || "Not Available"}</h3>
+              <Image src={ErrorImg} alt='Error' height={200} />
 
-                <p>{item.pages == 0 ? "No Pages Found!" : `${item.pages} Pages`}</p>
+              <p>No chapters available.</p>
 
-                {/* <p>{item.releasedDate}</p> */}
+            </div>
+          )}
 
-              </div>
+          {currentItems && currentItems.map((item, key: number) => (
+            <motion.li
+              key={key}
+              title={`Chapter ${item.chapterNumber} - ${mangaTitle}`}
+              variants={loadingChaptersMotion}
+            >
 
-              {/* <div className={styles.icon_container} style={{ transform: "scale(0.8)" }}>
-                <OutsideLinkSvg alt="Outside of this site Icon" width={16} heighy={16} />
-              </div> */}
+              <Link href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`} className={styles.chapter_container}>
+                <div className={styles.icon_container}>
+                  <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
+                </div>
 
-            </Link>
-          </li>
-        ))}
+                <div className={styles.info_container}>
 
-      </ol>
+                  <h3>{item.title != item.chapterNumber ? `Chapter ${item.chapterNumber}: ${item.title}` : `Chapter ${item.chapterNumber}` || "Not Available"}</h3>
 
+                  <p>{item.pages == 0 ? "No Pages Found!" : `${item.pages} Pages`}</p>
+
+                </div>
+
+              </Link>
+
+            </motion.li>
+          ))}
+
+        </motion.ol>
+      </AnimatePresence>
 
       {chaptersDataFetched.length > 0 && (
         <nav id={styles.pagination_buttons_container}>
