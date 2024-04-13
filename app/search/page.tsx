@@ -27,7 +27,7 @@ async function SearchPage({ searchParams }: {
 
     const isMobile = checkDeviceIsMobile(headers())
 
-    const sort = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
+    const sort = await axios.get(`${process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
 
     return (
         <main id={styles.container}>

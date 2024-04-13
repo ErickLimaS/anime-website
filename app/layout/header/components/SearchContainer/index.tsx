@@ -63,7 +63,7 @@ function SearchContainer() {
 
         setIsLoading(true)
 
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}?title=${value}`)
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL}?title=${value}`)
 
         setSearchResults(data.data as MediaDbOffline[])
 
