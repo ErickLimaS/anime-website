@@ -30,7 +30,7 @@ export async function generateMetadata({ params, searchParams }: {
 
 async function ReadChapter({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { chapter: string, source: string, q: string, page: string } // EPISODE NUMBER, SOURCE, EPISODE ID, LAST PAGE 
+    searchParams: { chapter: string, source: "mangadex", q: string, page: string } // EPISODE NUMBER, SOURCE, EPISODE ID, LAST PAGE 
 }) {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
