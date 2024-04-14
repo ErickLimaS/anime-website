@@ -5,13 +5,20 @@ import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import { motion } from 'framer-motion'
 
-type ComponentTypes = { data: EpisodeAnimeWatch, mediaId: number, backgroundImg?: string, episodeDescription?: string }
+type ComponentTypes = {
+    data: EpisodeAnimeWatch,
+    mediaId: number,
+    backgroundImg?: string,
+    episodeDescription?: string,
+    motionStyle?: any
+}
 
-function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription }: ComponentTypes) {
+function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle }: ComponentTypes) {
 
     return (
-        <li className={styles.container}>
+        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
 
             <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`} className={styles.img_container}>
                 <Image
@@ -44,7 +51,7 @@ function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription }: C
                 <span className={styles.episode_description_container}><p>{episodeDescription}</p></span>
             )}
 
-        </li>
+        </motion.li>
     )
 }
 

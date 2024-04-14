@@ -379,7 +379,10 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2 className={styles.heading_style}>CHAPTERS</h2>
 
-                <MangaChaptersContainer mangaTitle={mediaData.title.romaji} />
+                <MangaChaptersContainer
+                  mediaId={mediaData.id}
+                  mangaTitle={mediaData.title.romaji}
+                />
 
               </section>
             )}

@@ -4,11 +4,12 @@ import Image from 'next/image'
 import styles from "./component.module.css"
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
+import { motion } from 'framer-motion'
 
-function CrunchyrollEpisode({ data, mediaId }: { data: EpisodesType, mediaId: number }) {
+function CrunchyrollEpisode({ data, mediaId, motionStyle }: { data: EpisodesType, mediaId: number, motionStyle?: any }) {
 
     return (
-        <li className={styles.container}>
+        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
             <Link href={data.url} className={styles.img_container} target='_blank'>
                 <Image
                     src={data.thumbnail}
@@ -35,7 +36,7 @@ function CrunchyrollEpisode({ data, mediaId }: { data: EpisodesType, mediaId: nu
                 />
 
             </div>
-        </li>
+        </motion.li>
     )
 }
 

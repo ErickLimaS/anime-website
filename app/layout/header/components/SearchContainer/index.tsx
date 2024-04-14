@@ -12,6 +12,8 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
+import axios from 'axios'
+import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
 
 function SearchContainer() {
 
@@ -24,7 +26,8 @@ function SearchContainer() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [searchResults, setSearchResults] = useState<ApiDefaultResult[] | null>()
+    const [searchType, setSearchType] = useState<"offline" | "anilist">("offline")
+    const [searchResults, setSearchResults] = useState<ApiDefaultResult[] | MediaDbOffline[] | null>()
 
     const [searchInput, setSearchInput] = useState<string>("")
 
@@ -48,9 +51,33 @@ function SearchContainer() {
 
     }
 
+    async function fetchResultsOnChange(value: string) {
+
+        if (searchType == "anilist") setSearchResults(null)
+
+        setSearchType("offline")
+
+        setSearchInput(value)
+
+        if (value.length <= 2) return setSearchResults(null)
+
+        setIsLoading(true)
+
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL}?title=${value}`)
+
+        setSearchResults(data.data as MediaDbOffline[])
+
+        setIsLoading(false)
+
+    }
+
     async function searchValue(e: React.ChangeEvent<HTMLFormElement> | HTMLFormElement) {
 
         e.preventDefault()
+
+        setSearchType("anilist")
+
+        setSearchResults(null)
 
         let showAdultContent = false
 
@@ -111,8 +138,7 @@ function SearchContainer() {
                             type="text"
                             placeholder='Search...'
                             name='searchField'
-                            disabled={isLoading}
-                            onChange={(e) => setSearchInput(e.target.value)}
+                            onChange={(e) => fetchResultsOnChange(e.target.value)}
                         />
                         <button
                             type='submit'
@@ -165,7 +191,8 @@ function SearchContainer() {
                 initial={false}
                 mode='wait'
             >
-                {searchResults != null && (
+
+                {(searchResults != null && searchResults.length != 0) && (
                     <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
@@ -178,10 +205,15 @@ function SearchContainer() {
                         </button>
 
                         <ul>
-                            {searchResults.map((item: ApiDefaultResult, key: number) => (
+                            {(searchResults != null && searchResults.length == 0) && (
+                                <li><p>No results for this search</p></li>
+                            )}
+
+                            {searchResults.map((item: ApiDefaultResult | MediaDbOffline, key: number) => (
                                 <SearchResultItemCard
                                     key={key}
-                                    item={item}
+                                    itemAnilist={searchType == "anilist" ? item as ApiDefaultResult : undefined}
+                                    itemOfflineDb={searchType == "offline" ? item as MediaDbOffline : undefined}
                                     onClick={() => toggleSearchBarMobile(false)}
                                 />
                             ))}

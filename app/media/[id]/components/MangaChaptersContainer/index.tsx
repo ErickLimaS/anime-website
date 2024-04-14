@@ -1,17 +1,37 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import styles from "./component.module.css"
+import styles from "./component.module.css";
 import Link from 'next/link';
-import gogoanime from '@/api/gogoanime';
-import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
+import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface';
 import BookSvg from "@/public/assets/book.svg"
-import OutsideLinkSvg from "@/public/assets/box-arrow-up-right.svg"
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import Image from 'next/image';
 import ErrorImg from "@/public/error-img-2.png"
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
+import manga from '@/api/manga';
+import { AnimatePresence, motion } from 'framer-motion';
+import simulateRange from '@/app/lib/simulateRange';
+import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead';
 
-function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
+const loadingChaptersMotion = {
+  initial: {
+    opacity: 0,
+    scale: 0
+  },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0
+  }
+}
+
+function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, mediaId: number }) {
 
   const [loading, setLoading] = useState(true)
   const [chaptersDataFetched, setChaptersDataFetched] = useState<MangaChapters[]>([])
@@ -37,28 +57,21 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
 
     const query = stringToUrlFriendly(mangaTitle).toLowerCase()
 
-    mangaInfo = await gogoanime.getInfoFromThisMedia(query, "manga") as MangaInfo
+    mangaInfo = await manga.getInfoFromThisMedia(query) as MangaInfo
 
     // if the query dont match any id result, it will search results for this query,
     // than make the first request by the ID of the first search result 
-    if (mangaInfo.title == "") {
-      const searchResultsForMedia = await gogoanime.searchMedia(query, "manga") as MangaSearchResult[]
+    if (!mangaInfo) {
+      const searchResultsForMedia = await manga.searchMedia(query) as MangaSearchResult[]
 
-      mangaInfo = await gogoanime.getInfoFromThisMedia(searchResultsForMedia[0]?.id, "manga") as MangaInfo
+      mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia[0]?.id) as MangaInfo
     }
 
-    // sort ASC chapters
-    const data = mangaInfo.chapters.sort((a, b) => {
-      if (a.title < b.title) {
-        return -1 as any;
-      }
-    });
-
-    setChaptersDataFetched(data)
+    setChaptersDataFetched(mangaInfo.chapters)
 
     const endOffset = itemOffset + rangeChaptersPerPage;
-    setCurrentItems(data.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(data.length / rangeChaptersPerPage));
+    setCurrentItems(mangaInfo.chapters.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(mangaInfo.chapters.length / rangeChaptersPerPage));
 
     setLoading(false)
 
@@ -79,48 +92,85 @@ function MangaChaptersContainer({ mangaTitle }: { mangaTitle: string }) {
   return (
     <div>
 
-      <ol id={styles.container} data-loading={loading}>
+      <AnimatePresence>
+        <motion.ol
+          id={styles.container}
+          data-loading={loading}
+          variants={loadingChaptersMotion}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
 
-        {/* LOADING */}
-        {loading && (
-          <p>Loading...</p>
-        )}
+          {/* LOADING */}
+          {loading && (
+            <motion.div
+              id={styles.loading_chapters_container}
+              variants={loadingChaptersMotion}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
 
-        {/* SHOWS WHEN THERES NO RESULTS  */}
-        {!loading && (chaptersDataFetched.length == 0 || currentItems == null) && (
-          <div id={styles.no_chapters_container}>
+              {simulateRange(10).map((item, key) => (
 
-            <Image src={ErrorImg} alt='Error' height={200} />
+                <motion.div
+                  key={key}
+                  variants={loadingChaptersMotion}
+                />
 
-            <p>No chapters available.</p>
+              ))}
 
-          </div>
-        )}
+            </motion.div>
+          )}
 
-        {currentItems && currentItems.map((item: any, key: number) => (
-          <li key={key} title={item.title + " - " + mangaTitle}>
-            <Link href={`http://www.mangahere.cc/manga/${item.id}/1.html`} className={styles.chapter_container} target='_blank'>
+          {/* SHOWS WHEN THERES NO RESULTS  */}
+          {!loading && (chaptersDataFetched.length == 0 || currentItems == null) && (
+            <div id={styles.no_chapters_container}>
+
+              <Image src={ErrorImg} alt='Error' height={200} />
+
+              <p>No chapters available.</p>
+
+            </div>
+          )}
+
+          {currentItems && currentItems.map((item, key: number) => (
+            <motion.li
+              key={key}
+              title={`Chapter ${item.chapterNumber} - ${mangaTitle}`}
+              variants={loadingChaptersMotion}
+              className={styles.chapter_container}
+            >
+
               <div className={styles.icon_container}>
                 <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
               </div>
 
-              <div className={styles.info_container}>
-                <h3>{item.title || "Not Available"}</h3>
+              <Link href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}>
+                <div className={styles.info_container}>
 
-                <p>{item.releasedDate}</p>
+                  <h3>{item.title != item.chapterNumber ? `Chapter ${item.chapterNumber}: ${item.title}` : `Chapter ${item.chapterNumber}` || "Not Available"}</h3>
 
-              </div>
+                  <p>{item.pages == 0 ? "No Pages Found!" : `${item.pages} Pages`}</p>
 
-              <div className={styles.icon_container} style={{ transform: "scale(0.8)" }}>
-                <OutsideLinkSvg alt="Outside of this site Icon" width={16} heighy={16} />
-              </div>
+                </div>
 
-            </Link>
-          </li>
-        ))}
+              </Link>
 
-      </ol>
+              <ButtonMarkChapterAsRead
+                chapterId={item.id}
+                chapterTitle={item.title}
+                mediaId={mediaId}
+                source={"mangadex"}
+                hasText
+              />
 
+            </motion.li>
+          ))}
+
+        </motion.ol>
+      </AnimatePresence>
 
       {chaptersDataFetched.length > 0 && (
         <nav id={styles.pagination_buttons_container}>

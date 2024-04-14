@@ -44,7 +44,7 @@ function AnimeNavListHover() {
                                         src={item.thumbnail}
                                         alt={item.title}
                                         fill
-                                        sizes='(max-width: 1439px) 20vw, 231px'
+                                        sizes='(max-width: 1439px) 15vw, 231px'
                                     ></Image>
                                 </Link>
                             </div>

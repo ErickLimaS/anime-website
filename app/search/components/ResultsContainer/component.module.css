@@ -18,6 +18,20 @@
 
 }
 
+/* ERROR TEXT */
+#error_text {
+
+    min-height: 50vh;
+
+}
+
+#error_text h2 {
+
+    color: var(--white-100);
+
+}
+
+/* RESULTS */
 #content_container #results_container {
 
     padding-bottom: 46px;
@@ -65,6 +79,12 @@
 
     background-color: var(--brand-color);
     border-color: var(--brand-color);
+
+}
+
+#content_container>button svg {
+
+    transform: scale(1.4);
 
 }
 

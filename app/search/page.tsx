@@ -27,17 +27,7 @@ async function SearchPage({ searchParams }: {
 
     const isMobile = checkDeviceIsMobile(headers())
 
-    const sort = await axios.get(`${process.env.NEXT_PUBLIC_INSIDE_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
-
-    // GET ANILIST ID FOR THIS MEDIA
-    if (sort.data) {
-        sort.data.map((item: { sources: string[]; anilistId: string }) => item.sources.map(a => {
-            const foundUrl: string | null = a.includes("https://anilist.co/anime") ? a.slice(a.search(/\banime\b/)) : null
-
-            if (foundUrl) item.anilistId = foundUrl!.slice(6)
-
-        }))
-    }
+    const sort = await axios.get(`${process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
 
     return (
         <main id={styles.container}>

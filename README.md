@@ -4,7 +4,7 @@
 
 Project of animes and mangas website, utilizing the AniList, Consumet and Aniwatch API, which has info of animes and mangas released, data of the cast of that media, and many other things.
 
-<p align="center">You can access this website on <a href='https://aniproject.netlify.app/'>netlify</a>, on <a href='https://aniproject-website.onrender.com'>render (really slow)</a> or <a href='https://aniproject-dev.vercel.app/'>vercel</a>.</p>
+<p align="center">You can access this website on <a href='https://aniproject-dev.vercel.app/'>Vercel</a> or <a href='https://aniproject-website.onrender.com'>Render (really slow)</a>.</p>
 
 ## :hammer: Features
 
@@ -42,7 +42,7 @@ Front-end (on netlify.com):
 Back-End:
 
 - `Firebase`
-- `Next.js API routes`
+- `Next.js API Routes`
 
 ## :computer: How Can I Run It?
 
@@ -75,7 +75,7 @@ With all that done, you will need to fill the `.env.local` like the example bell
 NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
 NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.com
 NEXT_PUBLIC_VIDSRC_API_URL=https://your-hosted-vidsrc-api-url.com
-NEXT_PUBLIC_INSIDE_API_URL=https://url-to-where-your-website-is-hosted.com/api/anime-info
+NEXT_PUBLIC_NEXT_INTERNAL_API_URL=https://url-to-where-your-website-is-hosted.com/api/anime-info
 NEXT_PUBLIC_FIREBASE_API_KEY=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase-setting-related-to-this-field

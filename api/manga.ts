@@ -1,8 +1,5 @@
-import {
-    EpisodeLinksGoGoAnime, MediaInfo, MediaSearchResult
-} from "@/app/ts/interfaces/apiGogoanimeDataInterface";
-import { MangaInfo, MangaSearchResult } from "@/app/ts/interfaces/apiMangadexDataInterface";
-import Axios from "axios"
+import { MangaInfo, MangaPages, MangaSearchResult } from "@/app/ts/interfaces/apiMangadexDataInterface";
+import Axios from "axios";
 import axiosRetry from "axios-retry";
 import { cache } from "react";
 
@@ -19,17 +16,17 @@ axiosRetry(Axios, {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
 
-    // SEARCH ANIME BY QUERY
+    // SEARCH MANGA BY QUERY
     searchMedia: cache(async (query: string, page?: number) => {
 
         try {
 
             const { data } = await Axios({
-                url: `${CONSUMET_API_URL}/anime/gogoanime/${query}${page ? `?page=${page} ` : ""}`,
+                url: `${CONSUMET_API_URL}/manga/mangadex/${query}${page ? `?page=${page} ` : ""}`,
                 method: 'GET'
             })
 
-            return data.results as MediaSearchResult[] | MangaSearchResult[];
+            return data.results as MangaSearchResult[];
 
         }
         catch (error) {
@@ -42,17 +39,24 @@ export default {
 
     }),
 
-    // GET ANIME INFO
+    // GET ANIME AND MANGA INFO
     getInfoFromThisMedia: cache(async (id: string | number) => {
 
         try {
 
             const { data } = await Axios({
-                url: `${CONSUMET_API_URL}/anime/gogoanime/info/${id}`,
+                url: `${CONSUMET_API_URL}/manga/mangadex/info/${id}`,
                 method: 'GET'
             })
 
-            return data as MediaInfo | MangaInfo;
+
+            // sort ASC chapters
+            const dataSorted = (data as MangaInfo).chapters.sort((a, b) => Number(a.chapterNumber) - Number(b.chapterNumber))
+
+            data.chapters = dataSorted
+
+            return data as MangaInfo
+
         }
         catch (error) {
 
@@ -64,16 +68,17 @@ export default {
 
     }),
 
-    // GET EPISODES FOR ANIMES AND MOVIES
-    getEpisodeStreamingLinks: cache(async (episodeId: string | number, serverName?: string) => {
+    // GET PAGES FOR MANGA CHAPTER
+    getChapterPages: cache(async (chapterId: string) => {
 
         try {
             const { data } = await Axios({
-                url: `${CONSUMET_API_URL}/anime/gogoanime/watch/${episodeId}${serverName ? `?server=${serverName}` : ""}`,
+                url: `${CONSUMET_API_URL}/manga/mangadex/read/${chapterId}`,
                 method: 'GET'
             })
 
-            return data;
+            return data as MangaPages[]
+            
         }
         catch (error) {
 
@@ -85,24 +90,4 @@ export default {
 
     }),
 
-    // GET LINKS FOR THIS EPISODE
-    getLinksForThisEpisode: cache(async (episodeId: string) => {
-
-        try {
-            const { data } = await Axios({
-                url: `${CONSUMET_API_URL}/meta/anilist/watch/${episodeId}`,
-                method: 'GET'
-            })
-
-            return data as EpisodeLinksGoGoAnime;
-        }
-        catch (error) {
-
-            console.log(error)
-
-            return null
-
-        }
-
-    })
 }

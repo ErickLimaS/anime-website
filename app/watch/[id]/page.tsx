@@ -23,20 +23,20 @@ export const revalidate = 900 // revalidate cached data every 15 minutes
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string, source: string, q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
+    searchParams: { episode: string, source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime", q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
 
     return {
         title: `Watching EP ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
-        description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}}`,
+        description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}`,
     }
 }
 
 async function WatchEpisode({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string, source: string, q: string, t: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP
+    searchParams: { episode: string, source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime", q: string, t: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP
 }) {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults

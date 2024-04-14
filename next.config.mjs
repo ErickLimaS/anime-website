@@ -1,8 +1,45 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // So many new Sources that i had to just allow any 
+    // set to true due to vercel limit of optimization
+    unoptimized: true,
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "s4.anilist.co",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "img1.ak.crunchyroll.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "gogocdn.net",
+        port: "",
+        pathname: "/**",
+      }, {
+        protocol: "https",
+        hostname: "animenewsnetwork.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      // so many new Sources that i had to just allow any 
       {
         protocol: "https",
         hostname: "**",
