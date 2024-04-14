@@ -109,6 +109,7 @@
 .chapter_container {
 
     background: var(--brand-color);
+    border: 1px solid var(--brand-color);
 
     display: grid;
     grid-template-columns: 15% 75% 10%;
@@ -123,7 +124,17 @@
     }
 }
 
-.chapter_container a{
+/* NO PAGES AVAILABLE */
+.chapter_container[data-disabled=true] {
+
+    border: 1px solid var(--white-50);
+    background: var(--background);
+
+}
+
+/*  */
+
+.chapter_container a {
     width: 100%;
 }
 
