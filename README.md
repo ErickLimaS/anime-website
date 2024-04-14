@@ -117,6 +117,9 @@ npm run dev
 ![Watch Episode Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/491db36e-e655-4c91-970c-59983c546cb3)
 ![Watch Episode Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/62c3d7d0-809b-4e09-871e-6c9d2e809f71)
 
+### Read Page
+![Read Chapter Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/c1b07318-2923-49d6-a615-d80bd213f30e)
+
 ### Search/Filter Page
 
 ![Search/Filter Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/32af6c21-ca79-4cb9-9cb9-7b9f30e80302)
