@@ -27,6 +27,7 @@ import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { checkApiMisspellingMedias } from '@/app/lib/checkApiMediaMisspelling';
 import VidsrcEpisodeContainer from '../Episode/vidsrc';
+import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 
 type EpisodesContainerTypes = {
   dataCrunchyroll: EpisodesType[],
@@ -61,7 +62,7 @@ const episodePopupMotion = {
   animate: {
     opacity: 1,
     transition: {
-      duration: 0.5
+      duration: 1
     }
   }
 }
@@ -80,7 +81,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
   const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
   const [itemOffset, setItemOffset] = useState<number>(0);
 
-  const [episodeSource, setEpisodeSource] = useState<string>("")
+  const [episodeSource, setEpisodeSource] = useState<SourceType["source"]>("crunchyroll")
 
   const auth = getAuth()
 
@@ -90,8 +91,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   const [pageCount, setPageCount] = useState<number>(0)
 
-  // the length os episodes array will be divided by 25, getting the range of pagination
-  const rangeEpisodesPerPage = 25
+  // the length os episodes array will be divided by 20, getting the range of pagination
+  const rangeEpisodesPerPage = 20
 
   // Invoke when user click to request another page.
   const handlePageClick = (event: { selected: number }) => {
@@ -102,11 +103,11 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     setItemOffset(newOffset)
 
-    setTimeout(() => setLoading(false), 150)  // needed to refresh episodes "Marked as Watched"
+    setTimeout(() => setLoading(false), 250)  // needed to refresh episodes "Marked as Watched"
 
   }
 
-  const setEpisodesSource: (parameter: string) => void = async (parameter: string) => {
+  const setEpisodesSource: (parameter: SourceType["source"]) => void = async (parameter: SourceType["source"]) => {
 
     console.log(`Episodes Source Parameter: ${parameter} `)
 
@@ -455,7 +456,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           exit="exit"
         >
 
-          {simulateRange(25).map((item, key) => (
+          {simulateRange(rangeEpisodesPerPage).map((item, key) => (
 
             <motion.div
               key={key}

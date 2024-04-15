@@ -13,12 +13,13 @@ import {
 import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
+import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
 type BtnTypes = {
     episodeId: string,
     episodeTitle: string,
     mediaId: number,
-    source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime",
+    source: SourceType["source"],
     hasText?: boolean
 }
 

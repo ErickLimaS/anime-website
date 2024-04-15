@@ -21,7 +21,7 @@ type ContainerTypes = {
 function VidsrcEpisodeContainer({ data, vidsrcData, mediaId, title, episodeNumber, backgroundImg, episodeDescription, motionStyle }: ContainerTypes) {
 
     return (
-        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
+        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
 
             <Link href={`/watch/${mediaId}?source=vidsrc&episode=${episodeNumber}&q=${vidsrcData}`} className={styles.img_container}>
                 <Image

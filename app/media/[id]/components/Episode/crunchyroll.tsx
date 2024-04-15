@@ -9,7 +9,7 @@ import { motion } from 'framer-motion'
 function CrunchyrollEpisode({ data, mediaId, motionStyle }: { data: EpisodesType, mediaId: number, motionStyle?: any }) {
 
     return (
-        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
+        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
             <Link href={data.url} className={styles.img_container} target='_blank'>
                 <Image
                     src={data.thumbnail}

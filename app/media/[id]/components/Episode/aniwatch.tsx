@@ -18,7 +18,7 @@ type ComponentTypes = {
 function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle }: ComponentTypes) {
 
     return (
-        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
+        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
 
             {data.isFiller && (
                 <span className={styles.alert_filler_text}>Filler</span>

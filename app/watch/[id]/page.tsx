@@ -18,12 +18,13 @@ import ErrorImg from "@/public/error-img-4.png"
 import Link from 'next/link'
 import { getVideoSrcLink } from '@/api/vidsrc'
 import { VidsrcEpisodeLink } from '@/app/ts/interfaces/apiVidsrcInterface'
+import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
 export const revalidate = 900 // revalidate cached data every 15 minutes
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string, source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime", q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
+    searchParams: { episode: string, source: SourceType["source"], q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
@@ -36,7 +37,7 @@ export async function generateMetadata({ params, searchParams }: {
 
 async function WatchEpisode({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string, source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime", q: string, t: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP
+    searchParams: { episode: string, source: SourceType["source"], q: string, t: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP
 }) {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults

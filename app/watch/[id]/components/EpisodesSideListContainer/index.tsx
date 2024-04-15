@@ -7,9 +7,10 @@ import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatc
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { motion } from 'framer-motion'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
+import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
 type ComponentTypes = {
-    source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime",
+    source: SourceType["source"],
     mediaId: number,
     vidsrcId?: number,
     activeEpisodeNumber: number,
@@ -46,7 +47,7 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
 
     }, [activeEpisodeNumber])
 
-    function queryLinkBySource(item: EpisodeAnimeWatch | MediaEpisodes, source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime") {
+    function queryLinkBySource(item: EpisodeAnimeWatch | MediaEpisodes, source: SourceType["source"]) {
 
         switch (source) {
 
