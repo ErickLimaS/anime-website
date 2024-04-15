@@ -110,7 +110,9 @@ function ChaptersPages({ data, initialPage }) {
 
                         <div id={styles.close_btn_container}>
 
-                            <span className={styles.page_indicator_text}>Page <b>{currPage + 1 >= data.length ? data.length : `${currPage + 1} -`} {currPage + 2 > data.length ? "" : currPage + 2}</b> out of <b>{data.length}</b></span>
+                            <span className={styles.page_indicator_text}>
+                                Page <b>{currPage + 1 >= data.length ? data.length : `${currPage + 1}`}</b> <b className={styles.text_only_desktop}>{currPage + 2 > data.length ? "" : ` - ${currPage + 2}`}</b> out of <b>{data.length}</b>
+                            </span>
 
                             <motion.button onClick={() => setShowOnModal(false)} whileTap={{ scale: 0.9 }} aria-label={showOnModal ? "Close" : "Open on Fullscreen"}>
                                 <CloseSvg width={16} height={16} />
@@ -156,7 +158,9 @@ function ChaptersPages({ data, initialPage }) {
 
             </AnimatePresence>
 
-            <span className={styles.page_indicator_text}>Page <b>{currPage + 1 >= data.length ? data.length : `${currPage + 1} -`} {currPage + 2 > data.length ? "" : currPage + 2}</b> out of <b>{data.length}</b></span>
+            <span className={styles.page_indicator_text}>
+                Page <b>{currPage + 1 >= data.length ? data.length : `${currPage + 1}`}</b> <b className={styles.text_only_desktop}>{currPage + 2 > data.length ? "" : ` - ${currPage + 2}`}</b> out of <b>{data.length}</b>
+            </span>
 
             <p>Reading Direction: Left to Right</p>
 

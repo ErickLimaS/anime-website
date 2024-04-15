@@ -73,6 +73,16 @@
 
 }
 
+@media(max-width: 629px) {
+
+    #modal_chapter_pages_fullscreen_container #close_btn_container span .text_only_desktop,
+    .page_indicator_text .text_only_desktop {
+
+        display: none;
+
+    }
+}
+
 #modal_chapter_pages_fullscreen_container #close_btn_container button {
 
     transition: all ease-in-out 100ms;
@@ -142,7 +152,8 @@
     padding: 16px 16px;
 
     font-size: var(--font-size--p);
-    font-weight: 600;color: var(--white-100);
+    font-weight: 600;
+    color: var(--white-100);
 
     border: 1px solid var(--pink-variant-2);
     border-radius: 8px;
@@ -154,7 +165,7 @@
     background-color: var(--pink-variant-2);
 
     opacity: 0.9;
-    
+
 }
 
 #btns_container #fullscreen_btn svg {
