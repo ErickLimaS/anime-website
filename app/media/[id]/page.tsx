@@ -303,10 +303,6 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2 className={styles.heading_style}>CAST</h2>
 
-                {mediaData.type == "ANIME" && (
-                  <p>Hover over the image to show the actor behind its character</p>
-                )}
-
                 {/* MAKE HOVER, THAN FLIP IMAGE AND SHOW THE ACTOR */}
                 <div>
                   <ul className='display_flex_row'>

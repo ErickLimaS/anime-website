@@ -46,7 +46,7 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
 
     }, [activeEpisodeNumber])
 
-    function queryLinkBySource(item: EpisodeAnimeWatch | MediaEpisodes, source: string) {
+    function queryLinkBySource(item: EpisodeAnimeWatch | MediaEpisodes, source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime") {
 
         switch (source) {
 
@@ -86,7 +86,6 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                 animate="animate"
             >
 
-
                 {episodesList?.map((item, key: number) => (
                     <motion.li
                         key={key}
@@ -106,18 +105,24 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                         </Link>
 
                         <div className={styles.episode_info_container}>
-
                             <Link
                                 href={`/watch/${mediaId}?source=${source}&episode=${(item as MediaEpisodes).number}&q=${queryLinkBySource((item as MediaEpisodes), source)}`
                                 }
                             >
+
+                                {(source == "aniwatch" && (item as EpisodeAnimeWatch).isFiller) && (
+                                    <small className={styles.filler_alert_text}>Filler</small>
+                                )}
+
                                 <h4>
                                     {source == "gogoanime" || source == "vidsrc" ?
                                         episodesOnImdb ?
                                             episodesOnImdb[key].title : `Episode ${(item as MediaEpisodes).number}`
                                         :
-                                        (item as EpisodeAnimeWatch).title}
+                                        (item as EpisodeAnimeWatch).title
+                                    }
                                 </h4>
+
                             </Link>
 
                             <ButtonMarkEpisodeAsWatched
