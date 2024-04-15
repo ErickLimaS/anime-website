@@ -102,7 +102,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     setItemOffset(newOffset)
 
-    setTimeout(() => setLoading(false), 1000)  // needed to refresh episodes "Marked as Watched"
+    setTimeout(() => setLoading(false), 150)  // needed to refresh episodes "Marked as Watched"
 
   }
 
@@ -143,8 +143,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         setCurrentItems(dataCrunchyroll.slice(itemOffset, endOffset))
         setPageCount(Math.ceil(dataCrunchyroll.length / rangeEpisodesPerPage))
 
-        setLoading(false)
-
         break
 
       case "gogoanime": // get data from GOGOANIME as default
@@ -165,8 +163,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         setCurrentItems((mediaEpisodes as MediaEpisodes[]).slice(itemOffset, endOffset))
         setPageCount(Math.ceil((mediaEpisodes as MediaEpisodes[]).length / rangeEpisodesPerPage))
 
-        setLoading(false)
-
         break
 
       case "aniwatch": // get data from ANIWATCH
@@ -183,8 +179,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
         setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
-
-        setLoading(false)
 
         break
 
@@ -209,8 +203,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
         setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
 
-        setLoading(false)
-
         break
 
       default:
@@ -220,6 +212,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         break
 
     }
+
+    setLoading(false)
 
   }
 

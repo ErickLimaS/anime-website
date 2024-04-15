@@ -20,6 +20,10 @@ function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, mot
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
 
+            {data.isFiller && (
+                <span className={styles.alert_filler_text}>Filler</span>
+            )}
+
             <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`} className={styles.img_container}>
                 <Image
                     src={backgroundImg || placeholderImg}
