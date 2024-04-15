@@ -18,13 +18,19 @@
 
 #container svg {
 
-    transform: scale(1.2);
+    transform: scale(1.3);
 
 }
 
 #container[data-added=false] svg {
 
     fill: var(--brand-color);
+
+}
+
+#container[data-added=false].custom_text svg {
+
+    fill: var(--white-100);
 
 }
 
