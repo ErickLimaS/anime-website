@@ -26,6 +26,7 @@ type Component = {
     title: string,
     route: Url,
     sort: string,
+    mediaFormat?: "ANIME" | "MANGA",
     dateOptions?: boolean,
     darkBackground?: boolean,
     layoutInverted?: boolean,
@@ -34,7 +35,19 @@ type Component = {
 
 export const revalidate = 1800 // revalidate cached data every 30 min
 
-function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layoutInverted }: Component) {
+const popUpMediaMotion = {
+    initial: {
+        scale: 0,
+    },
+    animate: {
+        scale: 1,
+        transition: {
+            staggerChildren: 0.2,
+        },
+    },
+}
+
+function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBackground, layoutInverted }: Component) {
 
     // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
     const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1)
@@ -47,6 +60,8 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
+    const [showAdultContent, setShowAdultContent] = useState<boolean | null>(null)
+
     const [selectedId, setSelectedId] = useState<number | null>(null)
     const [mediaSelect, setMediaSelected] = useState<ApiDefaultResult | null>(null)
 
@@ -54,18 +69,6 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
-
-    const popUpMediaMotion = {
-        initial: {
-            scale: 0,
-        },
-        animate: {
-            scale: 1,
-            transition: {
-                staggerChildren: 0.2,
-            },
-        },
-    }
 
     async function getMedias(newPageResults?: boolean, days?: 1 | 7 | 30, previous?: boolean) {
 
@@ -75,11 +78,13 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
         let response: ApiAiringMidiaResults[] | ApiDefaultResult[] | void
 
-        let showAdultContent = false
+        let docUserShowAdultContent = showAdultContent || false
 
-        if (user) {
+        if (user && showAdultContent == null) {
 
-            showAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+            docUserShowAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+
+            setShowAdultContent(docUserShowAdultContent)
 
         }
 
@@ -87,11 +92,11 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
 
             // gets the range of days than parse it to unix and get any media releasing in the selected range
             response = await anilist.getReleasingByDaysRange(
-                "ANIME",
+                mediaFormat || "ANIME",
                 days!,
                 newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined,
                 undefined,
-                showAdultContent
+                docUserShowAdultContent
             ) as ApiAiringMidiaResults[]
 
             const responseMap = (response as ApiAiringMidiaResults[]).map((item) => item.media)
@@ -103,11 +108,11 @@ function NavThoughMedias({ title, route, dateOptions, sort, darkBackground, layo
         else {
 
             response = await anilist.getMediaForThisFormat(
-                "ANIME",
+                mediaFormat || "ANIME",
                 sort,
                 newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined,
                 5,
-                showAdultContent
+                docUserShowAdultContent
             ).then(
                 res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
             )

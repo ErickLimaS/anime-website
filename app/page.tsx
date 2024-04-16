@@ -130,6 +130,13 @@ export default async function Home() {
       {/* RANKING and NEWEST SECTION */}
       <section className={styles.background}>
 
+        {/* SECTION => MANGAS SORTED BY FAVOURITES */}
+        <section className={`${styles.medias_sections_container} ${styles.transparent_background}`}>
+
+          <NavThoughMedias title={"Best Rated Mangas"} route={"#"} mediaFormat="MANGA" sort={"FAVOURITES_DESC"} darkBackground={true} />
+
+        </section>
+
         <div id={styles.media_ranks_container}>
 
           {/* RANKING CONTAINER */}
