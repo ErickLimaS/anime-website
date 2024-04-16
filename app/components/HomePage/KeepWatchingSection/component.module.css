@@ -31,7 +31,7 @@
     }
 }
 
-@media((min-width: 1441px)) {
+@media((min-width: 1480px)) {
     #keep_watching_container {
         width: var(--breakpoint-xxl);
     }

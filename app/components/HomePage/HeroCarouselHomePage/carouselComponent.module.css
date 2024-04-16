@@ -189,7 +189,7 @@ ul.carousel_container li.carousel_item div.item_info {
     }
 }
 
-@media((min-width: 1441px)) {
+@media((min-width: 1480px)) {
     .carousel_position_wrapper {
         max-width: var(--breakpoint-xxl);
         max-height: 810px;
@@ -371,7 +371,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
     }
 }
 
-@media((min-width: 1441px)) {
+@media((min-width: 1480px)) {
     #recomendations_position_wrapper {
         max-width: var(--breakpoint-xxl);
         height: calc(450px + 15vw);
@@ -547,7 +547,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
     }
 }
 
-@media((min-width: 1441px)) {
+@media((min-width: 1480px)) {
     #stop_trailer_btn_container {
 
         max-width: var(--breakpoint-xxl);
