@@ -54,3 +54,39 @@
     padding: 32px 16px;
 
 }
+
+#rank_container ol[data-loading=true] {
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px 0;
+
+}
+
+/* LOADING */
+.loading_span {
+
+    animation: infinite 1.8s dimmeloading;
+
+    display: block;
+    background: var(--white-50);
+    height: 95px;
+    width: 100%;
+
+}
+
+@keyframes dimmeloading {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}

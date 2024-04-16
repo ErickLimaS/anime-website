@@ -3,18 +3,20 @@ import styles from './component.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { motion } from 'framer-motion'
 
 type MediaListInfo = {
     positionIndex: number,
     data: ApiDefaultResult,
     showCoverArt?: boolean,
-    alternativeBorder?: boolean
+    alternativeBorder?: boolean,
+    variants?: any
 }
 
-function MediaListCoverInfo({ positionIndex, data, showCoverArt, alternativeBorder }: MediaListInfo) {
+function MediaListCoverInfo({ positionIndex, data, showCoverArt, alternativeBorder, variants }: MediaListInfo) {
 
     return (
-        <li className={styles.item_list} data-no-border={alternativeBorder}>
+        <motion.li className={styles.item_list} data-no-border={alternativeBorder} variants={variants} initial="initial" animate="animate" exit="initial">
             {showCoverArt ? (
                 <div className={styles.img_container}>
                     <Link href={`/media/${data.id}`}>
@@ -49,7 +51,7 @@ function MediaListCoverInfo({ positionIndex, data, showCoverArt, alternativeBord
             {alternativeBorder && (
                 <span className={styles.border_bottom}></span>
             )}
-        </li >
+        </motion.li >
     )
 
 }
