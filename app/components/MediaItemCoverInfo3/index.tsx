@@ -13,34 +13,29 @@ type ComponentTypes = {
     darkMode?: boolean,
     loading?: boolean,
     hiddenOnDesktop?: boolean,
-    hiddenOnMobile?: boolean,
     layoutId?: string,
     key?: any
 }
 
-const popUpMediaMotion = {
-    initial: {
-        scale: 0,
-    },
-    animate: {
-        scale: 1,
-    },
-}
-
-function MediaItemCoverInfo3({ positionIndex, data, darkMode, loading, hiddenOnDesktop, hiddenOnMobile, layoutId, onClick }: ComponentTypes) {
+function MediaItemCoverInfo3({ positionIndex, data, darkMode, loading, hiddenOnDesktop, layoutId, onClick }: ComponentTypes) {
 
     const customStyle = positionIndex && { gridArea: `item${positionIndex}` }
+
+    const popUpMediaMotion = {
+        initial: {
+            scale: 0,
+        },
+        animate: {
+            scale: 1,
+        },
+    }
 
     return (
         <motion.div
             variants={popUpMediaMotion}
             layoutId={layoutId}
             onClick={() => onClick(String(data.id))}
-            className={`
-                ${styles.media_item_container} ${darkMode ? styles.darkMode : ''} 
-                ${hiddenOnDesktop ? styles.media_item_container_desktop_hidden : ""}
-                ${hiddenOnMobile ? styles.media_item_container_mobile_hidden : ""}
-            `}
+            className={`${styles.media_item_container} ${darkMode ? styles.darkMode : ''} ${hiddenOnDesktop ? styles.midia_item_container_hidden : ""}`}
             style={customStyle || undefined}
             data-loading={loading || false}
         >

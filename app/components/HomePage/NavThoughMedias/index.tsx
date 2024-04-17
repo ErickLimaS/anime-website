@@ -20,7 +20,6 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import SwiperListContainer from '../../SwiperListContainer'
 
 type Component = {
 
@@ -54,8 +53,6 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
     const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1)
 
     const [data, setData] = useState<ApiDefaultResult[]>([])
-    const [fetchedData, setFetchedData] = useState<ApiDefaultResult[]>([])
-    const [desktopData, setDesktopData] = useState<ApiDefaultResult[]>([])
 
     const [trailerActive, setTrailerActive] = useState<boolean>(false)
 
@@ -107,8 +104,6 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
             setDaysRange(days!)
 
-            setData(response as ApiDefaultResult[])
-
         }
         else {
 
@@ -122,15 +117,12 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                 res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
             )
 
-            if (data.length == 0) setData(response as ApiDefaultResult[])
-            if (data.length > 0) setFetchedData([...fetchedData, ...response as ApiDefaultResult[]])
-
         }
 
         // handles the pagination
-        if (newPageResults) setPageIndex((current) => previous ? current - 1 : current + 1)
+        if (newPageResults) setPageIndex(previous ? pageIndex - 1 : pageIndex + 1)
 
-        setDesktopData(response as ApiDefaultResult[])
+        setData(response as ApiDefaultResult[])
 
         setIsLoading(false)
     }
@@ -169,33 +161,15 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
                     <ul className='display_flex_row'>
                         <li>
-                            <button
-                                disabled={daysRange === 1}
-                                data-active={daysRange == 1}
-                                onClick={() => getMedias(undefined, 1, false)}
-                            >
-                                Today
-                            </button>
+                            <button disabled={daysRange === 1} data-active={daysRange == 1} onClick={() => getMedias(undefined, 1, false)}>Today</button>
                         </li>
                         <span>/</span>
                         <li>
-                            <button
-                                disabled={daysRange === 7}
-                                data-active={daysRange == 7}
-                                onClick={() => getMedias(undefined, 7, false)}
-                            >
-                                This week
-                            </button>
+                            <button disabled={daysRange === 7} data-active={daysRange == 7} onClick={() => getMedias(undefined, 7, false)}>This week</button>
                         </li>
                         <span>/</span>
                         <li>
-                            <button
-                                disabled={daysRange === 30}
-                                data-active={daysRange == 30}
-                                onClick={() => getMedias(undefined, 30, false)}
-                            >
-                                Last 30 days
-                            </button>
+                            <button disabled={daysRange === 30} data-active={daysRange == 30} onClick={() => getMedias(undefined, 30, false)}>Last 30 days</button>
                         </li>
                     </ul>
 
@@ -211,28 +185,18 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                 animate="animate"
             >
 
-                {/* ONLY DESKTOP */}
-                {desktopData.length > 0 && (desktopData.slice(0, 5).map((item, key) => (
-                    <MediaItemCoverInfo3
-                        layoutId={String(item.id)}
-                        key={item.id}
-                        onClick={() => setMediaPreview(item.id)}
-                        data={item as ApiDefaultResult}
-                        positionIndex={key + 1}
-                        loading={isLoading}
-                        darkMode={darkBackground}
-                        hiddenOnMobile
-                    />
-                ))
-                )}
-
-                {/* ONLY MOBILE */}
                 {data.length > 0 && (
-                    <div className={styles.mobile_list_container}>
-                        <SwiperListContainer
-                            data={fetchedData?.length > 0 ? [...data, ...fetchedData] : data}
+                    data.slice(0, 8).map((item, key: number) => (
+                        <MediaItemCoverInfo3
+                            layoutId={String(item.id)}
+                            key={item.id}
+                            onClick={() => setMediaPreview(item.id)}
+                            data={item as ApiDefaultResult}
+                            positionIndex={key + 1}
+                            loading={isLoading}
+                            darkMode={darkBackground}
                         />
-                    </div>
+                    ))
                 )}
 
                 {data.length == 0 && (
@@ -398,6 +362,7 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
                     {/* <Link href={route} className='display_align_justify_center'>VIEW ALL <ChevronRightIcon alt="Icon Facing Right" /></Link> */}
                 </div>
+
             </motion.div>
 
         </>

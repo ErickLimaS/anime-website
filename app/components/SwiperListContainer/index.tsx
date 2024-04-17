@@ -8,7 +8,7 @@ import styles from "./styles.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import ListCarousel from '../HomePage/HeroListCarousel';
 
-type ComponentTypes = {
+function SwiperListContainer({ data, options, customHeroSection, keepWatchingVariant, onClick }: {
     data?: ApiDefaultResult[] | KeepWatchingItem[],
     keepWatchingVariant?: boolean,
     customHeroSection?: boolean
@@ -19,9 +19,7 @@ type ComponentTypes = {
         bp740: number,
         bp1275: number,
     },
-}
-
-function SwiperListContainer({ data, options, customHeroSection, keepWatchingVariant, onClick }: ComponentTypes) {
+}) {
 
     return (
         <Swiper
@@ -49,7 +47,7 @@ function SwiperListContainer({ data, options, customHeroSection, keepWatchingVar
 
                         customHeroSection ? (
 
-                            <ListCarousel data={item as ApiDefaultResult} onClick={onClick} />
+                            <ListCarousel data={item as ApiDefaultResult} onClick={onClick}/>
 
                         ) : (
 

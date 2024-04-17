@@ -78,7 +78,7 @@
     }
 }
 
-@media((min-width: 1480px)) {
+@media((min-width: 1441px)) {
     #popular_container {
         width: var(--breakpoint-xxl);
     }
@@ -244,7 +244,7 @@
     }
 }
 
-@media((min-width: 1480px)) {
+@media((min-width: 1441px)) {
     #new_fetched_data_container {
         width: var(--breakpoint-xxl);
     }

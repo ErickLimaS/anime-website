@@ -13,14 +13,8 @@
 
 }
 
-@media(max-width: 875px) {
-    .media_item_container_mobile_hidden {
-        display: none !important;
-    }
-}
-
 @media(max-width: 989px) {
-    .media_item_container_desktop_hidden {
+    .midia_item_container_hidden {
         display: none !important;
     }
 }
