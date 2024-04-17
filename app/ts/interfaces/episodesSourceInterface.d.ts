@@ -1,3 +1,3 @@
 export interface SourceType {
-    source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime"
+    source: "crunchyroll" | "aniwatch" | "gogoanime"
 }

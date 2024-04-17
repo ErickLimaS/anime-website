@@ -59,10 +59,6 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
 
                 return `${(item as EpisodeAnimeWatch).episodeId}`
 
-            case "vidsrc":
-
-                return `${vidsrcId}?s=1&e=${item.number}`
-
             default:
 
                 return null
@@ -116,7 +112,7 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                                 )}
 
                                 <h4>
-                                    {source == "gogoanime" || source == "vidsrc" ?
+                                    {source == "gogoanime" ?
                                         episodesOnImdb ?
                                             episodesOnImdb[key].title : `Episode ${(item as MediaEpisodes).number}`
                                         :
@@ -128,7 +124,7 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
 
                             <ButtonMarkEpisodeAsWatched
                                 episodeId={source == "aniwatch" ? `${(item as MediaEpisodes).number}` : (item as MediaEpisodes).id}
-                                episodeTitle={source == "vidsrc" || source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
+                                episodeTitle={source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
                                 mediaId={mediaId}
                                 source={source}
                                 hasText={true}

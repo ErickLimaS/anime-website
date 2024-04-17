@@ -16,8 +16,6 @@ import { getMediaInfo } from '@/api/imdb'
 import Image from 'next/image'
 import ErrorImg from "@/public/error-img-4.png"
 import Link from 'next/link'
-import { getVideoSrcLink } from '@/api/vidsrc'
-import { VidsrcEpisodeLink } from '@/app/ts/interfaces/apiVidsrcInterface'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
 export const revalidate = 900 // revalidate cached data every 15 minutes
@@ -43,7 +41,7 @@ async function WatchEpisode({ params, searchParams }: {
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
     let episodeData
-    let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | VidsrcEpisodeLink["subtitles"] | undefined
+    let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | undefined
     let episodes: EpisodeAnimeWatch[] | MediaEpisodes[] = []
     let videoSrc: string | undefined = undefined
     let imdbEpisodes: ImdbEpisode[] = []
@@ -95,30 +93,6 @@ async function WatchEpisode({ params, searchParams }: {
 
                 // if episode on params dont match any of EPISODES results, it shows a error
                 if (episodes.find(item => item.episodeId == searchParams.q) == undefined) error = true
-
-            }
-
-            break
-
-        case ("vidsrc"):
-
-            // fetch episode data
-            episodeData = await getVideoSrcLink(`${searchParams.q}&e=${searchParams.episode}`) as VidsrcEpisodeLink
-
-            if (!episodeData) error = true
-
-            if (episodeData) {
-
-                // fetch episode link source
-                videoSrc = episodeData.source
-
-                // vidsrc ID to be used on url
-                vidsrcId = Number(searchParams.q.slice(0, searchParams?.q.search(/\bq\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bq\b/)).length - 3))
-
-                // fetch episodes for this media
-                episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
-
-                episodeSubtitles = episodeData.subtitles
 
             }
 
