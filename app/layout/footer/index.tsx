@@ -88,7 +88,6 @@ async function Footer() {
                                 <li><Link href="https://anilist.gitbook.io/anilist-apiv2-docs/" target='_blank'>AniList API</Link></li>
                                 <li><Link href="https://docs.consumet.org/" target='_blank'>Consumet API</Link></li>
                                 <li><Link href="https://github.com/ghoshRitesh12/aniwatch-api" target='_blank'>Aniwatch API</Link></li>
-                                <li><Link href="https://github.com/cool-dev-guy/vidsrc-api" target='_blank'>VidSrc API</Link></li>
                                 <li><Link href="https://preview.themeforest.net/item/vodi-video-wordpress-theme-for-movies-tv-shows/full_screen_preview/23738703" target='_blank'>Inspiration 1</Link></li>
                                 <li><Link href="https://dribbble.com/shots/20333170-The-Trailers-Concept-Site-Part-2" target='_blank'>Inspiration 2</Link></li>
                             </ul>
