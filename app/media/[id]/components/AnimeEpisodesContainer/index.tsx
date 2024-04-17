@@ -282,6 +282,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         <NavButtons
           functionReceived={setEpisodesSource as (parameter: string | number) => void}
           actualValue={episodeSource}
+          showSourceStatus
+          sepateWithSpan={true}
           options={
             [
               { name: "Crunchyroll", value: "crunchyroll" },
@@ -289,7 +291,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
               { name: "Aniwatch", value: "aniwatch" }
             ]
           }
-          sepateWithSpan={true}
         />
 
         {/* SHOWS A SELECT WITH OTHER RESULTS FOR THIS MEDIA */}

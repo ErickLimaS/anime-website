@@ -2,7 +2,7 @@
     overflow-x: auto;
 }
 
-.nav_button_container::-webkit-scrollbar{
+.nav_button_container::-webkit-scrollbar {
 
     height: 0;
 
@@ -16,6 +16,12 @@
 
 .nav_button_container>button,
 #dynamic_container>button {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0 8px;
 
     background-color: transparent;
     border: none;
@@ -33,6 +39,53 @@
 
 }
 
+/* SOURCE IS AVAILABLE */
+.nav_button_container>button span.source_status {
+
+    transition: all ease-in-out 150ms;
+
+    display: block;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+    background-color: var(--white-100);
+
+}
+
+.nav_button_container>button span.source_status:not([data-available]) {
+
+    animation: infinite 1.5s dimmeLoading;
+
+}
+
+
+.nav_button_container>button span.source_status[data-available=true] {
+    background-color: rgb(20, 243, 0);
+}
+
+.nav_button_container>button span.source_status[data-available=false] {
+    background-color: #ff3324;
+}
+
+@keyframes dimmeLoading {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+/*  */
 .nav_button_container>button[data-active=false]:hover,
 #dynamic_container>button[data-active=false]:hover {
 
@@ -47,7 +100,7 @@
 
 }
 
-.nav_button_container span {
+.nav_button_container span.separate_text {
 
     display: flex;
     align-items: flex-end;

@@ -61,7 +61,7 @@
 
 }
 
-#container_heading span {
+#container_heading>div>span {
 
     margin: auto;
     font-size: var(--font-size--small-1);
@@ -111,7 +111,7 @@
 
 }
 
-#container_heading span:last-child {
+#container_heading>div>span:last-child {
     display: none;
 }
 
