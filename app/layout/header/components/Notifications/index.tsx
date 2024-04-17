@@ -21,6 +21,18 @@ import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
 function NotificationsComponent() {
 
+    // HOW IT WORKS
+    // 
+    // [[[Currently, this is kinda messy, but a i have a ideia of how to optimize it and make it better later]]]. 
+    // 
+    // User stores the next episode on his document.
+    // Then this component gets this field on user doc and filters to
+    // show only when the current time is bigger than the episode release date. 
+    // When release date is reached, it updates that media info for the next episode release date.
+    // It checks every 30 min time span for any update on User Doc "notifications" 
+    // 
+    // Local storage helps keeping the control of when to update info, if notification panel was open or to check user doc again.
+
     const db = getFirestore(initFirebase())
     const auth = getAuth()
     const [user] = useAuthState(auth)
@@ -36,6 +48,18 @@ function NotificationsComponent() {
         const dateLastUpdate = Number(Number(localStorage.getItem('notificationsLastUpdate')) + 1800) || 0
 
         return dateNow >= dateLastUpdate
+
+    }
+
+    // set notications from user doc on local storage
+    async function updateNotificationsOnLocal() {
+
+        const allNotificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
+            (res) => res.data()?.notifications || []
+        )
+
+        localStorage.setItem('notifications', JSON.stringify(allNotificationsStored))
+        localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
 
     }
 
@@ -118,7 +142,8 @@ function NotificationsComponent() {
             const mediaNotificationsStillReleasing = notifications.filter(item => item.lastEpisode == false)
             const mediaFinishedNotifications = notifications.filter(item => item.lastEpisode == true)
 
-            if ((mediaNotificationsStillReleasing.length == 0 && mediaFinishedNotifications.length == 0) || isCurrDateBiggerThanLastUpdate() == false) return
+            // if user is not assigned to any media notification, returns
+            if (mediaNotificationsStillReleasing.length == 0 && mediaFinishedNotifications.length == 0) return
 
             // map notifications shown and updates info to next episode
             if (mediaFinishedNotifications.length > 0) {
@@ -199,17 +224,6 @@ function NotificationsComponent() {
                     )
 
                 })
-
-            }
-
-            async function updateNotificationsOnLocal() {
-
-                const allNotificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
-                    (res) => res.data()?.notifications || []
-                )
-
-                localStorage.setItem('notifications', JSON.stringify(allNotificationsStored))
-                localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
 
             }
 

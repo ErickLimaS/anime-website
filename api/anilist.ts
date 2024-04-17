@@ -183,7 +183,7 @@ export default {
                     'page': pageNumber || 1,
                     'perPage': perPage || 5,
                     'type': type,
-                    'sort': "EPISODE",
+                    'sort': "TIME_DESC",
                     'showAdultContent': showAdultContent == true ? undefined : false,
                     'airingAt_greater': dateInUnix,
                     'airingAt_lesser': lastHourOfTheDay(1) // returns today last hour 

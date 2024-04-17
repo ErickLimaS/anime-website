@@ -26,6 +26,10 @@ span#box_shadow_end_section {
     background-color: var(--black-50);
 }
 
+.medias_sections_container.transparent_background {
+    background-color: transparent;
+}
+
 /* Midia Banner Container */
 #media_banner_container {
 
@@ -282,8 +286,6 @@ span#box_shadow_end_section {
 
 @media((min-width: 1200px)) {
     #media_ranks_container {
-
-        padding: 30px;
 
         max-width: var(--breakpoint-xxl);
 

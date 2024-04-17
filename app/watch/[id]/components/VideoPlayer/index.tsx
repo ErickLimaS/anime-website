@@ -24,13 +24,12 @@ import aniwatch from "@/api/aniwatch";
 import { useRouter } from "next/navigation";
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
-import { VidsrcEpisodeLink } from "@/app/ts/interfaces/apiVidsrcInterface";
-import { getVideoSrcLink } from "@/api/vidsrc";
+import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
 
 type VideoPlayerType = {
     source: string,
     currentLastStop?: string,
-    mediaSource: string,
+    mediaSource: SourceType["source"],
     media: ApiMediaResults,
     vidsrcId?: number,
     mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[],
@@ -39,7 +38,7 @@ type VideoPlayerType = {
     episodeIntro?: { start: number, end: number },
     episodeOutro?: { start: number, end: number },
     episodeImg: string,
-    subtitles?: VidsrcEpisodeLink["subtitles"] | EpisodeLinksAnimeWatch["tracks"] | undefined,
+    subtitles?: EpisodeLinksAnimeWatch["tracks"] | undefined,
     videoQualities?: {
         url: string,
         quality: "360p" | "480p" | "720p" | "1080p" | "default" | "backup",
@@ -298,15 +297,6 @@ function Player({
                 fetchNextEpisode = await aniwatch.episodesLinks(fetchNextEpisode.episodeId) as EpisodeLinksAnimeWatch
 
                 fetchNextEpisode = fetchNextEpisode.sources[0].url
-
-            }
-            else if (mediaSource == "vidsrc") {
-
-                nextEpisodId = `${vidsrcId}?s=1&e=${fetchNextEpisode.number}`
-
-                fetchNextEpisode = await getVideoSrcLink(nextEpisodId) as VidsrcEpisodeLink
-
-                fetchNextEpisode = fetchNextEpisode.source
 
             }
 

@@ -15,11 +15,24 @@ export function convertToUnix(days: number) {
 }
 
 // receive a unix timestamp and converts to date 
-export function convertFromUnix(unixTimestamp: number, options?: { month?: "numeric" | "2-digit" | "long" | "short" | "narrow" | undefined, year?: "numeric" | undefined }) {
+export function convertFromUnix(
+    unixTimestamp: number,
+    options?: { month?: "numeric" | "2-digit" | "long" | "short" | "narrow" | undefined, year?: "numeric" | undefined, hour?: "2-digit" | undefined, minute?: "2-digit" | undefined }
+) {
 
     const date = new Date(unixTimestamp * 1000)
 
-    return date.toLocaleDateString('en-US', { month: options ? options.month : 'long', day: "numeric", year: options ? options.year : "numeric" })
+    return date.toLocaleDateString(
+        'en-US',
+        {
+            month: options ? options.month : 'long',
+            day: "numeric",
+            year: options ? options.year : "numeric",
+            hour12: false,
+            hour: options ? options.hour : "2-digit",
+            minute: options ? options.minute : "2-digit"
+        }
+    )
 
 }
 

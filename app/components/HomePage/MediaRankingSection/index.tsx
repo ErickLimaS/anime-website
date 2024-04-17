@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from "./component.module.css"
 import MediaListCoverInfo2 from '../../MediaItemCoverInfo2'
 import NavButtons from '../../NavButtons'
@@ -9,6 +9,8 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
+import { AnimatePresence, motion } from 'framer-motion'
+import simulateRange from '@/app/lib/simulateRange'
 
 type PropsTypes = {
 
@@ -19,38 +21,48 @@ type PropsTypes = {
 
 export const revalidate = 1800 // revalidate cached data every 30 min
 
+const showUpItemVariant = {
+
+    initial: { opacity: 0 },
+    animate: { opacity: 1 }
+
+}
+
 function MediaRankingSection(props: PropsTypes) {
 
-    const [mediaList, setMediaList] = useState<ApiDefaultResult[] | ApiDefaultResult | null>(null)
+    const [mediaList, setMediaList] = useState<ApiDefaultResult[] | null>(props.data as ApiDefaultResult[])
+    const [loading, setLoading] = useState<boolean>(false)
 
-    let { data } = props
-    let currentQueryValue = "ANIME"
+    const [showAdultContent, setShowAdultContent] = useState<boolean | null>(null)
+    const [currentQueryValue, setCurrentQueryValue] = useState<"ANIME" | "MANGA">("ANIME")
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
 
-    useEffect(() => {
-        setMediaList(data as ApiDefaultResult[])
-    }, [])
-
     // request new type of media then set them
-    const loadMedia: (parameter: string) => void = async (parameter: string) => {
+    const loadMedia: (parameter: "ANIME" | "MANGA") => void = async (parameter: "ANIME" | "MANGA") => {
 
-        let showAdultContent = false
+        setLoading(true)
 
-        if (user) {
+        let docUserShowAdultContent = showAdultContent || false
 
-            showAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+        if (user && showAdultContent == null) {
+
+            docUserShowAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+
+            setShowAdultContent(docUserShowAdultContent)
 
         }
 
-        const response = await anilist.getMediaForThisFormat(parameter, undefined, undefined, undefined, showAdultContent) as ApiDefaultResult[]
+        const response = await anilist.getMediaForThisFormat(parameter, undefined, undefined, undefined, docUserShowAdultContent) as ApiDefaultResult[]
 
-        currentQueryValue = parameter
+        setCurrentQueryValue(parameter)
 
         setMediaList(response as ApiDefaultResult[])
+
+        setLoading(false)
 
     }
 
@@ -70,11 +82,29 @@ function MediaRankingSection(props: PropsTypes) {
 
             </div>
 
-            <ol>
-                {((mediaList as ApiDefaultResult[]) || (data as ApiDefaultResult[])).slice(0, 10).map((item: ApiDefaultResult, key: number) => (
-                    <MediaListCoverInfo2 key={key} positionIndex={key + 1} data={item} showCoverArt={false} />
-                ))}
-            </ol>
+            <motion.ol data-loading={loading}>
+
+                <AnimatePresence>
+
+                    {loading && (
+                        simulateRange(10).map((item, key) => (
+                            <motion.span key={key}
+                                className={styles.loading_span}
+                                variants={showUpItemVariant}
+                                initial="initial"
+                                animate="animate"
+                                exit="initial"
+                            />
+                        ))
+                    )}
+                    
+                    {(!loading && mediaList) && mediaList!.slice(0, 10).map((item: ApiDefaultResult, key: number) => (
+                        <MediaListCoverInfo2 key={key} positionIndex={key + 1} data={item} showCoverArt={false} variants={showUpItemVariant} />
+                    ))}
+
+                </AnimatePresence>
+
+            </motion.ol>
 
         </div>
     )

@@ -19,7 +19,7 @@ type ComponentTypes = {
 function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescription, motionStyle }: ComponentTypes) {
 
     return (
-        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate">
+        <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
 
             <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`} className={styles.img_container}>
                 <Image

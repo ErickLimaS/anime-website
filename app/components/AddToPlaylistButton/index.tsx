@@ -99,7 +99,6 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
             isMediaOnDB()
         }
 
-
     }, [user])
 
     return (
@@ -119,6 +118,7 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
             <motion.button
                 whileTap={{ scale: 0.85 }}
                 id={styles.container}
+                className={customText ? styles.custom_text : ""}
                 onClick={() => addThisMedia()}
                 disabled={isLoading}
                 data-added={wasAddedToPlaylist}

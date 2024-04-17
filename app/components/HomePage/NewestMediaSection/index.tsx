@@ -25,6 +25,8 @@ function NewestMediaSection(props: PropsTypes) {
     const [mediaList, setMediaList] = useState<ApiAiringMidiaResults[] | ApiDefaultResult[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
+    const [showAdultContent, setShowAdultContent] = useState<boolean | null>(null)
+
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
@@ -44,11 +46,13 @@ function NewestMediaSection(props: PropsTypes) {
     // gets the range of days than parse it to unix, runs function to get any media releasing in the selected range
     async function getMediaByDaysRange(days: 1 | 7 | 30) {
 
-        let showAdultContent = false
+        let docUserShowAdultContent = showAdultContent || false
 
-        if (user) {
+        if (user && showAdultContent == null) {
 
-            showAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+            docUserShowAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+
+            setShowAdultContent(docUserShowAdultContent)
 
         }
 
@@ -56,7 +60,7 @@ function NewestMediaSection(props: PropsTypes) {
 
         setIsLoading(true)
 
-        const response = await anilist.getReleasingByDaysRange("ANIME", days, undefined, 11, showAdultContent).then(
+        const response = await anilist.getReleasingByDaysRange("ANIME", days, undefined, 11, docUserShowAdultContent).then(
             res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
         ).then(res => res.map((item) => item.media))
 

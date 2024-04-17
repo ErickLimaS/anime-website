@@ -26,7 +26,7 @@ import simulateRange from '@/app/lib/simulateRange';
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { checkApiMisspellingMedias } from '@/app/lib/checkApiMediaMisspelling';
-import VidsrcEpisodeContainer from '../Episode/vidsrc';
+import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 
 type EpisodesContainerTypes = {
   dataCrunchyroll: EpisodesType[],
@@ -61,7 +61,7 @@ const episodePopupMotion = {
   animate: {
     opacity: 1,
     transition: {
-      duration: 0.5
+      duration: 1
     }
   }
 }
@@ -80,7 +80,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
   const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
   const [itemOffset, setItemOffset] = useState<number>(0);
 
-  const [episodeSource, setEpisodeSource] = useState<string>("")
+  const [episodeSource, setEpisodeSource] = useState<SourceType["source"]>("crunchyroll")
 
   const auth = getAuth()
 
@@ -90,8 +90,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   const [pageCount, setPageCount] = useState<number>(0)
 
-  // the length os episodes array will be divided by 25, getting the range of pagination
-  const rangeEpisodesPerPage = 25
+  // the length os episodes array will be divided by 20, getting the range of pagination
+  const rangeEpisodesPerPage = 20
 
   // Invoke when user click to request another page.
   const handlePageClick = (event: { selected: number }) => {
@@ -102,11 +102,11 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     setItemOffset(newOffset)
 
-    setTimeout(() => setLoading(false), 1000)  // needed to refresh episodes "Marked as Watched"
+    setTimeout(() => setLoading(false), 250)  // needed to refresh episodes "Marked as Watched"
 
   }
 
-  const setEpisodesSource: (parameter: string) => void = async (parameter: string) => {
+  const setEpisodesSource: (parameter: SourceType["source"]) => void = async (parameter: SourceType["source"]) => {
 
     console.log(`Episodes Source Parameter: ${parameter} `)
 
@@ -116,7 +116,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   }
 
-  const getEpisodesFromNewSource = async (source: string) => {
+  const getEpisodesFromNewSource = async (source: SourceType["source"]) => {
 
     // if data props has 0 length, it is set to get data from gogoanime
     const chooseSource = source
@@ -143,8 +143,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         setCurrentItems(dataCrunchyroll.slice(itemOffset, endOffset))
         setPageCount(Math.ceil(dataCrunchyroll.length / rangeEpisodesPerPage))
 
-        setLoading(false)
-
         break
 
       case "gogoanime": // get data from GOGOANIME as default
@@ -165,8 +163,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         setCurrentItems((mediaEpisodes as MediaEpisodes[]).slice(itemOffset, endOffset))
         setPageCount(Math.ceil((mediaEpisodes as MediaEpisodes[]).length / rangeEpisodesPerPage))
 
-        setLoading(false)
-
         break
 
       case "aniwatch": // get data from ANIWATCH
@@ -184,33 +180,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
         setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
 
-        setLoading(false)
-
-        break
-
-      case "vidsrc": // get data from VIDSRC
-
-        // VIDSRC has no episodes INFO
-        // so it will use IMDB info data, and redirect it to a url with episode and season number.
-
-        setEpisodeSource(chooseSource)
-
-        mediaEpisodes = dataImdb?.find((item) => item.season == 1)?.episodes
-
-        if (mediaEpisodes == null || mediaEpisodes == undefined) {
-          setLoading(false)
-          setEpisodesDataFetched([])
-          return
-
-        }
-
-        setEpisodesDataFetched(mediaEpisodes as ImdbEpisode[])
-
-        setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
-        setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
-
-        setLoading(false)
-
         break
 
       default:
@@ -220,6 +189,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         break
 
     }
+
+    setLoading(false)
 
   }
 
@@ -311,15 +282,15 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         <NavButtons
           functionReceived={setEpisodesSource as (parameter: string | number) => void}
           actualValue={episodeSource}
+          showSourceStatus
+          sepateWithSpan={true}
           options={
             [
               { name: "Crunchyroll", value: "crunchyroll" },
               { name: "GoGoAnime", value: "gogoanime" },
-              { name: "Aniwatch", value: "aniwatch" },
-              { name: "VidSrc (unstable)", value: "vidsrc" }
+              { name: "Aniwatch", value: "aniwatch" }
             ]
           }
-          sepateWithSpan={true}
         />
 
         {/* SHOWS A SELECT WITH OTHER RESULTS FOR THIS MEDIA */}
@@ -345,35 +316,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                     value={item.id.toLowerCase()}
                   >
                     {item.name}
-                  </option>
-                ))}
-              </select>
-
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* SHOWS SEASONS FOR THIS MEDIA */}
-        {/* VIDSRC NEEDS THE SEASON NUMBER */}
-        <AnimatePresence>
-          {(episodeSource == "vidsrc" && dataImdb && dataImdb[0]?.season) && (
-            <motion.div
-              id={styles.select_media_container}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-            >
-
-              <select
-                onChange={(e) => vidsrcEpisodesBySeason(Number(e.target.value))}
-                defaultValue={1}
-              >
-                {dataImdb?.map((item, key) => (
-                  <option
-                    key={key}
-                    value={item.season}
-                  >
-                    Season {item.season}
                   </option>
                 ))}
               </select>
@@ -429,22 +371,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                 />
 
               )
-              ||
-              (episodeSource == "vidsrc" && props.vidsrcId != null && dataImdb && dataImdb[0]?.season) && (
-
-                <VidsrcEpisodeContainer
-                  motionStyle={episodePopupMotion}
-                  key={key}
-                  episodeNumber={key + 1 + itemOffset}
-                  data={currentItems[key] as ImdbEpisode}
-                  vidsrcData={`${props.vidsrcId}?s=${(currentItems[key] as ImdbEpisode)?.season}`}
-                  title={(currentItems[key] as ImdbEpisode)?.title}
-                  episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
-                  backgroundImg={(currentItems[key] as ImdbEpisode)?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
-                  mediaId={props.mediaId}
-                />
-
-              )
             )
 
           ))}
@@ -461,7 +387,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           exit="exit"
         >
 
-          {simulateRange(25).map((item, key) => (
+          {simulateRange(rangeEpisodesPerPage).map((item, key) => (
 
             <motion.div
               key={key}
@@ -477,20 +403,15 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         </motion.div>
       )}
 
-      {((
-        episodesDataFetched.length == 0 || (episodeSource == "vidsrc" && props.vidsrcId == null && (!dataImdb || dataImdb[0]?.season == undefined))
-        ||
-        (episodeSource == "vidsrc" && dataImdb == undefined))
-        && !loading
-      ) && (
-          <div id={styles.no_episodes_container}>
+      {((episodesDataFetched.length == 0) && !loading) && (
+        <div id={styles.no_episodes_container}>
 
-            <Image src={ErrorImg} alt='Error' height={200} />
+          <Image src={ErrorImg} alt='Error' height={200} />
 
-            <p>Not available on <span>{episodeSource}</span></p>
+          <p>Not available on <span>{episodeSource}</span></p>
 
-          </div>
-        )}
+        </div>
+      )}
 
       <nav id={styles.pagination_buttons_container}>
 

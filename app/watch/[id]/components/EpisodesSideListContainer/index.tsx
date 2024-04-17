@@ -7,9 +7,10 @@ import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatc
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { motion } from 'framer-motion'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
+import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
 type ComponentTypes = {
-    source: "crunchyroll" | "aniwatch" | "vidsrc" | "gogoanime",
+    source: SourceType["source"],
     mediaId: number,
     vidsrcId?: number,
     activeEpisodeNumber: number,
@@ -46,7 +47,7 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
 
     }, [activeEpisodeNumber])
 
-    function queryLinkBySource(item: EpisodeAnimeWatch | MediaEpisodes, source: string) {
+    function queryLinkBySource(item: EpisodeAnimeWatch | MediaEpisodes, source: SourceType["source"]) {
 
         switch (source) {
 
@@ -57,10 +58,6 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
             case "aniwatch":
 
                 return `${(item as EpisodeAnimeWatch).episodeId}`
-
-            case "vidsrc":
-
-                return `${vidsrcId}?s=1&e=${item.number}`
 
             default:
 
@@ -86,7 +83,6 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                 animate="animate"
             >
 
-
                 {episodesList?.map((item, key: number) => (
                     <motion.li
                         key={key}
@@ -106,23 +102,29 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                         </Link>
 
                         <div className={styles.episode_info_container}>
-
                             <Link
                                 href={`/watch/${mediaId}?source=${source}&episode=${(item as MediaEpisodes).number}&q=${queryLinkBySource((item as MediaEpisodes), source)}`
                                 }
                             >
+
+                                {(source == "aniwatch" && (item as EpisodeAnimeWatch).isFiller) && (
+                                    <small className={styles.filler_alert_text}>Filler</small>
+                                )}
+
                                 <h4>
-                                    {source == "gogoanime" || source == "vidsrc" ?
+                                    {source == "gogoanime" ?
                                         episodesOnImdb ?
                                             episodesOnImdb[key].title : `Episode ${(item as MediaEpisodes).number}`
                                         :
-                                        (item as EpisodeAnimeWatch).title}
+                                        (item as EpisodeAnimeWatch).title
+                                    }
                                 </h4>
+
                             </Link>
 
                             <ButtonMarkEpisodeAsWatched
                                 episodeId={source == "aniwatch" ? `${(item as MediaEpisodes).number}` : (item as MediaEpisodes).id}
-                                episodeTitle={source == "vidsrc" || source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
+                                episodeTitle={source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
                                 mediaId={mediaId}
                                 source={source}
                                 hasText={true}

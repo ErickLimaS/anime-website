@@ -124,12 +124,12 @@ h2.heading_style {
 
     display: flex;
 
-    border: 0;
+    border: 1px solid var(--white-100);
 
     text-align: center;
 
     padding: 16px;
-    background-color: var(--white-100);
+    background-color: transparent;
 
     border-radius: 8px;
 

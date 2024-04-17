@@ -73,6 +73,16 @@
 
 }
 
+@media(max-width: 629px) {
+
+    #modal_chapter_pages_fullscreen_container #close_btn_container span .text_only_desktop,
+    .page_indicator_text .text_only_desktop {
+
+        display: none;
+
+    }
+}
+
 #modal_chapter_pages_fullscreen_container #close_btn_container button {
 
     transition: all ease-in-out 100ms;
@@ -107,8 +117,25 @@
 
 }
 
-/* FULLSCREEN BUTTON */
-#container #fullscreen_btn {
+/* btn container */
+#btns_container {
+
+    margin-top: 32px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+}
+
+@media(min-width: 460px) {
+    #btns_container {
+        flex-direction: row;
+    }
+
+}
+
+#btns_container button {
 
     transition: all ease-in-out 100ms;
 
@@ -123,26 +150,25 @@
     border: 0;
 
     padding: 16px 16px;
-    margin-top: 32px;
 
     font-size: var(--font-size--p);
     font-weight: 600;
-    color: var(--pink-variant-2);
+    color: var(--white-100);
 
     border: 1px solid var(--pink-variant-2);
     border-radius: 8px;
 
 }
 
-#container #fullscreen_btn:hover {
+#btns_container button:hover {
 
     background-color: var(--pink-variant-2);
-    color: var(--white-100);
 
     opacity: 0.9;
+
 }
 
-#container #fullscreen_btn svg {
+#btns_container #fullscreen_btn svg {
 
     transform: scale(1.15);
 

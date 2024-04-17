@@ -114,7 +114,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
         if (onWatchPage) {
             let data: DocumentData[] = []
 
-            const queryCommentsToThisEpisode = query(collection(db, 'comments', `${media.id}`, "all"), where("episodeId", "==", episodeId))
+            const queryCommentsToThisEpisode = query(collection(db, 'comments', `${media.id}`, "all"), where("episodeNumber", "==", episodeNumber))
 
             const querySnapshot = await getDocs(queryCommentsToThisEpisode)
 
@@ -174,7 +174,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
         if (onWatchPage) {
             // SAVES ON COLLECTION OF EPISODE
-            await addDoc(collection(db, 'comments', `${media.id}`, `${episodeId}`), {
+            await addDoc(collection(db, 'comments', `${media.id}`, `${episodeNumber}`), {
                 commentRef: doc(db, 'comments', `${media.id}`, "all", commentSaved.id)
             })
         }

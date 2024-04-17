@@ -252,10 +252,12 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
                         <div className={styles.heading_container}>
                             <h5>
-                                {item.username.length > 10 ? `${item.username.slice(0, 10)}...` : item.username}
+                                {item.username.length > 25 ? `${item.username.slice(0, 25)}...` : item.username}
                             </h5>
 
-                            <p>{convertFromUnix(item.createdAt, { month: "short" })}</p>
+                            <p>
+                                {convertFromUnix(item.createdAt, { month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                            </p>
                         </div>
 
                         <div className={styles.comment_text_container} onClick={() => item.isSpoiler && setIsSpoiler(!isSpoiler)}>

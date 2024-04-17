@@ -139,6 +139,7 @@ function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, m
             <motion.li
               key={key}
               title={`Chapter ${item.chapterNumber} - ${mangaTitle}`}
+              data-disabled={item.pages == 0}
               variants={loadingChaptersMotion}
               className={styles.chapter_container}
             >
