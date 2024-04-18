@@ -85,8 +85,7 @@ const sourcesOptions = [
 
     { name: "Crunchyroll", value: "crunchyroll" },
     { name: "GoGoAnime", value: "gogoanime" },
-    { name: "Aniwatch", value: "aniwatch" },
-    { name: "VidSrc (unstable)", value: "vidsrc" },
+    { name: "Aniwatch", value: "aniwatch" }
 
 ]
 
