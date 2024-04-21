@@ -6,7 +6,20 @@ import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
 import { motion } from 'framer-motion'
 
-function CrunchyrollEpisode({ data, mediaId, motionStyle }: { data: EpisodesType, mediaId: number, motionStyle?: any }) {
+
+type ComponentTypes = {
+    data: EpisodesType,
+    mediaId: number,
+    motionStyle?: any,
+    episodesWatched?: {
+        mediaId: number;
+        episodeId: string;
+        episodeTitle: string;
+    }[]
+
+}
+
+function CrunchyrollEpisode({ data, mediaId, motionStyle, episodesWatched }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
@@ -33,6 +46,11 @@ function CrunchyrollEpisode({ data, mediaId, motionStyle }: { data: EpisodesType
                     episodeTitle={data.title}
                     mediaId={mediaId}
                     source="crunchyroll"
+                    wasWatched={
+                        episodesWatched?.find(
+                            (item) => item.episodeId == `${data.title}`
+                        ) ? true : false
+                    }
                 />
 
             </div>

@@ -5,10 +5,8 @@ import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import {
-    DocumentData, DocumentSnapshot,
     FieldPath, arrayRemove,
-    arrayUnion, doc,
-    getDoc, getFirestore, setDoc
+    arrayUnion, doc, getFirestore, setDoc
 } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
@@ -20,38 +18,20 @@ type BtnTypes = {
     episodeTitle: string,
     mediaId: number,
     source: SourceType["source"],
-    hasText?: boolean
+    hasText?: boolean,
+    wasWatched?: boolean
 }
 
-function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, hasText }: BtnTypes) {
+function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, wasWatched, hasText }: BtnTypes) {
 
-    const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(false)
+    const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(wasWatched || false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const auth = getAuth()
 
     const [user] = useAuthState(auth)
 
-    const db = getFirestore(initFirebase());
-
-    // CHECK IF EPISODE IS ON FIRESTORE, THEN CHANGE STATE
-    async function checkEpisodeMarkedAsWatched() {
-
-        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
-
-        if (!userDoc) return
-
-        const isOnEpisodesList = userDoc.get("episodesWatchedBySource")?.[source]
-
-        if (!isOnEpisodesList) return
-
-        const episodedWatched = isOnEpisodesList[mediaId]?.find(
-            (item: { episodeId: string }) => item.episodeId == episodeId
-        )
-
-        if (episodedWatched) setWasEpisodeWatched(true)
-
-    }
+    const db = getFirestore(initFirebase())
 
     // ADD OR REMOVE EPISODE FROM FIRESTORE
     async function handleEpisodeWatch() {
@@ -63,8 +43,7 @@ function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, 
         const episodeData = {
 
             mediaId: mediaId,
-            // crunchyroll has no ID for episodes, so it will be used its title
-            episodeId: episodeId,
+            episodeId: episodeId, // crunchyroll has no ID for episodes, so it will be used its title
             episodeTitle: episodeTitle
 
         }
@@ -73,26 +52,22 @@ function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, 
             {
                 episodesWatchedBySource: {
                     [source]: {
-                        [mediaId]: !wasEpisodeWatched ? arrayUnion(...[episodeData]) : arrayRemove(...[episodeData])
+                        [mediaId]: wasEpisodeWatched ? arrayRemove(...[episodeData]) : arrayUnion(...[episodeData])
                     }
                 }
             } as unknown as FieldPath,
             { merge: true }
+        ).then(() =>
+            setWasEpisodeWatched(!wasEpisodeWatched)
         )
 
-        if (!wasEpisodeWatched) setWasEpisodeWatched(true)
-        else setWasEpisodeWatched(false)
-
         setIsLoading(false)
+
     }
 
     useEffect(() => {
-
-        if (!user) return
-
-        checkEpisodeMarkedAsWatched()
-
-    }, [user, source, episodeId])
+        setWasEpisodeWatched(wasWatched || false)
+    }, [wasWatched])
 
     return (
 

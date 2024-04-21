@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import Link from 'next/link'
@@ -8,44 +8,62 @@ import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { motion } from 'framer-motion'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
+import { doc, DocumentData, DocumentSnapshot, getDoc, getFirestore } from 'firebase/firestore'
+import { initFirebase } from '@/app/firebaseApp'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { getAuth } from 'firebase/auth'
 
 type ComponentTypes = {
     source: SourceType["source"],
     mediaId: number,
-    vidsrcId?: number,
     activeEpisodeNumber: number,
     episodesList: MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[],
     episodesOnImdb: ImdbEpisode[] | undefined
 }
 
-function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNumber, episodesList, episodesOnImdb }: ComponentTypes) {
+const loadingEpisodesMotion = {
+    initial: {
+        scale: 0,
+    },
+    animate: {
+        scale: 1,
+        transition: {
+            staggerChildren: 0.02,
+        },
+    },
+}
 
-    const loadingEpisodesMotion = {
-        initial: {
-            scale: 0,
-        },
-        animate: {
-            scale: 1,
-            transition: {
-                staggerChildren: 0.02,
-            },
-        },
+function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episodesList, episodesOnImdb }: ComponentTypes) {
+
+    const [currEpisodesWatched, setCurrEpisodesWatched] = useState<{
+        mediaId: number;
+        episodeId: string;
+        episodeTitle: string;
+    }[]>()
+
+    const auth = getAuth()
+    const [user] = useAuthState(auth)
+    const db = getFirestore(initFirebase())
+
+    // CHECK WATCHED EPISODES ON FIRESTORE
+    async function getEpisodesWatched(source: SourceType["source"]) {
+
+        if (!user) return
+
+        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+
+        if (!userDoc) return
+
+        const isOnEpisodesList = userDoc.get("episodesWatchedBySource")?.[source]
+
+        if (!isOnEpisodesList) return
+
+        const watchedEpisodes = isOnEpisodesList[mediaId] || null
+
+        console.log(watchedEpisodes)
+        if (watchedEpisodes) setCurrEpisodesWatched(watchedEpisodes)
+
     }
-
-    useEffect(() => {
-
-        // focus list item that correspond to current episode on page
-        const centerActiveEpisode = () => {
-            const elementActive = document.querySelector("li[data-active=true]")
-
-            elementActive?.scrollIntoView()
-
-            window.scrollTo({ top: 0, behavior: 'instant' })
-        }
-
-        setTimeout(centerActiveEpisode, 500)
-
-    }, [activeEpisodeNumber])
 
     function queryLinkBySource(item: EpisodeAnimeWatch | MediaEpisodes, source: SourceType["source"]) {
 
@@ -66,6 +84,29 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
         }
 
     }
+
+    // FETCHS EPISODES WATCHED 
+    useEffect(() => {
+
+        if (user) getEpisodesWatched(source)
+
+    }, [user, mediaId, source])
+
+    // FOCUS ON ITEM LIST WHICH CORRESPOND TO EPISODE ID
+    useEffect(() => {
+
+        // focus list item that correspond to current episode on page
+        const centerActiveEpisode = () => {
+            const elementActive = document.querySelector("li[data-active=true]")
+
+            elementActive?.scrollIntoView()
+
+            window.scrollTo({ top: 0, behavior: 'instant' })
+        }
+
+        setTimeout(centerActiveEpisode, 500)
+
+    }, [activeEpisodeNumber])
 
     return (
         <div id={styles.episodes_list_container}>
@@ -128,6 +169,11 @@ function EpisodesSideListContainer({ source, mediaId, vidsrcId, activeEpisodeNum
                                 mediaId={mediaId}
                                 source={source}
                                 hasText={true}
+                                wasWatched={
+                                    currEpisodesWatched?.find(
+                                        (item2) => item2.episodeId == `${(item as any).number}`
+                                    ) ? true : false
+                                }
                             />
 
                         </div>
