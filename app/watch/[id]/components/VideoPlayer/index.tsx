@@ -168,9 +168,9 @@ function Player({
     // gets last time position of episode
     async function getUserLastStopOnCurrentEpisode(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
 
-        if (currentLastStop) return
+        if (currentLastStop || !userDoc) return
 
-        let keepWatchingList = userDoc?.get("keepWatching")
+        let keepWatchingList = userDoc.get("keepWatching")
 
         let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
 

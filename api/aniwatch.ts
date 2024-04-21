@@ -38,12 +38,12 @@ export default {
     }),
 
     // GET EPISODES, NO LINKS INCLUDED
-    getEpisodes: cache(async (mediaId: string) => {
+    getEpisodes: cache(async (episodeId: string) => {
 
         try {
 
             const { data } = await Axios({
-                url: `${BASE_URL}/anime/episodes/${mediaId}`,
+                url: `${BASE_URL}/anime/episodes/${episodeId}`,
             })
 
             return data as EpisodesFetchedAnimeWatch
@@ -59,12 +59,12 @@ export default {
     }),
 
     // GET EPISODES, NO LINKS INCLUDED
-    episodesLinks: cache(async (mediaId: string, server?: string, category?: string) => {
+    episodesLinks: cache(async (episodeId: string, server?: string, category?: "dub" | "sub") => {
 
         try {
 
             const { data } = await Axios({
-                url: `${BASE_URL}/anime/episode-srcs?id=${mediaId}${server ? `&server=${server}` : ""}${category ? `&category=${category}` : ""}`,
+                url: `${BASE_URL}/anime/episode-srcs?id=${episodeId}${server ? `&server=${server}` : ""}${category ? `&category=${category}` : ""}`,
             })
 
             return data as EpisodeLinksAnimeWatch
