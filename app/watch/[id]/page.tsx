@@ -232,7 +232,6 @@ async function WatchEpisode({ params, searchParams }: {
                         <EpisodesSideListContainer
                             source={searchParams.source}
                             episodesList={episodes}
-                            vidsrcId={vidsrcId}
                             episodesOnImdb={imdbEpisodes.length > 0 ? imdbEpisodes : undefined}
                             mediaId={params.id}
                             activeEpisodeNumber={Number(searchParams.episode)}
