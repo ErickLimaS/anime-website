@@ -42,11 +42,7 @@ function UserSideMenu() {
             }
         },
         exit: {
-            y: "-100px",
             opacity: 0,
-            transition: {
-                duration: 0.2
-            }
         }
 
     }

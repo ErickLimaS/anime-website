@@ -12,6 +12,7 @@ import manga from '@/api/manga';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead';
+import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 
 const loadingChaptersMotion = {
   initial: {
@@ -31,7 +32,7 @@ const loadingChaptersMotion = {
   }
 }
 
-function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, mediaId: number }) {
+function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
   const [loading, setLoading] = useState(true)
   const [chaptersDataFetched, setChaptersDataFetched] = useState<MangaChapters[]>([])
@@ -55,16 +56,40 @@ function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, m
 
     let mangaInfo
 
-    const query = stringToUrlFriendly(mangaTitle).toLowerCase()
+    const query = stringToUrlFriendly(mediaData.title.romaji).toLowerCase()
 
     mangaInfo = await manga.getInfoFromThisMedia(query) as MangaInfo
 
     // if the query dont match any id result, it will search results for this query,
     // than make the first request by the ID of the first search result 
     if (!mangaInfo) {
+
       const searchResultsForMedia = await manga.searchMedia(query) as MangaSearchResult[]
 
-      mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia[0]?.id) as MangaInfo
+      function getClosestResult() {
+
+        // FILTER RESULTS WITH SAME RELEASE YEAR
+        const closestResult = searchResultsForMedia.filter(
+          item => item.releaseDate == mediaData.startDate.year
+        ).sort(
+          (a, b) => Number(a.lastChapter) - Number(b.lastChapter)
+        ).reverse()
+        
+        if (!closestResult) return null
+
+        // RETURNS RESULT WITH SAME TITLE, CHAPTERS or VOLUMES
+        return closestResult.find(item => item.title.toLowerCase() == mediaData.title.romaji.toLowerCase())?.id
+          ||
+          closestResult.find(item => Number(item.lastChapter) == Number(mediaData.chapters))?.id
+          ||
+          closestResult.find(item => Number(item.lastVolume) == Number(mediaData.volumes))?.id
+          ||
+          closestResult[0].id
+
+      }
+
+      mangaInfo = await manga.getInfoFromThisMedia(getClosestResult() || searchResultsForMedia[0]?.id) as MangaInfo
+
     }
 
     setChaptersDataFetched(mangaInfo.chapters)
@@ -138,7 +163,7 @@ function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, m
           {currentItems && currentItems.map((item, key: number) => (
             <motion.li
               key={key}
-              title={`Chapter ${item.chapterNumber} - ${mangaTitle}`}
+              title={`Chapter ${item.chapterNumber} - ${mediaData.title.romaji}`}
               data-disabled={item.pages == 0}
               variants={loadingChaptersMotion}
               className={styles.chapter_container}
@@ -148,7 +173,7 @@ function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, m
                 <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
               </div>
 
-              <Link href={`/read/${mediaId}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}>
+              <Link href={`/read/${mediaData.id}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}>
                 <div className={styles.info_container}>
 
                   <h3>{item.title != item.chapterNumber ? `Chapter ${item.chapterNumber}: ${item.title}` : `Chapter ${item.chapterNumber}` || "Not Available"}</h3>
@@ -162,7 +187,7 @@ function MangaChaptersContainer({ mangaTitle, mediaId }: { mangaTitle: string, m
               <ButtonMarkChapterAsRead
                 chapterId={item.id}
                 chapterTitle={item.title}
-                mediaId={mediaId}
+                mediaId={mediaData.id}
                 source={"mangadex"}
                 hasText
               />
