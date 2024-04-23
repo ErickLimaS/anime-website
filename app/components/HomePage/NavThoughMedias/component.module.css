@@ -553,6 +553,14 @@
 
 }
 
+@media(min-width: 541px) {
+    #expand_container .description_container p {
+
+        padding-right: 8px;
+
+    }
+}
+
 /* BTNS */
 #expand_container .btns_container {
 
@@ -633,14 +641,14 @@
     align-items: center;
 
     background-color: var(--black-50);
-    color: #2e882b;
+    color: var(--white-100);
     border-color: #2e882b;
 
 }
 
 #expand_container .action_btns_container>button.trailer_btn svg {
 
-    fill: #2e882b;
+    fill: var(--white-100);
 
 }
 

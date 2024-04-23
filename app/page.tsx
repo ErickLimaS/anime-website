@@ -63,7 +63,7 @@ export default async function Home() {
       {/* SECTION => SHOWS MEDIA RELEASED BY A SELECTED TIME (today, 7 days, 30 days)  */}
       <section className={styles.medias_sections_container}>
 
-        <NavThoughMedias title={"Latest Releases"} route={"#"} sort="RELEASE" dateOptions={true} />
+        <NavThoughMedias title={"Latest Releases"} route={"#"} sort="RELEASE" dateOptions={true} sortResultsByTrendingLevel />
 
       </section>
 

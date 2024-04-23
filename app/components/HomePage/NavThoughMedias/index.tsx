@@ -30,6 +30,7 @@ type Component = {
     dateOptions?: boolean,
     darkBackground?: boolean,
     layoutInverted?: boolean,
+    sortResultsByTrendingLevel?: boolean
 
 }
 
@@ -47,7 +48,7 @@ const popUpMediaMotion = {
     },
 }
 
-function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBackground, layoutInverted }: Component) {
+function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBackground, layoutInverted, sortResultsByTrendingLevel }: Component) {
 
     // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
     const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1)
@@ -122,6 +123,12 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
         // handles the pagination
         if (newPageResults) setPageIndex(previous ? pageIndex - 1 : pageIndex + 1)
 
+        if (sortResultsByTrendingLevel) {
+
+            response = (response as ApiDefaultResult[]).sort((a, b) => a.trending - b.trending).reverse()
+            
+        }
+        
         setData(response as ApiDefaultResult[])
 
         setIsLoading(false)
@@ -224,7 +231,7 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                                 onClick={(e) => e.stopPropagation()}
                                 style={{
                                     background: mediaSelect.bannerImage ?
-                                        `linear-gradient(rgba(0, 0, 0, 0.75) , rgba(0, 0, 0, 0.75) ), url(${mediaSelect.bannerImage})`
+                                        `linear-gradient(to bottom right, rgba(0, 0, 0, 0.95) 25%, rgba(0, 0, 0, 0.75) ), url(${mediaSelect.bannerImage})`
                                         :
                                         `var(--black-100)`,
                                     backgroundPosition: "center",
