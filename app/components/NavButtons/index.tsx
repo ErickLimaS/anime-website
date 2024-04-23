@@ -5,6 +5,8 @@ import aniwatch from '@/api/aniwatch'
 import { EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import gogoanime from '@/api/gogoanime'
 import { EpisodeLinksGoGoAnime } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
+import CloudOfflineSvg from "@/public/assets/cloud-offline.svg"
+import CloudOnlineSvg from "@/public/assets/cloud.svg"
 
 type PropsType = {
     functionReceived: (parameter: string | number) => void,
@@ -90,21 +92,54 @@ function NavButtons(props: PropsType) {
             {props.options.map((item) => (
                 <React.Fragment key={item.value}>
                     <button
+                        className={props.showSourceStatus ? styles.white_color : ""}
                         data-active={lastValueReceived == (item.value)}
                         onClick={() => toggleStateAndReturnValue(item.value)}
                         aria-label={item.name}
-                    >
-
-                        {(props.showSourceStatus && item.value != "crunchyroll") && (
-                            <span
-                                title={item.value == "aniwatch" ?
+                        title={
+                            item.value != "crunchyroll" ?
+                                item.value == "aniwatch" ?
                                     aniwatchAvailable ? "Online" : "Offline"
                                     :
                                     gogoanimeAvailble ? "Online" : "Offline"
-                                }
-                                className={styles.source_status}
-                                data-available={item.value == "aniwatch" ? aniwatchAvailable : gogoanimeAvailble}
-                            />
+                                :
+                                ""
+                        }
+                    >
+
+                        {(props.showSourceStatus && item.value != "crunchyroll") && (
+
+                            item.value == "aniwatch" ?
+                                aniwatchAvailable ?
+                                    <CloudOnlineSvg
+                                        width={18}
+                                        height={18}
+                                        className={styles.source_status}
+                                        data-available={aniwatchAvailable}
+                                    />
+                                    :
+                                    <CloudOfflineSvg
+                                        width={24}
+                                        height={24}
+                                        className={styles.source_status}
+                                        data-available={aniwatchAvailable}
+                                    />
+                                :
+                                gogoanimeAvailble ?
+                                    <CloudOnlineSvg
+                                        width={18}
+                                        height={18}
+                                        className={styles.source_status}
+                                        data-available={gogoanimeAvailble}
+                                    />
+                                    :
+                                    <CloudOfflineSvg
+                                        width={24}
+                                        height={24}
+                                        className={styles.source_status}
+                                        data-available={gogoanimeAvailble}
+                                    />
+
                         )}
 
                         {item.name}

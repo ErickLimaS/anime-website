@@ -39,34 +39,43 @@
 
 }
 
-/* SOURCE IS AVAILABLE */
-.nav_button_container>button span.source_status {
+.nav_button_container>button.white_color:hover,
+#dynamic_container>button.white_color:hover {
 
-    transition: all ease-in-out 150ms;
-
-    display: block;
-
-    width: 8px;
-    height: 8px;
-
-    border-radius: 50%;
-    background-color: var(--white-100);
+    color: var(--white-75) !important;
 
 }
 
-.nav_button_container>button span.source_status:not([data-available]) {
+.nav_button_container>button.white_color,
+#dynamic_container>button.white_color {
+
+    color: var(--white-50) !important;
+
+}
+
+/* SOURCE IS AVAILABLE */
+.nav_button_container>button .source_status {
+
+    transition: all ease-in-out 150ms;
+
+    fill: var(--white-100);
+
+}
+
+.nav_button_container>button .source_status:not([data-available]) {
 
     animation: infinite 1.5s dimmeLoading;
 
 }
 
-
-.nav_button_container>button span.source_status[data-available=true] {
-    background-color: rgb(20, 243, 0);
+.nav_button_container>button .source_status[data-available=true] {
+    fill: rgb(72 255 55);
+    color: rgb(72 255 55);
 }
 
-.nav_button_container>button span.source_status[data-available=false] {
-    background-color: #ff3324;
+.nav_button_container>button .source_status[data-available=false] {
+    fill: #ff3324;
+    color: #ff3324;
 }
 
 @keyframes dimmeLoading {
@@ -97,6 +106,13 @@
 #dynamic_container>button[data-active=true] {
 
     color: var(--brand-color);
+
+}
+
+.nav_button_container>button.white_color[data-active=true],
+#dynamic_container>button.white_color[data-active=true] {
+
+    color: var(--white-100) !important;
 
 }
 
