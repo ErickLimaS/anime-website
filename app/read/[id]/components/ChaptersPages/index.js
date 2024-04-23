@@ -9,8 +9,7 @@ import CloseSvg from "@/public/assets/x.svg"
 import MangaSvg from "@/public/assets/book.svg"
 import RectangleSvg from "@/public/assets/rectangle.svg"
 
-
-// file is in JAVASCRIPT for a REASON
+// this file is in JAVASCRIPT for a REASON
 // THIS Library doesnt support TypeScript. With That, i couldnt just add a value to every prop it has.
 // making it a Js File was better than just having a bunch of undefined values :\
 // https://www.npmjs.com/package/page-flip
@@ -63,7 +62,7 @@ function ChaptersPages({ data, initialPage }) {
                             ref={pagesComponentRef}
                             size='stretch'
                             autoSize
-                            width={650}
+                            width={750}
                             height={format == "manga" ? 933 : 2000}
                             minWidth={315}
                             maxWidth={1000}
