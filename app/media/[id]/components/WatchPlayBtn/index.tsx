@@ -224,7 +224,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         >
 
             {(user && episodeNumber) && (
-                <span id={styles.continue_span}>Continue from EP {episodeNumber}</span>
+                <span id={styles.continue_span}>EPISODE {episodeNumber}</span>
             )}
 
             {isLoading ?

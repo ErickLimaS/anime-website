@@ -145,8 +145,6 @@
 #heading_info_container h1 span:nth-child(2) {
 
     width: fit-content;
-
-    font-size: var(--font-size--h5);
     font-weight: 400;
     color: var(--white-75);
 

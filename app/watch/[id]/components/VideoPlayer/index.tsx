@@ -144,7 +144,7 @@ function Player({
         setSubList(subListMap)
     }
 
-    // CURRENTLY DISABLED (im trying to understand the player api): get user preferred quality
+    // get user preferred quality ***** CURRENTLY DISABLED (im trying to understand the player api)
     async function getUserVideoQuality(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
 
         let userVideoQuality: string | null = null
@@ -168,9 +168,9 @@ function Player({
     // gets last time position of episode
     async function getUserLastStopOnCurrentEpisode(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
 
-        if (currentLastStop) return
+        if (currentLastStop || !userDoc) return
 
-        let keepWatchingList = userDoc?.get("keepWatching")
+        let keepWatchingList = userDoc.get("keepWatching")
 
         let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
 
@@ -210,7 +210,7 @@ function Player({
                             extraLarge: media.coverImage.extraLarge,
                             large: media.coverImage.large
                         },
-                        episode: saveNextEpisodeInfo ? episodeNumber + 1 : episodeNumber,
+                        episode: saveNextEpisodeInfo ? Number(episodeNumber) + 1 : episodeNumber,
                         episodeId: saveNextEpisodeInfo ? nextEpisode!.id : episodeId,
                         episodeImg: episodeImg || null,
                         episodeTimeLastStop: saveNextEpisodeInfo ? 0 : currentEpisodeTime,
@@ -387,7 +387,7 @@ function Player({
                 )}
 
                 <MediaProvider >
-                    {subList.map((item, key) => (
+                    {subList.map((item) => (
                         <Track
                             key={item.src}
                             src={item.src}

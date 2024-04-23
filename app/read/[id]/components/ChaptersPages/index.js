@@ -9,8 +9,7 @@ import CloseSvg from "@/public/assets/x.svg"
 import MangaSvg from "@/public/assets/book.svg"
 import RectangleSvg from "@/public/assets/rectangle.svg"
 
-
-// file is in JAVASCRIPT for a REASON
+// this file is in JAVASCRIPT for a REASON
 // THIS Library doesnt support TypeScript. With That, i couldnt just add a value to every prop it has.
 // making it a Js File was better than just having a bunch of undefined values :\
 // https://www.npmjs.com/package/page-flip
@@ -51,13 +50,19 @@ function ChaptersPages({ data, initialPage }) {
             <AnimatePresence>
 
                 {(!loading && data) && (
-                    <motion.div id={styles.pages_container} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: .4 } }} exit={{ opacity: 0, height: 0 }}>
+                    <motion.div
+                        id={styles.pages_container}
+                        data-format={format}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1, transition: { duration: .4 } }}
+                        exit={{ opacity: 0, height: 0 }}
+                    >
 
                         <HTMLFlipBook
                             ref={pagesComponentRef}
                             size='stretch'
                             autoSize
-                            width={550}
+                            width={750}
                             height={format == "manga" ? 933 : 2000}
                             minWidth={315}
                             maxWidth={1000}
@@ -89,7 +94,7 @@ function ChaptersPages({ data, initialPage }) {
                         :
                         <MangaSvg width={16} height={16} />
                     }
-                    {format == "manga" ? "Webtoon" : "Manga"} Mode
+                    {format == "manga" ? "Webtoon" : "Manga"} Mode {format == "manga" ? "(BETA)" : ""}
                 </motion.button>
 
                 <motion.button id={styles.fullscreen_btn} onClick={() => setShowOnModal(true)} whileTap={{ scale: 0.9 }}>
@@ -125,8 +130,8 @@ function ChaptersPages({ data, initialPage }) {
                             ref={pagesComponentRef}
                             size='stretch'
                             autoSize
-                            width={650}
-                            height={format == "manga" ? 1033 : 2000}
+                            width={format == "manga" ? 850 : 31000}
+                            height={format == "manga" ? 1033 : 202000}
                             minWidth={315}
                             maxWidth={1000}
                             minHeight={400}

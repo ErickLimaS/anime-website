@@ -28,7 +28,7 @@ export async function generateMetadata({ params, searchParams }: {
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
 
     return {
-        title: `Watching EP ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
+        title: `Episode ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
         description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}`,
     }
 }
@@ -232,7 +232,6 @@ async function WatchEpisode({ params, searchParams }: {
                         <EpisodesSideListContainer
                             source={searchParams.source}
                             episodesList={episodes}
-                            vidsrcId={vidsrcId}
                             episodesOnImdb={imdbEpisodes.length > 0 ? imdbEpisodes : undefined}
                             mediaId={params.id}
                             activeEpisodeNumber={Number(searchParams.episode)}

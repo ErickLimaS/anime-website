@@ -23,7 +23,7 @@ export async function generateMetadata({ params, searchParams }: {
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
 
     return {
-        title: `Reading Chapter ${searchParams.chapter} - ${mediaData.title.romaji} | AniProject`,
+        title: `Chapter ${searchParams.chapter} - ${mediaData.title.romaji} | AniProject`,
         description: `Read ${mediaData.title.romaji} - Chapter ${searchParams.chapter}. ${mediaData.description && mediaData.description}`,
     }
 }

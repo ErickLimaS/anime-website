@@ -14,7 +14,7 @@ import {
 } from '@/app/ts/interfaces/apiAnimewatchInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { doc, DocumentData, DocumentSnapshot, getDoc, getFirestore } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp';
 import ErrorImg from "@/public/error-img-2.png"
 import Image from 'next/image';
@@ -81,6 +81,11 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
   const [itemOffset, setItemOffset] = useState<number>(0);
 
   const [episodeSource, setEpisodeSource] = useState<SourceType["source"]>("crunchyroll")
+  const [currEpisodesWatched, setCurrEpisodesWatched] = useState<{
+    mediaId: number;
+    episodeId: string;
+    episodeTitle: string;
+  }[]>()
 
   const auth = getAuth()
 
@@ -212,28 +217,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   }
 
-  const vidsrcEpisodesBySeason = (seasonNumber: number) => {
-
-    setLoading(true)
-
-    const thisSeasonEpisodes = dataImdb?.find((item) =>
-      item.season == seasonNumber)?.episodes.filter((item) =>
-        Number(new Date(item.releaseDate).getTime() / 1000).toFixed(0) as unknown as number <= Number((new Date().getTime() / 1000).toFixed(0))
-      )
-
-    if (!thisSeasonEpisodes) return
-
-    const endOffset = itemOffset + rangeEpisodesPerPage
-
-    setEpisodesDataFetched(thisSeasonEpisodes)
-
-    setCurrentItems(thisSeasonEpisodes.slice(itemOffset, endOffset))
-    setPageCount(Math.ceil(thisSeasonEpisodes.length / rangeEpisodesPerPage))
-
-    setLoading(false)
-
-  }
-
   // get source setted on user profile
   const getUserDefaultSource = async () => {
 
@@ -247,6 +230,33 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   }
 
+  // CHECK WATCHED EPISODES ON FIRESTORE
+  async function getEpisodesWatched(source: SourceType["source"]) {
+
+    if (!user) return
+
+    const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+
+    if (!userDoc) return
+
+    const isOnEpisodesList = userDoc.get("episodesWatchedBySource")?.[source]
+
+    if (!isOnEpisodesList) return
+
+    const watchedEpisodes = isOnEpisodesList[props.mediaId] || null
+
+    if (watchedEpisodes) setCurrEpisodesWatched(watchedEpisodes)
+
+  }
+
+  // FETCHS EPISODES WATCHED 
+  useEffect(() => {
+
+    if (user) getEpisodesWatched(episodeSource)
+
+  }, [user, props.mediaId, episodeSource, itemOffset])
+
+  // FETCHS USERS SELECTED SOURCE / SET SOURCE
   useEffect(() => {
 
     if (user) {
@@ -259,6 +269,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   }, [user])
 
+  // HANDLES THE PAGINATION
   useEffect(() => {
 
     const endOffset = itemOffset + rangeEpisodesPerPage;
@@ -341,6 +352,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                   key={key}
                   data={item as EpisodesType}
                   mediaId={props.mediaId}
+                  episodesWatched={currEpisodesWatched}
                 />
 
               )
@@ -355,6 +367,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                   episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
                   backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
                   mediaId={props.mediaId}
+                  episodesWatched={currEpisodesWatched}
                 />
 
               )
@@ -368,6 +381,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                   episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
                   backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
                   mediaId={props.mediaId}
+                  episodesWatched={currEpisodesWatched}
                 />
 
               )

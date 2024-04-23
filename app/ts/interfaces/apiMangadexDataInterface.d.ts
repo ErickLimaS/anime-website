@@ -10,6 +10,9 @@ export interface MangaSearchResult {
 
     id: string,
     title: string,
+    lastChapter: string,
+    lastVolume: string,
+    releaseDate: number,
     headerForImage: {
         Referer: string,
     },

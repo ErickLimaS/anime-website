@@ -12,10 +12,15 @@ type ComponentTypes = {
     mediaId: number,
     backgroundImg?: string,
     episodeDescription?: string,
-    motionStyle?: any
+    motionStyle?: any,
+    episodesWatched?: {
+        mediaId: number;
+        episodeId: string;
+        episodeTitle: string;
+    }[]
 }
 
-function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle }: ComponentTypes) {
+function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle, episodesWatched }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
@@ -48,6 +53,11 @@ function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, mot
                     episodeTitle={data.title}
                     mediaId={mediaId}
                     source="aniwatch"
+                    wasWatched={
+                        episodesWatched?.find(
+                            (item) => item.episodeId == `${data.number}`
+                        ) ? true : false
+                    }
                 />
             </div>
 
