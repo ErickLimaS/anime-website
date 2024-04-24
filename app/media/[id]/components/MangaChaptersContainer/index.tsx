@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead';
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
+import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOnApi';
 
 const loadingChaptersMotion = {
   initial: {
@@ -64,39 +65,17 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
     // than make the first request by the ID of the first search result 
     if (!mangaInfo) {
 
-      const searchResultsForMedia = await manga.searchMedia(query) as MangaSearchResult[]
+      const closestResult = await getClosestMangaResultByTitle(query, mediaData)
 
-      function getClosestResult() {
-
-        // FILTER RESULTS WITH SAME RELEASE YEAR
-        const closestResult = searchResultsForMedia.filter(
-          item => item.releaseDate == mediaData.startDate.year
-        ).sort(
-          (a, b) => Number(a.lastChapter) - Number(b.lastChapter)
-        ).reverse()
-        
-        if (!closestResult) return null
-
-        // RETURNS RESULT WITH SAME TITLE, CHAPTERS or VOLUMES
-        return closestResult.find(item => item.title.toLowerCase() == mediaData.title.romaji.toLowerCase())?.id
-          ||
-          closestResult.find(item => Number(item.lastChapter) == Number(mediaData.chapters))?.id
-          ||
-          closestResult.find(item => Number(item.lastVolume) == Number(mediaData.volumes))?.id
-          ||
-          closestResult[0].id
-
-      }
-
-      mangaInfo = await manga.getInfoFromThisMedia(getClosestResult() || searchResultsForMedia[0]?.id) as MangaInfo
+      mangaInfo = await manga.getInfoFromThisMedia(closestResult) as MangaInfo
 
     }
 
-    setChaptersDataFetched(mangaInfo.chapters)
+    setChaptersDataFetched(mangaInfo.chapters.filter(item => item.pages != 0))
 
     const endOffset = itemOffset + rangeChaptersPerPage;
-    setCurrentItems(mangaInfo.chapters.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(mangaInfo.chapters.length / rangeChaptersPerPage));
+    setCurrentItems(mangaInfo.chapters.filter(item => item.pages != 0).slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(mangaInfo.chapters.filter(item => item.pages != 0).length / rangeChaptersPerPage));
 
     setLoading(false)
 

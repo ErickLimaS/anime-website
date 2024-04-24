@@ -12,6 +12,7 @@ import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilis
 import ChaptersPages from './components/ChaptersPages/index'
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
 import ChaptersSideListContainer from './components/ChaptersSideListContainer'
+import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOnApi'
 
 export const revalidate = 1800 // revalidate cached data every 30 minutes
 
@@ -49,12 +50,12 @@ async function ReadChapter({ params, searchParams }: {
     // if the query dont match any id result, it will search results for this query,
     // than make the first request by the ID of the first search result 
     if (!mangaInfo) {
-        const searchResultsForMedia = await manga.searchMedia(query) as MangaSearchResult[]
+        const searchResultsForMedia = await getClosestMangaResultByTitle(query, mediaData)
 
-        mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia[0]?.id) as MangaInfo
+        mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia) as MangaInfo
     }
 
-    allChapters = mangaInfo.chapters
+    allChapters = mangaInfo.chapters.filter(item => item.pages != 0)
 
     currChapterInfo = allChapters.filter((item) => item.id == searchParams.q)[0]
 
