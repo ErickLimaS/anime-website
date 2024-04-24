@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "./layout/header";
 import Footer from "./layout/footer";
 import NextTopLoader from 'nextjs-toploader';
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,8 @@ export default function RootLayout({
           color="var(--brand-color)"
           showSpinner={false}
         />
+
+        <Analytics />
 
         {children}
 
