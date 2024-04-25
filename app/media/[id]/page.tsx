@@ -65,6 +65,20 @@ async function MediaPage({ params }: { params: { id: number } }) {
       itemB => imdbEpisodesMapped.push(itemB))
   )
 
+  // RETURNS A RANDOM IMAGE URL
+  function randomizeBcgImg() {
+
+    const backgroundImgs: { url: string }[] = []
+
+    if (mediaData?.bannerImage) backgroundImgs.push({ url: mediaData?.bannerImage })
+    if (imdbMediaInfo?.cover) backgroundImgs.push({ url: imdbMediaInfo?.cover })
+
+    const randomNumber = Math.floor(Math.random() * (backgroundImgs?.length))
+
+    return backgroundImgs[randomNumber]?.url
+
+  }
+
   return (
     <main id={styles.container}>
 
@@ -76,9 +90,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
             `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${mediaData?.coverImage?.extraLarge})`
             :
             `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${mediaData.format == "MANGA" ?
-              mediaData.bannerImage
-              :
-              imdbMediaInfo?.cover || mediaData.bannerImage})`
+              mediaData.bannerImage : randomizeBcgImg()})`
         }}
       >
       </div>
