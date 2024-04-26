@@ -11,7 +11,7 @@ axiosRetry(Axios, {
     retries: 1,
     retryDelay: (retryAttempt) => retryAttempt * 1000,
     retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503,
-    onRetry: (retryNumber) => console.log(`retry: ${retryNumber}`)
+    onRetry: (retryNumber) => console.log(`retry: ${retryNumber} ${retryNumber == 3 ? " - Last Attempt" : ""}`)
 })
 
 // GET INFO FOR THIS MEDIA

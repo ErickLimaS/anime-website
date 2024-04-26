@@ -67,7 +67,17 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
       const closestResult = await getClosestMangaResultByTitle(query, mediaData)
 
-      mangaInfo = await manga.getInfoFromThisMedia(closestResult) as MangaInfo
+      mangaInfo = await manga.getInfoFromThisMedia(closestResult as string) as MangaInfo
+
+      if (!mangaInfo) {
+
+        setLoading(false)
+
+        setCurrentItems(null)
+
+        return
+
+      }
 
     }
 

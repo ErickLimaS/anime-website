@@ -36,8 +36,8 @@ async function ReadChapter({ params, searchParams }: {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
-    let currChapterInfo: MangaChapters
-    let allChapters: MangaChapters[]
+    let currChapterInfo: MangaChapters | undefined = undefined
+    let allChapters: MangaChapters[] | undefined = undefined
     let error = false
 
     // fetch episode data
@@ -52,14 +52,21 @@ async function ReadChapter({ params, searchParams }: {
     if (!mangaInfo) {
         const searchResultsForMedia = await getClosestMangaResultByTitle(query, mediaData)
 
-        mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia) as MangaInfo
+        mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia as string) as MangaInfo
+
+        if (!mangaInfo) error = true
+
     }
 
-    allChapters = mangaInfo.chapters.filter(item => item.pages != 0)
+    if (!error) {
 
-    currChapterInfo = allChapters.filter((item) => item.id == searchParams.q)[0]
+        allChapters = mangaInfo.chapters.filter(item => item.pages != 0)
 
-    if (!chapters || !allChapters) error = true
+        currChapterInfo = allChapters.filter((item) => item.id == searchParams.q)[0]
+
+        if (!chapters || !allChapters) error = true
+
+    }
 
     // ERROR MESSAGE
     if (error) {
@@ -105,9 +112,10 @@ async function ReadChapter({ params, searchParams }: {
 
                 <h1>
                     <span>{mediaData.title.romaji}: </span>
-                    {currChapterInfo.title == currChapterInfo.chapterNumber ? `Chapter ${currChapterInfo.chapterNumber}` : currChapterInfo.title}
+                    {currChapterInfo!.title == currChapterInfo!.chapterNumber ? `Chapter ${currChapterInfo!.chapterNumber}` : currChapterInfo!.title}
                 </h1>
-                <small>{currChapterInfo.pages} Pages</small>
+
+                <small>{currChapterInfo!.pages} Pages</small>
 
             </div>
 
@@ -126,7 +134,7 @@ async function ReadChapter({ params, searchParams }: {
                 <ChaptersSideListContainer
                     mediaId={params.id}
                     currChapterId={searchParams.q}
-                    episodesList={allChapters}
+                    episodesList={allChapters!}
                 />
             </div>
 
