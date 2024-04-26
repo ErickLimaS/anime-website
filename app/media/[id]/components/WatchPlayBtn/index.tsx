@@ -9,12 +9,16 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
 import styles from "./component.module.css"
+import { motion } from 'framer-motion'
+import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
+import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
 function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
     const [movieId, setMovieId] = useState<string | null>("")
     const [episodeNumber, setEpisodeNumber] = useState<number>()
-    const [episodeTime, setEpisodeTime] = useState<number>()
+    const [episodeLastStop, setEpisodeLastStop] = useState<number>()
+    const [episodeDuration, setEpisodeDuration] = useState<number>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const [source, setSource] = useState<string>()
@@ -28,15 +32,20 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
     const router = useRouter()
 
     // CHECK LAST EPISODE WATCHED BY DESCRECENT ORDER 
-    async function checkLastEpisodeWatched() {
+    async function checkEpisodesMarkedAsWatched() {
 
         const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
 
         if (!userDoc) return fetchMediaWatchUrl()
 
+        // VERIFY ON USER DOC "KEEP WATCHING" ANY EPISODE OF THIS MEDIA
+        const onKeepWatching = await checkKeepWatchingList()
+
+        if (onKeepWatching) return
+
         let episodedWatched
 
-        // CHECKS ON GOGOANIME FIRST
+        // VERIFY ON GOGOANIME
         const isOnEpisodesListGoGoAnime = userDoc.get("episodesWatchedBySource")?.gogoanime
 
         if (isOnEpisodesListGoGoAnime) setSource("gogoanime")
@@ -74,17 +83,10 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
             }
 
-            // IF NO RESULTS ON ANIWATCH, CHECK "KEEP WATCHING LIST"
-            if (!episodedWatched || episodedWatched.length == 0) {
-
-                const onKeepWacthing = await checkKeepWatchingList()
-
-                if (!onKeepWacthing) fetchMediaWatchUrl()
-
-                return
-
-            }
         }
+
+        // IF NO EPISODE WATCHED, IT FETCHS THE MEDIA'S FIRST EPISODE 
+        if (!episodedWatched || episodedWatched.length == 0) return fetchMediaWatchUrl()
 
         // CALL OTHER FUNCTION TO FETCH URL
         fetchMediaWatchUrl(episodedWatched[0].episodeTitle) // EPISODE TITLE HAS THE EPISODE NUMBER
@@ -114,29 +116,10 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         setSource(lastWatchedEpisode.source)
         setMovieId(lastWatchedEpisode.episodeId)
         setEpisodeNumber(Number(lastWatchedEpisode.episode))
-        setEpisodeTime(lastWatchedEpisode.episodeTimeLastStop)
+        setEpisodeDuration(lastWatchedEpisode.episodeDuration)
+        setEpisodeLastStop(lastWatchedEpisode.episodeTimeLastStop)
 
         return lastWatchedEpisode
-
-    }
-
-    async function fetchOnGoGoAnime() {
-
-        const searchResultsForMedia = fetchWithGoGoAnime(mediaTitle, "episodes")
-
-        setSource("gogoanime")
-
-        return searchResultsForMedia
-
-    }
-
-    async function fetchOnAniWatch() {
-
-        const searchResultsForMedia = fetchWithAniWatch(mediaTitle, "episodes")
-
-        setSource("aniwatch")
-
-        return searchResultsForMedia
 
     }
 
@@ -145,17 +128,43 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
         setIsLoading(true)
 
+        async function fetchOnGoGoAnime() {
+
+            const searchResultsForMedia = fetchWithGoGoAnime(mediaTitle, "episodes")
+
+            setSource("gogoanime")
+
+            return searchResultsForMedia
+
+        }
+
+        async function fetchOnAniWatch() {
+
+            const searchResultsForMedia = fetchWithAniWatch(mediaTitle, "episodes")
+
+            setSource("aniwatch")
+
+            return searchResultsForMedia
+
+        }
+
         // try first with animewatch
-        let media: any = await fetchOnGoGoAnime()
+        let media: MediaEpisodes[] | EpisodeAnimeWatch[]
+
+        media = await fetchOnGoGoAnime() as MediaEpisodes[]
 
         // if media is null, try with gogoanime
-        if (!media) media = await fetchOnAniWatch() // High chances of getting the wrong media
-
         if (!media) {
-            setIsLoading(false)
-            setMovieId(null)
 
-            return
+            media = await fetchOnAniWatch() as EpisodeAnimeWatch[]// High chances of getting the wrong media
+
+            if (!media) {
+                setIsLoading(false)
+                setMovieId(null)
+
+                return
+            }
+
         }
 
         // if user has watched a episode and the episode is NOT the last, redirects to next episode
@@ -166,9 +175,10 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
             if (episodeSelected) {
 
-                setMovieId(source == "gogoanime" ? episodeSelected!.id : episodeSelected!.episodeId)
+                setMovieId(source == "gogoanime" ? (episodeSelected as MediaEpisodes)!.id : (episodeSelected as EpisodeAnimeWatch)!.episodeId)
 
-                setEpisodeNumber(lastEpisodeWatched + 1) // add 1 to get the next episode after the last watched
+                // adds 1 to get the next episode after the last watched
+                setEpisodeNumber(lastEpisodeWatched + 1)
 
                 setIsLoading(false)
 
@@ -179,7 +189,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
         if (media) {
 
-            setMovieId(media[0]?.episodeId || media[0]?.id || null)
+            setMovieId((media[0] as EpisodeAnimeWatch)?.episodeId || (media[0] as MediaEpisodes)?.id || null)
 
         }
 
@@ -187,17 +197,17 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
     }
 
     // redirect to watch page
-    function redirectTo() {
+    function redirectToWatchPage() {
 
         setIsLoading(true)
 
-        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeTime}` : ""}`)
+        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeLastStop}` : ""}`)
 
     }
 
     useEffect(() => {
 
-        (user && !loading) ? checkLastEpisodeWatched() : fetchMediaWatchUrl()
+        (user && !loading) ? checkEpisodesMarkedAsWatched() : fetchMediaWatchUrl()
 
     }, [user, episodeNumber])
 
@@ -208,20 +218,30 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
     }, [mediaId, source, episodeNumber, movieId])
 
     return (
-        <button
+        <motion.button
             id={styles.container}
             role='link'
-            onClick={() => redirectTo()}
+            onClick={() => redirectToWatchPage()}
             disabled={isLoading || movieId == null}
+            aria-label={episodeNumber ? `Continue Episode ${episodeNumber}` : "Watch Episode 1"}
             title={isLoading ?
-                "Wait the Loading"
-                :
-                movieId == null ?
+                "Loading" : movieId == null ?
                     "Not Available At This Moment"
                     :
-                    `Watch ${mediaTitle} ${episodeNumber ? ` - EP ${episodeNumber}` : ""}`
+                    `Watch ${episodeNumber ? `Episode ${episodeNumber} - ${mediaTitle} ` : ""}`
             }
         >
+
+            {/* SHOWS PROGRESS OF EPISODE WATCHED */}
+            {(episodeLastStop != null && episodeDuration != null) && (
+                <motion.div className={styles.progress_bar}>
+                    <motion.div
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: (((episodeLastStop / episodeDuration) * 100) / 100) || 0.07 }}
+                        transition={{ duration: 1 }}
+                    />
+                </motion.div>
+            )}
 
             {(user && episodeNumber) && (
                 <span id={styles.continue_span}>EPISODE {episodeNumber}</span>
@@ -236,7 +256,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
                 <span id={styles.source_span}>{source.toUpperCase()}</span>
             )}
 
-        </button>
+        </motion.button>
     )
 }
 

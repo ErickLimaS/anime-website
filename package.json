@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.2.2",
     "@vidstack/react": "^1.10.9",
     "axios": "^1.6.6",
     "axios-retry": "^4.1.0",

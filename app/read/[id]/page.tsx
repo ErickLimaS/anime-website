@@ -12,6 +12,7 @@ import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilis
 import ChaptersPages from './components/ChaptersPages/index'
 import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
 import ChaptersSideListContainer from './components/ChaptersSideListContainer'
+import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOnApi'
 
 export const revalidate = 1800 // revalidate cached data every 30 minutes
 
@@ -35,8 +36,8 @@ async function ReadChapter({ params, searchParams }: {
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
-    let currChapterInfo: MangaChapters
-    let allChapters: MangaChapters[]
+    let currChapterInfo: MangaChapters | undefined = undefined
+    let allChapters: MangaChapters[] | undefined = undefined
     let error = false
 
     // fetch episode data
@@ -49,16 +50,23 @@ async function ReadChapter({ params, searchParams }: {
     // if the query dont match any id result, it will search results for this query,
     // than make the first request by the ID of the first search result 
     if (!mangaInfo) {
-        const searchResultsForMedia = await manga.searchMedia(query) as MangaSearchResult[]
+        const searchResultsForMedia = await getClosestMangaResultByTitle(query, mediaData)
 
-        mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia[0]?.id) as MangaInfo
+        mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia as string) as MangaInfo
+
+        if (!mangaInfo) error = true
+
     }
 
-    allChapters = mangaInfo.chapters
+    if (!error) {
 
-    currChapterInfo = allChapters.filter((item) => item.id == searchParams.q)[0]
+        allChapters = mangaInfo.chapters.filter(item => item.pages != 0)
 
-    if (!chapters || !allChapters) error = true
+        currChapterInfo = allChapters.filter((item) => item.id == searchParams.q)[0]
+
+        if (!chapters || !allChapters) error = true
+
+    }
 
     // ERROR MESSAGE
     if (error) {
@@ -104,9 +112,10 @@ async function ReadChapter({ params, searchParams }: {
 
                 <h1>
                     <span>{mediaData.title.romaji}: </span>
-                    {currChapterInfo.title == currChapterInfo.chapterNumber ? `Chapter ${currChapterInfo.chapterNumber}` : currChapterInfo.title}
+                    {currChapterInfo!.title == currChapterInfo!.chapterNumber ? `Chapter ${currChapterInfo!.chapterNumber}` : currChapterInfo!.title}
                 </h1>
-                <small>{currChapterInfo.pages} Pages</small>
+
+                <small>{currChapterInfo!.pages} Pages</small>
 
             </div>
 
@@ -125,7 +134,7 @@ async function ReadChapter({ params, searchParams }: {
                 <ChaptersSideListContainer
                     mediaId={params.id}
                     currChapterId={searchParams.q}
-                    episodesList={allChapters}
+                    episodesList={allChapters!}
                 />
             </div>
 

@@ -9,8 +9,8 @@ import EpisodesSideListContainer from './components/EpisodesSideListContainer'
 import CommentSectionContainer from '@/app/components/CommentSectionContainer'
 import aniwatch from '@/api/aniwatch'
 import Player from './components/VideoPlayer'
-import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch, EpisodesFetchedAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
-import { fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
+import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import { getMediaInfo } from '@/api/imdb'
 import Image from 'next/image'
@@ -22,8 +22,13 @@ export const revalidate = 900 // revalidate cached data every 15 minutes
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string, source: SourceType["source"], q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
+    searchParams: { episode: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
+
+    // ACTES AS DEFAULT VALUE FOR PAGE PROPS
+    if (Object.keys(searchParams).length === 0) {
+        searchParams = { episode: "1" }
+    }
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
 
@@ -31,12 +36,18 @@ export async function generateMetadata({ params, searchParams }: {
         title: `Episode ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
         description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}`,
     }
+
 }
 
 async function WatchEpisode({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
     searchParams: { episode: string, source: SourceType["source"], q: string, t: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP
 }) {
+
+    // ACTES AS DEFAULT VALUE FOR PAGE PROPS
+    if (Object.keys(searchParams).length === 0) {
+        searchParams = { episode: "1", source: "aniwatch", q: "", t: "0" }
+    }
 
     const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
 
@@ -75,6 +86,14 @@ async function WatchEpisode({ params, searchParams }: {
 
         case ("aniwatch"):
 
+            if (!searchParams.q) {
+
+                episodes = await fetchWithAniWatch(mediaData.title.romaji, "episodes") as EpisodeAnimeWatch[]
+
+                searchParams.q = episodes[0].episodeId
+
+            }
+
             // fetch episode data
             episodeData = await aniwatch.episodesLinks(searchParams.q) as EpisodeLinksAnimeWatch
 
@@ -86,13 +105,12 @@ async function WatchEpisode({ params, searchParams }: {
                 videoSrc = episodeData.sources[0].url
 
                 // fetch episodes for this media
-                const mediaTitle = searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).slice(0, searchParams.q.slice(0, searchParams?.q.search(/\bep\b/)).length - 1)
-                episodes = await aniwatch.getEpisodes(mediaTitle).then(res => (res as EpisodesFetchedAnimeWatch)?.episodes) as EpisodeAnimeWatch[]
+                if (episodes.length == 0) episodes = await fetchWithAniWatch(mediaData.title.romaji, "episodes") as EpisodeAnimeWatch[]
 
                 episodeSubtitles = episodeData.tracks
 
                 // if episode on params dont match any of EPISODES results, it shows a error
-                if (episodes.find(item => item.episodeId == searchParams.q) == undefined) error = true
+                if ((episodes as EpisodeAnimeWatch[]).find((item) => item.episodeId == searchParams.q) == undefined) error = true
 
             }
 

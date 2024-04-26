@@ -307,7 +307,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         {/* SHOWS A SELECT WITH OTHER RESULTS FOR THIS MEDIA */}
         {/* ANIWATCH DONT GET THE RIGHT RESULT MOST OF TIMES */}
         <AnimatePresence>
-          {episodeSource == "aniwatch" && (
+          {(episodeSource == "aniwatch" && mediaResultsInfoArray.length > 1) && (
             <motion.div
               id={styles.select_media_container}
               initial={{ height: 0, opacity: 0 }}
@@ -321,7 +321,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                 onChange={(e) => getEpisodesToThisMediaFromAniwatch(e.target.value)}
                 defaultValue={checkApiMisspellingMedias(props.mediaTitle).toLowerCase()}
               >
-                {mediaResultsInfoArray.length > 0 && mediaResultsInfoArray?.map((item, key) => (
+                {mediaResultsInfoArray?.map((item, key) => (
                   <option
                     key={key}
                     value={item.id.toLowerCase()}
