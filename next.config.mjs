@@ -1,8 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/watch',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/read',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/news/:path',
+        destination: '/news',
+        permanent: true,
+      },
+    ]
+  },
   images: {
-    // set to true due to vercel limit of optimization
-    unoptimized: true,
+    unoptimized: true, // set to TRUE due to vercel limit of image optimization
     remotePatterns: [
       {
         protocol: "https",
@@ -39,10 +57,9 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
-      // so many new Sources that i had to just allow any 
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "**", // so many new SOURCES that i had to just allow any 
         port: "",
         pathname: "/**",
       }
