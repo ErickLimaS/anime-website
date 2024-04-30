@@ -49,7 +49,7 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
 }
 
-export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | "search_list", format?: string, mediaTotalEpisodes?: number) {
+export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | "search_list", format?: string, mediaTotalEpisodes?: number, idToMatch?: string) {
 
     const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
 
@@ -105,7 +105,12 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | 
 
         if (!closestResult) return null
 
-        const res = await aniwatch.getEpisodes(closestResult[0].id) as EpisodesFetchedAnimeWatch
+        let mediaAniwatchId = null
+
+        // if ANIWATCH MEDIA ID is provided 
+        if (idToMatch) mediaAniwatchId = closestResult.find(item => item.id == idToMatch)
+
+        const res = await aniwatch.getEpisodes(mediaAniwatchId?.id || closestResult[0].id) as EpisodesFetchedAnimeWatch
 
         return res?.episodes?.length == 0 ? null : res.episodes
     }

@@ -12,13 +12,15 @@ import { doc, DocumentData, DocumentSnapshot, getDoc, getFirestore } from 'fireb
 import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
+import { convertFromUnix } from '@/app/lib/formatDateUnix'
 
 type ComponentTypes = {
     source: SourceType["source"],
     mediaId: number,
     activeEpisodeNumber: number,
     episodesList: MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[],
-    episodesOnImdb: ImdbEpisode[] | undefined
+    episodesOnImdb: ImdbEpisode[] | undefined,
+    nextAiringEpisode?: { episode: number, airingAt: number }
 }
 
 const loadingEpisodesMotion = {
@@ -33,7 +35,7 @@ const loadingEpisodesMotion = {
     },
 }
 
-function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episodesList, episodesOnImdb }: ComponentTypes) {
+function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episodesList, nextAiringEpisode, episodesOnImdb }: ComponentTypes) {
 
     const [currEpisodesWatched, setCurrEpisodesWatched] = useState<{
         mediaId: number;
@@ -180,6 +182,37 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
 
                     </motion.li>
                 ))}
+
+                {nextAiringEpisode && (
+                    <motion.li
+                        data-active={false}
+                        variants={loadingEpisodesMotion}
+                        className={styles.next_episode_container}
+                    >
+
+                        <Link
+                            title={`Episode ${nextAiringEpisode.episode}`}
+                            href={`/media/${mediaId}`}
+                        >
+
+                            <div className={styles.img_container}>
+                                <span>{nextAiringEpisode.episode}</span>
+                            </div>
+
+                        </Link>
+
+                        <div className={styles.episode_info_container}>
+                            <Link href={`/media/${mediaId}`}>
+
+                                <h4>Episode {nextAiringEpisode.episode}</h4>
+
+                                <small>On {convertFromUnix(nextAiringEpisode.airingAt)}</small>
+
+                            </Link>
+                        </div>
+
+                    </motion.li>
+                )}
 
             </motion.ol>
 
