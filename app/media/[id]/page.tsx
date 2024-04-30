@@ -363,8 +363,6 @@ async function MediaPage({ params }: { params: { id: number } }) {
             {(mediaData.type == "ANIME" && mediaData.format != "MOVIE" && mediaData.status != "NOT_YET_RELEASED") && (
               <section id={styles.episodes_container}>
 
-                <h2 className={styles.heading_style}>EPISODES</h2>
-
                 <EpisodesContainer
                   dataCrunchyroll={episodesFromCrunchyroll}
                   dataImdb={imdbMediaInfo?.seasons}

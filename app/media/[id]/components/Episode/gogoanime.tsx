@@ -11,17 +11,18 @@ type ComponentTypes = {
     data: MediaEpisodes,
     mediaId: number,
     title: string,
+    episodeNumber: number,
     backgroundImg?: string,
     episodeDescription?: string,
     motionStyle?: any,
     episodesWatched?: {
         mediaId: number;
-        episodeId: string;
+        episodeNumber: number;
         episodeTitle: string;
     }[]
 }
 
-function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescription, motionStyle, episodesWatched }: ComponentTypes) {
+function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescription, motionStyle, episodesWatched, episodeNumber }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
@@ -46,13 +47,12 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescript
                 </h3>
 
                 <ButtonMarkEpisodeAsWatched
-                    episodeId={data.id}
+                    episodeNumber={episodeNumber}
                     episodeTitle={`${data.number}`}
                     mediaId={mediaId}
-                    source="gogoanime"
                     wasWatched={
                         episodesWatched?.find(
-                            (item) => item.episodeId == `${data.number}`
+                            (item) => item.episodeNumber == episodeNumber
                         ) ? true : false
                     }
                 />

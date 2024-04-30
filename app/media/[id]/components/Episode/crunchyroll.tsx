@@ -10,16 +10,17 @@ import { motion } from 'framer-motion'
 type ComponentTypes = {
     data: EpisodesType,
     mediaId: number,
+    episodeNumber: number,
     motionStyle?: any,
     episodesWatched?: {
         mediaId: number;
-        episodeId: string;
+        episodeNumber: number;
         episodeTitle: string;
     }[]
 
 }
 
-function CrunchyrollEpisode({ data, mediaId, motionStyle, episodesWatched }: ComponentTypes) {
+function CrunchyrollEpisode({ data, mediaId, motionStyle, episodesWatched, episodeNumber }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
@@ -42,13 +43,12 @@ function CrunchyrollEpisode({ data, mediaId, motionStyle, episodesWatched }: Com
                 </h3>
 
                 <ButtonMarkEpisodeAsWatched
-                    episodeId={data.title}
+                    episodeNumber={episodeNumber}
                     episodeTitle={data.title}
                     mediaId={mediaId}
-                    source="crunchyroll"
                     wasWatched={
                         episodesWatched?.find(
-                            (item) => item.episodeId == `${data.title}`
+                            (item) => item.episodeNumber == episodeNumber
                         ) ? true : false
                     }
                 />

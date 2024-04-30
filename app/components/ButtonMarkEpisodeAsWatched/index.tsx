@@ -14,15 +14,14 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
 type BtnTypes = {
-    episodeId: string,
+    episodeNumber: number,
     episodeTitle: string,
     mediaId: number,
-    source: SourceType["source"],
     hasText?: boolean,
     wasWatched?: boolean
 }
 
-function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, wasWatched, hasText }: BtnTypes) {
+function ButtonMarkEpisodeAsWatched({ episodeNumber, episodeTitle, mediaId, wasWatched, hasText }: BtnTypes) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(wasWatched || false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -43,18 +42,17 @@ function ButtonMarkEpisodeAsWatched({ episodeId, episodeTitle, mediaId, source, 
         const episodeData = {
 
             mediaId: mediaId,
-            episodeId: episodeId, // crunchyroll has no ID for episodes, so it will be used its title
+            episodeNumber: episodeNumber,
             episodeTitle: episodeTitle
 
         }
 
         await setDoc(doc(db, 'users', user.uid),
             {
-                episodesWatchedBySource: {
-                    [source]: {
-                        [mediaId]: wasEpisodeWatched ? arrayRemove(...[episodeData]) : arrayUnion(...[episodeData])
-                    }
+                episodesWatched: {
+                    [mediaId]: wasEpisodeWatched ? arrayRemove(...[episodeData]) : arrayUnion(...[episodeData])
                 }
+
             } as unknown as FieldPath,
             { merge: true }
         ).then(() =>

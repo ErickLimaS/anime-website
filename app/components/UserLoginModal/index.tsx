@@ -25,6 +25,29 @@ type ModalTypes = {
     auth: Auth
 }
 
+const dropIn = {
+
+    hidden: {
+        x: "-100vw",
+        opacity: 0
+    },
+    visible: {
+        x: "0",
+        opacity: 1,
+        transition: {
+            duration: 0.2,
+            damping: 25,
+            type: "spring",
+            stiffness: 500
+        }
+    },
+    exit: {
+        x: "100vw",
+        opacity: 0
+    }
+
+}
+
 function UserModal({ onClick, auth, }: ModalTypes) {
 
     const googleProvider = new GoogleAuthProvider()
@@ -40,28 +63,6 @@ function UserModal({ onClick, auth, }: ModalTypes) {
     const [alternativeForm, setAlternativeForm] = useState(false)
     const [loginError, setLoginError] = useState<{ code: string, message: string } | null>(null)
 
-    const dropIn = {
-
-        hidden: {
-            x: "-100vw",
-            opacity: 0
-        },
-        visible: {
-            x: "0",
-            opacity: 1,
-            transition: {
-                duration: 0.2,
-                damping: 25,
-                type: "spring",
-                stiffness: 500
-            }
-        },
-        exit: {
-            x: "100vw",
-            opacity: 0
-        }
-
-    }
 
     async function newUserDoc(user: User) {
 
@@ -80,7 +81,7 @@ function UserModal({ onClick, auth, }: ModalTypes) {
             keepWatching: [],
             notifications: [],
             comments: {},
-            episodesWatchedBySource: {},
+            episodesWatched: {},
             videoSource: "gogoanime",
             showAdultContent: false,
             autoNextEpisode: true,

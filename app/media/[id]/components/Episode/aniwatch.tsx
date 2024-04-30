@@ -10,17 +10,18 @@ import { motion } from 'framer-motion'
 type ComponentTypes = {
     data: EpisodeAnimeWatch,
     mediaId: number,
+    episodeNumber: number,
     backgroundImg?: string,
     episodeDescription?: string,
     motionStyle?: any,
     episodesWatched?: {
         mediaId: number;
-        episodeId: string;
+        episodeNumber: number;
         episodeTitle: string;
     }[]
 }
 
-function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle, episodesWatched }: ComponentTypes) {
+function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle, episodesWatched, episodeNumber }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
@@ -49,13 +50,12 @@ function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, mot
                 </h3>
 
                 <ButtonMarkEpisodeAsWatched
-                    episodeId={`${data.number}`}
+                    episodeNumber={episodeNumber}
                     episodeTitle={data.title}
                     mediaId={mediaId}
-                    source="aniwatch"
                     wasWatched={
                         episodesWatched?.find(
-                            (item) => item.episodeId == `${data.number}`
+                            (item) => item.episodeNumber == episodeNumber
                         ) ? true : false
                     }
                 />
