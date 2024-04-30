@@ -6,9 +6,12 @@ import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import {
     arrayRemove, arrayUnion,
-    doc, FieldPath,
-    getDoc, getFirestore,
-    updateDoc
+    collection,
+    doc, DocumentData, FieldPath,
+    getDoc, getDocs, getFirestore,
+    query,
+    updateDoc,
+    where
 } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
@@ -23,43 +26,31 @@ function NotificationsComponent() {
 
     // HOW IT WORKS
     // 
-    // [[[Currently, this is kinda messy, but a i have a ideia of how to optimize it and make it better later]]]. 
+    // This component is related to a Collection called "Notifications" on Firebase. This collection stores
+    // the episodes for each media and has the number and release date on it.
+    // The logic here is that, the user is assigned to these Medias on Notifications Collection, and in this
+    // component, it checks the latest date the User Doc with these info awas updated. If the date is older than 
+    // the latests episodes released, it shows on Header Notification Modal.
     // 
-    // User stores the next episode on his document.
-    // Then this component gets this field on user doc and filters to
-    // show only when the current time is bigger than the episode release date. 
-    // When release date is reached, it updates that media info for the next episode release date.
-    // It checks every 30 min time span for any update on User Doc "notifications" 
-    // 
-    // Local storage helps keeping the control of when to update info, if notification panel was open or to check user doc again.
+    // Was make this way because any time a user is assigned to this same media, that user updates the medias info available
+    // for all the user. Previously, it was meant that each user had its own notification field on his doc. 
 
     const db = getFirestore(initFirebase())
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
-    const [notifications, setNotifications] = useState<NotificationFirebase[]>([])
+    const [notifications, setNotifications] = useState<NotificationsCollectionFirebase[]>([])
     const [hasNewNotifications, setHasNewNotifications] = useState<boolean>(false)
     const [menuOpen, setMenuOpen] = useState<boolean>(false)
 
-    // compare last Update with additional 30 minutes with the current time. If TRUE, fetchs Notifications again
+    // Compares LocalStorage Last Update with additional 10 minutes with the current time.
+    // If TRUE, fetchs Notifications again
     function isCurrDateBiggerThanLastUpdate() {
 
         const dateNow = Number((new Date().getTime() / 1000).toFixed(0))
-        const dateLastUpdate = Number(Number(localStorage.getItem('notificationsLastUpdate')) + 1800) || 0
+        const dateLastUpdate = Number(Number(localStorage.getItem('notificationsLastUpdate')) + 600) || 0
 
         return dateNow >= dateLastUpdate
-
-    }
-
-    // set notications from user doc on local storage
-    async function updateNotificationsOnLocal() {
-
-        const allNotificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
-            (res) => res.data()?.notifications || []
-        )
-
-        localStorage.setItem('notifications', JSON.stringify(allNotificationsStored))
-        localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
 
     }
 
@@ -68,68 +59,151 @@ function NotificationsComponent() {
 
         if (!user) return
 
-        let notificationsStored: NotificationFirebase[] = []
-
         if (localStorage.getItem('notifications') == undefined) {
-
-            notificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
-                (res) => res.data()?.notifications || []
-            )
-
-            localStorage.setItem('notificationsVisualized', "true")
-            localStorage.setItem('notifications', JSON.stringify(notificationsStored))
-            localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
-
+            setNotificationsOnLocalStorage()
         }
         else {
-
-            // compare last Update with additional 30 minutes with the current time. If TRUE, fetchs Notifications again
-            if (isCurrDateBiggerThanLastUpdate()) {
-
-                notificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
-                    (res) => res.data()?.notifications || []
-                ).then(
-                    (res) => res.sort((a: NotificationFirebase, b: NotificationFirebase) => a.title.romaji.localeCompare(b.title.romaji))
-                )
-
-                localStorage.setItem('notificationsVisualized', "true")
-                localStorage.setItem('notifications', JSON.stringify(notificationsStored))
-                localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
-
-            }
-
-            if (notificationsStored.length == 0) notificationsStored = JSON.parse(localStorage.getItem('notifications')!) || []
-
+            updateNotificationsOnLocalStorage()
         }
-
-        showNotificationsByConditions(notificationsStored)
 
     }
 
-    // check if notifications should be shown to the user, COMPARING the Curr Date with the Date of Release
-    function showNotificationsByConditions(notificationsData: NotificationFirebase[]) {
+    // Set notifications to be shown to the user
+    function showNotificationsByConditions(notificationsData: NotificationsCollectionFirebase[]) {
 
         if (notificationsData.length == 0) return
 
-        const currDateInUnix = parseInt((new Date().getTime() / 1000).toFixed(0))
+        localStorage.setItem('notificationsVisualized', "false")
+        setHasNewNotifications(true)
 
-        let notificationsToBeShown: NotificationFirebase[] = []
-
-        notificationsData.map((item) => {
-            (currDateInUnix >= item.nextReleaseDate && item.notificationVisualized == false)
-                ? notificationsToBeShown.push(item) : undefined
-        })
-
-        if (notificationsToBeShown.length > 0) {
-            localStorage.setItem('notificationsVisualized', "false")
-            setHasNewNotifications(true)
-        }
-
-        setNotifications(notificationsToBeShown)
+        setNotifications(notificationsData)
 
     }
 
-    function openNotificationsMenu() {
+    async function setNotificationsOnLocalStorage() {
+
+        let userAssignedNotifications: any[] = []
+
+        // gets all notification's that user is assigned
+        await getDoc(doc(db, "users", user!.uid)).then((res) => {
+            userAssignedNotifications = res.data()?.notifications || []
+        })
+
+        if (userAssignedNotifications.length > 0) {
+
+            // stores notifications Medias Id
+            let mediasIdsArray = []
+            mediasIdsArray.push(userAssignedNotifications.map(item => `${item.mediaId}`))
+
+            mediasIdsArray = mediasIdsArray[0]
+
+            const notificationsCollectionDocs = await getDocs(query(collection(db, 'notifications'), where(
+                "mediaId", "in", mediasIdsArray)
+            )).then((res) => res.docs.map(item => item.data())) as NotificationsCollectionFirebase[]
+
+
+            if (notificationsCollectionDocs) {
+
+                // sort episodes number
+                notificationsCollectionDocs.map((item) => item.episodes = item.episodes.sort((a, b) => a.number - b.number))
+
+                notificationsCollectionDocs.map((item) => item.episodes = [item.episodes[item.episodes.length - 1]])
+
+            }
+
+            userAssignedNotifications = notificationsCollectionDocs
+
+        }
+
+        localStorage.setItem('notificationsVisualized', "true")
+        localStorage.setItem('notifications', JSON.stringify(userAssignedNotifications))
+        localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
+
+        showNotificationsByConditions(userAssignedNotifications)
+
+    }
+
+    async function updateNotificationsOnLocalStorage() {
+
+        let userAssignedNotifications: any[] = []
+
+        if (isCurrDateBiggerThanLastUpdate()) {
+
+            await getDoc(doc(db, "users", user!.uid)).then((res) => {
+                userAssignedNotifications = res.data()?.notifications || []
+            })
+
+            let mediasIdsArray = []
+            mediasIdsArray.push(userAssignedNotifications.map(item => `${item.mediaId}`))
+
+            mediasIdsArray = mediasIdsArray[0]
+
+            const notificationsCollectionDocs = await getDocs(query(collection(db, 'notifications'), where(
+                "mediaId", "in", mediasIdsArray)
+            )).then((res) =>
+                res.docs.map(item => item.data())
+            ) as NotificationsCollectionFirebase[]
+
+            // compares episodes on local and doc and check if theres a new one
+            if (notificationsCollectionDocs) {
+
+                notificationsCollectionDocs.map((item) => item.episodes = item.episodes.sort((a: any, b: any) => a.number - b.number))
+
+                let showNotificationsList = []
+
+                for (let i = 0; userAssignedNotifications.length >= i + 1; i++) {
+
+                    console.log(i)
+                    console.log(userAssignedNotifications)
+
+                    // gets the current media on LOOP
+                    const onDbNotificationsMatches = notificationsCollectionDocs.find((item) => `${item.mediaId}` == `${userAssignedNotifications[i].mediaId}`)
+
+                    console.log(onDbNotificationsMatches)
+
+                    if (onDbNotificationsMatches) {
+
+                        onDbNotificationsMatches.title = userAssignedNotifications[i].title
+
+                        // if curr date is bigger than last episode released date
+                        const lastEpisodeNotificationVisualizedOnDB = onDbNotificationsMatches.episodes[onDbNotificationsMatches.episodes.length - 1]
+                        const lastEpisodeNotificationVisualizedOnLocal = userAssignedNotifications[i]
+
+                        // if latest Episode Released on DB is bigger than last episode notified 
+                        if (lastEpisodeNotificationVisualizedOnDB.number > lastEpisodeNotificationVisualizedOnLocal.lastEpisodeNotified) {
+
+                            if (Number((new Date().getTime() / 1000).toFixed(0)) > lastEpisodeNotificationVisualizedOnDB.releaseDate!) {
+
+                                showNotificationsList.push(onDbNotificationsMatches)
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                userAssignedNotifications = notificationsCollectionDocs
+
+                if (showNotificationsList.length > 0) {
+                    showNotificationsByConditions(showNotificationsList)
+                }
+
+                localStorage.setItem('notificationsVisualized', "true")
+                localStorage.setItem('notifications', JSON.stringify(notificationsCollectionDocs))
+                localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
+
+            }
+        }
+
+        if (userAssignedNotifications.length == 0) {
+            userAssignedNotifications = JSON.parse(localStorage.getItem('notifications')!) || []
+        }
+
+    }
+
+    function toggleOpenNotificationsMenu() {
 
         setMenuOpen(!menuOpen)
 
@@ -137,41 +211,34 @@ function NotificationsComponent() {
 
         setHasNewNotifications(false)
 
-        if (!menuOpen == false && notifications.length > 0) {
+        if (menuOpen && notifications.length > 0) {
 
-            const mediaNotificationsStillReleasing = notifications.filter(item => item.lastEpisode == false)
-            const mediaFinishedNotifications = notifications.filter(item => item.lastEpisode == true)
+            const mediaNotificationsStillReleasing: NotificationsCollectionFirebase[] = notifications.filter(item => item.isComplete == false)
+            const mediaFinishedNotifications: NotificationsCollectionFirebase[] = notifications.filter(item => item.isComplete == true) as any
 
-            // if user is not assigned to any media notification, returns
-            if (mediaNotificationsStillReleasing.length == 0 && mediaFinishedNotifications.length == 0) return
+            // MAP notifications shown and updates info to next episode
+            if (mediaNotificationsStillReleasing.length > 0) {
 
-            // map notifications shown and updates info to next episode
-            if (mediaFinishedNotifications.length > 0) {
                 mediaNotificationsStillReleasing.map(async (item) => {
 
                     // gets the update media's updated info
-                    const mediaData = await anilist.getMediaInfo(item.mediaId) as ApiMediaResults
+                    const mediaData = await anilist.getMediaInfo(Number(item.mediaId)) as ApiMediaResults
 
-                    const updateNotificationData = {
-                        mediaId: mediaData.id,
-                        title: {
-                            romaji: mediaData.title.romaji
-                        },
-                        isComplete: mediaData.status,
-                        notificationVisualized: mediaData.nextAiringEpisode?.episode ? false : true,
-                        nextReleaseDate: mediaData.nextAiringEpisode?.airingAt,
-                        episodeNumber: mediaData.nextAiringEpisode?.episode,
-                        lastEpisode: mediaData.nextAiringEpisode?.episode == mediaData.episodes,
-                        coverImage: {
-                            extraLarge: mediaData.coverImage.extraLarge,
-                            large: mediaData.coverImage.large
-                        }
-                    }
+                    // 
+                    await updateMediaOnNotificationCollection(mediaData)
 
                     // removes older notication with previous data
                     await updateDoc(doc(db, 'users', user!.uid),
                         {
-                            notifications: arrayRemove(...[item])
+                            notifications: arrayRemove(...[
+                                {
+                                    lastEpisodeNotified: mediaData.nextAiringEpisode?.episode - 1,
+                                    mediaId: mediaData.id,
+                                    title: {
+                                        romaji: mediaData.title.romaji,
+                                        native: mediaData.title.native,
+                                    }
+                                }])
 
                         } as unknown as FieldPath,
                         { merge: true }
@@ -182,7 +249,15 @@ function NotificationsComponent() {
                     // add new data to notificaion media
                     await updateDoc(doc(db, 'users', user!.uid),
                         {
-                            notifications: arrayUnion(...[updateNotificationData])
+                            notifications: arrayUnion(...[
+                                {
+                                    lastEpisodeNotified: mediaData.nextAiringEpisode?.episode,
+                                    mediaId: mediaData.id,
+                                    title: {
+                                        romaji: mediaData.title.romaji,
+                                        native: mediaData.title.native,
+                                    }
+                                }])
 
                         } as unknown as FieldPath,
                         { merge: true }
@@ -193,7 +268,7 @@ function NotificationsComponent() {
                 })
             }
 
-            // if theres medias that just FINISHED, it will set then to "notificationVisualized" true
+            // MAP medias that just FINISHED
             if (mediaFinishedNotifications.length > 0) {
 
                 mediaFinishedNotifications.map(async (item) => {
@@ -208,9 +283,6 @@ function NotificationsComponent() {
                     ).catch(
                         err => { return console.log(err) }
                     )
-
-                    // add field VISUALIZED to updated item
-                    item.notificationVisualized = true
 
                     // add new data to notification media
                     await updateDoc(doc(db, 'users', user!.uid),
@@ -227,6 +299,43 @@ function NotificationsComponent() {
 
             }
 
+            // UPDATES Notifications Collection with new Episodes Releases and Status
+            async function updateMediaOnNotificationCollection(mediaData: ApiMediaResults) {
+
+                const mediaNotificationDoc = await getDoc(doc(db, "notifications", `${mediaData.id}`)).then(
+                    (res) => res.data()
+                ) as NotificationsCollectionFirebase | DocumentData
+
+                mediaNotificationDoc.nextReleaseDate = mediaData.nextAiringEpisode?.airingAt
+                mediaNotificationDoc.status = mediaData.status
+                mediaNotificationDoc.lastUpdate = Number((new Date().getTime() / 1000).toFixed(0)) 
+                mediaNotificationDoc.isComplete = mediaData.status == "COMPLETE" ? true : false
+
+                if (mediaData.status != "FINISHED") {
+
+                    mediaNotificationDoc.episodes.push({
+                        releaseDate: mediaData.nextAiringEpisode?.airingAt || null,
+                        number: mediaData.nextAiringEpisode?.episode,
+                        wasReleased: Number((new Date().getTime() / 1000).toFixed(0)) > mediaData.nextAiringEpisode?.airingAt
+                    })
+
+                }
+
+                await updateDoc(doc(db, 'notifications', `${mediaData.id}`), mediaNotificationDoc)
+
+            }
+
+            async function updateNotificationsOnLocal() {
+
+                const allNotificationsStored = await getDoc(doc(db, "users", user!.uid)).then(
+                    (res) => res.data()?.notifications || []
+                )
+
+                localStorage.setItem('notifications', JSON.stringify(allNotificationsStored))
+                localStorage.setItem('notificationsLastUpdate', `${(new Date().getTime() / 1000).toFixed(0)}`)
+
+            }
+
             updateNotificationsOnLocal()
 
         }
@@ -235,8 +344,8 @@ function NotificationsComponent() {
 
     useEffect(() => {
 
-        if (localStorage.getItem('notificationsVisualized')) {
-            if (localStorage.getItem('notificationsVisualized') == "true") setHasNewNotifications(false)
+        if (localStorage.getItem('notificationsVisualized') && localStorage.getItem('notificationsVisualized') == "true") {
+            setHasNewNotifications(false)
         }
         else {
             localStorage.setItem('notificationsVisualized', "true")
@@ -257,7 +366,7 @@ function NotificationsComponent() {
                 >
                     <button
                         id={styles.notification_btn}
-                        onClick={() => openNotificationsMenu()}
+                        onClick={() => toggleOpenNotificationsMenu()}
                         title={menuOpen ? "Close Notifications" : "Open Notifications"}
                         data-active={menuOpen}
                     >
@@ -309,11 +418,11 @@ function NotificationsComponent() {
 
                                                     <div className={styles.notification_item_info}>
 
-                                                        <h5>Episode {item.episodeNumber} Released!</h5>
+                                                        <h5>Episode {item.episodes[item.episodes.length - 1]?.number} Released!</h5>
 
                                                         <small>{item.title.romaji}</small>
 
-                                                        {item.lastEpisode && (
+                                                        {item.status != "RELEASING" && (
                                                             <p><b>Watch the Season Finale!</b></p>
                                                         )}
 

@@ -3,6 +3,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/media',
+        destination: '/',
+        permanent: true,
+      },
+      {
         source: '/watch',
         destination: '/',
         permanent: true,
