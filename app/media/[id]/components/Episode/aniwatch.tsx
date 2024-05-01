@@ -43,9 +43,9 @@ function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, mot
             </Link>
 
             <div className={styles.title_button_container}>
-                <h3>
+                <h3 title={`Episode ${data.number} ${data.title && `- ${data.title}`}`}>
                     <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`}>
-                        {`Episode ${data.number} ${data.title && `- ${data.title}`}`}
+                        {`${data.number} ${data.title && `- ${data.title}`}`}
                     </Link>
                 </h3>
 

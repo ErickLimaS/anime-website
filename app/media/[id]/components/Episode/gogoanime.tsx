@@ -40,9 +40,9 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescript
             </Link>
 
             <div className={styles.title_button_container}>
-                <h3>
+                <h3 title={title ? `Episode ${data.number} - ${title}` : `Episode ${data.number}`}>
                     <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`}>
-                        {title ? `Episode ${data.number} - ${title}` : `Episode ${data.number}`}
+                        {title ? `${data.number} - ${title}` : `Episode ${data.number}`}
                     </Link>
                 </h3>
 
