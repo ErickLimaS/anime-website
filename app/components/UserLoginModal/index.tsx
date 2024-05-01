@@ -71,7 +71,7 @@ function UserModal({ onClick, auth, }: ModalTypes) {
         if (userHasDoc) return
 
         // if user is anonymous, set a placeholder Name and Photo
-        if (user.isAnonymous) await updateProfile(user, { displayName: "Anonymous", photoURL: "https://i.pinimg.com/736x/7d/6e/eb/7d6eeb79b0b43bb0987bf4c6935fa148.jpg" })
+        if (user.isAnonymous) await updateProfile(user, { displayName: "Anonymous", photoURL: "https://i.pinimg.com/736x/fc/4e/f7/fc4ef7ec7265a1ebb69b4b8d23982d9d.jpg" })
 
         // shows settings to new user
         setShowSettingsMenu(true)
@@ -82,6 +82,7 @@ function UserModal({ onClick, auth, }: ModalTypes) {
             notifications: [],
             comments: {},
             episodesWatched: {},
+            chaptersRead: {},
             videoSource: "gogoanime",
             showAdultContent: false,
             autoNextEpisode: true,

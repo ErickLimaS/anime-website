@@ -46,10 +46,16 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
   const rangeChaptersPerPage = 10
 
   const handlePageClick = (event: { selected: number }) => {
-    const newOffset = event.selected * rangeChaptersPerPage % chaptersDataFetched.length;
 
-    setItemOffset(newOffset);
-  };
+    setLoading(true) // needed to refresh chapters component "Mark Chapters Read"
+
+    const newOffset = event.selected * rangeChaptersPerPage % chaptersDataFetched.length
+
+    setItemOffset(newOffset)
+
+    setTimeout(() => setLoading(false), 500)  // needed to refresh chapters component "Mark Chapters Read"
+
+  }
 
   const getChapters = async () => {
 
@@ -149,7 +155,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
             </div>
           )}
 
-          {currentItems && currentItems.map((item, key: number) => (
+          {(currentItems && !loading) && currentItems.map((item, key: number) => (
             <motion.li
               key={key}
               title={`Chapter ${item.chapterNumber} - ${mediaData.title.romaji}`}
@@ -174,10 +180,9 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
               </Link>
 
               <ButtonMarkChapterAsRead
-                chapterId={item.id}
+                chapterNumber={Number(item.chapterNumber)}
                 chapterTitle={item.title}
                 mediaId={mediaData.id}
-                source={"mangadex"}
                 hasText
               />
 

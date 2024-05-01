@@ -100,30 +100,38 @@ const qualityOptions = [
 
 ]
 
-function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
+const dropIn = {
 
-    const dropIn = {
-
-        hidden: {
-            x: "-100vw",
-            opacity: 0
-        },
-        visible: {
-            x: "0",
-            opacity: 1,
-            transition: {
-                duration: 0.2,
-                damping: 25,
-                type: "spring",
-                stiffness: 500
-            }
-        },
-        exit: {
-            x: "100vw",
-            opacity: 0
+    hidden: {
+        x: "-100vw",
+        opacity: 0
+    },
+    visible: {
+        x: "0",
+        opacity: 1,
+        transition: {
+            duration: 0.2,
+            damping: 25,
+            type: "spring",
+            stiffness: 500
         }
-
+    },
+    exit: {
+        x: "100vw",
+        opacity: 0
     }
+
+}
+
+const btnVariants = {
+
+    tap: {
+        scale: 0.9
+    }
+
+}
+
+function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
     const [user] = useAuthState(auth)
 
@@ -146,14 +154,6 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
     const [currentNextEpisode, setCurrentNextEpisode] = useState<boolean | null>(null)
 
     const db = getFirestore(initFirebase());
-
-    const btnVariants = {
-
-        tap: {
-            scale: 0.9
-        }
-
-    }
 
     // changes info of user. mainly used to change video language
     async function changeSettings(e: React.FormEvent<HTMLFormElement> | HTMLFormElement) {
@@ -311,7 +311,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                 {user!.isAnonymous && (
                     <div id={styles.anonymous_disclaimer_container}>
                         <h5>You are in Anonymous Mode!</h5>
-                        <p>In this mode you <b>can not</b> make Comments and change your Username.</p>
+                        <p>In this mode you <b>can not</b> make Comments or change your Username.</p>
                     </div>
                 )}
 
