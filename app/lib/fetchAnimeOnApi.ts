@@ -57,7 +57,12 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | 
 
     // filter the same format
     if (format) {
-        searchResultsForMedia = searchResultsForMedia.filter(item => item.type.toLowerCase() == format.toLowerCase())
+        const filterFormat = searchResultsForMedia.filter(item => item.type.toLowerCase() == format.toLowerCase())
+
+        if (filterFormat.length > 0) {
+            searchResultsForMedia = filterFormat
+        }
+
     }
 
     let closestResult: MediaInfoAniwatch[] | undefined
@@ -103,7 +108,7 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | 
     // if only EPISODES is requested
     if (only == "episodes") {
 
-        if (!closestResult) return null
+        if (closestResult.length == 0) return null
 
         let mediaAniwatchId = null
 

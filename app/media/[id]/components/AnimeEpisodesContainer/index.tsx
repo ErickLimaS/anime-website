@@ -173,8 +173,14 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setEpisodesDataFetched(mediaEpisodes as MediaEpisodes[])
 
-        setCurrentItems((mediaEpisodes as MediaEpisodes[]).slice(itemOffset, endOffset))
-        setPageCount(Math.ceil((mediaEpisodes as MediaEpisodes[]).length / rangeEpisodesPerPage))
+        if (mediaEpisodes != null) {
+          setCurrentItems((mediaEpisodes as MediaEpisodes[]).slice(itemOffset, endOffset))
+          setPageCount(Math.ceil((mediaEpisodes as MediaEpisodes[]).length / rangeEpisodesPerPage))
+        }
+        else {
+          setCurrentItems(null)
+          setPageCount(0)
+        }
 
         break
 
@@ -190,8 +196,14 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         setEpisodesDataFetched(mediaEpisodes)
 
-        setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
-        setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
+        if (mediaEpisodes != null) {
+          setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
+          setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
+        }
+        else {
+          setCurrentItems(null)
+          setPageCount(0)
+        }
 
         break
 
@@ -339,7 +351,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     }
 
-    setCurrentItems(episodesDataFetched.slice(itemOffset, endOffset))
+    if (episodesDataFetched) setCurrentItems(episodesDataFetched.slice(itemOffset, endOffset))
 
   }, [episodesDataFetched, itemOffset, dataCrunchyroll, episodeSource])
 
@@ -518,7 +530,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           </motion.div>
         )}
 
-        {((episodesDataFetched.length == 0) && !loading) && (
+        {((episodesDataFetched?.length == 0 || episodesDataFetched == null) && !loading) && (
           <div id={styles.no_episodes_container}>
 
             <Image src={ErrorImg} alt='Error' height={200} />
