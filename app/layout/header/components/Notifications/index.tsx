@@ -153,13 +153,8 @@ function NotificationsComponent() {
 
                 for (let i = 0; userAssignedNotifications.length >= i + 1; i++) {
 
-                    console.log(i)
-                    console.log(userAssignedNotifications)
-
                     // gets the current media on LOOP
                     const onDbNotificationsMatches = notificationsCollectionDocs.find((item) => `${item.mediaId}` == `${userAssignedNotifications[i].mediaId}`)
-
-                    console.log(onDbNotificationsMatches)
 
                     if (onDbNotificationsMatches) {
 
@@ -232,7 +227,8 @@ function NotificationsComponent() {
                         {
                             notifications: arrayRemove(...[
                                 {
-                                    lastEpisodeNotified: mediaData.nextAiringEpisode?.episode - 1,
+                                    // if theres no new episode to release, set total episodes number as last notified
+                                    lastEpisodeNotified: mediaData.nextAiringEpisode ? mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes,
                                     mediaId: mediaData.id,
                                     title: {
                                         romaji: mediaData.title.romaji,
@@ -308,10 +304,14 @@ function NotificationsComponent() {
 
                 mediaNotificationDoc.nextReleaseDate = mediaData.nextAiringEpisode?.airingAt
                 mediaNotificationDoc.status = mediaData.status
-                mediaNotificationDoc.lastUpdate = Number((new Date().getTime() / 1000).toFixed(0)) 
+                mediaNotificationDoc.lastUpdate = Number((new Date().getTime() / 1000).toFixed(0))
                 mediaNotificationDoc.isComplete = mediaData.status == "COMPLETE" ? true : false
 
                 if (mediaData.status != "FINISHED") {
+
+                    (mediaNotificationDoc as NotificationsCollectionFirebase).episodes.map(
+                        (item) => item.wasReleased = Number((new Date().getTime() / 1000).toFixed(0)) > (item.releaseDate ? item.releaseDate : 0)
+                    )
 
                     mediaNotificationDoc.episodes.push({
                         releaseDate: mediaData.nextAiringEpisode?.airingAt || null,
