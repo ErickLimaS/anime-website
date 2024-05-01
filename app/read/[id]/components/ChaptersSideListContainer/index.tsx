@@ -12,19 +12,19 @@ type ComponentTypes = {
     episodesList: MangaChapters[]
 }
 
-function ChaptersSideListContainer({ mediaId, currChapterId, episodesList }: ComponentTypes) {
+const loadingEpisodesMotion = {
+    initial: {
+        scale: 0,
+    },
+    animate: {
+        scale: 1,
+        transition: {
+            staggerChildren: 0.02,
+        },
+    },
+}
 
-    const loadingEpisodesMotion = {
-        initial: {
-            scale: 0,
-        },
-        animate: {
-            scale: 1,
-            transition: {
-                staggerChildren: 0.02,
-            },
-        },
-    }
+function ChaptersSideListContainer({ mediaId, currChapterId, episodesList }: ComponentTypes) {
 
     useEffect(() => {
 
@@ -84,10 +84,9 @@ function ChaptersSideListContainer({ mediaId, currChapterId, episodesList }: Com
                             </Link>
 
                             <ButtonMarkChapterAsRead
-                                chapterId={item.id}
+                                chapterNumber={Number(item.chapterNumber)}
                                 chapterTitle={item.title}
                                 mediaId={mediaId}
-                                source={"mangadex"}
                                 hasText={true}
                             />
 

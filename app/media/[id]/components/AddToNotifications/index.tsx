@@ -9,7 +9,12 @@ import {
     updateDoc, arrayUnion,
     arrayRemove, getDoc,
     FieldPath, setDoc,
-    DocumentSnapshot, DocumentData
+    DocumentSnapshot, DocumentData,
+    collection,
+    deleteDoc,
+    query,
+    where,
+    getDocs
 } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
@@ -31,43 +36,141 @@ function AddToNotificationsList({ data }: { data: ApiDefaultResult }) {
 
     const db = getFirestore(initFirebase());
 
-    // WHEN BUTTON IS CLICKED, RUN FUNCTION TO ADD OR REMOVE MEDIA FROM FIRESTORE
+    // WHEN BUTTON IS CLICKED, RUN FUNCTION TO ADD OR REMOVE USER FROM MEDIA'S NOTIFICATIONS USERS ASSIGNED
     async function addThisMedia() {
 
-        if (!user) {
-
-            // opens user login modal
-            setIsUserModalOpen(true)
-            return
-        }
+        // opens user login modal
+        if (!user) return setIsUserModalOpen(true)
 
         setIsLoading(true)
 
-        const notificationData = {
-            mediaId: data.id,
-            title: {
-                romaji: data.title.romaji
-            },
-            notificationVisualized: false,
-            isComplete: data.status,
-            nextReleaseDate: data.nextAiringEpisode?.airingAt,
-            episodeNumber: data.nextAiringEpisode?.episode,
-            lastEpisode: data.nextAiringEpisode?.episode == data.episodes,
-            coverImage: {
-                extraLarge: data.coverImage.extraLarge,
-                large: data.coverImage.large
-            }
+        const mediaNotificationDoc = await getDoc(doc(db, "notifications", `${data.id}`))
+
+        // compare last Update with additional 30 minutes with the current time. If TRUE, fetchs Notifications again
+        function isCurrDateBiggerThanRelease(release: number) {
+
+            const dateNow = Number((new Date().getTime() / 1000).toFixed(0))
+            const releaseDate = release || 0
+
+            return dateNow >= releaseDate
+
         }
 
-        await updateDoc(doc(db, 'users', user.uid),
-            {
-                notifications: !wasAddedToNotifications ? arrayUnion(...[notificationData]) : arrayRemove(...[notificationData])
+        if (wasAddedToNotifications == false) {
 
-            } as unknown as FieldPath,
-            { merge: true }
-        )
+            // if DOC doesnt exist
+            if (mediaNotificationDoc.exists() == false) {
 
-        !wasAddedToNotifications ? setWasAddedToNotifications(true) : setWasAddedToNotifications(false)
+                const mediaNotificationInfo = {
+                    mediaId: `${data.id}`,
+                    lastUpdate: Number((new Date().getTime() / 1000).toFixed(0)),
+                    coverImage: {
+                        extraLarge: data.coverImage.extraLarge,
+                        large: data.coverImage.large
+                    },
+                    nextReleaseDate: data.nextAiringEpisode?.airingAt || null,
+                    status: data.status,
+                    isComplete: data.status == "FINISHED",
+                    episodes: [
+                        {
+                            releaseDate: data.nextAiringEpisode?.airingAt || null,
+                            number: data.nextAiringEpisode?.episode,
+                            wasReleased: isCurrDateBiggerThanRelease(data.nextAiringEpisode?.airingAt)
+                        }
+                    ]
+
+                }
+
+                await setDoc(doc(db, "notifications", `${data.id}`), mediaNotificationInfo)
+
+                // adds user to list be notified
+                await setDoc(doc(db, "notifications", `${data.id}`, "usersAssigned", user.uid), {
+                    userRef: user.uid
+                })
+
+            }
+            else { // if DOC exist
+
+                const docData = mediaNotificationDoc.data()
+
+                const updatedDocData = docData
+
+                let episodesOnDoc = docData.episodes
+
+                episodesOnDoc = episodesOnDoc.sort((a: { number: number }, b: { number: number }) => a.number - b.number)
+
+                if (isCurrDateBiggerThanRelease(episodesOnDoc[episodesOnDoc.length - 1].releaseDate)) {
+
+                    episodesOnDoc[episodesOnDoc.length - 1].wasReleased = isCurrDateBiggerThanRelease(episodesOnDoc[episodesOnDoc.length - 1].releaseDate)
+
+                    if (data.status != "FINISHED") {
+
+                        episodesOnDoc.push({
+                            releaseDate: data.nextAiringEpisode?.airingAt || null,
+                            number: data.nextAiringEpisode?.episode,
+                            wasReleased: isCurrDateBiggerThanRelease(data.nextAiringEpisode?.airingAt)
+                        })
+
+                    }
+
+                    episodesOnDoc.nextReleaseDate = data.nextAiringEpisode?.airingAt || null
+                    episodesOnDoc.episodes = episodesOnDoc
+
+                    await updateDoc(doc(db, 'notifications', `${data.id}`), updatedDocData)
+
+                }
+
+                // adds user to list be notified
+                await setDoc(doc(db, "notifications", `${data.id}`, "usersAssigned", user.uid), {
+                    userRef: user.uid
+                })
+
+            }
+
+            // add Media Id to Notifications on User DOC
+            await updateDoc(doc(db, 'users', user.uid),
+                {
+                    notifications: arrayUnion(...[
+                        {
+                            lastEpisodeNotified: data.nextAiringEpisode?.episode == 1 ? data.nextAiringEpisode?.episode : data.nextAiringEpisode?.episode - 1,
+                            mediaId: data.id,
+                            title: {
+                                romaji: data.title.romaji,
+                                native: data.title.native,
+                            }
+                        }])
+
+                } as unknown as FieldPath,
+                { merge: true }
+            )
+
+        }
+        else {
+
+            // remove user from list to be notified
+            await deleteDoc(doc(db, 'notifications', `${data.id}`, "usersAssigned", user.uid))
+
+            // add Media Id to Notifications on User DOC
+            await updateDoc(doc(db, 'users', user.uid),
+                {
+                    notifications: arrayRemove(...[
+                        {
+                            lastEpisodeNotified: data.nextAiringEpisode?.episode == 1 ? data.nextAiringEpisode?.episode : data.nextAiringEpisode?.episode - 1,
+                            mediaId: data.id,
+                            title: {
+                                romaji: data.title.romaji,
+                                native: data.title.native,
+                            }
+                        }
+                    ])
+
+                } as unknown as FieldPath,
+                { merge: true }
+            )
+
+        }
+
+        setWasAddedToNotifications(!wasAddedToNotifications ? true : false)
 
         setIsLoading(false)
     }
@@ -77,21 +180,29 @@ function AddToNotificationsList({ data }: { data: ApiDefaultResult }) {
 
         if (!user) return setWasAddedToNotifications(false)
 
-        let userDoc: DocumentSnapshot<DocumentData, DocumentData> = await getDoc(doc(db, 'users', user.uid))
+        // check if theres a DOC for this MEDIA
+        let mediaNotificationDoc: DocumentSnapshot<DocumentData, DocumentData> = await getDoc(doc(db, 'notifications', `${data.id}`))
 
-        // IF USER HAS NO DOC ON FIRESTORE, IT CREATES ONE
-        if (userDoc.exists() == false) {
+        // IF HAS DOC ON NOTIFICATIONS, IT CHECKS IF USER IS ASSIGNED TO RECEIVE NOTIFICATIONS
+        if (mediaNotificationDoc.exists()) {
 
-            userDoc = await setDoc(doc(db, 'users', user.uid), {}) as unknown as DocumentSnapshot<DocumentData, DocumentData>
+            setIsLoading(true)
+
+            let userIsAssigned = query(collection(db, 'notifications', `${data.id}`, "usersAssigned"), where("userRef", "==", `${user.uid}`))
+
+            const queryResult = await getDocs(userIsAssigned)
+
+            // IF SIZE EQUALS 1, MEANS USER EXISTS, THEN HE IS ASSIGNED 
+            queryResult.size == 1 ? setWasAddedToNotifications(true) : setWasAddedToNotifications(false)
+
+            setIsLoading(false)
 
             return
+
         }
 
-        const isMediaIdOnDoc = userDoc.get("notifications")?.find((item: NotificationFirebase) => item.mediaId == data.id)
+        setWasAddedToNotifications(false)
 
-        if (isMediaIdOnDoc) {
-            setWasAddedToNotifications(true)
-        }
     }
 
     useEffect(() => {

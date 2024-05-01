@@ -333,7 +333,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
                     {(comments.length == 0 && !isLoading) && (
                         <div id={styles.no_comments_container}>
 
-                            <p>No Comments Yet.</p>
+                            <p>No Comments Yet</p>
 
                         </div>
                     )}

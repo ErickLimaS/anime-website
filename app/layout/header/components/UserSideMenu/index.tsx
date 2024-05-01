@@ -16,7 +16,25 @@ import Link from 'next/link'
 import UserModal from '../../../../components/UserLoginModal'
 import { AnimatePresence, motion } from 'framer-motion'
 import UserSettingsModal from '../UserSettingsModal'
-import ProfileFallbackImg from "@/public/profile_fallback.jpg"
+
+const showUpMotion = {
+
+    hidden: {
+        y: "-40px",
+        opacity: 0
+    },
+    visible: {
+        y: "0",
+        opacity: 1,
+        transition: {
+            duration: 0.2
+        }
+    },
+    exit: {
+        opacity: 0,
+    }
+
+}
 
 function UserSideMenu() {
 
@@ -27,25 +45,6 @@ function UserSideMenu() {
     const auth = getAuth()
 
     const [user, loading] = useAuthState(auth)
-
-    const showUpMotion = {
-
-        hidden: {
-            y: "-40px",
-            opacity: 0
-        },
-        visible: {
-            y: "0",
-            opacity: 1,
-            transition: {
-                duration: 0.2
-            }
-        },
-        exit: {
-            opacity: 0,
-        }
-
-    }
 
     return (
         <div id={styles.user_container}>
@@ -102,7 +101,7 @@ function UserSideMenu() {
                     >
                         <span id={styles.img_container}>
                             <Image
-                                src={user.photoURL ? user.photoURL as string : ProfileFallbackImg as unknown as string}
+                                src={user.photoURL ? user.photoURL as string : "https://i.pinimg.com/736x/fc/4e/f7/fc4ef7ec7265a1ebb69b4b8d23982d9d.jpg"}
                                 alt={user.displayName as string}
                                 fill
                                 sizes='32px'

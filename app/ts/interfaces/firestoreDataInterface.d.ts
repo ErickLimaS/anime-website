@@ -51,20 +51,37 @@ interface KeepWatchingItem {
 
 }
 
-interface NotificationFirebase {
+interface NotificationsCollectionFirebase {
 
-    mediaId: number,
-    title: {
-        romaji: string
-    },
-    notificationVisualized: boolean,
+    mediaId: string,
     isComplete: boolean,
     nextReleaseDate: number,
-    lastEpisode: boolean,
-    episodeNumber: number,
+    title: {
+        romaji: string,
+        native: string
+    },
     coverImage: {
         extraLarge: string,
         large: string
-    }
+    },
+    episodes: {
+        number: number,
+        releaseDate: number | null,
+        wasReleased: boolean
+    }[],
+    lastUpdate: number,
+    status: string | null
+
+}
+
+interface UserDocAssignedNotificationsFirebase {
+
+    mediaId: string,
+    lastEpisodeNotified: number,
+    status: string,
+    title: {
+        romaji: string,
+        native: string
+    },
 
 }

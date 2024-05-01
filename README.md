@@ -6,6 +6,20 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 
 <p align="center">You can access this website on <a href='https://aniproject-dev.vercel.app/'>Vercel</a> or <a href='https://aniproject-website.onrender.com'>Render (really slow)</a>.</p>
 
+## Navigation
+
+- [Features](#hammer-features)
+- [Under Development](#pushpin-under-development)
+- [Tecnologies Used](#heavy_check_mark-tecnologies-used)
+- [How Can i Run It](#computer-how-can-i-run-it)
+- [How Fireabase is Organized](#open_file_folder-how-firebase-is-organized)
+  - [Authentication](#authentication)
+  - [Collections and Documents](#collections-and-documents)
+    - [Users](#users)
+    - [Comments](#comments)
+    - [Notifications](#notifications)
+- [Previews/Screenshots](#camera-previewscreenshots)
+
 ## :hammer: Features
 
 - [x] `Search`: Get a list of all animes and mangas you want using filters.
@@ -95,7 +109,57 @@ npm run dev
 
 5. That's it! It should be running.
 
-## :computer: Preview/Screenshots
+## :open_file_folder: How Firebase is Organized
+
+### Authentication
+
+With Firebase Authentication, theres 4 methods of Login/Signup:
+
+- Email
+- Google
+- GitHub
+- Anonymous
+
+It is used to store on User Document things like:
+
+- User Profile Photo
+- Username
+- Preferences (media source, adult content, subtitles and more)
+- Comments
+- Notifications
+- Bookmarked Medias
+- Currently Watching Medias
+- Episodes Watched/Chapters Read
+
+### Collections and Documents
+
+With Firebase Database, we have 3 Collections:
+
+#### Users
+
+Stores only Users Documents after a successfull signup.
+
+#### Comments
+
+Stores comments made on episodes or on its main page.
+
+Its separated based on Anilist API Media IDs Documents, and after that, a Collection that holds all comments to this media and other related to a episode where that comment was made.
+
+It strongly depends on Users Collection, due to each comment needs its user (owner). Each comment has a referer to its owner and stores its interactions, with Likes and Dislikes.
+
+When a Comment is made, it saves sort of a log on User Document, with infos like interactions with other comment or written on a episode.
+
+#### Notifications
+
+The Notifications Collections stores a document for each Media ID related to Anilist API every time a user assigned himself to be notified about a new episode release.
+
+Each document has a Collection that holds every user assigned to receive a notification.
+
+In this document, has info of all episodes already notified to any user and the next to be notified, cover art, if is complete, status and last update date.
+
+- User Document Relation: After a successfull notification is deliveried to user, it stores the last episode info on User Document, so it can be notified again and the next one is released.
+
+## :camera: Preview/Screenshots
 
 ### Home
 
@@ -119,6 +183,7 @@ npm run dev
 ![Watch Episode Page 2](https://github.com/ErickLimaS/anime-website/assets/69987890/62c3d7d0-809b-4e09-871e-6c9d2e809f71)
 
 ### Read Page
+
 ![Read Chapter Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/c1b07318-2923-49d6-a615-d80bd213f30e)
 
 ### Search/Filter Page

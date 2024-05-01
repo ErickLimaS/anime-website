@@ -73,8 +73,11 @@
 
 #write_comment_container form label textarea {
 
+    resize: vertical;
+
     padding: 8px;
 
+    border: 0;
     border-radius: 8px;
 
     margin: 8px 0;
@@ -100,9 +103,9 @@
 
 #write_comment_container form label textarea:focus {
 
-    border-radius: 4px;
-    outline-width: 1px;
-    outline-style: inset;
+    border-radius: 8px;
+    outline-width: 2px;
+    outline-style: outset;
     outline-color: var(--brand-color);
 
 }

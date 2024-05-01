@@ -218,3 +218,25 @@
     min-width: 50px;
 
 }
+
+/* NEXT EPISODE */
+.next_episode_container {
+
+    background-color: transparent !important;
+
+}
+
+.next_episode_container .episode_info_container small {
+
+    background-color: var(--brand-color);
+
+    color: var(--white-100);
+
+    padding: 2px 4px;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+
+}

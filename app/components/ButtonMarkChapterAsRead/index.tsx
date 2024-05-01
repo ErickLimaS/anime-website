@@ -15,14 +15,13 @@ import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 
 type BtnTypes = {
-    chapterId: string,
+    chapterNumber: number,
     chapterTitle: string,
     mediaId: number,
-    source: "mangadex",
     hasText?: boolean
 }
 
-function ButtonMarkChapterAsRead({ chapterId, chapterTitle, mediaId, source, hasText }: BtnTypes) {
+function ButtonMarkChapterAsRead({ chapterNumber, chapterTitle, mediaId, hasText }: BtnTypes) {
 
     const [wasChapterRead, setWasChapterRead] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -40,12 +39,12 @@ function ButtonMarkChapterAsRead({ chapterId, chapterTitle, mediaId, source, has
 
         if (!userDoc) return
 
-        const isOnChaptersList = userDoc.get("chaptersReadBySource")?.[source]
+        const isOnChaptersList = userDoc.get("chaptersRead")
 
         if (!isOnChaptersList) return
 
         const chapterRead = isOnChaptersList[mediaId]?.find(
-            (item: { chapterId: string }) => item.chapterId == chapterId
+            (item: { chapterNumber: number }) => item.chapterNumber == chapterNumber
         )
 
         if (chapterRead) setWasChapterRead(true)
@@ -62,17 +61,15 @@ function ButtonMarkChapterAsRead({ chapterId, chapterTitle, mediaId, source, has
         const episodeData = {
 
             mediaId: mediaId,
-            chapterId: chapterId,
+            chapterNumber: chapterNumber,
             chapterTitle: chapterTitle
 
         }
 
         await setDoc(doc(db, 'users', user.uid),
             {
-                chaptersReadBySource: {
-                    [source]: {
-                        [mediaId]: !wasChapterRead ? arrayUnion(...[episodeData]) : arrayRemove(...[episodeData])
-                    }
+                chaptersRead: {
+                    [mediaId]: !wasChapterRead ? arrayUnion(...[episodeData]) : arrayRemove(...[episodeData])
                 }
             } as unknown as FieldPath,
             { merge: true }
@@ -90,7 +87,7 @@ function ButtonMarkChapterAsRead({ chapterId, chapterTitle, mediaId, source, has
 
         checkChapterMarkedAsRead()
 
-    }, [user, source, chapterId])
+    }, [user, chapterNumber])
 
     return (
 

@@ -21,7 +21,7 @@ function CardMediaCoverAndDescription({ data, customDescription, showButtons }: 
                 ></Image>
             </Link>
 
-            <div className={styles.item_info_container}>
+            <div className={`${styles.item_info_container} ${customDescription ? styles.watch_page_custom_margin : ""}`}>
 
                 {(data.seasonYear && (
                     <small>{data.seasonYear}</small>
@@ -30,9 +30,14 @@ function CardMediaCoverAndDescription({ data, customDescription, showButtons }: 
                 <h4><Link href={`/media/${data.id}`}>{data.title && data.title.romaji || data.title.native}</Link></h4>
 
                 {data.description && (
-                    <span className={styles.paragrath_container}>
-                        {customDescription || parse(data?.description) || "Description Not Available"}
-                    </span>
+                    <React.Fragment>
+                        {customDescription && (
+                            <input type='checkbox' className={styles.expand_description} />
+                        )}
+                        <p className={`${styles.paragrath_container} ${customDescription ? styles.watch_page_custom_line_limit : ""}`}>
+                            {customDescription || parse(data?.description) || "Description Not Available"}
+                        </p>
+                    </React.Fragment>
                 )}
 
                 {showButtons == undefined && (

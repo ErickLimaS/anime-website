@@ -10,17 +10,18 @@ import { motion } from 'framer-motion'
 type ComponentTypes = {
     data: EpisodeAnimeWatch,
     mediaId: number,
+    episodeNumber: number,
     backgroundImg?: string,
     episodeDescription?: string,
     motionStyle?: any,
     episodesWatched?: {
         mediaId: number;
-        episodeId: string;
+        episodeNumber: number;
         episodeTitle: string;
     }[]
 }
 
-function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle, episodesWatched }: ComponentTypes) {
+function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle, episodesWatched, episodeNumber }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
@@ -42,20 +43,19 @@ function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, mot
             </Link>
 
             <div className={styles.title_button_container}>
-                <h3>
+                <h3 title={`Episode ${data.number} ${data.title && `- ${data.title}`}`}>
                     <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`}>
-                        {`Episode ${data.number} ${data.title && `- ${data.title}`}`}
+                        {`${data.number} ${data.title && `- ${data.title}`}`}
                     </Link>
                 </h3>
 
                 <ButtonMarkEpisodeAsWatched
-                    episodeId={`${data.number}`}
+                    episodeNumber={episodeNumber}
                     episodeTitle={data.title}
                     mediaId={mediaId}
-                    source="aniwatch"
                     wasWatched={
                         episodesWatched?.find(
-                            (item) => item.episodeId == `${data.number}`
+                            (item) => item.episodeNumber == episodeNumber
                         ) ? true : false
                     }
                 />

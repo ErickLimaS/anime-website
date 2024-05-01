@@ -11,17 +11,18 @@ type ComponentTypes = {
     data: MediaEpisodes,
     mediaId: number,
     title: string,
+    episodeNumber: number,
     backgroundImg?: string,
     episodeDescription?: string,
     motionStyle?: any,
     episodesWatched?: {
         mediaId: number;
-        episodeId: string;
+        episodeNumber: number;
         episodeTitle: string;
     }[]
 }
 
-function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescription, motionStyle, episodesWatched }: ComponentTypes) {
+function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescription, motionStyle, episodesWatched, episodeNumber }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
@@ -39,20 +40,19 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescript
             </Link>
 
             <div className={styles.title_button_container}>
-                <h3>
+                <h3 title={title ? `Episode ${data.number} - ${title}` : `Episode ${data.number}`}>
                     <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`}>
-                        {title ? `Episode ${data.number} - ${title}` : `Episode ${data.number}`}
+                        {title ? `${data.number} - ${title}` : `Episode ${data.number}`}
                     </Link>
                 </h3>
 
                 <ButtonMarkEpisodeAsWatched
-                    episodeId={data.id}
+                    episodeNumber={episodeNumber}
                     episodeTitle={`${data.number}`}
                     mediaId={mediaId}
-                    source="gogoanime"
                     wasWatched={
                         episodesWatched?.find(
-                            (item) => item.episodeId == `${data.number}`
+                            (item) => item.episodeNumber == episodeNumber
                         ) ? true : false
                     }
                 />

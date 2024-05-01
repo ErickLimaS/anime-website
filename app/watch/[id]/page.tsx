@@ -105,7 +105,13 @@ async function WatchEpisode({ params, searchParams }: {
                 videoSrc = episodeData.sources[0].url
 
                 // fetch episodes for this media
-                if (episodes.length == 0) episodes = await fetchWithAniWatch(mediaData.title.romaji, "episodes") as EpisodeAnimeWatch[]
+                if (episodes.length == 0) episodes = await fetchWithAniWatch(
+                    mediaData.title.romaji,
+                    "episodes",
+                    mediaData.format,
+                    undefined,
+                    searchParams?.q?.split("?")[0]
+                ) as EpisodeAnimeWatch[]
 
                 episodeSubtitles = episodeData.tracks
 
@@ -203,7 +209,7 @@ async function WatchEpisode({ params, searchParams }: {
                             </h1>
                         ) : (
                             <h1>
-                                {`Episode ${searchParams.episode}`}
+                                {`EP ${searchParams.episode}`}
                                 <span>{" "}-{" "}</span>
                                 <span>
                                     {
@@ -250,6 +256,7 @@ async function WatchEpisode({ params, searchParams }: {
                         <EpisodesSideListContainer
                             source={searchParams.source}
                             episodesList={episodes}
+                            nextAiringEpisode={mediaData.nextAiringEpisode}
                             episodesOnImdb={imdbEpisodes.length > 0 ? imdbEpisodes : undefined}
                             mediaId={params.id}
                             activeEpisodeNumber={Number(searchParams.episode)}
