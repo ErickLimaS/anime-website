@@ -55,8 +55,7 @@ async function WatchEpisode({ params, searchParams }: {
     let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | undefined
     let episodes: EpisodeAnimeWatch[] | MediaEpisodes[] = []
     let videoSrc: string | undefined = undefined
-    let imdbEpisodes: ImdbEpisode[] = []
-    let vidsrcId: number | undefined = undefined
+    let imdbEpisodes: ImdbEpisode[] = [] 
     let error = false
 
     switch (searchParams.source) {
@@ -182,7 +181,6 @@ async function WatchEpisode({ params, searchParams }: {
                         source={videoSrc as string}
                         currentLastStop={searchParams.t || undefined}
                         mediaSource={searchParams.source}
-                        vidsrcId={vidsrcId}
                         media={mediaData}
                         episodeIntro={(episodeData as EpisodeLinksAnimeWatch)?.intro}
                         episodeOutro={(episodeData as EpisodeLinksAnimeWatch)?.outro}
