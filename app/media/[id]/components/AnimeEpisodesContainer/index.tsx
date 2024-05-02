@@ -274,11 +274,11 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
     setOptionsModalOpen(!optionsModalOpen)
 
+    if (!user) return
+
     const userDoc = await getDoc(doc(db, 'users', user!.uid)).then((res) => res.data())
 
-    if (!userDoc) return
-
-    if (userDoc.episodesWatched[props.mediaId]?.length == dataImdbMapped?.length) {
+    if (userDoc!.episodesWatched[props.mediaId]?.length == dataImdbMapped?.length) {
       setAllEpisodesWatched(true)
     }
     else {

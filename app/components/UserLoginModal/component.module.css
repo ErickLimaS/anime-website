@@ -170,6 +170,14 @@
 
 }
 
+#login_buttons_container small {
+
+    color: initial;
+
+    font-weight: initial;
+
+}
+
 /* Span Container */
 #modal #span_container {
 
