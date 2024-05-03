@@ -94,8 +94,8 @@
 
 }
 
-#manga_card_container span,
-#manga_card_container span p {
+#manga_card_container p,
+#manga_card_container p p {
 
     font-size: var(--font-size--small-2);
 

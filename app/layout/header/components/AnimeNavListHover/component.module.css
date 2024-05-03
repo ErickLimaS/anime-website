@@ -53,8 +53,8 @@
 
 }
 
-#anime_card_container span,
-#anime_card_container span p {
+#anime_card_container p,
+#anime_card_container p p {
 
     font-size: var(--font-size--small-2);
 
