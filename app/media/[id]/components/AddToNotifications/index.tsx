@@ -68,6 +68,10 @@ function AddToNotificationsList({ data }: { data: ApiDefaultResult }) {
                         extraLarge: data.coverImage.extraLarge,
                         large: data.coverImage.large
                     },
+                    title: {
+                        romaji: data.title.romaji,
+                        native: data.title.native
+                    },
                     nextReleaseDate: data.nextAiringEpisode?.airingAt || null,
                     status: data.status,
                     isComplete: data.status == "FINISHED",

@@ -6,6 +6,8 @@ import { getAuth } from 'firebase/auth';
 import {
     DocumentData,
     DocumentSnapshot,
+    FieldPath,
+    arrayUnion,
     doc, getDoc,
     getFirestore, setDoc
 } from 'firebase/firestore';
@@ -31,7 +33,6 @@ type VideoPlayerType = {
     currentLastStop?: string,
     mediaSource: SourceType["source"],
     media: ApiMediaResults,
-    vidsrcId?: number,
     mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[],
     episodeNumber: string,
     episodeId: string,
@@ -59,11 +60,12 @@ function Player({
     source, mediaSource, subtitles,
     videoQualities, media, episodeId,
     episodeNumber, currentLastStop, episodeIntro,
-    episodeOutro, mediaEpisodes, episodeImg, vidsrcId }: VideoPlayerType) {
+    episodeOutro, mediaEpisodes, episodeImg }: VideoPlayerType) {
 
     const [subList, setSubList] = useState<SubtitlesType[] | undefined>(undefined)
 
     const [nextEpisode, setNextEpisode] = useState<{ id: string, src: string } | undefined>(undefined)
+    const [wasWatched, setWasWatched] = useState<boolean>(false)
 
     const [showActionButtons, setShowActionButtons] = useState<boolean>(false)
 
@@ -84,12 +86,114 @@ function Player({
 
     const router = useRouter()
 
-    // get user preferences 
+    // get user preferences: subtitles, video quality, skip intro...
     async function getUserPreferences() {
 
-        let userDoc = undefined
-        if (user) userDoc = await getDoc(doc(db, "users", user.uid))
+        if (!user) return
 
+        const userDoc = await getDoc(doc(db, "users", user.uid))
+
+        // verify if user watched the current episode before
+        async function currEpisodeWasWatched(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+
+            const episodesWasWatched = await userDoc?.get("episodesWatched")
+
+            const wasCurrEpisodeWatched = episodesWasWatched[media.id]?.find((item: { episodeNumber: string; }) => Number(item.episodeNumber) == Number(episodeNumber))
+
+            setWasWatched(wasCurrEpisodeWatched ? true : false)
+
+        }
+
+        // get user Auto Skip and Auto Next Episode
+        async function getUserAutoSkip(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+
+            let userAutoSkipIntroAndOutro: boolean | null = null
+            let userNextEpisode: boolean | null = null
+
+            userAutoSkipIntroAndOutro = await userDoc?.get("autoSkipIntroAndOutro") == true || false
+            userNextEpisode = await userDoc?.get("autoNextEpisode") == true || false
+
+            setAutoSkipIntroAndOutro(userAutoSkipIntroAndOutro)
+            setAutoNextEpisode(userNextEpisode)
+
+        }
+
+        // get user preferred language
+        async function getUserPreferredLanguage(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+
+            let preferredLanguage: string | null = null
+
+            preferredLanguage = await userDoc?.get("videoSubtitleLanguage")
+
+            // get user language and filter through the available subtitles to this media
+            let subListMap: SubtitlesType[] = []
+
+            subtitles?.map((item) => {
+
+                const isDefaultLang = (preferredLanguage && item.label) ?
+                    item.label.toLowerCase().includes(preferredLanguage.toLowerCase())
+                    :
+                    item.default || item.label?.includes("English")
+
+                subListMap.push(
+                    {
+                        kind: item.kind,
+                        srcLang: item.label,
+                        src: item.file,
+                        default: isDefaultLang,
+                        label: item.label,
+                        type: item.kind
+                    }
+                )
+
+            })
+
+            setSubList(subListMap)
+        }
+
+        // get user preferred quality ***** CURRENTLY DISABLED (im trying to understand the player api)
+        async function getUserVideoQuality(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+
+            let userVideoQuality: string | null = null
+
+            // userVideoQuality = await userDoc?.get("videoQuality")
+
+            if (!userVideoQuality) return setVideoSource(source)
+
+            // get which that matches the available qualities of this media
+            // let videoSourceMatchedUserQuality
+
+            // videoQualities?.map((item) => {
+
+            //     if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
+
+            // })
+
+            // setVideoSource(videoSourceMatchedUserQuality || source)
+        }
+
+        // gets last time position of episode
+        async function getUserLastStopOnCurrentEpisode(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+
+            if (currentLastStop || !userDoc) return
+
+            let keepWatchingList = userDoc.get("keepWatching")
+
+            let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
+
+                return keepWatchingList[key]
+
+            })
+
+            keepWatchingList = listFromObjectToArray
+                .filter(item => item.length != 0 && item)
+                .find((item: KeepWatchingItem) => item.id == media.id)
+
+            if (keepWatchingList) return setEpisodeLastStop(keepWatchingList.episodeTimeLastStop)
+
+        }
+
+        currEpisodeWasWatched(userDoc)
         getUserAutoSkip(userDoc)
         getUserPreferredLanguage(userDoc)
         getUserVideoQuality(userDoc)
@@ -97,92 +201,30 @@ function Player({
 
     }
 
-    // get user Auto Skip and Auto Next Episode
-    async function getUserAutoSkip(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
+    // adds media to EpisodesWatched. Only runs on episodes final moments.
+    async function markAsWatched() {
 
-        let userAutoSkipIntroAndOutro: boolean | null = null
-        let userNextEpisode: boolean | null = null
+        if (!user) return
 
-        userAutoSkipIntroAndOutro = await userDoc?.get("autoSkipIntroAndOutro") == true || false
-        userNextEpisode = await userDoc?.get("autoNextEpisode") == true || false
+        const episodeData = {
 
-        setAutoSkipIntroAndOutro(userAutoSkipIntroAndOutro)
-        setAutoNextEpisode(userNextEpisode)
+            mediaId: media.id,
+            episodeNumber: Number(episodeNumber),
+            episodeTitle: `Episode ${episodeNumber}`
 
-    }
+        }
 
-    // get user preferred language
-    async function getUserPreferredLanguage(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
-
-        let preferredLanguage: string | null = null
-
-        preferredLanguage = await userDoc?.get("videoSubtitleLanguage")
-
-        // get user language and filter through the available subtitles to this media
-        let subListMap: SubtitlesType[] = []
-
-        subtitles?.map((item) => {
-
-            const isDefaultLang = (preferredLanguage && item.label) ?
-                item.label.toLowerCase().includes(preferredLanguage.toLowerCase())
-                :
-                item.default || item.label?.includes("English")
-
-            subListMap.push(
-                {
-                    kind: item.kind,
-                    srcLang: item.label,
-                    src: item.file,
-                    default: isDefaultLang,
-                    label: item.label,
-                    type: item.kind
+        await setDoc(doc(db, 'users', user.uid),
+            {
+                episodesWatched: {
+                    [media.id]: arrayUnion(...[episodeData])
                 }
-            )
 
-        })
-
-        setSubList(subListMap)
-    }
-
-    // get user preferred quality ***** CURRENTLY DISABLED (im trying to understand the player api)
-    async function getUserVideoQuality(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
-
-        let userVideoQuality: string | null = null
-
-        // userVideoQuality = await userDoc?.get("videoQuality")
-
-        if (!userVideoQuality) return setVideoSource(source)
-
-        // get which that matches the available qualities of this media
-        // let videoSourceMatchedUserQuality
-
-        // videoQualities?.map((item) => {
-
-        //     if (userVideoQuality == item.quality) videoSourceMatchedUserQuality = item.url
-
-        // })
-
-        // setVideoSource(videoSourceMatchedUserQuality || source)
-    }
-
-    // gets last time position of episode
-    async function getUserLastStopOnCurrentEpisode(userDoc?: DocumentSnapshot<DocumentData, DocumentData>) {
-
-        if (currentLastStop || !userDoc) return
-
-        let keepWatchingList = userDoc.get("keepWatching")
-
-        let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
-
-            return keepWatchingList[key]
-
-        })
-
-        keepWatchingList = listFromObjectToArray
-            .filter(item => item.length != 0 && item)
-            .find((item: KeepWatchingItem) => item.id == media.id)
-
-        if (keepWatchingList) return setEpisodeLastStop(keepWatchingList.episodeTimeLastStop)
+            } as unknown as FieldPath,
+            { merge: true }
+        ).then(() =>
+            setWasWatched(true)
+        )
 
     }
 
@@ -225,23 +267,28 @@ function Player({
 
     }
 
-    function checkSecondsAndSetSkipAndNextEpisode(e: any) {
+    function handleSkipEpisodeAndIntros(e: any) {
 
         const currentTime = Math.round(e.currentTime)
         const duration = Math.round(e.duration)
 
+        // if episode has Intro or Outro Timestamp
         if (episodeIntro || episodeOutro) {
-            if (episodeIntro && currentTime >= episodeIntro.start && currentTime < episodeIntro.end) {
+            if (episodeIntro && (currentTime >= episodeIntro.start) && (currentTime < episodeIntro.end)) {
+
                 if (timeskip == null) setTimeskip(() => episodeIntro.end)
-                if (user && autoSkipIntroAndOutro && timeskip != null && (currentTime >= episodeIntro.start + 4)) { // adds 4 seconds to show btn animation
+                if (user && autoSkipIntroAndOutro && timeskip != null && (currentTime >= episodeIntro.start + 4)) { // adds 4 seconds to match the btn animation
                     skipEpisodeIntroOrOutro()
                 }
+
             }
-            else if (episodeOutro && currentTime >= episodeOutro.start && currentTime < episodeOutro.end) {
+            else if (episodeOutro && (currentTime >= episodeOutro.start) && (currentTime < episodeOutro.end)) {
+
                 if (timeskip == null) setTimeskip(() => episodeOutro.end)
-                if (user && autoSkipIntroAndOutro && timeskip != null && (currentTime >= episodeOutro.start + 4)) { // adds 4 seconds to show btn animation
+                if (user && autoSkipIntroAndOutro && timeskip != null && (currentTime >= episodeOutro.start + 4)) { // adds 4 seconds to match the btn animation
                     skipEpisodeIntroOrOutro()
                 }
+
             }
             else {
                 setTimeskip(null)
@@ -253,18 +300,15 @@ function Player({
 
         // show next episode button
         if (nextEpisode && Math.round((currentTime / duration) * 100) > 95) {
+
             setShowActionButtons(true)
+
+            if (!wasWatched) markAsWatched()
+
         }
         else {
             if (showActionButtons != false) setShowActionButtons(false)
         }
-
-    }
-
-    function skipEpisodeIntroOrOutro() {
-
-        setEpisodeLastStop(timeskip as number)
-        setTimeskip(null)
 
     }
 
@@ -306,6 +350,13 @@ function Player({
 
     }
 
+    function skipEpisodeIntroOrOutro() {
+
+        setEpisodeLastStop(timeskip as number)
+        setTimeskip(null)
+
+    }
+
     function nextEpisodeAction() {
 
         if (!nextEpisode) return
@@ -338,7 +389,7 @@ function Player({
                 autoPlay
                 volume={0.5}
                 // saves state of video every 45 secs, and shows SKIP btn on intros/outros
-                onProgressCapture={(e) => checkSecondsAndSetSkipAndNextEpisode(e.target)}
+                onProgressCapture={(e) => handleSkipEpisodeAndIntros(e.target)}
                 // when video ends, goes to next episode                 
                 onEnded={() => autoNextEpisode && nextEpisodeAction()}
             >

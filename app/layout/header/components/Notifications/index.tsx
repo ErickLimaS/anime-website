@@ -158,7 +158,7 @@ function NotificationsComponent() {
 
                     if (onDbNotificationsMatches) {
 
-                        onDbNotificationsMatches.title = userAssignedNotifications[i].title
+                        if (!onDbNotificationsMatches.title) onDbNotificationsMatches.title = userAssignedNotifications[i].title
 
                         // if curr date is bigger than last episode released date
                         const lastEpisodeNotificationVisualizedOnDB = onDbNotificationsMatches.episodes[onDbNotificationsMatches.episodes.length - 1]

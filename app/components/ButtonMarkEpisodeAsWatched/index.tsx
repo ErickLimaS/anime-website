@@ -11,7 +11,6 @@ import {
 import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
-import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
 type BtnTypes = {
     episodeNumber: number,
@@ -98,6 +97,7 @@ function ButtonMarkEpisodeAsWatched({ episodeNumber, episodeTitle, mediaId, wasW
                         </motion.span>
                     )}
                 </AnimatePresence>
+                
             </div>
         )
 
