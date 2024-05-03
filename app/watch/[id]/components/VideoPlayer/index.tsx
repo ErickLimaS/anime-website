@@ -98,7 +98,7 @@ function Player({
 
             const episodesWasWatched = await userDoc?.get("episodesWatched")
 
-            const wasCurrEpisodeWatched = episodesWasWatched[media.id]?.find((item: { episodeNumber: string; }) => item.episodeNumber == episodeNumber)
+            const wasCurrEpisodeWatched = episodesWasWatched[media.id]?.find((item: { episodeNumber: string; }) => Number(item.episodeNumber) == Number(episodeNumber))
 
             setWasWatched(wasCurrEpisodeWatched ? true : false)
 
@@ -209,7 +209,7 @@ function Player({
         const episodeData = {
 
             mediaId: media.id,
-            episodeNumber: episodeNumber,
+            episodeNumber: Number(episodeNumber),
             episodeTitle: `Episode ${episodeNumber}`
 
         }
