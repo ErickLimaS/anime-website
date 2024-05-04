@@ -15,12 +15,14 @@ function SearchResultItemCard({ onClick, itemAnilist, itemOfflineDb }: { onClick
         const el = document.getElementById(id)!.getElementsByTagName('h5')[0].getElementsByTagName('a')[0]
 
         if (isHovering) {
-            el!.style.color = itemAnilist?.coverImage?.color || 'var(--white-100)';
+            el!.style.color = itemAnilist?.coverImage?.color || 'var(--white-100)'
             return
         }
 
-        el!.style.color = 'var(--white-100)';
+        el!.style.color = 'var(--white-100)'
+
         return
+
     }
 
     return (

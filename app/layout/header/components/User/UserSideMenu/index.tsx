@@ -13,7 +13,7 @@ import { getAuth } from 'firebase/auth'
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
 import Link from 'next/link'
-import UserModal from '../../../../components/UserLoginModal'
+import UserModal from '../../../../../components/UserLoginModal'
 import { AnimatePresence, motion } from 'framer-motion'
 import UserSettingsModal from '../UserSettingsModal'
 

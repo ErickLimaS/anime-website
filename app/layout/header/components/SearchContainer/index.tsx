@@ -3,7 +3,7 @@ import React, { ChangeEvent, useState } from 'react'
 import styles from "./component.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from '@/api/anilist'
-import SearchResultItemCard from '@/app/layout/header/components/SearchResultItemCard'
+import SearchResultItemCard from '@/app/layout/header/components/SearchContainer/components/SearchResultItemCard'
 import LoadingIcon from '@/public/assets/ripple-1s-200px.svg'
 import SearchIcon from '@/public/assets/search.svg'
 import CloseSvg from '@/public/assets/x.svg'
@@ -14,6 +14,26 @@ import { initFirebase } from '@/app/firebaseApp'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import axios from 'axios'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
+
+const showUpMotion = {
+
+    hidden: {
+        y: "-40px",
+        opacity: 0
+    },
+    visible: {
+        y: "0",
+        opacity: 1,
+        transition: {
+            duration: 0.5
+        }
+    },
+    exit: {
+        opacity: 0,
+        y: "-120px"
+    }
+
+}
 
 function SearchContainer() {
 
@@ -26,31 +46,14 @@ function SearchContainer() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
+    // OFFLINE stands for using internal NEXT API and ANILIST stands for standart server fetch
     const [searchType, setSearchType] = useState<"offline" | "anilist">("offline")
+
     const [searchResults, setSearchResults] = useState<ApiDefaultResult[] | MediaDbOffline[] | null>()
 
     const [searchInput, setSearchInput] = useState<string>("")
 
-    const showUpMotion = {
-
-        hidden: {
-            y: "-40px",
-            opacity: 0
-        },
-        visible: {
-            y: "0",
-            opacity: 1,
-            transition: {
-                duration: 0.5
-            }
-        },
-        exit: {
-            opacity: 0,
-            y: "-120px"
-        }
-
-    }
-
+    // while typing on search input, it fetchs similar results
     async function fetchResultsOnChange(value: string) {
 
         if (searchType == "anilist") setSearchResults(null)
@@ -71,6 +74,7 @@ function SearchContainer() {
 
     }
 
+    // fetch results for search input form
     async function searchValue(e: React.ChangeEvent<HTMLFormElement> | HTMLFormElement) {
 
         e.preventDefault()
