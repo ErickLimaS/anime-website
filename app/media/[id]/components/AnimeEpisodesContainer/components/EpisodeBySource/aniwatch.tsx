@@ -3,14 +3,13 @@ import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
-import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
-import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
+import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
+import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { motion } from 'framer-motion'
 
 type ComponentTypes = {
-    data: MediaEpisodes,
+    data: EpisodeAnimeWatch,
     mediaId: number,
-    title: string,
     episodeNumber: number,
     backgroundImg?: string,
     episodeDescription?: string,
@@ -22,12 +21,16 @@ type ComponentTypes = {
     }[]
 }
 
-function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescription, motionStyle, episodesWatched, episodeNumber }: ComponentTypes) {
+function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, motionStyle, episodesWatched, episodeNumber }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
 
-            <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`} className={styles.img_container}>
+            {data.isFiller && (
+                <span className={styles.alert_filler_text}>Filler</span>
+            )}
+
+            <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`} className={styles.img_container}>
                 <Image
                     src={backgroundImg || placeholderImg}
                     data-other-source={true}
@@ -40,15 +43,15 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescript
             </Link>
 
             <div className={styles.title_button_container}>
-                <h3 title={title ? `Episode ${data.number} - ${title}` : `Episode ${data.number}`}>
-                    <Link href={`/watch/${mediaId}?source=gogoanime&episode=${data.number}&q=${data.id}`}>
-                        {title ? `${data.number} - ${title}` : `Episode ${data.number}`}
+                <h3 title={`Episode ${data.number} ${data.title && `- ${data.title}`}`}>
+                    <Link href={`/watch/${mediaId}?source=aniwatch&episode=${data.number}&q=${data.episodeId}`}>
+                        {`${data.number} ${data.title && `- ${data.title}`}`}
                     </Link>
                 </h3>
 
                 <ButtonMarkEpisodeAsWatched
                     episodeNumber={episodeNumber}
-                    episodeTitle={`${data.number}`}
+                    episodeTitle={data.title}
                     mediaId={mediaId}
                     wasWatched={
                         episodesWatched?.find(
@@ -56,7 +59,6 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescript
                         ) ? true : false
                     }
                 />
-
             </div>
 
             {episodeDescription && (
@@ -67,4 +69,4 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescript
     )
 }
 
-export default GoGoAnimeEpisode
+export default AniwatchEpisode

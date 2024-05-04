@@ -45,7 +45,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
   const rangeChaptersPerPage = 10
 
-  const handlePageClick = (event: { selected: number }) => {
+  function handlePageClick(event: { selected: number }) {
 
     setLoading(true) // needed to refresh chapters component "Mark Chapters Read"
 
@@ -57,7 +57,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
   }
 
-  const getChapters = async () => {
+  async function getChapters() {
 
     setLoading(true)
 

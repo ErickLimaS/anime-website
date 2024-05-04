@@ -24,9 +24,9 @@ import {
 import { initFirebase } from '@/app/firebaseApp';
 import ErrorImg from "@/public/error-img-2.png"
 import Image from 'next/image';
-import CrunchyrollEpisode from '../Episode/crunchyroll';
-import GoGoAnimeEpisode from '../Episode/gogoanime';
-import AniwatchEpisode from '../Episode/aniwatch';
+import CrunchyrollEpisode from './components/EpisodeBySource/crunchyroll';
+import GoGoAnimeEpisode from './components/EpisodeBySource/gogoanime';
+import AniwatchEpisode from './components/EpisodeBySource/aniwatch';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
@@ -103,11 +103,25 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   const [pageCount, setPageCount] = useState<number>(0)
 
-  // the length os episodes array will be divided by 20, getting the range of pagination
+  // the episodes array length will be divided by 20, getting the range of pagination
   const rangeEpisodesPerPage = 20
 
-  // Invoke when user click to request another page.
-  const handlePageClick = (event: { selected: number }) => {
+  // get source setted on user profile
+  async function getUserDefaultSource() {
+
+    const userData = await getDoc(doc(db, "users", user!.uid))
+
+    const userSource = await userData.get("videoSource").toLowerCase() || "crunchyroll"
+
+    getEpisodesFromNewSource(userSource)
+
+    setEpisodeSource(userSource)
+
+  }
+
+  // Invoke when user click to request another page
+
+  async function handlePageClick(event: { selected: number }) {
 
     setLoading(true) // needed to refresh episodes "Marked as Watched"
 
@@ -129,7 +143,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   }
 
-  const getEpisodesFromNewSource = async (source: SourceType["source"]) => {
+  async function getEpisodesFromNewSource(source: SourceType["source"]) {
 
     // if data props has 0 length, it is set to get data from gogoanime
     const chooseSource = source
@@ -220,7 +234,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
   }
 
   // user can select a result that matches the page, if not correct
-  const getEpisodesToThisMediaFromAniwatch = async (id: string) => {
+  async function getEpisodesToThisMediaFromAniwatch(id: string) {
 
     setLoading(true)
 
@@ -234,19 +248,6 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
     setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
 
     setLoading(false)
-
-  }
-
-  // get source setted on user profile
-  const getUserDefaultSource = async () => {
-
-    const userData = await getDoc(doc(db, "users", user!.uid))
-
-    const userSource = await userData.get("videoSource").toLowerCase() || "crunchyroll"
-
-    getEpisodesFromNewSource(userSource)
-
-    setEpisodeSource(userSource)
 
   }
 

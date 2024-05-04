@@ -93,7 +93,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     }
 
-    // IF NO EPISODES FOUND ON "EPISODES WATCHED",
+    // IF NO EPISODE FOUND ON "EPISODES WATCHED",
     // IT VERIFIES LAST EPISODE ON "KEEP WATCHING"
     async function checkKeepWatchingList() {
 
@@ -123,7 +123,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     }
 
-    // if ANIME, get ID for the first episode of this media / if MOVIE, get movie ID  
+    // if its a ANIME, get ID for the first episode of this media / if MOVIE, get movie ID  
     async function fetchMediaWatchUrl(lastEpisodeWatched?: number) {
 
         setIsLoading(true)
@@ -156,7 +156,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         // if media is null, try with gogoanime
         if (!media) {
 
-            media = await fetchOnAniWatch() as EpisodeAnimeWatch[]// High chances of getting the wrong media
+            media = await fetchOnAniWatch() as EpisodeAnimeWatch[] // High chances of getting the wrong media
 
             if (!media) {
                 setIsLoading(false)
@@ -197,15 +197,6 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     }
 
-    // redirect to watch page
-    function redirectToWatchPage() {
-
-        setIsLoading(true)
-
-        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeLastStop}` : ""}`)
-
-    }
-
     useEffect(() => {
 
         (user && !loading) ? checkEpisodesMarkedAsWatched() : fetchMediaWatchUrl()
@@ -222,7 +213,13 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         <motion.button
             id={styles.container}
             role='link'
-            onClick={() => redirectToWatchPage()}
+            onClick={() => {
+
+                setIsLoading(true)
+
+                router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeLastStop}` : ""}`)
+
+            }}
             disabled={isLoading || movieId == null}
             aria-label={episodeNumber ? `Continue Episode ${episodeNumber}` : "Watch Episode 1"}
             title={isLoading ?
@@ -249,7 +246,8 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
             )}
 
             {isLoading ?
-                <LoadingSvg fill="#fff" width={16} height={16} /> :
+                <LoadingSvg fill="#fff" width={16} height={16} />
+                :
                 <PlaySvg fill="#fff" width={16} height={16} />
             }
 

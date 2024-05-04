@@ -54,16 +54,25 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   })
 
-  let imdbEpisodesMapped: ImdbEpisode[] = []
-
-  // get media info on imdb
+  // GET MEDIA INFO ON IMDB
   const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
 
-  // get episodes on imdb
-  imdbMediaInfo?.seasons?.map(
-    itemA => itemA.episodes?.map(
-      itemB => imdbEpisodesMapped.push(itemB))
-  )
+  // GET MEDIA EPISODES ON IMDB
+  function getEpisodesOnImdb() {
+
+    let imdbEpisodesMapped: ImdbEpisode[] = []
+
+    imdbMediaInfo?.seasons?.map(
+      itemA => itemA.episodes?.map(
+        itemB => imdbEpisodesMapped.push(itemB))
+
+    )
+
+    return imdbEpisodesMapped
+
+  }
+
+  const imdbEpisodes = getEpisodesOnImdb()
 
   // RETURNS A RANDOM IMAGE URL
   function randomizeBcgImg() {
@@ -214,7 +223,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2>EPISODES</h2>
 
-                <p>{imdbEpisodesMapped.length || mediaData.episodes || "Not Available"}</p>
+                <p>{imdbEpisodes.length || mediaData.episodes || "Not Available"}</p>
               </li>
             )}
 
@@ -315,7 +324,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2 className={styles.heading_style}>CAST</h2>
 
-                {/* MAKE HOVER, THAN FLIP IMAGE AND SHOW THE ACTOR */}
+                {/* WHEN HOVERING, FLIP IMAGE AND SHOW THE ACTOR */}
                 <div>
                   <ul className='display_flex_row'>
                     {mediaData.characters.edges.map((item, key: number) => (
@@ -359,14 +368,14 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </section>
             )}
 
-            {/* EPISODES ONLY IF ANIME */}
+            {/* EPISODES - ONLY IF ANIME */}
             {(mediaData.type == "ANIME" && mediaData.format != "MOVIE" && mediaData.status != "NOT_YET_RELEASED") && (
               <section id={styles.episodes_container}>
 
                 <EpisodesContainer
                   dataCrunchyroll={episodesFromCrunchyroll}
                   dataImdb={imdbMediaInfo?.seasons}
-                  dataImdbMapped={imdbEpisodesMapped}
+                  dataImdbMapped={imdbEpisodes}
                   vidsrcId={imdbMediaInfo?.vidsrcId || null}
                   mediaTitle={mediaData.title.romaji}
                   mediaFormat={mediaData.format}
@@ -379,7 +388,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </section>
             )}
 
-            {/* CHAPTERS ONLY IF MANGA */}
+            {/* CHAPTERS - ONLY IF MANGA */}
             {mediaData.type == "MANGA" && (
               <section>
 

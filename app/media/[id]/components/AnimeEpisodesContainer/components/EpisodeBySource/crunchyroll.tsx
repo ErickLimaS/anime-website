@@ -3,7 +3,7 @@ import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import ButtonMarkEpisodeAsWatched from '../../../../components/ButtonMarkEpisodeAsWatched'
+import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
 import { motion } from 'framer-motion'
 
 
