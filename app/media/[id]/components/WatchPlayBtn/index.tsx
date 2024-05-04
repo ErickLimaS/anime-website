@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import PlaySvg from "@/public/assets/play2.svg"
-import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
+import LoadingSvg from "@/public/assets/Eclipse-1s-200px-custom-color.svg"
 import { useRouter } from 'next/navigation'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
@@ -194,6 +194,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         }
 
         setIsLoading(false)
+
     }
 
     // redirect to watch page
@@ -248,7 +249,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
             )}
 
             {isLoading ?
-                <LoadingSvg width={16} height={16} /> :
+                <LoadingSvg fill="#fff" width={16} height={16} /> :
                 <PlaySvg fill="#fff" width={16} height={16} />
             }
 

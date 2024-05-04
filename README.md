@@ -78,7 +78,7 @@ npm install
    - Go to these repos and host your own instance:
      - <a href='https://github.com/consumet/api.consumet.org'>Consumet API</a>
      - <a href='https://github.com/ghoshRitesh12/aniwatch-api'>Aniwatch API</a>
-   - This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
+   - OPTIONAL: This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
      - Go to <a href='https://github.com/manami-project/anime-offline-database'>this repository</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
      - With the file downloaded, put it in the `/app/api/anime-info` directory, replacing the previous one.
    - On Firebase, get your configs to use the Authentication and Firestore Database.
