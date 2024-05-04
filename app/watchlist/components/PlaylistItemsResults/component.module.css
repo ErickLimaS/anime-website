@@ -84,3 +84,10 @@
     }
 
 }
+
+p.no_results_text {
+
+    font-weight: 600;
+    color: var(--white-100);
+
+}

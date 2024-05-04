@@ -12,18 +12,20 @@ export const metadata: Metadata = {
     description: 'Filter animes released on that year, or just discover a new one in a genre you didnt watched yet.',
 }
 
-async function SearchPage({ searchParams }: {
-    searchParams: {
-        type?: string,
-        title?: string,
-        genre?: string[],
-        year?: number,
-        status?: string,
-        page?: string,
-        sort?: string,
-        season?: string,
-    }
-}) {
+type SearchPageTypes = {
+
+    type?: string,
+    title?: string,
+    genre?: string[],
+    year?: number,
+    status?: string,
+    page?: string,
+    sort?: string,
+    season?: string,
+
+}
+
+async function SearchPage({ searchParams }: { searchParams: SearchPageTypes }) {
 
     const isMobile = checkDeviceIsMobile(headers())
 

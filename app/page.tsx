@@ -42,7 +42,7 @@ export default async function Home() {
     res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
   ).then(res => res.map((item) => item.media))
 
-  // section 1 => uses same data, but filtered to the ones that has bannerimg
+  // section 1 => uses same data, but filtered to the ones that has banner img
   const popularData = mediaRankingData.filter(item => item.bannerImage)
 
   // used on banner section

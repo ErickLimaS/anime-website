@@ -21,7 +21,7 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: stri
     const searchParams = useSearchParams();
 
     // GETS KEEP WATCHING LIST ON USER DOC
-    async function getPlaylist() {
+    async function getUserKeepWatching() {
 
         const db = getFirestore(initFirebase());
 
@@ -88,15 +88,17 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: stri
 
     }, [params?.format])
 
-    // IF USER IS NOT LOGGED IN, HE IS REDIRECTED TO LOGIN PAGE
+    // ONLY RUNS WHEN USER IS LOGGED IN
     useEffect(() => {
 
-        if (user?.uid) getPlaylist()
+        if (user?.uid) getUserKeepWatching()
 
     }, [user])
 
     return (
         <>
+
+            {/* IF USER IS NOT LOGGED IN */}
             {(!user && !loading) && (
 
                 <UserModal
