@@ -31,8 +31,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi';
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
-import { checkApiMisspellingMedias } from '@/app/lib/checkApiMediaMisspelling';
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
+import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';
 
 type EpisodesContainerTypes = {
   dataCrunchyroll: EpisodesType[],
@@ -429,7 +429,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
                 <select
                   onChange={(e) => getEpisodesToThisMediaFromAniwatch(e.target.value)}
-                  defaultValue={checkApiMisspellingMedias(props.mediaTitle).toLowerCase()}
+                  defaultValue={checkAnilistTitleMisspelling(props.mediaTitle).toLowerCase()}
                 >
                   {mediaResultsInfoArray?.map((item, key) => (
                     <option

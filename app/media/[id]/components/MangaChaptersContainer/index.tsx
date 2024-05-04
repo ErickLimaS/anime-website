@@ -2,18 +2,18 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css";
 import Link from 'next/link';
-import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface';
+import { MangaChapters, MangaInfo } from '@/app/ts/interfaces/apiMangadexDataInterface';
 import BookSvg from "@/public/assets/book.svg"
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import Image from 'next/image';
 import ErrorImg from "@/public/error-img-2.png"
-import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
 import manga from '@/api/manga';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead';
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOnApi';
+import { stringToUrlFriendly } from '@/app/lib/convertStringsTo';
 
 const loadingChaptersMotion = {
   initial: {

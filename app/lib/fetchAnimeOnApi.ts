@@ -1,14 +1,14 @@
 import aniwatch from "@/api/aniwatch"
-import { EpisodesFetchedAnimeWatch, MediaInfoAniwatch, MediaInfoFetchedAnimeWatch } from "../ts/interfaces/apiAnimewatchInterface"
-import regexOnlyAlphabetic from "./regexOnlyAlphabetic"
+import { EpisodesFetchedAnimeWatch, MediaInfoAniwatch } from "../ts/interfaces/apiAnimewatchInterface"
 import simulateRange from "./simulateRange"
 import gogoanime from "@/api/gogoanime"
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from "../ts/interfaces/apiGogoanimeDataInterface"
-import { checkApiMisspellingMedias } from "./checkApiMediaMisspelling"
+import stringToOnlyAlphabetic from "./convertStringsTo"
+import { checkAnilistTitleMisspelling } from "./checkApiMediaMisspelling"
 
 export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") {
 
-    const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
+    const regexMediaTitle = stringToOnlyAlphabetic(checkAnilistTitleMisspelling(textSearch)).toLowerCase()
 
     let mediaSearched = await gogoanime.getInfoFromThisMedia(regexMediaTitle) as MediaInfo
     let searchResultsForMedia
@@ -20,7 +20,7 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
         // filter to closest title name to the query 
         filterBestResult = searchResultsForMedia.filter(item =>
-            regexOnlyAlphabetic(item.title).toLowerCase().indexOf(regexMediaTitle) !== -1
+            stringToOnlyAlphabetic(item.title).toLowerCase().indexOf(regexMediaTitle) !== -1
         )
 
         mediaSearched = await gogoanime.getInfoFromThisMedia(filterBestResult[0]?.id || searchResultsForMedia![0]?.id) as MediaInfo || null
@@ -51,7 +51,7 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
 export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | "search_list", format?: string, mediaTotalEpisodes?: number, idToMatch?: string) {
 
-    const regexMediaTitle = regexOnlyAlphabetic(checkApiMisspellingMedias(textSearch)).toLowerCase()
+    const regexMediaTitle = stringToOnlyAlphabetic(checkAnilistTitleMisspelling(textSearch)).toLowerCase()
 
     let searchResultsForMedia = await aniwatch.searchMedia(regexMediaTitle).then((res) => res!.animes) as MediaInfoAniwatch[]
 
@@ -69,7 +69,7 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | 
 
     // filter to item which has the same media name 
     closestResult = searchResultsForMedia.filter(
-        (item) => regexOnlyAlphabetic(item.name).toLowerCase() == regexMediaTitle
+        (item) => stringToOnlyAlphabetic(item.name).toLowerCase() == regexMediaTitle
     )
 
     // if is only SEARCH LIST is requested
@@ -101,7 +101,7 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | 
     // filter closest title result
     if (!closestResult) {
         closestResult = searchResultsForMedia.filter((item) =>
-            regexOnlyAlphabetic(item.name).toLowerCase().includes(regexMediaTitle) || searchResultsForMedia[0]
+            stringToOnlyAlphabetic(item.name).toLowerCase().includes(regexMediaTitle) || searchResultsForMedia[0]
         )
     }
 

@@ -1,4 +1,4 @@
-import regexOnlyAlphabetic from "@/app/lib/regexOnlyAlphabetic"
+import stringToOnlyAlphabetic from "@/app/lib/convertStringsTo"
 import { ImdbMediaInfo, ImdbSearchItem } from "@/app/ts/interfaces/apiImdbInterface"
 import Axios from "axios"
 import axiosRetry from "axios-retry"
@@ -46,7 +46,7 @@ export const getMediaInfo = cache(async (search: boolean, mediaId?: string, type
 
         if (search && seachTitle) {
 
-            const searchResults: ImdbSearchItem[] = await searchMedia(regexOnlyAlphabetic(seachTitle)).then(res => res.results)
+            const searchResults: ImdbSearchItem[] = await searchMedia(stringToOnlyAlphabetic(seachTitle)).then(res => res.results)
 
             const filteredRes = searchResults.find((item) => Number(item.releaseDate) == releaseYear)
 

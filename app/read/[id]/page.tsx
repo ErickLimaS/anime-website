@@ -10,9 +10,9 @@ import Link from 'next/link'
 import manga from '@/api/manga'
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import ChaptersPages from './components/ChaptersPages/index'
-import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly'
 import ChaptersSideListContainer from './components/ChaptersSideListContainer'
 import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOnApi'
+import { stringToUrlFriendly } from '@/app/lib/convertStringsTo'
 
 export const revalidate = 1800 // revalidate cached data every 30 minutes
 
