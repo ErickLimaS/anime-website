@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import React from 'react'
 import styles from "./page.module.css"
-import newsApi from '@/api/news'
+import newsApi from '@/app/api/consumetNews'
 import Image from 'next/image'
 import Link from 'next/link'
 import NewsSwiperContainer from './components/NewsSwiperContainer'

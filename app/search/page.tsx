@@ -29,7 +29,9 @@ async function SearchPage({ searchParams }: { searchParams: SearchPageTypes }) {
 
     const isMobile = checkDeviceIsMobile(headers())
 
-    const sort = await axios.get(`${process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
+    const OFFLINE_ANIME_DATABASE = process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL
+
+    const sort = await axios.get(`${OFFLINE_ANIME_DATABASE}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
 
     return (
         <main id={styles.container}>

@@ -7,7 +7,7 @@ import BookSvg from "@/public/assets/book.svg"
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import Image from 'next/image';
 import ErrorImg from "@/public/error-img-2.png"
-import manga from '@/api/manga';
+import manga from '@/app/api/consumetManga';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead';

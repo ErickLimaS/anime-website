@@ -1,6 +1,6 @@
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import React from 'react'
-import anilist from "@/api/anilist"
+import anilist from "@/app/api/anilist"
 import styles from "./page.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
@@ -23,7 +23,7 @@ import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import CommentSectionContainer from '../../components/CommentSectionContainer'
-import { getMediaInfo } from '@/api/imdb'
+import { getMediaInfo } from '@/app/api/consumetImdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import AddToNotificationsList from './components/AddToNotifications'
 
@@ -376,7 +376,6 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   dataCrunchyroll={episodesFromCrunchyroll}
                   dataImdb={imdbMediaInfo?.seasons}
                   dataImdbMapped={imdbEpisodes}
-                  vidsrcId={imdbMediaInfo?.vidsrcId || null}
                   mediaTitle={mediaData.title.romaji}
                   mediaFormat={mediaData.format}
                   mediaId={mediaData.id}

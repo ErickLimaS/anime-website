@@ -16,7 +16,7 @@ axiosRetry(Axios, {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
 
-    // SEARCH MANGA BY QUERY
+    // SEARCH MANGA BY QUERY/TITLE
     searchMedia: cache(async (query: string, page?: number) => {
 
         try {
@@ -39,7 +39,7 @@ export default {
 
     }),
 
-    // GET ANIME AND MANGA INFO
+    // GET MANGA INFO
     getInfoFromThisMedia: cache(async (id: string | number) => {
 
         try {

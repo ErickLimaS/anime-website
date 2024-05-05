@@ -64,7 +64,7 @@ export default {
 
     }),
 
-    // GET EPISODES FOR ANIMES AND MOVIES
+    // GET EPISODES LINKS FOR ANIMES AND MOVIES
     getEpisodeStreamingLinks: cache(async (episodeId: string | number, serverName?: string) => {
 
         try {
@@ -85,8 +85,8 @@ export default {
 
     }),
 
-    // GET LINKS FOR THIS EPISODE
-    getLinksForThisEpisode: cache(async (episodeId: string) => {
+    // ALTERNATIVE: GET EPISODES LINKS FOR ANIMES AND MOVIES
+    getEpisodeStreamingLinks2: cache(async (episodeId: string) => {
 
         try {
             const { data } = await Axios({

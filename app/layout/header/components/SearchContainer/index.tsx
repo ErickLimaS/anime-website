@@ -2,7 +2,7 @@
 import React, { ChangeEvent, useState } from 'react'
 import styles from "./component.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import anilist from '@/api/anilist'
+import anilist from '@/app/api/anilist'
 import SearchResultItemCard from '@/app/layout/header/components/SearchContainer/components/SearchResultItemCard'
 import LoadingIcon from '@/public/assets/ripple-1s-200px.svg'
 import SearchIcon from '@/public/assets/search.svg'

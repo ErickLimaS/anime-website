@@ -6,7 +6,7 @@ import { cache } from "react"
 
 const CONSUMET_API_URL = process.env.NEXT_PUBLIC_CONSUMET_API_URL
 
-// HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
+// HANDLES SERVER ERRORS, most of time when server was not running due to Free Tier usage
 axiosRetry(Axios, {
     retries: 1,
     retryDelay: (retryAttempt) => retryAttempt * 1000,
@@ -14,7 +14,7 @@ axiosRetry(Axios, {
     onRetry: (retryNumber) => console.log(`retry: ${retryNumber} ${retryNumber == 3 ? " - Last Attempt" : ""}`)
 })
 
-// GET INFO FOR THIS MEDIA
+// SEARCH BY MEDIA TITLE
 export const searchMedia = cache(async (mediaTitle: string) => {
 
     try {
@@ -59,9 +59,6 @@ export const getMediaInfo = cache(async (search: boolean, mediaId?: string, type
             url: `${CONSUMET_API_URL}/meta/tmdb/info/${mediaSearchedId || mediaId}?type=${mediaSearchedType || type}`,
             method: "GET"
         })
-
-        // adds ID to be used by Vidsrc API
-        data.vidsrcId = mediaSearchedId
 
         return data as ImdbMediaInfo
 

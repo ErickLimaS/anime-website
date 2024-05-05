@@ -1,18 +1,18 @@
 import React from 'react'
 import styles from "./page.module.css"
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
-import gogoanime from '@/api/gogoanime'
-import anilist from '@/api/anilist'
+import gogoanime from '@/app/api/consumetGoGoAnime'
+import anilist from '@/app/api/anilist'
 import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
 import { EpisodeLinksGoGoAnime, MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import EpisodesSideListContainer from './components/EpisodesSideListContainer'
 import CommentSectionContainer from '@/app/components/CommentSectionContainer'
-import aniwatch from '@/api/aniwatch'
+import aniwatch from '@/app/api/aniwatch'
 import Player from './components/VideoPlayer'
 import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
-import { getMediaInfo } from '@/api/imdb'
+import { getMediaInfo } from '@/app/api/consumetImdb'
 import Image from 'next/image'
 import ErrorImg from "@/public/error-img-4.png"
 import Link from 'next/link'
@@ -63,7 +63,7 @@ async function WatchEpisode({ params, searchParams }: {
         case ("gogoanime"):
 
             // fetch episode data
-            episodeData = await gogoanime.getLinksForThisEpisode(searchParams.q) as EpisodeLinksGoGoAnime
+            episodeData = await gogoanime.getEpisodeStreamingLinks2(searchParams.q) as EpisodeLinksGoGoAnime
 
             if (!episodeData) error = true
 

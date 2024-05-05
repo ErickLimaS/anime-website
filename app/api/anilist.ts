@@ -15,19 +15,19 @@ const headers = {
     'Content-Type': 'application/json',
 }
 
-// returns medias which is adult
+// returns medias with adult content
 function filterAdultContent(data: ApiDefaultResult[] | ApiAiringMidiaResults[], reponseType?: "mediaByFormat") {
 
-    let filtered
-
     if (reponseType == "mediaByFormat") {
-        filtered = (data as ApiDefaultResult[]).filter((item) => item.isAdult == false)
+        const filteredData = (data as ApiDefaultResult[]).filter((item) => item.isAdult == false)
+
+        return filteredData
     }
     else {
-        filtered = (data as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
-    }
+        const filteredData = (data as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
 
-    return filtered
+        return filteredData
+    }
 
 }
 
@@ -250,7 +250,7 @@ export default {
 
     }),
 
-    // MEDIAS IN THIS FORMAT    
+    // MEDIAS WITH INDICATED FORMAT    
     getMediaForThisFormat: cache(async (type: string, sort?: string, pageNumber?: number, perPage?: number, showAdultContent?: boolean) => {
 
         try {
@@ -287,7 +287,7 @@ export default {
 
     }),
 
-    // GET INFO OF anime/movie/manga by ID
+    // GET MEDIA INFO BY ID
     getMediaInfo: cache(async (id: number, showAdultContent?: boolean) => {
 
         try {

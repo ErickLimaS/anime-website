@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import styles from "./component.module.css"
 import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
 import Link from 'next/link'
-import anilist from '@/api/anilist'
+import anilist from '@/app/api/anilist'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"

@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import React from "react";
 import HeroCarousel from "./components/HomePage/HeroCarouselHomePage";
-import anilist from '../api/anilist';
+import anilist from './api/anilist';
 import NavThoughMedias from "./components/HomePage/NavThoughMedias";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/HomePage/NewestMediaSection";

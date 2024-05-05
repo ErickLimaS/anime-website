@@ -1,4 +1,4 @@
-import news from '@/api/news'
+import news from '@/app/api/consumetNews'
 import { News, NewsArcticle } from '@/app/ts/interfaces/newsInterface'
 import React from 'react'
 import styles from "./page.module.css"

@@ -8,7 +8,7 @@ import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
-import aniwatch from '@/api/aniwatch';
+import aniwatch from '@/app/api/aniwatch';
 import {
   EpisodeAnimeWatch,
   EpisodesFetchedAnimeWatch,
@@ -41,8 +41,7 @@ type EpisodesContainerTypes = {
   mediaTitle: string,
   mediaFormat: string,
   mediaId: number,
-  totalEpisodes: number,
-  vidsrcId: number | null
+  totalEpisodes: number
 }
 
 const loadingEpisodesMotion = {

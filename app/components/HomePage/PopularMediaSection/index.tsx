@@ -8,7 +8,7 @@ import ChevronRightIcon from '@/public/assets/chevron-right.svg';
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg';
 import SwiperListContainer from '../../SwiperListContainer'
 import { AnimatePresence, motion } from 'framer-motion'
-import anilist from '@/api/anilist'
+import anilist from '@/app/api/anilist'
 
 function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] }) {
 

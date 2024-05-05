@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import AnimeDataOffline from "./anime-offline-database.json"
+import AnimeDataOffline from "./anime-offline-database.json";
+import { MediaDbOffline } from "@/app/ts/interfaces/dbOffilineInterface";
 
 export async function GET(request: NextRequest) {
 
     const params = request.nextUrl.searchParams
 
-    const pageLimit = 12
+    const resultLimit = 12
 
-    let dataSort = (AnimeDataOffline as any).data
+    let dataSort = (AnimeDataOffline as { data: MediaDbOffline[] }).data
 
     if (params.get("type")) dataSort = dataSort.filter((item: { type: string }) => item.type == params.get("type")!.toUpperCase())
 
@@ -49,14 +50,14 @@ export async function GET(request: NextRequest) {
 
     const totalLength = dataSort.length
 
-    dataSort = dataSort.slice(0, pageLimit * Number(params.get("page") || 1))
+    dataSort = dataSort.slice(0, resultLimit * Number(params.get("page") || 1))
 
     // GET ANILIST ID FOR EACH MEDIA
     if (dataSort) {
 
         let sortHasAnilistId
 
-        sortHasAnilistId = dataSort.filter((item: { sources: string[]; anilistId: string }) => item.sources.map(a => {
+        sortHasAnilistId = dataSort.filter((item) => item.sources.map(a => {
 
             if (a.includes("https://anilist.co/anime")) {
                 const foundUrl: string | null = a.slice(a.search(/\banime\b/))
@@ -66,17 +67,17 @@ export async function GET(request: NextRequest) {
         }))
 
         // filter only itens which has the anilist ID
-        sortHasAnilistId = sortHasAnilistId.filter((item: { anilistId: string }) => item.anilistId)
+        sortHasAnilistId = sortHasAnilistId.filter((item) => item.anilistId)
 
         dataSort = sortHasAnilistId
 
     }
-    
+
     return NextResponse.json(
         {
             data: dataSort,
             allResultsLength: totalLength,
-            lastUpdate: (AnimeDataOffline as any).lastUpdate
+            lastUpdate: (AnimeDataOffline as { lastUpdate: string }).lastUpdate
         }
     )
 

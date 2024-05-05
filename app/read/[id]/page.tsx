@@ -1,13 +1,13 @@
 import React from 'react'
 import styles from "./page.module.css"
-import anilist from '@/api/anilist'
+import anilist from '@/app/api/anilist'
 import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
 import { MangaChapters, MangaInfo, MangaPages, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface'
 import CommentSectionContainer from '@/app/components/CommentSectionContainer'
 import Image from 'next/image'
 import ErrorImg from "@/public/error-img-4.png"
 import Link from 'next/link'
-import manga from '@/api/manga'
+import manga from '@/app/api/consumetManga'
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import ChaptersPages from './components/ChaptersPages/index'
 import ChaptersSideListContainer from './components/ChaptersSideListContainer'

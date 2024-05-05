@@ -21,8 +21,8 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 import { AnimatePresence, motion } from "framer-motion";
 import { EpisodeLinksGoGoAnime, MediaEpisodes } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
 import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from "@/app/ts/interfaces/apiAnimewatchInterface";
-import gogoanime from "@/api/gogoanime";
-import aniwatch from "@/api/aniwatch";
+import gogoanime from "@/app/api/consumetGoGoAnime";
+import aniwatch from "@/app/api/aniwatch";
 import { useRouter } from "next/navigation";
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
@@ -327,7 +327,7 @@ function Player({
 
                 nextEpisodId = (fetchNextEpisode as MediaEpisodes).id
 
-                fetchNextEpisode = await gogoanime.getLinksForThisEpisode(fetchNextEpisode.id) as EpisodeLinksGoGoAnime
+                fetchNextEpisode = await gogoanime.getEpisodeStreamingLinks2(fetchNextEpisode.id) as EpisodeLinksGoGoAnime
 
                 fetchNextEpisode = (fetchNextEpisode as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
 
