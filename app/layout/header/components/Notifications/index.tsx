@@ -206,17 +206,17 @@ function NotificationsComponent() {
 
         setHasNewNotifications(false)
 
-        if (menuOpen && notifications.length > 0) {
+        if (notifications.length > 0) {
 
             const mediaNotificationsStillReleasing: NotificationsCollectionFirebase[] = notifications.filter(item => item.isComplete == false)
-            const mediaFinishedNotifications: NotificationsCollectionFirebase[] = notifications.filter(item => item.isComplete == true) as any
+            const mediaFinishedNotifications: NotificationsCollectionFirebase[] = notifications.filter(item => item.isComplete == true)
 
             // MAP notifications shown and updates info to next episode
             if (mediaNotificationsStillReleasing.length > 0) {
 
                 mediaNotificationsStillReleasing.map(async (item) => {
 
-                    // gets the update media's updated info
+                    // gets the media's latest info
                     const mediaData = await anilist.getMediaInfo(Number(item.mediaId)) as ApiMediaResults
 
                     // 
@@ -228,7 +228,7 @@ function NotificationsComponent() {
                             notifications: arrayRemove(...[
                                 {
                                     // if theres no new episode to release, set total episodes number as last notified
-                                    lastEpisodeNotified: mediaData.nextAiringEpisode ? mediaData.nextAiringEpisode.episode - 1 : mediaData.episodes,
+                                    lastEpisodeNotified: mediaData.nextAiringEpisode ? mediaData.nextAiringEpisode.episode - 2 : mediaData.episodes,
                                     mediaId: mediaData.id,
                                     title: {
                                         romaji: mediaData.title.romaji,
@@ -247,7 +247,7 @@ function NotificationsComponent() {
                         {
                             notifications: arrayUnion(...[
                                 {
-                                    lastEpisodeNotified: mediaData.nextAiringEpisode?.episode,
+                                    lastEpisodeNotified: mediaData.nextAiringEpisode ? mediaData.nextAiringEpisode?.episode - 1 : mediaData.episodes,
                                     mediaId: mediaData.id,
                                     title: {
                                         romaji: mediaData.title.romaji,
