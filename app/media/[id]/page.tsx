@@ -18,7 +18,6 @@ import MangaChaptersContainer from './components/MangaChaptersContainer'
 import AddToPlaylistButton from '@/app/components/Buttons/AddToPlaylist'
 import ScoreRating from '@/app/components/DynamicAssets/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
-import SwiperContainer from '@/app/components/SwiperContainer'
 import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
@@ -26,7 +25,7 @@ import CommentSection from '../../components/CommentSection'
 import { getMediaInfo } from '@/app/api/consumetImdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import AddToNotificationsList from './components/AddToNotifications'
-import { SwiperSlide } from 'swiper/react'
+import RelatedMediaSwiperContainer from './components/RelatedMediaSwiperContainer'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -409,19 +408,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <ul>
 
-                  <SwiperContainer >
-
-                    {mediaData.relations.nodes.map((item, key) => (
-
-                      <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
-
-                        <MediaCover positionIndex={key + 1} darkMode={true} data={item as ApiDefaultResult} />
-
-                      </SwiperSlide>
-
-                    ))}
-
-                  </SwiperContainer >
+                  <RelatedMediaSwiperContainer data={mediaData.relations.nodes} />
 
                 </ul>
 
