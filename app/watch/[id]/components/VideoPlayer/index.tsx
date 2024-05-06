@@ -387,7 +387,8 @@ function Player({
                 src={videoSource}
                 currentTime={episodeLastStop}
                 autoPlay
-                volume={0.5}
+                onVolumeChange={(e) => localStorage.setItem("videoPlayerVolume", `${e.volume}`)}
+                volume={Number(localStorage.getItem("videoPlayerVolume")) || 0.5}
                 // saves state of video every 45 secs, and shows SKIP btn on intros/outros
                 onProgressCapture={(e) => handleSkipEpisodeAndIntros(e.target)}
                 // when video ends, goes to next episode                 

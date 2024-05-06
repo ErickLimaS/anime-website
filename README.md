@@ -35,7 +35,6 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 
 ## :pushpin: Under Development
 
-- [ ] `Refactor Code`
 - [ ] `Add Reply to Comments`
 
 ## :heavy_check_mark: Tecnologies Used
