@@ -5,7 +5,7 @@ import styles from "./page.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
-import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
+import MediaCover from '@/app/components/MediaCards/MediaCover'
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import PlaySvg from "@/public/assets/play-circle.svg"
 import BookSvg from "@/public/assets/book.svg"
@@ -15,17 +15,18 @@ import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
-import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
-import ScoreRating from '@/app/components/ScoreRating'
+import AddToPlaylistButton from '@/app/components/Buttons/AddToPlaylist'
+import ScoreRating from '@/app/components/DynamicAssets/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
-import SwiperListContainer from '@/app/components/SwiperListContainer'
+import SwiperContainer from '@/app/components/SwiperContainer'
 import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
-import CommentSectionContainer from '../../components/CommentSectionContainer'
+import CommentSection from '../../components/CommentSection'
 import { getMediaInfo } from '@/app/api/consumetImdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import AddToNotificationsList from './components/AddToNotifications'
+import { SwiperSlide } from 'swiper/react'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -408,7 +409,19 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <ul>
 
-                  <SwiperListContainer data={(mediaData).relations.nodes} />
+                  <SwiperContainer >
+
+                    {mediaData.relations.nodes.map((item, key) => (
+
+                      <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
+
+                        <MediaCover positionIndex={key + 1} darkMode={true} data={item as ApiDefaultResult} />
+
+                      </SwiperSlide>
+
+                    ))}
+
+                  </SwiperContainer >
 
                 </ul>
 
@@ -420,7 +433,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <h2 className={styles.heading_style}>COMMENTS</h2>
 
-              <CommentSectionContainer media={mediaData} />
+              <CommentSection media={mediaData} />
 
             </section>
 
@@ -434,8 +447,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                   {mediaData?.recommendations.edges.slice(0, 12).map((item, key: number) => (
 
-                    <li key={key} >
-                      <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item.node.mediaRecommendation} />
+                    <li key={key}>
+                      <MediaCover positionIndex={key + 1} darkMode={true} data={item.node.mediaRecommendation} />
                     </li>
 
                   ))}

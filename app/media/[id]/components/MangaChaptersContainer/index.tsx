@@ -10,9 +10,9 @@ import ErrorImg from "@/public/error-img-2.png"
 import manga from '@/app/api/consumetManga';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
-import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead';
+import MarkChapterAsReadButton from '@/app/components/Buttons/MarkChapterAsRead';
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOnApi';
+import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOptions';
 import { stringToUrlFriendly } from '@/app/lib/convertStringsTo';
 
 const loadingChaptersMotion = {
@@ -179,7 +179,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
               </Link>
 
-              <ButtonMarkChapterAsRead
+              <MarkChapterAsReadButton
                 chapterNumber={Number(item.chapterNumber)}
                 chapterTitle={item.title}
                 mediaId={mediaData.id}

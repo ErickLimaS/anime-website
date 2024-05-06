@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from "./page.module.css"
 import anilist from '@/app/api/anilist'
-import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
+import CoverWithMediaInfo from '@/app/components/MediaCards/CoverWithMediaInfo'
 import { MangaChapters, MangaInfo, MangaPages, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface'
-import CommentSectionContainer from '@/app/components/CommentSectionContainer'
+import CommentSection from '@/app/components/CommentSection'
 import Image from 'next/image'
 import ErrorImg from "@/public/error-img-4.png"
 import Link from 'next/link'
@@ -11,7 +11,7 @@ import manga from '@/app/api/consumetManga'
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import ChaptersPages from './components/ChaptersPages/index'
 import ChaptersSideListContainer from './components/ChaptersSideListContainer'
-import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOnApi'
+import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOptions'
 import { stringToUrlFriendly } from '@/app/lib/convertStringsTo'
 
 export const revalidate = 1800 // revalidate cached data every 30 minutes
@@ -126,7 +126,7 @@ async function ReadChapter({ params, searchParams }: {
 
             <div id={styles.all_chapters_container}>
 
-                <CardMediaCoverAndDescription
+                <CoverWithMediaInfo
                     data={mediaData as ApiDefaultResult}
                     showButtons={false}
                 />

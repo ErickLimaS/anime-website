@@ -5,39 +5,40 @@ import Link from 'next/link'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
-import AddToPlaylistButton from '../../AddToPlaylistButton'
-import SwiperListContainer from '../../SwiperListContainer'
+import AddToPlaylistButton from '../../Buttons/AddToPlaylist'
+import SwiperContainer from '../../SwiperContainer'
 import ListCarousel from '../HeroListCarousel'
 import EyeSvg from "@/public/assets/eye-fill.svg"
 import EyeSlashSvg from "@/public/assets/eye-slash-fill.svg"
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
+import { SwiperSlide } from 'swiper/react'
+
+const variants = {
+    enter: (direction: number) => {
+        return {
+            x: direction > 0 ? 1000 : -1000,
+            opacity: 0
+        };
+    },
+    center: {
+        zIndex: 1,
+        x: 0,
+        opacity: 1
+    },
+    exit: (direction: number) => {
+        return {
+            zIndex: 0,
+            x: direction < 0 ? 1000 : -1000,
+            opacity: 0
+        };
+    }
+}
 
 function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: boolean }) {
 
     const [[page, direction], setPage] = useState([0, 0])
 
     const [autoPlayTrailer, setAutoPlayTrailer] = useState<boolean>(true)
-
-    const variants = {
-        enter: (direction: number) => {
-            return {
-                x: direction > 0 ? 1000 : -1000,
-                opacity: 0
-            };
-        },
-        center: {
-            zIndex: 1,
-            x: 0,
-            opacity: 1
-        },
-        exit: (direction: number) => {
-            return {
-                zIndex: 0,
-                x: direction < 0 ? 1000 : -1000,
-                opacity: 0
-            };
-        }
-    }
 
     const swipeConfidenceThreshold = 10000;
     const swipePower = (offset: number, velocity: number) => {
@@ -207,25 +208,36 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                     <h3>Todays Recomendation</h3>
 
                     {/* SHOWS ONLY ON MOBILE */}
-
                     <div id={styles.swiper_list_container}>
                         {data != undefined && (
-                            <SwiperListContainer
-                                onClick={(e: { target: { outerText: string } }) => setPage(
-                                    [
-                                        data.findIndex((item) => item.title.romaji == e.target.outerText),
-                                        data.findIndex((item) => item.title.romaji == e.target.outerText)
-                                    ]
-                                )}
-                                data={data.slice(0, 9)}
+                            <SwiperContainer
                                 options={{
                                     slidesPerView: 2,
                                     bp480: 2,
                                     bp740: 3,
                                     bp1275: 3
                                 }}
-                                customHeroSection
-                            />
+                            >
+
+                                {data.slice(0, 9).map((item, key) => (
+
+                                    <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
+
+                                        <ListCarousel
+                                            data={item as ApiDefaultResult}
+                                            onClick={(e: { target: { outerText: string } }) => setPage(
+                                                [
+                                                    data.findIndex((item) => item.title.romaji == e.target.outerText),
+                                                    data.findIndex((item) => item.title.romaji == e.target.outerText)
+                                                ]
+                                            )}
+                                        />
+
+                                    </SwiperSlide>
+
+                                ))}
+
+                            </SwiperContainer>
                         )}
                     </div>
 

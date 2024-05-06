@@ -4,7 +4,7 @@ import Image from 'next/image'
 import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
-import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
+import MarkEpisodeAsWatchedButton from '@/app/components/Buttons/MarkEpisodeAsWatched'
 import { motion } from 'framer-motion'
 
 type ComponentTypes = {
@@ -46,7 +46,7 @@ function GoGoAnimeEpisode({ data, mediaId, title, backgroundImg, episodeDescript
                     </Link>
                 </h3>
 
-                <ButtonMarkEpisodeAsWatched
+                <MarkEpisodeAsWatchedButton
                     episodeNumber={episodeNumber}
                     episodeTitle={`${data.number}`}
                     mediaId={mediaId}

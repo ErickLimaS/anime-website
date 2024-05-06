@@ -12,11 +12,11 @@ import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import Comment from './CommentContainer';
+import Comment from './components/Comment';
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
-import UserModal from '../UserLoginModal';
+import UserModal from '@/app/components/UserLoginModal';
 import { AnimatePresence, motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 
@@ -27,7 +27,7 @@ type CommetsSectionTypes = {
     episodeNumber?: number
 }
 
-function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber }: CommetsSectionTypes) {
+function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: CommetsSectionTypes) {
 
     const [comments, setComments] = useState<DocumentData[]>([])
     const [commentSaved, setCommentSaved] = useState<boolean>(false)
@@ -43,21 +43,22 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
     const db = getFirestore(initFirebase());
 
-    // SHOWS MORE COMMENTS ON CLICK
-    function setNewSliceRange() {
+    // SHOWS MORE COMMENTS
+    function loadMoreComments() {
 
-        setCommentsSliceRange(commentsSliceRange + 5)
+        setCommentsSliceRange(commentsSliceRange + 10)
 
     }
 
+    // sort comments
     async function sortCommentsBy(sort: string, data?: DocumentData[]) {
 
-        let sorted
 
         setIsLoading(true)
 
         if (!data) data = await loadComments()
 
+        let sorted
 
         switch (sort) {
             case "date":
@@ -136,7 +137,8 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
     }
 
-    // CREATES DOCUMENT ON THIS MEDIA COLLECTION, AND UPDATES USER DOC WITH INFO THE REF THIS COMMENT DOC
+    // CREATES DOCUMENT ON THIS MEDIA COLLECTION
+    // AND UPDATES USER DOC WITH INFO WITH THE REF OF THIS COMMENT DOC
     async function createComment(e: React.FormEvent<HTMLFormElement>) {
 
         e.preventDefault()
@@ -219,6 +221,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
     return (
         <>
+            {/* SHOWS USER LOGIN MODAL */}
             <AnimatePresence
                 initial={false}
                 mode='wait'
@@ -316,7 +319,7 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
                             {comments.length > commentsSliceRange && (
 
-                                <button onClick={() => setNewSliceRange()}>SEE MORE COMMENTS</button>
+                                <button onClick={() => loadMoreComments()}>SEE MORE COMMENTS</button>
 
                             )}
                         </>
@@ -346,4 +349,4 @@ function CommentSectionContainer({ media, onWatchPage, episodeId, episodeNumber 
 
 }
 
-export default CommentSectionContainer
+export default CommentSection

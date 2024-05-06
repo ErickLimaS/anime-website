@@ -20,7 +20,7 @@ type BtnTypes = {
     wasWatched?: boolean
 }
 
-function ButtonMarkEpisodeAsWatched({ episodeNumber, episodeTitle, mediaId, wasWatched, hasText }: BtnTypes) {
+function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasWatched, hasText }: BtnTypes) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(wasWatched || false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -32,11 +32,11 @@ function ButtonMarkEpisodeAsWatched({ episodeNumber, episodeTitle, mediaId, wasW
     const db = getFirestore(initFirebase())
 
     // ADD OR REMOVE EPISODE FROM FIRESTORE
-    async function handleEpisodeWatch() {
-
-        setIsLoading(true)
+    async function addOrRemoveEpisodeWatched() {
 
         if (!user) return
+
+        setIsLoading(true)
 
         const episodeData = {
 
@@ -72,7 +72,7 @@ function ButtonMarkEpisodeAsWatched({ episodeNumber, episodeTitle, mediaId, wasW
             <div className={styles.button_container}>
 
                 <motion.button
-                    onClick={() => handleEpisodeWatch()}
+                    onClick={() => addOrRemoveEpisodeWatched()}
                     data-active={wasEpisodeWatched}
                     disabled={isLoading}
                     title={wasEpisodeWatched ? "Mark as Unwatched " : "Mark as Watched"}
@@ -104,4 +104,4 @@ function ButtonMarkEpisodeAsWatched({ episodeNumber, episodeTitle, mediaId, wasW
     )
 }
 
-export default ButtonMarkEpisodeAsWatched
+export default MarkEpisodeAsWatchedButton

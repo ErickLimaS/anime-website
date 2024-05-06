@@ -3,14 +3,14 @@ import styles from "./page.module.css"
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import gogoanime from '@/app/api/consumetGoGoAnime'
 import anilist from '@/app/api/anilist'
-import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
+import CoverWithMediaInfo from '@/app/components/MediaCards/CoverWithMediaInfo'
 import { EpisodeLinksGoGoAnime, MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import EpisodesSideListContainer from './components/EpisodesSideListContainer'
-import CommentSectionContainer from '@/app/components/CommentSectionContainer'
+import CommentSection from '@/app/components/CommentSection'
 import aniwatch from '@/app/api/aniwatch'
 import Player from './components/VideoPlayer'
 import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
-import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
+import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOptions'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import { getMediaInfo } from '@/app/api/consumetImdb'
 import Image from 'next/image'
@@ -221,7 +221,7 @@ async function WatchEpisode({ params, searchParams }: {
                             </h1>
                         )}
 
-                        <CardMediaCoverAndDescription
+                        <CoverWithMediaInfo
                             data={mediaData as ApiDefaultResult}
                             showButtons={false}
                             customDescription={imdbEpisodes?.find(item => item.episode == Number(searchParams.episode))?.description || undefined}
@@ -236,7 +236,7 @@ async function WatchEpisode({ params, searchParams }: {
                             <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
 
                             {/* ONLY ON DESKTOP */}
-                            <CommentSectionContainer
+                            <CommentSection
                                 media={mediaData}
                                 onWatchPage={true}
                                 episodeId={searchParams.q}
@@ -268,7 +268,7 @@ async function WatchEpisode({ params, searchParams }: {
 
                             <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
 
-                            <CommentSectionContainer
+                            <CommentSection
                                 media={mediaData}
                                 onWatchPage={true}
                                 episodeId={searchParams.q}

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
-import MediaFormatIcon from '../MediaFormatIcon'
+import MediaFormatIcon from '../../DynamicAssets/MediaFormatIcon'
 
 type ComponentTypes = {
     data: ApiDefaultResult | MediaDbOffline | KeepWatchingItem,
@@ -15,7 +15,7 @@ type ComponentTypes = {
     fromOfflineDb?: boolean
 }
 
-function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDesktop, fromOfflineDb }: ComponentTypes) {
+function MediaCover({ positionIndex, data, darkMode, loading, hiddenOnDesktop, fromOfflineDb }: ComponentTypes) {
 
     const customStyle = positionIndex && { gridArea: `item${positionIndex}` }
 
@@ -110,4 +110,4 @@ function MediaItemCoverInfo({ positionIndex, data, darkMode, loading, hiddenOnDe
 
 }
 
-export default MediaItemCoverInfo
+export default MediaCover

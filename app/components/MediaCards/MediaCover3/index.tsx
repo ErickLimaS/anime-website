@@ -4,7 +4,7 @@ import styles from './component.module.css'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { motion } from 'framer-motion'
-import MediaFormatIcon from '../MediaFormatIcon'
+import MediaFormatIcon from '../../DynamicAssets/MediaFormatIcon'
 
 type ComponentTypes = {
     data: ApiDefaultResult,
@@ -17,18 +17,18 @@ type ComponentTypes = {
     key?: any
 }
 
-function MediaItemCoverInfo3({ positionIndex, data, darkMode, loading, hiddenOnDesktop, layoutId, onClick }: ComponentTypes) {
+const popUpMediaMotion = {
+    initial: {
+        scale: 0,
+    },
+    animate: {
+        scale: 1,
+    }
+}
+
+function MediaCover3({ positionIndex, data, darkMode, loading, hiddenOnDesktop, layoutId, onClick }: ComponentTypes) {
 
     const customStyle = positionIndex && { gridArea: `item${positionIndex}` }
-
-    const popUpMediaMotion = {
-        initial: {
-            scale: 0,
-        },
-        animate: {
-            scale: 1,
-        },
-    }
 
     return (
         <motion.div
@@ -79,4 +79,4 @@ function MediaItemCoverInfo3({ positionIndex, data, darkMode, loading, hiddenOnD
 
 }
 
-export default MediaItemCoverInfo3
+export default MediaCover3

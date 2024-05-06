@@ -7,7 +7,7 @@ import Link from 'next/link'
 import NewsSwiperContainer from './components/NewsSwiperContainer'
 import SvgCalendar from "@/public/assets/calendar3.svg"
 import { News } from '../ts/interfaces/newsInterface'
-import NewsCard1 from './components/NewsCard1'
+import NewsCard from './components/NewsCard'
 
 export const revalidate = 1800 // revalidate cached data every 30 min
 
@@ -88,7 +88,7 @@ async function NewsHomePage() {
                     <div id={styles.hero_news_list}>
                         {news.slice(4, 9).map((item, key) => (
 
-                            <NewsCard1 key={key} data={item} />
+                            <NewsCard key={key} data={item} />
 
                         ))}
                     </div>
@@ -99,7 +99,8 @@ async function NewsHomePage() {
 
                     <h2>Recent Animes News</h2>
 
-                    <NewsSwiperContainer data={animesNews}
+                    <NewsSwiperContainer
+                        data={animesNews}
                         options={{
                             slidesPerView: 1.2,
                             bp480: 2.2,

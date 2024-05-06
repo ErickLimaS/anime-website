@@ -9,13 +9,13 @@ import ChevronRightIcon from '@/public/assets/chevron-right.svg'
 import CloseSvg from '@/public/assets/x.svg'
 import PlaySvg from '@/public/assets/play.svg'
 import { Url } from 'next/dist/shared/lib/router/router'
-import MediaItemCoverInfo3 from '../../MediaItemCoverInfo3'
+import MediaCover3 from '../../MediaCards/MediaCover3'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import AddToPlaylistButton from '../../AddToPlaylistButton'
+import AddToPlaylistButton from '../../Buttons/AddToPlaylist'
 import parse from "html-react-parser"
-import ScoreRating from '../../ScoreRating'
-import MediaFormatIcon from '../../MediaFormatIcon'
+import ScoreRating from '../../DynamicAssets/ScoreRating'
+import MediaFormatIcon from '../../DynamicAssets/MediaFormatIcon'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
@@ -194,7 +194,7 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
                 {data.length > 0 && (
                     data.slice(0, 8).map((item, key: number) => (
-                        <MediaItemCoverInfo3
+                        <MediaCover3
                             layoutId={String(item.id)}
                             key={item.id}
                             onClick={() => setMediaPreview(item.id)}

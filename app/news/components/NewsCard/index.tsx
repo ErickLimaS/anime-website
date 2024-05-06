@@ -4,7 +4,7 @@ import styles from "./component.module.css"
 import Image from 'next/image'
 import { News } from '@/app/ts/interfaces/newsInterface'
 
-function NewsCard1({ data }: { data: News }) {
+function NewsCard({ data }: { data: News }) {
     return (
         <div className={styles.hero_news_container}>
 
@@ -32,4 +32,4 @@ function NewsCard1({ data }: { data: News }) {
     )
 }
 
-export default NewsCard1
+export default NewsCard

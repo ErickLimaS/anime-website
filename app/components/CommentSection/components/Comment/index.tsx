@@ -18,7 +18,7 @@ import { initFirebase } from '@/app/firebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { AnimatePresence } from 'framer-motion';
-import UserModal from '../../UserLoginModal';
+import UserModal from '@/app/components/UserLoginModal';
 
 function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
@@ -28,7 +28,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
     const [isSpoiler, setIsSpoiler] = useState<boolean>(item.isSpoiler)
 
-    const [commentData, setCommentData] = useState<QueryDocumentSnapshot<DocumentData, DocumentData> | any>()
+    const [commentData, setCommentData] = useState<Comment>()
     const [commentDocId, setCommentDocId] = useState<string | DocumentData>()
 
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
@@ -55,7 +55,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     }
 
     // INCREASES NUMBER OF INTERACTIONS WITH BUTTONS LIKE DISLIKE
-    async function likeOrDislikeIncrease(button: string, add: boolean) {
+    async function likeOrDislikeIncrease(buttonAction: string, addAction: boolean) {
 
         if (!user) return setIsUserModalOpen(true)
 
@@ -66,19 +66,19 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
         const commentDocData = query![1] as DocumentData
         const commentDocId = query![0] as string
 
-        switch (button) {
+        switch (buttonAction) {
 
             case "like":
 
                 await updateDoc(doc(db, 'comments', `${mediaId}`, "all", commentDocId), {
 
-                    likes: add ? commentDocData.likes + 1 : (commentDocData.likes == 0 ? 0 : commentDocData.likes - 1),
+                    likes: addAction ? commentDocData.likes + 1 : (commentDocData.likes == 0 ? 0 : commentDocData.likes - 1),
                     dislikes: isDisliked ? commentDocData.dislikes - 1 : commentDocData.dislikes
 
                 })
 
                 // UPDATES USER INTERACTION WITH COMMENT
-                if (add) {
+                if (addAction) {
                     await setDoc(doc(db, 'users', user.uid), {
                         comments: {
                             interacted: arrayUnion(...[{
@@ -109,10 +109,10 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
                 const queryLikesUpdate = await queryCommentDoc()
 
-                setCommentData(queryLikesUpdate![1])
+                setCommentData(queryLikesUpdate![1] as Comment)
 
-                setIsLiked(add ? true : false)
-                if (isDisliked) setIsDisliked(add ? false : true)
+                setIsLiked(addAction ? true : false)
+                if (isDisliked) setIsDisliked(addAction ? false : true)
 
                 return
 
@@ -121,12 +121,12 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
                 await updateDoc(doc(db, 'comments', `${mediaId}`, "all", commentDocId), {
 
                     likes: isLiked ? commentDocData.likes - 1 : commentDocData.likes,
-                    dislikes: add ? commentDocData.dislikes + 1 : (commentDocData.dislikes == 0 ? 0 : commentDocData.dislikes - 1)
+                    dislikes: addAction ? commentDocData.dislikes + 1 : (commentDocData.dislikes == 0 ? 0 : commentDocData.dislikes - 1)
 
                 })
 
                 // UPDATES USER INTERACTION WITH COMMENT
-                if (add) {
+                if (addAction) {
                     await setDoc(doc(db, 'users', user.uid), {
                         comments: {
                             interacted: arrayUnion(...[{
@@ -157,10 +157,10 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
                 const queryDislikesUpdate = await queryCommentDoc()
 
-                setCommentData(queryDislikesUpdate![1])
+                setCommentData(queryDislikesUpdate![1] as Comment)
 
-                setIsDisliked(add ? true : false)
-                if (isLiked) setIsLiked(add ? false : true)
+                setIsDisliked(addAction ? true : false)
+                if (isLiked) setIsLiked(addAction ? false : true)
 
                 return
 
@@ -171,7 +171,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
     }
 
-    // DELETE COMMENT IF USER IS THE AUTHOR
+    // IF USER IS THE AUTHOR, DELETE COMMENT
     async function deleteComment() {
 
         await deleteDoc(doc(db, 'comments', `${mediaId}`, "all", `${commentDocId}`))
@@ -190,7 +190,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
         setCommentDocId(commentDocId)
 
-        setCommentData(commentDocData)
+        setCommentData(commentDocData as Comment)
 
         if (!user) return
 
@@ -221,7 +221,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     }, [user, item, mediaId])
 
     return (
-        <>
+        <React.Fragment>
             <AnimatePresence
                 initial={false}
                 mode='wait'
@@ -272,26 +272,38 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
                                 <div className={styles.buttons_container}>
                                     <button onClick={() => likeOrDislikeIncrease("like", isLiked ? false : true)}>
                                         {isLiked ? (
-                                            <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes </>
+                                            <>
+                                                <SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes
+                                            </>
                                         ) : (
-                                            <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like </>
+                                            <>
+                                                <SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like
+                                            </>
                                         )}
                                     </button>
 
                                     <button onClick={() => likeOrDislikeIncrease("dislike", isDisliked ? false : true)}>
                                         {isDisliked ? (
-                                            <> <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes </>
+                                            <>
+                                                <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes
+                                            </>
                                         ) : (
-                                            <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike </>
+                                            <>
+                                                <SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike
+                                            </>
                                         )}
                                     </button>
 
-                                    {/* <button onClick={() => console.log("")} disabled>
-                                    <SvgReply width={16} height={16} alt="Reply" />Reply
-                                </button> */}
+                                    {/* 
+                                    <button onClick={() => console.log("")} disabled>
+                                        <SvgReply width={16} height={16} alt="Reply" />Reply
+                                    </button>
+                                    */}
 
                                     {(user?.uid == item.userId.id) && (
-                                        <button className={styles.delete_btn} onClick={() => deleteComment()}><SvgTrash width={16} height={16} alt="Delete Icon" />Delete</button>
+                                        <button className={styles.delete_btn} onClick={() => deleteComment()}>
+                                            <SvgTrash width={16} height={16} alt="Delete Icon" />Delete
+                                        </button>
                                     )}
                                 </div>
 
@@ -305,7 +317,7 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
                 </li >
             )}
-        </>
+        </React.Fragment>
 
     )
 }

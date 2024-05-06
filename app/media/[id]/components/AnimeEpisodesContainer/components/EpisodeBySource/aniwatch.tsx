@@ -3,7 +3,7 @@ import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import placeholderImg from "@/public/photo-placeholder.jpg"
-import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
+import MarkEpisodeAsWatchedButton from '@/app/components/Buttons/MarkEpisodeAsWatched'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { motion } from 'framer-motion'
 
@@ -49,7 +49,7 @@ function AniwatchEpisode({ data, mediaId, backgroundImg, episodeDescription, mot
                     </Link>
                 </h3>
 
-                <ButtonMarkEpisodeAsWatched
+                <MarkEpisodeAsWatchedButton
                     episodeNumber={episodeNumber}
                     episodeTitle={data.title}
                     mediaId={mediaId}

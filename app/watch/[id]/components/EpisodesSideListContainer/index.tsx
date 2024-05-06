@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import Link from 'next/link'
-import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
+import MarkEpisodeAsWatchedButton from '@/app/components/Buttons/MarkEpisodeAsWatched'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { motion } from 'framer-motion'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
@@ -164,7 +164,7 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
 
                             </Link>
 
-                            <ButtonMarkEpisodeAsWatched
+                            <MarkEpisodeAsWatchedButton
                                 episodeNumber={(item as MediaEpisodes).number}
                                 episodeTitle={source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
                                 mediaId={mediaId}

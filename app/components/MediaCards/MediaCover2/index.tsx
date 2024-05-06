@@ -13,7 +13,7 @@ type MediaListInfo = {
     variants?: any
 }
 
-function MediaListCoverInfo({ positionIndex, data, showCoverArt, alternativeBorder, variants }: MediaListInfo) {
+function MediaCover2({ positionIndex, data, showCoverArt, alternativeBorder, variants }: MediaListInfo) {
 
     return (
         <motion.li className={styles.item_list} data-no-border={alternativeBorder} variants={variants} initial="initial" animate="animate" exit="initial">
@@ -56,4 +56,4 @@ function MediaListCoverInfo({ positionIndex, data, showCoverArt, alternativeBord
 
 }
 
-export default MediaListCoverInfo
+export default MediaCover2

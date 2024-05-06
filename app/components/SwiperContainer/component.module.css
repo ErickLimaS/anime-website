@@ -7,10 +7,3 @@
     display: flex;
     flex-direction: row;
 }
-
-.custom_list_item>* {
-
-    height: inherit;
-    width: inherit !important;
-
-}

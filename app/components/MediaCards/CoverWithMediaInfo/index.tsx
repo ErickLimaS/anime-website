@@ -4,9 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import parse from "html-react-parser"
-import AddToPlaylistButton from '../AddToPlaylistButton'
+import AddToPlaylistButton from '../../Buttons/AddToPlaylist'
 
-function CardMediaCoverAndDescription({ data, customDescription, showButtons }: { data: ApiDefaultResult, customDescription?: string, showButtons?: boolean }) {
+function CoverWithMediaInfo({ data, customDescription, showButtons }: { data: ApiDefaultResult, customDescription?: string, showButtons?: boolean }) {
     return (
 
         <div
@@ -57,4 +57,4 @@ function CardMediaCoverAndDescription({ data, customDescription, showButtons }: 
 
 }
 
-export default CardMediaCoverAndDescription
+export default CoverWithMediaInfo

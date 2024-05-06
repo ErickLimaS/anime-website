@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
-import MediaFormatIcon from '../MediaFormatIcon'
+import MediaFormatIcon from '../../../../DynamicAssets/MediaFormatIcon'
 import DeleteSvg from "@/public/assets/trash.svg"
 import { arrayRemove, doc, getFirestore, FieldPath, setDoc } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
@@ -19,7 +19,7 @@ type ComponentTypes = {
     fromOfflineDb?: boolean
 }
 
-function EpisodeCoverInfo({ data, darkMode }: ComponentTypes) {
+function KeepWatchingEpisodeInfo({ data, darkMode }: ComponentTypes) {
 
     const [wasDeleted, setWasDeleted] = useState<boolean>(false)
 
@@ -122,4 +122,4 @@ function EpisodeCoverInfo({ data, darkMode }: ComponentTypes) {
 
 }
 
-export default EpisodeCoverInfo
+export default KeepWatchingEpisodeInfo

@@ -21,7 +21,7 @@ type BtnTypes = {
     hasText?: boolean
 }
 
-function ButtonMarkChapterAsRead({ chapterNumber, chapterTitle, mediaId, hasText }: BtnTypes) {
+function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, hasText }: BtnTypes) {
 
     const [wasChapterRead, setWasChapterRead] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -33,17 +33,13 @@ function ButtonMarkChapterAsRead({ chapterNumber, chapterTitle, mediaId, hasText
     const db = getFirestore(initFirebase());
 
     // CHECK IF CHAPTER WAS ADDED ON FIRESTORE, THEN CHANGE STATE
-    async function checkChapterMarkedAsRead() {
+    async function wasChapterMarkedAsRead() {
 
-        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+        if (!user) return
 
-        if (!userDoc) return
+        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user.uid))
 
-        const isOnChaptersList = userDoc.get("chaptersRead")
-
-        if (!isOnChaptersList) return
-
-        const chapterRead = isOnChaptersList[mediaId]?.find(
+        const chapterRead = userDoc.get("chaptersRead")[mediaId]?.find(
             (item: { chapterNumber: number }) => item.chapterNumber == chapterNumber
         )
 
@@ -52,11 +48,11 @@ function ButtonMarkChapterAsRead({ chapterNumber, chapterTitle, mediaId, hasText
     }
 
     // ADD OR REMOVE CHAPTER FROM FIRESTORE
-    async function handleChapterRead() {
-
-        setIsLoading(true)
+    async function addOrRemoveChapterRead() {
 
         if (!user) return
+
+        setIsLoading(true)
 
         const episodeData = {
 
@@ -85,7 +81,7 @@ function ButtonMarkChapterAsRead({ chapterNumber, chapterTitle, mediaId, hasText
 
         if (!user) return
 
-        checkChapterMarkedAsRead()
+        wasChapterMarkedAsRead()
 
     }, [user, chapterNumber])
 
@@ -95,7 +91,7 @@ function ButtonMarkChapterAsRead({ chapterNumber, chapterTitle, mediaId, hasText
             <div className={styles.button_container}>
 
                 <motion.button
-                    onClick={() => handleChapterRead()}
+                    onClick={() => addOrRemoveChapterRead()}
                     data-active={wasChapterRead}
                     disabled={isLoading}
                     title={wasChapterRead ? "Mark as Unread" : "Mark as Read "}
@@ -126,4 +122,4 @@ function ButtonMarkChapterAsRead({ chapterNumber, chapterTitle, mediaId, hasText
     )
 }
 
-export default ButtonMarkChapterAsRead
+export default MarkChapterAsReadButton

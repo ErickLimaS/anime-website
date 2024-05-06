@@ -4,7 +4,7 @@ import styles from "./component.module.css"
 import { MangaChapters } from '@/app/ts/interfaces/apiMangadexDataInterface'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead'
+import MarkChapterAsReadButton from '@/app/components/Buttons/MarkChapterAsRead'
 
 type ComponentTypes = {
     mediaId: number,
@@ -83,7 +83,7 @@ function ChaptersSideListContainer({ mediaId, currChapterId, episodesList }: Com
                                 <h4>{item.pages == 0 ? `${item.title} (Not Available)` : item.title == item.chapterNumber ? `Chapter ${item.chapterNumber}` : item.title}</h4>
                             </Link>
 
-                            <ButtonMarkChapterAsRead
+                            <MarkChapterAsReadButton
                                 chapterNumber={Number(item.chapterNumber)}
                                 chapterTitle={item.title}
                                 mediaId={mediaId}

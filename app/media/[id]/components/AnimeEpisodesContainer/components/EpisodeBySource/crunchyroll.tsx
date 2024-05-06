@@ -3,7 +3,7 @@ import React from 'react'
 import Image from 'next/image'
 import styles from "./component.module.css"
 import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import ButtonMarkEpisodeAsWatched from '@/app/components/ButtonMarkEpisodeAsWatched'
+import MarkEpisodeAsWatchedButton from '@/app/components/Buttons/MarkEpisodeAsWatched'
 import { motion } from 'framer-motion'
 
 
@@ -42,7 +42,7 @@ function CrunchyrollEpisode({ data, mediaId, motionStyle, episodesWatched, episo
                     </Link>
                 </h3>
 
-                <ButtonMarkEpisodeAsWatched
+                <MarkEpisodeAsWatchedButton
                     episodeNumber={episodeNumber}
                     episodeTitle={data.title}
                     mediaId={mediaId}

@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import styles from "./component.module.css"
-import MediaListCoverInfo2 from '../../MediaItemCoverInfo2'
+import MediaListCoverInfo2 from '../../MediaCards/MediaCover2'
 import NavButtons from '../../NavButtons'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from "@/app/api/anilist"

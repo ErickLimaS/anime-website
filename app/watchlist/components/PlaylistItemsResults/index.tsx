@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
+import MediaCover from '@/app/components/MediaCards/MediaCover'
 import UserModal from '@/app/components/UserLoginModal'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 
@@ -115,7 +115,7 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: str
                                 userFilteredBookmarks.length > 0 ? (
                                     userFilteredBookmarks.map((item, key: number) => (
                                         <li key={key}>
-                                            <MediaItemCoverInfo data={item as ApiDefaultResult} darkMode />
+                                            <MediaCover data={item as ApiDefaultResult} darkMode />
                                         </li>
                                     )))
                                     :
@@ -125,7 +125,7 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: str
                             ) : (
                                 userBookmarks.map((item, key: number) => (
                                     <li key={key}>
-                                        <MediaItemCoverInfo data={item as ApiDefaultResult} darkMode />
+                                        <MediaCover data={item as ApiDefaultResult} darkMode />
                                     </li>
                                 )))
                             }

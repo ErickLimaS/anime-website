@@ -7,8 +7,7 @@ import {
     getFirestore, doc,
     updateDoc, arrayUnion,
     arrayRemove, getDoc,
-    FieldPath, setDoc,
-    DocumentSnapshot, DocumentData
+    FieldPath
 } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
@@ -31,13 +30,15 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
     const db = getFirestore(initFirebase());
 
     // WHEN BUTTON IS CLICKED, RUN FUNCTION TO ADD OR REMOVE MEDIA FROM FIRESTORE
-    async function addThisMedia() {
+    async function addOrRemoveMediaOnDb() {
 
         if (!user) {
 
             // opens user login modal
             setIsUserModalOpen(true)
+
             return
+
         }
 
         setIsLoading(true)
@@ -66,28 +67,20 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
         !wasAddedToPlaylist ? setWasAddedToPlaylist(true) : setWasAddedToPlaylist(false)
 
         setIsLoading(false)
+
     }
 
     // IF MEDIA ID MATCHS ANY RESULT ON DB, IT SETS THIS COMPONENT BUTTON AS ACTIVE
     async function isMediaOnDB() {
 
-        if (!user) return setWasAddedToPlaylist(false)
+        if (!user) return
 
-        let userDoc: DocumentSnapshot<DocumentData, DocumentData> = await getDoc(doc(db, 'users', user.uid))
-
-        // IF USER HAS NO DOC ON FIRESTORE, IT CREATES ONE
-        if (userDoc.exists() == false) {
-
-            userDoc = await setDoc(doc(db, 'users', user.uid), {}) as unknown as DocumentSnapshot<DocumentData, DocumentData>
-
-            return
-        }
+        const userDoc = await getDoc(doc(db, 'users', user.uid))
 
         const isMediaIdOnDoc = userDoc.get("bookmarks")?.find((item: { id: number }) => item.id == data.id)
 
-        if (isMediaIdOnDoc) {
-            setWasAddedToPlaylist(true)
-        }
+        if (isMediaIdOnDoc) setWasAddedToPlaylist(true)
+
     }
 
     useEffect(() => {
@@ -102,7 +95,8 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
     }, [user])
 
     return (
-        <>
+        <React.Fragment>
+            {/* SHOWS USER LOGIN MODAL */}
             <AnimatePresence
                 initial={false}
                 mode='wait'
@@ -119,7 +113,7 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
                 whileTap={{ scale: 0.85 }}
                 id={styles.container}
                 className={customText ? styles.custom_text : ""}
-                onClick={() => addThisMedia()}
+                onClick={() => addOrRemoveMediaOnDb()}
                 disabled={isLoading}
                 data-added={wasAddedToPlaylist}
                 aria-label={wasAddedToPlaylist ? "Click To Remove from Playlist" : "Click To Add To Playlist"}
@@ -135,7 +129,7 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
                 }
             </motion.button>
 
-        </>
+        </React.Fragment>
     )
 }
 
