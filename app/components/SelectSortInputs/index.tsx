@@ -32,11 +32,13 @@ function SelectSort({ options }: { options?: { name: string, value: string }[] }
                     defaultValue={new URLSearchParams(Array.from(searchParams.entries())).get("sort") || "title_asc"}
                 >
                     {options ? (
+                        
                         options.map((item, key) => (
                             <option key={key} value={item.value}>
                                 {item.name}
                             </option>
                         ))
+
                     ) : (
                         <>
                             <option value="title_asc">

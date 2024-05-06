@@ -18,7 +18,7 @@ import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestor
 import { initFirebase } from '@/app/firebaseApp'
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import { useAuthState } from 'react-firebase-hooks/auth'
-import UserSettingsModal from '@/app/layout/header/components/UserSettingsModal'
+import UserSettingsModal from '@/app/layout/header/components/User/UserSettingsModal'
 
 type ModalTypes = {
     onClick?: MouseEventHandler<HTMLDivElement>,

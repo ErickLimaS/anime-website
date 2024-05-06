@@ -1,9 +1,9 @@
 "use client"
 import React, { useLayoutEffect, useState } from 'react'
 import styles from "./component.module.css"
-import CardMediaCoverAndDescription from '@/app/components/CardMediaCoverAndDescription'
+import CoverWithMediaInfo from '@/app/components/MediaCards/CoverWithMediaInfo'
 import Link from 'next/link'
-import anilist from '@/api/anilist'
+import anilist from '@/app/api/anilist'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 
@@ -30,7 +30,7 @@ function AnimeNavListHover() {
                     <h5>Anime of the Day</h5>
 
                     {animeData ? (
-                        <CardMediaCoverAndDescription data={animeData[0]} />
+                        <CoverWithMediaInfo data={animeData[0]} />
                     ) : (
                         <LoadingSvg />
                     )}

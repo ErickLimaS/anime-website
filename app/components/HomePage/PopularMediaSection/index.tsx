@@ -1,14 +1,27 @@
 "use client"
 import React, { useState } from 'react'
-import MediaItemCoverInfo from '../../MediaItemCoverInfo'
+import MediaCover from '../../MediaCards/MediaCover'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Link from 'next/link'
 import styles from "./component.module.css"
 import ChevronRightIcon from '@/public/assets/chevron-right.svg';
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg';
-import SwiperListContainer from '../../SwiperListContainer'
+import SwiperContainer from '../../SwiperContainer'
 import { AnimatePresence, motion } from 'framer-motion'
-import anilist from '@/api/anilist'
+import anilist from '@/app/api/anilist'
+import { SwiperSlide } from 'swiper/react'
+
+const motionVariants = {
+    initial: {
+        scale: 0,
+    },
+    animate: {
+        scale: 1,
+        transition: {
+            staggerChildren: 0.2,
+        },
+    },
+}
 
 function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] }) {
 
@@ -46,18 +59,6 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
 
     }
 
-    const motionVariants = {
-        initial: {
-            scale: 0,
-        },
-        animate: {
-            scale: 1,
-            transition: {
-                staggerChildren: 0.2,
-            },
-        },
-    }
-
     return (
         <React.Fragment>
             <section id={styles.popular_container} >
@@ -77,11 +78,23 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
 
                     {/* SHOWS ONLY ON MOBILE */}
                     <div id={styles.popular_list_container}>
-                        <SwiperListContainer data={fetchedData?.length > 0 ? [...initialData, ...fetchedData] : initialData} />
+                        <SwiperContainer>
+
+                            {(fetchedData?.length > 0 ? [...initialData, ...fetchedData] : initialData).map((item, key) => (
+
+                                <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
+
+                                    <MediaCover positionIndex={key + 1} darkMode={true} data={item as ApiDefaultResult} />
+
+                                </SwiperSlide>
+
+                            ))}
+
+                        </SwiperContainer>
                     </div>
 
                     {initialData.map((item, key: number) => (
-                        <MediaItemCoverInfo data={item} key={key} positionIndex={key + 1} darkMode={true} hiddenOnDesktop />
+                        <MediaCover data={item} key={key} positionIndex={key + 1} darkMode={true} hiddenOnDesktop />
                     ))}
 
 
@@ -97,7 +110,7 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
                         animate={"animate"}
                     >
                         {fetchedData?.map((item, key: number) => (
-                            <MediaItemCoverInfo data={item} key={key} darkMode={true} hiddenOnDesktop />
+                            <MediaCover data={item} key={key} darkMode={true} hiddenOnDesktop />
                         ))}
                     </motion.div>
                 )}

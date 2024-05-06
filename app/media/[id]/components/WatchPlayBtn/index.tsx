@@ -1,13 +1,13 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import PlaySvg from "@/public/assets/play2.svg"
-import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
+import LoadingSvg from "@/public/assets/Eclipse-1s-200px-custom-color.svg"
 import { useRouter } from 'next/navigation'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
-import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOnApi'
+import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOptions'
 import styles from "./component.module.css"
 import { motion } from 'framer-motion'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
@@ -93,7 +93,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     }
 
-    // IF NO EPISODES FOUND ON "EPISODES WATCHED",
+    // IF NO EPISODE FOUND ON "EPISODES WATCHED",
     // IT VERIFIES LAST EPISODE ON "KEEP WATCHING"
     async function checkKeepWatchingList() {
 
@@ -123,7 +123,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     }
 
-    // if ANIME, get ID for the first episode of this media / if MOVIE, get movie ID  
+    // if its a ANIME, get ID for the first episode of this media / if MOVIE, get movie ID  
     async function fetchMediaWatchUrl(lastEpisodeWatched?: number) {
 
         setIsLoading(true)
@@ -156,7 +156,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         // if media is null, try with gogoanime
         if (!media) {
 
-            media = await fetchOnAniWatch() as EpisodeAnimeWatch[]// High chances of getting the wrong media
+            media = await fetchOnAniWatch() as EpisodeAnimeWatch[] // High chances of getting the wrong media
 
             if (!media) {
                 setIsLoading(false)
@@ -194,14 +194,6 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         }
 
         setIsLoading(false)
-    }
-
-    // redirect to watch page
-    function redirectToWatchPage() {
-
-        setIsLoading(true)
-
-        router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeLastStop}` : ""}`)
 
     }
 
@@ -221,7 +213,13 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
         <motion.button
             id={styles.container}
             role='link'
-            onClick={() => redirectToWatchPage()}
+            onClick={() => {
+
+                setIsLoading(true)
+
+                router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeLastStop}` : ""}`)
+
+            }}
             disabled={isLoading || movieId == null}
             aria-label={episodeNumber ? `Continue Episode ${episodeNumber}` : "Watch Episode 1"}
             title={isLoading ?
@@ -248,7 +246,8 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
             )}
 
             {isLoading ?
-                <LoadingSvg width={16} height={16} /> :
+                <LoadingSvg fill="#fff" width={16} height={16} />
+                :
                 <PlaySvg fill="#fff" width={16} height={16} />
             }
 

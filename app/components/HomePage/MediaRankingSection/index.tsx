@@ -1,10 +1,10 @@
 "use client"
 import React, { useState } from 'react'
 import styles from "./component.module.css"
-import MediaListCoverInfo2 from '../../MediaItemCoverInfo2'
+import MediaListCoverInfo2 from '../../MediaCards/MediaCover2'
 import NavButtons from '../../NavButtons'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import anilist from "@/api/anilist"
+import anilist from "@/app/api/anilist"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'

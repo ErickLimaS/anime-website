@@ -1,12 +1,28 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import SwiperListContainer from '../../SwiperListContainer'
+import SwiperContainer from '../../SwiperContainer'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
+import KeepWatchingEpisodeInfo from './components/KeepWatchingEpisodeInfo'
+import { SwiperSlide } from 'swiper/react'
+
+const motionVariants = {
+    initial: {
+        opacity: 0,
+        height: 0
+    },
+    animate: {
+        opacity: 1,
+        height: "auto",
+        transition: {
+            staggerChildren: 0.1,
+        },
+    }
+}
 
 function KeepWatchingSection() {
 
@@ -17,20 +33,6 @@ function KeepWatchingSection() {
     const db = getFirestore(initFirebase());
 
     const [watchingList, setWatchingList] = useState<KeepWatchingItem[]>([])
-
-    const motionVariants = {
-        initial: {
-            opacity: 0,
-            height: 0
-        },
-        animate: {
-            opacity: 1,
-            height: "auto",
-            transition: {
-                staggerChildren: 0.1,
-            },
-        }
-    }
 
     async function getWatchingList() {
 
@@ -78,22 +80,33 @@ function KeepWatchingSection() {
 
                     <div>
 
-                        <SwiperListContainer
-                            keepWatchingVariant={true}
-                            data={watchingList}
+                        <SwiperContainer
                             options={{
                                 slidesPerView: 2.2,
                                 bp480: 2.2,
                                 bp740: 3.2,
                                 bp1275: 4.2
                             }}
-                        />
+                        >
+
+                            {watchingList.map((item, key) => (
+
+                                <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
+
+                                    <KeepWatchingEpisodeInfo darkMode={true} data={item as KeepWatchingItem} />
+
+                                </SwiperSlide>
+
+                            ))}
+
+                        </SwiperContainer>
 
                     </div>
 
                 </motion.section>
-            )}
-        </AnimatePresence>
+            )
+            }
+        </AnimatePresence >
     )
 }
 

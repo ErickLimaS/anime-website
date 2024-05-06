@@ -1,14 +1,15 @@
-// made for many MISTAKES of API with spelling.
-// It converts the wrong name that i got to the correct one,
-//  or to the one that gets the correct result.
-export function checkApiMisspellingMedias(mediaTitle: string) {
+// Made for MISTAKES of ANILIST API with title spelling.
+
+// It converts the wrong name to the correct one, or to the one that gets the correct result.
+
+export function checkAnilistTitleMisspelling(mediaTitle: string) {
 
     const animesList = [
-        { wrongNameOnApi: "NARUTO: Shippuuden", correctName: "NARUTO: Shippuden" },
-        { wrongNameOnApi: "JUJUTSU KAISEN", correctName: "JUJUTSU KAISEN (TV)" }
+        { wrongName: "NARUTO: Shippuuden", correctName: "NARUTO: Shippuden" },
+        { wrongName: "JUJUTSU KAISEN", correctName: "JUJUTSU KAISEN (TV)" }
     ]
 
-    const hasCorrectName = animesList.find(item => item.wrongNameOnApi.toLowerCase() == mediaTitle.toLowerCase())
+    const hasCorrectName = animesList.find(item => item.wrongName.toLowerCase() == mediaTitle.toLowerCase())
 
     return hasCorrectName?.correctName || mediaTitle
 

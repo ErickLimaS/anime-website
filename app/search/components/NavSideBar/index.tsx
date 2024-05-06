@@ -5,6 +5,23 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import SvgFilter from "@/public/assets/funnel.svg"
 import SvgClose from "@/public/assets/x.svg"
+import * as SearchOptions from "./constants"
+
+const showUpMotion = {
+
+    hidden: {
+        opacity: 0,
+        scale: 1.08
+    },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            duration: 0.3
+        }
+    }
+
+}
 
 function NavSideBar({ isMobile }: { isMobile: boolean }) {
 
@@ -17,71 +34,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
     const [isLoading, setLoading] = useState(false)
     const [openFiltersMenu, setOpenFiltersMenu] = useState(false)
 
-    const showUpMotion = {
-
-        hidden: {
-            opacity: 0,
-            scale: 1.08
-        },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                duration: 0.3
-            }
-        }
-
-    }
-
     const range = (n: number) => [...Array(n).keys()]
-
-    const allGenresAnilist = [
-        { name: "Action", value: "action" },
-        { name: "Comedy", value: "comedy" },
-        { name: "Drama", value: "drama" },
-        { name: "Ecchi", value: "ecchi" },
-        { name: "Fantasy", value: "fantasy" },
-        { name: "Horror", value: "horror" },
-        { name: "Mahou", value: "mahou" },
-        { name: "Shoujo", value: "shoujo" },
-        { name: "Mecha", value: "mecha" },
-        { name: "Mystery", value: "mystery" },
-        { name: "Music", value: "music" },
-        { name: "Psychological", value: "psychological" },
-        { name: "Romance", value: "romance" },
-        { name: "Slice of Life", value: "slice-of-Life" },
-        { name: "Sci-fi", value: "sci-fi" },
-        { name: "Sports", value: "sports" },
-        { name: "Supernatural", value: "supernatural" },
-        { name: "Thriller", value: "thriller" }
-    ]
-
-    const allTypesAnilist = [
-        { name: "Anime", value: "tv" },
-        { name: "Mangas", value: "manga" },
-        { name: "Movie", value: "movie" },
-        { name: "Novel", value: "novel" },
-        { name: "Special", value: "special" },
-        { name: "Ova", value: "ova" },
-        { name: "Ona", value: "ona" },
-        { name: "Music", value: "music" },
-        { name: "Tv Short", value: "tv_short" },
-        { name: "One Shot", value: "one_shot" },
-    ]
-
-    const allStatusAnilist = [
-        { name: "Finished", value: "finished" },
-        { name: "Releasing", value: "ongoing" },
-        { name: "To be Released", value: "upcoming" },
-        { name: "Hiatus", value: "unknown" },
-    ]
-
-    const allSeasonsAnilist = [
-        { name: "Summer", value: "summer" },
-        { name: "Winter", value: "winter" },
-        { name: "Fall", value: "fall" },
-        { name: "Spring", value: "spring" }
-    ]
 
     function fetchData(queryType: string, inputTarget: any) {
 
@@ -216,7 +169,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
 
                                     <ul>
 
-                                        {allGenresAnilist.map((item, key) => (
+                                        {SearchOptions.allGenres.map((item, key) => (
                                             <li key={key}>
                                                 <label>
                                                     {item.name}
@@ -260,7 +213,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                     <p>TYPE</p>
 
                                     <ul>
-                                        {allTypesAnilist.map((item, key) => (
+                                        {SearchOptions.allTypes.map((item, key) => (
                                             <li key={key}>
                                                 <label>
                                                     {item.name}
@@ -283,7 +236,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
 
                                     <ul>
 
-                                        {allStatusAnilist.map((item, key) => (
+                                        {SearchOptions.allStatus.map((item, key) => (
                                             <li key={key}>
                                                 <label>
                                                     {item.name}
@@ -307,7 +260,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
 
                                     <ul>
 
-                                        {allSeasonsAnilist.map((item, key) => (
+                                        {SearchOptions.allSeasons.map((item, key) => (
                                             <li key={key}>
                                                 <label>
                                                     {item.name}

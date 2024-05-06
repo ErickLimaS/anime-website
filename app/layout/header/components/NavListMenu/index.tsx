@@ -36,7 +36,7 @@ const animesGenres = [
     { name: "Thriller", value: "thriller" },
     { name: "Romance", value: "romance" },
     { name: "Slice of Life", value: "slice-of-life" },
-    { name: "Mystery", value: "Mystery" },
+    { name: "Mystery", value: "mystery" },
     { name: "Sports", value: "sports" },
 ]
 

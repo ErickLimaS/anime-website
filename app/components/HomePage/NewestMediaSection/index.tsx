@@ -1,11 +1,11 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import MediaListCoverInfo2 from '../../MediaItemCoverInfo2'
-import CardMediaCoverAndDescription from '../../CardMediaCoverAndDescription'
+import MediaListCoverInfo2 from '../../MediaCards/MediaCover2'
+import CoverWithMediaInfo from '../../MediaCards/CoverWithMediaInfo'
 import NavButtons from '../../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import anilist from "@/api/anilist"
+import anilist from "@/app/api/anilist"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
@@ -101,7 +101,7 @@ function NewestMediaSection(props: PropsTypes) {
                     <>
                         <li>
                             {(mediaList[0] != undefined) ? (
-                                <CardMediaCoverAndDescription data={(mediaList as ApiDefaultResult[])[0]} />
+                                <CoverWithMediaInfo data={(mediaList as ApiDefaultResult[])[0]} />
                             ) : (
                                 <p>No results for today</p>
                             )}

@@ -2,14 +2,14 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import React from "react";
 import HeroCarousel from "./components/HomePage/HeroCarouselHomePage";
-import anilist from '../api/anilist';
+import anilist from './api/anilist';
 import NavThoughMedias from "./components/HomePage/NavThoughMedias";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/HomePage/NewestMediaSection";
 import MediaRankingSection from "./components/HomePage/MediaRankingSection";
 import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
-import AddToPlaylistButton from "./components/AddToPlaylistButton";
+import AddToPlaylistButton from "./components/Buttons/AddToPlaylist";
 import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";
 import { headers } from "next/headers";
 import KeepWatchingSection from "./components/HomePage/KeepWatchingSection";
@@ -42,7 +42,7 @@ export default async function Home() {
     res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
   ).then(res => res.map((item) => item.media))
 
-  // section 1 => uses same data, but filtered to the ones that has bannerimg
+  // section 1 => uses same data, but filtered to the ones that has banner img
   const popularData = mediaRankingData.filter(item => item.bannerImage)
 
   // used on banner section

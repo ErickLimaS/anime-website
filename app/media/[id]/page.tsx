@@ -1,11 +1,11 @@
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import React from 'react'
-import anilist from "@/api/anilist"
+import anilist from "@/app/api/anilist"
 import styles from "./page.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
-import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
+import MediaCover from '@/app/components/MediaCards/MediaCover'
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import PlaySvg from "@/public/assets/play-circle.svg"
 import BookSvg from "@/public/assets/book.svg"
@@ -15,17 +15,17 @@ import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
-import AddToPlaylistButton from '@/app/components/AddToPlaylistButton'
-import ScoreRating from '@/app/components/ScoreRating'
+import AddToPlaylistButton from '@/app/components/Buttons/AddToPlaylist'
+import ScoreRating from '@/app/components/DynamicAssets/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
-import SwiperListContainer from '@/app/components/SwiperListContainer'
 import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
-import CommentSectionContainer from '../../components/CommentSectionContainer'
-import { getMediaInfo } from '@/api/imdb'
+import CommentSection from '../../components/CommentSection'
+import { getMediaInfo } from '@/app/api/consumetImdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import AddToNotificationsList from './components/AddToNotifications'
+import RelatedMediaSwiperContainer from './components/RelatedMediaSwiperContainer'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -54,16 +54,25 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
   })
 
-  let imdbEpisodesMapped: ImdbEpisode[] = []
-
-  // get media info on imdb
+  // GET MEDIA INFO ON IMDB
   const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
 
-  // get episodes on imdb
-  imdbMediaInfo?.seasons?.map(
-    itemA => itemA.episodes?.map(
-      itemB => imdbEpisodesMapped.push(itemB))
-  )
+  // GET MEDIA EPISODES ON IMDB
+  function getEpisodesOnImdb() {
+
+    let imdbEpisodesMapped: ImdbEpisode[] = []
+
+    imdbMediaInfo?.seasons?.map(
+      itemA => itemA.episodes?.map(
+        itemB => imdbEpisodesMapped.push(itemB))
+
+    )
+
+    return imdbEpisodesMapped
+
+  }
+
+  const imdbEpisodes = getEpisodesOnImdb()
 
   // RETURNS A RANDOM IMAGE URL
   function randomizeBcgImg() {
@@ -214,7 +223,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2>EPISODES</h2>
 
-                <p>{imdbEpisodesMapped.length || mediaData.episodes || "Not Available"}</p>
+                <p>{imdbEpisodes.length || mediaData.episodes || "Not Available"}</p>
               </li>
             )}
 
@@ -315,7 +324,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <h2 className={styles.heading_style}>CAST</h2>
 
-                {/* MAKE HOVER, THAN FLIP IMAGE AND SHOW THE ACTOR */}
+                {/* WHEN HOVERING, FLIP IMAGE AND SHOW THE ACTOR */}
                 <div>
                   <ul className='display_flex_row'>
                     {mediaData.characters.edges.map((item, key: number) => (
@@ -359,15 +368,14 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </section>
             )}
 
-            {/* EPISODES ONLY IF ANIME */}
+            {/* EPISODES - ONLY IF ANIME */}
             {(mediaData.type == "ANIME" && mediaData.format != "MOVIE" && mediaData.status != "NOT_YET_RELEASED") && (
               <section id={styles.episodes_container}>
 
                 <EpisodesContainer
                   dataCrunchyroll={episodesFromCrunchyroll}
                   dataImdb={imdbMediaInfo?.seasons}
-                  dataImdbMapped={imdbEpisodesMapped}
-                  vidsrcId={imdbMediaInfo?.vidsrcId || null}
+                  dataImdbMapped={imdbEpisodes}
                   mediaTitle={mediaData.title.romaji}
                   mediaFormat={mediaData.format}
                   mediaId={mediaData.id}
@@ -379,7 +387,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
               </section>
             )}
 
-            {/* CHAPTERS ONLY IF MANGA */}
+            {/* CHAPTERS - ONLY IF MANGA */}
             {mediaData.type == "MANGA" && (
               <section>
 
@@ -400,7 +408,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                 <ul>
 
-                  <SwiperListContainer data={(mediaData).relations.nodes} />
+                  <RelatedMediaSwiperContainer data={mediaData.relations.nodes} />
 
                 </ul>
 
@@ -412,7 +420,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <h2 className={styles.heading_style}>COMMENTS</h2>
 
-              <CommentSectionContainer media={mediaData} />
+              <CommentSection media={mediaData} />
 
             </section>
 
@@ -426,8 +434,8 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                   {mediaData?.recommendations.edges.slice(0, 12).map((item, key: number) => (
 
-                    <li key={key} >
-                      <MediaItemCoverInfo positionIndex={key + 1} darkMode={true} data={item.node.mediaRecommendation} />
+                    <li key={key}>
+                      <MediaCover positionIndex={key + 1} darkMode={true} data={item.node.mediaRecommendation} />
                     </li>
 
                   ))}

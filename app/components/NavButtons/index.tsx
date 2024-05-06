@@ -1,9 +1,9 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import aniwatch from '@/api/aniwatch'
+import aniwatch from '@/app/api/aniwatch'
 import { EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
-import gogoanime from '@/api/gogoanime'
+import gogoanime from '@/app/api/consumetGoGoAnime'
 import { EpisodeLinksGoGoAnime } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import CloudOfflineSvg from "@/public/assets/cloud-offline.svg"
 import CloudOnlineSvg from "@/public/assets/cloud.svg"
@@ -56,7 +56,7 @@ function NavButtons(props: PropsType) {
 
                 case 'gogoanime':
 
-                    const gogoanimeResponse = await gogoanime.getLinksForThisEpisode("one-piece-episode-1") as EpisodeLinksGoGoAnime
+                    const gogoanimeResponse = await gogoanime.getEpisodeStreamingLinks2("one-piece-episode-1") as EpisodeLinksGoGoAnime
 
                     setGogoanimeAvailble(gogoanimeResponse != null ? true : false)
 

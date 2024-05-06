@@ -187,3 +187,11 @@ li {
   aspect-ratio: 16 / 9;
   width: 100%;
 }
+
+/* SWIPER JS */
+.custom_swiper_list_item>* {
+
+  height: inherit;
+  width: inherit !important;
+
+}

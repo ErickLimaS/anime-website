@@ -1,10 +1,10 @@
-import news from '@/api/news'
+import news from '@/app/api/consumetNews'
 import { News, NewsArcticle } from '@/app/ts/interfaces/newsInterface'
 import React from 'react'
 import styles from "./page.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
-import NewsCard1 from '@/app/news/components/NewsCard1'
+import NewsCard from '@/app/news/components/NewsCard'
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
@@ -75,7 +75,7 @@ async function NewPage({ params }: { params: { id: string } }) {
 
                         <li key={key} >
                             <article>
-                                <NewsCard1 data={item} />
+                                <NewsCard data={item} />
                             </article>
                         </li>
 

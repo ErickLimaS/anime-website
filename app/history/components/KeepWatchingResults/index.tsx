@@ -6,7 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSearchParams } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
-import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
+import MediaCover from '@/app/components/MediaCards/MediaCover'
 import UserModal from '@/app/components/UserLoginModal'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 
@@ -21,7 +21,7 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: stri
     const searchParams = useSearchParams();
 
     // GETS KEEP WATCHING LIST ON USER DOC
-    async function getPlaylist() {
+    async function getUserKeepWatching() {
 
         const db = getFirestore(initFirebase());
 
@@ -88,15 +88,17 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: stri
 
     }, [params?.format])
 
-    // IF USER IS NOT LOGGED IN, HE IS REDIRECTED TO LOGIN PAGE
+    // ONLY RUNS WHEN USER IS LOGGED IN
     useEffect(() => {
 
-        if (user?.uid) getPlaylist()
+        if (user?.uid) getUserKeepWatching()
 
     }, [user])
 
     return (
         <>
+
+            {/* IF USER IS NOT LOGGED IN */}
             {(!user && !loading) && (
 
                 <UserModal
@@ -117,7 +119,7 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: stri
                             userFilteredKeepWatching.length > 0 ? (
                                 userFilteredKeepWatching.map((item, key: number) => (
                                     <li key={key}>
-                                        <MediaItemCoverInfo data={item as KeepWatchingItem} darkMode />
+                                        <MediaCover data={item as KeepWatchingItem} darkMode />
                                     </li>
                                 ))
                             ) : (
@@ -127,7 +129,7 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: stri
                             userKeepWatching.length > 0 ? (
                                 userKeepWatching.map((item, key: number) => (
                                     <li key={key}>
-                                        <MediaItemCoverInfo data={item as KeepWatchingItem} darkMode />
+                                        <MediaCover data={item as KeepWatchingItem} darkMode />
                                     </li>
                                 ))
                             ) : (

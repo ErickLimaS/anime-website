@@ -2,18 +2,18 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css";
 import Link from 'next/link';
-import { MangaChapters, MangaInfo, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface';
+import { MangaChapters, MangaInfo } from '@/app/ts/interfaces/apiMangadexDataInterface';
 import BookSvg from "@/public/assets/book.svg"
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import Image from 'next/image';
 import ErrorImg from "@/public/error-img-2.png"
-import { stringToUrlFriendly } from '@/app/lib/convertStringToUrlFriendly';
-import manga from '@/api/manga';
+import manga from '@/app/api/consumetManga';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
-import ButtonMarkChapterAsRead from '@/app/components/ButtonMarkChapterAsRead';
+import MarkChapterAsReadButton from '@/app/components/Buttons/MarkChapterAsRead';
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOnApi';
+import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOptions';
+import { stringToUrlFriendly } from '@/app/lib/convertStringsTo';
 
 const loadingChaptersMotion = {
   initial: {
@@ -45,7 +45,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
   const rangeChaptersPerPage = 10
 
-  const handlePageClick = (event: { selected: number }) => {
+  function handlePageClick(event: { selected: number }) {
 
     setLoading(true) // needed to refresh chapters component "Mark Chapters Read"
 
@@ -57,7 +57,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
   }
 
-  const getChapters = async () => {
+  async function getChapters() {
 
     setLoading(true)
 
@@ -179,7 +179,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
               </Link>
 
-              <ButtonMarkChapterAsRead
+              <MarkChapterAsReadButton
                 chapterNumber={Number(item.chapterNumber)}
                 chapterTitle={item.title}
                 mediaId={mediaData.id}

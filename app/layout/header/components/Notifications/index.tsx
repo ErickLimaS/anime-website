@@ -19,7 +19,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
-import anilist from '@/api/anilist'
+import anilist from '@/app/api/anilist'
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
 function NotificationsComponent() {

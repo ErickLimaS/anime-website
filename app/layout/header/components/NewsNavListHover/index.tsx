@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import styles from "./component.module.css"
 import Link from 'next/link'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
-import news from '@/api/news'
+import news from '@/app/api/consumetNews'
 import { News } from '@/app/ts/interfaces/newsInterface'
 import SvgCalendar from "@/public/assets/calendar3.svg"
 import Image from 'next/image'

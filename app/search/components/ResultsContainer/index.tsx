@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import styles from "./component.module.css"
-import MediaItemCoverInfo from '@/app/components/MediaItemCoverInfo'
+import MediaCover from '@/app/components/MediaCards/MediaCover'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -80,7 +80,7 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
                                 initial="hidden"
                                 animate="visible"
                             >
-                                <MediaItemCoverInfo darkMode data={item} fromOfflineDb />
+                                <MediaCover darkMode data={item} fromOfflineDb />
                             </motion.div>
                         ))}
 

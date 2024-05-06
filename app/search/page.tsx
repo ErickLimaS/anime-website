@@ -12,22 +12,26 @@ export const metadata: Metadata = {
     description: 'Filter animes released on that year, or just discover a new one in a genre you didnt watched yet.',
 }
 
-async function SearchPage({ searchParams }: {
-    searchParams: {
-        type?: string,
-        title?: string,
-        genre?: string[],
-        year?: number,
-        status?: string,
-        page?: string,
-        sort?: string,
-        season?: string,
-    }
-}) {
+type SearchPageTypes = {
+
+    type?: string,
+    title?: string,
+    genre?: string[],
+    year?: number,
+    status?: string,
+    page?: string,
+    sort?: string,
+    season?: string,
+
+}
+
+async function SearchPage({ searchParams }: { searchParams: SearchPageTypes }) {
 
     const isMobile = checkDeviceIsMobile(headers())
 
-    const sort = await axios.get(`${process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
+    const OFFLINE_ANIME_DATABASE = process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL
+
+    const sort = await axios.get(`${OFFLINE_ANIME_DATABASE}?${Object.entries(searchParams).map(e => e.join('=')).join('&')}`).then(res => res.data)
 
     return (
         <main id={styles.container}>

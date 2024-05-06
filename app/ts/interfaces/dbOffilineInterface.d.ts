@@ -9,6 +9,9 @@ export interface MediaDbOffline {
         season: string,
         year: number
     },
-    type: string
+    type: string,
+    status: string,
+    sources: string[],
+    anilistId: string,
 
 }

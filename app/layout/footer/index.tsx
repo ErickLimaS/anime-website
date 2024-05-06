@@ -6,7 +6,7 @@ import Facebook from "../../../public/assets/facebook.svg"
 import Instagram from "../../../public/assets/instagram.svg"
 import Youtube from "../../../public/assets/youtube.svg"
 import Twitter from "../../../public/assets/twitter-x.svg"
-import API from '../../../api/anilist'
+import API from '../../api/anilist'
 
 async function Footer() {
 
