@@ -129,7 +129,7 @@ function Player({
         // get user preferred language
         async function getUserPreferredLanguage(userDoc: DocumentSnapshot<DocumentData, DocumentData> | null) {
 
-            let preferredLanguage
+            let preferredLanguage: string
 
             if (userDoc == null) preferredLanguage = "English"
             else preferredLanguage = await userDoc?.get("videoSubtitleLanguage")
