@@ -1,7 +1,20 @@
 #container .background {
 
+    z-index: 1;
+
+    position: sticky;
+    top: 0;
+
     background: black;
 
+}
+
+@media(min-width: 840px) {
+    #container .background {
+
+        position: relative;
+
+    }
 }
 
 #video_container {

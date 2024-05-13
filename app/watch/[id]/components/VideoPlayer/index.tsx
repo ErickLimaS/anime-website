@@ -89,12 +89,12 @@ function Player({
     // get user preferences: subtitles, video quality, skip intro...
     async function getUserPreferences() {
 
-        if (!user) return
-
-        const userDoc = await getDoc(doc(db, "users", user.uid))
+        const userDoc = user ? await getDoc(doc(db, "users", user.uid)) : null
 
         // verify if user watched the current episode before
-        async function currEpisodeWasWatched(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+        async function currEpisodeWasWatched(userDoc: DocumentSnapshot<DocumentData, DocumentData> | null) {
+
+            if (userDoc == null) return setWasWatched(false)
 
             const episodesWasWatched = await userDoc?.get("episodesWatched")
 
@@ -105,7 +105,15 @@ function Player({
         }
 
         // get user Auto Skip and Auto Next Episode
-        async function getUserAutoSkip(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+        async function getUserAutoSkip(userDoc: DocumentSnapshot<DocumentData, DocumentData> | null) {
+
+            if (userDoc == null) {
+
+                setAutoSkipIntroAndOutro(false)
+                setAutoNextEpisode(true)
+
+                return
+            }
 
             let userAutoSkipIntroAndOutro: boolean | null = null
             let userNextEpisode: boolean | null = null
@@ -119,11 +127,12 @@ function Player({
         }
 
         // get user preferred language
-        async function getUserPreferredLanguage(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+        async function getUserPreferredLanguage(userDoc: DocumentSnapshot<DocumentData, DocumentData> | null) {
 
-            let preferredLanguage: string | null = null
+            let preferredLanguage
 
-            preferredLanguage = await userDoc?.get("videoSubtitleLanguage")
+            if (userDoc == null) preferredLanguage = "English"
+            else preferredLanguage = await userDoc?.get("videoSubtitleLanguage")
 
             // get user language and filter through the available subtitles to this media
             let subListMap: SubtitlesType[] = []
@@ -152,7 +161,7 @@ function Player({
         }
 
         // get user preferred quality ***** CURRENTLY DISABLED (im trying to understand the player api)
-        async function getUserVideoQuality(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+        async function getUserVideoQuality(userDoc: DocumentSnapshot<DocumentData, DocumentData> | null) {
 
             let userVideoQuality: string | null = null
 
@@ -173,7 +182,9 @@ function Player({
         }
 
         // gets last time position of episode
-        async function getUserLastStopOnCurrentEpisode(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+        async function getUserLastStopOnCurrentEpisode(userDoc: DocumentSnapshot<DocumentData, DocumentData> | null) {
+
+            if (userDoc == null) return setEpisodeLastStop(0)
 
             if (currentLastStop || !userDoc) return
 
@@ -439,7 +450,7 @@ function Player({
                 )}
 
                 <MediaProvider >
-                    {subList.map((item) => (
+                    {subList?.map((item) => (
                         <Track
                             key={item.src}
                             src={item.src}
