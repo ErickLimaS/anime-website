@@ -63,79 +63,42 @@
 
 #itens_container {
 
-    display: grid;
+    display: flex;
+    flex-direction: column-reverse;
+
+    align-items: center;
 
     width: 96%;
     max-width: var(--breakpoint-xxl);
 
     margin: auto;
 
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-areas:
-        "button_and_title button_and_title"
-        "item1 item2"
-        "item3 item4"
-        "item5 item6"
-    ;
-    grid-gap: 32px 16px;
-    gap: 32px 16px;
-    justify-items: center;
-    justify-content: center;
 
-}
-
-@media(min-width: 430px) {
-    #itens_container {
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-areas:
-            "button_and_title button_and_title button_and_title"
-            "item1 item2 item3"
-            "item4 item5 item6"
-        ;
-    }
-}
-
-@media(min-width: 620px) {
-    #itens_container {
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-areas:
-            "button_and_title button_and_title button_and_title button_and_title"
-            "item1 item2 item3 item4"
-            "item5 item6 item7 item8"
-        ;
-    }
 }
 
 @media(min-width: 876px) {
     #itens_container {
-        grid-template-columns: repeat(7, 1fr);
-        grid-template-areas:
-            "item1 item2 item3 item4 item5 button_and_title button_and_title"
-        ;
-        grid-template-rows: repeat(1, 1fr);
-        grid-auto-rows: 0;
-        overflow-y: hidden;
+        display: grid;
+
+        grid-template-columns: 7fr 2fr;
     }
 }
 
-@media(min-width: 990px) {
-    #itens_container[data-layoutInverted=true] {
-        grid-template-columns: repeat(6, 1fr);
-        grid-template-areas:
-            "button_and_title button_and_title item1 item2 item3 item4"
-            "button_and_title button_and_title item5 item6 item7 item8"
-        ;
+@media(min-width: 876px) {
+    #itens_container[data-layoutInverted] {
+
+        display: grid;
+
+        grid-template-columns: 2fr 7fr;
+
     }
 }
 
-/* INVERTED */
-@media(min-width: 1200px) {
-    #itens_container[data-layoutInverted=true] {
-        grid-template-columns: repeat(7, 1fr);
-        grid-template-areas:
-            "button_and_title button_and_title item1 item2 item3 item4 item5"
-            "button_and_title button_and_title item6 item7 item8 item9 item10"
-        ;
+@media(min-width: 876px) {
+    #itens_container[data-layoutInverted]>div:last-child {
+
+        order: -1;
+
     }
 }
 
@@ -144,18 +107,10 @@
     color: var(--white-100);
 }
 
-#nav_title_buttons_container {
-
-    grid-area: button_and_title;
-
-}
-
 @media(min-width: 876px) {
     #nav_title_buttons_container {
 
         margin: auto 0;
-
-        width: inherit;
 
         display: flex;
 
