@@ -36,6 +36,13 @@ export function convertFromUnix(
 
 }
 
+// Current Date in Unix
+export function getCurrentUnixDate() {
+
+    return Number((new Date().getTime() / 1000).toFixed(0))
+
+}
+
 // get last minutes and seconds of this day (today) and returns the unix timestamp
 export function lastHourOfTheDay(days: number) {
 

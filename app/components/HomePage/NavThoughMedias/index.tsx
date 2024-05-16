@@ -4,8 +4,6 @@ import styles from './component.module.css'
 import Link from 'next/link'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from '@/app/api/anilist'
-import ChevronLeftIcon from '@/public/assets/chevron-left.svg'
-import ChevronRightIcon from '@/public/assets/chevron-right.svg'
 import CloseSvg from '@/public/assets/x.svg'
 import PlaySvg from '@/public/assets/play.svg'
 import { Url } from 'next/dist/shared/lib/router/router'
@@ -20,8 +18,11 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
+import SwiperCarousel from './swiperCarousel'
+import { SwiperSlide } from 'swiper/react'
+import { convertToUnix } from '@/app/lib/formatDateUnix'
 
-type Component = {
+type ComponentType = {
 
     title: string,
     route: Url,
@@ -48,7 +49,7 @@ const popUpMediaMotion = {
     },
 }
 
-function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBackground, layoutInverted, sortResultsByTrendingLevel }: Component) {
+function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBackground, layoutInverted, sortResultsByTrendingLevel }: ComponentType) {
 
     // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
     const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1)
@@ -56,8 +57,6 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
     const [data, setData] = useState<ApiDefaultResult[]>([])
 
     const [trailerActive, setTrailerActive] = useState<boolean>(false)
-
-    const [pageIndex, setPageIndex] = useState<number>(1)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -71,11 +70,9 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
     const db = getFirestore(initFirebase())
 
-    async function getMedias(newPageResults?: boolean, days?: 1 | 7 | 30, previous?: boolean) {
+    async function getMedias(days?: 1 | 7 | 30) {
 
         setIsLoading(true)
-
-        if (newPageResults == false) setPageIndex(1)
 
         let response: ApiAiringMidiaResults[] | ApiDefaultResult[] | void
 
@@ -95,12 +92,20 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
             response = await anilist.getReleasingByDaysRange(
                 mediaFormat || "ANIME",
                 days!,
-                newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined,
                 undefined,
+                40,
                 docUserShowAdultContent
             ) as ApiAiringMidiaResults[]
 
-            const responseMap = (response as ApiAiringMidiaResults[]).map((item) => item.media)
+            // Remove releases from "today" to show on other options
+            if (days != 1 && days != undefined) {
+                response = (response as ApiAiringMidiaResults[]).filter((item) => (
+                    convertToUnix(1) > item.airingAt && item.airingAt > convertToUnix(days)) && item.media
+                )
+            }
+
+            const responseMap = (response as ApiAiringMidiaResults[]).map(item => item.media)
+
             response = responseMap
 
             setDaysRange(days!)
@@ -111,8 +116,8 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
             response = await anilist.getMediaForThisFormat(
                 mediaFormat || "ANIME",
                 sort,
-                newPageResults ? (previous ? pageIndex - 1 : pageIndex + 1) : undefined,
-                5,
+                20,
+                undefined,
                 docUserShowAdultContent
             ).then(
                 res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
@@ -120,20 +125,18 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
         }
 
-        // handles the pagination
-        if (newPageResults) setPageIndex(previous ? pageIndex - 1 : pageIndex + 1)
-
         if (sortResultsByTrendingLevel) {
 
             response = (response as ApiDefaultResult[]).sort((a, b) => a.trending - b.trending).reverse()
-            
+
         }
-        
+
         setData(response as ApiDefaultResult[])
 
         setIsLoading(false)
     }
 
+    // handles Popin of the media selected
     function setMediaPreview(media: number | null) {
 
         if (media == null) {
@@ -151,7 +154,7 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
         if (sort == "RELEASE") {
 
-            getMedias(undefined, 1)
+            getMedias(1)
 
         }
         else {
@@ -161,22 +164,28 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
     }, [])
 
     return (
-        <>
+        <React.Fragment>
 
             {dateOptions && (
                 <nav id={styles.nav_tabs_container} aria-label='Media By Range of Days Menu '>
 
                     <ul className='display_flex_row'>
                         <li>
-                            <button disabled={daysRange === 1} data-active={daysRange == 1} onClick={() => getMedias(undefined, 1, false)}>Today</button>
+                            <button disabled={daysRange === 1} data-active={daysRange == 1} onClick={() => getMedias(1)}>
+                                Today
+                            </button>
                         </li>
                         <span>/</span>
                         <li>
-                            <button disabled={daysRange === 7} data-active={daysRange == 7} onClick={() => getMedias(undefined, 7, false)}>This week</button>
+                            <button disabled={daysRange === 7} data-active={daysRange == 7} onClick={() => getMedias(7)}>
+                                This week
+                            </button>
                         </li>
                         <span>/</span>
                         <li>
-                            <button disabled={daysRange === 30} data-active={daysRange == 30} onClick={() => getMedias(undefined, 30, false)}>Last 30 days</button>
+                            <button disabled={daysRange === 30} data-active={daysRange == 30} onClick={() => getMedias(30)}>
+                                Last 30 days
+                            </button>
                         </li>
                     </ul>
 
@@ -192,28 +201,38 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                 animate="animate"
             >
 
-                {data.length > 0 && (
-                    data.slice(0, 8).map((item, key: number) => (
-                        <MediaCover3
-                            layoutId={String(item.id)}
-                            key={item.id}
-                            onClick={() => setMediaPreview(item.id)}
-                            data={item as ApiDefaultResult}
-                            positionIndex={key + 1}
-                            loading={isLoading}
-                            darkMode={darkBackground}
-                        />
-                    ))
-                )}
+                <SwiperCarousel
+                    title={title}
+                    daysSelected={daysRange}
+                >
 
-                {data.length == 0 && (
-                    <p className='display_align_justify_center'>
-                        {!dateOptions && "No results"}
-                        {(dateOptions && daysRange == 1) && "Nothing Releasing Today"}
-                        {(dateOptions && daysRange == 7) && "Nothing Released in 7 Days"}
-                        {(dateOptions && daysRange == 30) && "Nothing Released in 30 Days"}
-                    </p>
-                )}
+                    {data.length > 0 ? (
+
+                        data.map((item, key) => (
+                            <SwiperSlide key={item.id}>
+                                <MediaCover3
+                                    layoutId={String(item.id)}
+                                    onClick={() => setMediaPreview(item.id)}
+                                    data={item as ApiDefaultResult}
+                                    positionIndex={key + 1}
+                                    loading={isLoading}
+                                    darkMode={darkBackground}
+                                />
+                            </SwiperSlide>
+                        ))
+
+                    ) : (
+
+                        <p className='display_align_justify_center'>
+                            {!dateOptions && "No results"}
+                            {(dateOptions && daysRange == 1) && "Nothing Releasing Today"}
+                            {(dateOptions && daysRange == 7) && "Nothing Released in 7 Days"}
+                            {(dateOptions && daysRange == 30) && "Nothing Released in 30 Days"}
+                        </p>
+
+                    )}
+
+                </SwiperCarousel>
 
                 {/* WHEN A ID IS SELECTED, SHOWS A INFO PREVIEW OF MEDIA */}
                 <AnimatePresence>
@@ -341,38 +360,9 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                     )}
                 </AnimatePresence>
 
-                <div id={styles.nav_title_buttons_container}>
-
-                    <h3>{title}</h3>
-
-                    <div id={styles.buttons_container} className='display_flex_row display_align_justify_center'>
-
-                        <button
-                            onClick={() => sort == "RELEASE" ? getMedias(true, daysRange, true) : getMedias(true, undefined, true)}
-                            disabled={pageIndex == 1}
-                            aria-label="Previous Page Results"
-                        >
-                            <ChevronLeftIcon alt="Icon Facing Left" />
-                        </button>
-
-                        <button
-                            onClick={() => sort == "RELEASE" ? getMedias(true, daysRange, false) : getMedias(true, undefined, false)}
-                            disabled={data?.length <= 3}
-                            aria-label="Next Page Results"
-                        >
-                            <ChevronRightIcon alt="Icon Facing Right" />
-                        </button>
-
-                    </div>
-
-                    <span id={styles.line}></span>
-
-                    {/* <Link href={route} className='display_align_justify_center'>VIEW ALL <ChevronRightIcon alt="Icon Facing Right" /></Link> */}
-                </div>
-
             </motion.div>
 
-        </>
+        </React.Fragment>
     )
 
 }
