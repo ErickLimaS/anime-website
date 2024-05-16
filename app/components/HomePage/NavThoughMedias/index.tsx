@@ -20,6 +20,7 @@ import { initFirebase } from '@/app/firebaseApp'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import SwiperCarousel from './swiperCarousel'
 import { SwiperSlide } from 'swiper/react'
+import { convertToUnix } from '@/app/lib/formatDateUnix'
 
 type ComponentType = {
 
@@ -92,11 +93,19 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                 mediaFormat || "ANIME",
                 days!,
                 undefined,
-                20,
+                40,
                 docUserShowAdultContent
             ) as ApiAiringMidiaResults[]
 
-            const responseMap = (response as ApiAiringMidiaResults[]).map((item) => item.media)
+            // Remove releases from "today" to show on other options
+            if (days != 1 && days != undefined) {
+                response = (response as ApiAiringMidiaResults[]).filter((item) => (
+                    convertToUnix(1) > item.airingAt && item.airingAt > convertToUnix(days)) && item.media
+                )
+            }
+
+            const responseMap = (response as ApiAiringMidiaResults[]).map(item => item.media)
+
             response = responseMap
 
             setDaysRange(days!)
@@ -194,6 +203,7 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
                 <SwiperCarousel
                     title={title}
+                    daysSelected={daysRange}
                 >
 
                     {data.length > 0 ? (

@@ -18,7 +18,7 @@ import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { convertFromUnix } from '@/app/lib/formatDateUnix'
+import { convertFromUnix, getCurrentUnixDate } from '@/app/lib/formatDateUnix'
 import anilist from '@/app/api/anilist'
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
@@ -47,7 +47,7 @@ function NotificationsComponent() {
     // If TRUE, fetchs Notifications again
     function isCurrDateBiggerThanLastUpdate() {
 
-        const dateNow = Number((new Date().getTime() / 1000).toFixed(0))
+        const dateNow = getCurrentUnixDate()
         const dateLastUpdate = Number(Number(localStorage.getItem('notificationsLastUpdate')) + 600) || 0
 
         return dateNow >= dateLastUpdate

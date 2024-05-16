@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { A11y, Navigation, Pagination } from 'swiper/modules';
-import { Swiper } from 'swiper/react';
+import { Swiper, SwiperClass, SwiperProps, useSwiper } from 'swiper/react';
 import ChevronLeftIcon from '@/public/assets/chevron-left.svg';
 import ChevronRightIcon from '@/public/assets/chevron-right.svg';
 import styles from './component.module.css';
@@ -10,14 +10,25 @@ import 'swiper/css/pagination';
 type SwiperTypes = {
     children: React.ReactNode,
     title: string,
+    daysSelected: number,
     breakpoint?: { slidesPerView?: number, bp480?: number, bp740?: number, bp1080?: number }
 }
 
-function SwiperCarousel({ children, title, breakpoint }: SwiperTypes) {
+function SwiperCarousel({ children, title, daysSelected, breakpoint }: SwiperTypes) {
+
+    const [swiper, setSwiper] = useState<SwiperClass | null>(null)
+
+    useEffect(() => {
+
+        if (swiper?.activeIndex) swiper?.slideTo(0)
+
+    }, [daysSelected, swiper != null])
+
     return (
         <React.Fragment>
 
             <Swiper
+                onSwiper={setSwiper}
                 style={{ width: "inherit" }}
                 modules={[Navigation, Pagination, A11y]}
                 slidesPerView={breakpoint?.slidesPerView || 2}
