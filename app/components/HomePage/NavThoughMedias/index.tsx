@@ -234,133 +234,133 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
                 </SwiperCarousel>
 
-                {/* WHEN A ID IS SELECTED, SHOWS A INFO PREVIEW OF MEDIA */}
-                <AnimatePresence>
-                    {(selectedId && mediaSelect) && (
+            </motion.div>
+
+            {/* WHEN A ID IS SELECTED, SHOWS A INFO PREVIEW OF MEDIA */}
+            <AnimatePresence>
+                {(selectedId && mediaSelect) && (
+                    <motion.div
+                        id={styles.overlay}
+                        onClick={() => setMediaPreview(null)}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
                         <motion.div
-                            id={styles.overlay}
-                            onClick={() => setMediaPreview(null)}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
+                            layoutId={String(selectedId)}
+                            id={styles.expand_container}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                background: mediaSelect.bannerImage ?
+                                    `linear-gradient(to bottom right, rgba(0, 0, 0, 0.95) 25%, rgba(0, 0, 0, 0.75) ), url(${mediaSelect.bannerImage})`
+                                    :
+                                    `var(--black-100)`,
+                                backgroundPosition: "center",
+                                backgroundSize: "cover",
+                                backgroundRepeat: "no-repeat"
+                            }}
                         >
-                            <motion.div
-                                layoutId={String(selectedId)}
-                                id={styles.expand_container}
-                                onClick={(e) => e.stopPropagation()}
-                                style={{
-                                    background: mediaSelect.bannerImage ?
-                                        `linear-gradient(to bottom right, rgba(0, 0, 0, 0.95) 25%, rgba(0, 0, 0, 0.75) ), url(${mediaSelect.bannerImage})`
-                                        :
-                                        `var(--black-100)`,
-                                    backgroundPosition: "center",
-                                    backgroundSize: "cover",
-                                    backgroundRepeat: "no-repeat"
-                                }}
-                            >
 
-                                <motion.button onClick={() => setMediaPreview(null)} title="Close">
-                                    <CloseSvg width={16} height={16} />
-                                </motion.button>
+                            <motion.button onClick={() => setMediaPreview(null)} title="Close">
+                                <CloseSvg width={16} height={16} />
+                            </motion.button>
 
-                                <motion.div className={styles.media_container}>
+                            <motion.div className={styles.media_container}>
 
-                                    <motion.div className={styles.img_container}>
+                                <motion.div className={styles.img_container}>
 
-                                        <Image
-                                            src={mediaSelect.coverImage.large}
-                                            alt={mediaSelect.title.romaji}
-                                            fill
-                                            sizes='(max-width: 430px) 45vw, (max-width: 620px) 33vw, (max-width: 876px) 15vw, 10vw'
-                                        />
-
-                                    </motion.div>
-
-                                    <motion.div className={styles.info_container}>
-
-                                        <motion.h5>
-                                            {mediaSelect.title.romaji}
-                                            {(mediaSelect.seasonYear && (<span> ({mediaSelect.seasonYear})</span>))}
-                                        </motion.h5>
-
-                                        <motion.p style={{ color: mediaSelect.coverImage.color || "var(--white-100)" }}>
-                                            <MediaFormatIcon format={mediaSelect.format} /> {mediaSelect.format == "TV" ? "ANIME" : mediaSelect.format}
-                                        </motion.p>
-
-                                        {mediaSelect.averageScore && (
-                                            <motion.p>
-                                                <ScoreRating score={(mediaSelect.averageScore / 2) / 10} source='anilist' />
-                                            </motion.p>
-                                        )}
-
-                                        {(mediaSelect.episodes && mediaSelect.format != "MOVIE" && mediaSelect.format != "MUSIC" && mediaSelect.format != "MANGA") && (
-                                            <motion.p>{mediaSelect.episodes} Episodes</motion.p>
-                                        )}
-
-                                        {mediaSelect.genres && (
-                                            <motion.p className={styles.smaller_fonts}>
-                                                {mediaSelect.genres.map((item, key) => (`${item}${key + 1 == mediaSelect.genres.length ? "" : ", "}`))}
-                                            </motion.p>
-                                        )}
-
-                                    </motion.div>
+                                    <Image
+                                        src={mediaSelect.coverImage.large}
+                                        alt={mediaSelect.title.romaji}
+                                        fill
+                                        sizes='(max-width: 430px) 45vw, (max-width: 620px) 33vw, (max-width: 876px) 15vw, 10vw'
+                                    />
 
                                 </motion.div>
 
-                                {/* SHOWS TRAILER / SHOWS DESCRIPTION */}
-                                {trailerActive ? (
+                                <motion.div className={styles.info_container}>
 
-                                    <motion.div className={styles.trailer_container}>
-                                        <iframe
-                                            className="yt_embed_video"
-                                            src={`https://www.youtube.com/embed/${mediaSelect.trailer.id}`}
-                                            frameBorder={0}
-                                            title={mediaSelect.title.romaji + " Trailer"}
-                                            allow="accelerometer; autoplay; encrypted-media; gyroscope;"
-                                            allowFullScreen></iframe>
-                                    </motion.div>
+                                    <motion.h5>
+                                        {mediaSelect.title.romaji}
+                                        {(mediaSelect.seasonYear && (<span> ({mediaSelect.seasonYear})</span>))}
+                                    </motion.h5>
 
-                                ) : (
-                                    mediaSelect.description && (
-                                        <motion.div className={styles.description_container}>
-                                            <motion.p>{parse(mediaSelect.description.replace(new RegExp(`<br[^>]*>|<\/br>`, 'gi'), " "))}</motion.p>
-                                        </motion.div>
-                                    )
-                                )}
+                                    <motion.p style={{ color: mediaSelect.coverImage.color || "var(--white-100)" }}>
+                                        <MediaFormatIcon format={mediaSelect.format} /> {mediaSelect.format == "TV" ? "ANIME" : mediaSelect.format}
+                                    </motion.p>
 
-                                <motion.div className={styles.btns_container}>
+                                    {mediaSelect.averageScore && (
+                                        <motion.p>
+                                            <ScoreRating score={(mediaSelect.averageScore / 2) / 10} source='anilist' />
+                                        </motion.p>
+                                    )}
 
-                                    <motion.div className={`${styles.action_btns_container}`}>
+                                    {(mediaSelect.episodes && mediaSelect.format != "MOVIE" && mediaSelect.format != "MUSIC" && mediaSelect.format != "MANGA") && (
+                                        <motion.p>{mediaSelect.episodes} Episodes</motion.p>
+                                    )}
 
-                                        <Link href={`/media/${mediaSelect.id}`}>SEE MORE</Link>
-
-                                        <AddToPlaylistButton data={mediaSelect} />
-
-                                    </motion.div>
-
-                                    {mediaSelect.trailer && (
-                                        <motion.div className={`${styles.action_btns_container} ${styles.trailer_btn_container}`}>
-
-                                            <motion.button
-                                                className={styles.trailer_btn}
-                                                onClick={() => setTrailerActive(!trailerActive)}
-                                                data-active={trailerActive}
-                                            >
-                                                <PlaySvg alt="Play" width={16} height={16} /> TRAILER
-                                            </motion.button>
-
-                                        </motion.div>
+                                    {mediaSelect.genres && (
+                                        <motion.p className={styles.smaller_fonts}>
+                                            {mediaSelect.genres.map((item, key) => (`${item}${key + 1 == mediaSelect.genres.length ? "" : ", "}`))}
+                                        </motion.p>
                                     )}
 
                                 </motion.div>
 
                             </motion.div>
 
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                            {/* SHOWS TRAILER / SHOWS DESCRIPTION */}
+                            {trailerActive ? (
 
-            </motion.div>
+                                <motion.div className={styles.trailer_container}>
+                                    <iframe
+                                        className="yt_embed_video"
+                                        src={`https://www.youtube.com/embed/${mediaSelect.trailer.id}`}
+                                        frameBorder={0}
+                                        title={mediaSelect.title.romaji + " Trailer"}
+                                        allow="accelerometer; autoplay; encrypted-media; gyroscope;"
+                                        allowFullScreen></iframe>
+                                </motion.div>
+
+                            ) : (
+                                mediaSelect.description && (
+                                    <motion.div className={styles.description_container}>
+                                        <motion.p>{parse(mediaSelect.description.replace(new RegExp(`<br[^>]*>|<\/br>`, 'gi'), " "))}</motion.p>
+                                    </motion.div>
+                                )
+                            )}
+
+                            <motion.div className={styles.btns_container}>
+
+                                <motion.div className={`${styles.action_btns_container}`}>
+
+                                    <Link href={`/media/${mediaSelect.id}`}>SEE MORE</Link>
+
+                                    <AddToPlaylistButton data={mediaSelect} />
+
+                                </motion.div>
+
+                                {mediaSelect.trailer && (
+                                    <motion.div className={`${styles.action_btns_container} ${styles.trailer_btn_container}`}>
+
+                                        <motion.button
+                                            className={styles.trailer_btn}
+                                            onClick={() => setTrailerActive(!trailerActive)}
+                                            data-active={trailerActive}
+                                        >
+                                            <PlaySvg alt="Play" width={16} height={16} /> TRAILER
+                                        </motion.button>
+
+                                    </motion.div>
+                                )}
+
+                            </motion.div>
+
+                        </motion.div>
+
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
         </React.Fragment>
     )
