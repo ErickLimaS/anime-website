@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import HeroCarousel from "./components/HomePage/HeroCarouselHomePage";
 import anilist from './api/anilist';
-import NavThoughMedias from "./components/HomePage/NavThoughMedias";
+import NavigationThroughMedias from "./components/HomePage/NavigationThroughMedias";
 import parse from "html-react-parser"
 import NewestMediaSection from "./components/HomePage/NewestMediaSection";
 import MediaRankingSection from "./components/HomePage/MediaRankingSection";
@@ -24,98 +24,115 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 
-  const isMobileScreen = checkDeviceIsMobile(headers())
+  const isOnMobileScreen = checkDeviceIsMobile(headers())
+
+  // section 3
+  const listAnimesTrending = await anilist.getMediaForThisFormat("ANIME") as ApiDefaultResult[]
+
+  // section 1
+  const listAnimesTrendingWithBackground = listAnimesTrending.filter(item => item.bannerImage)
 
   // section 2
-  const trendingData = await anilist.getNewReleases("ANIME", undefined, undefined, false, "RELEASING", 1, 12).then(
+  const listAnimesReleasingByPopularity = await anilist.getNewReleases("ANIME", undefined, undefined, false, "RELEASING", 1, 12).then(
     res => (res as ApiDefaultResult[])
   )
 
   // section 3
-  const mediaBannerData = await anilist.getMediaForThisFormat("ANIME", "SCORE_DESC").then(
+  const listMediasToBannerSection = await anilist.getMediaForThisFormat("ANIME", "SCORE_DESC").then(
     res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
   )
 
-  // section 4
-  const mediaRankingData = await anilist.getMediaForThisFormat("ANIME") as ApiDefaultResult[]
-  const newestMediaData = await anilist.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
+  const randomIndexForBannerSection = Math.floor(Math.random() * (listMediasToBannerSection?.length || 10)) + 1
+
+  // section 4 data
+  const listMediasReleasedToday = await anilist.getReleasingByDaysRange("ANIME", 1, undefined, 11).then(
     res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
   ).then(res => res.map((item) => item.media))
-
-  // section 1 => uses same data, but filtered to the ones that has banner img
-  const popularData = mediaRankingData.filter(item => item.bannerImage)
-
-  // used on banner section
-  const randomNumber = Math.floor(Math.random() * (mediaBannerData?.length || 10)) + 1
 
   return (
     <main id={styles.container} className={styles.main}>
 
-      {/* PAGE HERO */}
-      <HeroCarousel data={popularData} isMobile={isMobileScreen || false} />
+      {/* HERO */}
+      <HeroCarousel
+        animesList={listAnimesTrendingWithBackground}
+        isOnMobileScreen={isOnMobileScreen || false}
+      />
 
       {/* Keep Watching  */}
       <KeepWatchingSection />
 
-      {/* POPULAR MEDIA  SECTION*/}
-      <PopularMediaSection initialData={trendingData} />
+      {/* POPULAR MEDIA SECTION*/}
+      <PopularMediaSection
+        animesList={listAnimesReleasingByPopularity}
+      />
 
       {/* SECTION => SHOWS MEDIA RELEASED BY A SELECTED TIME (today, 7 days, 30 days)  */}
       <section className={styles.medias_sections_container}>
 
-        <NavThoughMedias title={"Latest Releases"} route={"#"} sort="RELEASE" dateOptions={true} sortResultsByTrendingLevel />
+        <NavigationThroughMedias
+          headingTitle={"Latest Releases"}
+          route={"#"}
+          sortBy="RELEASE"
+          isFetchByDateButtonsOnScreen
+          isResultsSortedByTrending
+        />
 
       </section>
 
       {/* SECTION => Media Banner With Trailer Embeded  */}
-      {mediaBannerData != (undefined || null) && (
-        <section id={styles.media_banner_container}
-          style={{
-            background: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(${mediaBannerData[randomNumber] && mediaBannerData[randomNumber].bannerImage})`
-          }}>
+      <section id={styles.media_banner_container}
+        style={{
+          background: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(${listMediasToBannerSection[randomIndexForBannerSection]?.bannerImage})`
+        }}
+      >
 
-          <div>
+        <div>
 
-            <div id={styles.media_info}>
-              {mediaBannerData[randomNumber] && (
-                <h3><Link href={`/media/${mediaBannerData[randomNumber].id}`}>{mediaBannerData[randomNumber].title.romaji}</Link></h3>
-              )}
+          <div id={styles.media_info}>
+            {listMediasToBannerSection[randomIndexForBannerSection] && (
+              <h3><Link href={`/media/${listMediasToBannerSection[randomIndexForBannerSection].id}`}>{listMediasToBannerSection[randomIndexForBannerSection].title.romaji}</Link></h3>
+            )}
 
-              {mediaBannerData[randomNumber]?.description && (
-                <span>{parse(mediaBannerData[randomNumber].description.replace(new RegExp(`<br[^>]*>|<\/br>`, 'gi'), " "))}</span>
-              )}
+            {listMediasToBannerSection[randomIndexForBannerSection]?.description && (
+              <span>{parse(listMediasToBannerSection[randomIndexForBannerSection].description.replace(new RegExp(`<br[^>]*>|<\/br>`, 'gi'), " "))}</span>
+            )}
 
-              <div className={styles.item_buttons}>
+            <div className={styles.item_buttons}>
 
-                <Link href={`/media/${mediaBannerData[randomNumber].id}`}>WATCH NOW</Link>
+              <Link href={`/media/${listMediasToBannerSection[randomIndexForBannerSection].id}`}>WATCH NOW</Link>
 
-                <AddToPlaylistButton data={mediaBannerData[randomNumber]} />
-
-              </div>
-            </div>
-
-            <div id={styles.player_button_container}>
-
-              {(mediaBannerData[randomNumber].trailer) && (
-                <iframe
-                  className="yt_embed_video"
-                  src={`https://www.youtube.com/embed/${mediaBannerData[randomNumber].trailer.id}?controls=0&showinfo=0`}
-                  frameBorder={0}
-                  title={mediaBannerData[randomNumber].title.romaji + " Trailer"}
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope;"
-                  allowFullScreen></iframe>
-              )}
+              <AddToPlaylistButton data={listMediasToBannerSection[randomIndexForBannerSection]} />
 
             </div>
           </div>
 
-        </section>
-      )}
+          <div id={styles.player_button_container}>
+
+            {(listMediasToBannerSection[randomIndexForBannerSection].trailer) && (
+              <iframe
+                className="yt_embed_video"
+                src={`https://www.youtube.com/embed/${listMediasToBannerSection[randomIndexForBannerSection].trailer.id}?controls=0&showinfo=0`}
+                frameBorder={0}
+                title={listMediasToBannerSection[randomIndexForBannerSection].title.romaji + " Trailer"}
+                allow="accelerometer; autoplay; encrypted-media; gyroscope;"
+                allowFullScreen
+              />
+            )}
+
+          </div>
+        </div>
+
+      </section>
 
       {/* SECTION => SHOWS MEDIAS SORTED BY FAVOURITES */}
       <section className={`${styles.medias_sections_container} ${styles.dark_background}`}>
 
-        <NavThoughMedias title={"All Time Favorites"} route={"#"} sort={"FAVOURITES_DESC"} darkBackground={true} />
+        <NavigationThroughMedias
+          headingTitle={"All Time Favorites"}
+          route={"#"}
+          sortBy={"FAVOURITES_DESC"}
+          darkBackground
+        />
 
       </section>
 
@@ -123,7 +140,12 @@ export default async function Home() {
       {/* SECTION => SHOWS MEDIAS SORTED BY LATEST UPDATES ON ANILIST */}
       <section className={`${styles.medias_sections_container}`}>
 
-        <NavThoughMedias title={"Show Me Something New"} route={"#"} sort={"UPDATED_AT_DESC"} layoutInverted={true} />
+        <NavigationThroughMedias
+          headingTitle={"Show Me Something New"}
+          route={"#"}
+          sortBy={"UPDATED_AT_DESC"}
+          isLayoutInverted
+        />
 
       </section>
 
@@ -133,17 +155,27 @@ export default async function Home() {
         {/* SECTION => MANGAS SORTED BY FAVOURITES */}
         <section className={`${styles.medias_sections_container} ${styles.transparent_background}`}>
 
-          <NavThoughMedias title={"Best Rated Mangas"} route={"#"} mediaFormat="MANGA" sort={"FAVOURITES_DESC"} darkBackground={true} />
+          <NavigationThroughMedias
+            headingTitle={"Best Rated Mangas"}
+            route={"#"}
+            mediaFormat="MANGA"
+            sortBy={"FAVOURITES_DESC"}
+            darkBackground
+          />
 
         </section>
 
         <div id={styles.media_ranks_container}>
 
           {/* RANKING CONTAINER */}
-          <MediaRankingSection data={mediaRankingData} />
+          <MediaRankingSection
+            initialAnimesList={listAnimesTrending}
+          />
 
           {/* NEWEST CONTAINER*/}
-          <NewestMediaSection data={newestMediaData} />
+          <NewestMediaSection
+            initialAnimesList={listMediasReleasedToday}
+          />
 
         </div>
 

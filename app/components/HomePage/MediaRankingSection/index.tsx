@@ -7,62 +7,63 @@ import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from "@/app/api/anilist"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
-import { initFirebase } from '@/app/firebaseApp'
-import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { AnimatePresence, motion } from 'framer-motion'
 import simulateRange from '@/app/lib/simulateRange'
+import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'
 
-type PropsTypes = {
+type ComponentType = {
 
-    data: void | ApiDefaultResult[],
-    currentQueryValue?: string
+    initialAnimesList: void | ApiDefaultResult[]
 
 }
 
 export const revalidate = 1800 // revalidate cached data every 30 min
 
-const showUpItemVariant = {
+const framerMotionShowUpItemVariant = {
 
     initial: { opacity: 0 },
     animate: { opacity: 1 }
 
 }
 
-function MediaRankingSection(props: PropsTypes) {
+function MediaRankingSection({ initialAnimesList }: ComponentType) {
 
-    const [mediaList, setMediaList] = useState<ApiDefaultResult[] | null>(props.data as ApiDefaultResult[])
-    const [loading, setLoading] = useState<boolean>(false)
+    const [mediaList, setMediaList] = useState<ApiDefaultResult[] | null>(initialAnimesList as ApiDefaultResult[])
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [showAdultContent, setShowAdultContent] = useState<boolean | null>(null)
-    const [currentQueryValue, setCurrentQueryValue] = useState<"ANIME" | "MANGA">("ANIME")
+    const [isAdultContentSetToShow, setIsAdultContentSetToShow] = useState<boolean | null>(null)
+    const [currFormat, setCurrFormat] = useState<"ANIME" | "MANGA">("ANIME")
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
-    const db = getFirestore(initFirebase())
+    async function getUserPreference() {
 
-    // request new type of media then set them
-    const loadMedia: (parameter: "ANIME" | "MANGA") => void = async (parameter: "ANIME" | "MANGA") => {
+        if (!user) return false
 
-        setLoading(true)
+        if (isAdultContentSetToShow) return isAdultContentSetToShow
 
-        let docUserShowAdultContent = showAdultContent || false
+        const userAdultContentPreference: boolean = await getUserAdultContentPreference(user)
 
-        if (user && showAdultContent == null) {
+        setIsAdultContentSetToShow(userAdultContentPreference)
 
-            docUserShowAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
+        return userAdultContentPreference
 
-            setShowAdultContent(docUserShowAdultContent)
+    }
 
-        }
+    const fetchMediasByFormat: (format: "ANIME" | "MANGA") => void = async (format: "ANIME" | "MANGA") => {
 
-        const response = await anilist.getMediaForThisFormat(parameter, undefined, undefined, undefined, docUserShowAdultContent) as ApiDefaultResult[]
+        setIsLoading(true)
 
-        setCurrentQueryValue(parameter)
+        const isAdultContentAllowed = await getUserPreference()
 
-        setMediaList(response as ApiDefaultResult[])
+        const listMediaByFormat = await anilist.getMediaForThisFormat(format, undefined, undefined, undefined, isAdultContentAllowed) as ApiDefaultResult[]
 
-        setLoading(false)
+        setCurrFormat(format)
+
+        setMediaList(listMediaByFormat as ApiDefaultResult[])
+
+        setIsLoading(false)
 
     }
 
@@ -74,32 +75,39 @@ function MediaRankingSection(props: PropsTypes) {
                 <h3>Top 10 This Week</h3>
 
                 <NavButtons
-                    functionReceived={loadMedia as (parameter: string | number) => void}
-                    actualValue={currentQueryValue} options={[
-                        { name: "Animes", value: "ANIME" }, { name: "Mangas", value: "MANGA" }
+                    functionReceived={fetchMediasByFormat as (parameter: string | number) => void}
+                    actualValue={currFormat} options={[
+                        { name: "Animes", value: "ANIME" },
+                        { name: "Mangas", value: "MANGA" }
                     ]}
                 />
 
             </div>
 
-            <motion.ol data-loading={loading}>
+            <motion.ol data-loading={isLoading}>
 
                 <AnimatePresence>
 
-                    {loading && (
+                    {isLoading && (
                         simulateRange(10).map((item, key) => (
                             <motion.span key={key}
                                 className={styles.loading_span}
-                                variants={showUpItemVariant}
+                                variants={framerMotionShowUpItemVariant}
                                 initial="initial"
                                 animate="animate"
                                 exit="initial"
                             />
                         ))
                     )}
-                    
-                    {(!loading && mediaList) && mediaList!.slice(0, 10).map((item: ApiDefaultResult, key: number) => (
-                        <MediaListCoverInfo2 key={key} positionIndex={key + 1} data={item} showCoverArt={false} variants={showUpItemVariant} />
+
+                    {(!isLoading && mediaList) && mediaList!.slice(0, 10).map((item: ApiDefaultResult, key: number) => (
+                        <MediaListCoverInfo2
+                            key={key}
+                            positionIndex={key + 1}
+                            data={item}
+                            showCoverArt={false}
+                            variants={framerMotionShowUpItemVariant}
+                        />
                     ))}
 
                 </AnimatePresence>

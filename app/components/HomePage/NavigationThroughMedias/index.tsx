@@ -16,28 +16,27 @@ import ScoreRating from '../../DynamicAssets/ScoreRating'
 import MediaFormatIcon from '../../DynamicAssets/MediaFormatIcon'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
-import { initFirebase } from '@/app/firebaseApp'
-import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import SwiperCarousel from './swiperCarousel'
 import { SwiperSlide } from 'swiper/react'
 import { convertToUnix } from '@/app/lib/formatDateUnix'
-
-type ComponentType = {
-
-    title: string,
-    route: Url,
-    sort: string,
-    mediaFormat?: "ANIME" | "MANGA",
-    dateOptions?: boolean,
-    darkBackground?: boolean,
-    layoutInverted?: boolean,
-    sortResultsByTrendingLevel?: boolean
-
-}
+import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'
 
 export const revalidate = 1800 // revalidate cached data every 30 min
 
-const popUpMediaMotion = {
+type ComponentType = {
+
+    headingTitle: string,
+    route: Url,
+    sortBy: "RELEASE" | "FAVOURITES_DESC" | "UPDATED_AT_DESC",
+    mediaFormat?: "ANIME" | "MANGA",
+    isFetchByDateButtonsOnScreen?: boolean,
+    darkBackground?: boolean,
+    isLayoutInverted?: boolean,
+    isResultsSortedByTrending?: boolean
+
+}
+
+const framerMotionPopUpMedia = {
     initial: {
         scale: 0,
     },
@@ -49,141 +48,140 @@ const popUpMediaMotion = {
     },
 }
 
-function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBackground, layoutInverted, sortResultsByTrendingLevel }: ComponentType) {
+function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDateButtonsOnScreen, sortBy, darkBackground, isLayoutInverted, isResultsSortedByTrending }: ComponentType) {
 
-    // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
-    const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1)
+    const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1) // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
 
-    const [data, setData] = useState<ApiDefaultResult[]>([])
+    const [mediaList, setMediaList] = useState<ApiDefaultResult[]>([])
 
-    const [trailerActive, setTrailerActive] = useState<boolean>(false)
+    const [isTrailerBeeingShown, setIsTrailerBeeingShown] = useState<boolean>(false)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [showAdultContent, setShowAdultContent] = useState<boolean | null>(null)
+    const [isAdultContentSetToShow, setIsAdultContentSetToShow] = useState<boolean | null>(null)
 
     const [selectedId, setSelectedId] = useState<number | null>(null)
     const [mediaSelect, setMediaSelected] = useState<ApiDefaultResult | null>(null)
 
+    useEffect(() => {
+
+        if (sortBy == "RELEASE") fetchMediaListByDays(1)
+        else fetchMediaList()
+
+    }, [])
+
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
-    const db = getFirestore(initFirebase())
+    async function getUserPreference() {
 
-    async function getMedias(days?: 1 | 7 | 30) {
+        if (!user) return false
+
+        if (isAdultContentSetToShow) return isAdultContentSetToShow
+
+        const userAdultContentPreference: boolean = await getUserAdultContentPreference(user)
+
+        setIsAdultContentSetToShow(userAdultContentPreference)
+
+        return userAdultContentPreference
+
+    }
+
+    async function fetchMediaListByDays(days: 1 | 7 | 30) {
 
         setIsLoading(true)
 
-        let response: ApiAiringMidiaResults[] | ApiDefaultResult[] | void
+        let fetchedMedia: ApiAiringMidiaResults[] | ApiDefaultResult[] = []
 
-        let docUserShowAdultContent = showAdultContent || false
+        const isAdultContentAllowed = await getUserPreference()
 
-        if (user && showAdultContent == null) {
+        fetchedMedia = await anilist.getReleasingByDaysRange(
+            mediaFormat || "ANIME",
+            days!,
+            undefined,
+            40,
+            isAdultContentAllowed
+        ) as ApiAiringMidiaResults[]
 
-            docUserShowAdultContent = await getDoc(doc(db, 'users', user!.uid)).then(doc => doc.get("showAdultContent"))
-
-            setShowAdultContent(docUserShowAdultContent)
-
-        }
-
-        if (sort == "RELEASE") {
-
-            // gets the range of days than parse it to unix and get any media releasing in the selected range
-            response = await anilist.getReleasingByDaysRange(
-                mediaFormat || "ANIME",
-                days!,
-                undefined,
-                40,
-                docUserShowAdultContent
-            ) as ApiAiringMidiaResults[]
-
-            // Remove releases from "today" to show on other options
-            if (days != 1 && days != undefined) {
-                response = (response as ApiAiringMidiaResults[]).filter((item) => (
-                    convertToUnix(1) > item.airingAt && item.airingAt > convertToUnix(days)) && item.media
-                )
-            }
-
-            const responseMap = (response as ApiAiringMidiaResults[]).map(item => item.media)
-
-            response = responseMap
-
-            setDaysRange(days!)
-
-        }
-        else {
-
-            response = await anilist.getMediaForThisFormat(
-                mediaFormat || "ANIME",
-                sort,
-                20,
-                undefined,
-                docUserShowAdultContent
-            ).then(
-                res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
+        // Remove releases from "today" to show on other options
+        if (days != 1 && days != undefined) {
+            fetchedMedia = (fetchedMedia as ApiAiringMidiaResults[]).filter((item) => (
+                convertToUnix(1) > item.airingAt && item.airingAt > convertToUnix(days)) && item.media
             )
-
         }
 
-        if (sortResultsByTrendingLevel) {
+        const mapResultMediaInnerInfo = (fetchedMedia as ApiAiringMidiaResults[]).map(item => item.media)
 
-            response = (response as ApiDefaultResult[]).sort((a, b) => a.trending - b.trending).reverse()
+        fetchedMedia = mapResultMediaInnerInfo
 
-        }
+        setDaysRange(days!)
 
-        setData(response as ApiDefaultResult[])
+        if (isResultsSortedByTrending) fetchedMedia = (fetchedMedia as ApiDefaultResult[]).sort((a, b) => a.trending - b.trending).reverse()
+
+        setMediaList(fetchedMedia as ApiDefaultResult[])
 
         setIsLoading(false)
     }
 
-    // handles Popin of the media selected
-    function setMediaPreview(media: number | null) {
+    async function fetchMediaList() {
 
-        if (media == null) {
-            setSelectedId(null)
-            setTrailerActive(false)
-            setMediaSelected(null)
-        }
-        else {
-            setSelectedId(media)
-            setMediaSelected(data.find((item) => item.id == media) as SetStateAction<ApiDefaultResult | null>)
-        }
+        setIsLoading(true)
+
+        let fetchedMedia: ApiAiringMidiaResults[] | ApiDefaultResult[] = []
+
+        const isAdultContentAllowed = await getUserPreference()
+
+        fetchedMedia = await anilist.getMediaForThisFormat(
+            mediaFormat || "ANIME",
+            sortBy,
+            20,
+            undefined,
+            isAdultContentAllowed
+        ).then(res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == isAdultContentAllowed))
+
+        if (isResultsSortedByTrending) fetchedMedia = (fetchedMedia as ApiDefaultResult[]).sort((a, b) => a.trending - b.trending).reverse()
+
+        setMediaList(fetchedMedia as ApiDefaultResult[])
+
+        setIsLoading(false)
     }
 
-    useEffect(() => {
+    function handleMediaPopUpFocus(media: number | null) {
 
-        if (sort == "RELEASE") {
+        if (media) {
 
-            getMedias(1)
+            setSelectedId(media)
+            setMediaSelected(mediaList.find((item) => item.id == media) as SetStateAction<ApiDefaultResult | null>)
 
+            return
         }
-        else {
-            getMedias()
-        }
 
-    }, [])
+        setSelectedId(null)
+        setIsTrailerBeeingShown(false)
+        setMediaSelected(null)
+    }
 
     return (
         <React.Fragment>
 
-            {dateOptions && (
+            {isFetchByDateButtonsOnScreen && (
                 <nav id={styles.nav_tabs_container} aria-label='Media By Range of Days Menu '>
 
                     <ul className='display_flex_row'>
                         <li>
-                            <button disabled={daysRange === 1} data-active={daysRange == 1} onClick={() => getMedias(1)}>
+                            <button disabled={daysRange === 1} data-active={daysRange == 1} onClick={() => fetchMediaListByDays(1)}>
                                 Today
                             </button>
                         </li>
                         <span>/</span>
                         <li>
-                            <button disabled={daysRange === 7} data-active={daysRange == 7} onClick={() => getMedias(7)}>
+                            <button disabled={daysRange === 7} data-active={daysRange == 7} onClick={() => fetchMediaListByDays(7)}>
                                 This week
                             </button>
                         </li>
                         <span>/</span>
                         <li>
-                            <button disabled={daysRange === 30} data-active={daysRange == 30} onClick={() => getMedias(30)}>
+                            <button disabled={daysRange === 30} data-active={daysRange == 30} onClick={() => fetchMediaListByDays(30)}>
                                 Last 30 days
                             </button>
                         </li>
@@ -195,24 +193,24 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
             <motion.div
                 id={styles.itens_container}
                 data-darkBackground={darkBackground && darkBackground}
-                data-layoutInverted={layoutInverted && layoutInverted}
-                variants={popUpMediaMotion}
+                data-layoutInverted={isLayoutInverted && isLayoutInverted}
+                variants={framerMotionPopUpMedia}
                 initial="initial"
                 animate="animate"
             >
 
                 <SwiperCarousel
-                    title={title}
+                    title={headingTitle}
                     daysSelected={daysRange}
                 >
 
-                    {data.length > 0 ? (
+                    {mediaList.length > 0 ? (
 
-                        data.map((item, key) => (
+                        mediaList.map((item, key) => (
                             <SwiperSlide key={item.id}>
                                 <MediaCover3
                                     layoutId={String(item.id)}
-                                    onClick={() => setMediaPreview(item.id)}
+                                    onClick={() => handleMediaPopUpFocus(item.id)}
                                     data={item as ApiDefaultResult}
                                     positionIndex={key + 1}
                                     loading={isLoading}
@@ -224,10 +222,10 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                     ) : (
 
                         <p className='display_align_justify_center'>
-                            {!dateOptions && "No results"}
-                            {(dateOptions && daysRange == 1) && "Nothing Releasing Today"}
-                            {(dateOptions && daysRange == 7) && "Nothing Released in 7 Days"}
-                            {(dateOptions && daysRange == 30) && "Nothing Released in 30 Days"}
+                            {!isFetchByDateButtonsOnScreen && "No results"}
+                            {(isFetchByDateButtonsOnScreen && daysRange == 1) && "Nothing Releasing Today"}
+                            {(isFetchByDateButtonsOnScreen && daysRange == 7) && "Nothing Released in 7 Days"}
+                            {(isFetchByDateButtonsOnScreen && daysRange == 30) && "Nothing Released in 30 Days"}
                         </p>
 
                     )}
@@ -241,7 +239,7 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                 {(selectedId && mediaSelect) && (
                     <motion.div
                         id={styles.overlay}
-                        onClick={() => setMediaPreview(null)}
+                        onClick={() => handleMediaPopUpFocus(null)}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -261,7 +259,7 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                             }}
                         >
 
-                            <motion.button onClick={() => setMediaPreview(null)} title="Close">
+                            <motion.button onClick={() => handleMediaPopUpFocus(null)} title="Close">
                                 <CloseSvg width={16} height={16} />
                             </motion.button>
 
@@ -310,7 +308,7 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
                             </motion.div>
 
                             {/* SHOWS TRAILER / SHOWS DESCRIPTION */}
-                            {trailerActive ? (
+                            {isTrailerBeeingShown ? (
 
                                 <motion.div className={styles.trailer_container}>
                                     <iframe
@@ -345,8 +343,8 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
                                         <motion.button
                                             className={styles.trailer_btn}
-                                            onClick={() => setTrailerActive(!trailerActive)}
-                                            data-active={trailerActive}
+                                            onClick={() => setIsTrailerBeeingShown(!isTrailerBeeingShown)}
+                                            data-active={isTrailerBeeingShown}
                                         >
                                             <PlaySvg alt="Play" width={16} height={16} /> TRAILER
                                         </motion.button>
@@ -367,4 +365,4 @@ function NavThoughMedias({ title, route, mediaFormat, dateOptions, sort, darkBac
 
 }
 
-export default NavThoughMedias
+export default NavigationThroughMedias

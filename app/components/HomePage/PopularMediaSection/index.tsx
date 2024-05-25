@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import anilist from '@/app/api/anilist'
 import { SwiperSlide } from 'swiper/react'
 
-const motionVariants = {
+const framerMotionVariants = {
     initial: {
         scale: 0,
     },
@@ -23,39 +23,39 @@ const motionVariants = {
     },
 }
 
-function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] }) {
+function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] }) {
 
-    const [loading, setLoading] = useState<boolean>(false)
-    const [disableBtn, setDisableBtn] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isBtnDisable, setIsBtnDisable] = useState<boolean>(false)
 
     const [fetchedData, setFetchedData] = useState<ApiDefaultResult[]>([])
-    const [currPage, setCurrPage] = useState(2) // starts on page 2, because it will be used after the home page fetch 
+    const [currFetchPage, setCurrFetchPage] = useState(2) // next fetch will start on page 2
 
-    async function loadMoreData() {
+    async function fetchAnimesListNextPage() {
 
-        setLoading(true)
+        setIsLoading(true)
 
-        const trendingData = await anilist.getNewReleases("ANIME", undefined, undefined, false, "RELEASING", currPage, 14).then(
+        const listAnimesReleasingByPopularity = await anilist.getNewReleases("ANIME", undefined, undefined, false, "RELEASING", currFetchPage, 14).then(
             res => (res as ApiDefaultResult[])
         )
 
-        if (!trendingData || trendingData.length == 0) {
+        if (!listAnimesReleasingByPopularity || listAnimesReleasingByPopularity.length == 0) {
 
-            setDisableBtn(true)
-            setLoading(false)
+            setIsBtnDisable(true)
+            setIsLoading(false)
 
             return
 
         }
 
-        if (trendingData.length <= 13) setDisableBtn(true)
+        if (listAnimesReleasingByPopularity.length <= 13) setIsBtnDisable(true)
 
-        const pushToOlderResults = [...fetchedData, ...trendingData]
+        const olderListWithNewResults = [...fetchedData, ...listAnimesReleasingByPopularity]
 
-        setFetchedData(pushToOlderResults)
-        setCurrPage(currPage + 1)
+        setFetchedData(olderListWithNewResults)
+        setCurrFetchPage(currFetchPage + 1)
 
-        setLoading(false)
+        setIsLoading(false)
 
     }
 
@@ -80,11 +80,15 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
                     <div id={styles.popular_list_container}>
                         <SwiperContainer>
 
-                            {(fetchedData?.length > 0 ? [...initialData, ...fetchedData] : initialData).map((item, key) => (
+                            {(fetchedData?.length > 0 ? [...animesList, ...fetchedData] : animesList).map((item, key) => (
 
                                 <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
 
-                                    <MediaCover positionIndex={key + 1} darkMode={true} data={item as ApiDefaultResult} />
+                                    <MediaCover
+                                        positionIndex={key + 1}
+                                        darkMode={true}
+                                        data={item as ApiDefaultResult}
+                                    />
 
                                 </SwiperSlide>
 
@@ -93,7 +97,7 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
                         </SwiperContainer>
                     </div>
 
-                    {initialData.map((item, key: number) => (
+                    {animesList.map((item, key: number) => (
                         <MediaCover data={item} key={key} positionIndex={key + 1} darkMode={true} hiddenOnDesktop />
                     ))}
 
@@ -105,7 +109,7 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
                 {fetchedData?.length > 0 && (
                     <motion.div
                         id={styles.new_fetched_data_container}
-                        variants={motionVariants}
+                        variants={framerMotionVariants}
                         initial={"initial"}
                         animate={"animate"}
                     >
@@ -121,8 +125,19 @@ function PopularMediaSection({ initialData }: { initialData: ApiDefaultResult[] 
 
                 <span id={styles.line}></span>
 
-                <motion.button onClick={() => loadMoreData()} data-loading={loading} disabled={disableBtn}>
-                    {loading ? <LoadingSvg width={16} height={16} /> : "+ View more"}
+                <motion.button
+                    aria-label={isLoading ? "wait the loading" : "+ View more"}
+                    onClick={() => fetchAnimesListNextPage()}
+                    data-loading={isLoading}
+                    disabled={isBtnDisable}
+                >
+
+                    {isLoading ?
+                        <LoadingSvg width={16} height={16} />
+                        :
+                        "+ View more"
+                    }
+
                 </motion.button >
 
             </div>

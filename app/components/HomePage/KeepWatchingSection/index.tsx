@@ -10,7 +10,7 @@ import { initFirebase } from '@/app/firebaseApp'
 import KeepWatchingEpisodeInfo from './components/KeepWatchingEpisodeInfo'
 import { SwiperSlide } from 'swiper/react'
 
-const motionVariants = {
+const framerMotionVariants = {
     initial: {
         opacity: 0,
         height: 0
@@ -34,44 +34,37 @@ function KeepWatchingSection() {
 
     const [watchingList, setWatchingList] = useState<KeepWatchingItem[]>([])
 
+    useEffect(() => { if (user) getWatchingList() }, [user])
+
     async function getWatchingList() {
 
         const userDoc = await getDoc(doc(db, "users", user!.uid))
 
         const watchingList = userDoc.get("keepWatching")
 
-        let listFromObjectToArray = Object.keys(watchingList).map(key => {
+        if (!watchingList) return setWatchingList([])
+
+        const changeWatchingListFromObjectToArray: KeepWatchingItem[] = Object.keys(watchingList).map(key => {
 
             return watchingList[key]
 
-        })
+        }).filter(item => item.length != 0 && item)
 
-        // removes any empty object
-        listFromObjectToArray = listFromObjectToArray.filter(item => item.length != 0 && item)
-
-        // sort by update date
-        listFromObjectToArray = listFromObjectToArray.sort(function (x: KeepWatchingItem, y: KeepWatchingItem) {
+        const watchingListSortedByDate = changeWatchingListFromObjectToArray.sort(function (x, y) {
             return x.updatedAt - y.updatedAt
         }).reverse()
 
-        setWatchingList(listFromObjectToArray || null)
+        setWatchingList(watchingListSortedByDate || [])
 
     }
 
-    useEffect(() => {
-
-        if (user) getWatchingList()
-
-    }, [user])
-
     return (
-        <AnimatePresence
-            initial={false}
-        >
+        <AnimatePresence initial={false}>
+
             {(user && watchingList!.length > 0) && (
                 <motion.section
                     id={styles.keep_watching_container}
-                    variants={motionVariants}
+                    variants={framerMotionVariants}
                     initial={"initial"}
                     animate={"animate"}
                 >
@@ -104,8 +97,8 @@ function KeepWatchingSection() {
                     </div>
 
                 </motion.section>
-            )
-            }
+            )}
+
         </AnimatePresence >
     )
 }
