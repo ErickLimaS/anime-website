@@ -1,27 +1,28 @@
 "use client"
 import React, { useEffect, useState } from 'react'
+import styles from "./component.module.css"
 import PlaySvg from "@/public/assets/play2.svg"
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px-custom-color.svg"
 import { useRouter } from 'next/navigation'
-import { getAuth } from 'firebase/auth'
+import { getAuth, User } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { DocumentData, DocumentSnapshot, doc, getDoc, getFirestore } from 'firebase/firestore'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOptions'
-import styles from "./component.module.css"
 import { motion } from 'framer-motion'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 
-function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
+export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
     const [movieId, setMovieId] = useState<string | null>("")
     const [episodeNumber, setEpisodeNumber] = useState<number>()
     const [episodeLastStop, setEpisodeLastStop] = useState<number>()
     const [episodeDuration, setEpisodeDuration] = useState<number>()
+
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    const [source, setSource] = useState<string>()
+    const [sourceName, setSourceName] = useState<string>()
 
     const auth = getAuth()
 
@@ -31,100 +32,82 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
     const router = useRouter()
 
-    // CHECK LAST EPISODE WATCHED BY DESCRECENT ORDER 
-    async function checkEpisodesMarkedAsWatched() {
+    useEffect(() => {
 
-        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+        if (user && !loading) handleEpisodesMarkedAsWatched()
+        else fetchMediaEpisodeUrl()
 
-        if (!userDoc) return fetchMediaWatchUrl()
+    }, [user, episodeNumber])
 
-        // VERIFY ON USER DOC "KEEP WATCHING" ANY EPISODE OF THIS MEDIA
-        const onKeepWatching = await checkKeepWatchingList()
+    useEffect(() => {
 
-        if (onKeepWatching) return
+        if (mediaId && sourceName && movieId) setIsLoading(false)
 
-        let episodedWatched
+    }, [mediaId, sourceName, episodeNumber, movieId])
 
-        // VERIFY ON GOGOANIME
-        const isOnEpisodesListGoGoAnime = userDoc.get("episodesWatchedBySource")?.gogoanime
+    async function handleEpisodesMarkedAsWatched() {
 
-        if (isOnEpisodesListGoGoAnime) setSource("gogoanime")
+        const userDoc = await getDoc(doc(db, 'users', user!.uid))
 
-        const mediaOnDb = isOnEpisodesListGoGoAnime && isOnEpisodesListGoGoAnime[mediaId]
+        if (!userDoc) return fetchMediaEpisodeUrl()
 
-        if (mediaOnDb != undefined) {
+        const lastEpisodeWatched = await checkIfMediaIsOnKeepWatchingList()
+
+        if (lastEpisodeWatched) return // Priority for Keep Watching Episodes
+
+        const episodesWatchedList = userDoc.get("episodesWatched")
+
+        const userPreferredSource = userDoc.get("videoSource") || "gogoanime"
+
+        if (episodesWatchedList) setSourceName(userPreferredSource)
+
+        if (episodesWatchedList[mediaId]) {
 
             // SORT ARRAY TO GET THE HIGHEST EPISODE NUMBER ON FIRST INDEX
-            episodedWatched = isOnEpisodesListGoGoAnime[mediaId].sort(
+            const lastestEpisodeMarkedAsWatched = episodesWatchedList[mediaId].sort(
                 function (a: { episodeTitle: number }, b: { episodeTitle: number }) {
                     return b.episodeTitle - a.episodeTitle
                 }
             )
 
-        }
-
-        // IF IS NOT ON GOGOANIME, TRY WITH ANIWATCH
-        if (!episodedWatched || episodedWatched.length == 0) {
-
-            const isOnEpisodesListAnimeWatch = userDoc.get("episodesWatchedBySource")?.aniwatch
-
-            if (isOnEpisodesListAnimeWatch) setSource("aniwatch")
-
-            const mediaOnDb = isOnEpisodesListAnimeWatch && isOnEpisodesListAnimeWatch[mediaId]
-
-            if (mediaOnDb != undefined) {
-
-                // SORT ARRAY TO GET THE HIGHEST EPISODE NUMBER ON FIRST INDEX
-                episodedWatched = isOnEpisodesListAnimeWatch[mediaId].sort(
-                    function (a: { episodeTitle: number }, b: { episodeTitle: number }) {
-                        return b.episodeTitle - a.episodeTitle
-                    }
-                )
-
-            }
+            fetchMediaEpisodeUrl(lastestEpisodeMarkedAsWatched[0].episodeTitle) // EPISODE TITLE HAS THE EPISODE NUMBER
 
         }
 
         // IF NO EPISODE WATCHED, IT FETCHS THE MEDIA'S FIRST EPISODE 
-        if (!episodedWatched || episodedWatched.length == 0) return fetchMediaWatchUrl()
-
-        // CALL OTHER FUNCTION TO FETCH URL
-        fetchMediaWatchUrl(episodedWatched[0].episodeTitle) // EPISODE TITLE HAS THE EPISODE NUMBER
+        return fetchMediaEpisodeUrl()
 
     }
 
-    // IF NO EPISODE FOUND ON "EPISODES WATCHED",
-    // IT VERIFIES LAST EPISODE ON "KEEP WATCHING"
-    async function checkKeepWatchingList() {
+    async function checkIfMediaIsOnKeepWatchingList() {
 
-        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+        const userDoc = await getDoc(doc(db, 'users', user!.uid))
 
-        let keepWatchingList = await userDoc.get("keepWatching")
+        let userKeepWatchingList = await userDoc.get("keepWatching")
 
-        let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
+        let listFromObjectToArray = Object.keys(userKeepWatchingList).map(key => {
 
-            return keepWatchingList[key]
+            return userKeepWatchingList[key]
 
         })
 
-        keepWatchingList = listFromObjectToArray.filter(item => item.length != 0 && item)
+        userKeepWatchingList = listFromObjectToArray.filter(item => item.length != 0 && item)
 
-        const lastWatchedEpisode: KeepWatchingItem = keepWatchingList.find((item: KeepWatchingItem) => item.id == mediaId)
+        const mediaLastEpisodeWatched: KeepWatchingItem = userKeepWatchingList.find((item: KeepWatchingItem) => item.id == mediaId)
 
-        if (!lastWatchedEpisode) return null
+        if (!mediaLastEpisodeWatched) return null
 
-        setSource(lastWatchedEpisode.source)
-        setMovieId(lastWatchedEpisode.episodeId)
-        setEpisodeNumber(Number(lastWatchedEpisode.episode))
-        setEpisodeDuration(lastWatchedEpisode.episodeDuration)
-        setEpisodeLastStop(lastWatchedEpisode.episodeTimeLastStop)
+        setSourceName(mediaLastEpisodeWatched.source)
+        setMovieId(mediaLastEpisodeWatched.episodeId)
+        setEpisodeNumber(Number(mediaLastEpisodeWatched.episode))
+        setEpisodeDuration(mediaLastEpisodeWatched.episodeDuration)
+        setEpisodeLastStop(mediaLastEpisodeWatched.episodeTimeLastStop)
 
-        return lastWatchedEpisode
+        return mediaLastEpisodeWatched
 
     }
-
-    // if its a ANIME, get ID for the first episode of this media / if MOVIE, get movie ID  
-    async function fetchMediaWatchUrl(lastEpisodeWatched?: number) {
+    
+  async function fetchMediaEpisodeUrl(lastEpisodeWatchedNumber?: number) {
 
         setIsLoading(true)
 
@@ -132,7 +115,7 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
             const searchResultsForMedia = fetchWithGoGoAnime(mediaTitle, "episodes")
 
-            setSource("gogoanime")
+            setSourceName("gogoanime")
 
             return searchResultsForMedia
 
@@ -142,43 +125,37 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
 
             const searchResultsForMedia = fetchWithAniWatch(mediaTitle, "episodes")
 
-            setSource("aniwatch")
+            setSourceName("aniwatch")
 
             return searchResultsForMedia
 
         }
 
-        // try first with animewatch
-        let media: MediaEpisodes[] | EpisodeAnimeWatch[]
+        let currMediaInfo: MediaEpisodes[] | EpisodeAnimeWatch[] = await fetchOnGoGoAnime() as MediaEpisodes[]
 
-        media = await fetchOnGoGoAnime() as MediaEpisodes[]
+        if (!currMediaInfo) currMediaInfo = await fetchOnAniWatch() as EpisodeAnimeWatch[] // High chances of getting the wrong media
 
-        // if media is null, try with gogoanime
-        if (!media) {
+        if (!currMediaInfo) {
 
-            media = await fetchOnAniWatch() as EpisodeAnimeWatch[] // High chances of getting the wrong media
+            setIsLoading(false)
+            setMovieId(null)
 
-            if (!media) {
-                setIsLoading(false)
-                setMovieId(null)
-
-                return
-            }
+            return
 
         }
 
-        // if user has watched a episode and the episode is NOT the last, redirects to next episode
-        if (media && lastEpisodeWatched && (media.length > lastEpisodeWatched)) {
+        // if user has watched a episode and the episode is NOT the last, redirects to the next episode
+        if (lastEpisodeWatchedNumber && (currMediaInfo.length > lastEpisodeWatchedNumber)) {
 
-            // add 1 to get the next episode after the last watched
-            const episodeSelected = media.find((item: { number: number }) => item.number == lastEpisodeWatched + 1)
+            // adds 1 to get the next episode after the last watched
+            const nextEpisodeAfterLastWatched = currMediaInfo.find((episode: { number: number }) => episode.number == lastEpisodeWatchedNumber + 1)
 
-            if (episodeSelected) {
+            if (nextEpisodeAfterLastWatched) {
 
-                setMovieId(source == "gogoanime" ? (episodeSelected as MediaEpisodes)!.id : (episodeSelected as EpisodeAnimeWatch)!.episodeId)
+                setMovieId(sourceName == "gogoanime" ? (nextEpisodeAfterLastWatched as MediaEpisodes)!.id : (nextEpisodeAfterLastWatched as EpisodeAnimeWatch)!.episodeId)
 
                 // adds 1 to get the next episode after the last watched
-                setEpisodeNumber(lastEpisodeWatched + 1)
+                setEpisodeNumber(lastEpisodeWatchedNumber + 1)
 
                 setIsLoading(false)
 
@@ -187,51 +164,39 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
             }
         }
 
-        if (media) {
-
-            setMovieId((media[0] as EpisodeAnimeWatch)?.episodeId || (media[0] as MediaEpisodes)?.id || null)
-
-        }
+        if (currMediaInfo) setMovieId((currMediaInfo[0] as EpisodeAnimeWatch)?.episodeId || (currMediaInfo[0] as MediaEpisodes)?.id || null)
 
         setIsLoading(false)
 
     }
 
-    useEffect(() => {
+    function handlePlayBtn() {
 
-        (user && !loading) ? checkEpisodesMarkedAsWatched() : fetchMediaWatchUrl()
+        setIsLoading(true)
 
-    }, [user, episodeNumber])
+        const mediaPathname = `/watch/${mediaId}?source=${sourceName}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeLastStop}` : ""}`
 
-    useEffect(() => {
+        router.push(mediaPathname)
 
-        if (mediaId && source && movieId) setIsLoading(false)
-
-    }, [mediaId, source, episodeNumber, movieId])
+    }
 
     return (
         <motion.button
             id={styles.container}
             role='link'
-            onClick={() => {
-
-                setIsLoading(true)
-
-                router.push(`/watch/${mediaId}?source=${source}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeLastStop}` : ""}`)
-
-            }}
+            onClick={() => handlePlayBtn()}
             disabled={isLoading || movieId == null}
             aria-label={episodeNumber ? `Continue Episode ${episodeNumber}` : "Watch Episode 1"}
             title={isLoading ?
                 "Loading" : movieId == null ?
                     "Not Available At This Moment"
                     :
-                    `Watch ${episodeNumber ? `Episode ${episodeNumber} - ${mediaTitle} ` : ""}`
+                    `Watch ${episodeNumber ? `Episode ${episodeNumber} - ${mediaTitle} ` : mediaTitle}`
             }
         >
 
             {/* SHOWS PROGRESS OF EPISODE WATCHED */}
-            {(episodeLastStop != null && episodeDuration != null) && (
+            {/* {(episodeLastStop != null && episodeDuration != null) && (
                 <motion.div className={styles.progress_bar}>
                     <motion.div
                         initial={{ scaleX: 0 }}
@@ -239,11 +204,23 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
                         transition={{ duration: 1 }}
                     />
                 </motion.div>
-            )}
+            )} */}
 
-            {(user && episodeNumber) && (
-                <span id={styles.continue_span}>EPISODE {episodeNumber}</span>
-            )}
+            <ProgressBar
+                episodeDuration={episodeDuration}
+                episodeLastStop={episodeLastStop}
+            />
+
+            {/* {(user && episodeNumber) && (
+                <span id={styles.continue_span}>
+                    EPISODE {episodeNumber}
+                </span>
+            )} */}
+
+            <EpisodeNumber
+                user={user}
+                episodeNumber={episodeNumber}
+            />
 
             {isLoading ?
                 <LoadingSvg fill="#fff" width={16} height={16} />
@@ -251,12 +228,53 @@ function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string 
                 <PlaySvg fill="#fff" width={16} height={16} />
             }
 
-            {(movieId && source) && (
-                <span id={styles.source_span}>{source.toUpperCase()}</span>
-            )}
+            {/* {(movieId && sourceName) && (
+                <span id={styles.source_span}>
+                    {sourceName.toUpperCase()}
+                </span>
+            )} */}
+
+            <SourceName
+                movieId={movieId}
+                sourceName={sourceName}
+            />
 
         </motion.button>
     )
 }
 
-export default PlayBtn
+function ProgressBar({ episodeLastStop, episodeDuration }: { episodeLastStop: number | undefined, episodeDuration: number | undefined }) {
+
+    return (
+        (episodeLastStop && episodeDuration) && (
+            <motion.div className={styles.progress_bar}>
+                <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: (((episodeLastStop / episodeDuration) * 100) / 100) || 0.07 }}
+                    transition={{ duration: 1 }}
+                />
+            </motion.div>
+        )
+    )
+
+}
+
+function EpisodeNumber({ user, episodeNumber }: { user: User | null | undefined, episodeNumber: number | undefined }) {
+    return (
+        (user && episodeNumber) && (
+            <span id={styles.continue_span}>
+                EPISODE {episodeNumber}
+            </span>
+        )
+    )
+}
+
+function SourceName({ movieId, sourceName }: { movieId: string | null, sourceName: string | undefined }) {
+    return (
+        (movieId && sourceName) && (
+            <span id={styles.source_span}>
+                {sourceName.toUpperCase()}
+            </span>
+        )
+    )
+}

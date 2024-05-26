@@ -2,10 +2,10 @@ import React from 'react'
 import styles from "./footerComponent.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
-import FacebookSvg from "../../../public/assets/facebook.svg"
-import InstagramSvg from "../../../public/assets/instagram.svg"
-import YoutubeSvg from "../../../public/assets/youtube.svg"
-import TwitterSvg from "../../../public/assets/twitter-x.svg"
+import FacebookSvg from "@/public/assets/facebook.svg"
+import InstagramSvg from "@/public/assets/instagram.svg"
+import YoutubeSvg from "@/public/assets/youtube.svg"
+import TwitterSvg from "@/public/assets/twitter-x.svg"
 import API from '../../../api/anilist'
 import { animesGenres } from '../header'
 

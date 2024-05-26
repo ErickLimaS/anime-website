@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
-import { AddToPlaylist } from '../../Buttons/AddToPlaylist'
+import * as AddToPlaylist from '../../Buttons/AddToPlaylist'
 import SwiperContainer from '../../SwiperContainer'
 import ListItemHeroCarousel from './components/HeroListCarousel'
 import EyeSvg from "@/public/assets/eye-fill.svg"
@@ -183,7 +183,9 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
 
                                         <Link href={`/media/${animesList[currMediaOnScreenIndex]?.id}`}>{animesList[currMediaOnScreenIndex].format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
 
-                                        <AddToPlaylist mediaInfo={animesList[currMediaOnScreenIndex]} />
+                                        <AddToPlaylist.Button
+                                            mediaInfo={animesList[currMediaOnScreenIndex]}
+                                        />
 
                                     </div>
 

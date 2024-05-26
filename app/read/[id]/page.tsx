@@ -3,7 +3,7 @@ import styles from "./page.module.css"
 import anilist from '@/app/api/anilist'
 import Container from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { MangaChapters, MangaInfo, MangaPages, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface'
-import CommentSection from '@/app/components/CommentSection'
+import CommentsSection from '@/app/components/CommentsSection'
 import Image from 'next/image'
 import ErrorImg from "@/public/error-img-4.png"
 import Link from 'next/link'

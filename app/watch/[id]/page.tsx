@@ -6,7 +6,7 @@ import anilist from '@/app/api/anilist'
 import Container from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { EpisodeLinksGoGoAnime, MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import EpisodesSideListContainer from './components/EpisodesSideListContainer'
-import CommentSection from '@/app/components/CommentSection'
+import CommentsSection from '@/app/components/CommentsSection'
 import aniwatch from '@/app/api/aniwatch'
 import Player from './components/VideoPlayer'
 import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
@@ -236,9 +236,9 @@ async function WatchEpisode({ params, searchParams }: {
                             <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
 
                             {/* ONLY ON DESKTOP */}
-                            <CommentSection
-                                media={mediaData}
-                                onWatchPage={true}
+                            <CommentsSection
+                                mediaInfo={mediaData}
+                                isOnWatchPage={true}
                                 episodeId={searchParams.q}
                                 episodeNumber={Number(searchParams.episode)}
                             />
@@ -268,9 +268,9 @@ async function WatchEpisode({ params, searchParams }: {
 
                             <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
 
-                            <CommentSection
-                                media={mediaData}
-                                onWatchPage={true}
+                            <CommentsSection
+                                mediaInfo={mediaData}
+                                isOnWatchPage={true}
                                 episodeId={searchParams.q}
                                 episodeNumber={Number(searchParams.episode)}
                             />

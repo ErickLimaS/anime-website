@@ -8,6 +8,7 @@ import CloseSvg from '@/public/assets/x.svg'
 import PlaySvg from '@/public/assets/play.svg'
 import { Url } from 'next/dist/shared/lib/router/router'
 import * as MediaCard from '../../MediaCards/MediaCard'
+import * as MediaCardClientSide from '../../MediaCards/MediaCard/variantClientSide'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import * as AddToPlaylistButton from '../../Buttons/AddToPlaylist'
@@ -209,7 +210,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                         mediaList.map((media, key) => (
                             <SwiperSlide key={media.id}>
 
-                                <MediaCard.Container
+                                <MediaCardClientSide.FramerMotionContainer
                                     onDarkMode={onDarkBackground}
                                     positionIndex={key + 1}
                                     isLoading={isLoading}
@@ -235,7 +236,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                                         title={media.title.romaji || media.title.native}
                                     />
 
-                                </MediaCard.Container>
+                                </MediaCardClientSide.FramerMotionContainer>
 
                             </SwiperSlide>
                         ))

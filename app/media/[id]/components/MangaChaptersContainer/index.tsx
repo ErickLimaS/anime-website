@@ -15,7 +15,7 @@ import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOptions';
 import { stringToUrlFriendly } from '@/app/lib/convertStringsTo';
 
-const loadingChaptersMotion = {
+const framerMotionLoadingChapters = {
   initial: {
     opacity: 0,
     scale: 0
@@ -33,81 +33,79 @@ const loadingChaptersMotion = {
   }
 }
 
-function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
+function MangaChaptersContainer({ mediaInfo }: { mediaInfo: ApiMediaResults }) {
 
-  const [loading, setLoading] = useState(true)
-  const [chaptersDataFetched, setChaptersDataFetched] = useState<MangaChapters[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [chapterList, setChaptersList] = useState<MangaChapters[]>([])
 
-  const [currentItems, setCurrentItems] = useState<MangaChapters[] | null>(null);
-  const [pageCount, setPageCount] = useState<number>(0);
+  const [currItems, setCurrItems] = useState<MangaChapters[] | null>(null)
+  const [pageCount, setPageCount] = useState<number>(0)
 
-  const [itemOffset, setItemOffset] = useState<number>(0);
+  const [itemOffset, setItemOffset] = useState<number>(0)
 
   const rangeChaptersPerPage = 10
 
-  function handlePageClick(event: { selected: number }) {
+  useEffect(() => {
 
-    setLoading(true) // needed to refresh chapters component "Mark Chapters Read"
+    if (chapterList.length == 0) fetchMangaChapters()
 
-    const newOffset = event.selected * rangeChaptersPerPage % chaptersDataFetched.length
+    const endOffset = itemOffset + rangeChaptersPerPage;
+    setCurrItems(chapterList.slice(itemOffset, endOffset));
+
+  }, [itemOffset, rangeChaptersPerPage])
+
+
+  function handleButtonPageNavigation(event: { selected: number }) {
+
+    setIsLoading(true) // Needed to refresh chapters component "Mark Chapters Read"
+
+    const newOffset = event.selected * rangeChaptersPerPage % chapterList.length
 
     setItemOffset(newOffset)
 
-    setTimeout(() => setLoading(false), 500)  // needed to refresh chapters component "Mark Chapters Read"
+    setTimeout(() => setIsLoading(false), 500)  // Needed to refresh chapters component "Mark Chapters Read"
 
   }
 
-  async function getChapters() {
+  async function fetchMangaChapters() {
 
-    setLoading(true)
+    setIsLoading(true)
 
-    let mangaInfo
+    const query = stringToUrlFriendly(mediaInfo.title.romaji).toLowerCase()
 
-    const query = stringToUrlFriendly(mediaData.title.romaji).toLowerCase()
+    let mangaInfo: MangaInfo
 
     mangaInfo = await manga.getInfoFromThisMedia(query) as MangaInfo
 
-    // if the query dont match any id result, it will search results for this query,
-    // than make the first request by the ID of the first search result 
     if (!mangaInfo) {
 
-      const closestResult = await getClosestMangaResultByTitle(query, mediaData)
+      const mangaClosestResult = await getClosestMangaResultByTitle(query, mediaInfo)
 
-      mangaInfo = await manga.getInfoFromThisMedia(closestResult as string) as MangaInfo
-
-      if (!mangaInfo) {
-
-        setLoading(false)
-
-        setCurrentItems(null)
-
-        return
-
-      }
+      mangaInfo = await manga.getInfoFromThisMedia(mangaClosestResult as string) as MangaInfo
 
     }
 
-    setChaptersDataFetched(mangaInfo.chapters.filter(item => item.pages != 0))
+    if (!mangaInfo) {
 
-    const endOffset = itemOffset + rangeChaptersPerPage;
-    setCurrentItems(mangaInfo.chapters.filter(item => item.pages != 0).slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(mangaInfo.chapters.filter(item => item.pages != 0).length / rangeChaptersPerPage));
+      setIsLoading(false)
 
-    setLoading(false)
+      setCurrItems(null)
+
+      return
+
+    }
+
+    setChaptersList(mangaInfo.chapters.filter(item => item.pages != 0))
+
+    const endOffset = itemOffset + rangeChaptersPerPage
+
+    setCurrItems(mangaInfo.chapters.filter(item => item.pages != 0).slice(itemOffset, endOffset))
+
+    setPageCount(Math.ceil(mangaInfo.chapters.filter(item => item.pages != 0).length / rangeChaptersPerPage))
+
+    setIsLoading(false)
 
   }
-
-  useEffect(() => {
-
-    // Fetch items 
-    if (chaptersDataFetched.length == 0) {
-      getChapters()
-    }
-
-    const endOffset = itemOffset + rangeChaptersPerPage;
-    setCurrentItems(chaptersDataFetched.slice(itemOffset, endOffset));
-
-  }, [itemOffset, rangeChaptersPerPage]);
 
   return (
     <div>
@@ -115,18 +113,18 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
       <AnimatePresence>
         <motion.ol
           id={styles.container}
-          data-loading={loading}
-          variants={loadingChaptersMotion}
+          data-loading={isLoading}
+          variants={framerMotionLoadingChapters}
           initial="initial"
           animate="animate"
           exit="exit"
         >
 
           {/* LOADING */}
-          {loading && (
+          {isLoading && (
             <motion.div
               id={styles.loading_chapters_container}
-              variants={loadingChaptersMotion}
+              variants={framerMotionLoadingChapters}
               initial="initial"
               animate="animate"
               exit="exit"
@@ -136,7 +134,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
 
                 <motion.div
                   key={key}
-                  variants={loadingChaptersMotion}
+                  variants={framerMotionLoadingChapters}
                 />
 
               ))}
@@ -145,7 +143,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
           )}
 
           {/* SHOWS WHEN THERES NO RESULTS  */}
-          {!loading && (chaptersDataFetched.length == 0 || currentItems == null) && (
+          {!isLoading && (chapterList.length == 0 || currItems == null) && (
             <div id={styles.no_chapters_container}>
 
               <Image src={ErrorImg} alt='Error' height={200} />
@@ -155,12 +153,12 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
             </div>
           )}
 
-          {(currentItems && !loading) && currentItems.map((item, key: number) => (
+          {(currItems && !isLoading) && currItems.map((item, key: number) => (
             <motion.li
               key={key}
-              title={`Chapter ${item.chapterNumber} - ${mediaData.title.romaji}`}
+              title={`Chapter ${item.chapterNumber} - ${mediaInfo.title.romaji}`}
               data-disabled={item.pages == 0}
-              variants={loadingChaptersMotion}
+              variants={framerMotionLoadingChapters}
               className={styles.chapter_container}
             >
 
@@ -168,7 +166,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
                 <BookSvg alt="Book Opened Icon" width={16} heighy={16} />
               </div>
 
-              <Link href={`/read/${mediaData.id}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}>
+              <Link href={`/read/${mediaInfo.id}?source=mangadex&chapter=${item.chapterNumber}&q=${item.id}`}>
                 <div className={styles.info_container}>
 
                   <h3>{item.title != item.chapterNumber ? `Chapter ${item.chapterNumber}: ${item.title}` : `Chapter ${item.chapterNumber}` || "Not Available"}</h3>
@@ -182,7 +180,7 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
               <MarkChapterAsReadButton
                 chapterNumber={Number(item.chapterNumber)}
                 chapterTitle={item.title}
-                mediaId={mediaData.id}
+                mediaId={mediaInfo.id}
                 hasText
               />
 
@@ -192,11 +190,11 @@ function MangaChaptersContainer({ mediaData }: { mediaData: ApiMediaResults }) {
         </motion.ol>
       </AnimatePresence>
 
-      {chaptersDataFetched.length > 0 && (
+      {chapterList.length > 0 && (
         <nav id={styles.pagination_buttons_container}>
 
           <NavPaginateItems
-            onPageChange={handlePageClick}
+            onPageChange={handleButtonPageNavigation}
             pageCount={pageCount}
           />
 

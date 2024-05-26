@@ -4,8 +4,8 @@ import styles from "./component.module.css"
 import Image from 'next/image';
 import {
     getFirestore, doc, arrayUnion, FieldPath, setDoc,
-    DocumentSnapshot, DocumentData, QueryDocumentSnapshot,
-    addDoc, collection, getDocs, QuerySnapshot,
+    DocumentData, QueryDocumentSnapshot,
+    addDoc, collection, getDocs,
     where, query
 } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
@@ -21,16 +21,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 
 type CommetsSectionTypes = {
-    media: ApiMediaResults | ApiDefaultResult,
-    onWatchPage?: boolean,
+    mediaInfo: ApiMediaResults | ApiDefaultResult,
+    isOnWatchPage?: boolean,
     episodeId?: string,
     episodeNumber?: number
 }
 
-function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: CommetsSectionTypes) {
+function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }: CommetsSectionTypes) {
 
-    const [comments, setComments] = useState<DocumentData[]>([])
-    const [commentSaved, setCommentSaved] = useState<boolean>(false)
+    const [commentsList, setCommentsList] = useState<DocumentData[]>([])
+    const [wasCommentCreatedSuccessfully, setWasCommentCreatedSuccessfully] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
@@ -43,49 +43,44 @@ function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: Commet
 
     const db = getFirestore(initFirebase());
 
-    // SHOWS MORE COMMENTS
-    function loadMoreComments() {
+    useEffect(() => { getCommentsForCurrMedia() }, [mediaInfo, user, episodeId])
 
-        setCommentsSliceRange(commentsSliceRange + 10)
+    function handleCommentsSliceRange() { setCommentsSliceRange(commentsSliceRange + 10) }
 
-    }
-
-    // sort comments
-    async function sortCommentsBy(sort: string, data?: DocumentData[]) {
-
+    async function handleCommentsSortBy(sortBy: "date" | "likes" | "dislikes", commentsUnsorted?: DocumentData[]) {
 
         setIsLoading(true)
 
-        if (!data) data = await loadComments()
+        if (!commentsUnsorted) commentsUnsorted = await getCommentsForCurrMedia()
 
-        let sorted
+        let sortedComments
 
-        switch (sort) {
+        switch (sortBy) {
             case "date":
 
-                sorted = data!.sort((x, y) => y.createdAt - x.createdAt)
-                setComments(sorted)
+                sortedComments = commentsUnsorted!.sort((x, y) => y.createdAt - x.createdAt)
+                setCommentsList(sortedComments)
 
                 break
 
             case "likes":
 
-                sorted = data!.sort((x, y) => y.likes - x.likes)
-                setComments(sorted)
+                sortedComments = commentsUnsorted!.sort((x, y) => y.likes - x.likes)
+                setCommentsList(sortedComments)
 
                 break
 
             case "dislikes":
 
-                sorted = data!.sort((x, y) => y.dislikes - x.dislikes)
-                setComments(sorted)
+                sortedComments = commentsUnsorted!.sort((x, y) => y.dislikes - x.dislikes)
+                setCommentsList(sortedComments)
 
                 break
 
             default:
 
-                sorted = data!.sort((x, y) => y.createdAt - x.createdAt)
-                setComments(sorted)
+                sortedComments = commentsUnsorted!.sort((x, y) => y.createdAt - x.createdAt)
+                setCommentsList(sortedComments)
 
                 break
 
@@ -95,51 +90,47 @@ function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: Commet
 
     }
 
-    // GET ALL COMMENTS ON DB RELATED TO THIS MEDIA ID
-    async function loadComments() {
+    async function getCommentsForCurrMedia() {
 
         setIsLoading(true)
 
-        let commentsToThisMedia: QuerySnapshot<DocumentData, DocumentData> = await getDocs(collection(db, 'comments', `${media.id}`, onWatchPage ? `${episodeId}` : "all"))
+        let mediaComments = await getDocs(collection(db, 'comments', `${mediaInfo.id}`, isOnWatchPage ? `${episodeId}` : "all"))
 
-        // IF HAS NO COMMENTS DOC ON FIRESTORE, IT CREATES ONE
-        if (!commentsToThisMedia) {
+        if (!mediaComments) {
 
-            await setDoc(doc(db, 'comments', `${media.id}`), {}) as unknown as DocumentSnapshot<DocumentData, DocumentData>
+            await setDoc(doc(db, 'comments', `${mediaInfo.id}`), {})
 
-            commentsToThisMedia = await getDocs(collection(db, 'comments', `${media.id}`, onWatchPage ? `${episodeId}` : "all"))
+            mediaComments = await getDocs(collection(db, 'comments', `${mediaInfo.id}`, isOnWatchPage ? `${episodeId}` : "all"))
 
             return
+
         }
 
-        if (onWatchPage) {
-            let data: DocumentData[] = []
+        if (isOnWatchPage) {
+            let commentsForCurrEpisode: DocumentData[] = []
 
-            const queryCommentsToThisEpisode = query(collection(db, 'comments', `${media.id}`, "all"), where("episodeNumber", "==", episodeNumber))
+            const queryCommentsToThisEpisode = query(collection(db, 'comments', `${mediaInfo.id}`, "all"), where("episodeNumber", "==", episodeNumber))
 
             const querySnapshot = await getDocs(queryCommentsToThisEpisode)
 
-            querySnapshot.docs.forEach(doc => data.push(doc.data()))
+            querySnapshot.docs.forEach(doc => commentsForCurrEpisode.push(doc.data()))
 
-            await sortCommentsBy("date", data)
+            await handleCommentsSortBy("date", commentsForCurrEpisode)
 
             return
         }
 
-        const data = commentsToThisMedia.docs.map((doc: QueryDocumentSnapshot) => doc.data())
+        const mediaCommentsMapped = mediaComments.docs.map((doc: QueryDocumentSnapshot) => doc.data())
 
-        // SORT AND SET COMMENTS TO STATE
-        await sortCommentsBy("date", data)
+        await handleCommentsSortBy("date", mediaCommentsMapped)
 
         setIsLoading(false)
 
-        return data
+        return mediaCommentsMapped
 
     }
 
-    // CREATES DOCUMENT ON THIS MEDIA COLLECTION
-    // AND UPDATES USER DOC WITH INFO WITH THE REF OF THIS COMMENT DOC
-    async function createComment(e: React.FormEvent<HTMLFormElement>) {
+    async function handleCreateComment(e: React.FormEvent<HTMLFormElement>) {
 
         e.preventDefault()
 
@@ -151,76 +142,64 @@ function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: Commet
 
         setIsLoading(true)
 
-        const timeStamp = Math.floor(new Date().getTime() / 1000.0)
+        const commentTimeStamp = Math.floor(new Date().getTime() / 1000.0)
 
-        const commentValues = {
+        const commentData = {
 
             userId: doc(db, "users", user.uid),
             username: user.displayName,
             userPhoto: user.photoURL,
-            createdAt: timeStamp,
+            createdAt: commentTimeStamp,
             comment: form.comment.value,
             isSpoiler: form.spoiler.checked,
             likes: 0,
             dislikes: 0,
-            fromEpisode: onWatchPage || null,
+            fromEpisode: isOnWatchPage || null,
             episodeId: episodeId || null,
             episodeNumber: episodeNumber || null
 
         }
 
-        let commentSaved
+        const commentCreatedDoc = await addDoc(collection(db, 'comments', `${mediaInfo.id}`, "all"), commentData)
 
-        // SAVES COMMENT ON COLLECTION "ALL" OF MEDIA
-        commentSaved = await addDoc(collection(db, 'comments', `${media.id}`, "all"), commentValues)
-
-        if (onWatchPage) {
-            // SAVES ON COLLECTION OF EPISODE
-            await addDoc(collection(db, 'comments', `${media.id}`, `${episodeNumber}`), {
-                commentRef: doc(db, 'comments', `${media.id}`, "all", commentSaved.id)
-            })
-        }
-
-        if (commentSaved) {
+        if (commentCreatedDoc) {
 
             form.comment.value = ""
-            setCommentSaved(true)
+            setWasCommentCreatedSuccessfully(true)
 
-            // UPDATES USER COMMENTS MADE
             await setDoc(doc(db, 'users', user.uid), {
                 comments: {
                     written: arrayUnion(...[{
-                        commentRef: commentSaved.id,
+                        commentRef: commentCreatedDoc.id,
                         media: {
-                            id: media.id,
+                            id: mediaInfo.id,
                             coverImage: {
-                                extraLarge: media.coverImage.extraLarge
+                                extraLarge: mediaInfo.coverImage.extraLarge
                             },
                             title: {
-                                romaji: media.title.romaji
+                                romaji: mediaInfo.title.romaji
                             }
                         }
                     }])
                 }
-            } as unknown as FieldPath, { merge: true }
-            )
+            } as unknown as FieldPath, { merge: true })
 
         }
 
-        loadComments()
+        if (isOnWatchPage) {
+            await addDoc(collection(db, 'comments', `${mediaInfo.id}`, `${episodeNumber}`), {
+                commentRef: doc(db, 'comments', `${mediaInfo.id}`, "all", commentCreatedDoc.id)
+            })
+        }
+
+        getCommentsForCurrMedia()
 
         setIsLoading(false)
     }
 
-    useEffect(() => {
-
-        loadComments()
-
-    }, [media, user, episodeId])
-
-
     return (
-        <>
+        <React.Fragment>
+
             {/* SHOWS USER LOGIN MODAL */}
             <AnimatePresence
                 initial={false}
@@ -251,13 +230,13 @@ function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: Commet
                         )}
                     </div>
 
-                    <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => createComment(e)}>
+                    <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleCreateComment(e)}>
                         <label>
                             Leave your comment
                             <textarea
                                 rows={3} cols={70}
                                 name='comment'
-                                onChange={() => setCommentSaved(false)}
+                                onChange={() => wasCommentCreatedSuccessfully ? setWasCommentCreatedSuccessfully(false) : null}
                                 placeholder='Your comment here'
                                 required
                             ></textarea>
@@ -273,7 +252,7 @@ function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: Commet
                             disabled={isLoading || user?.isAnonymous}
                             whileTap={{ scale: 0.9 }}
                         >
-                            {commentSaved ?
+                            {wasCommentCreatedSuccessfully ?
                                 <><SvgCheck width={16} height={16} alt="Check" /> Comment Done</>
                                 :
                                 "Comment!"
@@ -286,54 +265,60 @@ function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: Commet
                 {/* ALL COMMENTS FROM DB FOR THIS MEDIA */}
                 <div id={styles.all_comments_container}>
 
-                    {comments.length > 0 && (
-                        <>
+                    {commentsList.length > 0 && (
+                        <React.Fragment>
                             <div id={styles.comments_heading}>
-                                {comments.length > 1 && (
+                                {commentsList.length > 1 && (
                                     <div id={styles.custom_select}>
+
                                         <SvgFilter width={16} height={16} alt="Filter" />
-                                        <select onChange={(e) => sortCommentsBy(e.target.value)} title="Choose How To Sort The Comments">
+
+                                        <select
+                                            onChange={(e) => handleCommentsSortBy(e.target.value as "date" | "likes" | "dislikes")}
+                                            title="Choose How To Sort The Comments"
+                                        >
                                             <option selected value="date">Most Recent</option>
                                             <option value="likes">Most Likes</option>
                                             <option value="dislikes">Most Dislikes</option>
                                         </select>
+
                                     </div>
                                 )}
 
-                                <p>{comments.length} comment{comments.length > 1 ? "s" : ""}</p>
+                                <p>{commentsList.length} comment{commentsList.length > 1 ? "s" : ""}</p>
                             </div>
 
                             <ul>
-                                {!isLoading ? (
-                                    comments.slice(0, commentsSliceRange).map((item, key) => (
+                                {!isLoading && (
+                                    commentsList.slice(0, commentsSliceRange).map((comment, key) => (
                                         <Comment
-                                            key={item.createdAt}
-                                            item={item as Comment}
-                                            mediaId={media.id}
+                                            key={key}
+                                            item={comment as Comment}
+                                            mediaId={mediaInfo.id}
                                         />
                                     ))
-                                ) : (
-                                    <></>
                                 )}
                             </ul>
 
-                            {comments.length > commentsSliceRange && (
+                            {commentsList.length > commentsSliceRange && (
 
-                                <button onClick={() => loadMoreComments()}>SEE MORE COMMENTS</button>
+                                <button onClick={() => handleCommentsSliceRange()}>
+                                    SEE MORE COMMENTS
+                                </button>
 
                             )}
-                        </>
+                        </React.Fragment>
                     )}
 
                     {isLoading && (
-                        <div >
+                        <div>
 
                             <SvgLoading width={120} height={120} alt="Loading" />
 
                         </div>
                     )}
 
-                    {(comments.length == 0 && !isLoading) && (
+                    {(commentsList.length == 0 && !isLoading) && (
                         <div id={styles.no_comments_container}>
 
                             <p>No Comments Yet</p>
@@ -344,9 +329,9 @@ function CommentSection({ media, onWatchPage, episodeId, episodeNumber }: Commet
                 </div>
 
             </div>
-        </>
+        </React.Fragment>
     )
 
 }
 
-export default CommentSection
+export default CommentsSection

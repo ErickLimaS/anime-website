@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import styles from "./component.module.css"
 import * as MediaCard from '../../MediaCards/MediaCard'
+import * as MediaCardClientSide from '../../MediaCards/MediaCard/variantClientSide'
 import NavigationButtons from '../../NavButtons'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from "@/app/api/anilist"
@@ -97,7 +98,7 @@ function MediaRankingSection({ initialAnimesList }: { initialAnimesList: void | 
 
                     {(!isLoading && mediaList) && mediaList!.slice(0, 10).map((media, key) => (
 
-                        <MediaCard.ListItemContainer
+                        <MediaCardClientSide.ListItemContainer
                             key={key}
                             positionIndex={key + 1}
                             variants={framerMotionShowUpItemVariant}
@@ -107,7 +108,7 @@ function MediaRankingSection({ initialAnimesList }: { initialAnimesList: void | 
                                 mediaInfo={media}
                             />
 
-                        </MediaCard.ListItemContainer>
+                        </MediaCardClientSide.ListItemContainer>
 
                     ))}
 

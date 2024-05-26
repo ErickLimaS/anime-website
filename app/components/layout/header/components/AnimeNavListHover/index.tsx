@@ -35,6 +35,12 @@ function AnimeNavListHover() {
                                 description={animeData[0].description}
                             />
 
+                            <MediaInfoExpanded.Buttons
+                                media={animeData[0]}
+                                mediaFormat={animeData[0].format}
+                                mediaId={animeData[0].id}
+                            />
+
                         </MediaInfoExpanded.Container>
                     ) : (
                         <LoadingSvg />

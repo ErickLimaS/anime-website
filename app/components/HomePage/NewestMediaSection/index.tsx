@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import * as MediaCard from '../../MediaCards/MediaCard'
+import * as MediaCardClientSide from '../../MediaCards/MediaCard/variantClientSide'
 import * as MediaInfoExpanded from '../../MediaCards/MediaInfoExpandedWithCover'
 import NavigationButtons from '../../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
@@ -122,7 +123,7 @@ function NewestMediaSection({ initialAnimesList }: { initialAnimesList: ApiDefau
 
                         {(animesList as ApiDefaultResult[]).slice(1, 11).map((media, key) => (
 
-                            <MediaCard.ListItemContainer
+                            <MediaCardClientSide.ListItemContainer
                                 key={key}
                                 positionIndex={key + 1}
                                 showCoverArt={{ mediaInfo: media }}
@@ -133,7 +134,7 @@ function NewestMediaSection({ initialAnimesList }: { initialAnimesList: ApiDefau
                                     mediaInfo={media}
                                 />
 
-                            </MediaCard.ListItemContainer>
+                            </MediaCardClientSide.ListItemContainer>
 
                         ))}
 
