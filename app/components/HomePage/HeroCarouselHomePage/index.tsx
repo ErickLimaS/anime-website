@@ -5,9 +5,9 @@ import Link from 'next/link'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
-import AddToPlaylistButton from '../../Buttons/AddToPlaylist'
+import { AddToPlaylist } from '../../Buttons/AddToPlaylist'
 import SwiperContainer from '../../SwiperContainer'
-import ListCarousel from '../HeroListCarousel'
+import ListItemHeroCarousel from './components/HeroListCarousel'
 import EyeSvg from "@/public/assets/eye-fill.svg"
 import EyeSlashSvg from "@/public/assets/eye-slash-fill.svg"
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
@@ -60,7 +60,7 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
         return Math.abs(offset) * velocity;
     }
 
-    const imageIndex = wrap(0, animesList.length, page);
+    const currMediaOnScreenIndex = wrap(0, animesList.length, page);
 
     const paginate = (newDirection: number) => {
         setPage([page + newDirection, newDirection]);
@@ -68,9 +68,9 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
 
     const backgroundImageStyle = {
         background: isOnMobileScreen ?
-            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${animesList[imageIndex]?.coverImage.extraLarge})`
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${animesList[currMediaOnScreenIndex]?.coverImage.extraLarge})`
             :
-            `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${animesList[imageIndex]?.bannerImage})`
+            `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${animesList[currMediaOnScreenIndex]?.bannerImage})`
         ,
         backgroundPosition: isOnMobileScreen ? "top" : "center",
         backgroundSize: "cover",
@@ -122,16 +122,16 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
                             }}
                         >
 
-                            {autoPlayTrailer && animesList[imageIndex]?.trailer && (
+                            {autoPlayTrailer && animesList[currMediaOnScreenIndex]?.trailer && (
                                 <AnimatePresence>
                                     <motion.div className={styles.video_container}>
                                         <motion.iframe
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             transition={{ delay: 3 }}
-                                            src={`https://www.youtube.com/embed/${animesList[imageIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0&playlist=${animesList[imageIndex].trailer.id}`}
+                                            src={`https://www.youtube.com/embed/${animesList[currMediaOnScreenIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0&playlist=${animesList[currMediaOnScreenIndex].trailer.id}`}
                                             frameBorder={0}
-                                            title={animesList[imageIndex].title.romaji + " Trailer"}
+                                            title={animesList[currMediaOnScreenIndex].title.romaji + " Trailer"}
                                         />
                                     </motion.div>
                                 </AnimatePresence>
@@ -141,38 +141,38 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
                             <div className={styles.carousel_position_wrapper}>
                                 <div className={styles.item_info}>
 
-                                    <h2><Link href={`/media/${animesList[imageIndex]?.id}`}>{animesList[imageIndex]?.title.romaji}</Link></h2>
+                                    <h2><Link href={`/media/${animesList[currMediaOnScreenIndex]?.id}`}>{animesList[currMediaOnScreenIndex]?.title.romaji}</Link></h2>
 
                                     <div className={`${styles.item_info_inside} display_flex_row`}>
 
-                                        {animesList[imageIndex]?.seasonYear && (
-                                            <p>{animesList[imageIndex].seasonYear.toString()}</p>
+                                        {animesList[currMediaOnScreenIndex]?.seasonYear && (
+                                            <p>{animesList[currMediaOnScreenIndex].seasonYear.toString()}</p>
                                         )}
-                                        {((animesList[imageIndex]?.genres) && (animesList[imageIndex]?.seasonYear != undefined)) && (
+                                        {((animesList[currMediaOnScreenIndex]?.genres) && (animesList[currMediaOnScreenIndex]?.seasonYear != undefined)) && (
                                             <span>|</span>
                                         )}
 
-                                        {animesList[imageIndex]?.genres && (
-                                            <p><Link href={`/search?genre=[${animesList[imageIndex]?.genres[0].toLowerCase()}]`}>{animesList[imageIndex]?.genres[0]}</Link></p>
+                                        {animesList[currMediaOnScreenIndex]?.genres && (
+                                            <p><Link href={`/search?genre=[${animesList[currMediaOnScreenIndex]?.genres[0].toLowerCase()}]`}>{animesList[currMediaOnScreenIndex]?.genres[0]}</Link></p>
                                         )}
-                                        {((animesList[imageIndex]?.seasonYear != undefined) && (animesList[imageIndex]?.episodes != undefined && animesList[imageIndex]?.nextAiringEpisode == null)) && (
+                                        {((animesList[currMediaOnScreenIndex]?.seasonYear != undefined) && (animesList[currMediaOnScreenIndex]?.episodes != undefined && animesList[currMediaOnScreenIndex]?.nextAiringEpisode == null)) && (
                                             <span>|</span>
                                         )}
 
-                                        {(animesList[imageIndex]?.episodes && animesList[imageIndex].format != "MOVIE" && animesList[imageIndex]?.nextAiringEpisode == null) && (
-                                            <p>{animesList[imageIndex].episodes.toString()} {animesList[imageIndex].episodes > 1 ? "Episodes" : "Episode"}</p>
+                                        {(animesList[currMediaOnScreenIndex]?.episodes && animesList[currMediaOnScreenIndex].format != "MOVIE" && animesList[currMediaOnScreenIndex]?.nextAiringEpisode == null) && (
+                                            <p>{animesList[currMediaOnScreenIndex].episodes.toString()} {animesList[currMediaOnScreenIndex].episodes > 1 ? "Episodes" : "Episode"}</p>
                                         )}
-                                        {animesList[imageIndex]?.duration && animesList[imageIndex].format == "MOVIE" && (
-                                            <p>{animesList[imageIndex].duration} Minutes</p>
+                                        {animesList[currMediaOnScreenIndex]?.duration && animesList[currMediaOnScreenIndex].format == "MOVIE" && (
+                                            <p>{animesList[currMediaOnScreenIndex].duration} Minutes</p>
                                         )}
-                                        {animesList[imageIndex]?.nextAiringEpisode && (
+                                        {animesList[currMediaOnScreenIndex]?.nextAiringEpisode && (
                                             <span>|</span>
                                         )}
 
-                                        {animesList[imageIndex]?.nextAiringEpisode && (
+                                        {animesList[currMediaOnScreenIndex]?.nextAiringEpisode && (
                                             <p>
-                                                Ep {animesList[imageIndex]?.nextAiringEpisode.episode} on {convertFromUnix(
-                                                    animesList[imageIndex]?.nextAiringEpisode.airingAt, { month: "long", year: undefined })
+                                                Ep {animesList[currMediaOnScreenIndex]?.nextAiringEpisode.episode} on {convertFromUnix(
+                                                    animesList[currMediaOnScreenIndex]?.nextAiringEpisode.airingAt, { month: "long", year: undefined })
                                                 }
                                             </p>
                                         )}
@@ -181,9 +181,9 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
 
                                     <div className={styles.item_buttons}>
 
-                                        <Link href={`/media/${animesList[imageIndex]?.id}`}>{animesList[imageIndex].format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
+                                        <Link href={`/media/${animesList[currMediaOnScreenIndex]?.id}`}>{animesList[currMediaOnScreenIndex].format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
 
-                                        <AddToPlaylistButton data={animesList[imageIndex]} />
+                                        <AddToPlaylist mediaInfo={animesList[currMediaOnScreenIndex]} />
 
                                     </div>
 
@@ -220,9 +220,9 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
 
                                     <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
 
-                                        <ListCarousel
-                                            data={item as ApiDefaultResult}
-                                            onClick={(e: { target: { outerText: string } }) => setPage(
+                                        <ListItemHeroCarousel
+                                            animeInfo={item as ApiDefaultResult}
+                                            handleFunction={(e: { target: { outerText: string } }) => setPage(
                                                 [
                                                     animesList.findIndex((item) => item.title.romaji == e.target.outerText),
                                                     animesList.findIndex((item) => item.title.romaji == e.target.outerText)
@@ -241,12 +241,12 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
                     {/* SHOWS ONLY ON DESKTOP */}
                     <ul>
                         {animesList != undefined && (
-                            animesList.slice(0, 9).map((item, key: number) => (
-                                item.bannerImage && (
-                                    <ListCarousel
-                                        onClick={() => setPage([key, key])}
+                            animesList.slice(0, 9).map((media, key: number) => (
+                                media.bannerImage && (
+                                    <ListItemHeroCarousel
+                                        animeInfo={media}
+                                        handleFunction={() => setPage([key, key])}
                                         key={key}
-                                        data={item}
                                     />
                                 ))
                             )

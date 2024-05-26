@@ -5,7 +5,7 @@ import styles from "./page.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
-import MediaCover from '@/app/components/MediaCards/MediaCover'
+import MediaCoverCard from '@/app/components/MediaCards/MediaCover'
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import PlaySvg from "@/public/assets/play-circle.svg"
 import BookSvg from "@/public/assets/book.svg"
@@ -15,7 +15,7 @@ import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
-import AddToPlaylistButton from '@/app/components/Buttons/AddToPlaylist'
+import { AddToPlaylist, SvgIcon } from '@/app/components/Buttons/AddToPlaylist'
 import ScoreRating from '@/app/components/DynamicAssets/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
 import { headers } from 'next/headers'
@@ -159,12 +159,19 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
               <AddToNotificationsList data={mediaData as ApiDefaultResult} />
 
-              <AddToPlaylistButton
-                data={mediaData as ApiDefaultResult}
-                customText={
-                  [<BookmarkFillSvg key={0} />, <BookmarkSvg key={1} />]
-                }
-              />
+              <AddToPlaylist
+                mediaInfo={mediaData as ApiDefaultResult}
+              >
+
+                <SvgIcon >
+                  <BookmarkSvg />
+                </SvgIcon>
+
+                <SvgIcon >
+                  <BookmarkFillSvg />
+                </SvgIcon>
+
+              </AddToPlaylist>
 
             </div>
 
@@ -435,7 +442,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                   {mediaData?.recommendations.edges.slice(0, 12).map((item, key: number) => (
 
                     <li key={key}>
-                      <MediaCover positionIndex={key + 1} darkMode={true} data={item.node.mediaRecommendation} />
+                      <MediaCoverCard positionIndex={key + 1} darkMode={true} mediaInfo={item.node.mediaRecommendation} />
                     </li>
 
                   ))}

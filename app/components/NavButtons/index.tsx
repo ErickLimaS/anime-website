@@ -9,50 +9,45 @@ import CloudOfflineSvg from "@/public/assets/cloud-offline.svg"
 import CloudOnlineSvg from "@/public/assets/cloud.svg"
 
 type PropsType = {
-    functionReceived: (parameter: string | number) => void,
-    options: OptionsType[],
-    actualValue?: string | number,
-    sepateWithSpan?: boolean,
+    propsFunction: (parameter: string | number) => void,
+    buttonOptions: {
+        name: string,
+        value: number | string
+    }[],
+    currValue?: string | number,
+    sepateBtnsWithSpan?: boolean,
     showSourceStatus?: boolean
 }
 
-type OptionsType = {
-    name: string,
-    value: number | string
-}
+function NavigationButtons({ propsFunction, buttonOptions, currValue, sepateBtnsWithSpan, showSourceStatus }: PropsType) {
 
-function NavButtons(props: PropsType) {
-
-    const { functionReceived } = props
-
-    const [lastValueReceived, setLastValueReceived] = useState<string | number>()
+    const [lastValueReturned, setLastValueReturned] = useState<string | number>()
 
     const [gogoanimeAvailble, setGogoanimeAvailble] = useState<boolean | null>()
     const [aniwatchAvailable, setAniwatchAvailable] = useState<boolean | null>()
 
-    useEffect(() => {
-        setLastValueReceived(props.actualValue || "" || 1)
-    }, [props.actualValue])
+    useEffect(() => setLastValueReturned(currValue || "" || 1), [currValue])
 
-    function toggleStateAndReturnValue(value: string | number) {
+    useEffect(() => { if (buttonOptions) checkVideoSourceAvailability(buttonOptions) }, [buttonOptions])
 
-        // if user tries to make the same call, it just wont continue to do requests
-        if (lastValueReceived == value) return
+    function handlePropsFunctionWithBtnValue(value: string | number) {
+
+        if (lastValueReturned == value) return
 
         // run the received function
-        functionReceived(value)
+        propsFunction(value)
 
         // set the actual value
-        setLastValueReceived(value)
+        setLastValueReturned(value)
 
     }
 
     // checks if source is currently available 
-    async function checkVideoSourceAvailable(sources: OptionsType[]) {
+    async function checkVideoSourceAvailability(videoSourcesAvailable: PropsType["buttonOptions"]) {
 
-        sources.map(async (item) => {
+        videoSourcesAvailable.map(async (source) => {
 
-            switch (item.value as string) {
+            switch (source.value) {
 
                 case 'gogoanime':
 
@@ -80,36 +75,36 @@ function NavButtons(props: PropsType) {
 
     }
 
-    useEffect(() => {
-        if (props.options) {
-            checkVideoSourceAvailable(props.options)
-        }
-    }, [props?.options])
+    function getBtnTitleByBtnValue(btnValue: string) {
+
+        const btnTitle = btnValue != "crunchyroll" ?
+            btnValue == "aniwatch" ?
+                aniwatchAvailable ? "Online" : "Offline"
+                :
+                gogoanimeAvailble ? "Online" : "Offline"
+            :
+            ""
+
+        return btnTitle
+
+    }
 
     return (
         <div className={styles.nav_button_container}>
 
-            {props.options.map((item) => (
-                <React.Fragment key={item.value}>
+            {buttonOptions.map((button) => (
+                <React.Fragment key={button.value}>
                     <button
-                        className={props.showSourceStatus ? styles.white_color : ""}
-                        data-active={lastValueReceived == (item.value)}
-                        onClick={() => toggleStateAndReturnValue(item.value)}
-                        aria-label={item.name}
-                        title={
-                            item.value != "crunchyroll" ?
-                                item.value == "aniwatch" ?
-                                    aniwatchAvailable ? "Online" : "Offline"
-                                    :
-                                    gogoanimeAvailble ? "Online" : "Offline"
-                                :
-                                ""
-                        }
+                        className={showSourceStatus ? styles.white_color : ""}
+                        data-active={lastValueReturned == (button.value)}
+                        onClick={() => handlePropsFunctionWithBtnValue(button.value)}
+                        aria-label={button.name}
+                        title={getBtnTitleByBtnValue(button.value as string)}
                     >
 
-                        {(props.showSourceStatus && item.value != "crunchyroll") && (
+                        {(showSourceStatus && button.value != "crunchyroll") && (
 
-                            item.value == "aniwatch" ?
+                            button.value == "aniwatch" ?
                                 aniwatchAvailable ?
                                     <CloudOnlineSvg
                                         width={18}
@@ -142,10 +137,10 @@ function NavButtons(props: PropsType) {
 
                         )}
 
-                        {item.name}
+                        {button.name}
 
                     </button >
-                    {props.sepateWithSpan && (
+                    {sepateBtnsWithSpan && (
                         <span className={styles.separate_text}> | </span>
                     )}
                 </React.Fragment>
@@ -156,4 +151,4 @@ function NavButtons(props: PropsType) {
 
 }
 
-export default NavButtons
+export default NavigationButtons

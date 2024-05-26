@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import MediaCover from '../../MediaCards/MediaCover'
+import * as MediaCard from '../../MediaCards/MediaCover'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Link from 'next/link'
 import styles from "./component.module.css"
@@ -80,16 +80,30 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                     <div id={styles.popular_list_container}>
                         <SwiperContainer>
 
-                            {(fetchedData?.length > 0 ? [...animesList, ...fetchedData] : animesList).map((item, key) => (
+                            {(fetchedData?.length > 0 ? [...animesList, ...fetchedData] : animesList).map((media, key) => (
 
                                 <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
 
-                                    <MediaCover
-                                        positionIndex={key + 1}
-                                        darkMode={true}
-                                        data={item as ApiDefaultResult}
-                                    />
+                                    <MediaCard.Container key={key} positionIndex={key + 1} onDarkMode isHiddenOnDesktop>
 
+                                        <MediaCard.MediaImg
+                                            title={media.title.romaji || media.title.native}
+                                            formatOrType={media.format}
+                                            url={media.coverImage.large}
+                                            mediaId={media.id}
+                                        />
+
+                                        <MediaCard.SmallTag
+                                            seasonYear={media.seasonYear}
+                                            tags={media.genres[0]}
+                                        />
+
+                                        <MediaCard.LinkTitle
+                                            title={media.title.romaji || media.title.native}
+                                            id={media.id}
+                                        />
+
+                                    </MediaCard.Container>
                                 </SwiperSlide>
 
                             ))}
@@ -97,10 +111,30 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                         </SwiperContainer>
                     </div>
 
-                    {animesList.map((item, key: number) => (
-                        <MediaCover data={item} key={key} positionIndex={key + 1} darkMode={true} hiddenOnDesktop />
-                    ))}
+                    {animesList.map((media, key: number) => (
 
+                        <MediaCard.Container key={key} onDarkMode isHiddenOnDesktop>
+
+                            <MediaCard.MediaImg
+                                title={media.title.romaji || media.title.native}
+                                formatOrType={media.format}
+                                url={media.coverImage.large}
+                                mediaId={media.id}
+                            />
+
+                            <MediaCard.SmallTag
+                                seasonYear={media.seasonYear}
+                                tags={media.genres[0]}
+                            />
+
+                            <MediaCard.LinkTitle
+                                title={media.title.romaji || media.title.native}
+                                id={media.id}
+                            />
+
+                        </MediaCard.Container>
+                        
+                    ))}
 
                 </React.Fragment>
             </section>
@@ -113,8 +147,29 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                         initial={"initial"}
                         animate={"animate"}
                     >
-                        {fetchedData?.map((item, key: number) => (
-                            <MediaCover data={item} key={key} darkMode={true} hiddenOnDesktop />
+                        {fetchedData?.map((media, key: number) => (
+
+                            <MediaCard.Container key={key} onDarkMode isHiddenOnDesktop>
+
+                                <MediaCard.MediaImg
+                                    title={media.title.romaji || media.title.native}
+                                    formatOrType={media.format}
+                                    url={media.coverImage.large}
+                                    mediaId={media.id}
+                                />
+
+                                <MediaCard.SmallTag
+                                    seasonYear={media.seasonYear}
+                                    tags={media.genres[0]}
+                                />
+
+                                <MediaCard.LinkTitle
+                                    title={media.title.romaji || media.title.native}
+                                    id={media.id}
+                                />
+
+                            </MediaCard.Container>
+
                         ))}
                     </motion.div>
                 )}
@@ -132,11 +187,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                     disabled={isBtnDisable}
                 >
 
-                    {isLoading ?
-                        <LoadingSvg width={16} height={16} />
-                        :
-                        "+ View more"
-                    }
+                    {isLoading ? <LoadingSvg width={16} height={16} /> : "+ View more"}
 
                 </motion.button >
 

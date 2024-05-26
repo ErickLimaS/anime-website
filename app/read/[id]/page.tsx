@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from "./page.module.css"
 import anilist from '@/app/api/anilist'
-import CoverWithMediaInfo from '@/app/components/MediaCards/CoverWithMediaInfo'
+import Container from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { MangaChapters, MangaInfo, MangaPages, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface'
 import CommentSection from '@/app/components/CommentSection'
 import Image from 'next/image'
@@ -126,7 +126,7 @@ async function ReadChapter({ params, searchParams }: {
 
             <div id={styles.all_chapters_container}>
 
-                <CoverWithMediaInfo
+                <Container
                     data={mediaData as ApiDefaultResult}
                     showButtons={false}
                 />

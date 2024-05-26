@@ -1,11 +1,11 @@
 "use client"
 import React, { useLayoutEffect, useState } from 'react'
 import styles from "./component.module.css"
-import CoverWithMediaInfo from '@/app/components/MediaCards/CoverWithMediaInfo'
+import Container from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import Link from 'next/link'
 import anilist from '@/app/api/anilist'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import MediaCover from '@/app/components/MediaCards/MediaCover'
+import MediaCoverCard from '@/app/components/MediaCards/MediaCover'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 
 function MangaNavListHover() {
@@ -40,7 +40,7 @@ function MangaNavListHover() {
                     <h5>Manga of the Day</h5>
 
                     {mangaData ? (
-                        <CoverWithMediaInfo data={mangaData[0]} />
+                        <Container data={mangaData[0]} />
                     ) : (
                         <LoadingSvg />
                     )}
@@ -53,7 +53,7 @@ function MangaNavListHover() {
                         <ul>
                             {mangaData?.slice(1, 6).map((item, key: number) => (
                                 <li key={key}>
-                                    <MediaCover data={item} />
+                                    <MediaCoverCard mediaInfo={item} />
                                 </li>
                             ))}
                         </ul>

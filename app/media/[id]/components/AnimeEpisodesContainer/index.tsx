@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import NavButtons from '../../../../components/NavButtons';
+import NavigationButtons from '../../../../components/NavButtons';
 import DotsSvg from "@/public/assets/three-dots-vertical.svg";
 import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
@@ -400,12 +400,12 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         <div id={styles.container_heading}>
 
-          <NavButtons
-            functionReceived={setEpisodesSource as (parameter: string | number) => void}
-            actualValue={episodeSource}
+          <NavigationButtons
+            propsFunction={setEpisodesSource as (parameter: string | number) => void}
+            currValue={episodeSource}
             showSourceStatus
-            sepateWithSpan={true}
-            options={
+            sepateBtnsWithSpan={true}
+            buttonOptions={
               [
                 { name: "Crunchyroll", value: "crunchyroll" },
                 { name: "GoGoAnime", value: "gogoanime" },

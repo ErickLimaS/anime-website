@@ -9,7 +9,7 @@ import NewestMediaSection from "./components/HomePage/NewestMediaSection";
 import MediaRankingSection from "./components/HomePage/MediaRankingSection";
 import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
-import AddToPlaylistButton from "./components/Buttons/AddToPlaylist";
+import * as AddToPlaylistButton from "./components/Buttons/AddToPlaylist";
 import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";
 import { headers } from "next/headers";
 import KeepWatchingSection from "./components/HomePage/KeepWatchingSection";
@@ -90,7 +90,11 @@ export default async function Home() {
 
           <div id={styles.media_info}>
             {listMediasToBannerSection[randomIndexForBannerSection] && (
-              <h3><Link href={`/media/${listMediasToBannerSection[randomIndexForBannerSection].id}`}>{listMediasToBannerSection[randomIndexForBannerSection].title.romaji}</Link></h3>
+              <h3>
+                <Link href={`/media/${listMediasToBannerSection[randomIndexForBannerSection].id}`}>
+                  {listMediasToBannerSection[randomIndexForBannerSection].title.romaji}
+                </Link>
+              </h3>
             )}
 
             {listMediasToBannerSection[randomIndexForBannerSection]?.description && (
@@ -101,7 +105,9 @@ export default async function Home() {
 
               <Link href={`/media/${listMediasToBannerSection[randomIndexForBannerSection].id}`}>WATCH NOW</Link>
 
-              <AddToPlaylistButton data={listMediasToBannerSection[randomIndexForBannerSection]} />
+              <AddToPlaylistButton.Button
+                mediaInfo={listMediasToBannerSection[randomIndexForBannerSection]}
+              />
 
             </div>
           </div>
@@ -131,7 +137,7 @@ export default async function Home() {
           headingTitle={"All Time Favorites"}
           route={"#"}
           sortBy={"FAVOURITES_DESC"}
-          darkBackground
+          onDarkBackground
         />
 
       </section>
@@ -160,7 +166,7 @@ export default async function Home() {
             route={"#"}
             mediaFormat="MANGA"
             sortBy={"FAVOURITES_DESC"}
-            darkBackground
+            onDarkBackground
           />
 
         </section>

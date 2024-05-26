@@ -3,7 +3,7 @@ import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Navigation, Pagination } from 'swiper/modules';
 import styles from "./component.module.css"
-import MediaCover from '@/app/components/MediaCards/MediaCover';
+import MediaCoverCard from '@/app/components/MediaCards/MediaCover';
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface';
 
 function RelatedMediaSwiperContainer({ data, options }: {
@@ -33,7 +33,7 @@ function RelatedMediaSwiperContainer({ data, options }: {
 
                 <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
 
-                    <MediaCover positionIndex={key + 1} darkMode={true} data={item as ApiDefaultResult} />
+                    <MediaCoverCard positionIndex={key + 1} darkMode={true} mediaInfo={item as ApiDefaultResult} />
                  
                 </SwiperSlide>
 

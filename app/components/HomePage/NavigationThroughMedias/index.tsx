@@ -7,10 +7,10 @@ import anilist from '@/app/api/anilist'
 import CloseSvg from '@/public/assets/x.svg'
 import PlaySvg from '@/public/assets/play.svg'
 import { Url } from 'next/dist/shared/lib/router/router'
-import MediaCover3 from '../../MediaCards/MediaCover3'
+import * as MediaCard from '../../MediaCards/MediaCover'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import AddToPlaylistButton from '../../Buttons/AddToPlaylist'
+import * as AddToPlaylistButton from '../../Buttons/AddToPlaylist'
 import parse from "html-react-parser"
 import ScoreRating from '../../DynamicAssets/ScoreRating'
 import MediaFormatIcon from '../../DynamicAssets/MediaFormatIcon'
@@ -30,7 +30,7 @@ type ComponentType = {
     sortBy: "RELEASE" | "FAVOURITES_DESC" | "UPDATED_AT_DESC",
     mediaFormat?: "ANIME" | "MANGA",
     isFetchByDateButtonsOnScreen?: boolean,
-    darkBackground?: boolean,
+    onDarkBackground?: boolean,
     isLayoutInverted?: boolean,
     isResultsSortedByTrending?: boolean
 
@@ -48,7 +48,7 @@ const framerMotionPopUpMedia = {
     },
 }
 
-function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDateButtonsOnScreen, sortBy, darkBackground, isLayoutInverted, isResultsSortedByTrending }: ComponentType) {
+function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDateButtonsOnScreen, sortBy, onDarkBackground, isLayoutInverted, isResultsSortedByTrending }: ComponentType) {
 
     const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1) // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
 
@@ -192,7 +192,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
 
             <motion.div
                 id={styles.itens_container}
-                data-darkBackground={darkBackground && darkBackground}
+                data-darkBackground={onDarkBackground && onDarkBackground}
                 data-layoutInverted={isLayoutInverted && isLayoutInverted}
                 variants={framerMotionPopUpMedia}
                 initial="initial"
@@ -206,16 +206,37 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
 
                     {mediaList.length > 0 ? (
 
-                        mediaList.map((item, key) => (
-                            <SwiperSlide key={item.id}>
-                                <MediaCover3
-                                    layoutId={String(item.id)}
-                                    onClick={() => handleMediaPopUpFocus(item.id)}
-                                    data={item as ApiDefaultResult}
+                        mediaList.map((media, key) => (
+                            <SwiperSlide key={media.id}>
+
+                                <MediaCard.Container
+                                    onDarkMode={onDarkBackground}
                                     positionIndex={key + 1}
-                                    loading={isLoading}
-                                    darkMode={darkBackground}
-                                />
+                                    isLoading={isLoading}
+                                    framerMotionProps={{
+                                        layoutId: String(media.id),
+                                        mediaId: media.id,
+                                        framerMotionExpandCardFunction: () => handleMediaPopUpFocus(media.id)
+                                    }}
+                                >
+
+                                    <MediaCard.MediaImg
+                                        title={media.title.romaji || media.title.native}
+                                        formatOrType={media.format}
+                                        url={media.coverImage.large}
+                                    />
+
+                                    <MediaCard.SmallTag
+                                        seasonYear={media.seasonYear}
+                                        tags={media.genres[0]}
+                                    />
+
+                                    <MediaCard.Title
+                                        title={media.title.romaji || media.title.native}
+                                    />
+
+                                </MediaCard.Container>
+
                             </SwiperSlide>
                         ))
 
@@ -334,7 +355,9 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
 
                                     <Link href={`/media/${mediaSelect.id}`}>SEE MORE</Link>
 
-                                    <AddToPlaylistButton data={mediaSelect} />
+                                    <AddToPlaylistButton.Button
+                                        mediaInfo={mediaSelect}
+                                    />
 
                                 </motion.div>
 
@@ -360,7 +383,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                 )}
             </AnimatePresence>
 
-        </React.Fragment>
+        </React.Fragment >
     )
 
 }

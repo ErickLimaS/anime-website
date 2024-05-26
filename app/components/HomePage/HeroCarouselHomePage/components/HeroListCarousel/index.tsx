@@ -4,20 +4,20 @@ import styles from "./component.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { AnimatePresence, motion } from 'framer-motion'
 
-function ListCarousel({ data, onClick }: { data: ApiDefaultResult, onClick?: any }) {
+function ListItemHeroCarousel({ animeInfo, handleFunction }: { animeInfo: ApiDefaultResult, handleFunction?: any }) {
     return (
         <li className={styles.container}>
-            <div title={`Watch ${data.title.romaji}`} onClick={onClick}>
+            <div title={`Watch ${animeInfo.title.romaji}`} onClick={handleFunction}>
                 <Image
-                    src={data.bannerImage}
-                    alt={`Cover for ${data.title.romaji}`}
+                    src={animeInfo.bannerImage}
+                    alt={`Cover for ${animeInfo.title.romaji}`}
                     fill
                     sizes='(max-width: 1199px) 75vw, 25vw'
                 />
                 <AnimatePresence>
                     <motion.span initial={{ height: 0 }} animate={{ height: "100%", transition: { duration: 0.6 } }} exit={{ height: 0 }}>
                         <span className={styles.title}>
-                            {data.title.romaji || "Not Available"}
+                            {animeInfo.title.romaji || "Not Available"}
                         </span>
                     </motion.span>
                 </AnimatePresence>
@@ -26,4 +26,4 @@ function ListCarousel({ data, onClick }: { data: ApiDefaultResult, onClick?: any
     )
 }
 
-export default ListCarousel
+export default ListItemHeroCarousel

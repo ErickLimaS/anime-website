@@ -3,7 +3,7 @@ import styles from "./page.module.css"
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import gogoanime from '@/app/api/consumetGoGoAnime'
 import anilist from '@/app/api/anilist'
-import CoverWithMediaInfo from '@/app/components/MediaCards/CoverWithMediaInfo'
+import Container from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { EpisodeLinksGoGoAnime, MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import EpisodesSideListContainer from './components/EpisodesSideListContainer'
 import CommentSection from '@/app/components/CommentSection'
@@ -221,7 +221,7 @@ async function WatchEpisode({ params, searchParams }: {
                             </h1>
                         )}
 
-                        <CoverWithMediaInfo
+                        <Container
                             data={mediaData as ApiDefaultResult}
                             showButtons={false}
                             customDescription={imdbEpisodes?.find(item => item.episode == Number(searchParams.episode))?.description || undefined}

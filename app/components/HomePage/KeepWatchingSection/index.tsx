@@ -82,11 +82,14 @@ function KeepWatchingSection() {
                             }}
                         >
 
-                            {watchingList.map((item, key) => (
+                            {watchingList.map((media, key) => (
 
                                 <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
 
-                                    <KeepWatchingEpisodeInfo darkMode={true} data={item as KeepWatchingItem} />
+                                    <KeepWatchingEpisodeInfo
+                                        animeInfo={media}
+                                        darkMode
+                                    />
 
                                 </SwiperSlide>
 

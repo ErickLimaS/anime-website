@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import styles from "./component.module.css"
-import MediaCover from '@/app/components/MediaCards/MediaCover'
+import * as MediaCard from '@/app/components/MediaCards/MediaCover'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -74,13 +74,32 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
                         mode='wait'
                     >
 
-                        {data.slice(0, (itemsPerClick * newRange)).map((item, key: number) => (
+                        {data.slice(0, (itemsPerClick * newRange)).map((media, key: number) => (
                             <motion.div key={key}
                                 variants={showUpMotion}
                                 initial="hidden"
                                 animate="visible"
                             >
-                                <MediaCover darkMode data={item} fromOfflineDb />
+                                <MediaCard.Container onDarkMode>
+
+                                    <MediaCard.MediaImgLink
+                                        title={media.title}
+                                        formatOrType={media.type}
+                                        url={media.picture}
+                                        mediaId={media.anilistId as string}
+                                    />
+
+                                    <MediaCard.SmallTag
+                                        seasonYear={media.animeSeason.year}
+                                        tags={media.tags[0]}
+                                    />
+
+                                    <MediaCard.LinkTitle
+                                        title={media.title}
+                                        anilistId={media.anilistId}
+                                    />
+
+                                </MediaCard.Container>
                             </motion.div>
                         ))}
 

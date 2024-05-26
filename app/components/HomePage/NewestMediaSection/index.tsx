@@ -1,24 +1,18 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import MediaListCoverInfo2 from '../../MediaCards/MediaCover2'
-import CoverWithMediaInfo from '../../MediaCards/CoverWithMediaInfo'
-import NavButtons from '../../NavButtons'
+import * as MediaCard from '../../MediaCards/MediaCover'
+import * as MediaInfoExpanded from '../../MediaCards/MediaInfoExpandedWithCover'
+import NavigationButtons from '../../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from "@/app/api/anilist"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'
 
-type ComponentTypes = {
-
-    initialAnimesList: ApiDefaultResult[]
-
-}
-
 export const revalidate = 1800 // revalidate the data every 30 min
 
-function NewestMediaSection({ initialAnimesList }: ComponentTypes) {
+function NewestMediaSection({ initialAnimesList }: { initialAnimesList: ApiDefaultResult[] }) {
 
     const [animesList, setAnimesList] = useState<ApiAiringMidiaResults[] | ApiDefaultResult[]>([])
 
@@ -89,30 +83,61 @@ function NewestMediaSection({ initialAnimesList }: ComponentTypes) {
 
                 <h3>Newest Animes Episodes</h3>
 
-                <NavButtons
-                    functionReceived={handleParameterToFetchNewData as (parameter: string | number) => void}
-                    actualValue={initialAnimesList[0] == null || initialAnimesList[0] == undefined ? 30 : currDaysValue}
-                    options={[
-                        { name: "Today", value: 1 }, { name: "This week", value: 7 }, { name: "Last 30 days", value: 30 }
+                <NavigationButtons
+                    propsFunction={handleParameterToFetchNewData as (parameter: string | number) => void}
+                    currValue={(initialAnimesList[0] == null || initialAnimesList[0] == undefined) ? 30 : currDaysValue}
+                    buttonOptions={[
+                        { name: "Today", value: 1 },
+                        { name: "This week", value: 7 },
+                        { name: "Last 30 days", value: 30 }
                     ]} />
 
             </div>
 
             <ul>
                 {!isLoading && (
-                    <>
+                    <React.Fragment>
+
                         <li>
-                            {(animesList[0] != undefined) ? (
-                                <CoverWithMediaInfo data={(animesList as ApiDefaultResult[])[0]} />
+                            {animesList[0] ? (
+                                <MediaInfoExpanded.Container
+                                    mediaInfo={animesList[0] as ApiDefaultResult}
+                                >
+
+                                    <MediaInfoExpanded.Description
+                                        description={(animesList as ApiDefaultResult[])[0].description}
+                                    />
+
+                                    <MediaInfoExpanded.Buttons
+                                        media={(animesList as ApiDefaultResult[])[0]}
+                                        mediaId={(animesList as ApiDefaultResult[])[0].id}
+                                        mediaFormat={(animesList as ApiDefaultResult[])[0].format}
+                                    />
+
+                                </MediaInfoExpanded.Container>
                             ) : (
                                 <p>No results for today</p>
                             )}
                         </li>
 
-                        {(animesList as ApiDefaultResult[]).slice(1, 11).map((item, key: number) => (
-                            <MediaListCoverInfo2 key={key} positionIndex={key + 1} data={item} showCoverArt={true} alternativeBorder={true} />
+                        {(animesList as ApiDefaultResult[]).slice(1, 11).map((media, key) => (
+
+                            <MediaCard.ListItemContainer
+                                key={key}
+                                positionIndex={key + 1}
+                                showCoverArt={{ mediaInfo: media }}
+                                alternativeBorder
+                            >
+
+                                <MediaCard.MediaInfo
+                                    mediaInfo={media}
+                                />
+
+                            </MediaCard.ListItemContainer>
+
                         ))}
-                    </>
+
+                    </React.Fragment>
                 )}
             </ul>
 

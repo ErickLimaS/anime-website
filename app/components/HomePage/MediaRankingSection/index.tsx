@@ -1,8 +1,8 @@
 "use client"
 import React, { useState } from 'react'
 import styles from "./component.module.css"
-import MediaListCoverInfo2 from '../../MediaCards/MediaCover2'
-import NavButtons from '../../NavButtons'
+import * as MediaCard from '../../MediaCards/MediaCover'
+import NavigationButtons from '../../NavButtons'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from "@/app/api/anilist"
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -10,12 +10,6 @@ import { getAuth } from 'firebase/auth'
 import { AnimatePresence, motion } from 'framer-motion'
 import simulateRange from '@/app/lib/simulateRange'
 import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'
-
-type ComponentType = {
-
-    initialAnimesList: void | ApiDefaultResult[]
-
-}
 
 export const revalidate = 1800 // revalidate cached data every 30 min
 
@@ -26,7 +20,7 @@ const framerMotionShowUpItemVariant = {
 
 }
 
-function MediaRankingSection({ initialAnimesList }: ComponentType) {
+function MediaRankingSection({ initialAnimesList }: { initialAnimesList: void | ApiDefaultResult[] }) {
 
     const [mediaList, setMediaList] = useState<ApiDefaultResult[] | null>(initialAnimesList as ApiDefaultResult[])
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -74,9 +68,10 @@ function MediaRankingSection({ initialAnimesList }: ComponentType) {
 
                 <h3>Top 10 This Week</h3>
 
-                <NavButtons
-                    functionReceived={fetchMediasByFormat as (parameter: string | number) => void}
-                    actualValue={currFormat} options={[
+                <NavigationButtons
+                    propsFunction={fetchMediasByFormat as (parameter: string | number) => void}
+                    currValue={currFormat}
+                    buttonOptions={[
                         { name: "Animes", value: "ANIME" },
                         { name: "Mangas", value: "MANGA" }
                     ]}
@@ -100,14 +95,20 @@ function MediaRankingSection({ initialAnimesList }: ComponentType) {
                         ))
                     )}
 
-                    {(!isLoading && mediaList) && mediaList!.slice(0, 10).map((item: ApiDefaultResult, key: number) => (
-                        <MediaListCoverInfo2
+                    {(!isLoading && mediaList) && mediaList!.slice(0, 10).map((media, key) => (
+
+                        <MediaCard.ListItemContainer
                             key={key}
                             positionIndex={key + 1}
-                            data={item}
-                            showCoverArt={false}
                             variants={framerMotionShowUpItemVariant}
-                        />
+                        >
+
+                            <MediaCard.MediaInfo
+                                mediaInfo={media}
+                            />
+
+                        </MediaCard.ListItemContainer>
+
                     ))}
 
                 </AnimatePresence>
