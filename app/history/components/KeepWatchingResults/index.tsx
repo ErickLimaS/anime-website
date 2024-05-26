@@ -6,7 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSearchParams } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
-import MediaCoverCard from '@/app/components/MediaCards/MediaCover'
+import MediaCoverCard from '@/app/components/MediaCards/MediaCard'
 import UserModal from '@/app/components/UserLoginModal'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 

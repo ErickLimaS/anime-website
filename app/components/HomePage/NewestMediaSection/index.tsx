@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import * as MediaCard from '../../MediaCards/MediaCover'
+import * as MediaCard from '../../MediaCards/MediaCard'
 import * as MediaInfoExpanded from '../../MediaCards/MediaInfoExpandedWithCover'
 import NavigationButtons from '../../NavButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'

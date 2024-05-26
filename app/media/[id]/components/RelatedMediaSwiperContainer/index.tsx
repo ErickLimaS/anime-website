@@ -3,7 +3,7 @@ import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Navigation, Pagination } from 'swiper/modules';
 import styles from "./component.module.css"
-import MediaCoverCard from '@/app/components/MediaCards/MediaCover';
+import MediaCoverCard from '@/app/components/MediaCards/MediaCard';
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface';
 
 function RelatedMediaSwiperContainer({ data, options }: {

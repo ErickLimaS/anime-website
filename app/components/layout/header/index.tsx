@@ -6,10 +6,23 @@ import Link from 'next/link'
 import AnimeNavListHover from './components/AnimeNavListHover'
 import MangaNavListHover from './components/MangaNavListHover'
 import UserSideMenu from './components/User/UserSideMenu'
-import NavListMenu from './components/NavListMenu'
-import SearchContainer from './components/SearchContainer'
+import MenuList from './components/MenuList'
+import SearchFormContainer from './components/SearchFormContainer'
 import NewsNavListHover from './components/NewsNavListHover'
-import NotificationsComponent from './components/Notifications'
+import NotificationsContainer from './components/Notifications'
+
+export const animesGenres = [
+    { name: "Action", value: "action" },
+    { name: "Adventure", value: "adventure" },
+    { name: "Comedy", value: "comedy" },
+    { name: "Drama", value: "drama" },
+    { name: "Sci-Fi", value: "sci-fi" },
+    { name: "Thriller", value: "thriller" },
+    { name: "Romance", value: "romance" },
+    { name: "Slice of Life", value: "slice-of-life" },
+    { name: "Mystery", value: "mystery" },
+    { name: "Sports", value: "sports" },
+]
 
 function Header() {
 
@@ -21,7 +34,7 @@ function Header() {
                 <div id={styles.menu_and_logo_container} className='display_flex_row align_items_center'>
 
                     {/* MENU NAVIGATION -- SCREEN LEFT SIDE -- MOBILE*/}
-                    <NavListMenu />
+                    <MenuList />
 
                     <Link href="/" id={styles.img_container}>
                         <Image
@@ -58,13 +71,10 @@ function Header() {
 
                 <div id={styles.user_and_search_container} className='display_flex_row align_items_center'>
 
-                    {/* SEARCH MOBILE AND DESKTOP, SEARCH RESULTS CONTAINER INSIDE*/}
-                    <SearchContainer />
+                    <SearchFormContainer />
 
-                    {/* NOTIFICATIONS */}
-                    <NotificationsComponent />
+                    <NotificationsContainer />
 
-                    {/* USER MENU -- RIGHT SIDE OF SCREEN */}
                     <UserSideMenu />
 
                 </div>

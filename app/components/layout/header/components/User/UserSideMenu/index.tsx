@@ -13,7 +13,7 @@ import { getAuth } from 'firebase/auth'
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
 import Link from 'next/link'
-import UserModal from '../../../../../components/UserLoginModal'
+import UserModal from '../../../../../UserLoginModal'
 import { AnimatePresence, motion } from 'framer-motion'
 import UserSettingsModal from '../UserSettingsModal'
 
@@ -65,8 +65,8 @@ function UserSideMenu() {
 
             </AnimatePresence>
 
-            {!user ? (
-                <>
+            {!user && (
+                <React.Fragment>
                     <button
                         onClick={() => setIsUserLoginOpen(!isUserLoginOpen)}
                         aria-controls={styles.user_menu_list}
@@ -76,21 +76,27 @@ function UserSideMenu() {
                         data-useractive={false}
                         data-loading={loading}
                     >
-                        {loading ? (
+
+                        {loading && (
                             <LoadingSvg width={16} height={16} title="Loading" />
-                        ) : (
-                            <>
+                        )}
+
+                        {!loading && (
+                            <React.Fragment>
                                 <PersonIcon className={styles.scale} alt="User Icon" width={16} height={16} />
                                 <span>
                                     Login
                                 </span>
-                            </>
+                            </React.Fragment>
                         )}
+
                     </button>
 
-                </>
-            ) : (
-                <>
+                </React.Fragment>
+            )}
+
+            {user && (
+                <React.Fragment>
                     <button
                         onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                         aria-controls={styles.user_menu_list}
@@ -155,7 +161,6 @@ function UserSideMenu() {
                             </motion.div>
                         )}
 
-
                         {isUserSettingsOpen && (
 
                             <UserSettingsModal
@@ -167,7 +172,7 @@ function UserSideMenu() {
                         )}
 
                     </AnimatePresence>
-                </>
+                </React.Fragment>
             )}
         </div>
 

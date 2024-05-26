@@ -22,8 +22,10 @@ import { convertFromUnix, getCurrentUnixDate } from '@/app/lib/formatDateUnix'
 import anilist from '@/app/api/anilist'
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
-function NotificationsComponent() {
+function NotificationsContainer() {
 
+    // WILL REMAKE IT SOON
+    // 
     // HOW IT WORKS
     // 
     // This component is related to a Collection called "Notifications" on Firebase. This collection stores
@@ -35,13 +37,26 @@ function NotificationsComponent() {
     // Was make this way because any time a user is assigned to this same media, that user updates the medias info available
     // for all the user. Previously, it was meant that each user had its own notification field on his doc. 
 
-    const db = getFirestore(initFirebase())
-    const auth = getAuth()
-    const [user] = useAuthState(auth)
-
     const [notifications, setNotifications] = useState<NotificationsCollectionFirebase[]>([])
     const [hasNewNotifications, setHasNewNotifications] = useState<boolean>(false)
     const [menuOpen, setMenuOpen] = useState<boolean>(false)
+
+    const auth = getAuth()
+    const [user] = useAuthState(auth)
+    const db = getFirestore(initFirebase())
+
+    useEffect(() => {
+
+        if (localStorage.getItem('notificationsVisualized') && localStorage.getItem('notificationsVisualized') == "true") {
+            setHasNewNotifications(false)
+        }
+        else {
+            localStorage.setItem('notificationsVisualized', "true")
+        }
+
+        checkNotificationsStored()
+
+    }, [user])
 
     // Compares LocalStorage Last Update with additional 10 minutes with the current time.
     // If TRUE, fetchs Notifications again
@@ -342,19 +357,6 @@ function NotificationsComponent() {
 
     }
 
-    useEffect(() => {
-
-        if (localStorage.getItem('notificationsVisualized') && localStorage.getItem('notificationsVisualized') == "true") {
-            setHasNewNotifications(false)
-        }
-        else {
-            localStorage.setItem('notificationsVisualized', "true")
-        }
-
-        checkNotificationsStored()
-
-    }, [user])
-
     if (user) {
         return (
             <AnimatePresence>
@@ -378,7 +380,9 @@ function NotificationsComponent() {
                     </button>
 
                     {hasNewNotifications && (
-                        <span id={styles.notifications_badge}>{notifications.length}</span>
+                        <span id={styles.notifications_badge}>
+                            {notifications.length}
+                        </span>
                     )}
 
                     <AnimatePresence>
@@ -392,52 +396,52 @@ function NotificationsComponent() {
 
                                 <h4>Latest Notifications</h4>
 
-                                {notifications.length == 0 ?
-                                    (
-                                        <div>
-                                            <p style={{ color: "var(--white-100)" }}>No New Notifications</p>
-                                        </div>
-                                    ) : (
-                                        <ul>
-                                            {notifications.map((item, key) => (
+                                {notifications.length == 0 && (
+                                    <div>
+                                        <p style={{ color: "var(--white-100)" }}>No New Notifications</p>
+                                    </div>
+                                )}
 
-                                                <li
-                                                    key={key}
-                                                    className={styles.notification_item_container}
-                                                    aria-label={`${item.title.romaji} new episode released`}
-                                                >
+                                {notifications.length != 0 && (
+                                    <ul>
+                                        {notifications.map((item, key) => (
 
-                                                    <div className={styles.img_container}>
-                                                        <Image
-                                                            src={item.coverImage.large}
-                                                            alt={item.title.romaji}
-                                                            fill
-                                                            sizes='100px'
-                                                        />
-                                                    </div>
+                                            <li
+                                                key={key}
+                                                className={styles.notification_item_container}
+                                                aria-label={`${item.title.romaji} new episode released`}
+                                            >
 
-                                                    <div className={styles.notification_item_info}>
+                                                <div className={styles.img_container}>
+                                                    <Image
+                                                        src={item.coverImage.large}
+                                                        alt={item.title.romaji}
+                                                        fill
+                                                        sizes='100px'
+                                                    />
+                                                </div>
 
-                                                        <h5>Episode {item.episodes[item.episodes.length - 1]?.number} Released!</h5>
+                                                <div className={styles.notification_item_info}>
 
-                                                        <small>{item.title.romaji}</small>
+                                                    <h5>Episode {item.episodes[item.episodes.length - 1]?.number} Released!</h5>
 
-                                                        {item.status != "RELEASING" && (
-                                                            <p><b>Watch the Season Finale!</b></p>
-                                                        )}
+                                                    <small>{item.title.romaji}</small>
 
-                                                        <p>Released on {convertFromUnix(item.nextReleaseDate)}</p>
+                                                    {item.status != "RELEASING" && (
+                                                        <p><b>Watch the Season Finale!</b></p>
+                                                    )}
 
-                                                        <Link href={`/media/${item.mediaId}`}>SEE MORE</Link>
+                                                    <p>Released on {convertFromUnix(item.nextReleaseDate)}</p>
 
-                                                    </div>
+                                                    <Link href={`/media/${item.mediaId}`}>SEE MORE</Link>
 
-                                                </li>
+                                                </div>
 
-                                            ))}
-                                        </ul>
-                                    )
-                                }
+                                            </li>
+
+                                        ))}
+                                    </ul>
+                                )}
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -447,4 +451,4 @@ function NotificationsComponent() {
     }
 }
 
-export default NotificationsComponent
+export default NotificationsContainer

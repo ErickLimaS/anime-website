@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import styles from "./component.module.css"
-import * as MediaCard from '@/app/components/MediaCards/MediaCover'
+import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'

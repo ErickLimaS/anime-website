@@ -5,7 +5,7 @@ import styles from "./page.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
-import MediaCoverCard from '@/app/components/MediaCards/MediaCover'
+import MediaCoverCard from '@/app/components/MediaCards/MediaCard'
 import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import PlaySvg from "@/public/assets/play-circle.svg"
 import BookSvg from "@/public/assets/book.svg"

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import * as MediaCard from '../../MediaCards/MediaCover'
+import * as MediaCard from '../../MediaCards/MediaCard'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Link from 'next/link'
 import styles from "./component.module.css"
@@ -90,7 +90,6 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                                             title={media.title.romaji || media.title.native}
                                             formatOrType={media.format}
                                             url={media.coverImage.large}
-                                            mediaId={media.id}
                                         />
 
                                         <MediaCard.SmallTag
@@ -119,7 +118,6 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                                 title={media.title.romaji || media.title.native}
                                 formatOrType={media.format}
                                 url={media.coverImage.large}
-                                mediaId={media.id}
                             />
 
                             <MediaCard.SmallTag
@@ -155,7 +153,6 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                                     title={media.title.romaji || media.title.native}
                                     formatOrType={media.format}
                                     url={media.coverImage.large}
-                                    mediaId={media.id}
                                 />
 
                                 <MediaCard.SmallTag
