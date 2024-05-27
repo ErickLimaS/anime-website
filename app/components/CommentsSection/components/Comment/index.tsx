@@ -10,15 +10,14 @@ import SvgThumbDownFill from "@/public/assets/hand-thumbs-down-fill.svg"
 import SvgTrash from "@/public/assets/trash.svg"
 import SvgReply from "@/public/assets/reply.svg"
 import {
-    DocumentData, DocumentSnapshot, FieldPath, QueryDocumentSnapshot,
+    DocumentData, FieldPath,
     arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs,
     getFirestore, query, setDoc, updateDoc, where
 } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
-import { AnimatePresence } from 'framer-motion';
-import UserModal from '@/app/components/UserLoginModal';
+import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant';
 
 export default function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
@@ -183,17 +182,11 @@ export default function Comment({ item, mediaId }: { item: Comment, mediaId: num
     return (
         <React.Fragment>
 
-            <AnimatePresence
-                initial={false}
-                mode='wait'
-            >
-                {(!user && isUserModalOpen) && (
-                    <UserModal
-                        onClick={() => setIsUserModalOpen(false)}
-                        auth={auth}
-                    />
-                )}
-            </AnimatePresence>
+            <ShowUpLoginPanelAnimated
+                apperanceCondition={isUserModalOpen}
+                customOnClickAction={() => setIsUserModalOpen(false)}
+                auth={auth}
+            />
 
             {!wasDeleted && (
                 <li className={styles.comment_container} data-has-spoiler={isSpoiler}>

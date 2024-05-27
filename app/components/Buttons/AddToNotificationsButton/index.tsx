@@ -9,18 +9,15 @@ import {
     updateDoc, arrayUnion,
     arrayRemove, getDoc,
     FieldPath, setDoc,
-    collection,
-    deleteDoc,
-    query,
-    where,
-    getDocs
+    collection, deleteDoc,
+    query, where, getDocs
 } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import UserModal from '@/app/components/UserLoginModal';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 
 function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult | ApiMediaResults }) {
 
@@ -218,17 +215,11 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
         return (
             <React.Fragment>
 
-                <AnimatePresence
-                    initial={false}
-                    mode='wait'
-                >
-                    {isUserModalOpen && (
-                        <UserModal
-                            onClick={() => setIsUserModalOpen(false)}
-                            auth={auth}
-                        />
-                    )}
-                </AnimatePresence>
+                <ShowUpLoginPanelAnimated
+                    apperanceCondition={isUserModalOpen}
+                    customOnClickAction={() => setIsUserModalOpen(false)}
+                    auth={auth}
+                />
 
                 <motion.button
                     whileTap={{ scale: 0.85 }}

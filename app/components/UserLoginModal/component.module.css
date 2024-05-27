@@ -172,7 +172,7 @@
 
 #login_buttons_container small {
 
-    color: initial;
+    color: var(--black-100) !important;
 
     font-weight: initial;
 

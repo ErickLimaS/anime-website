@@ -90,7 +90,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
     return backgroundImgs[randomNumber]?.url
 
   }
-  console.log(mediaInfo?.recommendations.edges[0])
+  
   function convertMediaStatus() {
 
     if (mediaInfo.status == "NOT_YET_RELEASED") {

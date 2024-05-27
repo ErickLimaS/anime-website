@@ -13,8 +13,8 @@ import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import UserModal from '@/app/components/UserLoginModal';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 
 export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[] }) {
 
@@ -88,19 +88,12 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
 
     return (
         <React.Fragment>
-            
-            {/* SHOWS USER LOGIN MODAL */}
-            <AnimatePresence
-                initial={false}
-                mode='wait'
-            >
-                {isUserModalOpen && (
-                    <UserModal
-                        onClick={() => setIsUserModalOpen(false)}
-                        auth={auth}
-                    />
-                )}
-            </AnimatePresence>
+
+            <ShowUpLoginPanelAnimated
+                apperanceCondition={isUserModalOpen}
+                customOnClickAction={() => setIsUserModalOpen(false)}
+                auth={auth}
+            />
 
             <motion.button
                 whileTap={{ scale: 0.85 }}

@@ -16,9 +16,9 @@ import Comment from './components/Comment';
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
-import UserModal from '@/app/components/UserLoginModal';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
+import ShowUpLoginPanelAnimated from '../UserLoginModal/animatedVariant';
 
 type CommetsSectionTypes = {
     mediaInfo: ApiMediaResults | ApiDefaultResult,
@@ -200,18 +200,11 @@ function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }:
     return (
         <React.Fragment>
 
-            {/* SHOWS USER LOGIN MODAL */}
-            <AnimatePresence
-                initial={false}
-                mode='wait'
-            >
-                {(!user && isUserModalOpen) && (
-                    <UserModal
-                        onClick={() => setIsUserModalOpen(false)}
-                        auth={auth}
-                    />
-                )}
-            </AnimatePresence>
+            <ShowUpLoginPanelAnimated
+                apperanceCondition={isUserModalOpen}
+                customOnClickAction={() => setIsUserModalOpen(false)}
+                auth={auth}
+            />
 
             <div id={styles.container}>
 
