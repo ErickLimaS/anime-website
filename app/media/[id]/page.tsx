@@ -90,7 +90,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
     return backgroundImgs[randomNumber]?.url
 
   }
-  
+
   function convertMediaStatus() {
 
     if (mediaInfo.status == "NOT_YET_RELEASED") {
@@ -203,19 +203,15 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
             <div id={styles.btns_actions_container}>
 
-              <AddToNotificationsButton
-                mediaInfo={mediaInfo}
-              />
-
               <AddToPlaylist.Button
                 mediaInfo={mediaInfo as ApiDefaultResult}
               >
 
-                <AddToPlaylist.SvgIcon >
+                <AddToPlaylist.SvgIcon>
                   <BookmarkSvg />
                 </AddToPlaylist.SvgIcon>
 
-                <AddToPlaylist.SvgIcon >
+                <AddToPlaylist.SvgIcon>
                   <BookmarkFillSvg />
                 </AddToPlaylist.SvgIcon>
 

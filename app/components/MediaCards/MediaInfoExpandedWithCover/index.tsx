@@ -10,7 +10,7 @@ export function Container({ children, mediaInfo, customDescription }: { children
     return (
 
         <div className={`${styles.midia_item_container}`}>
-            
+
             <Link id={styles.img_container} href={`/media/${mediaInfo.id}`}>
                 <Image
                     src={mediaInfo.coverImage && mediaInfo.coverImage.extraLarge}
@@ -33,7 +33,7 @@ export function Container({ children, mediaInfo, customDescription }: { children
                 </h4>
 
                 {children}
-                
+
             </div>
 
         </div>
@@ -48,9 +48,9 @@ export function Description({ description }: { description: string }) {
 
             {/* <input type='checkbox' className={styles.expand_description} /> */}
 
-            <p className={`${styles.paragrath_container} ${styles.watch_page_custom_line_limit}`}>
-                {parse(description) || "Description Not Available"}
-            </p>
+            {/* <span className={`${styles.paragrath_container} ${styles.watch_page_custom_line_limit}`}> */}
+            {parse(description) || "Description Not Available"}
+            {/* </span> */}
 
         </React.Fragment>
     )

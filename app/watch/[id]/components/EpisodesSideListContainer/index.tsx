@@ -8,36 +8,24 @@ import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { motion } from 'framer-motion'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
-import { doc, DocumentData, DocumentSnapshot, getDoc, getFirestore } from 'firebase/firestore'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
 
 type ComponentTypes = {
-    source: SourceType["source"],
+    sourceName: SourceType["source"],
     mediaId: number,
     activeEpisodeNumber: number,
     episodesList: MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[],
-    episodesOnImdb: ImdbEpisode[] | undefined,
-    nextAiringEpisode?: { episode: number, airingAt: number }
+    episodesListOnImdb: ImdbEpisode[] | undefined,
+    nextAiringEpisodeInfo?: { episode: number, airingAt: number }
 }
 
-const loadingEpisodesMotion = {
-    initial: {
-        scale: 0,
-    },
-    animate: {
-        scale: 1,
-        transition: {
-            staggerChildren: 0.02,
-        },
-    },
-}
+export default function EpisodesListContainer({ sourceName, mediaId, activeEpisodeNumber, episodesList, nextAiringEpisodeInfo, episodesListOnImdb }: ComponentTypes) {
 
-function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episodesList, nextAiringEpisode, episodesOnImdb }: ComponentTypes) {
-
-    const [currEpisodesWatched, setCurrEpisodesWatched] = useState<{
+    const [episodesWatchedList, setEpisodesWatchedList] = useState<{
         mediaId: number;
         episodeNumber: number;
         episodeTitle: string;
@@ -45,38 +33,50 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
+
     const db = getFirestore(initFirebase())
 
-    // CHECK WATCHED EPISODES ON FIRESTORE
-    async function getEpisodesWatched() {
+    useEffect(() => { if (user) getEpisodesWatchedList() }, [user, mediaId, sourceName])
 
-        if (!user) return
+    useEffect(() => {
 
-        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+        function centerActiveListItemEpisode() {
+            const elementActive = document.querySelector("li[data-active=true]")
 
-        if (!userDoc) return
+            elementActive?.scrollIntoView()
 
-        const isOnEpisodesList = userDoc.get("episodesWatched")
+            window.scrollTo({ top: 0, behavior: 'instant' })
+        }
 
-        if (!isOnEpisodesList) return
+        setTimeout(centerActiveListItemEpisode, 2000)
 
-        const watchedEpisodes = isOnEpisodesList[mediaId] || null
+    }, [activeEpisodeNumber])
 
-        if (watchedEpisodes) setCurrEpisodesWatched(watchedEpisodes)
+    async function getEpisodesWatchedList() {
+
+        const userDoc = await getDoc(doc(db, 'users', user!.uid))
+
+        const episodesWatchedList = userDoc.get("episodesWatched")
+
+        if (!episodesWatchedList) return
+
+        const currMediaWatchedEpisodesList = episodesWatchedList[mediaId] || null
+
+        if (currMediaWatchedEpisodesList) setEpisodesWatchedList(currMediaWatchedEpisodesList)
 
     }
 
-    function queryLinkBySource(item: EpisodeAnimeWatch | MediaEpisodes, source: SourceType["source"]) {
+    function getMediaIdParamByMediaSource(media: EpisodeAnimeWatch | MediaEpisodes, source: SourceType["source"]) {
 
         switch (source) {
 
             case "gogoanime":
 
-                return `${(item as MediaEpisodes).id}`
+                return `${(media as MediaEpisodes).id}`
 
             case "aniwatch":
 
-                return `${(item as EpisodeAnimeWatch).episodeId}`
+                return `${(media as EpisodeAnimeWatch).episodeId}`
 
             default:
 
@@ -86,94 +86,60 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
 
     }
 
-    // FETCHS EPISODES WATCHED 
-    useEffect(() => {
-
-        if (user) getEpisodesWatched()
-
-    }, [user, mediaId, source])
-
-    // FOCUS ON ITEM LIST WHICH CORRESPOND TO EPISODE ID
-    useEffect(() => {
-
-        // focus list item that correspond to current episode on page
-        const centerActiveEpisode = () => {
-            const elementActive = document.querySelector("li[data-active=true]")
-
-            elementActive?.scrollIntoView()
-
-            window.scrollTo({ top: 0, behavior: 'instant' })
-        }
-
-        setTimeout(centerActiveEpisode, 500)
-
-    }, [activeEpisodeNumber])
-
     return (
         <div id={styles.episodes_list_container}>
 
             <div className={styles.heading_container}>
                 <h3>EPISODES</h3>
 
-                <p>on {(source).toUpperCase()}</p>
+                <p>on {sourceName.toUpperCase()}</p>
             </div>
 
-            <motion.ol
-                id={styles.list_container}
-                variants={loadingEpisodesMotion}
-                initial="initial"
-                animate="animate"
-            >
+            <motion.ol id={styles.list_container}>
 
-                {episodesList?.map((item, key: number) => (
+                {episodesList?.map((episode, key) => (
                     <motion.li
                         key={key}
-                        data-active={(item as MediaEpisodes).number == activeEpisodeNumber}
-                        variants={loadingEpisodesMotion}
+                        data-active={(episode as MediaEpisodes).number == activeEpisodeNumber}
                     >
 
                         <Link
-                            title={`Episode ${(item as MediaEpisodes).number}`}
-                            href={`/watch/${mediaId}?source=${source}&episode=${(item as MediaEpisodes).number}&q=${queryLinkBySource((item as MediaEpisodes), source)}`}
+                            title={`Episode ${(episode as MediaEpisodes).number}`}
+                            href={`/watch/${mediaId}?source=${sourceName}&episode=${(episode as MediaEpisodes).number}&q=${getMediaIdParamByMediaSource((episode as MediaEpisodes), sourceName)}`}
                         >
 
                             <div className={styles.img_container}>
-                                <span>{(item as MediaEpisodes).number}</span>
+                                <span>{(episode as MediaEpisodes).number}</span>
                             </div>
 
                         </Link>
 
                         <div className={styles.episode_info_container}>
                             <Link
-                                href={`/watch/${mediaId}?source=${source}&episode=${(item as MediaEpisodes).number}&q=${queryLinkBySource((item as MediaEpisodes), source)}`
-                                }
+                                href={`/watch/${mediaId}?source=${sourceName}&episode=${(episode as MediaEpisodes).number}&q=${getMediaIdParamByMediaSource((episode as MediaEpisodes), sourceName)}`}
                             >
 
-                                {(source == "aniwatch" && (item as EpisodeAnimeWatch).isFiller) && (
+                                {(sourceName == "aniwatch" && (episode as EpisodeAnimeWatch).isFiller) && (
                                     <small className={styles.filler_alert_text}>Filler</small>
                                 )}
 
                                 <h4>
-                                    {source == "gogoanime" ?
-                                        episodesOnImdb ?
-                                            episodesOnImdb[key].title : `Episode ${(item as MediaEpisodes).number}`
+                                    {sourceName == "gogoanime" ?
+                                        episodesListOnImdb ?
+                                            episodesListOnImdb[key].title : `Episode ${(episode as MediaEpisodes).number}`
                                         :
-                                        (item as EpisodeAnimeWatch).title
+                                        (episode as EpisodeAnimeWatch).title
                                     }
                                 </h4>
 
                             </Link>
 
                             <MarkEpisodeAsWatchedButton
-                                episodeNumber={(item as MediaEpisodes).number}
-                                episodeTitle={source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
+                                episodeNumber={(episode as MediaEpisodes).number}
+                                episodeTitle={sourceName == "aniwatch" ? (episode as ImdbEpisode).title : `${(episode as MediaEpisodes).number}`}
                                 mediaId={mediaId}
                                 showAdditionalText={true}
-                                wasWatched={
-                                    currEpisodesWatched?.find(
-                                        (item2) => item2.episodeNumber == (item as any).number
-                                    ) ? true : false
-                                }
+                                wasWatched={episodesWatchedList?.find((item) => item.episodeNumber == (episode as MediaEpisodes).number) ? true : false}
                             />
 
                         </div>
@@ -181,36 +147,11 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
                     </motion.li>
                 ))}
 
-                {nextAiringEpisode && (
-                    <motion.li
-                        data-active={false}
-                        variants={loadingEpisodesMotion}
-                        className={styles.next_episode_container}
-                    >
+                <NextAiringEpisodeListItem
+                    nextAiringEpisodeInfo={nextAiringEpisodeInfo}
+                    mediaId={mediaId}
+                />
 
-                        <Link
-                            title={`Episode ${nextAiringEpisode.episode}`}
-                            href={`/media/${mediaId}`}
-                        >
-
-                            <div className={styles.img_container}>
-                                <span>{nextAiringEpisode.episode}</span>
-                            </div>
-
-                        </Link>
-
-                        <div className={styles.episode_info_container}>
-                            <Link href={`/media/${mediaId}`}>
-
-                                <h4>Episode {nextAiringEpisode.episode}</h4>
-
-                                <small>On {convertFromUnix(nextAiringEpisode.airingAt)}</small>
-
-                            </Link>
-                        </div>
-
-                    </motion.li>
-                )}
 
             </motion.ol>
 
@@ -218,4 +159,40 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
     )
 }
 
-export default EpisodesSideListContainer
+function NextAiringEpisodeListItem({ mediaId, nextAiringEpisodeInfo }: {
+    mediaId: number, nextAiringEpisodeInfo?: { episode: number, airingAt: number }
+}) {
+
+    return (
+        nextAiringEpisodeInfo && (
+            <motion.li
+                data-active={false}
+                className={styles.next_episode_container}
+            >
+
+                <Link
+                    title={`Episode ${nextAiringEpisodeInfo.episode}`}
+                    href={`/media/${mediaId}`}
+                >
+
+                    <div className={styles.img_container}>
+                        <span>{nextAiringEpisodeInfo.episode}</span>
+                    </div>
+
+                </Link>
+
+                <div className={styles.episode_info_container}>
+                    <Link href={`/media/${mediaId}`}>
+
+                        <h4>Episode {nextAiringEpisodeInfo.episode}</h4>
+
+                        <small>On {convertFromUnix(nextAiringEpisodeInfo.airingAt)}</small>
+
+                    </Link>
+                </div>
+
+            </motion.li>
+        )
+    )
+
+}

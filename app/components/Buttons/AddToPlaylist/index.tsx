@@ -105,15 +105,17 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
                 aria-label={wasAddedToPlaylist ? "Click To Remove from Playlist" : "Click To Add To Playlist"}
                 title={wasAddedToPlaylist ? `Remove ${mediaInfo.title && mediaInfo.title?.romaji} from Playlist` : `Add ${mediaInfo.title && mediaInfo.title?.romaji} To Playlist`}
             >
-                {isLoading &&
-                    <LoadingSvg alt="Loading Icon" width={16} height={16} />
+
+                {isLoading ?
+                    (<LoadingSvg alt="Loading Icon" width={16} height={16} />)
+                    :
+                    ((!isLoading && wasAddedToPlaylist) ?
+                        (children ? children[1] : (<><Loading2Svg width={16} height={16} /> ON PLAYLIST</>))
+                        :
+                        (children ? children[0] : "+ PLAYLIST")
+                    )
                 }
 
-                {(!isLoading && wasAddedToPlaylist) ?
-                    (children ? children[1] : (<><Loading2Svg width={16} height={16} /> ON PLAYLIST</>))
-                    :
-                    (children ? children[0] : "+ PLAYLIST")
-                }
             </motion.button>
 
         </React.Fragment>
