@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import NavigationButtons from '../../../../components/NavButtons';
+import NavigationButtons from '../../../../components/NavigationButtons';
 import DotsSvg from "@/public/assets/three-dots-vertical.svg";
 import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface';

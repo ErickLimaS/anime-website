@@ -168,7 +168,7 @@ function EpisodesSideListContainer({ source, mediaId, activeEpisodeNumber, episo
                                 episodeNumber={(item as MediaEpisodes).number}
                                 episodeTitle={source == "aniwatch" ? (item as ImdbEpisode).title : `${(item as MediaEpisodes).number}`}
                                 mediaId={mediaId}
-                                hasText={true}
+                                showAdditionalText={true}
                                 wasWatched={
                                     currEpisodesWatched?.find(
                                         (item2) => item2.episodeNumber == (item as any).number

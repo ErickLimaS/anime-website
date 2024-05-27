@@ -29,7 +29,7 @@ function HistoryPage({ params, searchParams }: { params?: unknown, searchParams?
 
                     <h1>Latests Watched</h1>
 
-                    <SelectSort options={
+                    <SelectSort customSelectInputOptions={
                         [
                             { name: "From A to Z", value: "title_asc" },
                             { name: "From Z to A", value: "title_desc" },

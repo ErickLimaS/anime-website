@@ -20,10 +20,10 @@ import { getAuth } from 'firebase/auth';
 import { AnimatePresence } from 'framer-motion';
 import UserModal from '@/app/components/UserLoginModal';
 
-function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
+export default function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
-    const [isLiked, setIsLiked] = useState<boolean>(false)
-    const [isDisliked, setIsDisliked] = useState<boolean>(false)
+    const [isLiked, setWasLiked] = useState<boolean>(false)
+    const [wasDisliked, setWasDisliked] = useState<boolean>(false)
     const [wasDeleted, setWasDeleted] = useState<boolean>(false)
 
     const [isSpoiler, setIsSpoiler] = useState<boolean>(item.isSpoiler)
@@ -36,83 +36,71 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
-    const db = getFirestore(initFirebase());
+    const db = getFirestore(initFirebase())
 
-    // GET COMMENT DOC ID AND DATA
-    async function queryCommentDoc() {
+    useEffect(() => { getCommentCurrLikesAndDislikes() }, [user, item, mediaId])
 
-        const queryItem = query(collection(db, 'comments', `${mediaId}`, "all"), where("createdAt", "==", item.createdAt))
+    async function getCommentDoc() {
 
-        const querySnapshot = await getDocs(queryItem)
+        const queryComment = query(collection(db, 'comments', `${mediaId}`, "all"), where("createdAt", "==", item.createdAt))
 
-        if (!querySnapshot.docs[0]) return
+        const commentDoc = await getDocs(queryComment)
 
-        const commentDocId = querySnapshot.docs[0].id
-        const commentDocData = querySnapshot.docs[0].data()
+        if (!commentDoc.docs[0]) return
 
-        return [commentDocId, commentDocData]
+        const commentDocId = commentDoc.docs[0].id
+        const commentDocData = commentDoc.docs[0].data()
+
+        return {
+            commentDocId: commentDocId,
+            commentDocData: commentDocData as Comment | DocumentData
+        }
 
     }
 
-    // INCREASES NUMBER OF INTERACTIONS WITH BUTTONS LIKE DISLIKE
-    async function likeOrDislikeIncrease(buttonAction: string, addAction: boolean) {
+    async function handleLikesAndDislikesActions(buttonActionType: "like" | "dislike", isActionSetToTrue: boolean) {
 
         if (!user) return setIsUserModalOpen(true)
 
         if (user.isAnonymous) return
 
-        const query = await queryCommentDoc()
+        const queryComment = await getCommentDoc()
 
-        const commentDocData = query![1] as DocumentData
-        const commentDocId = query![0] as string
+        const commentDocData = queryComment!.commentDocData
+        const commentDocId = queryComment!.commentDocId
 
-        switch (buttonAction) {
+        switch (buttonActionType) {
 
             case "like":
 
                 await updateDoc(doc(db, 'comments', `${mediaId}`, "all", commentDocId), {
 
-                    likes: addAction ? commentDocData.likes + 1 : (commentDocData.likes == 0 ? 0 : commentDocData.likes - 1),
-                    dislikes: isDisliked ? commentDocData.dislikes - 1 : commentDocData.dislikes
+                    likes: isActionSetToTrue ? commentDocData.likes + 1 : (commentDocData.likes == 0 ? 0 : commentDocData.likes - 1),
+                    dislikes: wasDisliked ? commentDocData.dislikes - 1 : commentDocData.dislikes
 
                 })
 
-                // UPDATES USER INTERACTION WITH COMMENT
-                if (addAction) {
-                    await setDoc(doc(db, 'users', user.uid), {
-                        comments: {
-                            interacted: arrayUnion(...[{
-                                commentRef: commentDocId,
-                                wasLiked: true,
-                                wasDisliked: false,
-                                wasReply: false
-                            }])
-                        }
-                    } as unknown as FieldPath,
-                        { merge: true }
-                    )
-                }
-                else {
-                    await setDoc(doc(db, 'users', user.uid), {
-                        comments: {
-                            interacted: arrayRemove(...[{
-                                commentRef: commentDocId,
-                                wasLiked: true,
-                                wasDisliked: false,
-                                wasReply: false
-                            }])
-                        }
-                    } as unknown as FieldPath,
-                        { merge: true }
-                    )
+                const commentLikedData = {
+                    commentRef: commentDocId,
+                    wasLiked: true,
+                    wasDisliked: false,
+                    wasReply: false
                 }
 
-                const queryLikesUpdate = await queryCommentDoc()
+                await setDoc(doc(db, 'users', user.uid), {
+                    comments: {
+                        interacted: isActionSetToTrue ? arrayUnion(...[commentLikedData]) : arrayRemove(...[commentLikedData])
+                    }
+                } as unknown as FieldPath,
+                    { merge: true }
+                )
 
-                setCommentData(queryLikesUpdate![1] as Comment)
+                const queryUpdatedComment = await getCommentDoc()
 
-                setIsLiked(addAction ? true : false)
-                if (isDisliked) setIsDisliked(addAction ? false : true)
+                setCommentData(queryUpdatedComment!.commentDocData as Comment)
+
+                setWasLiked(isActionSetToTrue)
+                if (wasDisliked) setWasDisliked(isActionSetToTrue ? false : true)
 
                 return
 
@@ -121,46 +109,31 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
                 await updateDoc(doc(db, 'comments', `${mediaId}`, "all", commentDocId), {
 
                     likes: isLiked ? commentDocData.likes - 1 : commentDocData.likes,
-                    dislikes: addAction ? commentDocData.dislikes + 1 : (commentDocData.dislikes == 0 ? 0 : commentDocData.dislikes - 1)
+                    dislikes: isActionSetToTrue ? commentDocData.dislikes + 1 : (commentDocData.dislikes == 0 ? 0 : commentDocData.dislikes - 1)
 
                 })
 
-                // UPDATES USER INTERACTION WITH COMMENT
-                if (addAction) {
-                    await setDoc(doc(db, 'users', user.uid), {
-                        comments: {
-                            interacted: arrayUnion(...[{
-                                commentRef: commentDocId,
-                                wasLiked: false,
-                                wasDisliked: true,
-                                wasReply: false
-                            }])
-                        }
-                    } as unknown as FieldPath,
-                        { merge: true }
-                    )
-                }
-                else {
-                    await setDoc(doc(db, 'users', user.uid), {
-                        comments: {
-                            interacted: arrayRemove(...[{
-                                commentRef: commentDocId,
-                                wasLiked: false,
-                                wasDisliked: true,
-                                wasReply: false
-                            }])
-                        }
-                    } as unknown as FieldPath,
-                        { merge: true }
-                    )
+                const commentDislikedData = {
+                    commentRef: commentDocId,
+                    wasLiked: false,
+                    wasDisliked: true,
+                    wasReply: false
                 }
 
-                const queryDislikesUpdate = await queryCommentDoc()
+                await setDoc(doc(db, 'users', user.uid), {
+                    comments: {
+                        interacted: isActionSetToTrue ? arrayUnion(...[commentDislikedData]) : arrayRemove(...[commentDislikedData])
+                    }
+                } as unknown as FieldPath,
+                    { merge: true }
+                )
 
-                setCommentData(queryDislikesUpdate![1] as Comment)
+                const queryDislikesUpdate = await getCommentDoc()
 
-                setIsDisliked(addAction ? true : false)
-                if (isLiked) setIsLiked(addAction ? false : true)
+                setCommentData(queryDislikesUpdate?.commentDocData as Comment)
+
+                setWasDisliked(isActionSetToTrue)
+                if (isLiked) setWasLiked(isActionSetToTrue ? false : true)
 
                 return
 
@@ -171,57 +144,45 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
 
     }
 
-    // IF USER IS THE AUTHOR, DELETE COMMENT
-    async function deleteComment() {
+    async function deleteCurrComment() {
 
-        await deleteDoc(doc(db, 'comments', `${mediaId}`, "all", `${commentDocId}`))
+        // Only deletes from Curr Media Collection
+        // Doesnt delete from User Doc comment history (so we can keep control)
 
-        setWasDeleted(true)
+        await deleteDoc(doc(db, 'comments', `${mediaId}`, "all", `${commentDocId}`)).then(() => {
 
-    }
+            setWasDeleted(true)
 
-    // CHECKS HOW MANY INTERACTIONS THE COMMENT HAS
-    async function checkLikesAndDislikes() {
-
-        const docQuery = await queryCommentDoc()
-
-        const commentDocId = docQuery![0]
-        const commentDocData = docQuery![1]
-
-        setCommentDocId(commentDocId)
-
-        setCommentData(commentDocData as Comment)
-
-        if (!user) return
-
-        // CHECKS IF USER HAS LIKED OR DISLIKED
-        let queryUserDoc: DocumentSnapshot<DocumentData, DocumentData> = await getDoc(doc(db, 'users', user.uid))
-
-        // IF USER HAS NO DOC ON FIRESTORE, IT CREATES ONE
-        if (queryUserDoc.exists() == false) {
-
-            queryUserDoc = await setDoc(doc(db, 'users', user.uid), {}) as unknown as DocumentSnapshot<DocumentData, DocumentData>
-
-            return
-        }
-
-        const docCommentIntereactionOnUser = queryUserDoc.get("comments.interacted")?.find((item: { commentRef: string }) => item.commentRef == commentDocId)
-
-        if (docCommentIntereactionOnUser) {
-            if (docCommentIntereactionOnUser.wasLiked) setIsLiked(true)
-            if (docCommentIntereactionOnUser.wasDisliked) setIsDisliked(true)
-        }
+        })
 
     }
 
-    useEffect(() => {
+    async function getCommentCurrLikesAndDislikes() {
 
-        checkLikesAndDislikes()
+        const docQuery = await getCommentDoc()
 
-    }, [user, item, mediaId])
+        setCommentDocId(docQuery?.commentDocId)
+
+        setCommentData(docQuery?.commentDocData as Comment)
+
+        if (!user) return // bellow is just to check curr user interactions with this comment
+
+        const userDoc = await getDoc(doc(db, 'users', user.uid))
+
+        const userInteractionWithCurrComment = userDoc.get("comments.interacted")?.find(
+            (item: { commentRef: string }) => item.commentRef == docQuery?.commentDocId
+        )
+
+        if (!userInteractionWithCurrComment) return
+
+        if (userInteractionWithCurrComment.wasLiked) setWasLiked(true)
+        if (userInteractionWithCurrComment.wasDisliked) setWasDisliked(true)
+
+    }
 
     return (
         <React.Fragment>
+
             <AnimatePresence
                 initial={false}
                 mode='wait'
@@ -270,38 +231,27 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
                             <div className={`${styles.flex} display_flex_row space_beetween align_items_center`}>
 
                                 <div className={styles.buttons_container}>
-                                    <button onClick={() => likeOrDislikeIncrease("like", isLiked ? false : true)}>
-                                        {isLiked ? (
-                                            <>
-                                                <SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes
-                                            </>
-                                        ) : (
-                                            <>
-                                                <SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like
-                                            </>
-                                        )}
+                                    <button onClick={() => handleLikesAndDislikesActions("like", isLiked ? false : true)}>
+
+                                        <SvgIcons type={"like"} isBtnActive={isLiked} commentData={commentData} />
+
                                     </button>
 
-                                    <button onClick={() => likeOrDislikeIncrease("dislike", isDisliked ? false : true)}>
-                                        {isDisliked ? (
-                                            <>
-                                                <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes
-                                            </>
-                                        ) : (
-                                            <>
-                                                <SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike
-                                            </>
-                                        )}
+                                    <button onClick={() => handleLikesAndDislikesActions("dislike", wasDisliked ? false : true)}>
+
+                                        <SvgIcons type={"like"} isBtnActive={wasDisliked} commentData={commentData} />
+
                                     </button>
 
                                     {/* 
                                     <button onClick={() => console.log("")} disabled>
+                                        <SvgIcons type={"reply"} isBtnActive={"#"} commentData={#} />
                                         <SvgReply width={16} height={16} alt="Reply" />Reply
                                     </button>
                                     */}
 
                                     {(user?.uid == item.userId.id) && (
-                                        <button className={styles.delete_btn} onClick={() => deleteComment()}>
+                                        <button className={styles.delete_btn} onClick={() => deleteCurrComment()}>
                                             <SvgTrash width={16} height={16} alt="Delete Icon" />Delete
                                         </button>
                                     )}
@@ -322,4 +272,29 @@ function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
     )
 }
 
-export default Comment
+function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike", isBtnActive: boolean, commentData: { likes: number, dislikes: number } }) {
+
+    switch (type) {
+
+        case 'like':
+
+            if (isBtnActive) {
+                return <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  & #x2022; Likes</>
+            }
+
+            return <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} & #x2022; Like</>
+
+        case 'dislike':
+
+            if (isBtnActive) {
+                return <> <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes</>
+            }
+
+            return <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike</>
+
+        default:
+            return
+
+    }
+
+}

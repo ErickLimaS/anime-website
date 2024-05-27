@@ -6,7 +6,7 @@ import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
 import * as AddToPlaylist from '../../Buttons/AddToPlaylist'
-import SwiperContainer from '../../SwiperContainer'
+import SwiperCarouselContainer from '../../SwiperCarouselContainer'
 import ListItemHeroCarousel from './components/HeroListCarousel'
 import EyeSvg from "@/public/assets/eye-fill.svg"
 import EyeSlashSvg from "@/public/assets/eye-slash-fill.svg"
@@ -209,7 +209,7 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
                     {/* SHOWS ONLY ON MOBILE */}
                     <div id={styles.swiper_list_container}>
                         {animesList != undefined && (
-                            <SwiperContainer
+                            <SwiperCarouselContainer
                                 options={{
                                     slidesPerView: 2,
                                     bp480: 2,
@@ -236,7 +236,7 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
 
                                 ))}
 
-                            </SwiperContainer>
+                            </SwiperCarouselContainer>
                         )}
                     </div>
 

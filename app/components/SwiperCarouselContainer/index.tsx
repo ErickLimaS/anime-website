@@ -14,7 +14,7 @@ type SwiperTypes = {
     },
 }
 
-function SwiperContainer({ children, options }: SwiperTypes) {
+function SwiperCarouselContainer({ children, options }: SwiperTypes) {
 
     return (
         <Swiper
@@ -35,4 +35,4 @@ function SwiperContainer({ children, options }: SwiperTypes) {
     );
 }
 
-export default SwiperContainer
+export default SwiperCarouselContainer

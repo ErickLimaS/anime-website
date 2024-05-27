@@ -568,7 +568,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                     <li className='display_flex_row align_items_center'>
 
                       <ScoreRating
-                        score={(mediaInfo.averageScore / 2) / 10}
+                        ratingScore={(mediaInfo.averageScore / 2) / 10}
                         source='anilist'
                       />
 
@@ -583,9 +583,9 @@ async function MediaPage({ params }: { params: { id: number } }) {
                     <li className='display_flex_row align_items_center'>
 
                       <ScoreRating
-                        score={Number(imdbMediaInfo.rating.toFixed(1))}
+                        ratingScore={Number(imdbMediaInfo.rating.toFixed(1))}
                         source='imdb'
-                        type='string'
+                        ratingType='string'
                       />
 
                     </li>

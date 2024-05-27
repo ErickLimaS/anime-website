@@ -6,7 +6,7 @@ import Link from 'next/link'
 import styles from "./component.module.css"
 import ChevronRightIcon from '@/public/assets/chevron-right.svg';
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg';
-import SwiperContainer from '../../SwiperContainer'
+import SwiperCarouselContainer from '../../SwiperCarouselContainer'
 import { AnimatePresence, motion } from 'framer-motion'
 import anilist from '@/app/api/anilist'
 import { SwiperSlide } from 'swiper/react'
@@ -78,7 +78,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
 
                     {/* SHOWS ONLY ON MOBILE */}
                     <div id={styles.popular_list_container}>
-                        <SwiperContainer>
+                        <SwiperCarouselContainer>
 
                             {(fetchedData?.length > 0 ? [...animesList, ...fetchedData] : animesList).map((media, key) => (
 
@@ -107,7 +107,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
 
                             ))}
 
-                        </SwiperContainer>
+                        </SwiperCarouselContainer>
                     </div>
 
                     {animesList.map((media, key: number) => (

@@ -311,7 +311,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
 
                                     {mediaSelect.averageScore && (
                                         <motion.p>
-                                            <ScoreRating score={(mediaSelect.averageScore / 2) / 10} source='anilist' />
+                                            <ScoreRating ratingScore={(mediaSelect.averageScore / 2) / 10} source='anilist' />
                                         </motion.p>
                                     )}
 

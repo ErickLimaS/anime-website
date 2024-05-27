@@ -4,7 +4,7 @@ import styles from "./component.module.css"
 import * as MediaCard from '../../MediaCards/MediaCard'
 import * as MediaCardClientSide from '../../MediaCards/MediaCard/variantClientSide'
 import * as MediaInfoExpanded from '../../MediaCards/MediaInfoExpandedWithCover'
-import NavigationButtons from '../../NavButtons'
+import NavigationButtons from '../../NavigationButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from "@/app/api/anilist"
 import { useAuthState } from 'react-firebase-hooks/auth'

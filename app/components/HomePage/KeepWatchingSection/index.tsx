@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import SwiperContainer from '../../SwiperContainer'
+import SwiperCarouselContainer from '../../SwiperCarouselContainer'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 import { getAuth } from 'firebase/auth'
@@ -73,7 +73,7 @@ function KeepWatchingSection() {
 
                     <div>
 
-                        <SwiperContainer
+                        <SwiperCarouselContainer
                             options={{
                                 slidesPerView: 2.2,
                                 bp480: 2.2,
@@ -95,7 +95,7 @@ function KeepWatchingSection() {
 
                             ))}
 
-                        </SwiperContainer>
+                        </SwiperCarouselContainer>
 
                     </div>
 

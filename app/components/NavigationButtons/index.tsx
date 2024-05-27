@@ -7,19 +7,20 @@ import gogoanime from '@/app/api/consumetGoGoAnime'
 import { EpisodeLinksGoGoAnime } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import CloudOfflineSvg from "@/public/assets/cloud-offline.svg"
 import CloudOnlineSvg from "@/public/assets/cloud.svg"
+import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
 type PropsType = {
     propsFunction: (parameter: string | number) => void,
     buttonOptions: {
         name: string,
-        value: number | string
+        value: number | string | SourceType["source"]
     }[],
     currValue?: string | number,
     sepateBtnsWithSpan?: boolean,
     showSourceStatus?: boolean
 }
 
-function NavigationButtons({ propsFunction, buttonOptions, currValue, sepateBtnsWithSpan, showSourceStatus }: PropsType) {
+export default function NavigationButtons({ propsFunction, buttonOptions, currValue, sepateBtnsWithSpan, showSourceStatus }: PropsType) {
 
     const [lastValueReturned, setLastValueReturned] = useState<string | number>()
 
@@ -30,19 +31,18 @@ function NavigationButtons({ propsFunction, buttonOptions, currValue, sepateBtns
 
     useEffect(() => { if (buttonOptions) checkVideoSourceAvailability(buttonOptions) }, [buttonOptions])
 
-    function handlePropsFunctionWithBtnValue(value: string | number) {
+    function handlePropsFunctionWithBtnValue(btnActionValue: string | number) {
 
-        if (lastValueReturned == value) return
+        if (lastValueReturned == btnActionValue) return
 
         // run the received function
-        propsFunction(value)
+        propsFunction(btnActionValue)
 
         // set the actual value
-        setLastValueReturned(value)
+        setLastValueReturned(btnActionValue)
 
     }
 
-    // checks if source is currently available 
     async function checkVideoSourceAvailability(videoSourcesAvailable: PropsType["buttonOptions"]) {
 
         videoSourcesAvailable.map(async (source) => {
@@ -75,17 +75,18 @@ function NavigationButtons({ propsFunction, buttonOptions, currValue, sepateBtns
 
     }
 
-    function getBtnTitleByBtnValue(btnValue: string) {
+    function getBtnTitleByBtnValue(btnValue: SourceType["source"]) {
 
-        const btnTitle = btnValue != "crunchyroll" ?
-            btnValue == "aniwatch" ?
-                aniwatchAvailable ? "Online" : "Offline"
-                :
-                gogoanimeAvailble ? "Online" : "Offline"
-            :
-            ""
-
-        return btnTitle
+        switch (btnValue) {
+            case 'crunchyroll':
+                return ""
+            case 'aniwatch':
+                return aniwatchAvailable ? "Online" : "Offline"
+            case 'gogoanime':
+                return gogoanimeAvailble ? "Online" : "Offline"
+            default:
+                return ""
+        }
 
     }
 
@@ -94,55 +95,32 @@ function NavigationButtons({ propsFunction, buttonOptions, currValue, sepateBtns
 
             {buttonOptions.map((button) => (
                 <React.Fragment key={button.value}>
+
                     <button
                         className={showSourceStatus ? styles.white_color : ""}
                         data-active={lastValueReturned == (button.value)}
                         onClick={() => handlePropsFunctionWithBtnValue(button.value)}
                         aria-label={button.name}
-                        title={getBtnTitleByBtnValue(button.value as string)}
+                        title={getBtnTitleByBtnValue(button.value as SourceType["source"])}
                     >
 
-                        {(showSourceStatus && button.value != "crunchyroll") && (
+                        {showSourceStatus && (
 
-                            button.value == "aniwatch" ?
-                                aniwatchAvailable ?
-                                    <CloudOnlineSvg
-                                        width={18}
-                                        height={18}
-                                        className={styles.source_status}
-                                        data-available={aniwatchAvailable}
-                                    />
-                                    :
-                                    <CloudOfflineSvg
-                                        width={24}
-                                        height={24}
-                                        className={styles.source_status}
-                                        data-available={aniwatchAvailable}
-                                    />
-                                :
-                                gogoanimeAvailble ?
-                                    <CloudOnlineSvg
-                                        width={18}
-                                        height={18}
-                                        className={styles.source_status}
-                                        data-available={gogoanimeAvailble}
-                                    />
-                                    :
-                                    <CloudOfflineSvg
-                                        width={24}
-                                        height={24}
-                                        className={styles.source_status}
-                                        data-available={gogoanimeAvailble}
-                                    />
+                            <MediaSourceAvailabilityIcon
+                                sourceName={button.value as "aniwatch" | "gogoanime"}
+                                isAvailable={(button.value as "aniwatch" | "gogoanime") == "aniwatch" ? aniwatchAvailable : gogoanimeAvailble}
+                            />
 
                         )}
 
                         {button.name}
 
                     </button >
+
                     {sepateBtnsWithSpan && (
                         <span className={styles.separate_text}> | </span>
                     )}
+
                 </React.Fragment>
             ))}
 
@@ -151,4 +129,55 @@ function NavigationButtons({ propsFunction, buttonOptions, currValue, sepateBtns
 
 }
 
-export default NavigationButtons
+function MediaSourceAvailabilityIcon({ sourceName, isAvailable }: { sourceName: SourceType["source"], isAvailable: boolean | null | undefined }) {
+
+    switch (sourceName) {
+
+        case "aniwatch":
+            if (isAvailable) {
+                return (
+                    <CloudOnlineSvg
+                        width={18}
+                        height={18}
+                        className={styles.source_status}
+                        data-available={isAvailable}
+                    />
+                )
+            }
+
+            return (
+                <CloudOfflineSvg
+                    width={24}
+                    height={24}
+                    className={styles.source_status}
+                    data-available={isAvailable}
+                />
+            )
+
+        case 'gogoanime':
+            if (isAvailable) {
+                return (
+                    <CloudOnlineSvg
+                        width={18}
+                        height={18}
+                        className={styles.source_status}
+                        data-available={isAvailable}
+                    />
+                )
+            }
+
+            return (
+                <CloudOfflineSvg
+                    width={24}
+                    height={24}
+                    className={styles.source_status}
+                    data-available={isAvailable}
+                />
+            )
+
+        default:
+            return
+
+    }
+
+}
