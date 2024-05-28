@@ -33,7 +33,7 @@ export default {
 
             console.log(err)
 
-            return null
+            return err
 
         }
 
@@ -56,7 +56,7 @@ export default {
 
             console.log(err)
 
-            return null
+            return err
 
         }
 
