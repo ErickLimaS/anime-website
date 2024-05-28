@@ -52,7 +52,7 @@ export const getMediaInfo = cache(async ({ search, mediaId, type, seachTitle, re
 
         if (search && seachTitle) {
 
-            const searchResults: ImdbSearchItem[] = await searchMedia(stringToOnlyAlphabetic(seachTitle)).then(res => res.results)
+            const searchResults: ImdbSearchItem[] = await searchMedia({ mediaTitle: stringToOnlyAlphabetic(seachTitle) }).then(res => res.results)
 
             const filteredRes = searchResults.find((item) => Number(item.releaseDate) == releaseYear)
 

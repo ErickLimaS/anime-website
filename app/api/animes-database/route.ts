@@ -4,77 +4,96 @@ import { MediaDbOffline } from "@/app/ts/interfaces/dbOffilineInterface";
 
 export async function GET(request: NextRequest) {
 
-    const params = request.nextUrl.searchParams
+    const searchParams = request.nextUrl.searchParams
 
-    const resultLimit = 12
+    const resultsLimit = 12
 
-    let dataSort = (AnimeDataOffline as { data: MediaDbOffline[] }).data
+    let dataToBeSorted = (AnimeDataOffline as { data: MediaDbOffline[] }).data
 
-    if (params.get("type")) dataSort = dataSort.filter((item: { type: string }) => item.type == params.get("type")!.toUpperCase())
-
-    if (params.get("genre")) dataSort = dataSort.filter((item: { tags: string[] }) => item.tags.some(a => (params.get("genre")!.includes(a))))
-
-    if (params.get("status")) dataSort = dataSort.filter((item: { status: string }) => item.status == params.get("status")!.toUpperCase())
-
-    if (params.get("year")) dataSort = dataSort.filter((item: { animeSeason: { year: number } }) => item.animeSeason.year == Number(params.get("year")))
-
-    if (params.get("title")) dataSort = dataSort.filter((item: { title: string }) => item.title.toLowerCase().includes(params.get("title")!.toLowerCase()))
-
-    if (params.get("season")) dataSort = dataSort.filter((item: { animeSeason: { season: string } }) =>
-        item.animeSeason.season.toLocaleLowerCase() == params.get("season")?.toLocaleLowerCase()
-    )
-
-    if (params.get("sort")) {
-        if (params.get("sort") == "releases_desc") {
-            dataSort = dataSort.sort(
-                (a: { animeSeason: { year: number } }, b: { animeSeason: { year: number } }) => a.animeSeason.year - b.animeSeason.year
-            ).reverse()
-        }
-        else if (params.get("sort") == "releases_asc") {
-            dataSort = dataSort.sort(
-                (a: { animeSeason: { year: number } }, b: { animeSeason: { year: number } }) => a.animeSeason.year - b.animeSeason.year
-            )
-        }
-
-        if (params.get("sort") == "title_desc") {
-            dataSort = dataSort.sort(
-                (a: { title: string }, b: { title: string }) => a.title > b.title ? -1 : 1
-            )
-        }
-        else if (params.get("sort") == "title_asc") {
-            dataSort = dataSort.sort(
-                (a: { title: string }, b: { title: string }) => a.title > b.title ? -1 : 1
-            ).reverse()
-        }
+    if (searchParams.get("type")) {
+        dataToBeSorted = dataToBeSorted.filter((media) => media.type == searchParams.get("type")!.toUpperCase())
     }
 
-    const totalLength = dataSort.length
+    if (searchParams.get("year")) {
+        dataToBeSorted = dataToBeSorted.filter((media) => media.animeSeason.year == Number(searchParams.get("year")))
+    }
+
+    if (searchParams.get("genre")) {
+        dataToBeSorted = dataToBeSorted.filter((media) => media.tags.some(genreName => (searchParams.get("genre")!.includes(genreName))))
+    }
+
+    if (searchParams.get("status")) {
+        dataToBeSorted = dataToBeSorted.filter((media) => media.status == searchParams.get("status")!.toUpperCase())
+    }
+
+    if (searchParams.get("title")) {
+        dataToBeSorted = dataToBeSorted.filter((media) => media.title.toLowerCase().includes(searchParams.get("title")!.toLowerCase()))
+    }
+
+    if (searchParams.get("season")) {
+        dataToBeSorted = dataToBeSorted.filter((media) =>
+            media.animeSeason.season.toLocaleLowerCase() == searchParams.get("season")?.toLocaleLowerCase()
+        )
+    }
+
+    switch (searchParams.get("sort")) {
+
+        case "releases_desc":
+
+            dataToBeSorted = dataToBeSorted.sort((a, b) => a.animeSeason.year - b.animeSeason.year).reverse()
+
+            break
+
+        case "releases_asc":
+
+            dataToBeSorted = dataToBeSorted.sort((a, b) => a.animeSeason.year - b.animeSeason.year)
+
+            break
+
+        case "title_desc":
+
+            dataToBeSorted = dataToBeSorted.sort((a, b) => a.title > b.title ? -1 : 1)
+
+            break
+
+        case "title_asc":
+
+            dataToBeSorted = dataToBeSorted.sort((a, b) => a.title > b.title ? -1 : 1).reverse()
+
+            break
+
+        default:
+            break
+
+    }
+
+    const totalResultsLength = dataToBeSorted.length
 
     // GET ANILIST ID FOR EACH MEDIA
-    if (dataSort) {
+    if (dataToBeSorted.length > 0) {
 
-        let sortHasAnilistId = dataSort.filter((item) => item.sources.map(a => {
+        const mediasWithAnilistId = dataToBeSorted.filter((media) => media.sources.map(source => {
 
-            if (a.includes("https://anilist.co/anime")) {
-                const foundUrl: string | null = a.slice(a.search(/\banime\b/))
-                item.anilistId = foundUrl!.slice(6)
+            if (source.includes("https://anilist.co/anime")) {
+
+                const urlWithAnilistId = source.slice(source.search(/\banime\b/))
+
+                media.anilistId = urlWithAnilistId!.slice(6)
+
             }
 
-        }))
+        })).filter((item) => item.anilistId)
 
-        // filter only itens which has the anilist ID
-        sortHasAnilistId = sortHasAnilistId.filter((item) => item.anilistId)
-
-        dataSort = sortHasAnilistId
+        dataToBeSorted = mediasWithAnilistId
 
     }
 
-    dataSort = dataSort.slice(0, resultLimit * Number(params.get("page") || 1))
+    const resultsLimitedByPage = dataToBeSorted.slice(0, resultsLimit * Number(searchParams.get("page") || 1))
 
     return NextResponse.json(
         {
-            data: dataSort,
-            allResultsLength: totalLength,
+            data: resultsLimitedByPage,
+            allResultsLength: totalResultsLength,
             lastUpdate: (AnimeDataOffline as { lastUpdate: string }).lastUpdate
         }
     )
