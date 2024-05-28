@@ -3,7 +3,7 @@ import { Auth } from "firebase/auth";
 import { AnimatePresence } from "framer-motion";
 import UserModal from ".";
 
-export default function ShowUpLoginPanelAnimated({ apperanceCondition, customOnClickAction, auth }: { apperanceCondition: boolean, customOnClickAction: () => void, auth: Auth }) {
+export default function ShowUpLoginPanelAnimated({ apperanceCondition, customOnClickAction, auth }: { apperanceCondition: boolean, customOnClickAction?: () => void, auth: Auth }) {
 
     return (
         <AnimatePresence

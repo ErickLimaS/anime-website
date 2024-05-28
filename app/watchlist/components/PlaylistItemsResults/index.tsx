@@ -6,53 +6,37 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSearchParams } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
-import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
-import UserModal from '@/app/components/UserLoginModal'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
+import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 
-function PlaylistItemsResults({ params }: { params?: { format: string, sort: string } }) {
+function PlaylistItemsResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
-    const [userBookmarks, setUserBookmarks] = useState<BookmarkItem[]>([])
+    const [userBookmarksList, setUserBookmarksList] = useState<BookmarkItem[]>([])
     const [userFilteredBookmarks, setUserFilteredBookmarks] = useState<BookmarkItem[]>([])
 
     const searchParams = useSearchParams();
 
-    // GETS BOOKMARKS ON USER DOCUMENT
-    async function getUserBookmarks() {
+    useEffect(() => { setUserFilteredBookmarks([]) }, [searchParams.size == 0])
 
-        const db = getFirestore(initFirebase());
+    useEffect(() => { if (user?.uid) getUserBookmarksList() }, [user])
 
-        const bookmarks: BookmarkItem[] = await getDoc(doc(db, 'users', (user as User).uid)).then(doc => doc.get("bookmarks"))
+    useEffect(() => {
 
-        if (params) {
-
-            let filteredBookmarks = bookmarks
-
-            if (params?.format) filteredBookmarks = filteredBookmarks.filter(item => item.format == params.format.toUpperCase())
-
-            if (params?.sort) {
-                if (params.sort == "title_desc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1)
-                else if (params.sort == "title_asc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1).reverse()
-            }
+        if (params?.format) {
+            const filteredBookmarks = userBookmarksList.filter(media => media.format == params!.format.toUpperCase())
 
             setUserFilteredBookmarks(filteredBookmarks)
-            setUserBookmarks(bookmarks)
-
-            return
         }
 
-        setUserFilteredBookmarks([])
-        setUserBookmarks(bookmarks)
+    }, [params?.format])
 
-    }
-
-    // HANDLES SELECT SORT CHANGES 
     useEffect(() => {
-        let filteredBookmarks = !params?.format ? userBookmarks : userFilteredBookmarks
+
+        let filteredBookmarks = !params?.format ? userBookmarksList : userFilteredBookmarks
 
         if (params?.sort) {
             if (params.sort == "title_desc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1)
@@ -60,116 +44,116 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: str
         }
 
         setUserFilteredBookmarks(filteredBookmarks)
+
     }, [params?.sort])
 
-    // RUNS WHEN HAS NO PARAMS 
-    useEffect(() => {
+    async function getUserBookmarksList() {
 
-        setUserFilteredBookmarks([])
+        const db = getFirestore(initFirebase());
 
-    }, [searchParams.size == 0])
+        const bookmarksList: BookmarkItem[] = await getDoc(doc(db, 'users', (user as User).uid)).then(doc => doc.get("bookmarks"))
 
-    // HANDLES FORMAT SORT CHANGES 
-    useEffect(() => {
+        if (!params) {
 
-        if (params?.format) {
-            const filteredBookmarks = userBookmarks.filter(item => item.format == params!.format.toUpperCase())
+            setUserFilteredBookmarks([])
+            setUserBookmarksList(bookmarksList)
 
-            setUserFilteredBookmarks(filteredBookmarks)
+            return
         }
 
-    }, [params?.format])
+        let filteredBookmarks = bookmarksList
 
-    // ONLY RUNS WHEN USER IS LOGGED IN
-    useEffect(() => {
+        if (params?.format) filteredBookmarks = filteredBookmarks.filter(item => item.format == params.format.toUpperCase())
 
-        if (user?.uid) getUserBookmarks()
+        if (params?.sort) {
+            if (params.sort == "title_desc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1)
+            else if (params.sort == "title_asc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1).reverse()
+        }
 
-    }, [user])
+        setUserFilteredBookmarks(filteredBookmarks)
+        setUserBookmarksList(bookmarksList)
+
+    }
 
     return (
-        <>
+        <React.Fragment>
 
-            {/* IF USER IS NOT LOGGED IN */}
-            {(!user && !loading) && (
+            <ShowUpLoginPanelAnimated
+                apperanceCondition={(!user && !loading) ? true : false}
+                auth={auth}
+            />
 
-                <UserModal
-                    auth={auth}
-                />
-
-            )}
-
-            {loading ? (
+            {loading && (
 
                 <div style={{ height: "400px", width: "100%", display: "flex" }}>
                     <SvgLoading width={120} height={120} style={{ margin: "auto" }} />
                 </div>
 
-            ) : (
-                userBookmarks?.length > 0 ? (
-                    <div id={styles.container}>
-
-                        <ul>
-
-                            {params ? (
-                                userFilteredBookmarks.length > 0 ? (
-                                    userFilteredBookmarks.map((media, key) => (
-                                        <li key={key}>
-
-                                            <MediaCard.Container onDarkMode>
-
-                                                <MediaCard.MediaImgLink
-                                                    mediaId={media.id}
-                                                    title={media.title.romaji}
-                                                    formatOrType={media.format}
-                                                    url={media.coverImage.extraLarge}
-                                                />
-
-                                                <MediaCard.LinkTitle
-                                                    title={media.title.romaji}
-                                                    id={media.id}
-                                                />
-
-                                            </MediaCard.Container>
-
-                                        </li>
-                                    )))
-                                    :
-                                    (
-                                        <p className={styles.no_results_text}>No Results</p>
-                                    )
-                            ) : (
-                                userBookmarks.map((media, key) => (
-                                    <li key={key}>
-
-                                        <MediaCard.Container onDarkMode>
-
-                                            <MediaCard.MediaImgLink
-                                                mediaId={media.id}
-                                                title={media.title.romaji}
-                                                formatOrType={media.format}
-                                                url={media.coverImage.extraLarge}
-                                            />
-
-                                            <MediaCard.LinkTitle
-                                                title={media.title.romaji}
-                                                id={media.id}
-                                            />
-
-                                        </MediaCard.Container>
-
-                                    </li>
-                                )))
-                            }
-
-                        </ul>
-
-                    </div>
-                ) : (
-                    <p className={styles.no_results_text}>No Results</p>
-                )
             )}
-        </>
+
+            {!loading && (
+                <div id={styles.container}>
+
+                    <ul>
+
+                        {(userFilteredBookmarks.length == 0 || userBookmarksList?.length == 0) && (
+                            <p className={styles.no_results_text}>
+                                No Results
+                            </p>
+                        )}
+
+                        {params ? (
+                            userFilteredBookmarks.length > 0 && (userFilteredBookmarks.map((media, key) => (
+                                <li key={key}>
+
+                                    <MediaCard.Container onDarkMode>
+
+                                        <MediaCard.MediaImgLink
+                                            mediaId={media.id}
+                                            title={media.title.romaji}
+                                            formatOrType={media.format}
+                                            url={media.coverImage.extraLarge}
+                                        />
+
+                                        <MediaCard.LinkTitle
+                                            title={media.title.romaji}
+                                            id={media.id}
+                                        />
+
+                                    </MediaCard.Container>
+
+                                </li>
+                            )))
+                        ) : (
+                            userBookmarksList.map((media, key) => (
+                                <li key={key}>
+
+                                    <MediaCard.Container onDarkMode>
+
+                                        <MediaCard.MediaImgLink
+                                            mediaId={media.id}
+                                            title={media.title.romaji}
+                                            formatOrType={media.format}
+                                            url={media.coverImage.extraLarge}
+                                        />
+
+                                        <MediaCard.LinkTitle
+                                            title={media.title.romaji}
+                                            id={media.id}
+                                        />
+
+                                    </MediaCard.Container>
+
+                                </li>
+                            ))
+                        )}
+
+                    </ul>
+
+                </div>
+
+            )}
+        </React.Fragment>
     )
 }
 

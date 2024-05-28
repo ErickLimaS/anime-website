@@ -24,7 +24,9 @@ function SelectSort({ customSelectInputOptions }: { customSelectInputOptions?: {
 
     return (
         <div id={styles.container} className='display_flex_row align_items_center'>
+
             <SvgFilter height={16} width={16} alt="Filter Icon" />
+
             <form>
                 <select
                     aria-label="Sort Options"
@@ -61,6 +63,7 @@ function SelectSort({ customSelectInputOptions }: { customSelectInputOptions?: {
 
                 </select>
             </form >
+
         </div >
     )
 }
