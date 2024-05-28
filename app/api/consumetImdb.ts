@@ -1,4 +1,4 @@
-import stringToOnlyAlphabetic from "@/app/lib/convertStringsTo"
+import stringToOnlyAlphabetic from "@/app/lib/convertStrings"
 import { ImdbMediaInfo, ImdbSearchItem } from "@/app/ts/interfaces/apiImdbInterface"
 import Axios from "axios"
 import axiosRetry from "axios-retry"
