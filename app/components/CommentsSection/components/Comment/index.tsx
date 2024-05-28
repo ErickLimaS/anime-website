@@ -232,7 +232,7 @@ export default function Comment({ item, mediaId }: { item: Comment, mediaId: num
 
                                     <button onClick={() => handleLikesAndDislikesActions("dislike", wasDisliked ? false : true)}>
 
-                                        <SvgIcons type={"like"} isBtnActive={wasDisliked} commentData={commentData} />
+                                        <SvgIcons type={"dislike"} isBtnActive={wasDisliked} commentData={commentData} />
 
                                     </button>
 
@@ -272,15 +272,15 @@ function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike"
         case 'like':
 
             if (isBtnActive) {
-                return <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  & #x2022; Likes</>
+                return <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes</>
             }
 
-            return <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} & #x2022; Like</>
+            return <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like</>
 
         case 'dislike':
 
             if (isBtnActive) {
-                return <> <SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes</>
+                return <><SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes</>
             }
 
             return <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike</>

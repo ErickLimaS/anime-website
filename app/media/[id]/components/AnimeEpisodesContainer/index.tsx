@@ -359,6 +359,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
               !isLoading && (
                 <EpisodeBySource
                   key={key}
+                  index={key}
                   episodeInfo={episode}
                   mediaInfo={mediaInfo}
                   currEpisodesSource={currEpisodesSource}
@@ -533,7 +534,7 @@ function OptionsPanel({ user, db, mediaInfo, imdb }: {
 
 }
 
-function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, key, imdb, crunchyrollInitialEpisodes }:
+function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, index, imdb, crunchyrollInitialEpisodes }:
   {
     episodeInfo: ImdbEpisode | EpisodesType | MediaEpisodes | EpisodeAnimeWatch,
     currEpisodesSource: SourceType["source"],
@@ -544,7 +545,7 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
     }[],
     itemOffset: number,
     mediaInfo: ApiDefaultResult | ApiMediaResults,
-    key: number,
+    index: number,
     imdb: EpisodesContainerTypes["imdb"],
     crunchyrollInitialEpisodes: EpisodesContainerTypes["crunchyrollInitialEpisodes"]
   }
@@ -558,9 +559,9 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
 
         <CrunchyrollEpisode
           motionStyle={framerMotionEpisodePopup}
-          key={key}
+          key={index}
           data={episodeInfo as EpisodesType}
-          episodeNumber={key + itemOffset + 1}
+          episodeNumber={index + itemOffset + 1}
           mediaId={mediaInfo.id}
           episodesWatched={currEpisodesWatched}
         />
@@ -573,12 +574,12 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
 
         <GoGoAnimeEpisode
           motionStyle={framerMotionEpisodePopup}
-          key={key}
+          key={index}
           data={episodeInfo as MediaEpisodes}
-          episodeNumber={key + itemOffset + 1}
-          title={imdb.episodesList[key + itemOffset]?.title}
-          episodeDescription={imdb.episodesList[key + itemOffset]?.description || undefined}
-          backgroundImg={imdb.episodesList[key + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[key + itemOffset]?.thumbnail}
+          episodeNumber={index + itemOffset + 1}
+          title={imdb.episodesList[index + itemOffset]?.title}
+          episodeDescription={imdb.episodesList[index + itemOffset]?.description || undefined}
+          backgroundImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
           mediaId={mediaInfo.id}
           episodesWatched={currEpisodesWatched}
         />
@@ -591,11 +592,11 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
 
         <AniwatchEpisode
           motionStyle={framerMotionEpisodePopup}
-          key={key}
+          key={index}
           data={episodeInfo as EpisodeAnimeWatch}
-          episodeNumber={key + itemOffset + 1}
-          episodeDescription={imdb.episodesList[key + itemOffset]?.description || undefined}
-          backgroundImg={imdb.episodesList[key + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[key + itemOffset]?.thumbnail}
+          episodeNumber={index + itemOffset + 1}
+          episodeDescription={imdb.episodesList[index + itemOffset]?.description || undefined}
+          backgroundImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
           mediaId={mediaInfo.id}
           episodesWatched={currEpisodesWatched}
         />

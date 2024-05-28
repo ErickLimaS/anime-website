@@ -51,17 +51,17 @@ export default async function WatchEpisode({ params, searchParams }: {
 
     if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
 
-    // get media info on imdb
-    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo({ search: true, seachTitle: mediaInfo.title.romaji, releaseYear: mediaInfo.startDate.year }) as ImdbMediaInfo
-
-    // get episodes on imdb
-    imdbMediaInfo?.seasons?.map(itemA => itemA.episodes?.map(itemB => imdbEpisodesList.push(itemB)))
-
     let episodeDataFetched: EpisodeLinksGoGoAnime | EpisodeLinksAnimeWatch | null = null
     let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | undefined = undefined
     let episodesList: EpisodeAnimeWatch[] | MediaEpisodes[] = []
     let videoUrlSrc: string | undefined = undefined
     let imdbEpisodesList: ImdbEpisode[] = []
+
+    // get media info on imdb
+    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo({ search: true, seachTitle: mediaInfo.title.romaji, releaseYear: mediaInfo.startDate.year }) as ImdbMediaInfo
+
+    // get episodes on imdb
+    imdbMediaInfo?.seasons?.map(itemA => itemA.episodes?.map(itemB => imdbEpisodesList.push(itemB)))
 
     function compareEpisodeIDs(episodesList: { id?: string, episodeId?: string }[], sourceName: SourceType["source"]) {
 
@@ -213,9 +213,11 @@ export default async function WatchEpisode({ params, searchParams }: {
                             mediaInfo={mediaInfo as ApiDefaultResult}
                         >
 
-                            <MediaCardExpanded.Description
+                            <p>
+                                <MediaCardExpanded.Description
                                 description={imdbEpisodeInfo?.description || mediaInfo.description}
                             />
+                            </p>
 
                         </MediaCardExpanded.Container>
 

@@ -13,11 +13,11 @@ import { getAuth } from 'firebase/auth'
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image'
 import Link from 'next/link'
-import UserModal from '../../../../../UserLoginModal'
 import { AnimatePresence, motion } from 'framer-motion'
 import UserSettingsModal from '../UserSettingsModal'
+import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 
-const showUpMotion = {
+const framerMotionShowUp = {
 
     hidden: {
         y: "-40px",
@@ -49,21 +49,11 @@ function UserSideMenu() {
     return (
         <div id={styles.user_container}>
 
-            <AnimatePresence
-                initial={false}
-                mode='wait'
-            >
-                {(isUserLoginOpen) && (
-
-                    <UserModal
-                        onClick={() => setIsUserLoginOpen(!isUserLoginOpen)}
-                        auth={auth}
-                        aria-expanded={isUserMenuOpen}
-                    />
-
-                )}
-
-            </AnimatePresence>
+            <ShowUpLoginPanelAnimated
+                apperanceCondition={isUserLoginOpen}
+                customOnClickAction={() => setIsUserLoginOpen(!isUserLoginOpen)}
+                auth={auth}
+            />
 
             {!user && (
                 <React.Fragment>
@@ -127,7 +117,7 @@ function UserSideMenu() {
                     >
                         {isUserMenuOpen && (
                             <motion.div
-                                variants={showUpMotion}
+                                variants={framerMotionShowUp}
                                 id={styles.user_menu_list}
                                 aria-expanded={isUserMenuOpen}
                                 initial="hidden"

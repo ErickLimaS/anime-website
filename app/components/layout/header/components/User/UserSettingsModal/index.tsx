@@ -21,7 +21,7 @@ type SettingsTypes = {
     newUser?: boolean
 }
 
-const dropIn = {
+const framerMotionDropIn = {
 
     hidden: {
         x: "-100vw",
@@ -44,7 +44,7 @@ const dropIn = {
 
 }
 
-const btnVariants = {
+const framerMotionBtnVariants = {
 
     tap: {
         scale: 0.9
@@ -74,10 +74,9 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
     const [currentSkipIntroAndOutro, setCurrentSkipIntroAndOutro] = useState<boolean | null>(null)
     const [currentNextEpisode, setCurrentNextEpisode] = useState<boolean | null>(null)
 
-    const db = getFirestore(initFirebase());
+    const db = getFirestore(initFirebase())
 
-    // changes info of user. mainly used to change video language
-    async function changeSettings(e: React.FormEvent<HTMLFormElement> | HTMLFormElement) {
+    async function handleUpdateUserInfoForm(e: React.FormEvent<HTMLFormElement> | HTMLFormElement) {
 
         e.preventDefault()
 
@@ -115,7 +114,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
     }
 
     // delete field or account of user
-    async function deleteAccountInfo(option: "account" | "bookmarks" | "notifications" | "episodes") {
+    async function deleteOptions(option: "account" | "bookmarks" | "notifications" | "episodes") {
 
         if (!user) return
 
@@ -182,7 +181,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
     }
 
     // auto run to get current language saved
-    (async function checkCurrentInfo() {
+    (async function getUserSettings() {
 
         if (!user) return
 
@@ -208,7 +207,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
             <motion.div
                 onClick={(e) => e.stopPropagation()}
                 id={styles.modal}
-                variants={dropIn}
+                variants={framerMotionDropIn}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
@@ -221,7 +220,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                             title="Close Settings"
                             onClick={onClick as MouseEventHandler<HTMLButtonElement>}
                             id={styles.close_menu_btn}
-                            variants={btnVariants}
+                            variants={framerMotionBtnVariants}
                             whileTap={"tap"}
                         >
                             <CloseSvg alt="Close" width={16} height={16} />
@@ -236,7 +235,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                     </div>
                 )}
 
-                <form onSubmit={(e) => changeSettings(e)}>
+                <form onSubmit={(e) => handleUpdateUserInfoForm(e)}>
 
                     <div className={styles.group_container}>
                         <h5><span><UserSvg alt="Person" width={16} height={16} /></span> User</h5>
@@ -317,7 +316,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                         <motion.div
                                             key={key}
                                             className={styles.img_checkbox}
-                                            variants={btnVariants}
+                                            variants={framerMotionBtnVariants}
                                             whileTap={"tap"}
                                         >
                                             <input
@@ -488,7 +487,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                     <motion.button
                                         type='button'
                                         onClick={() => setDeleteBookmarksClick(!deleteBookmarksClick)}
-                                        variants={btnVariants}
+                                        variants={framerMotionBtnVariants}
                                         whileTap="tap"
                                         data-active={deleteBookmarksClick}
                                     >
@@ -509,7 +508,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                         >
                                             <p>Are you Sure?</p>
                                             <button type='button' onClick={() => setDeleteBookmarksClick(false)}>Cancel</button>
-                                            <button onClick={() => deleteAccountInfo("bookmarks")}>Delete!</button>
+                                            <button onClick={() => deleteOptions("bookmarks")}>Delete!</button>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -518,7 +517,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                     <motion.button
                                         type='button'
                                         onClick={() => setDeleteEpisodesClick(!deleteEpisodesClick)}
-                                        variants={btnVariants}
+                                        variants={framerMotionBtnVariants}
                                         whileTap="tap"
                                         data-active={deleteEpisodesClick}
                                     >
@@ -538,7 +537,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                         >
                                             <p>Are you Sure?</p>
                                             <button type='button' onClick={() => setDeleteEpisodesClick(false)}>Cancel</button>
-                                            <button onClick={() => deleteAccountInfo("episodes")}>Delete!</button>
+                                            <button onClick={() => deleteOptions("episodes")}>Delete!</button>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -547,7 +546,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                     <motion.button
                                         type='button'
                                         onClick={() => setDeleteNotificationsClick(!deleteNotificationsClick)}
-                                        variants={btnVariants}
+                                        variants={framerMotionBtnVariants}
                                         whileTap="tap"
                                         data-active={deleteNotificationsClick}
                                     >
@@ -567,7 +566,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                         >
                                             <p>Are you Sure?</p>
                                             <button type='button' onClick={() => setDeleteNotificationsClick(false)}>Cancel</button>
-                                            <button onClick={() => deleteAccountInfo("episodes")}>Delete!</button>
+                                            <button onClick={() => deleteOptions("episodes")}>Delete!</button>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -576,7 +575,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                     <motion.button
                                         type='button'
                                         onClick={() => setDeleteAccountClick(!deleteAccountClick)}
-                                        variants={btnVariants}
+                                        variants={framerMotionBtnVariants}
                                         whileTap="tap"
                                         data-active={deleteAccountClick}
                                     >
@@ -596,7 +595,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                         >
                                             <p>Are you Sure?</p>
                                             <button type='button' onClick={() => setDeleteAccountClick(false)}>Cancel</button>
-                                            <button onClick={() => deleteAccountInfo("account")}>Delete!</button>
+                                            <button onClick={() => deleteOptions("account")}>Delete!</button>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>

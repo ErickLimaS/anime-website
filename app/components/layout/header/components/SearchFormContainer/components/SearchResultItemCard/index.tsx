@@ -53,6 +53,7 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
             </div>
 
             <div className={styles.result_info_container}>
+                
                 <h5 onClick={handleChoseResult}>
                     <Link href={`/media/${mediaFromAnilist?.id || mediaFromOfflineDB?.anilistId}`}>
                         {mediaFromAnilist?.title.romaji ? mediaFromAnilist.title.romaji : (mediaFromAnilist?.title?.romaji || mediaFromOfflineDB?.title || `No Title`)}
@@ -60,6 +61,7 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
                 </h5>
 
                 <div>
+
                     {mediaFromAnilist?.genres != undefined && (
                         <ul className={`display_flex_row ${styles.genres_container}`}>
                             {mediaFromAnilist.genres.slice(0, 3).map((item: string, key) => (
@@ -71,6 +73,7 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
                             ))}
                         </ul>
                     )}
+
                     {mediaFromOfflineDB?.tags != undefined && (
                         <ul className={`display_flex_row ${styles.genres_container}`}>
                             {mediaFromOfflineDB.tags.slice(0, 3).map((item: string, key) => (
@@ -84,12 +87,14 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
                     )}
 
                     <div className={`${styles.width_flex} display_flex_row`}>
+
                         <p>
                             <span style={{ color: "var(--error)" }}>
                                 {mediaFromAnilist?.isAdult && "+18"}
                             </span>
                             {mediaFromAnilist?.type ? mediaFromAnilist.type : mediaFromOfflineDB?.type || 'No Type Defined'}
                         </p>
+
                         {mediaFromAnilist?.startDate != undefined ? (
                             <small>
                                 {mediaFromAnilist.type == 'ANIME' && 'First aired in '}
@@ -105,11 +110,10 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
                             </small>
                         ) : (
                             <small>
-                                {mediaFromOfflineDB?.animeSeason.year}
+                                {mediaFromOfflineDB?.animeSeason.year || "No Date Available"}
                             </small>
-                        ) || (
-                            <small>No Date Available</small>
                         )}
+
                     </div>
                 </div>
             </div>

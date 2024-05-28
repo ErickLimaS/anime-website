@@ -360,7 +360,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 </h2>
 
                 <p>
-                  <span>Episode {mediaInfo.nextAiringEpisode.episode}</span> on {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, { hour: undefined, minute: undefined })}
+                  <span>Episode {mediaInfo.nextAiringEpisode.episode}</span> on {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, { month: 'long', year: 'numeric', hour: undefined, minute: undefined })}
                 </p>
 
               </div>
@@ -545,7 +545,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 </h2>
 
                 <p>
-                  <span>Episode {mediaInfo.nextAiringEpisode.episode}</span> on {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, { hour: undefined, minute: undefined })}
+                  <span>Episode {mediaInfo.nextAiringEpisode.episode}</span> on {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, { month: 'long', year: 'numeric', hour: undefined, minute: undefined })}
                 </p>
 
               </div>

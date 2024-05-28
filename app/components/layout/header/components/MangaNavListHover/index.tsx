@@ -77,6 +77,12 @@ function MangaNavListHover() {
                                 description={mangaList[0].description}
                             />
 
+                            <MediaInfoExpanded.Buttons
+                                media={mangaList[0]}
+                                mediaFormat={mangaList[0].format}
+                                mediaId={mangaList[0].id}
+                            />
+
                         </MediaInfoExpanded.Container>
                     ) : (
                         <LoadingSvg />

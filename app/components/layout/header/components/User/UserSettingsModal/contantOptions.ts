@@ -75,6 +75,5 @@ export const qualityOptions = [
     { name: "720p", value: "720" },
     { name: "480p", value: "480" },
     { name: "360p", value: "360" },
-    { name: "144p", value: "144" },
 
 ]
