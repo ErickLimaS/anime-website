@@ -4,7 +4,7 @@ import { ApiMediaResults } from "../ts/interfaces/apiAnilistDataInterface"
 
 export async function getClosestMangaResultByTitle(query: string, mediaInfo: ApiMediaResults) {
 
-    const searchResultsForMedia = await manga.searchMedia(query) as MangaSearchResult[]
+    const searchResultsForMedia = await manga.searchMedia({ query: query }) as MangaSearchResult[]
 
     // FILTER RESULTS WITH SAME RELEASE YEAR
     const closestResult = searchResultsForMedia?.filter(

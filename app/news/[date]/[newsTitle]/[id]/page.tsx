@@ -8,7 +8,7 @@ import NewsCard from '@/app/news/components/NewsCard'
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
-    const newsData = await news.getNewsInfo(params.id) as NewsArcticle
+    const newsData = await news.getNewsInfo({ id: params.id }) as NewsArcticle
 
     return {
         title: `${newsData.title} | AniProject`,
@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 async function NewPage({ params }: { params: { id: string } }) {
 
-    const newsData = await news.getNewsInfo(params.id) as NewsArcticle
-    const otherNews = await news.getNews() as News[]
+    const newsData = await news.getNewsInfo({ id: params.id }) as NewsArcticle
+    const otherNews = await news.getNews({}) as News[]
 
     return (
         <main id={styles.container}>

@@ -10,20 +10,20 @@ export async function fetchWithGoGoAnime(textSearch: string, only?: "episodes") 
 
     const regexMediaTitle = stringToOnlyAlphabetic(checkAnilistTitleMisspelling(textSearch)).toLowerCase()
 
-    let mediaSearched = await gogoanime.getInfoFromThisMedia(regexMediaTitle) as MediaInfo
+    let mediaSearched = await gogoanime.getInfoFromThisMedia({ id: regexMediaTitle }) as MediaInfo
     let searchResultsForMedia
     let filterBestResult
 
     // if no results were found by matching the id, search the title 
     if (!mediaSearched) {
-        searchResultsForMedia = await gogoanime.searchMedia(regexMediaTitle) as MediaSearchResult[]
+        searchResultsForMedia = await gogoanime.searchMedia({ query: regexMediaTitle }) as MediaSearchResult[]
 
         // filter to closest title name to the query 
         filterBestResult = searchResultsForMedia.filter(item =>
             stringToOnlyAlphabetic(item.title).toLowerCase().indexOf(regexMediaTitle) !== -1
         )
 
-        mediaSearched = await gogoanime.getInfoFromThisMedia(filterBestResult[0]?.id || searchResultsForMedia![0]?.id) as MediaInfo || null
+        mediaSearched = await gogoanime.getInfoFromThisMedia({ id: filterBestResult[0]?.id || searchResultsForMedia![0]?.id }) as MediaInfo || null
     }
 
     if (!mediaSearched) return null
@@ -53,7 +53,7 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | 
 
     const regexMediaTitle = stringToOnlyAlphabetic(checkAnilistTitleMisspelling(textSearch)).toLowerCase()
 
-    let searchResultsForMedia = await aniwatch.searchMedia(regexMediaTitle).then((res) => res!.animes) as MediaInfoAniwatch[]
+    let searchResultsForMedia = await aniwatch.searchMedia({ query: regexMediaTitle }).then((res) => res!.animes) as MediaInfoAniwatch[]
 
     // filter the same format
     if (format) {
@@ -115,7 +115,7 @@ export async function fetchWithAniWatch(textSearch: string, only?: "episodes" | 
         // if ANIWATCH MEDIA ID is provided 
         if (idToMatch) mediaAniwatchId = closestResult.find(item => item.id == idToMatch)
 
-        const res = await aniwatch.getEpisodes(mediaAniwatchId?.id || closestResult[0].id) as EpisodesFetchedAnimeWatch
+        const res = await aniwatch.getEpisodes({ episodeId: mediaAniwatchId?.id || closestResult[0].id }) as EpisodesFetchedAnimeWatch
 
         return res?.episodes?.length == 0 ? null : res.episodes
     }

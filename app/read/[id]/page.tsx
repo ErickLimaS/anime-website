@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from "./page.module.css"
 import anilist from '@/app/api/anilist'
-import Container from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
+import * as MediaCardExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { MangaChapters, MangaInfo, MangaPages, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface'
 import CommentsSection from '@/app/components/CommentsSection'
 import Image from 'next/image'
@@ -21,7 +21,7 @@ export async function generateMetadata({ params, searchParams }: {
     searchParams: { chapter: string, source: string, q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
 
-    const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
+    const mediaData = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
 
     return {
         title: `Chapter ${searchParams.chapter} - ${mediaData.title.romaji} | AniProject`,
@@ -34,25 +34,25 @@ async function ReadChapter({ params, searchParams }: {
     searchParams: { chapter: string, source: "mangadex", q: string, page: string } // EPISODE NUMBER, SOURCE, EPISODE ID, LAST PAGE 
 }) {
 
-    const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
+    const mediaData = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
 
     let currChapterInfo: MangaChapters | undefined = undefined
     let allChapters: MangaChapters[] | undefined = undefined
     let error = false
 
     // fetch episode data
-    const chapters = await manga.getChapterPages(searchParams.q) as MangaPages[]
+    const chapters = await manga.getChapterPages({ chapterId: searchParams.q }) as MangaPages[]
 
     const query = stringToUrlFriendly(mediaData.title.romaji).toLowerCase()
 
-    let mangaInfo = await manga.getInfoFromThisMedia(query) as MangaInfo
+    let mangaInfo = await manga.getInfoFromThisMedia({ id: query }) as MangaInfo
 
     // if the query dont match any id result, it will search results for this query,
     // than make the first request by the ID of the first search result 
     if (!mangaInfo) {
         const searchResultsForMedia = await getClosestMangaResultByTitle(query, mediaData)
 
-        mangaInfo = await manga.getInfoFromThisMedia(searchResultsForMedia as string) as MangaInfo
+        mangaInfo = await manga.getInfoFromThisMedia({ id: searchResultsForMedia as string }) as MangaInfo
 
         if (!mangaInfo) error = true
 
@@ -126,10 +126,16 @@ async function ReadChapter({ params, searchParams }: {
 
             <div id={styles.all_chapters_container}>
 
-                <Container
-                    data={mediaData as ApiDefaultResult}
-                    showButtons={false}
-                />
+                <MediaCardExpanded.Container
+                    mediaInfo={mediaData as ApiDefaultResult}
+
+                >
+
+                    <MediaCardExpanded.Description
+                        description={mediaData.description}
+                    />
+
+                </MediaCardExpanded.Container>
 
                 <ChaptersSideListContainer
                     mediaId={params.id}

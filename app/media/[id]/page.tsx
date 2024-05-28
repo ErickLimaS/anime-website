@@ -31,7 +31,7 @@ export const revalidate = 43200 // revalidate cached data every 12 hours
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
-  const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
+  const mediaData = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
 
   return {
     title: `${mediaData.title.romaji || mediaData.title.native} | AniProject`,
@@ -42,12 +42,12 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 
 async function MediaPage({ params }: { params: { id: number } }) {
 
-  const mediaInfo = await anilist.getMediaInfo(params.id) as ApiMediaResults
+  const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
 
   const isOnMobileScreen = checkDeviceIsMobile(headers()) || false
 
   // GET MEDIA INFO ON IMDB
-  const imdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaInfo.title.romaji, mediaInfo.startDate.year) as ImdbMediaInfo
+  const imdbMediaInfo = await getMediaInfo({ search: true, seachTitle: mediaInfo.title.romaji, releaseYear: mediaInfo.startDate.year }) as ImdbMediaInfo
 
   function getCrunchyrollEpisodes() {
 

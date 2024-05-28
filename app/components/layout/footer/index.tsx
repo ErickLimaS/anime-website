@@ -11,7 +11,7 @@ import { animesGenres } from '../header'
 
 async function Footer() {
 
-    const animesReleasingList = await API.getReleasingThisWeek("ANIME")
+    const animesReleasingList = await API.getReleasingThisWeek({ type: "ANIME" })
 
     return (
         <footer id={styles.footer}>

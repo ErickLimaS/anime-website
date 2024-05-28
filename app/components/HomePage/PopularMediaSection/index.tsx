@@ -35,7 +35,9 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
 
         setIsLoading(true)
 
-        const listAnimesReleasingByPopularity = await anilist.getNewReleases("ANIME", undefined, undefined, false, "RELEASING", currFetchPage, 14).then(
+        const listAnimesReleasingByPopularity = await anilist.getNewReleases(
+            { type: "ANIME", showAdultContent: false, status: "RELEASING", page: currFetchPage, perPage: 14 }
+        ).then(
             res => (res as ApiDefaultResult[])
         )
 
@@ -131,7 +133,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                             />
 
                         </MediaCard.Container>
-                        
+
                     ))}
 
                 </React.Fragment>

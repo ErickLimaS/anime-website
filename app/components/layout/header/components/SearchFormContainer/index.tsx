@@ -85,7 +85,7 @@ function SearchFormContainer() {
 
         setIsLoading(true)
 
-        const searchResults = await anilist.getSeachResults(searchInputValue, isAdultContentAllowed)
+        const searchResults = await anilist.getSeachResults({ query: searchInputValue, showAdultContent: isAdultContentAllowed })
 
         setSearchResultsList(searchResults as ApiDefaultResult[])
 

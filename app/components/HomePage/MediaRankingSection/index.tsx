@@ -52,7 +52,7 @@ function MediaRankingSection({ initialAnimesList }: { initialAnimesList: void | 
 
         const isAdultContentAllowed = await getUserPreference()
 
-        const listMediaByFormat = await anilist.getMediaForThisFormat(format, undefined, undefined, undefined, isAdultContentAllowed) as ApiDefaultResult[]
+        const listMediaByFormat = await anilist.getMediaForThisFormat({ type: format, showAdultContent: isAdultContentAllowed }) as ApiDefaultResult[]
 
         setCurrFormat(format)
 

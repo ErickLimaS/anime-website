@@ -67,7 +67,7 @@ function NewestMediaSection({ initialAnimesList }: { initialAnimesList: ApiDefau
 
         const isAdultContentAllowed = await getUserPreference()
 
-        const listAnimesByDaysRange = await anilist.getReleasingByDaysRange("ANIME", days, undefined, 11, isAdultContentAllowed).then(
+        const listAnimesByDaysRange = await anilist.getReleasingByDaysRange({ type: "ANIME", days: days, perPage: 11, showAdultContent: isAdultContentAllowed }).then(
             res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
         ).then(res => res.map((item) => item.media))
 

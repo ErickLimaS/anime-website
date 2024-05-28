@@ -75,23 +75,23 @@ function MangaChaptersContainer({ mediaInfo }: { mediaInfo: ApiMediaResults }) {
 
     let mangaInfo: MangaInfo
 
-    mangaInfo = await manga.getInfoFromThisMedia(query) as MangaInfo
+    mangaInfo = await manga.getInfoFromThisMedia({ id: query }) as MangaInfo
 
     if (!mangaInfo) {
 
       const mangaClosestResult = await getClosestMangaResultByTitle(query, mediaInfo)
 
-      mangaInfo = await manga.getInfoFromThisMedia(mangaClosestResult as string) as MangaInfo
+      mangaInfo = await manga.getInfoFromThisMedia({ id: mangaClosestResult as string }) as MangaInfo
 
-    }
+      if (!mangaInfo) {
 
-    if (!mangaInfo) {
+        setIsLoading(false)
 
-      setIsLoading(false)
+        setCurrItems(null)
 
-      setCurrItems(null)
+        return
 
-      return
+      }
 
     }
 

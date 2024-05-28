@@ -16,7 +16,7 @@ function MangaNavListHover() {
 
     const fetchTrendingMangasList = async () => {
 
-        const trendingMangas = await anilist.getMediaForThisFormat("MANGA", "TRENDING_DESC") as ApiDefaultResult[]
+        const trendingMangas = await anilist.getMediaForThisFormat({ type: "MANGA", sort: "TRENDING_DESC" }) as ApiDefaultResult[]
 
         setMangaList(trendingMangas)
 

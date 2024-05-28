@@ -16,7 +16,7 @@ function AnimeNavListHover() {
 
     async function fetchAnimeList() {
 
-        const animeList: ApiDefaultResult[] = await anilist.getMediaForThisFormat("ANIME") as ApiDefaultResult[]
+        const animeList: ApiDefaultResult[] = await anilist.getMediaForThisFormat({ type: "ANIME" }) as ApiDefaultResult[]
 
         setAnimeData(animeList)
 

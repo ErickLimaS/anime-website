@@ -16,7 +16,7 @@ function NewsNavListHover() {
 
     const fetchRecentNews = async () => {
 
-        const recentNews = await news.getNews() as News[]
+        const recentNews = await news.getNews({}) as News[]
 
         setNewsList(recentNews)
 

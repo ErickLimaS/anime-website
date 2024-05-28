@@ -322,7 +322,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
             const nextEpisodeId = (nextEpisodeInfo as MediaEpisodes).id
 
-            const episodeInfo = await gogoanime.getEpisodeStreamingLinks2(nextEpisodeId) as EpisodeLinksGoGoAnime
+            const episodeInfo = await gogoanime.getEpisodeStreamingLinks2({ episodeId: nextEpisodeId }) as EpisodeLinksGoGoAnime
 
             nextEpisodeInfo = episodeInfo.sources.find(item => item.quality == "default").url
 
@@ -333,7 +333,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
             const nextEpisodeId = (nextEpisodeInfo as EpisodeAnimeWatch).episodeId
 
-            const episodeInfo = await aniwatch.episodesLinks(nextEpisodeId) as EpisodeLinksAnimeWatch
+            const episodeInfo = await aniwatch.episodesLinks({ episodeId: nextEpisodeId }) as EpisodeLinksAnimeWatch
 
             setNextEpisodeInfo({ id: nextEpisodeId, src: episodeInfo.sources[0].url })
 

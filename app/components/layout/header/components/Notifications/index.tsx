@@ -232,7 +232,7 @@ function NotificationsContainer() {
                 mediaNotificationsStillReleasing.map(async (item) => {
 
                     // gets the media's latest info
-                    const mediaData = await anilist.getMediaInfo(Number(item.mediaId)) as ApiMediaResults
+                    const mediaData = await anilist.getMediaInfo({ id: Number(item.mediaId) }) as ApiMediaResults
 
                     // 
                     await updateMediaOnNotificationCollection(mediaData)

@@ -28,7 +28,7 @@ export async function generateMetadata({ params, searchParams }: {
     // ACTES AS DEFAULT VALUE FOR PAGE PROPS
     if (Object.keys(searchParams).length === 0) searchParams = { episode: "1" }
 
-    const mediaInfo = await anilist.getMediaInfo(params.id) as ApiDefaultResult
+    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
 
     return {
         title: !mediaInfo ? "Error | AniProject" : `Episode ${searchParams.episode} - ${mediaInfo.title.romaji} | AniProject`,
@@ -45,7 +45,7 @@ export default async function WatchEpisode({ params, searchParams }: {
     // ACTES AS DEFAULT VALUE FOR PAGE PROPS
     if (Object.keys(searchParams).length === 0) searchParams = { episode: "1", source: "aniwatch", q: "", t: "0" }
 
-    const mediaInfo = await anilist.getMediaInfo(params.id) as ApiMediaResults
+    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
 
     let hadFetchError = false
 
@@ -54,7 +54,7 @@ export default async function WatchEpisode({ params, searchParams }: {
     if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
 
     // get media info on imdb
-    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaInfo.title.romaji, mediaInfo.startDate.year) as ImdbMediaInfo
+    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo({ search: true, seachTitle: mediaInfo.title.romaji, releaseYear: mediaInfo.startDate.year }) as ImdbMediaInfo
 
     // get episodes on imdb
     imdbMediaInfo?.seasons?.map(itemA => itemA.episodes?.map(itemB => imdbEpisodesList.push(itemB)))
@@ -91,7 +91,7 @@ export default async function WatchEpisode({ params, searchParams }: {
 
         case ("gogoanime"):
 
-            episodeDataFetched = await gogoanime.getEpisodeStreamingLinks2(searchParams.q) as EpisodeLinksGoGoAnime
+            episodeDataFetched = await gogoanime.getEpisodeStreamingLinks2({ episodeId: searchParams.q }) as EpisodeLinksGoGoAnime
 
             if (!episodeDataFetched) {
 
@@ -123,7 +123,7 @@ export default async function WatchEpisode({ params, searchParams }: {
             }
 
             // fetch episode data
-            episodeDataFetched = await aniwatch.episodesLinks(searchParams.q) as EpisodeLinksAnimeWatch
+            episodeDataFetched = await aniwatch.episodesLinks({ episodeId: searchParams.q }) as EpisodeLinksAnimeWatch
 
             if (!episodeDataFetched) hadFetchError = true
 

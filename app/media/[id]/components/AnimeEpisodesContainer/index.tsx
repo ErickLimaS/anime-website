@@ -245,7 +245,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
     const endOffset = itemOffset + rangeEpisodesPerPage
 
-    const mediaEpisodes = await aniwatch.getEpisodes(id) as EpisodesFetchedAnimeWatch
+    const mediaEpisodes = await aniwatch.getEpisodes({ episodeId: id }) as EpisodesFetchedAnimeWatch
 
     setEpisodesList(mediaEpisodes.episodes)
 

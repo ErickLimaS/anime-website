@@ -51,7 +51,7 @@ export default function NavigationButtons({ propsFunction, buttonOptions, currVa
 
                 case 'gogoanime':
 
-                    const gogoanimeResponse = await gogoanime.getEpisodeStreamingLinks2("one-piece-episode-1") as EpisodeLinksGoGoAnime
+                    const gogoanimeResponse = await gogoanime.getEpisodeStreamingLinks2({ episodeId: "one-piece-episode-1" }) as EpisodeLinksGoGoAnime
 
                     setGogoanimeAvailble(gogoanimeResponse != null ? true : false)
 

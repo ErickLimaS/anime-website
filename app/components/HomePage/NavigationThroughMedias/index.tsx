@@ -96,13 +96,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
 
         const isAdultContentAllowed = await getUserPreference()
 
-        fetchedMedia = await anilist.getReleasingByDaysRange(
-            mediaFormat || "ANIME",
-            days!,
-            undefined,
-            40,
-            isAdultContentAllowed
-        ) as ApiAiringMidiaResults[]
+        fetchedMedia = await anilist.getReleasingByDaysRange({ type: mediaFormat || "ANIME", days: days!, perPage: 40, showAdultContent: isAdultContentAllowed }) as ApiAiringMidiaResults[]
 
         // Remove releases from "today" to show on other options
         if (days != 1 && days != undefined) {
@@ -132,13 +126,11 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
 
         const isAdultContentAllowed = await getUserPreference()
 
-        fetchedMedia = await anilist.getMediaForThisFormat(
-            mediaFormat || "ANIME",
-            sortBy,
-            20,
-            undefined,
-            isAdultContentAllowed
-        ).then(res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == isAdultContentAllowed))
+        fetchedMedia = await anilist.getMediaForThisFormat({
+            type: mediaFormat || "ANIME", sort: sortBy, pageNumber: 20, showAdultContent: isAdultContentAllowed
+        }).then(res =>
+            (res as ApiDefaultResult[]).filter((item) => item.isAdult == isAdultContentAllowed)
+        )
 
         if (isResultsSortedByTrending) fetchedMedia = (fetchedMedia as ApiDefaultResult[]).sort((a, b) => a.trending - b.trending).reverse()
 

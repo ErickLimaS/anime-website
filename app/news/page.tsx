@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 async function NewsHomePage() {
 
-    const news = await newsApi.getNews() as News[]
+    const news = await newsApi.getNews({}) as News[]
 
-    const animesNews = await newsApi.getNews("anime") as News[]
-    const mangasNews = await newsApi.getNews("manga") as News[]
-    const gamesNews = await newsApi.getNews("games") as News[]
-    const industryNews = await newsApi.getNews("industry") as News[]
+    const animesNews = await newsApi.getNews({ topic: "anime" }) as News[]
+    const mangasNews = await newsApi.getNews({ topic: "manga" }) as News[]
+    const gamesNews = await newsApi.getNews({ topic: "games" }) as News[]
+    const industryNews = await newsApi.getNews({ topic: "industry" }) as News[]
 
     return (
         (news && mangasNews && gamesNews && industryNews) && (

@@ -15,7 +15,7 @@ axiosRetry(Axios, {
 })
 
 // SEARCH BY MEDIA TITLE
-export const searchMedia = cache(async (mediaTitle: string) => {
+export const searchMedia = cache(async ({ mediaTitle }: { mediaTitle: string }) => {
 
     try {
 
@@ -37,7 +37,13 @@ export const searchMedia = cache(async (mediaTitle: string) => {
 })
 
 // GET INFO FOR THIS MEDIA
-export const getMediaInfo = cache(async (search: boolean, mediaId?: string, type?: "TV Series", seachTitle?: string, releaseYear?: number) => {
+export const getMediaInfo = cache(async ({ search, mediaId, type, seachTitle, releaseYear }: {
+    search: boolean,
+    mediaId?: string,
+    type?: "TV Series",
+    seachTitle?: string,
+    releaseYear?: number
+}) => {
 
     try {
 

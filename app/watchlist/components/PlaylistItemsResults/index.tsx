@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import MediaCoverCard from '@/app/components/MediaCards/MediaCard'
+import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import UserModal from '@/app/components/UserLoginModal'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 
@@ -113,9 +113,25 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: str
 
                             {params ? (
                                 userFilteredBookmarks.length > 0 ? (
-                                    userFilteredBookmarks.map((item, key: number) => (
+                                    userFilteredBookmarks.map((media, key) => (
                                         <li key={key}>
-                                            <MediaCoverCard mediaInfo={item as ApiDefaultResult} darkMode />
+
+                                            <MediaCard.Container onDarkMode>
+
+                                                <MediaCard.MediaImgLink
+                                                    mediaId={media.id}
+                                                    title={media.title.romaji}
+                                                    formatOrType={media.format}
+                                                    url={media.coverImage.extraLarge}
+                                                />
+
+                                                <MediaCard.LinkTitle
+                                                    title={media.title.romaji}
+                                                    id={media.id}
+                                                />
+
+                                            </MediaCard.Container>
+
                                         </li>
                                     )))
                                     :
@@ -123,9 +139,25 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: str
                                         <p className={styles.no_results_text}>No Results</p>
                                     )
                             ) : (
-                                userBookmarks.map((item, key: number) => (
+                                userBookmarks.map((media, key) => (
                                     <li key={key}>
-                                        <MediaCoverCard mediaInfo={item as ApiDefaultResult} darkMode />
+
+                                        <MediaCard.Container onDarkMode>
+
+                                            <MediaCard.MediaImgLink
+                                                mediaId={media.id}
+                                                title={media.title.romaji}
+                                                formatOrType={media.format}
+                                                url={media.coverImage.extraLarge}
+                                            />
+
+                                            <MediaCard.LinkTitle
+                                                title={media.title.romaji}
+                                                id={media.id}
+                                            />
+
+                                        </MediaCard.Container>
+
                                     </li>
                                 )))
                             }
