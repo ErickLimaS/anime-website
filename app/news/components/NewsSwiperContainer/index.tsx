@@ -7,8 +7,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { News } from '@/app/ts/interfaces/newsInterface';
 
-function SwiperContainer({ data, options }: {
-    data?: News[],
+function SwiperContainer({ newsList, options }: {
+    newsList?: News[],
     options?: {
         slidesPerView?: number
         bp480: number,
@@ -30,7 +30,7 @@ function SwiperContainer({ data, options }: {
             }}
         >
 
-            {data?.map((item, key: number) => (
+            {newsList?.map((newsArticle, key) => (
 
                 <SwiperSlide key={key} className={styles.custom_list_item} role="listitem">
 
@@ -38,8 +38,8 @@ function SwiperContainer({ data, options }: {
 
                         <div className={styles.img_container}>
                             <Image
-                                src={item.thumbnail}
-                                alt={item.title}
+                                src={newsArticle.thumbnail}
+                                alt={newsArticle.title}
                                 fill
                                 sizes='(max-width: 520px) 85vw, (max-width: 1259px) 30vw, 364px'
                             />
@@ -47,9 +47,15 @@ function SwiperContainer({ data, options }: {
 
                         <div className={styles.title_container}>
 
-                            <Link className={styles.topic} href={`/news?topic=${item.topics[0]}`}>{item.topics[0].toUpperCase()}</Link>
+                            <Link className={styles.topic} href={`/news?topic=${newsArticle.topics[0]}`}>
+                                {newsArticle.topics[0].toUpperCase()}
+                            </Link>
 
-                            <h3><Link href={`news/${item.id.replace(/\/?daily-briefs\//, "")}`}>{item.title}</Link></h3>
+                            <h3>
+                                <Link href={`news/${newsArticle.id.replace(/\/?daily-briefs\//, "")}`}>
+                                    {newsArticle.title}
+                                </Link>
+                            </h3>
 
                         </div>
                     </div>

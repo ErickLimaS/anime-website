@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import SwiperContainer from '../../SwiperContainer'
+import SwiperCarouselContainer from '../../SwiperCarouselContainer'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 import { getAuth } from 'firebase/auth'
@@ -10,7 +10,7 @@ import { initFirebase } from '@/app/firebaseApp'
 import KeepWatchingEpisodeInfo from './components/KeepWatchingEpisodeInfo'
 import { SwiperSlide } from 'swiper/react'
 
-const motionVariants = {
+const framerMotionVariants = {
     initial: {
         opacity: 0,
         height: 0
@@ -34,44 +34,37 @@ function KeepWatchingSection() {
 
     const [watchingList, setWatchingList] = useState<KeepWatchingItem[]>([])
 
+    useEffect(() => { if (user) getWatchingList() }, [user])
+
     async function getWatchingList() {
 
         const userDoc = await getDoc(doc(db, "users", user!.uid))
 
         const watchingList = userDoc.get("keepWatching")
 
-        let listFromObjectToArray = Object.keys(watchingList).map(key => {
+        if (!watchingList) return setWatchingList([])
+
+        const changeWatchingListFromObjectToArray: KeepWatchingItem[] = Object.keys(watchingList).map(key => {
 
             return watchingList[key]
 
-        })
+        }).filter(item => item.length != 0 && item)
 
-        // removes any empty object
-        listFromObjectToArray = listFromObjectToArray.filter(item => item.length != 0 && item)
-
-        // sort by update date
-        listFromObjectToArray = listFromObjectToArray.sort(function (x: KeepWatchingItem, y: KeepWatchingItem) {
+        const watchingListSortedByDate = changeWatchingListFromObjectToArray.sort(function (x, y) {
             return x.updatedAt - y.updatedAt
         }).reverse()
 
-        setWatchingList(listFromObjectToArray || null)
+        setWatchingList(watchingListSortedByDate || [])
 
     }
 
-    useEffect(() => {
-
-        if (user) getWatchingList()
-
-    }, [user])
-
     return (
-        <AnimatePresence
-            initial={false}
-        >
+        <AnimatePresence initial={false}>
+
             {(user && watchingList!.length > 0) && (
                 <motion.section
                     id={styles.keep_watching_container}
-                    variants={motionVariants}
+                    variants={framerMotionVariants}
                     initial={"initial"}
                     animate={"animate"}
                 >
@@ -80,7 +73,7 @@ function KeepWatchingSection() {
 
                     <div>
 
-                        <SwiperContainer
+                        <SwiperCarouselContainer
                             options={{
                                 slidesPerView: 2.2,
                                 bp480: 2.2,
@@ -89,23 +82,26 @@ function KeepWatchingSection() {
                             }}
                         >
 
-                            {watchingList.map((item, key) => (
+                            {watchingList.map((media, key) => (
 
                                 <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
 
-                                    <KeepWatchingEpisodeInfo darkMode={true} data={item as KeepWatchingItem} />
+                                    <KeepWatchingEpisodeInfo
+                                        animeInfo={media}
+                                        darkMode
+                                    />
 
                                 </SwiperSlide>
 
                             ))}
 
-                        </SwiperContainer>
+                        </SwiperCarouselContainer>
 
                     </div>
 
                 </motion.section>
-            )
-            }
+            )}
+
         </AnimatePresence >
     )
 }

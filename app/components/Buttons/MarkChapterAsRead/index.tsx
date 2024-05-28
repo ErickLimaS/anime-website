@@ -5,7 +5,6 @@ import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import {
-    DocumentData, DocumentSnapshot,
     FieldPath, arrayRemove,
     arrayUnion, doc,
     getDoc, getFirestore, setDoc
@@ -18,10 +17,10 @@ type BtnTypes = {
     chapterNumber: number,
     chapterTitle: string,
     mediaId: number,
-    hasText?: boolean
+    showAdditionalText?: boolean
 }
 
-function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, hasText }: BtnTypes) {
+export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, showAdditionalText }: BtnTypes) {
 
     const [wasChapterRead, setWasChapterRead] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -32,12 +31,19 @@ function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, hasText
 
     const db = getFirestore(initFirebase());
 
-    // CHECK IF CHAPTER WAS ADDED ON FIRESTORE, THEN CHANGE STATE
-    async function wasChapterMarkedAsRead() {
+    useEffect(() => {
 
         if (!user) return
 
-        const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user.uid))
+        wasChapterPreviouslyMarkedAsRead()
+
+    }, [user, chapterNumber])
+
+    async function wasChapterPreviouslyMarkedAsRead() {
+
+        if (!user) return
+
+        const userDoc = await getDoc(doc(db, 'users', user.uid))
 
         const chapterRead = userDoc.get("chaptersRead")[mediaId]?.find(
             (item: { chapterNumber: number }) => item.chapterNumber == chapterNumber
@@ -47,14 +53,13 @@ function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, hasText
 
     }
 
-    // ADD OR REMOVE CHAPTER FROM FIRESTORE
-    async function addOrRemoveChapterRead() {
+    async function handleChapterReadAction() {
 
         if (!user) return
 
         setIsLoading(true)
 
-        const episodeData = {
+        const mangaChapterInfo = {
 
             mediaId: mediaId,
             chapterNumber: chapterNumber,
@@ -65,61 +70,72 @@ function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, hasText
         await setDoc(doc(db, 'users', user.uid),
             {
                 chaptersRead: {
-                    [mediaId]: !wasChapterRead ? arrayUnion(...[episodeData]) : arrayRemove(...[episodeData])
+                    [mediaId]: !wasChapterRead ? arrayUnion(...[mangaChapterInfo]) : arrayRemove(...[mangaChapterInfo])
                 }
             } as unknown as FieldPath,
             { merge: true }
-        )
+        ).then(() => {
 
-        if (!wasChapterRead) setWasChapterRead(true)
-        else setWasChapterRead(false)
+            setWasChapterRead(!wasChapterRead)
+
+        })
 
         setIsLoading(false)
+
     }
 
-    useEffect(() => {
-
-        if (!user) return
-
-        wasChapterMarkedAsRead()
-
-    }, [user, chapterNumber])
-
     return (
-
         user && (
             <div className={styles.button_container}>
 
                 <motion.button
-                    onClick={() => addOrRemoveChapterRead()}
+                    onClick={() => handleChapterReadAction()}
                     data-active={wasChapterRead}
                     disabled={isLoading}
-                    title={wasChapterRead ? "Mark as Unread" : "Mark as Read "}
+                    title={wasChapterRead ? "Mark as Unread" : "Mark as Read"}
                 >
-                    {wasChapterRead ? (
-                        <CheckFillSvg width={16} height={16} alt="Check Chapter as Read" />
-                    ) : (
-                        <CheckSvg width={16} height={16} alt="Check Chapter as Unread" />
-                    )}
+
+                    <SvgIcons
+                        wasChapterRead={wasChapterRead}
+                    />
 
                 </motion.button>
 
-                <AnimatePresence>
-                    {(hasText && wasChapterRead) && (
-                        <motion.span
-                            className={styles.text_span}
-                            initial={{ opacity: 0, y: "10px" }}
-                            animate={{ opacity: 1, y: "0", transition: { duration: 0.2 } }}
-                            exit={{ opacity: 0, y: "10px" }}
-                        >
-                            Read
-                        </motion.span>
-                    )}
-                </AnimatePresence>
+                <AuxTextAnimated
+                    wasChapterRead={wasChapterRead}
+                    showAdditionalText={showAdditionalText}
+                />
+
             </div>
         )
-
     )
 }
 
-export default MarkChapterAsReadButton
+function SvgIcons({ wasChapterRead }: { wasChapterRead: boolean }) {
+
+    if (wasChapterRead) {
+        return (<CheckFillSvg width={16} height={16} alt="Check Chapter as Read" />)
+    }
+
+    return (<CheckSvg width={16} height={16} alt="Check Chapter as Unread" />)
+
+}
+
+function AuxTextAnimated({ showAdditionalText, wasChapterRead }: { wasChapterRead: boolean, showAdditionalText?: boolean }) {
+
+    return (
+        <AnimatePresence>
+            {(showAdditionalText && wasChapterRead) && (
+                <motion.span
+                    className={styles.text_span}
+                    initial={{ opacity: 0, y: "10px" }}
+                    animate={{ opacity: 1, y: "0", transition: { duration: 0.2 } }}
+                    exit={{ opacity: 0, y: "10px" }}
+                >
+                    Read
+                </motion.span>
+            )}
+        </AnimatePresence>
+    )
+
+}

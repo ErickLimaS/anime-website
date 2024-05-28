@@ -17,7 +17,7 @@ axiosRetry(Axios, {
 export default {
 
     // GET ALL NEWS, OR NEWS BY TOPIC
-    getNews: cache(async (topic?: string) => {
+    getNews: cache(async ({ topic }: { topic?: string }) => {
 
         try {
 
@@ -33,14 +33,14 @@ export default {
 
             console.log(err)
 
-            return null
+            return err
 
         }
 
     }),
 
     // GET NEWS ARTICLE BY ID
-    getNewsInfo: cache(async (id: string) => {
+    getNewsInfo: cache(async ({ id }: { id: string }) => {
 
         try {
 
@@ -56,7 +56,7 @@ export default {
 
             console.log(err)
 
-            return null
+            return err
 
         }
 

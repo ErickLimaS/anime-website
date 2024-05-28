@@ -6,24 +6,56 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSearchParams } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
-import MediaCover from '@/app/components/MediaCards/MediaCover'
-import UserModal from '@/app/components/UserLoginModal'
+import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
+import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 
-function KeepWatchingResults({ params }: { params?: { format: string, sort: string } }) {
+function KeepWatchingResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
+
+    const [keepWatchingList, setKeepWatchingList] = useState<KeepWatchingItem[]>([])
+    const [filteredKeepWatchingList, setFilteredKeepWatchingList] = useState<KeepWatchingItem[]>([])
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
-    const [userKeepWatching, setUserKeepWatching] = useState<KeepWatchingItem[]>([])
-    const [userFilteredKeepWatching, setUserFilteredKeepWatching] = useState<KeepWatchingItem[]>([])
+    const searchParams = useSearchParams()
 
-    const searchParams = useSearchParams();
+    useEffect(() => { setFilteredKeepWatchingList([]) }, [searchParams.size == 0])
 
-    // GETS KEEP WATCHING LIST ON USER DOC
+    useEffect(() => { if (user?.uid) getUserKeepWatching() }, [user])
+
+    useEffect(() => {
+
+        const sortType = params?.sort
+
+        let filteredBookmarks = !params?.format ? keepWatchingList : filteredKeepWatchingList
+
+        if (sortType) {
+            if (sortType == "title_desc") filteredBookmarks = filteredBookmarks.sort((media1, media2) => media1.title.romaji > media2.title.romaji ? -1 : 1)
+            else if (sortType == "title_asc") filteredBookmarks = filteredBookmarks.sort((media1, media2) => media1.title.romaji > media2.title.romaji ? -1 : 1).reverse()
+        }
+
+        setFilteredKeepWatchingList(filteredBookmarks)
+
+    }, [params?.sort])
+
+    useEffect(() => {
+
+        const formatType = params?.format
+
+        if (formatType) {
+
+            const filteredBookmarks = keepWatchingList.filter(media => media.format.toUpperCase() == formatType.toUpperCase())
+
+            setFilteredKeepWatchingList(filteredBookmarks)
+
+        }
+
+    }, [params?.format])
+
     async function getUserKeepWatching() {
 
-        const db = getFirestore(initFirebase());
+        const db = getFirestore(initFirebase())
 
         let keepWatchingList = await getDoc(doc(db, 'users', (user as User).uid)).then(doc => doc.get("keepWatching"))
 
@@ -35,113 +67,113 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: stri
 
         keepWatchingList = listFromObjectToArray.filter(item => item.length != 0 && item)
 
-        if (params) {
+        if (!params) {
 
-            let filteredKeepWatching: KeepWatchingItem[] = keepWatchingList
-
-            if (params?.format) filteredKeepWatching = filteredKeepWatching.filter(item => item.format.toUpperCase() == params.format.toUpperCase())
-
-            if (params?.sort) {
-                if (params.sort == "title_desc") filteredKeepWatching = filteredKeepWatching.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1)
-                else if (params.sort == "title_asc") filteredKeepWatching = filteredKeepWatching.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1).reverse()
-            }
-
-            setUserFilteredKeepWatching(filteredKeepWatching)
-            setUserKeepWatching(keepWatchingList)
+            setFilteredKeepWatchingList([])
+            setKeepWatchingList(keepWatchingList)
 
             return
+
         }
 
-        setUserFilteredKeepWatching([])
-        setUserKeepWatching(keepWatchingList)
+        const formatType = params?.format
+
+        const sortType = params?.sort
+
+        let filteredKeepWatching: KeepWatchingItem[] = keepWatchingList
+
+        if (formatType) filteredKeepWatching = filteredKeepWatching.filter(item => item.format.toUpperCase() == params.format.toUpperCase())
+
+        if (sortType) {
+            if (params.sort == "title_desc") {
+                filteredKeepWatching = filteredKeepWatching.sort((media1, media2) => media1.title.romaji > media2.title.romaji ? -1 : 1)
+            }
+            else if (params.sort == "title_asc") {
+                filteredKeepWatching = filteredKeepWatching.sort((media1, media2) => media1.title.romaji > media2.title.romaji ? -1 : 1).reverse()
+            }
+        }
+
+        setFilteredKeepWatchingList(filteredKeepWatching)
+        setKeepWatchingList(keepWatchingList)
 
     }
 
-    // HANDLES SELECT SORT CHANGES 
-    useEffect(() => {
-        let filteredBookmarks = !params?.format ? userKeepWatching : userFilteredKeepWatching
-
-        if (params?.sort) {
-            if (params.sort == "title_desc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1)
-            else if (params.sort == "title_asc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1).reverse()
-        }
-
-        setUserFilteredKeepWatching(filteredBookmarks)
-    }, [params?.sort])
-
-    // RUNS WHEN HAS NO PARAMS 
-    useEffect(() => {
-
-        setUserFilteredKeepWatching([])
-
-    }, [searchParams.size == 0])
-
-    // HANDLES FORMAT SORT CHANGES 
-    useEffect(() => {
-
-        if (params?.format) {
-            const filteredBookmarks = userKeepWatching.filter(item => item.format.toUpperCase() == params!.format.toUpperCase())
-            console.log(filteredBookmarks)
-            setUserFilteredKeepWatching(filteredBookmarks)
-
-        }
-
-    }, [params?.format])
-
-    // ONLY RUNS WHEN USER IS LOGGED IN
-    useEffect(() => {
-
-        if (user?.uid) getUserKeepWatching()
-
-    }, [user])
-
     return (
-        <>
+        <React.Fragment>
 
-            {/* IF USER IS NOT LOGGED IN */}
-            {(!user && !loading) && (
+            <ShowUpLoginPanelAnimated
+                apperanceCondition={(!user && !loading) ? true : false}
+                auth={auth}
+            />
 
-                <UserModal
-                    auth={auth}
-                />
-
-            )}
-
-            {loading ? (
+            {loading && (
                 <div style={{ height: "400px", width: "100%", display: "flex" }}>
                     <SvgLoading width={120} height={120} style={{ margin: "auto" }} />
                 </div>
-            ) : (
+            )}
+
+            {!loading && (
                 <div id={styles.container}>
 
                     <ul>
+
+                        {(filteredKeepWatchingList.length == 0 || keepWatchingList?.length == 0) && (
+                            <p className={styles.no_results_text}>
+                                No Results
+                            </p>
+                        )}
+
                         {params ? (
-                            userFilteredKeepWatching.length > 0 ? (
-                                userFilteredKeepWatching.map((item, key: number) => (
-                                    <li key={key}>
-                                        <MediaCover data={item as KeepWatchingItem} darkMode />
-                                    </li>
-                                ))
-                            ) : (
-                                <p style={{ color: "var(--white-100)" }}>No Results.</p>
-                            )
+                            filteredKeepWatchingList.length > 0 && (filteredKeepWatchingList.map((media, key) => (
+                                <li key={key}>
+
+                                    <MediaCard.Container onDarkMode>
+
+                                        <MediaCard.MediaImgLink
+                                            mediaId={media.id}
+                                            title={media.title.romaji}
+                                            formatOrType={media.format}
+                                            url={media.coverImage.extraLarge}
+                                        />
+
+                                        <MediaCard.LinkTitle
+                                            title={media.title.romaji}
+                                            id={media.id}
+                                        />
+
+                                    </MediaCard.Container>
+
+                                </li>
+                            )))
                         ) : (
-                            userKeepWatching.length > 0 ? (
-                                userKeepWatching.map((item, key: number) => (
-                                    <li key={key}>
-                                        <MediaCover data={item as KeepWatchingItem} darkMode />
-                                    </li>
-                                ))
-                            ) : (
-                                <p style={{ color: "var(--white-100)" }}>No Results.</p>
-                            )
+                            keepWatchingList.map((media, key) => (
+                                <li key={key}>
+
+                                    <MediaCard.Container onDarkMode>
+
+                                        <MediaCard.MediaImgLink
+                                            mediaId={media.id}
+                                            title={media.title.romaji}
+                                            formatOrType={media.format}
+                                            url={media.coverImage.extraLarge}
+                                        />
+
+                                        <MediaCard.LinkTitle
+                                            title={media.title.romaji}
+                                            id={media.id}
+                                        />
+
+                                    </MediaCard.Container>
+
+                                </li>
+                            ))
                         )}
                     </ul>
 
                 </div >
             )
             }
-        </>
+        </React.Fragment>
     )
 }
 

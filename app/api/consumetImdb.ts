@@ -1,4 +1,4 @@
-import stringToOnlyAlphabetic from "@/app/lib/convertStringsTo"
+import stringToOnlyAlphabetic from "@/app/lib/convertStrings"
 import { ImdbMediaInfo, ImdbSearchItem } from "@/app/ts/interfaces/apiImdbInterface"
 import Axios from "axios"
 import axiosRetry from "axios-retry"
@@ -15,7 +15,7 @@ axiosRetry(Axios, {
 })
 
 // SEARCH BY MEDIA TITLE
-export const searchMedia = cache(async (mediaTitle: string) => {
+export const searchMedia = cache(async ({ mediaTitle }: { mediaTitle: string }) => {
 
     try {
 
@@ -37,7 +37,13 @@ export const searchMedia = cache(async (mediaTitle: string) => {
 })
 
 // GET INFO FOR THIS MEDIA
-export const getMediaInfo = cache(async (search: boolean, mediaId?: string, type?: "TV Series", seachTitle?: string, releaseYear?: number) => {
+export const getMediaInfo = cache(async ({ search, mediaId, type, seachTitle, releaseYear }: {
+    search: boolean,
+    mediaId?: string,
+    type?: "TV Series",
+    seachTitle?: string,
+    releaseYear?: number
+}) => {
 
     try {
 
@@ -46,7 +52,7 @@ export const getMediaInfo = cache(async (search: boolean, mediaId?: string, type
 
         if (search && seachTitle) {
 
-            const searchResults: ImdbSearchItem[] = await searchMedia(stringToOnlyAlphabetic(seachTitle)).then(res => res.results)
+            const searchResults: ImdbSearchItem[] = await searchMedia({ mediaTitle: stringToOnlyAlphabetic(seachTitle) }).then(res => res.results)
 
             const filteredRes = searchResults.find((item) => Number(item.releaseDate) == releaseYear)
 

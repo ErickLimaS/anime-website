@@ -17,7 +17,7 @@ axiosRetry(Axios, {
 export default {
 
     // SEARCH MEDIA
-    searchMedia: cache(async (query: string, page?: number) => {
+    searchMedia: cache(async ({ query, page }: { query: string, page?: number }) => {
 
         try {
 
@@ -38,7 +38,7 @@ export default {
     }),
 
     // GET EPISODES, NO LINKS INCLUDED
-    getEpisodes: cache(async (episodeId: string) => {
+    getEpisodes: cache(async ({ episodeId }: { episodeId: string }) => {
 
         try {
 
@@ -59,7 +59,7 @@ export default {
     }),
 
     // GET EPISODES, NO LINKS INCLUDED
-    episodesLinks: cache(async (episodeId: string, server?: string, category?: "dub" | "sub") => {
+    episodesLinks: cache(async ({ episodeId, server, category }: { episodeId: string, server?: string, category?: "dub" | "sub" }) => {
 
         try {
 

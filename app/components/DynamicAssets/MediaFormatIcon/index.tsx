@@ -5,31 +5,32 @@ import MangaSvg from "@/public/assets/book.svg"
 import MusicSvg from "@/public/assets/music-note-beamed.svg"
 import OtherSvg from "@/public/assets/three-dots.svg"
 
-function MediaFormatIcon({ format }: { format: string }) {
+function MediaFormatIcon({ format }: { format: "OVA" | "TV" | "ONA" | "SPECIAL" | "MOVIE" | "MANGA" | "MUSIC" | string }) {
 
-    if (format == "OVA" || format == "TV" || format == "ONA" || format == "SPECIAL") {
+    switch (format) {
 
-        return (<AnimeSvg width={16} height={16} alt="Tv Icon" />)
+        case "OVA":
+        case "TV":
+        case "ONA":
+        case "SPECIAL":
 
-    }
-    else if (format == "MOVIE") {
+            return (<AnimeSvg width={16} height={16} alt="Tv Icon" />)
 
-        return (<MovieSvg width={16} height={16} alt="Movie Icon" />)
+        case "MOVIE":
 
-    }
-    else if (format == "MANGA") {
+            return (<MovieSvg width={16} height={16} alt="Movie Icon" />)
 
-        return (<MangaSvg width={16} height={16} alt="Manga Icon" />)
+        case "MANGA":
 
-    }
-    else if (format == "MUSIC") {
+            return (<MangaSvg width={16} height={16} alt="Manga Icon" />)
 
-        return (<MusicSvg width={16} height={16} alt="Music Icon" />)
+        case "MUSIC":
 
-    }
-    else {
+            return (<MusicSvg width={16} height={16} alt="Music Icon" />)
 
-        return (<OtherSvg width={16} height={16} alt="Other Icon" />)
+        default:
+
+            return (<OtherSvg width={16} height={16} alt="Other Icon" />)
 
     }
 

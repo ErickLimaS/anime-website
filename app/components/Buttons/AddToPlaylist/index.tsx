@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
-import LoadingsssSvg from "@/public/assets/bookmark-check-fill.svg"
+import Loading2Svg from "@/public/assets/bookmark-check-fill.svg"
 import {
     getFirestore, doc,
     updateDoc, arrayUnion,
@@ -13,10 +13,10 @@ import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import UserModal from '@/app/components/UserLoginModal';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 
-function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, customText?: any[] }) {
+export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[] }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [wasAddedToPlaylist, setWasAddedToPlaylist] = useState<boolean>(false)
@@ -27,32 +27,35 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
 
     const [user, loading] = useAuthState(auth)
 
-    const db = getFirestore(initFirebase());
+    const db = getFirestore(initFirebase())
+
+    useEffect(() => {
+
+        if (!user || loading) return
+
+        setIsUserModalOpen(false)
+        isMediaOnUserDoc()
+
+    }, [user])
 
     // WHEN BUTTON IS CLICKED, RUN FUNCTION TO ADD OR REMOVE MEDIA FROM FIRESTORE
-    async function addOrRemoveMediaOnDb() {
+    async function handleMediaOnUserDoc() {
 
-        if (!user) {
-
-            // opens user login modal
-            setIsUserModalOpen(true)
-
-            return
-
-        }
+        // Opens Login Modal
+        if (!user) return setIsUserModalOpen(true)
 
         setIsLoading(true)
 
         const bookmarkData = {
-            id: data.id,
+            id: mediaInfo.id,
             title: {
-                romaji: data.title.romaji
+                romaji: mediaInfo.title.romaji
             },
-            format: data.format,
-            description: data.description,
+            format: mediaInfo.format,
+            description: mediaInfo.description,
             coverImage: {
-                extraLarge: data.coverImage.extraLarge,
-                large: data.coverImage.large
+                extraLarge: mediaInfo.coverImage.extraLarge,
+                large: mediaInfo.coverImage.large
             }
         }
 
@@ -64,73 +67,63 @@ function AddToPlaylistButton({ data, customText }: { data: ApiDefaultResult, cus
             { merge: true }
         )
 
-        !wasAddedToPlaylist ? setWasAddedToPlaylist(true) : setWasAddedToPlaylist(false)
+        wasAddedToPlaylist ? setWasAddedToPlaylist(false) : setWasAddedToPlaylist(true)
 
         setIsLoading(false)
 
     }
 
     // IF MEDIA ID MATCHS ANY RESULT ON DB, IT SETS THIS COMPONENT BUTTON AS ACTIVE
-    async function isMediaOnDB() {
+    async function isMediaOnUserDoc() {
 
         if (!user) return
 
         const userDoc = await getDoc(doc(db, 'users', user.uid))
 
-        const isMediaIdOnDoc = userDoc.get("bookmarks")?.find((item: { id: number }) => item.id == data.id)
+        const wasMediaIdFoundOnDoc = userDoc.get("bookmarks")?.find((item: { id: number }) => item.id == mediaInfo.id)
 
-        if (isMediaIdOnDoc) setWasAddedToPlaylist(true)
+        if (wasMediaIdFoundOnDoc) setWasAddedToPlaylist(true)
 
     }
 
-    useEffect(() => {
-
-        if (!user || loading) {
-            return
-        } else {
-            setIsUserModalOpen(false)
-            isMediaOnDB()
-        }
-
-    }, [user])
-
     return (
         <React.Fragment>
-            {/* SHOWS USER LOGIN MODAL */}
-            <AnimatePresence
-                initial={false}
-                mode='wait'
-            >
-                {isUserModalOpen && (
-                    <UserModal
-                        onClick={() => setIsUserModalOpen(false)}
-                        auth={auth}
-                    />
-                )}
-            </AnimatePresence>
+
+            <ShowUpLoginPanelAnimated
+                apperanceCondition={isUserModalOpen}
+                customOnClickAction={() => setIsUserModalOpen(false)}
+                auth={auth}
+            />
 
             <motion.button
                 whileTap={{ scale: 0.85 }}
                 id={styles.container}
-                className={customText ? styles.custom_text : ""}
-                onClick={() => addOrRemoveMediaOnDb()}
+                className={children ? styles.custom_text : ""}
+                onClick={() => handleMediaOnUserDoc()}
                 disabled={isLoading}
                 data-added={wasAddedToPlaylist}
                 aria-label={wasAddedToPlaylist ? "Click To Remove from Playlist" : "Click To Add To Playlist"}
-                title={wasAddedToPlaylist ? `Remove ${data.title && data.title?.romaji} from Playlist` : `Add ${data.title && data.title?.romaji} To Playlist`}
+                title={wasAddedToPlaylist ? `Remove ${mediaInfo.title && mediaInfo.title?.romaji} from Playlist` : `Add ${mediaInfo.title && mediaInfo.title?.romaji} To Playlist`}
             >
+
                 {isLoading ?
-                    <LoadingSvg alt="Loading Icon" width={16} height={16} />
+                    (<LoadingSvg alt="Loading Icon" width={16} height={16} />)
                     :
-                    (wasAddedToPlaylist ?
-                        (customText ? customText[0] : (<><LoadingsssSvg width={16} height={16} /> ON PLAYLIST</>))
+                    ((!isLoading && wasAddedToPlaylist) ?
+                        (children ? children[1] : (<><Loading2Svg width={16} height={16} /> ON PLAYLIST</>))
                         :
-                        (customText ? customText[1] : "+ PLAYLIST"))
+                        (children ? children[0] : "+ PLAYLIST")
+                    )
                 }
+
             </motion.button>
 
         </React.Fragment>
     )
 }
 
-export default AddToPlaylistButton
+export function SvgIcon({ children }: { children: React.ReactNode }) {
+
+    return (children)
+
+}

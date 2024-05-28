@@ -4,43 +4,47 @@ import SvgFilter from "@/public/assets/filter-right.svg"
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import styles from "./component.module.css"
 
-function SelectSort({ options }: { options?: { name: string, value: string }[] }) {
+function SelectSort({ customSelectInputOptions }: { customSelectInputOptions?: { name: string, value: string }[] }) {
 
     const router = useRouter()
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    function setOnUrlQuery(element: HTMLSelectElement) {
+    function handleNewUrlParams(element: HTMLSelectElement) {
 
-        const current = new URLSearchParams(Array.from(searchParams.entries()));
+        const currentUrlParams = new URLSearchParams(Array.from(searchParams.entries()));
 
-        current.set("sort", `${element.value}`)
+        currentUrlParams.set("sort", `${element.value}`)
 
-        const query = current ? `?${current}` : ""
+        const newUrlParams = currentUrlParams ? `?${currentUrlParams}` : ""
 
-        router.push(`${pathname}${decodeURI(query)}`, { scroll: false })
+        router.push(`${pathname}${decodeURI(newUrlParams)}`, { scroll: false })
 
     }
 
     return (
         <div id={styles.container} className='display_flex_row align_items_center'>
+
             <SvgFilter height={16} width={16} alt="Filter Icon" />
+
             <form>
                 <select
-                    title="Sort the results"
-                    onChange={(e) => setOnUrlQuery(e.target)}
+                    aria-label="Sort Options"
+                    onChange={(e) => handleNewUrlParams(e.target)}
                     defaultValue={new URLSearchParams(Array.from(searchParams.entries())).get("sort") || "title_asc"}
                 >
-                    {options ? (
-                        
-                        options.map((item, key) => (
-                            <option key={key} value={item.value}>
-                                {item.name}
+
+                    {customSelectInputOptions ? (
+
+                        customSelectInputOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.name}
                             </option>
                         ))
 
                     ) : (
-                        <>
+
+                        <React.Fragment>
                             <option value="title_asc">
                                 From A to Z
                             </option>
@@ -53,10 +57,13 @@ function SelectSort({ options }: { options?: { name: string, value: string }[] }
                             <option value="releases_asc">
                                 Release Asc
                             </option>
-                        </>
+                        </React.Fragment>
+
                     )}
+
                 </select>
             </form >
+
         </div >
     )
 }

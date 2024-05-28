@@ -5,28 +5,28 @@ import {
     defaultApiQueryRequest, getCurrentSeason,
     mediaAiringApiQueryRequest, mediaByIdQueryRequest,
     mediaTrendingApiQueryRequest
-} from './anilistQueryFunctions'
+} from './anilistQueryConstants'
 import { cache } from 'react'
 import axiosRetry from 'axios-retry'
 
-const BASE_URL: string = 'https://graphql.anilist.co/'
+const BASE_URL = 'https://graphql.anilist.co/'
 
 const headers = {
     'Content-Type': 'application/json',
 }
 
 // returns medias with adult content
-function filterAdultContent(data: ApiDefaultResult[] | ApiAiringMidiaResults[], reponseType?: "mediaByFormat") {
+function filterMediasWithAdultContent(mediasList: ApiDefaultResult[] | ApiAiringMidiaResults[], reponseType?: "mediaByFormat") {
 
     if (reponseType == "mediaByFormat") {
-        const filteredData = (data as ApiDefaultResult[]).filter((item) => item.isAdult == false)
+        const mediasFiltered = (mediasList as ApiDefaultResult[]).filter((item) => item.isAdult == false)
 
-        return filteredData
+        return mediasFiltered
     }
     else {
-        const filteredData = (data as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
+        const mediasFiltered = (mediasList as ApiAiringMidiaResults[]).filter((item) => item.media.isAdult == false)
 
-        return filteredData
+        return mediasFiltered
     }
 
 }
@@ -43,7 +43,7 @@ axiosRetry(Axios, {
 export default {
 
     // HOME PAGE
-    getNewReleases: cache(async (
+    getNewReleases: cache(async ({ type, format, sort, showAdultContent, status, page, perPage }: {
         type: string,
         format?: string,
         sort?: string,
@@ -51,9 +51,9 @@ export default {
         status?: "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS",
         page?: number,
         perPage?: number
-    ) => {
+    }) => {
 
-        const season: string = getCurrentSeason()
+        const season = getCurrentSeason()
 
         try {
 
@@ -92,7 +92,7 @@ export default {
     }),
 
     //SEARCH
-    getSeachResults: cache(async (query: string, showAdultContent?: boolean) => {
+    getSeachResults: cache(async ({ query, showAdultContent }: { query: string, showAdultContent?: boolean }) => {
 
         try {
 
@@ -115,7 +115,7 @@ export default {
             })
 
             return showAdultContent ?
-                data.data.Page.media as ApiDefaultResult[] : filterAdultContent(data.data.Page.media, "mediaByFormat")
+                data.data.Page.media as ApiDefaultResult[] : filterMediasWithAdultContent(data.data.Page.media, "mediaByFormat")
 
         }
         catch (error: any) {
@@ -128,7 +128,7 @@ export default {
     }),
 
     // RELEASING THIS WEEK
-    getReleasingThisWeek: cache(async (type: string, format?: string, page?: number, showAdultContent?: boolean) => {
+    getReleasingThisWeek: cache(async ({ type, format, page, showAdultContent }: { type: string, format?: string, page?: number, showAdultContent?: boolean }) => {
 
         try {
 
@@ -168,7 +168,13 @@ export default {
     }),
 
     // RELEASING BY DAYS RANGE
-    getReleasingByDaysRange: cache(async (type: string, days: 1 | 7 | 30, pageNumber?: number, perPage?: number, showAdultContent?: boolean) => {
+    getReleasingByDaysRange: cache(async ({ type, days, pageNumber, perPage, showAdultContent }: {
+        type: string,
+        days: 1 | 7 | 30,
+        pageNumber?: number,
+        perPage?: number,
+        showAdultContent?: boolean
+    }) => {
 
         try {
 
@@ -198,7 +204,7 @@ export default {
             })
 
             return showAdultContent ?
-                data.data.Page.airingSchedules as ApiAiringMidiaResults[] : filterAdultContent(data.data.Page.airingSchedules) as ApiAiringMidiaResults[]
+                data.data.Page.airingSchedules as ApiAiringMidiaResults[] : filterMediasWithAdultContent(data.data.Page.airingSchedules) as ApiAiringMidiaResults[]
 
         }
         catch (error: any) {
@@ -212,7 +218,7 @@ export default {
     }),
 
     // TRENDING
-    getTrendingMedia: cache(async (sort?: string, showAdultContent?: boolean) => {
+    getTrendingMedia: cache(async ({ sort, showAdultContent }: { sort?: string, showAdultContent?: boolean }) => {
 
         try {
 
@@ -251,7 +257,13 @@ export default {
     }),
 
     // MEDIAS WITH INDICATED FORMAT    
-    getMediaForThisFormat: cache(async (type: string, sort?: string, pageNumber?: number, perPage?: number, showAdultContent?: boolean) => {
+    getMediaForThisFormat: cache(async ({ type, sort, pageNumber, perPage, showAdultContent }: {
+        type: string,
+        sort?: string,
+        pageNumber?: number,
+        perPage?: number,
+        showAdultContent?: boolean
+    }) => {
 
         try {
 
@@ -274,7 +286,7 @@ export default {
             })
 
             return showAdultContent ?
-                data.data.Page.media as ApiDefaultResult[] : filterAdultContent(data.data.Page.media, "mediaByFormat") as ApiDefaultResult[]
+                data.data.Page.media as ApiDefaultResult[] : filterMediasWithAdultContent(data.data.Page.media, "mediaByFormat") as ApiDefaultResult[]
 
         }
         catch (error: any) {
@@ -288,7 +300,7 @@ export default {
     }),
 
     // GET MEDIA INFO BY ID
-    getMediaInfo: cache(async (id: number, showAdultContent?: boolean) => {
+    getMediaInfo: cache(async ({ id, showAdultContent }: { id: number, showAdultContent?: boolean }) => {
 
         try {
 

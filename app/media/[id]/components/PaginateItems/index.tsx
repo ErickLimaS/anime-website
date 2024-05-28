@@ -16,7 +16,6 @@ function NavPaginateItems({ onPageChange, pageCount }: NavTypes) {
         <ReactPaginate
             nextLabel={<ChevronRightSvg alt="Icon to Right side" width={16} height={16} />}
             onPageChange={onPageChange}
-            // changes value when screen is lower than 440
             pageRangeDisplayed={(typeof window !== "undefined") && window.matchMedia("(max-width: 440px)").matches ? 1 : 2}
             marginPagesDisplayed={1}
             pageCount={pageCount}

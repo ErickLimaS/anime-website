@@ -20,7 +20,7 @@ axiosRetry(Axios, {
 export default {
 
     // SEARCH ANIME BY QUERY
-    searchMedia: cache(async (query: string, page?: number) => {
+    searchMedia: cache(async ({ query, page }: { query: string, page?: number }) => {
 
         try {
 
@@ -43,7 +43,7 @@ export default {
     }),
 
     // GET ANIME INFO
-    getInfoFromThisMedia: cache(async (id: string | number) => {
+    getInfoFromThisMedia: cache(async ({ id }: { id: string | number }) => {
 
         try {
 
@@ -65,7 +65,7 @@ export default {
     }),
 
     // GET EPISODES LINKS FOR ANIMES AND MOVIES
-    getEpisodeStreamingLinks: cache(async (episodeId: string | number, serverName?: string) => {
+    getEpisodeStreamingLinks: cache(async ({ episodeId, serverName }: { episodeId: string | number, serverName?: string }) => {
 
         try {
             const { data } = await Axios({
@@ -86,7 +86,7 @@ export default {
     }),
 
     // ALTERNATIVE: GET EPISODES LINKS FOR ANIMES AND MOVIES
-    getEpisodeStreamingLinks2: cache(async (episodeId: string) => {
+    getEpisodeStreamingLinks2: cache(async ({ episodeId }: { episodeId: string }) => {
 
         try {
             const { data } = await Axios({

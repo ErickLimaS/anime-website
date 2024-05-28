@@ -13,13 +13,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import fallbackImg from '@/public/photo-placeholder.jpg'
 
 type ComponentTypes = {
-    data: KeepWatchingItem,
-    darkMode?: boolean,
-    hiddenOnDesktop?: boolean,
-    fromOfflineDb?: boolean
+    animeInfo: KeepWatchingItem,
+    darkMode?: boolean
 }
 
-function KeepWatchingEpisodeInfo({ data, darkMode }: ComponentTypes) {
+function KeepWatchingEpisodeInfo({ animeInfo, darkMode }: ComponentTypes) {
 
     const [wasDeleted, setWasDeleted] = useState<boolean>(false)
 
@@ -34,7 +32,7 @@ function KeepWatchingEpisodeInfo({ data, darkMode }: ComponentTypes) {
         await setDoc(doc(db, 'users', user!.uid),
             {
                 keepWatching: {
-                    [data.id]: arrayRemove(...[data])
+                    [animeInfo.id]: arrayRemove(...[animeInfo])
                 }
             } as unknown as FieldPath,
             { merge: true }
@@ -57,36 +55,36 @@ function KeepWatchingEpisodeInfo({ data, darkMode }: ComponentTypes) {
                     <div id={styles.img_container}>
 
                         <Image
-                            title={data.title.romaji}
-                            src={data.episodeImg || fallbackImg}
+                            title={animeInfo.title.romaji}
+                            src={animeInfo.episodeImg || fallbackImg}
                             placeholder='blur'
                             blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
-                            alt={data.title && data.title.romaji || "Not Available"}
+                            alt={animeInfo.title && animeInfo.title.romaji || "Not Available"}
                             fill
                             sizes='(max-width: 324px) 100vw, (max-width: 495px) 50vw, (max-width: 1025px) 200px, (max-width: 1479px) 180px, 174px'
                         ></Image>
 
                         <span className={styles.media_type_icon}>
 
-                            <MediaFormatIcon format={data.format} />
+                            <MediaFormatIcon format={animeInfo.format} />
 
                             <span className={styles.media_format_title}>
-                                {data.format == "TV" ? "ANIME" : data.format}
+                                {animeInfo.format == "TV" ? "ANIME" : animeInfo.format}
                             </span>
 
                         </span>
 
                         <div className={styles.overlay_info_container}>
 
-                            <Link href={`/watch/${data.id}?source=${data.source}&episode=${data.episode}&q=${data.episodeId}&t=${data.episodeTimeLastStop || 0}`}>
-                                {data.format != "MOVIE" ? "CONTINUE EPISODE" : "CONTINUE"}
+                            <Link href={`/watch/${animeInfo.id}?source=${animeInfo.source}&episode=${animeInfo.episode}&q=${animeInfo.episodeId}&t=${animeInfo.episodeTimeLastStop || 0}`}>
+                                {animeInfo.format != "MOVIE" ? "CONTINUE EPISODE" : "CONTINUE"}
                             </Link>
 
                         </div>
 
-                        {data.format != "MOVIE" && (
+                        {animeInfo.format != "MOVIE" && (
 
-                            <span className={styles.episode_name_span}>Episode {data.episode}</span>
+                            <span className={styles.episode_name_span}>Episode {animeInfo.episode}</span>
 
                         )}
 
@@ -95,7 +93,7 @@ function KeepWatchingEpisodeInfo({ data, darkMode }: ComponentTypes) {
                         >
                             <motion.div
                                 initial={{ scaleX: 0 }}
-                                animate={{ scaleX: (((data.episodeTimeLastStop / data.episodeDuration) * 100) / 100) || 0.005 }}
+                                animate={{ scaleX: (((animeInfo.episodeTimeLastStop / animeInfo.episodeDuration) * 100) / 100) || 0.005 }}
                                 transition={{ duration: 1 }}
                             />
                         </motion.div>
@@ -104,12 +102,12 @@ function KeepWatchingEpisodeInfo({ data, darkMode }: ComponentTypes) {
 
                     <div className={styles.info_bottom}>
                         <Link
-                            href={`/media/${data.id}`}
+                            href={`/media/${animeInfo.id}`}
                         >
-                            {data.title && data.title.romaji}
+                            {animeInfo.title && animeInfo.title.romaji}
                         </Link>
 
-                        <button onClick={() => removeFromKeepWatching()} title={`Remove ${data.title.romaji} from Keep Watching`}>
+                        <button onClick={() => removeFromKeepWatching()} title={`Remove ${animeInfo.title.romaji} from Keep Watching`}>
 
                             <DeleteSvg width={16} height={16} alt="Delete" />
 

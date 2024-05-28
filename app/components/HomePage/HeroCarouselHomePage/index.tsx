@@ -5,15 +5,15 @@ import Link from 'next/link'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { wrap } from 'popmotion'
 import { AnimatePresence, motion } from 'framer-motion'
-import AddToPlaylistButton from '../../Buttons/AddToPlaylist'
-import SwiperContainer from '../../SwiperContainer'
-import ListCarousel from '../HeroListCarousel'
+import * as AddToPlaylist from '../../Buttons/AddToPlaylist'
+import SwiperCarouselContainer from '../../SwiperCarouselContainer'
+import ListItemHeroCarousel from './components/HeroListCarousel'
 import EyeSvg from "@/public/assets/eye-fill.svg"
 import EyeSlashSvg from "@/public/assets/eye-slash-fill.svg"
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import { SwiperSlide } from 'swiper/react'
 
-const variants = {
+const framerMotionVariants = {
     enter: (direction: number) => {
         return {
             x: direction > 0 ? 1000 : -1000,
@@ -34,45 +34,11 @@ const variants = {
     }
 }
 
-function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: boolean }) {
+function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefaultResult[], isOnMobileScreen: boolean }) {
 
     const [[page, direction], setPage] = useState([0, 0])
 
     const [autoPlayTrailer, setAutoPlayTrailer] = useState<boolean>(true)
-
-    const swipeConfidenceThreshold = 10000;
-    const swipePower = (offset: number, velocity: number) => {
-        return Math.abs(offset) * velocity;
-    }
-
-    const imageIndex = wrap(0, data.length, page);
-
-    const paginate = (newDirection: number) => {
-        setPage([page + newDirection, newDirection]);
-    };
-
-    let styledList = {
-        background: isMobile ?
-            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${data[imageIndex]?.coverImage.extraLarge})`
-            :
-            `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${data[imageIndex]?.bannerImage})`
-        ,
-        backgroundPosition: isMobile ?
-            "top"
-            :
-            "center"
-        ,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat"
-    }
-
-    // change auto play trailer state 
-    function changeTrailerState() {
-
-        localStorage.setItem("autoPlayTrailer", `${!autoPlayTrailer}`)
-        setAutoPlayTrailer(!autoPlayTrailer)
-
-    }
 
     useEffect(() => {
 
@@ -84,15 +50,46 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
             return
         }
 
-        setAutoPlayTrailer(localStorage.getItem("autoPlayTrailer") == "true" ? true : false)
+        setAutoPlayTrailer(localStorage.getItem("autoPlayTrailer") == "true")
 
     }, [])
+
+    // Slide Carousel Props
+    const swipeConfidenceThreshold = 10000;
+    const swipePower = (offset: number, velocity: number) => {
+        return Math.abs(offset) * velocity;
+    }
+
+    const currMediaOnScreenIndex = wrap(0, animesList.length, page);
+
+    const paginate = (newDirection: number) => {
+        setPage([page + newDirection, newDirection]);
+    };
+
+    const backgroundImageStyle = {
+        background: isOnMobileScreen ?
+            `linear-gradient(rgba(0, 0, 0, 0.05), var(--background) 100%), url(${animesList[currMediaOnScreenIndex]?.coverImage.extraLarge})`
+            :
+            `linear-gradient(rgba(0, 0, 0, 0.00), var(--background) 100%), url(${animesList[currMediaOnScreenIndex]?.bannerImage})`
+        ,
+        backgroundPosition: isOnMobileScreen ? "top" : "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat"
+    }
+
+    // change auto play trailer state 
+    function changeAutoPlayTrailerState() {
+
+        localStorage.setItem("autoPlayTrailer", `${!autoPlayTrailer}`)
+        setAutoPlayTrailer(!autoPlayTrailer)
+
+    }
 
     return (
         <section id={styles.hero_section_container}>
 
             {/* CAROUSEL OF BCG IMG AND MEDIA TITLE*/}
-            {data != undefined && (
+            {animesList != undefined && (
 
                 <AnimatePresence initial={true} custom={direction} mode='sync'>
 
@@ -101,9 +98,9 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                         <motion.li
                             key={page}
                             className={styles.carousel_item}
-                            style={styledList}
+                            style={backgroundImageStyle}
                             custom={direction}
-                            variants={variants}
+                            variants={framerMotionVariants}
                             initial="enter"
                             animate="center"
                             exit="exit"
@@ -125,16 +122,16 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                             }}
                         >
 
-                            {autoPlayTrailer && data[imageIndex]?.trailer && (
+                            {autoPlayTrailer && animesList[currMediaOnScreenIndex]?.trailer && (
                                 <AnimatePresence>
                                     <motion.div className={styles.video_container}>
                                         <motion.iframe
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             transition={{ delay: 3 }}
-                                            src={`https://www.youtube.com/embed/${data[imageIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0&playlist=${data[imageIndex].trailer.id}`}
+                                            src={`https://www.youtube.com/embed/${animesList[currMediaOnScreenIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0&playlist=${animesList[currMediaOnScreenIndex].trailer.id}`}
                                             frameBorder={0}
-                                            title={data[imageIndex].title.romaji + " Trailer"}
+                                            title={animesList[currMediaOnScreenIndex].title.romaji + " Trailer"}
                                         />
                                     </motion.div>
                                 </AnimatePresence>
@@ -144,38 +141,38 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                             <div className={styles.carousel_position_wrapper}>
                                 <div className={styles.item_info}>
 
-                                    <h2><Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex]?.title.romaji}</Link></h2>
+                                    <h2><Link href={`/media/${animesList[currMediaOnScreenIndex]?.id}`}>{animesList[currMediaOnScreenIndex]?.title.romaji}</Link></h2>
 
                                     <div className={`${styles.item_info_inside} display_flex_row`}>
 
-                                        {data[imageIndex]?.seasonYear && (
-                                            <p>{data[imageIndex].seasonYear.toString()}</p>
+                                        {animesList[currMediaOnScreenIndex]?.seasonYear && (
+                                            <p>{animesList[currMediaOnScreenIndex].seasonYear.toString()}</p>
                                         )}
-                                        {((data[imageIndex]?.genres) && (data[imageIndex]?.seasonYear != undefined)) && (
+                                        {((animesList[currMediaOnScreenIndex]?.genres) && (animesList[currMediaOnScreenIndex]?.seasonYear != undefined)) && (
                                             <span>|</span>
                                         )}
 
-                                        {data[imageIndex]?.genres && (
-                                            <p><Link href={`/search?genre=[${data[imageIndex]?.genres[0].toLowerCase()}]`}>{data[imageIndex]?.genres[0]}</Link></p>
+                                        {animesList[currMediaOnScreenIndex]?.genres && (
+                                            <p><Link href={`/search?genre=[${animesList[currMediaOnScreenIndex]?.genres[0].toLowerCase()}]`}>{animesList[currMediaOnScreenIndex]?.genres[0]}</Link></p>
                                         )}
-                                        {((data[imageIndex]?.seasonYear != undefined) && (data[imageIndex]?.episodes != undefined && data[imageIndex]?.nextAiringEpisode == null)) && (
+                                        {((animesList[currMediaOnScreenIndex]?.seasonYear != undefined) && (animesList[currMediaOnScreenIndex]?.episodes != undefined && animesList[currMediaOnScreenIndex]?.nextAiringEpisode == null)) && (
                                             <span>|</span>
                                         )}
 
-                                        {(data[imageIndex]?.episodes && data[imageIndex].format != "MOVIE" && data[imageIndex]?.nextAiringEpisode == null) && (
-                                            <p>{data[imageIndex].episodes.toString()} {data[imageIndex].episodes > 1 ? "Episodes" : "Episode"}</p>
+                                        {(animesList[currMediaOnScreenIndex]?.episodes && animesList[currMediaOnScreenIndex].format != "MOVIE" && animesList[currMediaOnScreenIndex]?.nextAiringEpisode == null) && (
+                                            <p>{animesList[currMediaOnScreenIndex].episodes.toString()} {animesList[currMediaOnScreenIndex].episodes > 1 ? "Episodes" : "Episode"}</p>
                                         )}
-                                        {data[imageIndex]?.duration && data[imageIndex].format == "MOVIE" && (
-                                            <p>{data[imageIndex].duration} Minutes</p>
+                                        {animesList[currMediaOnScreenIndex]?.duration && animesList[currMediaOnScreenIndex].format == "MOVIE" && (
+                                            <p>{animesList[currMediaOnScreenIndex].duration} Minutes</p>
                                         )}
-                                        {data[imageIndex]?.nextAiringEpisode && (
+                                        {animesList[currMediaOnScreenIndex]?.nextAiringEpisode && (
                                             <span>|</span>
                                         )}
 
-                                        {data[imageIndex]?.nextAiringEpisode && (
+                                        {animesList[currMediaOnScreenIndex]?.nextAiringEpisode && (
                                             <p>
-                                                Ep {data[imageIndex]?.nextAiringEpisode.episode} on {convertFromUnix(
-                                                    data[imageIndex]?.nextAiringEpisode.airingAt, { month: "long", year: undefined })
+                                                Ep {animesList[currMediaOnScreenIndex]?.nextAiringEpisode.episode} on {convertFromUnix(
+                                                    animesList[currMediaOnScreenIndex]?.nextAiringEpisode.airingAt, { month: "long", year: undefined })
                                                 }
                                             </p>
                                         )}
@@ -184,9 +181,11 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
 
                                     <div className={styles.item_buttons}>
 
-                                        <Link href={`/media/${data[imageIndex]?.id}`}>{data[imageIndex].format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
+                                        <Link href={`/media/${animesList[currMediaOnScreenIndex]?.id}`}>{animesList[currMediaOnScreenIndex].format == "MANGA" ? "READ" : "WATCH"} NOW</Link>
 
-                                        <AddToPlaylistButton data={data[imageIndex]} />
+                                        <AddToPlaylist.Button
+                                            mediaInfo={animesList[currMediaOnScreenIndex]}
+                                        />
 
                                     </div>
 
@@ -209,8 +208,8 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
 
                     {/* SHOWS ONLY ON MOBILE */}
                     <div id={styles.swiper_list_container}>
-                        {data != undefined && (
-                            <SwiperContainer
+                        {animesList != undefined && (
+                            <SwiperCarouselContainer
                                 options={{
                                     slidesPerView: 2,
                                     bp480: 2,
@@ -219,16 +218,16 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
                                 }}
                             >
 
-                                {data.slice(0, 9).map((item, key) => (
+                                {animesList.slice(0, 9).map((item, key) => (
 
                                     <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
 
-                                        <ListCarousel
-                                            data={item as ApiDefaultResult}
-                                            onClick={(e: { target: { outerText: string } }) => setPage(
+                                        <ListItemHeroCarousel
+                                            animeInfo={item as ApiDefaultResult}
+                                            handleFunction={(e: { target: { outerText: string } }) => setPage(
                                                 [
-                                                    data.findIndex((item) => item.title.romaji == e.target.outerText),
-                                                    data.findIndex((item) => item.title.romaji == e.target.outerText)
+                                                    animesList.findIndex((item) => item.title.romaji == e.target.outerText),
+                                                    animesList.findIndex((item) => item.title.romaji == e.target.outerText)
                                                 ]
                                             )}
                                         />
@@ -237,19 +236,19 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
 
                                 ))}
 
-                            </SwiperContainer>
+                            </SwiperCarouselContainer>
                         )}
                     </div>
 
                     {/* SHOWS ONLY ON DESKTOP */}
                     <ul>
-                        {data != undefined && (
-                            data.slice(0, 9).map((item, key: number) => (
-                                item.bannerImage && (
-                                    <ListCarousel
-                                        onClick={() => setPage([key, key])}
+                        {animesList != undefined && (
+                            animesList.slice(0, 9).map((media, key: number) => (
+                                media.bannerImage && (
+                                    <ListItemHeroCarousel
+                                        animeInfo={media}
+                                        handleFunction={() => setPage([key, key])}
                                         key={key}
-                                        data={item}
                                     />
                                 ))
                             )
@@ -262,7 +261,7 @@ function HeroCarousel({ data, isMobile }: { data: ApiDefaultResult[], isMobile: 
             {/* STOP/PLAY TRAILER BUTTON */}
             <div id={styles.stop_trailer_btn_container}>
                 <motion.button
-                    onClick={() => changeTrailerState()}
+                    onClick={() => changeAutoPlayTrailerState()}
                     whileTap={{ scale: 0.9 }}
                 >
                     {autoPlayTrailer ? (

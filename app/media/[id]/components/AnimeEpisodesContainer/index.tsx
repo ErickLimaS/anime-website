@@ -1,12 +1,12 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import NavButtons from '../../../../components/NavButtons';
+import NavigationButtons from '../../../../components/NavigationButtons';
 import DotsSvg from "@/public/assets/three-dots-vertical.svg";
 import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
-import { EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
+import { ApiDefaultResult, ApiMediaResults, EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
 import aniwatch from '@/app/api/aniwatch';
 import {
@@ -15,10 +15,11 @@ import {
   MediaInfoAniwatch
 } from '@/app/ts/interfaces/apiAnimewatchInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { getAuth } from 'firebase/auth';
+import { getAuth, User } from 'firebase/auth';
 import {
   doc, DocumentData,
   DocumentSnapshot, FieldPath,
+  Firestore,
   getDoc, getFirestore, setDoc
 } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp';
@@ -29,22 +30,21 @@ import GoGoAnimeEpisode from './components/EpisodeBySource/gogoanime';
 import AniwatchEpisode from './components/EpisodeBySource/aniwatch';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
-import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOptions';
+import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/optimizedFetchAnimeOptions';
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';
 
 type EpisodesContainerTypes = {
-  dataCrunchyroll: EpisodesType[],
-  dataImdb?: ImdbMediaInfo["seasons"],
-  dataImdbMapped: ImdbEpisode[],
-  mediaTitle: string,
-  mediaFormat: string,
-  mediaId: number,
-  totalEpisodes: number
+  imdb: {
+    mediaSeasons: ImdbMediaInfo["seasons"],
+    episodesList: ImdbEpisode[],
+  },
+  mediaInfo: ApiDefaultResult | ApiMediaResults,
+  crunchyrollInitialEpisodes: EpisodesType[]
 }
 
-const loadingEpisodesMotion = {
+const framerMotionLoadingEpisodes = {
   initial: {
     scale: 0
   },
@@ -59,7 +59,7 @@ const loadingEpisodesMotion = {
   }
 }
 
-const episodePopupMotion = {
+const framerMotionEpisodePopup = {
   initial: {
     opacity: 0
   },
@@ -71,28 +71,24 @@ const episodePopupMotion = {
   }
 }
 
-function EpisodesContainer(props: EpisodesContainerTypes) {
+export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialEpisodes }: EpisodesContainerTypes) {
 
-  const { dataCrunchyroll } = props
-  const { dataImdbMapped } = props
-
-  const [loading, setLoading] = useState(false)
-  const [optionsModalOpen, setOptionsModalOpen] = useState(false)
-  const [episodesDataFetched, setEpisodesDataFetched] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]>(dataCrunchyroll)
-
-  const [allEpisodesWatched, setAllEpisodesWatched] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [episodesList, setEpisodesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]>(crunchyrollInitialEpisodes)
 
   const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<MediaInfoAniwatch[]>([])
 
-  const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
-  const [itemOffset, setItemOffset] = useState<number>(0);
+  const [currAnimesList, setCurrAnimesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
+  const [itemOffset, setItemOffset] = useState<number>(0)
 
-  const [episodeSource, setEpisodeSource] = useState<SourceType["source"]>("crunchyroll")
+  const [currEpisodesSource, setCurrEpisodesSource] = useState<SourceType["source"]>("crunchyroll")
   const [currEpisodesWatched, setCurrEpisodesWatched] = useState<{
     mediaId: number;
     episodeNumber: number;
     episodeTitle: string;
   }[]>()
+
+  const [pageNumber, setPageNumber] = useState<number>(0)
 
   const auth = getAuth()
 
@@ -100,260 +96,196 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
   const db = getFirestore(initFirebase())
 
-  const [pageCount, setPageCount] = useState<number>(0)
+  useEffect(() => {
+
+    if (user) getUserPreferredSource()
+    else fetchEpisodesFromSource(crunchyrollInitialEpisodes.length == 0 ? "gogoanime" : "crunchyroll")
+
+  }, [user])
+
+  // PAGINATION
+  useEffect(() => {
+
+    const endOffset = itemOffset + rangeEpisodesPerPage;
+
+    if (currEpisodesSource == "crunchyroll") setPageNumber(Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage));
+
+    if (episodesList) setCurrAnimesList(episodesList.slice(itemOffset, endOffset))
+
+  }, [episodesList, itemOffset, crunchyrollInitialEpisodes, currEpisodesSource])
+
+  useEffect(() => { if (user) getUserEpisodesWatched() }, [user, mediaInfo.id, currEpisodesSource, itemOffset])
 
   // the episodes array length will be divided by 20, getting the range of pagination
   const rangeEpisodesPerPage = 20
 
-  // get source setted on user profile
-  async function getUserDefaultSource() {
+  async function getUserPreferredSource() {
 
-    const userData = await getDoc(doc(db, "users", user!.uid))
+    const useDoc = await getDoc(doc(db, "users", user!.uid))
 
-    const userSource = await userData.get("videoSource").toLowerCase() || "crunchyroll"
+    const userSelectedSource = await useDoc.get("videoSource").toLowerCase() || "crunchyroll"
 
-    getEpisodesFromNewSource(userSource)
+    fetchEpisodesFromSource(userSelectedSource)
 
-    setEpisodeSource(userSource)
-
-  }
-
-  // Invoke when user click to request another page
-
-  async function handlePageClick(event: { selected: number }) {
-
-    setLoading(true) // needed to refresh episodes "Marked as Watched"
-
-    const newOffset = event.selected * rangeEpisodesPerPage % episodesDataFetched.length
-
-    setItemOffset(newOffset)
-
-    setTimeout(() => setLoading(false), 250)  // needed to refresh episodes "Marked as Watched"
+    setCurrEpisodesSource(userSelectedSource)
 
   }
 
-  const setEpisodesSource: (parameter: SourceType["source"]) => void = async (parameter: SourceType["source"]) => {
+  async function getUserEpisodesWatched() {
 
-    console.log(`Episodes Source Parameter: ${parameter} `)
+    if (!user) return
 
-    setEpisodeSource(parameter)
+    const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
 
-    getEpisodesFromNewSource(parameter)
+    const userEpisodesWatchedList = userDoc.get("episodesWatched")
+
+    const mediaEpisodesWatchedList = userEpisodesWatchedList[mediaInfo.id] || null
+
+    if (mediaEpisodesWatchedList) setCurrEpisodesWatched(mediaEpisodesWatchedList)
 
   }
 
-  async function getEpisodesFromNewSource(source: SourceType["source"]) {
+  async function fetchEpisodesFromSource(newSourceChose: SourceType["source"]) {
 
     // if data props has 0 length, it is set to get data from gogoanime
-    const chooseSource = source
+    if ((newSourceChose == currEpisodesSource) && episodesList.length > 0) return
 
-    if ((chooseSource == episodeSource) && episodesDataFetched.length > 0) return
+    setIsLoading(true)
 
-    setLoading(true)
+    const paginationEndOffset = itemOffset + rangeEpisodesPerPage
 
-    const endOffset = itemOffset + rangeEpisodesPerPage
+    let mediaEpisodesList: EpisodeAnimeWatch[] | MediaEpisodes[]
 
-    // transform title in some way it can get query by other sources removing special chars
-    const query = props.mediaTitle
-
-    let mediaEpisodes
-
-    switch (chooseSource) {
+    switch (newSourceChose) {
 
       case "crunchyroll":
 
-        setEpisodeSource(chooseSource)
+        setCurrEpisodesSource(newSourceChose)
 
-        setEpisodesDataFetched(dataCrunchyroll)
+        setEpisodesList(crunchyrollInitialEpisodes)
 
-        setCurrentItems(dataCrunchyroll.slice(itemOffset, endOffset))
-        setPageCount(Math.ceil(dataCrunchyroll.length / rangeEpisodesPerPage))
+        setCurrAnimesList(crunchyrollInitialEpisodes.slice(itemOffset, paginationEndOffset))
+
+        setPageNumber(Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage))
 
         break
 
-      case "gogoanime": // get data from GOGOANIME as default
+      case "gogoanime":
 
-        setEpisodeSource(chooseSource)
+        setCurrEpisodesSource(newSourceChose)
 
-        mediaEpisodes = await fetchWithGoGoAnime(query, "episodes") as MediaEpisodes[]
+        mediaEpisodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as MediaEpisodes[]
 
-        if (mediaEpisodes == null) {
-          setLoading(false)
-          setEpisodesDataFetched([])
+        if (!mediaEpisodesList) {
+
+          setIsLoading(false)
+
+          setEpisodesList([])
+
+          setCurrAnimesList(null)
+
+          setPageNumber(0)
+
           return
 
         }
 
-        setEpisodesDataFetched(mediaEpisodes as MediaEpisodes[])
+        setEpisodesList(mediaEpisodesList as MediaEpisodes[])
 
-        if (mediaEpisodes != null) {
-          setCurrentItems((mediaEpisodes as MediaEpisodes[]).slice(itemOffset, endOffset))
-          setPageCount(Math.ceil((mediaEpisodes as MediaEpisodes[]).length / rangeEpisodesPerPage))
-        }
-        else {
-          setCurrentItems(null)
-          setPageCount(0)
-        }
+        setCurrAnimesList((mediaEpisodesList as MediaEpisodes[]).slice(itemOffset, paginationEndOffset))
+
+        setPageNumber(Math.ceil((mediaEpisodesList as MediaEpisodes[]).length / rangeEpisodesPerPage))
 
         break
 
-      case "aniwatch": // get data from ANIWATCH
+      case "aniwatch":
 
-        setEpisodeSource(chooseSource)
+        setCurrEpisodesSource(newSourceChose)
 
-        const searchResultsForMedia = await fetchWithAniWatch(query, "search_list", props.mediaFormat, dataImdbMapped.length) as MediaInfoAniwatch[]
+        const searchResultsListForCurrMedia = await optimizedFetchOnAniwatch({
+          textToSearch: mediaInfo.title.romaji,
+          only: "search_list",
+          format: mediaInfo.format,
+          mediaTotalEpisodes: imdb.episodesList.length
+        }) as MediaInfoAniwatch[]
 
-        setMediaResultsInfoArray(searchResultsForMedia)
+        setMediaResultsInfoArray(searchResultsListForCurrMedia)
 
-        mediaEpisodes = await fetchWithAniWatch(query, "episodes", props.mediaFormat, dataImdbMapped.length) as EpisodesFetchedAnimeWatch["episodes"]
+        mediaEpisodesList = await optimizedFetchOnAniwatch({
+          textToSearch: mediaInfo.title.romaji,
+          only: "episodes",
+          format: mediaInfo.format,
+          mediaTotalEpisodes: imdb.episodesList.length
 
-        setEpisodesDataFetched(mediaEpisodes)
+        }) as EpisodesFetchedAnimeWatch["episodes"]
 
-        if (mediaEpisodes != null) {
-          setCurrentItems(mediaEpisodes.slice(itemOffset, endOffset))
-          setPageCount(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage))
+        setEpisodesList(mediaEpisodesList)
+
+        if (mediaEpisodesList) {
+
+          setCurrAnimesList(mediaEpisodesList.slice(itemOffset, paginationEndOffset))
+
+          setPageNumber(Math.ceil(mediaEpisodesList.length / rangeEpisodesPerPage))
+
         }
         else {
-          setCurrentItems(null)
-          setPageCount(0)
+
+          setCurrAnimesList(null)
+
+          setPageNumber(0)
+
         }
 
         break
 
       default:
 
-        console.log("need to work on it")
+        alert("need to work on it. give me a shoutout on Git Issues if i forget")
 
         break
 
     }
 
-    setLoading(false)
+    setIsLoading(false)
 
   }
 
-  // user can select a result that matches the page, if not correct
-  async function getEpisodesToThisMediaFromAniwatch(id: string) {
+  async function handleRefetchMediaEpisodesFromSelectTag(id: string) {
 
-    setLoading(true)
+    setIsLoading(true)
 
     const endOffset = itemOffset + rangeEpisodesPerPage
 
-    const mediaEpisodes = await aniwatch.getEpisodes(id) as EpisodesFetchedAnimeWatch
+    const mediaEpisodes = await aniwatch.getEpisodes({ episodeId: id }) as EpisodesFetchedAnimeWatch
 
-    setEpisodesDataFetched(mediaEpisodes.episodes)
+    setEpisodesList(mediaEpisodes.episodes)
 
-    setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+    setCurrAnimesList(mediaEpisodes.episodes.slice(itemOffset, endOffset));
+    setPageNumber(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
 
-    setLoading(false)
-
-  }
-
-  // CHECK WATCHED EPISODES ON FIRESTORE
-  async function getEpisodesWatched() {
-
-    if (!user) return
-
-    const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
-
-    if (!userDoc) return
-
-    const isOnEpisodesList = userDoc.get("episodesWatched")
-
-    if (!isOnEpisodesList) return
-
-    const watchedEpisodes = isOnEpisodesList[props.mediaId] || null
-
-    if (watchedEpisodes) setCurrEpisodesWatched(watchedEpisodes)
+    setIsLoading(false)
 
   }
 
-  // OPENS MODAL and CHECKS IF ALL EPISODES WAS ALREADY MARKED 
-  async function toggleOpenOptionsModal() {
+  async function handleButtonPageNavigation(event: { selected: number }) {
 
-    setOptionsModalOpen(!optionsModalOpen)
+    setIsLoading(true) // Needed to refresh episodes "Marked as Watched"
 
-    if (!user) return
+    const newOffset = event.selected * rangeEpisodesPerPage % episodesList.length
 
-    const userDoc = await getDoc(doc(db, 'users', user!.uid)).then((res) => res.data())
+    setItemOffset(newOffset)
 
-    if (userDoc!.episodesWatched[props.mediaId]?.length == dataImdbMapped?.length) {
-      setAllEpisodesWatched(true)
-    }
-    else {
-      setAllEpisodesWatched(false)
-    }
+    setTimeout(() => setIsLoading(false), 250)  // Needed to refresh episodes "Marked as Watched"
 
   }
 
-  // MARK ALL EPISODES AS WATCHED ON FIRESTORE
-  async function markAllEpisodesAsWatched() {
+  const handleSourcesButtonValue: (parameter: SourceType["source"]) => void = async (parameter: SourceType["source"]) => {
 
-    if (!user) return
+    setCurrEpisodesSource(parameter)
 
-    function mapAllEpisodesInfo(index: number) {
-
-      return {
-        mediaId: props.mediaId,
-        episodeNumber: index + 1,
-        episodeTitle: dataImdbMapped[index]?.title
-      }
-    }
-
-    const allEpisodes: { mediaId: number; episodeNumber: number; episodeTitle: string; }[] = []
-
-    dataImdbMapped.map((item, key) => allEpisodes.push(mapAllEpisodesInfo(key)))
-
-    await setDoc(doc(db, 'users', user.uid),
-      {
-        episodesWatched: {
-          [props.mediaId]: allEpisodesWatched ? null : allEpisodes
-        }
-
-      } as unknown as FieldPath,
-      { merge: true }
-    ).then(() =>
-      setAllEpisodesWatched(!allEpisodesWatched)
-    )
+    fetchEpisodesFromSource(parameter)
 
   }
-
-  // FETCHS EPISODES WATCHED 
-  useEffect(() => {
-
-    if (user) getEpisodesWatched()
-
-  }, [user, props.mediaId, episodeSource, itemOffset])
-
-  // FETCHS USERS SELECTED SOURCE / SET SOURCE
-  useEffect(() => {
-
-    if (user) {
-      getUserDefaultSource()
-    }
-    else {
-      // if there's no episodes coming from crunchyroll, gets episodes from other source
-      getEpisodesFromNewSource(dataCrunchyroll.length == 0 ? "gogoanime" : "crunchyroll")
-    }
-
-  }, [user])
-
-  // HANDLES THE PAGINATION
-  useEffect(() => {
-
-    const endOffset = itemOffset + rangeEpisodesPerPage;
-
-    // if theres episodes from crunchyroll, sets the pagination pages
-    if (episodeSource == "crunchyroll") {
-
-      setPageCount(Math.ceil(dataCrunchyroll.length / rangeEpisodesPerPage));
-
-    }
-
-    if (episodesDataFetched) setCurrentItems(episodesDataFetched.slice(itemOffset, endOffset))
-
-  }, [episodesDataFetched, itemOffset, dataCrunchyroll, episodeSource])
 
   return (
     <React.Fragment>
@@ -361,38 +293,12 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
       <div id={styles.episodes_heading}>
         <h2 className={styles.heading_style}>EPISODES</h2>
 
-        <button
-          id={styles.options_btn}
-          onClick={() => toggleOpenOptionsModal()}
-          data-active={optionsModalOpen}
-        >
-          <DotsSvg width={16} height={16} />
-        </button>
-
-        <AnimatePresence>
-          {optionsModalOpen && (
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className={styles.options_modal_container}
-            >
-
-              <h5>OPTIONS</h5>
-
-              <ul>
-                <li>
-                  <motion.button onClick={() => markAllEpisodesAsWatched()} whileTap={{ scale: 0.9 }}>
-                    <CheckFillSvg width={16} height={16} /> {allEpisodesWatched ? "Unmark" : "Mark"} All Episodes as Watched
-                  </motion.button>
-                </li>
-              </ul>
-
-            </motion.div>
-
-          )}
-        </AnimatePresence>
+        <OptionsPanel
+          user={user}
+          db={db}
+          mediaInfo={mediaInfo}
+          imdb={imdb}
+        />
 
       </div>
 
@@ -400,24 +306,21 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         <div id={styles.container_heading}>
 
-          <NavButtons
-            functionReceived={setEpisodesSource as (parameter: string | number) => void}
-            actualValue={episodeSource}
+          <NavigationButtons
+            propsFunction={handleSourcesButtonValue as (parameter: string | number) => void}
+            currValue={currEpisodesSource}
             showSourceStatus
-            sepateWithSpan={true}
-            options={
-              [
-                { name: "Crunchyroll", value: "crunchyroll" },
-                { name: "GoGoAnime", value: "gogoanime" },
-                { name: "Aniwatch", value: "aniwatch" }
-              ]
-            }
+            sepateBtnsWithSpan={true}
+            buttonOptions={[
+              { name: "Crunchyroll", value: "crunchyroll" },
+              { name: "GoGoAnime", value: "gogoanime" },
+              { name: "Aniwatch", value: "aniwatch" }
+            ]}
           />
 
-          {/* SHOWS A SELECT WITH OTHER RESULTS FOR THIS MEDIA */}
-          {/* ANIWATCH DONT GET THE RIGHT RESULT MOST OF TIMES */}
+          {/* SHOWS A SELECT WITH OTHER RESULTS FOR THIS MEDIA, ANIWATCH DONT GET THE RIGHT RESULT MOST OF TIMES */}
           <AnimatePresence>
-            {(episodeSource == "aniwatch" && mediaResultsInfoArray.length > 1) && (
+            {(currEpisodesSource == "aniwatch" && mediaResultsInfoArray.length > 1) && (
               <motion.div
                 id={styles.select_media_container}
                 initial={{ height: 0, opacity: 0 }}
@@ -428,15 +331,15 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
                 <small>Wrong Episodes? Select bellow!</small>
 
                 <select
-                  onChange={(e) => getEpisodesToThisMediaFromAniwatch(e.target.value)}
-                  defaultValue={checkAnilistTitleMisspelling(props.mediaTitle).toLowerCase()}
+                  onChange={(e) => handleRefetchMediaEpisodesFromSelectTag(e.target.value)}
+                  defaultValue={checkAnilistTitleMisspelling(mediaInfo.title.romaji || mediaInfo.title.native).toLowerCase()}
                 >
-                  {mediaResultsInfoArray?.map((item, key) => (
+                  {mediaResultsInfoArray?.map((media, key) => (
                     <option
                       key={key}
-                      value={item.id.toLowerCase()}
+                      value={media.id.toLowerCase()}
                     >
-                      {item.name}
+                      {media.name}
                     </option>
                   ))}
                 </select>
@@ -447,57 +350,24 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
         </div>
 
-        <motion.ol id={styles.container} data-loading={loading} animate={{ height: "auto" }}>
+        <motion.ol id={styles.container} data-loading={isLoading} animate={{ height: "auto" }}>
 
           <AnimatePresence>
 
-            {currentItems && currentItems.map((item: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode, key: number) => (
+            {currAnimesList && currAnimesList.map((episode: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode, key: number) => (
 
-              !loading && (
-
-                episodeSource == "crunchyroll" && (
-
-                  <CrunchyrollEpisode
-                    motionStyle={episodePopupMotion}
-                    key={key}
-                    data={item as EpisodesType}
-                    episodeNumber={key + itemOffset + 1}
-                    mediaId={props.mediaId}
-                    episodesWatched={currEpisodesWatched}
-                  />
-
-                )
-                ||
-                episodeSource == "gogoanime" && (
-
-                  <GoGoAnimeEpisode
-                    motionStyle={episodePopupMotion}
-                    key={key}
-                    data={item as MediaEpisodes}
-                    episodeNumber={key + itemOffset + 1}
-                    title={dataImdbMapped[key + itemOffset]?.title}
-                    episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
-                    backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
-                    mediaId={props.mediaId}
-                    episodesWatched={currEpisodesWatched}
-                  />
-
-                )
-                ||
-                episodeSource == "aniwatch" && (
-
-                  <AniwatchEpisode
-                    motionStyle={episodePopupMotion}
-                    key={key}
-                    data={item as EpisodeAnimeWatch}
-                    episodeNumber={key + itemOffset + 1}
-                    episodeDescription={dataImdbMapped[key + itemOffset]?.description || undefined}
-                    backgroundImg={dataImdbMapped[key + itemOffset]?.img?.hd || dataCrunchyroll[key + itemOffset]?.thumbnail}
-                    mediaId={props.mediaId}
-                    episodesWatched={currEpisodesWatched}
-                  />
-
-                )
+              !isLoading && (
+                <EpisodeBySource
+                  key={key}
+                  index={key}
+                  episodeInfo={episode}
+                  mediaInfo={mediaInfo}
+                  currEpisodesSource={currEpisodesSource}
+                  imdb={imdb}
+                  crunchyrollInitialEpisodes={crunchyrollInitialEpisodes}
+                  itemOffset={itemOffset}
+                  currEpisodesWatched={currEpisodesWatched}
+                />
               )
 
             ))}
@@ -505,10 +375,10 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           </AnimatePresence>
         </motion.ol>
 
-        {loading && (
+        {isLoading && (
           <motion.div
             id={styles.loading_episodes_container}
-            variants={loadingEpisodesMotion}
+            variants={framerMotionLoadingEpisodes}
             initial="initial"
             animate="animate"
             exit="exit"
@@ -518,7 +388,7 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
 
               <motion.div
                 key={key}
-                variants={loadingEpisodesMotion}
+                variants={framerMotionLoadingEpisodes}
               >
 
                 <LoadingSvg width={60} height={60} alt="Loading Episodes" />
@@ -530,12 +400,12 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
           </motion.div>
         )}
 
-        {((episodesDataFetched?.length == 0 || episodesDataFetched == null) && !loading) && (
+        {((episodesList?.length == 0 || episodesList == null) && !isLoading) && (
           <div id={styles.no_episodes_container}>
 
             <Image src={ErrorImg} alt='Error' height={200} />
 
-            <p>Not available on <span>{episodeSource}</span></p>
+            <p>Not available on <span>{currEpisodesSource}</span></p>
 
           </div>
         )}
@@ -543,8 +413,8 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
         <nav id={styles.pagination_buttons_container}>
 
           <NavPaginateItems
-            onPageChange={handlePageClick}
-            pageCount={pageCount}
+            onPageChange={handleButtonPageNavigation}
+            pageCount={pageNumber}
           />
 
         </nav>
@@ -554,4 +424,188 @@ function EpisodesContainer(props: EpisodesContainerTypes) {
   )
 }
 
-export default EpisodesContainer
+function OptionsPanel({ user, db, mediaInfo, imdb }: {
+  user: User | null | undefined,
+  db: Firestore,
+  imdb: {
+    mediaSeasons: ImdbMediaInfo["seasons"],
+    episodesList: ImdbEpisode[],
+  },
+  mediaInfo: ApiDefaultResult | ApiMediaResults,
+}) {
+
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState<boolean>(false)
+  const [allEpisodesWatched, setAllEpisodesWatched] = useState<boolean>(false)
+
+  async function toggleOpenOptionsModal() {
+
+    setIsOptionsModalOpen(!isOptionsModalOpen)
+
+    if (!user) return
+
+    const userDoc = await getDoc(doc(db, 'users', user!.uid)).then((res) => res.data())
+
+    if (userDoc!.episodesWatched[mediaInfo.id]?.length == imdb.episodesList?.length) {
+      setAllEpisodesWatched(true)
+    }
+
+    setAllEpisodesWatched(false)
+
+  }
+
+  async function handleMarkAllEpisodesAsWatched() {
+
+    if (!user) return
+
+    function mapAllEpisodesInfo(index: number) {
+
+      return {
+        mediaId: mediaInfo.id,
+        episodeNumber: index + 1,
+        episodeTitle: imdb.episodesList[index]?.title
+      }
+
+    }
+
+    const allEpisodes: { mediaId: number, episodeNumber: number, episodeTitle: string }[] = []
+
+    imdb.episodesList.map((episode, key) => allEpisodes.push(mapAllEpisodesInfo(key)))
+
+    await setDoc(doc(db, 'users', user.uid),
+      {
+        episodesWatched: {
+          [mediaInfo.id]: allEpisodesWatched ? null : allEpisodes
+        }
+
+      } as unknown as FieldPath,
+      { merge: true }
+    ).then(() =>
+      setAllEpisodesWatched(!allEpisodesWatched)
+    )
+
+  }
+
+  return (
+    <React.Fragment>
+
+      <button
+        id={styles.options_btn}
+        onClick={() => toggleOpenOptionsModal()}
+        data-active={isOptionsModalOpen}
+        aria-controls={styles.episodes_options_panel}
+        aria-label={isOptionsModalOpen ? `Close Options Menu` : `Open Options Menu`}
+
+      >
+        <DotsSvg width={16} height={16} />
+      </button>
+
+      <AnimatePresence>
+        {isOptionsModalOpen && (
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            id={styles.episodes_options_panel}
+            aria-expanded={isOptionsModalOpen}
+            className={styles.options_modal_container}
+          >
+
+            <h5>OPTIONS</h5>
+
+            <ul>
+              <li>
+                <motion.button
+                  onClick={() => handleMarkAllEpisodesAsWatched()}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <CheckFillSvg width={16} height={16} /> {allEpisodesWatched ? "Unmark" : "Mark"} All Episodes as Watched
+                </motion.button>
+              </li>
+            </ul>
+
+          </motion.div>
+
+        )}
+      </AnimatePresence>
+
+    </React.Fragment>
+  )
+
+}
+
+function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, index, imdb, crunchyrollInitialEpisodes }:
+  {
+    episodeInfo: ImdbEpisode | EpisodesType | MediaEpisodes | EpisodeAnimeWatch,
+    currEpisodesSource: SourceType["source"],
+    currEpisodesWatched?: {
+      mediaId: number;
+      episodeNumber: number;
+      episodeTitle: string;
+    }[],
+    itemOffset: number,
+    mediaInfo: ApiDefaultResult | ApiMediaResults,
+    index: number,
+    imdb: EpisodesContainerTypes["imdb"],
+    crunchyrollInitialEpisodes: EpisodesContainerTypes["crunchyrollInitialEpisodes"]
+  }
+) {
+
+  switch (currEpisodesSource) {
+
+    case "crunchyroll":
+
+      return (
+
+        <CrunchyrollEpisode
+          motionStyle={framerMotionEpisodePopup}
+          key={index}
+          data={episodeInfo as EpisodesType}
+          episodeNumber={index + itemOffset + 1}
+          mediaId={mediaInfo.id}
+          episodesWatched={currEpisodesWatched}
+        />
+
+      )
+
+    case "gogoanime":
+
+      return (
+
+        <GoGoAnimeEpisode
+          motionStyle={framerMotionEpisodePopup}
+          key={index}
+          data={episodeInfo as MediaEpisodes}
+          episodeNumber={index + itemOffset + 1}
+          title={imdb.episodesList[index + itemOffset]?.title}
+          episodeDescription={imdb.episodesList[index + itemOffset]?.description || undefined}
+          backgroundImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
+          mediaId={mediaInfo.id}
+          episodesWatched={currEpisodesWatched}
+        />
+
+      )
+
+    case "aniwatch":
+
+      return (
+
+        <AniwatchEpisode
+          motionStyle={framerMotionEpisodePopup}
+          key={index}
+          data={episodeInfo as EpisodeAnimeWatch}
+          episodeNumber={index + itemOffset + 1}
+          episodeDescription={imdb.episodesList[index + itemOffset]?.description || undefined}
+          backgroundImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
+          mediaId={mediaInfo.id}
+          episodesWatched={currEpisodesWatched}
+        />
+
+      )
+
+    default:
+      return (<></>)
+
+  }
+
+}

@@ -17,7 +17,7 @@ axiosRetry(Axios, {
 export default {
 
     // SEARCH MANGA BY QUERY/TITLE
-    searchMedia: cache(async (query: string, page?: number) => {
+    searchMedia: cache(async ({ query, page }: { query: string, page?: number }) => {
 
         try {
 
@@ -40,7 +40,7 @@ export default {
     }),
 
     // GET MANGA INFO
-    getInfoFromThisMedia: cache(async (id: string | number) => {
+    getInfoFromThisMedia: cache(async ({ id }: { id: string | number }) => {
 
         try {
 
@@ -69,7 +69,7 @@ export default {
     }),
 
     // GET PAGES FOR MANGA CHAPTER
-    getChapterPages: cache(async (chapterId: string) => {
+    getChapterPages: cache(async ({ chapterId }: { chapterId: string }) => {
 
         try {
             const { data } = await Axios({

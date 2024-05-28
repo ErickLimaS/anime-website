@@ -18,14 +18,14 @@ import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestor
 import { initFirebase } from '@/app/firebaseApp'
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import { useAuthState } from 'react-firebase-hooks/auth'
-import UserSettingsModal from '@/app/layout/header/components/User/UserSettingsModal'
+import UserSettingsModal from '@/app/components/layout/header/components/User/UserSettingsModal'
 
 type ModalTypes = {
     onClick?: MouseEventHandler<HTMLDivElement>,
     auth: Auth
 }
 
-const dropIn = {
+const framerMotionDropIn = {
 
     hidden: {
         x: "-100vw",
@@ -48,35 +48,38 @@ const dropIn = {
 
 }
 
-function UserModal({ onClick, auth, }: ModalTypes) {
+export default function UserModal({ onClick, auth, }: ModalTypes) {
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState<boolean>(false)
+
+    const [formType, setFormType] = useState<"login" | "signup">("login")
+    const [loginError, setLoginError] = useState<{ code: string, message: string } | null>(null)
 
     const googleProvider = new GoogleAuthProvider()
     const githubProvider = new GithubAuthProvider()
 
+    const [user] = useAuthState(auth)
     const db = getFirestore(initFirebase())
 
-    const [user] = useAuthState(auth)
+    async function createNewUserDocument(user: User) {
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [showSettingsMenu, setShowSettingsMenu] = useState(false)
+        const doesUserHasDoc = await getDoc(doc(db, "users", user.uid)).then(res => res.data())
 
-    const [alternativeForm, setAlternativeForm] = useState(false)
-    const [loginError, setLoginError] = useState<{ code: string, message: string } | null>(null)
-
-
-    async function newUserDoc(user: User) {
-
-        const userHasDoc = await getDoc(doc(db, "users", user.uid)).then(res => res.data())
-
-        if (userHasDoc) return
+        if (doesUserHasDoc) return
 
         // if user is anonymous, set a placeholder Name and Photo
-        if (user.isAnonymous) await updateProfile(user, { displayName: "Anonymous", photoURL: "https://i.pinimg.com/736x/fc/4e/f7/fc4ef7ec7265a1ebb69b4b8d23982d9d.jpg" })
+        if (user.isAnonymous) {
+            await updateProfile(
+                user, {
+                displayName: "Anonymous",
+                photoURL: "https://i.pinimg.com/736x/fc/4e/f7/fc4ef7ec7265a1ebb69b4b8d23982d9d.jpg"
+            })
+        }
 
-        // shows settings to new user
-        setShowSettingsMenu(true)
+        setIsSettingsMenuOpen(true) // requires user to custom his new profile on Settings Panel
 
-        await setDoc(doc(collection(db, "users"), user.uid), {
+        const defaultNewUserDocValues = {
             bookmarks: [],
             keepWatching: [],
             notifications: [],
@@ -89,13 +92,15 @@ function UserModal({ onClick, auth, }: ModalTypes) {
             autoSkipIntroAndOutro: false,
             videoQuality: "auto",
             videoSubtitleLanguage: "English",
-        })
+        }
+
+        await setDoc(doc(collection(db, "users"), user.uid), defaultNewUserDocValues)
 
     }
 
     const signInGoogle = async () => {
         await signInWithPopup(auth, googleProvider)
-            .then(async (res) => await newUserDoc(res.user))
+            .then(async (res) => await createNewUserDocument(res.user))
             .catch((err: any) => {
 
                 setLoginError({
@@ -108,7 +113,7 @@ function UserModal({ onClick, auth, }: ModalTypes) {
 
     const signInGithub = async () => {
         await signInWithPopup(auth, githubProvider)
-            .then(async (res) => await newUserDoc(res.user))
+            .then(async (res) => await createNewUserDocument(res.user))
             .catch((err: any) => {
 
                 setLoginError({
@@ -118,11 +123,10 @@ function UserModal({ onClick, auth, }: ModalTypes) {
 
             })
     }
-
 
     const signAnonymously = async () => {
         await signInAnonymously(auth)
-            .then(async (res) => await newUserDoc(res.user))
+            .then(async (res) => await createNewUserDocument(res.user))
             .catch((err: any) => {
 
                 setLoginError({
@@ -133,7 +137,7 @@ function UserModal({ onClick, auth, }: ModalTypes) {
             })
     }
 
-    async function handleLoginForm(e: React.FormEvent<HTMLFormElement>, action: "login" | "signup") {
+    async function handleLoginForm(e: React.FormEvent<HTMLFormElement>) {
 
         e.preventDefault()
 
@@ -141,69 +145,74 @@ function UserModal({ onClick, auth, }: ModalTypes) {
 
         const form: any = e.target
 
-        // signup
-        if (action == "signup") {
-            try {
-
-                const doesPasswordFieldsMatch = form.password.value.trim() == form.confirm_password.value.trim()
-
-                if (!doesPasswordFieldsMatch) {
-                    setLoginError({
-                        code: "password",
-                        message: "Passwords doesn't match."
-                    })
-
-                    setIsLoading(false)
-
-                    return
-                }
-
-                const res = await createUserWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
-
-                // update user info
-                await updateProfile(res.user, {
-                    displayName: form.username.value,
-                    photoURL: ProfileFallbackImg.src as string
-                })
-
-                // add default values to user doc
-                await newUserDoc(res.user)
-
-                setLoginError(null)
-            }
-            catch (err: any) {
-
-                setLoginError({
-                    code: err.code,
-                    message: err.message
-                })
-
-            }
+        try {
+            await signInWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
+            setLoginError(null)
         }
-        // login
-        else {
-            try {
-                const res = await signInWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
-                setLoginError(null)
-            }
-            catch (err: any) {
+        catch (err: any) {
 
-                setLoginError({
-                    code: err.code,
-                    message: err.code == "auth/invalid-credential" ? "Check Your Email and Password, then try again." : err.message
-                })
+            setLoginError({
+                code: err.code,
+                message: err.code == "auth/invalid-credential" ? "Check Your Email and Password, then try again." : err.message
+            })
 
-            }
         }
 
         setIsLoading(false)
 
     }
 
-    // only opens when user has created a account
-    if (user && showSettingsMenu) {
-        return <UserSettingsModal auth={auth} onClick={onClick} newUser />
+    async function handleSignUpForm(e: React.FormEvent<HTMLFormElement>) {
+
+        e.preventDefault()
+
+        setIsLoading(true)
+
+        const form: any = e.target
+
+        try {
+
+            const doesPasswordFieldsMatch = form.password.value.trim() == form.confirm_password.value.trim()
+
+            if (!doesPasswordFieldsMatch) {
+                setLoginError({
+                    code: "password",
+                    message: "Passwords doesn't match."
+                })
+
+                setIsLoading(false)
+
+                return
+            }
+
+            const res = await createUserWithEmailAndPassword(auth, form.email.value.trim(), form.password.value.trim())
+
+            // update user info
+            await updateProfile(res.user, {
+                displayName: form.username.value,
+                photoURL: ProfileFallbackImg.src as string
+            })
+
+            // add default values to user doc
+            await createNewUserDocument(res.user)
+
+            setLoginError(null)
+        }
+        catch (err: any) {
+
+            setLoginError({
+                code: err.code,
+                message: err.message
+            })
+
+        }
+
+        setIsLoading(false)
+
     }
+
+    // Required to customize the new User created on Settings panel
+    if (user && isSettingsMenuOpen) return <UserSettingsModal auth={auth} onClick={onClick} newUser />
 
     return !user && (
         <motion.div
@@ -213,10 +222,10 @@ function UserModal({ onClick, auth, }: ModalTypes) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
         >
-            < motion.div
+            <motion.div
                 onClick={(e) => e.stopPropagation()}
                 id={styles.modal}
-                variants={dropIn}
+                variants={framerMotionDropIn}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
@@ -232,30 +241,11 @@ function UserModal({ onClick, auth, }: ModalTypes) {
                     </button>
                 </div>
 
-                <div id={styles.login_buttons_container}>
-
-                    <div>
-                        <button title='Google' id={styles.google_button} onClick={() => signInGoogle()}>
-                            <GoogleSvg width={16} height={16} alt={"Google icon"} />
-                        </button>
-                        <small>Google</small>
-                    </div>
-
-                    <div>
-                        <button title='Anonymously' id={styles.anonymous_button} onClick={() => signAnonymously()}>
-                            <AnonymousSvg width={16} height={16} alt={"Anonymous icon"} />
-                        </button>
-                        <small>Anonymously</small>
-                    </div>
-
-                    <div>
-                        <button title='GitHub' id={styles.github_button} onClick={() => signInGithub()}>
-                            <GitHubSvg width={16} height={16} alt={"GitHub icon"} />
-                        </button>
-                        <small>GitHub</small>
-                    </div>
-
-                </div>
+                <LoginAlternativesButtons
+                    withGitHub={() => signInGithub()}
+                    anonymously={() => signAnonymously()}
+                    withGoogle={() => signInGoogle()}
+                />
 
                 <div id={styles.span_container}>
                     <span></span>
@@ -264,13 +254,13 @@ function UserModal({ onClick, auth, }: ModalTypes) {
                 </div>
 
                 <motion.form
-                    onSubmit={(e) => handleLoginForm(e, alternativeForm ? "signup" : "login")}
+                    onSubmit={(e) => formType == "signup" ? handleSignUpForm(e) : handleLoginForm(e)}
                     onChange={() => setLoginError(null)}
                     data-error-occurred={loginError ? true : false}
                 >
 
                     <AnimatePresence>
-                        {alternativeForm && (
+                        {formType == "signup" && (
                             <motion.label
                                 initial={{ opacity: 0, height: 0, }}
                                 animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
@@ -305,14 +295,14 @@ function UserModal({ onClick, auth, }: ModalTypes) {
                             name='password'
                             pattern="^(?=.*\d)(?=.*[a-zA-Z]).{8,}$"
                             title={"Password has to have at least 1 letter and 1 number. Min. 8 characters."}
-                            autoComplete={alternativeForm ? 'new-password' : 'current-password'}
+                            autoComplete={formType == "signup" ? 'new-password' : 'current-password'}
                             placeholder='Your Password'
                             required>
                         </input>
                     </label>
 
                     <AnimatePresence>
-                        {alternativeForm && (
+                        {formType == "signup" && (
                             <motion.label
                                 initial={{ opacity: 0, height: 0, marginTop: "8px" }}
                                 animate={{ opacity: 1, height: "auto", transition: { duration: 0.4 } }}
@@ -341,7 +331,7 @@ function UserModal({ onClick, auth, }: ModalTypes) {
                             {isLoading ? (
                                 <LoadingSvg width={16} height={16} alt={"Loading"} />
                             ) : (
-                                alternativeForm ? (
+                                formType == "signup" ? (
                                     <motion.span>
                                         SIGN UP
                                     </motion.span>
@@ -380,9 +370,9 @@ function UserModal({ onClick, auth, }: ModalTypes) {
 
                 <motion.button
                     id={styles.create_account_button}
-                    onClick={() => setAlternativeForm(!alternativeForm)}
+                    onClick={() => setFormType(formType == "signup" ? "login" : "signup")}
                 >
-                    {alternativeForm ? "Or Login in Your Account" : "Or Create Your Account"}
+                    {formType == "signup" ? "Or Login in Your Account" : "Or Create Your Account"}
                 </motion.button>
 
             </motion.div>
@@ -391,4 +381,31 @@ function UserModal({ onClick, auth, }: ModalTypes) {
     )
 }
 
-export default UserModal
+function LoginAlternativesButtons({ withGoogle, withGitHub, anonymously }: { withGoogle: () => void, withGitHub: () => void, anonymously: () => void }) {
+
+    return (
+        <div id={styles.login_buttons_container}>
+            <div>
+                <button title='Google' id={styles.google_button} onClick={() => withGoogle()}>
+                    <GoogleSvg width={16} height={16} alt={"Google icon"} />
+                </button>
+                <small>Google</small>
+            </div>
+
+            <div>
+                <button title='Anonymously' id={styles.anonymous_button} onClick={() => anonymously()}>
+                    <AnonymousSvg width={16} height={16} alt={"Anonymous icon"} />
+                </button>
+                <small>Anonymously</small>
+            </div>
+
+            <div>
+                <button title='GitHub' id={styles.github_button} onClick={() => withGitHub()}>
+                    <GitHubSvg width={16} height={16} alt={"GitHub icon"} />
+                </button>
+                <small>GitHub</small>
+            </div>
+        </div>
+    )
+
+}

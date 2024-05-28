@@ -3,83 +3,110 @@ import styles from "./page.module.css"
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import gogoanime from '@/app/api/consumetGoGoAnime'
 import anilist from '@/app/api/anilist'
-import CoverWithMediaInfo from '@/app/components/MediaCards/CoverWithMediaInfo'
+import * as MediaCardExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { EpisodeLinksGoGoAnime, MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
-import EpisodesSideListContainer from './components/EpisodesSideListContainer'
-import CommentSection from '@/app/components/CommentSection'
+import EpisodesListContainer from './components/EpisodesListContainer'
+import CommentsSection from '@/app/components/CommentsSection'
 import aniwatch from '@/app/api/aniwatch'
-import Player from './components/VideoPlayer'
+import VideoPlayer from './components/VideoPlayer'
 import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
-import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOptions'
+import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/optimizedFetchAnimeOptions'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import { getMediaInfo } from '@/app/api/consumetImdb'
-import Image from 'next/image'
-import ErrorImg from "@/public/error-img-4.png"
-import Link from 'next/link'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
+import { FetchEpisodeError } from '@/app/components/MediaFetchErrorPage'
 
 export const revalidate = 900 // revalidate cached data every 15 minutes
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string } // EPISODE NUMBER, SOURCE, EPISODE ID
+    searchParams: { episode: string } // EPISODE NUMBER
 }) {
 
     // ACTES AS DEFAULT VALUE FOR PAGE PROPS
-    if (Object.keys(searchParams).length === 0) {
-        searchParams = { episode: "1" }
-    }
+    if (Object.keys(searchParams).length === 0) searchParams = { episode: "1" }
 
-    const mediaData = await anilist.getMediaInfo(params.id) as ApiDefaultResult
+    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
 
     return {
-        title: `Episode ${searchParams.episode} - ${mediaData.title.romaji} | AniProject`,
-        description: `Watch ${mediaData.title.romaji}, episode ${searchParams.episode}. ${mediaData.description && mediaData.description}`,
+        title: !mediaInfo ? "Error | AniProject" : `Episode ${searchParams.episode} - ${mediaInfo.title.romaji} | AniProject`,
+        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.romaji}, episode ${searchParams.episode}. ${mediaInfo.description && mediaInfo.description}`,
     }
 
 }
 
-async function WatchEpisode({ params, searchParams }: {
+export default async function WatchEpisode({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
     searchParams: { episode: string, source: SourceType["source"], q: string, t: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP
 }) {
 
     // ACTES AS DEFAULT VALUE FOR PAGE PROPS
-    if (Object.keys(searchParams).length === 0) {
-        searchParams = { episode: "1", source: "aniwatch", q: "", t: "0" }
+    if (Object.keys(searchParams).length === 0) searchParams = { episode: "1", source: "aniwatch", q: "", t: "0" }
+
+    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
+
+    let hadFetchError = false
+
+    if (!mediaInfo) hadFetchError = true
+
+    if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
+
+    let episodeDataFetched: EpisodeLinksGoGoAnime | EpisodeLinksAnimeWatch | null = null
+    let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | undefined = undefined
+    let episodesList: EpisodeAnimeWatch[] | MediaEpisodes[] = []
+    let videoUrlSrc: string | undefined = undefined
+    let imdbEpisodesList: ImdbEpisode[] = []
+
+    // get media info on imdb
+    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo({ search: true, seachTitle: mediaInfo.title.romaji, releaseYear: mediaInfo.startDate.year }) as ImdbMediaInfo
+
+    // get episodes on imdb
+    imdbMediaInfo?.seasons?.map(itemA => itemA.episodes?.map(itemB => imdbEpisodesList.push(itemB)))
+
+    function compareEpisodeIDs(episodesList: { id?: string, episodeId?: string }[], sourceName: SourceType["source"]) {
+
+        // Compare Episode ID from params with episodes fetched ID
+
+        switch (sourceName) {
+            case "aniwatch":
+                const aniwatchEpisodeIdFromParamsIsOnEpisodesList = episodesList.find(episode => episode.episodeId == searchParams.q)
+
+                return aniwatchEpisodeIdFromParamsIsOnEpisodesList == undefined
+
+            case 'gogoanime':
+
+                const gogoanimeEpisodeIdFromParamsIsOnEpisodesList = episodesList.find(episode => episode.id == searchParams.q)
+
+                return gogoanimeEpisodeIdFromParamsIsOnEpisodesList == undefined
+
+            default:
+                return false
+        }
+
     }
-
-    const mediaData = await anilist.getMediaInfo(params.id) as ApiMediaResults
-
-    let episodeData
-    let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | undefined
-    let episodes: EpisodeAnimeWatch[] | MediaEpisodes[] = []
-    let videoSrc: string | undefined = undefined
-    let imdbEpisodes: ImdbEpisode[] = [] 
-    let error = false
 
     switch (searchParams.source) {
 
         case ("gogoanime"):
 
-            // fetch episode data
-            episodeData = await gogoanime.getEpisodeStreamingLinks2(searchParams.q) as EpisodeLinksGoGoAnime
+            episodeDataFetched = await gogoanime.getEpisodeStreamingLinks2({ episodeId: searchParams.q }) as EpisodeLinksGoGoAnime
 
-            if (!episodeData) error = true
+            if (!episodeDataFetched) {
 
-            if (episodeData) {
+                hadFetchError = true
 
-                // fetch episode link source
-                videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources.find(item => item.quality == "default").url
-                if (!videoSrc) videoSrc = (episodeData as EpisodeLinksGoGoAnime).sources[0].url
-
-                // fetch episodes for this media
-                episodes = await fetchWithGoGoAnime(mediaData.title.romaji, "episodes") as MediaEpisodes[]
-
-                // if episode on params dont match any of EPISODES results, it shows a error
-                if (episodes.find(item => item.id == searchParams.q) == undefined) error = true
+                break
 
             }
+
+            // Episode link source
+            videoUrlSrc = episodeDataFetched.sources.find(item => item.quality == "default").url
+            if (!videoUrlSrc) videoUrlSrc = episodeDataFetched.sources[0].url
+
+            // Episodes for this media
+            episodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as MediaEpisodes[]
+
+            hadFetchError = compareEpisodeIDs(episodesList, "gogoanime")
 
             break
 
@@ -87,89 +114,46 @@ async function WatchEpisode({ params, searchParams }: {
 
             if (!searchParams.q) {
 
-                episodes = await fetchWithAniWatch(mediaData.title.romaji, "episodes") as EpisodeAnimeWatch[]
+                episodesList = await optimizedFetchOnAniwatch({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as EpisodeAnimeWatch[]
 
-                searchParams.q = episodes[0].episodeId
+                searchParams.q = episodesList[0].episodeId
 
             }
 
             // fetch episode data
-            episodeData = await aniwatch.episodesLinks(searchParams.q) as EpisodeLinksAnimeWatch
+            episodeDataFetched = await aniwatch.episodesLinks({ episodeId: searchParams.q }) as EpisodeLinksAnimeWatch
 
-            if (!episodeData) error = true
+            if (!episodeDataFetched) hadFetchError = true
 
-            if (episodeData) {
+            // fetch episode link source
+            videoUrlSrc = episodeDataFetched.sources[0].url
 
-                // fetch episode link source
-                videoSrc = episodeData.sources[0].url
+            // fetch episodes for this media
+            if (episodesList.length == 0) {
 
-                // fetch episodes for this media
-                if (episodes.length == 0) episodes = await fetchWithAniWatch(
-                    mediaData.title.romaji,
-                    "episodes",
-                    mediaData.format,
-                    undefined,
-                    searchParams?.q?.split("?")[0]
-                ) as EpisodeAnimeWatch[]
-
-                episodeSubtitles = episodeData.tracks
-
-                // if episode on params dont match any of EPISODES results, it shows a error
-                if ((episodes as EpisodeAnimeWatch[]).find((item) => item.episodeId == searchParams.q) == undefined) error = true
+                episodesList = await optimizedFetchOnAniwatch({
+                    textToSearch: mediaInfo.title.romaji,
+                    only: "episodes",
+                    format: mediaInfo.format,
+                    idToMatch: searchParams?.q?.split("?")[0]
+                }) as EpisodeAnimeWatch[]
 
             }
+
+            episodeSubtitles = episodeDataFetched.tracks
+
+            hadFetchError = compareEpisodeIDs(episodesList, "aniwatch")
 
             break
 
         default:
-
-            error = true
+            hadFetchError = true
 
     }
 
-    // get media info on imdb
-    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo(true, undefined, undefined, mediaData.title.romaji, mediaData.startDate.year) as ImdbMediaInfo
+    const imdbEpisodeInfo = imdbEpisodesList?.find(item => item.episode == Number(searchParams.episode))
 
-    // get episodes on imdb
-    imdbMediaInfo?.seasons?.map(itemA => itemA.episodes?.map(itemB => imdbEpisodes.push(itemB)))
-
-    // ERROR MESSAGE
-    if (error) {
-        return (
-            <div id={styles.error_modal_container}>
-
-                <div id={styles.heading_text_container}>
-                    <div>
-                        <Image src={ErrorImg} height={330} alt={'Error'} />
-                    </div>
-
-                    <h1>ERROR!</h1>
-
-                    <p>What could have happened: </p>
-
-                    <ul>
-                        <li>{`${searchParams.source} doesn't have this media available.`}</li>
-                        <li>{`The Media ID doesn't match episode ID on ${searchParams.source}.`}</li>
-                        <li>{`Problems With Server.`}</li>
-                        <li>{`${searchParams.source} API changes or not available.`}</li>
-                    </ul>
-                </div>
-
-
-                <div id={styles.redirect_btns_container}>
-                    <Link href={`/media/${params.id}`}>
-                        Return To Media Page
-                    </Link>
-
-                    <Link href={"/"}>
-                        Return to Home Page
-                    </Link>
-
-                </div>
-
-            </div>
-        )
-    }
+    if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
 
     return (
         <main id={styles.container}>
@@ -177,21 +161,27 @@ async function WatchEpisode({ params, searchParams }: {
             {/* PLAYER */}
             <div className={styles.background}>
                 <section id={styles.video_container}>
-                    <Player
-                        source={videoSrc as string}
-                        currentLastStop={searchParams.t || undefined}
+
+                    <VideoPlayer
+                        mediaEpisodes={episodesList}
                         mediaSource={searchParams.source}
-                        media={mediaData}
-                        episodeIntro={(episodeData as EpisodeLinksAnimeWatch)?.intro}
-                        episodeOutro={(episodeData as EpisodeLinksAnimeWatch)?.outro}
-                        episodeNumber={searchParams.episode}
-                        episodeImg={imdbEpisodes[Number(searchParams.episode) - 1]?.img?.hd || mediaData.bannerImage || null}
-                        mediaEpisodes={episodes}
-                        episodeId={searchParams.q}
-                        subtitles={episodeSubtitles}
-                        // videoQualities={searchParams.source == "gogoanime" ? (episodeData as EpisodeLinksGoGoAnime).sources : undefined}
-                        videoQualities={undefined}
+                        mediaInfo={mediaInfo}
+                        videoInfo={{
+                            urlSource: videoUrlSrc as string,
+                            subtitlesList: episodeSubtitles,
+                            currentLastStop: searchParams.t || undefined,
+                            videoQualities: undefined,
+                            // videoQualities: searchParams.source == "gogoanime" ? (episodeData as EpisodeLinksGoGoAnime).sources : undefined
+                        }}
+                        episodeInfo={{
+                            episodeId: searchParams.q,
+                            episodeIntro: (episodeDataFetched as EpisodeLinksAnimeWatch)?.intro,
+                            episodeOutro: (episodeDataFetched as EpisodeLinksAnimeWatch)?.outro,
+                            episodeNumber: searchParams.episode,
+                            episodeImg: imdbEpisodesList[Number(searchParams.episode) - 1]?.img?.hd || mediaInfo.bannerImage || null,
+                        }}
                     />
+
                 </section>
             </div>
 
@@ -201,31 +191,35 @@ async function WatchEpisode({ params, searchParams }: {
 
                     <div id={styles.heading_info_container}>
 
-                        {mediaData.format == "MOVIE" ? (
+                        {mediaInfo.format == "MOVIE" ? (
                             <h1 className='display_flex_row align_items_center'>
-                                {mediaData.title.romaji || mediaData.title.native}
+                                {mediaInfo.title.romaji || mediaInfo.title.native}
                             </h1>
                         ) : (
                             <h1>
                                 {`EP ${searchParams.episode}`}
                                 <span>{" "}-{" "}</span>
                                 <span>
-                                    {
-                                        imdbEpisodes?.find(item => item.episode == Number(searchParams.episode))?.title
-                                        ||
-                                        mediaData.title.romaji
-                                        ||
-                                        mediaData.title.native
+                                    {searchParams.source == "gogoanime" ?
+                                        imdbEpisodesList[Number(searchParams.episode)]?.title || imdbEpisodeInfo?.title || mediaInfo.title.romaji || mediaInfo.title.native
+                                        :
+                                        (episodesList[Number(searchParams.episode) - 1] as EpisodeAnimeWatch)?.title
                                     }
                                 </span>
                             </h1>
                         )}
 
-                        <CoverWithMediaInfo
-                            data={mediaData as ApiDefaultResult}
-                            showButtons={false}
-                            customDescription={imdbEpisodes?.find(item => item.episode == Number(searchParams.episode))?.description || undefined}
-                        />
+                        <MediaCardExpanded.Container
+                            mediaInfo={mediaInfo as ApiDefaultResult}
+                        >
+
+                            <p>
+                                <MediaCardExpanded.Description
+                                description={imdbEpisodeInfo?.description || mediaInfo.description}
+                            />
+                            </p>
+
+                        </MediaCardExpanded.Container>
 
                     </div>
 
@@ -233,12 +227,12 @@ async function WatchEpisode({ params, searchParams }: {
 
                         <div className={styles.comment_container}>
 
-                            <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
+                            <h2>COMMENTS {mediaInfo.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
 
                             {/* ONLY ON DESKTOP */}
-                            <CommentSection
-                                media={mediaData}
-                                onWatchPage={true}
+                            <CommentsSection
+                                mediaInfo={mediaInfo}
+                                isOnWatchPage={true}
                                 episodeId={searchParams.q}
                                 episodeNumber={Number(searchParams.episode)}
                             />
@@ -248,14 +242,14 @@ async function WatchEpisode({ params, searchParams }: {
 
                 </div>
 
-                <div data-format={mediaData.format}>
+                <div data-format={mediaInfo.format}>
 
-                    {mediaData.format != "MOVIE" && (
-                        <EpisodesSideListContainer
-                            source={searchParams.source}
-                            episodesList={episodes}
-                            nextAiringEpisode={mediaData.nextAiringEpisode}
-                            episodesOnImdb={imdbEpisodes.length > 0 ? imdbEpisodes : undefined}
+                    {mediaInfo.format != "MOVIE" && (
+                        <EpisodesListContainer
+                            sourceName={searchParams.source}
+                            episodesList={episodesList}
+                            nextAiringEpisodeInfo={mediaInfo.nextAiringEpisode}
+                            episodesListOnImdb={imdbEpisodesList.length > 0 ? imdbEpisodesList : undefined}
                             mediaId={params.id}
                             activeEpisodeNumber={Number(searchParams.episode)}
                         />
@@ -266,11 +260,11 @@ async function WatchEpisode({ params, searchParams }: {
 
                         <div className={styles.comment_container}>
 
-                            <h2>COMMENTS {mediaData.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
+                            <h2>COMMENTS {mediaInfo.format != "MOVIE" && (`FOR EPISODE ${searchParams.episode}`)}</h2>
 
-                            <CommentSection
-                                media={mediaData}
-                                onWatchPage={true}
+                            <CommentsSection
+                                mediaInfo={mediaInfo}
+                                isOnWatchPage={true}
                                 episodeId={searchParams.q}
                                 episodeNumber={Number(searchParams.episode)}
                             />
@@ -286,5 +280,3 @@ async function WatchEpisode({ params, searchParams }: {
         </main>
     )
 }
-
-export default WatchEpisode

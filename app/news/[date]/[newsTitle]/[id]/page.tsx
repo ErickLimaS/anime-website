@@ -8,18 +8,18 @@ import NewsCard from '@/app/news/components/NewsCard'
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
-    const newsData = await news.getNewsInfo(params.id) as NewsArcticle
+    const newsInfo = await news.getNewsInfo({ id: params.id }) as NewsArcticle
 
     return {
-        title: `${newsData.title} | AniProject`,
-        description: newsData.intro,
+        title: `${newsInfo ? newsInfo.title : "Error"} | AniProject`,
+        description: newsInfo.intro,
     }
 }
 
 async function NewPage({ params }: { params: { id: string } }) {
 
-    const newsData = await news.getNewsInfo(params.id) as NewsArcticle
-    const otherNews = await news.getNews() as News[]
+    const newsInfo = await news.getNewsInfo({ id: params.id }) as NewsArcticle
+    const recentNewsList = await news.getNews({}) as News[]
 
     return (
         <main id={styles.container}>
@@ -28,20 +28,20 @@ async function NewPage({ params }: { params: { id: string } }) {
 
                 <div id={styles.heading_container}>
 
-                    <h1>{newsData.title}</h1>
+                    <h1>{newsInfo.title}</h1>
 
                     <div id={styles.img_intro_container}>
 
                         <div id={styles.img_container}>
                             <Image
-                                src={newsData.thumbnail}
-                                alt={newsData.intro}
+                                src={newsInfo.thumbnail}
+                                alt={newsInfo.intro}
                                 fill
                                 sizes='(max-width: 440px) 100vw, 120px'
                             />
                         </div>
 
-                        <small>{newsData.intro}</small>
+                        <small>{newsInfo.intro}</small>
 
                     </div>
 
@@ -49,16 +49,18 @@ async function NewPage({ params }: { params: { id: string } }) {
 
                 <div id={styles.main_text_container}>
 
-                    <p>{newsData.description}</p>
+                    <p>{newsInfo.description}</p>
 
                 </div>
 
                 <div id={styles.footer_container}>
 
-                    <small>Source: <Link href={newsData.url} target='_blank'>Anime News Network</Link></small>
+                    <small>
+                        Source: <Link href={newsInfo.url} target='_blank'>Anime News Network</Link>
+                    </small>
 
                     <small>
-                        {new Date(`${newsData.uploadedAt}`).toLocaleString(
+                        {new Date(`${newsInfo.uploadedAt}`).toLocaleString(
                             'default',
                             { month: 'long', day: "numeric", year: "numeric", hour: 'numeric', minute: '2-digit' }
                         )}
@@ -71,11 +73,11 @@ async function NewPage({ params }: { params: { id: string } }) {
             <div id={styles.other_news_container}>
 
                 <ul>
-                    {otherNews.slice(0, 7).map((item, key) => (
+                    {recentNewsList.slice(0, 7).map((newsArticle, key) => (
 
                         <li key={key} >
                             <article>
-                                <NewsCard data={item} />
+                                <NewsCard newsInfo={newsArticle} />
                             </article>
                         </li>
 

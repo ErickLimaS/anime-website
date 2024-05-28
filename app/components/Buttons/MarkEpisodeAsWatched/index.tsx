@@ -16,11 +16,12 @@ type BtnTypes = {
     episodeNumber: number,
     episodeTitle: string,
     mediaId: number,
-    hasText?: boolean,
+    showAdditionalText?: boolean,
     wasWatched?: boolean
 }
 
-function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasWatched, hasText }: BtnTypes) {
+
+export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasWatched, showAdditionalText }: BtnTypes) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(wasWatched || false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -31,14 +32,15 @@ function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasW
 
     const db = getFirestore(initFirebase())
 
-    // ADD OR REMOVE EPISODE FROM FIRESTORE
-    async function addOrRemoveEpisodeWatched() {
+    useEffect(() => { setWasEpisodeWatched(wasWatched || false) }, [wasWatched])
+
+    async function handleEpisodeWatchedAction() {
 
         if (!user) return
 
         setIsLoading(true)
 
-        const episodeData = {
+        const animesEpisodeInfo = {
 
             mediaId: mediaId,
             episodeNumber: episodeNumber,
@@ -49,59 +51,74 @@ function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasW
         await setDoc(doc(db, 'users', user.uid),
             {
                 episodesWatched: {
-                    [mediaId]: wasEpisodeWatched ? arrayRemove(...[episodeData]) : arrayUnion(...[episodeData])
+                    [mediaId]: wasEpisodeWatched ? arrayRemove(...[animesEpisodeInfo]) : arrayUnion(...[animesEpisodeInfo])
                 }
 
             } as unknown as FieldPath,
             { merge: true }
         ).then(() =>
+
             setWasEpisodeWatched(!wasEpisodeWatched)
+
         )
 
         setIsLoading(false)
 
     }
 
-    useEffect(() => {
-        setWasEpisodeWatched(wasWatched || false)
-    }, [wasWatched])
-
     return (
-
         user && (
             <div className={styles.button_container}>
 
                 <motion.button
-                    onClick={() => addOrRemoveEpisodeWatched()}
+                    onClick={() => handleEpisodeWatchedAction()}
                     data-active={wasEpisodeWatched}
                     disabled={isLoading}
                     title={wasEpisodeWatched ? "Mark as Unwatched " : "Mark as Watched"}
                 >
-                    {wasEpisodeWatched ? (
-                        <CheckFillSvg width={16} height={16} alt="Check Episode as Watched" />
-                    ) : (
-                        <CheckSvg width={16} height={16} alt="Check Episode as Not Watched" />
-                    )}
+
+                    <SvgIcons
+                        wasEpisodeWatched={wasEpisodeWatched}
+                    />
 
                 </motion.button>
 
-                <AnimatePresence>
-                    {(hasText && wasEpisodeWatched) && (
-                        <motion.span
-                            className={styles.text_span}
-                            initial={{ opacity: 0, y: "10px" }}
-                            animate={{ opacity: 1, y: "0", transition: { duration: 0.2 } }}
-                            exit={{ opacity: 0, y: "10px" }}
-                        >
-                            Watched
-                        </motion.span>
-                    )}
-                </AnimatePresence>
-                
+                <AuxTextAnimated
+                    wasEpisodeWatched={wasEpisodeWatched}
+                    showAdditionalText={showAdditionalText}
+                />
+
             </div>
         )
-
     )
 }
 
-export default MarkEpisodeAsWatchedButton
+function SvgIcons({ wasEpisodeWatched }: { wasEpisodeWatched: boolean }) {
+
+    if (wasEpisodeWatched) {
+        return (<CheckFillSvg width={16} height={16} alt="Check Episode as Watched" />)
+    }
+
+    return (<CheckSvg width={16} height={16} alt="Check Episode as Not Watched" />)
+
+}
+
+function AuxTextAnimated({ showAdditionalText, wasEpisodeWatched }: { wasEpisodeWatched: boolean, showAdditionalText?: boolean }) {
+
+    return (
+
+        <AnimatePresence>
+            {(showAdditionalText && wasEpisodeWatched) && (
+                <motion.span
+                    className={styles.text_span}
+                    initial={{ opacity: 0, y: "10px" }}
+                    animate={{ opacity: 1, y: "0", transition: { duration: 0.2 } }}
+                    exit={{ opacity: 0, y: "10px" }}
+                >
+                    Watched
+                </motion.span>
+            )}
+        </AnimatePresence>
+    )
+
+}
