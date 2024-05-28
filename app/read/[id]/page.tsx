@@ -10,9 +10,10 @@ import Link from 'next/link'
 import manga from '@/app/api/consumetManga'
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import ChaptersPages from './components/ChaptersPages/index'
-import ChaptersSideListContainer from './components/ChaptersSideListContainer'
+import ChaptersListContainer from './components/ChaptersListContainer'
 import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOptions'
 import { stringToUrlFriendly } from '@/app/lib/convertStringsTo'
+import { FetchEpisodeError } from '@/app/components/MediaFetchErrorPage'
 
 export const revalidate = 1800 // revalidate cached data every 30 minutes
 
@@ -21,11 +22,11 @@ export async function generateMetadata({ params, searchParams }: {
     searchParams: { chapter: string, source: string, q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
 
-    const mediaData = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
+    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
 
     return {
-        title: `Chapter ${searchParams.chapter} - ${mediaData.title.romaji} | AniProject`,
-        description: `Read ${mediaData.title.romaji} - Chapter ${searchParams.chapter}. ${mediaData.description && mediaData.description}`,
+        title: !mediaInfo ? "Error | AniProject" : `Chapter ${searchParams.chapter} - ${mediaInfo.title.romaji} | AniProject`,
+        description: `Read ${mediaInfo.title.romaji} - Chapter ${searchParams.chapter}. ${mediaInfo.description && mediaInfo.description}`,
     }
 }
 
@@ -34,76 +35,38 @@ async function ReadChapter({ params, searchParams }: {
     searchParams: { chapter: string, source: "mangadex", q: string, page: string } // EPISODE NUMBER, SOURCE, EPISODE ID, LAST PAGE 
 }) {
 
-    const mediaData = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
+    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
 
     let currChapterInfo: MangaChapters | undefined = undefined
-    let allChapters: MangaChapters[] | undefined = undefined
-    let error = false
+    let allAvailableChaptersList: MangaChapters[] | undefined = undefined
+    let hadFetchError = false
 
-    // fetch episode data
-    const chapters = await manga.getChapterPages({ chapterId: searchParams.q }) as MangaPages[]
+    const currMangaChapters = await manga.getChapterPages({ chapterId: searchParams.q }) as MangaPages[]
 
-    const query = stringToUrlFriendly(mediaData.title.romaji).toLowerCase()
+    const mangaTitleUrlFrindly = stringToUrlFriendly(mediaInfo.title.romaji).toLowerCase()
 
-    let mangaInfo = await manga.getInfoFromThisMedia({ id: query }) as MangaInfo
+    let mangaInfo = await manga.getInfoFromThisMedia({ id: mangaTitleUrlFrindly }) as MangaInfo
 
     // if the query dont match any id result, it will search results for this query,
     // than make the first request by the ID of the first search result 
     if (!mangaInfo) {
-        const searchResultsForMedia = await getClosestMangaResultByTitle(query, mediaData)
+        const mangaClosestResult = await getClosestMangaResultByTitle(mangaTitleUrlFrindly, mediaInfo)
 
-        mangaInfo = await manga.getInfoFromThisMedia({ id: searchResultsForMedia as string }) as MangaInfo
+        mangaInfo = await manga.getInfoFromThisMedia({ id: mangaClosestResult as string }) as MangaInfo
 
-        if (!mangaInfo) error = true
-
-    }
-
-    if (!error) {
-
-        allChapters = mangaInfo.chapters.filter(item => item.pages != 0)
-
-        currChapterInfo = allChapters.filter((item) => item.id == searchParams.q)[0]
-
-        if (!chapters || !allChapters) error = true
+        if (!mangaInfo) hadFetchError = true
 
     }
 
-    // ERROR MESSAGE
-    if (error) {
-        return (
-            <div id={styles.error_modal_container}>
+    if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
 
-                <div id={styles.heading_text_container}>
-                    <div>
-                        <Image src={ErrorImg} height={330} alt={'Error'} />
-                    </div>
+    allAvailableChaptersList = mangaInfo.chapters.filter(item => item.pages != 0)
 
-                    <h1>ERROR!</h1>
+    currChapterInfo = allAvailableChaptersList.find((item) => item.id == searchParams.q)
 
-                    <p>What could have happened: </p>
+    if (!currMangaChapters || !allAvailableChaptersList) hadFetchError = true
 
-                    <ul>
-                        <li>{`${searchParams.source} doesn't have this media available.`}</li>
-                        <li>{`Problems With Server.`}</li>
-                        <li>{`${searchParams.source} API changes or not available.`}</li>
-                    </ul>
-                </div>
-
-
-                <div id={styles.redirect_btns_container}>
-                    <Link href={`/media/${params.id}`}>
-                        Return To Media Page
-                    </Link>
-
-                    <Link href={"/"}>
-                        Return to Home Page
-                    </Link>
-
-                </div>
-
-            </div>
-        )
-    }
+    if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
 
     return (
         <main id={styles.container}>
@@ -111,7 +74,7 @@ async function ReadChapter({ params, searchParams }: {
             <div id={styles.heading_container}>
 
                 <h1>
-                    <span>{mediaData.title.romaji}: </span>
+                    <span>{mediaInfo.title.romaji}: </span>
                     {currChapterInfo!.title == currChapterInfo!.chapterNumber ? `Chapter ${currChapterInfo!.chapterNumber}` : currChapterInfo!.title}
                 </h1>
 
@@ -120,28 +83,29 @@ async function ReadChapter({ params, searchParams }: {
             </div>
 
             <ChaptersPages
-                data={chapters}
+                chapters={currMangaChapters}
                 initialPage={Number(searchParams.page) || undefined}
             />
 
             <div id={styles.all_chapters_container}>
 
                 <MediaCardExpanded.Container
-                    mediaInfo={mediaData as ApiDefaultResult}
+                    mediaInfo={mediaInfo as ApiDefaultResult}
 
                 >
 
                     <MediaCardExpanded.Description
-                        description={mediaData.description}
+                        description={mediaInfo.description}
                     />
 
                 </MediaCardExpanded.Container>
 
-                <ChaptersSideListContainer
+                <ChaptersListContainer
                     mediaId={params.id}
                     currChapterId={searchParams.q}
-                    episodesList={allChapters!}
+                    chaptersList={allAvailableChaptersList!}
                 />
+
             </div>
 
         </main>

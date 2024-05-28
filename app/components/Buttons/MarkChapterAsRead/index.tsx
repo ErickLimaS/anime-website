@@ -17,10 +17,10 @@ type BtnTypes = {
     chapterNumber: number,
     chapterTitle: string,
     mediaId: number,
-    hasText?: boolean
+    showAdditionalText?: boolean
 }
 
-export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, hasText: showAdditionalText }: BtnTypes) {
+export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, showAdditionalText }: BtnTypes) {
 
     const [wasChapterRead, setWasChapterRead] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)

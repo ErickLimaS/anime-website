@@ -78,7 +78,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<MediaInfoAniwatch[]>([])
 
-  const [currentItems, setCurrentItems] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
+  const [currAnimesList, setCurrAnimesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
   const [itemOffset, setItemOffset] = useState<number>(0)
 
   const [currEpisodesSource, setCurrEpisodesSource] = useState<SourceType["source"]>("crunchyroll")
@@ -88,7 +88,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
     episodeTitle: string;
   }[]>()
 
-  const [pageCount, setPageCount] = useState<number>(0)
+  const [pageNumber, setPageNumber] = useState<number>(0)
 
   const auth = getAuth()
 
@@ -108,9 +108,9 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
     const endOffset = itemOffset + rangeEpisodesPerPage;
 
-    if (currEpisodesSource == "crunchyroll") setPageCount(Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage));
+    if (currEpisodesSource == "crunchyroll") setPageNumber(Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage));
 
-    if (episodesList) setCurrentItems(episodesList.slice(itemOffset, endOffset))
+    if (episodesList) setCurrAnimesList(episodesList.slice(itemOffset, endOffset))
 
   }, [episodesList, itemOffset, crunchyrollInitialEpisodes, currEpisodesSource])
 
@@ -164,9 +164,9 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         setEpisodesList(crunchyrollInitialEpisodes)
 
-        setCurrentItems(crunchyrollInitialEpisodes.slice(itemOffset, paginationEndOffset))
+        setCurrAnimesList(crunchyrollInitialEpisodes.slice(itemOffset, paginationEndOffset))
 
-        setPageCount(Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage))
+        setPageNumber(Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage))
 
         break
 
@@ -182,9 +182,9 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
           setEpisodesList([])
 
-          setCurrentItems(null)
+          setCurrAnimesList(null)
 
-          setPageCount(0)
+          setPageNumber(0)
 
           return
 
@@ -192,9 +192,9 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         setEpisodesList(mediaEpisodesList as MediaEpisodes[])
 
-        setCurrentItems((mediaEpisodesList as MediaEpisodes[]).slice(itemOffset, paginationEndOffset))
+        setCurrAnimesList((mediaEpisodesList as MediaEpisodes[]).slice(itemOffset, paginationEndOffset))
 
-        setPageCount(Math.ceil((mediaEpisodesList as MediaEpisodes[]).length / rangeEpisodesPerPage))
+        setPageNumber(Math.ceil((mediaEpisodesList as MediaEpisodes[]).length / rangeEpisodesPerPage))
 
         break
 
@@ -212,16 +212,16 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         if (mediaEpisodesList) {
 
-          setCurrentItems(mediaEpisodesList.slice(itemOffset, paginationEndOffset))
+          setCurrAnimesList(mediaEpisodesList.slice(itemOffset, paginationEndOffset))
 
-          setPageCount(Math.ceil(mediaEpisodesList.length / rangeEpisodesPerPage))
+          setPageNumber(Math.ceil(mediaEpisodesList.length / rangeEpisodesPerPage))
 
         }
         else {
 
-          setCurrentItems(null)
+          setCurrAnimesList(null)
 
-          setPageCount(0)
+          setPageNumber(0)
 
         }
 
@@ -249,8 +249,8 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
     setEpisodesList(mediaEpisodes.episodes)
 
-    setCurrentItems(mediaEpisodes.episodes.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+    setCurrAnimesList(mediaEpisodes.episodes.slice(itemOffset, endOffset));
+    setPageNumber(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
 
     setIsLoading(false)
 
@@ -343,7 +343,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
           <AnimatePresence>
 
-            {currentItems && currentItems.map((episode: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode, key: number) => (
+            {currAnimesList && currAnimesList.map((episode: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode, key: number) => (
 
               !isLoading && (
                 <EpisodeBySource
@@ -402,7 +402,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
           <NavPaginateItems
             onPageChange={handleButtonPageNavigation}
-            pageCount={pageCount}
+            pageCount={pageNumber}
           />
 
         </nav>

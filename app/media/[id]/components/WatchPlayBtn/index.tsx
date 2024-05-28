@@ -106,8 +106,8 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
         return mediaLastEpisodeWatched
 
     }
-    
-  async function fetchMediaEpisodeUrl(lastEpisodeWatchedNumber?: number) {
+
+    async function fetchMediaEpisodeUrl(lastEpisodeWatchedNumber?: number) {
 
         setIsLoading(true)
 
@@ -195,27 +195,10 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
             }
         >
 
-            {/* SHOWS PROGRESS OF EPISODE WATCHED */}
-            {/* {(episodeLastStop != null && episodeDuration != null) && (
-                <motion.div className={styles.progress_bar}>
-                    <motion.div
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: (((episodeLastStop / episodeDuration) * 100) / 100) || 0.07 }}
-                        transition={{ duration: 1 }}
-                    />
-                </motion.div>
-            )} */}
-
             <ProgressBar
                 episodeDuration={episodeDuration}
                 episodeLastStop={episodeLastStop}
             />
-
-            {/* {(user && episodeNumber) && (
-                <span id={styles.continue_span}>
-                    EPISODE {episodeNumber}
-                </span>
-            )} */}
 
             <EpisodeNumber
                 user={user}
@@ -228,12 +211,6 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
                 <PlaySvg fill="#fff" width={16} height={16} />
             }
 
-            {/* {(movieId && sourceName) && (
-                <span id={styles.source_span}>
-                    {sourceName.toUpperCase()}
-                </span>
-            )} */}
-
             <SourceName
                 movieId={movieId}
                 sourceName={sourceName}
@@ -245,12 +222,14 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
 function ProgressBar({ episodeLastStop, episodeDuration }: { episodeLastStop: number | undefined, episodeDuration: number | undefined }) {
 
+    const isActive = (episodeLastStop && episodeDuration) ? true : false
+
     return (
-        (episodeLastStop && episodeDuration) && (
+        isActive && (
             <motion.div className={styles.progress_bar}>
                 <motion.div
                     initial={{ scaleX: 0 }}
-                    animate={{ scaleX: (((episodeLastStop / episodeDuration) * 100) / 100) || 0.07 }}
+                    animate={{ scaleX: (((episodeLastStop! / episodeDuration!) * 100) / 100) || 0.07 }}
                     transition={{ duration: 1 }}
                 />
             </motion.div>
@@ -261,11 +240,11 @@ function ProgressBar({ episodeLastStop, episodeDuration }: { episodeLastStop: nu
 
 function EpisodeNumber({ user, episodeNumber }: { user: User | null | undefined, episodeNumber: number | undefined }) {
     return (
-        (user && episodeNumber) && (
+        ((user && episodeNumber) && (
             <span id={styles.continue_span}>
                 EPISODE {episodeNumber}
             </span>
-        )
+        ))
     )
 }
 
