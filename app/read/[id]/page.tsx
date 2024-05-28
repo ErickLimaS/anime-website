@@ -2,17 +2,13 @@ import React from 'react'
 import styles from "./page.module.css"
 import anilist from '@/app/api/anilist'
 import * as MediaCardExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
-import { MangaChapters, MangaInfo, MangaPages, MangaSearchResult } from '@/app/ts/interfaces/apiMangadexDataInterface'
-import CommentsSection from '@/app/components/CommentsSection'
-import Image from 'next/image'
-import ErrorImg from "@/public/error-img-4.png"
-import Link from 'next/link'
+import { MangaChapters, MangaInfo, MangaPages } from '@/app/ts/interfaces/apiMangadexDataInterface'
 import manga from '@/app/api/consumetManga'
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import ChaptersPages from './components/ChaptersPages/index'
 import ChaptersListContainer from './components/ChaptersListContainer'
-import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOptions'
-import { stringToUrlFriendly } from '@/app/lib/convertStringsTo'
+import { getClosestMangaResultByTitle } from '@/app/lib/optimizedFetchMangaOptions'
+import { stringToUrlFriendly } from '@/app/lib/convertStrings'
 import { FetchEpisodeError } from '@/app/components/MediaFetchErrorPage'
 
 export const revalidate = 1800 // revalidate cached data every 30 minutes

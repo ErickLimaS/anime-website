@@ -30,7 +30,7 @@ import GoGoAnimeEpisode from './components/EpisodeBySource/gogoanime';
 import AniwatchEpisode from './components/EpisodeBySource/aniwatch';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
-import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOptions';
+import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/optimizedFetchAnimeOptions';
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';
@@ -174,7 +174,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         setCurrEpisodesSource(newSourceChose)
 
-        mediaEpisodesList = await fetchWithGoGoAnime(mediaInfo.title.romaji, "episodes") as MediaEpisodes[]
+        mediaEpisodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as MediaEpisodes[]
 
         if (!mediaEpisodesList) {
 
@@ -202,11 +202,22 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         setCurrEpisodesSource(newSourceChose)
 
-        const searchResultsListForCurrMedia = await fetchWithAniWatch(mediaInfo.title.romaji, "search_list", mediaInfo.format, imdb.episodesList.length) as MediaInfoAniwatch[]
+        const searchResultsListForCurrMedia = await optimizedFetchOnAniwatch({
+          textToSearch: mediaInfo.title.romaji,
+          only: "search_list",
+          format: mediaInfo.format,
+          mediaTotalEpisodes: imdb.episodesList.length
+        }) as MediaInfoAniwatch[]
 
         setMediaResultsInfoArray(searchResultsListForCurrMedia)
 
-        mediaEpisodesList = await fetchWithAniWatch(mediaInfo.title.romaji, "episodes", mediaInfo.format, imdb.episodesList.length) as EpisodesFetchedAnimeWatch["episodes"]
+        mediaEpisodesList = await optimizedFetchOnAniwatch({
+          textToSearch: mediaInfo.title.romaji,
+          only: "episodes",
+          format: mediaInfo.format,
+          mediaTotalEpisodes: imdb.episodesList.length
+
+        }) as EpisodesFetchedAnimeWatch["episodes"]
 
         setEpisodesList(mediaEpisodesList)
 

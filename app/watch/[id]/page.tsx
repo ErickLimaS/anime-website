@@ -10,7 +10,7 @@ import CommentsSection from '@/app/components/CommentsSection'
 import aniwatch from '@/app/api/aniwatch'
 import VideoPlayer from './components/VideoPlayer'
 import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
-import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOptions'
+import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/optimizedFetchAnimeOptions'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import { getMediaInfo } from '@/app/api/consumetImdb'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
@@ -104,7 +104,7 @@ export default async function WatchEpisode({ params, searchParams }: {
             if (!videoUrlSrc) videoUrlSrc = episodeDataFetched.sources[0].url
 
             // Episodes for this media
-            episodesList = await fetchWithGoGoAnime(mediaInfo.title.romaji, "episodes") as MediaEpisodes[]
+            episodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as MediaEpisodes[]
 
             hadFetchError = compareEpisodeIDs(episodesList, "gogoanime")
 
@@ -114,7 +114,7 @@ export default async function WatchEpisode({ params, searchParams }: {
 
             if (!searchParams.q) {
 
-                episodesList = await fetchWithAniWatch(mediaInfo.title.romaji, "episodes") as EpisodeAnimeWatch[]
+                episodesList = await optimizedFetchOnAniwatch({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as EpisodeAnimeWatch[]
 
                 searchParams.q = episodesList[0].episodeId
 
@@ -130,13 +130,14 @@ export default async function WatchEpisode({ params, searchParams }: {
 
             // fetch episodes for this media
             if (episodesList.length == 0) {
-                episodesList = await fetchWithAniWatch(
-                    mediaInfo.title.romaji,
-                    "episodes",
-                    mediaInfo.format,
-                    undefined,
-                    searchParams?.q?.split("?")[0]
-                ) as EpisodeAnimeWatch[]
+
+                episodesList = await optimizedFetchOnAniwatch({
+                    textToSearch: mediaInfo.title.romaji,
+                    only: "episodes",
+                    format: mediaInfo.format,
+                    idToMatch: searchParams?.q?.split("?")[0]
+                }) as EpisodeAnimeWatch[]
+
             }
 
             episodeSubtitles = episodeDataFetched.tracks

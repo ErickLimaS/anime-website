@@ -12,8 +12,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import MarkChapterAsReadButton from '@/app/components/Buttons/MarkChapterAsRead';
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import { getClosestMangaResultByTitle } from '@/app/lib/fetchMangaOptions';
-import { stringToUrlFriendly } from '@/app/lib/convertStringsTo';
+import { getClosestMangaResultByTitle } from '@/app/lib/optimizedFetchMangaOptions';
+import { stringToUrlFriendly } from '@/app/lib/convertStrings';
 
 const framerMotionLoadingChapters = {
   initial: {

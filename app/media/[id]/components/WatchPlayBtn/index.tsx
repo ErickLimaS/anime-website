@@ -8,7 +8,7 @@ import { getAuth, User } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import { fetchWithAniWatch, fetchWithGoGoAnime } from '@/app/lib/fetchAnimeOptions'
+import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/optimizedFetchAnimeOptions'
 import { motion } from 'framer-motion'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
@@ -113,7 +113,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
         async function fetchOnGoGoAnime() {
 
-            const searchResultsForMedia = fetchWithGoGoAnime(mediaTitle, "episodes")
+            const searchResultsForMedia = optimizedFetchOnGoGoAnime({ textToSearch: mediaTitle, only: "episodes" })
 
             setSourceName("gogoanime")
 
@@ -123,7 +123,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
         async function fetchOnAniWatch() {
 
-            const searchResultsForMedia = fetchWithAniWatch(mediaTitle, "episodes")
+            const searchResultsForMedia = optimizedFetchOnAniwatch({ textToSearch: mediaTitle, only: "episodes" })
 
             setSourceName("aniwatch")
 

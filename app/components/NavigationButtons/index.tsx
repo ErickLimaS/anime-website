@@ -59,7 +59,7 @@ export default function NavigationButtons({ propsFunction, buttonOptions, currVa
 
                 case 'aniwatch':
 
-                    const aniwatchResponse = await aniwatch.episodesLinks("one-piece-100?ep=2142") as EpisodeLinksAnimeWatch
+                    const aniwatchResponse = await aniwatch.episodesLinks({ episodeId: "one-piece-100?ep=2142" }) as EpisodeLinksAnimeWatch
 
                     setAniwatchAvailable(aniwatchResponse != null ? true : false)
 
