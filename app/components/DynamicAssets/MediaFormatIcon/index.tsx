@@ -9,7 +9,10 @@ function MediaFormatIcon({ format }: { format: "OVA" | "TV" | "ONA" | "SPECIAL" 
 
     switch (format) {
 
-        case "OVA" || format == "TV" || format == "ONA" || format == "SPECIAL":
+        case "OVA":
+        case "TV":
+        case "ONA":
+        case "SPECIAL":
 
             return (<AnimeSvg width={16} height={16} alt="Tv Icon" />)
 

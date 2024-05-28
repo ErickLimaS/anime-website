@@ -1,5 +1,5 @@
-
 // ALL INFO RELATED TO OFFLINE DATA FROM anime offline database on "/api/anime-info"
+
 export const allGenres = [
     { name: "Action", value: "action" },
     { name: "Comedy", value: "comedy" },

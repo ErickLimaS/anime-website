@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import SvgFilter from "@/public/assets/funnel.svg"
 import SvgClose from "@/public/assets/x.svg"
 import * as SearchOptions from "./constants"
+import simulateRange from '@/app/lib/simulateRange'
 
 const showUpMotion = {
 
@@ -23,110 +24,116 @@ const showUpMotion = {
 
 }
 
-function NavSideBar({ isMobile }: { isMobile: boolean }) {
+function NavigationSideBar({ isMobile }: { isMobile: boolean }) {
 
     const router = useRouter()
     const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const searchParams = useSearchParams()
 
-    const [urlQuery, setUrlQuery] = useState(new URLSearchParams(Array.from(searchParams.entries())))
+    const [searchParamsState, setSearchParamsState] = useState(new URLSearchParams(Array.from(searchParams.entries())))
 
     const [isLoading, setLoading] = useState(false)
-    const [openFiltersMenu, setOpenFiltersMenu] = useState(false)
+    const [isFiltersMenuOpen, setIsFiltersMenuOpen] = useState(false)
 
-    const range = (n: number) => [...Array(n).keys()]
+    function fetchNewResultsByQueryType(queryType: string, inputTarget: any) {
 
-    function fetchData(queryType: string, inputTarget: any) {
-
-        const current = new URLSearchParams(Array.from(searchParams.entries()));
+        const currSearchParams = new URLSearchParams(Array.from(searchParams.entries()));
 
         setLoading(true)
 
-        if (queryType == "genre") {
+        switch (queryType) {
 
-            if (current.get("genre")?.includes(inputTarget.value)) {
+            case "genre":
 
-                const originalString = current.get("genre")
+                if (currSearchParams.get("genre")?.includes(inputTarget.value)) {
 
-                if (originalString == `[${inputTarget.value}]`) {
+                    const originalString = currSearchParams.get("genre")
 
-                    current.delete("genre")
+                    if (originalString == `[${inputTarget.value}]`) {
 
-                    setUrlQuery(current)
+                        currSearchParams.delete("genre")
 
-                    const query = `?${current}`
+                        setSearchParamsState(currSearchParams)
+
+                        const query = `?${currSearchParams}`
+
+                        router.push(`${pathname}${decodeURI(query)}`)
+
+                        setLoading(false)
+                        return
+                    }
+
+                    const newString = originalString!.replace(`-${inputTarget.value}`, "")
+
+                    currSearchParams.set("genre", newString)
+                    const query = `?${currSearchParams}`
+
+                    setSearchParamsState(currSearchParams)
 
                     router.push(`${pathname}${decodeURI(query)}`)
 
                     setLoading(false)
+
                     return
                 }
 
-                const newString = originalString!.replace(`-${inputTarget.value}`, "")
+                currSearchParams.set(queryType, currSearchParams.get("genre") ?
+                    `[${currSearchParams.get("genre")?.slice(1, currSearchParams.get("genre")!.length - 1)}-${inputTarget.value}]`
+                    :
+                    `[${inputTarget.value}]`
+                )
 
-                current.set("genre", newString)
-                const query = `?${current}`
+                break
 
-                setUrlQuery(current)
+            default:
 
-                router.push(`${pathname}${decodeURI(query)}`)
+                if (queryType == "year" && inputTarget.value == "any") {
 
-                setLoading(false)
+                    currSearchParams.delete("year")
 
-                return
-            }
+                    const query = `?${currSearchParams}`
 
-            current.set(queryType, current.get("genre") ?
-                `[${current.get("genre")?.slice(1, current.get("genre")!.length - 1)}-${inputTarget.value}]`
-                :
-                `[${inputTarget.value}]`
-            )
+                    setSearchParamsState(currSearchParams)
+
+                    router.push(`${pathname}${decodeURI(query)}`)
+
+                    setLoading(false)
+
+                    return
+
+                }
+
+                if (currSearchParams.get(queryType)?.includes(inputTarget.value)) {
+                    currSearchParams.delete(queryType)
+                }
+                else {
+                    currSearchParams.set(queryType, inputTarget.value)
+                }
+
+                break
 
         }
-        else {
-            if (queryType == "year" && inputTarget.value == "any") {
 
-                current.delete("year")
+        const newSearchParams = currSearchParams ? `?${currSearchParams}` : ""
 
-                const query = `?${current}`
+        router.push(`${pathname}${decodeURI(newSearchParams)}`)
 
-                setUrlQuery(current)
-
-                router.push(`${pathname}${decodeURI(query)}`)
-
-                setLoading(false)
-
-                return
-
-            }
-
-            if (current.get(queryType)?.includes(inputTarget.value)) {
-                current.delete(queryType)
-            }
-            else {
-                current.set(queryType, inputTarget.value)
-            }
-        }
-
-        const query = current ? `?${current}` : ""
-
-        router.push(`${pathname}${decodeURI(query)}`)
-
-        setUrlQuery(current)
+        setSearchParamsState(currSearchParams)
 
         setLoading(false)
 
     }
 
     return (
-        <>
+        <React.Fragment>
+
             {isMobile && (
                 <button
                     id={styles.btn_filters}
-                    onClick={() => setOpenFiltersMenu(!openFiltersMenu)}
-                    data-active={openFiltersMenu}
+                    onClick={() => setIsFiltersMenuOpen(!isFiltersMenuOpen)}
+                    data-active={isFiltersMenuOpen}
                 >
-                    {openFiltersMenu ? (
+                    {isFiltersMenuOpen ? (
                         <>
                             <SvgClose width={16} height={16} alt="Close" /> FILTERS
                         </>
@@ -143,16 +150,17 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                 initial={false}
                 mode='wait'
             >
-                {((isMobile && openFiltersMenu == true) || (!isMobile && !openFiltersMenu)) && (
+                {((isMobile && isFiltersMenuOpen == true) || (!isMobile && !isFiltersMenuOpen)) && (
                     <motion.div
                         id={styles.backdrop}
-                        onClick={() => setOpenFiltersMenu(false)}
+                        onClick={() => setIsFiltersMenuOpen(false)}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                     >
+
                         {/* SHOW IF IT IS MOBILE AND MENU IS OPEN, OR IF IS NOT MOBILE (ON DESKTOP) AND MENU IS CLOSED */}
-                        {((isMobile && openFiltersMenu == true) || (!isMobile && !openFiltersMenu)) && (
+                        {((isMobile && isFiltersMenuOpen == true) || (!isMobile && !isFiltersMenuOpen)) && (
                             <motion.div
                                 onClick={(e: { stopPropagation: () => any }) => e.stopPropagation()}
                                 onScrollCapture={(e: { stopPropagation: () => any }) => e.stopPropagation()}
@@ -161,7 +169,7 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                 initial="hidden"
                                 animate="visible"
                                 data-loading={isLoading}
-                                data-active={openFiltersMenu}
+                                data-active={isFiltersMenuOpen}
                             >
                                 <form className={styles.nav_container}>
 
@@ -176,8 +184,8 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                                     <input
                                                         type='checkbox'
                                                         value={item.value}
-                                                        defaultChecked={urlQuery.get("genre")?.includes(item.value)}
-                                                        onClick={(e) => fetchData("genre", e.target)}>
+                                                        defaultChecked={searchParamsState.get("genre")?.includes(item.value)}
+                                                        onClick={(e) => fetchNewResultsByQueryType("genre", e.target)}>
                                                     </input>
                                                 </label>
                                             </li>
@@ -192,11 +200,11 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                     <p>YEAR</p>
 
                                     <select
-                                        defaultValue={urlQuery.get("year") ? `${urlQuery.get("year")}` : `any`}
-                                        onChange={(e) => fetchData("year", e.target)}
+                                        defaultValue={searchParamsState.get("year") ? `${searchParamsState.get("year")}` : `any`}
+                                        onChange={(e) => fetchNewResultsByQueryType("year", e.target)}
                                     >
                                         <option value="any">Any</option>
-                                        {range(60).map((item, key) => (
+                                        {simulateRange(60).map((item, key) => (
                                             <option
                                                 key={key}
                                                 value={new Date().getFullYear() - item}
@@ -220,8 +228,8 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                                     <input
                                                         type='checkbox'
                                                         value={item.value}
-                                                        defaultChecked={urlQuery.get("type")?.includes(item.value)}
-                                                        onClick={(e) => fetchData("type", e.target)}>
+                                                        defaultChecked={searchParamsState.get("type")?.includes(item.value)}
+                                                        onClick={(e) => fetchNewResultsByQueryType("type", e.target)}>
                                                     </input>
                                                 </label>
                                             </li>
@@ -243,8 +251,8 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                                     <input
                                                         type='checkbox'
                                                         value={item.value}
-                                                        defaultChecked={urlQuery.get("status")?.includes(item.value)}
-                                                        onClick={(e) => fetchData("status", e.target)}>
+                                                        defaultChecked={searchParamsState.get("status")?.includes(item.value)}
+                                                        onClick={(e) => fetchNewResultsByQueryType("status", e.target)}>
                                                     </input>
                                                 </label>
                                             </li>
@@ -267,8 +275,8 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                                                     <input
                                                         type='checkbox'
                                                         value={item.value}
-                                                        defaultChecked={urlQuery.get("season")?.includes(item.value)}
-                                                        onClick={(e) => fetchData("season", e.target)}>
+                                                        defaultChecked={searchParamsState.get("season")?.includes(item.value)}
+                                                        onClick={(e) => fetchNewResultsByQueryType("season", e.target)}>
                                                     </input>
                                                 </label>
                                             </li>
@@ -282,9 +290,10 @@ function NavSideBar({ isMobile }: { isMobile: boolean }) {
                         )}
                     </motion.div>
                 )}
+
             </AnimatePresence>
-        </>
+        </React.Fragment>
     )
 }
 
-export default NavSideBar
+export default NavigationSideBar

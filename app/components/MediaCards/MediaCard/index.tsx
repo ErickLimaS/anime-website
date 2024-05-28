@@ -127,8 +127,9 @@ export function MediaImgLink({ url, mediaId, formatOrType, title }: { url: strin
 export function SmallTag({ seasonYear, tags }: { seasonYear: number, tags: string }) {
 
     return (
-        <small>{seasonYear}, {tags.slice(0, 1).toUpperCase() + tags.slice(1)}</small>
-    )
+        tags && (
+            <small>{seasonYear || "Not Available"}, {tags.slice(0, 1).toUpperCase() + tags.slice(1)}</small>
+        ))
 
 }
 

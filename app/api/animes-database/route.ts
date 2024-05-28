@@ -50,14 +50,10 @@ export async function GET(request: NextRequest) {
 
     const totalLength = dataSort.length
 
-    dataSort = dataSort.slice(0, resultLimit * Number(params.get("page") || 1))
-
     // GET ANILIST ID FOR EACH MEDIA
     if (dataSort) {
 
-        let sortHasAnilistId
-
-        sortHasAnilistId = dataSort.filter((item) => item.sources.map(a => {
+        let sortHasAnilistId = dataSort.filter((item) => item.sources.map(a => {
 
             if (a.includes("https://anilist.co/anime")) {
                 const foundUrl: string | null = a.slice(a.search(/\banime\b/))
@@ -72,6 +68,8 @@ export async function GET(request: NextRequest) {
         dataSort = sortHasAnilistId
 
     }
+
+    dataSort = dataSort.slice(0, resultLimit * Number(params.get("page") || 1))
 
     return NextResponse.json(
         {

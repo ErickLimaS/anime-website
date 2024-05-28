@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
@@ -8,7 +8,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import SelectSort from '@/app/components/SelectSortInputs'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 
-const showUpMotion = {
+const framerMotionShowUp = {
 
     hidden: {
         opacity: 0,
@@ -18,37 +18,39 @@ const showUpMotion = {
         opacity: 1,
         scale: 1,
         transition: {
-            duration: 1
+            delayChildren: 0.5
         }
     }
 
 }
 
-function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffline[], totalLength: number, lastUpdate: string }) {
+function ResultsContainer({ mediasList, totalLength, lastUpdate }: { mediasList: MediaDbOffline[], totalLength: number, lastUpdate: string }) {
 
-    const [newRange, setNewRange] = useState<number>(1)
-    const [loading, setLoading] = useState<boolean>(false)
+    const [currPageNumber, setCurrPageNumber] = useState<number>(1)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const itemsPerClick = 12
+    const resultsPerPage = 12
 
     const router = useRouter()
     const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const searchParams = useSearchParams()
 
-    function fetchData() {
+    useEffect(() => setCurrPageNumber(Number(new URLSearchParams(Array.from(searchParams.entries())).get("page")) || 1), [])
 
-        setLoading(true)
+    function fetchNextResultPage() {
 
-        const current = new URLSearchParams(Array.from(searchParams.entries()));
+        setIsLoading(true)
 
-        current.set("page", `${newRange + 1}`)
-        setNewRange(newRange + 1)
+        const currSearchParams = new URLSearchParams(Array.from(searchParams.entries()))
 
-        const query = current ? `?${current}` : ""
+        currSearchParams.set("page", `${currPageNumber + 1}`)
+        setCurrPageNumber(currPageNumber + 1)
 
-        router.push(`${pathname}${decodeURI(query)}`, { scroll: false })
+        const newSearchParams = currSearchParams ? `?${currSearchParams}` : ""
 
-        setLoading(false)
+        router.push(`${pathname}${decodeURI(newSearchParams)}`, { scroll: false })
+
+        setIsLoading(false)
 
     }
 
@@ -61,63 +63,73 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
                 <SelectSort />
             </div>
 
-            {data.length == 0 && (
+            {mediasList.length == 0 && (
                 <div id={styles.error_text}>
                     <h2>No Results Found</h2>
                 </div>
             )}
 
-            {data.length > 0 && (
-                <div id={styles.results_container}>
+            {mediasList.length > 0 && (
+                <div>
                     <AnimatePresence
                         initial={true}
                         mode='wait'
                     >
 
-                        {data.slice(0, (itemsPerClick * newRange)).map((media, key: number) => (
-                            <motion.div key={key}
-                                variants={showUpMotion}
-                                initial="hidden"
-                                animate="visible"
-                            >
-                                <MediaCard.Container onDarkMode>
+                        <motion.ul
+                            id={styles.results_container}
+                            variants={framerMotionShowUp}
+                            initial="hidden"
+                            animate="visible"
+                        >
 
-                                    <MediaCard.MediaImgLink
-                                        title={media.title}
-                                        formatOrType={media.type}
-                                        url={media.picture}
-                                        mediaId={media.anilistId as string}
-                                    />
+                            {mediasList.map((media, key) => (
+                                <motion.li
+                                    key={key}
+                                    variants={framerMotionShowUp}
+                                >
+                                    <MediaCard.Container onDarkMode>
 
-                                    <MediaCard.SmallTag
-                                        seasonYear={media.animeSeason.year}
-                                        tags={media.tags[0]}
-                                    />
+                                        <MediaCard.MediaImgLink
+                                            title={media.title}
+                                            formatOrType={media.type}
+                                            url={media.picture}
+                                            mediaId={media.anilistId as string}
+                                        />
 
-                                    <MediaCard.LinkTitle
-                                        title={media.title}
-                                        anilistId={media.anilistId}
-                                    />
+                                        <MediaCard.SmallTag
+                                            seasonYear={media.animeSeason.year}
+                                            tags={media.tags[0]}
+                                        />
 
-                                </MediaCard.Container>
-                            </motion.div>
-                        ))}
+                                        <MediaCard.LinkTitle
+                                            title={media.title}
+                                            anilistId={media.anilistId}
+                                        />
 
+                                    </MediaCard.Container>
+                                </motion.li>
+                            ))}
+
+                        </motion.ul>
 
                     </AnimatePresence>
                 </div>
             )}
 
-            {((itemsPerClick * newRange) < totalLength) && (
-                <button onClick={() => fetchData()} aria-label={loading ? "Loading" : "View More Results"}>
-                    {loading ? <LoadingSvg width={16} height={16} /> : " + View more"}
+            {(totalLength > (resultsPerPage * currPageNumber)) && (
+                <button
+                    onClick={() => fetchNextResultPage()}
+                    aria-label={isLoading ? "Loading" : "View More Results"}
+                >
+                    {isLoading ? <LoadingSvg width={16} height={16} /> : " + View more"}
                 </button>
             )}
 
-            {data.length > 0 && (
+            {mediasList.length > 0 && (
                 <span>
-                    Showing {(itemsPerClick * newRange >= totalLength) ?
-                        "all " : `${itemsPerClick * newRange} out of `}
+                    Showing {(resultsPerPage * currPageNumber >= totalLength) ?
+                        "all " : `${resultsPerPage * currPageNumber} out of `}
                     <span>{totalLength.toLocaleString("en-US")}</span> results
                 </span>
             )}
@@ -125,6 +137,7 @@ function ResultsContainer({ data, totalLength, lastUpdate }: { data: MediaDbOffl
             <span style={{ display: "block", fontSize: "var(--font-size--small-2" }}>
                 Last Update: {new Date(lastUpdate).toLocaleDateString("en-us", { day: "numeric", month: "long", year: "numeric" }) || "undefined"}
             </span>
+
         </div >
     )
 }
