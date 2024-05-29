@@ -23,7 +23,7 @@ import { EpisodeLinksGoGoAnime, MediaEpisodes } from "@/app/ts/interfaces/apiGog
 import { EpisodeAnimeWatch, EpisodeLinksAnimeWatch } from "@/app/ts/interfaces/apiAnimewatchInterface"
 import gogoanime from "@/app/api/consumetGoGoAnime";
 import aniwatch from "@/app/api/aniwatch";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface"
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
@@ -85,6 +85,8 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
     const db = getFirestore(initFirebase())
 
     const router = useRouter()
+
+    const searchParams = useSearchParams()
 
     useEffect(() => {
 
@@ -322,7 +324,10 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
             const nextEpisodeId = (nextEpisodeInfo as MediaEpisodes).id
 
-            const episodeInfo = await gogoanime.getEpisodeStreamingLinks2({ episodeId: nextEpisodeId }) as EpisodeLinksGoGoAnime
+            const episodeInfo = await gogoanime.getEpisodeStreamingLinks({
+                episodeId: nextEpisodeId,
+                useAlternateLinkOption: true
+            }) as EpisodeLinksGoGoAnime
 
             nextEpisodeInfo = episodeInfo.sources.find(item => item.quality == "default").url
 
@@ -333,7 +338,10 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
             const nextEpisodeId = (nextEpisodeInfo as EpisodeAnimeWatch).episodeId
 
-            const episodeInfo = await aniwatch.episodesLinks({ episodeId: nextEpisodeId }) as EpisodeLinksAnimeWatch
+            const episodeInfo = await aniwatch.episodesLinks({
+                episodeId: nextEpisodeId,
+                category: searchParams.get("dub") == "true" ? "dub" : "sub"
+            }) as EpisodeLinksAnimeWatch
 
             setNextEpisodeInfo({ id: nextEpisodeId, src: episodeInfo.sources[0].url })
 
