@@ -18,17 +18,18 @@ type ComponentTypes = {
         mediaId: number;
         episodeNumber: number;
         episodeTitle: string;
-    }[]
+    }[],
+    useDubbedRoute: boolean
 }
 
-export default function AniwatchEpisode({ episodeInfo, mediaId, episodeImg, episodeDescription, motionStyle, episodesWatchedInfo, episodeNumber }: ComponentTypes) {
+export default function AniwatchEpisode({ episodeInfo, mediaId, episodeImg, episodeDescription, motionStyle, episodesWatchedInfo, episodeNumber, useDubbedRoute }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
 
             <FillerWarningText isFiller={episodeInfo.isFiller} />
 
-            <Link href={`/watch/${mediaId}?source=aniwatch&episode=${episodeInfo.number}&q=${episodeInfo.episodeId}`} className={styles.img_container}>
+            <Link href={`/watch/${mediaId}?source=aniwatch&episode=${episodeInfo.number}&q=${episodeInfo.episodeId}${useDubbedRoute ? '&dub=true' : ''}`} className={styles.img_container}>
                 <Image
                     src={episodeImg || placeholderImg}
                     data-other-source={true}
@@ -42,7 +43,7 @@ export default function AniwatchEpisode({ episodeInfo, mediaId, episodeImg, epis
 
             <div className={styles.title_button_container}>
                 <h3 title={`Episode ${episodeInfo.number} ${episodeInfo.title && `- ${episodeInfo.title}`}`}>
-                    <Link href={`/watch/${mediaId}?source=aniwatch&episode=${episodeInfo.number}&q=${episodeInfo.episodeId}`}>
+                    <Link href={`/watch/${mediaId}?source=aniwatch&episode=${episodeInfo.number}&q=${episodeInfo.episodeId}${useDubbedRoute ? '&dub=true' : ''}`}>
                         {`${episodeInfo.number} ${episodeInfo.title && `- ${episodeInfo.title}`}`}
                     </Link>
                 </h3>

@@ -7,7 +7,7 @@ import stringToOnlyAlphabetic from "./convertStrings"
 import { checkAnilistTitleMisspelling } from "./checkApiMediaMisspelling"
 
 // Always tries to give at least one result that resembles the query
-export async function optimizedFetchOnGoGoAnime({ textToSearch, only }: { textToSearch: string, only?: "episodes" }) {
+export async function optimizedFetchOnGoGoAnime({ textToSearch, only, isDubbed }: { textToSearch: string, only?: "episodes", isDubbed?: boolean }) {
 
     const titleFixed = stringToOnlyAlphabetic(checkAnilistTitleMisspelling(textToSearch)).toLowerCase()
 
@@ -17,9 +17,18 @@ export async function optimizedFetchOnGoGoAnime({ textToSearch, only }: { textTo
 
     const resultsForMediaSearch = await gogoanime.searchMedia({ query: titleFixed }) as MediaSearchResult[]
 
-    let closestResultsByMediaTitle = resultsForMediaSearch.filter(media =>
-        stringToOnlyAlphabetic(media.title).toLowerCase().indexOf(titleFixed) !== -1
-    )
+    let closestResultsByMediaTitle
+
+    if (isDubbed) {
+        closestResultsByMediaTitle = resultsForMediaSearch.filter(
+            media => media.subOrDub == "dub"
+        )
+    }
+    else {
+        closestResultsByMediaTitle = resultsForMediaSearch.filter(
+            media => stringToOnlyAlphabetic(media.title).toLowerCase().indexOf(titleFixed) !== -1
+        )
+    }
 
     mediaInfo = await gogoanime.getInfoFromThisMedia({ id: closestResultsByMediaTitle[0]?.id || resultsForMediaSearch![0]?.id }) as MediaInfo || null
 
@@ -46,8 +55,8 @@ export async function optimizedFetchOnGoGoAnime({ textToSearch, only }: { textTo
 }
 
 // Always tries to give at least one result that resembles the query
-export async function optimizedFetchOnAniwatch({ textToSearch, only, format, mediaTotalEpisodes, idToMatch }:
-    { textToSearch: string, only?: "episodes" | "search_list", format?: string, mediaTotalEpisodes?: number, idToMatch?: string }) {
+export async function optimizedFetchOnAniwatch({ textToSearch, only, format, mediaTotalEpisodes, idToMatch, isDubbed }:
+    { textToSearch: string, only?: "episodes" | "search_list", format?: string, mediaTotalEpisodes?: number, idToMatch?: string, isDubbed?: boolean }) {
 
     const titleFixed = stringToOnlyAlphabetic(checkAnilistTitleMisspelling(textToSearch)).toLowerCase()
 

@@ -51,7 +51,10 @@ export default function NavigationButtons({ propsFunction, buttonOptions, currVa
 
                 case 'gogoanime':
 
-                    const gogoanimeResponse = await gogoanime.getEpisodeStreamingLinks2({ episodeId: "one-piece-episode-1" }) as EpisodeLinksGoGoAnime
+                    const gogoanimeResponse = await gogoanime.getEpisodeStreamingLinks({
+                        episodeId: "one-piece-episode-1",
+                        useAlternateLinkOption: true
+                    }) as EpisodeLinksGoGoAnime
 
                     setGogoanimeAvailble(gogoanimeResponse != null ? true : false)
 
@@ -102,6 +105,7 @@ export default function NavigationButtons({ propsFunction, buttonOptions, currVa
                         onClick={() => handlePropsFunctionWithBtnValue(button.value)}
                         aria-label={button.name}
                         title={getBtnTitleByBtnValue(button.value as SourceType["source"])}
+                        disabled={currValue == button.value}
                     >
 
                         {showSourceStatus && (

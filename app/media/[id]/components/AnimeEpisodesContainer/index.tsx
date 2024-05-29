@@ -77,6 +77,8 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [episodesList, setEpisodesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]>(crunchyrollInitialEpisodes)
 
+  const [isEpisodesDubbed, setIsEpisodesDubbed] = useState<boolean>(false)
+
   const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<MediaInfoAniwatch[]>([])
 
   const [currAnimesList, setCurrAnimesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
@@ -106,12 +108,21 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   useEffect(() => {
 
+    if (typeof window !== 'undefined') {
+
+      setIsEpisodesDubbed(localStorage.getItem("dubEpisodes") == "true")
+
+    }
+
+  }, [typeof window])
+
+  useEffect(() => {
+
     if (user) getUserPreferredSource()
     else fetchEpisodesFromSource(crunchyrollInitialEpisodes.length == 0 ? "gogoanime" : "crunchyroll")
 
   }, [user])
 
-  // PAGINATION
   useEffect(() => {
 
     const endOffset = itemOffset + rangeEpisodesPerPage;
@@ -147,6 +158,11 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   }, [episodesList, currSearchParams.get("source")])
 
+  useEffect(() => {
+
+    if (currEpisodesSource == "gogoanime") fetchEpisodesFromSource(currEpisodesSource)
+
+  }, [isEpisodesDubbed])
 
   async function getUserPreferredSource() {
 
@@ -176,9 +192,6 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   async function fetchEpisodesFromSource(newSourceChose: SourceType["source"]) {
 
-    // if data props has 0 length, it is set to get data from gogoanime
-    if ((newSourceChose == currEpisodesSource) && episodesList.length > 0) return
-
     setIsLoading(true)
 
     const paginationEndOffset = itemOffset + rangeEpisodesPerPage
@@ -203,7 +216,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         setCurrEpisodesSource(newSourceChose)
 
-        mediaEpisodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as MediaEpisodes[]
+        mediaEpisodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes", isDubbed: isEpisodesDubbed }) as MediaEpisodes[]
 
         if (!mediaEpisodesList) {
 
@@ -323,6 +336,8 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         <h2 className={styles.heading_style}>EPISODES</h2>
 
         <OptionsPanel
+          callDubbedFunction={() => setIsEpisodesDubbed(!isEpisodesDubbed)}
+          dubbedStateValue={isEpisodesDubbed}
           user={user}
           db={db}
           mediaInfo={mediaInfo}
@@ -396,6 +411,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
                   crunchyrollInitialEpisodes={crunchyrollInitialEpisodes}
                   itemOffset={itemOffset}
                   currEpisodesWatched={currEpisodesWatched}
+                  useDubbedRoute={isEpisodesDubbed}
                 />
               )
 
@@ -454,7 +470,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
   )
 }
 
-function OptionsPanel({ user, db, mediaInfo, imdb }: {
+function OptionsPanel({ user, db, mediaInfo, imdb, callDubbedFunction, dubbedStateValue }: {
   user: User | null | undefined,
   db: Firestore,
   imdb: {
@@ -462,10 +478,16 @@ function OptionsPanel({ user, db, mediaInfo, imdb }: {
     episodesList: ImdbEpisode[],
   },
   mediaInfo: ApiDefaultResult | ApiMediaResults,
+  callDubbedFunction: () => void,
+  dubbedStateValue: boolean
 }) {
 
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState<boolean>(false)
   const [allEpisodesWatched, setAllEpisodesWatched] = useState<boolean>(false)
+
+  const [isDubActive, setIsDubActive] = useState(false)
+
+  useEffect(() => { setIsDubActive(dubbedStateValue) }, [dubbedStateValue])
 
   async function toggleOpenOptionsModal() {
 
@@ -515,8 +537,35 @@ function OptionsPanel({ user, db, mediaInfo, imdb }: {
 
   }
 
+  function handleDubbedInputValueChange() {
+
+    localStorage.setItem("dubEpisodes", dubbedStateValue ? "false" : "true")
+
+    callDubbedFunction()
+
+  }
+
   return (
-    <React.Fragment>
+    <div id={styles.option_container}>
+
+      <div id={styles.dub_input_container}>
+
+        <label>
+
+          <input
+            type='checkbox'
+            name="isDubbed"
+            checked={isDubActive}
+            aria-label='Dubbed Episodes'
+            onChange={() => handleDubbedInputValueChange()}
+          />
+          <span />
+
+        </label>
+
+        <p>Dubbed</p>
+
+      </div>
 
       <button
         id={styles.options_btn}
@@ -559,12 +608,12 @@ function OptionsPanel({ user, db, mediaInfo, imdb }: {
         )}
       </AnimatePresence>
 
-    </React.Fragment>
+    </div>
   )
 
 }
 
-function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, index, imdb, crunchyrollInitialEpisodes }: {
+function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, index, imdb, crunchyrollInitialEpisodes, useDubbedRoute }: {
   episodeInfo: ImdbEpisode | EpisodesType | MediaEpisodes | EpisodeAnimeWatch,
   currEpisodesSource: SourceType["source"],
   currEpisodesWatched?: {
@@ -576,7 +625,8 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
   mediaInfo: ApiDefaultResult | ApiMediaResults,
   index: number,
   imdb: EpisodesContainerTypes["imdb"],
-  crunchyrollInitialEpisodes: EpisodesContainerTypes["crunchyrollInitialEpisodes"]
+  crunchyrollInitialEpisodes: EpisodesContainerTypes["crunchyrollInitialEpisodes"],
+  useDubbedRoute: boolean
 }) {
 
   switch (currEpisodesSource) {
@@ -610,6 +660,7 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
           backgroundImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
           mediaId={mediaInfo.id}
           episodesWatchedInfo={currEpisodesWatched}
+          useDubbedRoute={useDubbedRoute}
         />
 
       )
@@ -627,6 +678,7 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
           episodeImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
           mediaId={mediaInfo.id}
           episodesWatchedInfo={currEpisodesWatched}
+          useDubbedRoute={useDubbedRoute}
         />
 
       )
