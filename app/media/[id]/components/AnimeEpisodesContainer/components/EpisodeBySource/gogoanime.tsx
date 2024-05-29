@@ -19,15 +19,16 @@ type ComponentTypes = {
         mediaId: number;
         episodeNumber: number;
         episodeTitle: string;
-    }[]
+    }[],
+    useDubbedRoute: boolean
 }
 
-export default function GoGoAnimeEpisode({ episodeInfo, mediaId, episodeTitle, backgroundImg, episodeDescription, motionStyle, episodesWatchedInfo, episodeNumber }: ComponentTypes) {
+export default function GoGoAnimeEpisode({ episodeInfo, mediaId, episodeTitle, backgroundImg, episodeDescription, motionStyle, episodesWatchedInfo, episodeNumber, useDubbedRoute }: ComponentTypes) {
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
 
-            <Link href={`/watch/${mediaId}?source=gogoanime&episode=${episodeInfo.number}&q=${episodeInfo.id}`} className={styles.img_container}>
+            <Link href={`/watch/${mediaId}?source=gogoanime&episode=${episodeInfo.number}&q=${episodeInfo.id}${useDubbedRoute ? '&dub=true' : ''}`} className={styles.img_container}>
                 <Image
                     src={backgroundImg || placeholderImg}
                     data-other-source={true}
@@ -41,7 +42,8 @@ export default function GoGoAnimeEpisode({ episodeInfo, mediaId, episodeTitle, b
 
             <div className={styles.title_button_container}>
                 <h3 title={episodeTitle ? `Episode ${episodeInfo.number} - ${episodeTitle}` : `Episode ${episodeInfo.number}`}>
-                    <Link href={`/watch/${mediaId}?source=gogoanime&episode=${episodeInfo.number}&q=${episodeInfo.id}`}>
+                    <Link href={`/watch/${mediaId}?source=gogoanime&episode=${episodeInfo.number}&q=${episodeInfo.id}${useDubbedRoute ? '&dub=true' : ''}`}>
+
                         {episodeTitle ? `${episodeInfo.number} - ${episodeTitle}` : `Episode ${episodeInfo.number}`}
                     </Link>
                 </h3>
