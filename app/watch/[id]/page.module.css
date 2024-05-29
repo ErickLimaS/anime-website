@@ -9,7 +9,7 @@
 
 }
 
-@media(min-width: 840px) {
+@media(min-width: 768px) {
     #container .background {
 
         position: relative;
