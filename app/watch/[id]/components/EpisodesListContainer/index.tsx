@@ -13,6 +13,7 @@ import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
+import { useSearchParams } from 'next/navigation'
 
 type ComponentTypes = {
     sourceName: SourceType["source"],
@@ -35,6 +36,8 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
+
+    const searchParams = useSearchParams()
 
     useEffect(() => { if (user) getEpisodesWatchedList() }, [user, mediaId, sourceName])
 
@@ -90,7 +93,8 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
         <div id={styles.episodes_list_container}>
 
             <div className={styles.heading_container}>
-                <h3>EPISODES</h3>
+                <h3>EPISODES {searchParams.get("dub") ? "(DUB)" : ""}</h3>
+
 
                 <p>on {sourceName.toUpperCase()}</p>
             </div>

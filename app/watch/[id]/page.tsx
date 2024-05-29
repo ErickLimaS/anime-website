@@ -20,7 +20,7 @@ export const revalidate = 900 // revalidate cached data every 15 minutes
 
 export async function generateMetadata({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string } // EPISODE NUMBER
+    searchParams: { episode: string, dub?: string } // EPISODE NUMBER, DUBBED
 }) {
 
     // ACTES AS DEFAULT VALUE FOR PAGE PROPS
@@ -30,14 +30,14 @@ export async function generateMetadata({ params, searchParams }: {
 
     return {
         title: !mediaInfo ? "Error | AniProject" : `Episode ${searchParams.episode} - ${mediaInfo.title.romaji} | AniProject`,
-        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.romaji}, episode ${searchParams.episode}. ${mediaInfo.description ? mediaInfo.description.replace(/(<([^>]+)>)/ig, '') : ""}`,
+        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.romaji} - episode ${searchParams.episode} ${searchParams.dub ? "Dubbed" : ""}. ${mediaInfo.description ? mediaInfo.description.replace(/(<([^>]+)>)/ig, '') : ""}`,
     }
 
 }
 
 export default async function WatchEpisode({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string, source: SourceType["source"], q: string, t: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP
+    searchParams: { episode: string, source: SourceType["source"], q: string, t: string, dub?: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP, DUBBED
 }) {
 
     // ACTES AS DEFAULT VALUE FOR PAGE PROPS
@@ -89,7 +89,7 @@ export default async function WatchEpisode({ params, searchParams }: {
 
         case ("gogoanime"):
 
-            episodeDataFetched = await gogoanime.getEpisodeStreamingLinks2({ episodeId: searchParams.q }) as EpisodeLinksGoGoAnime
+            episodeDataFetched = await gogoanime.getEpisodeStreamingLinks({ episodeId: searchParams.q, useAlternateLinkOption: true }) as EpisodeLinksGoGoAnime
 
             if (!episodeDataFetched) {
 
@@ -104,7 +104,11 @@ export default async function WatchEpisode({ params, searchParams }: {
             if (!videoUrlSrc) videoUrlSrc = episodeDataFetched.sources[0].url
 
             // Episodes for this media
-            episodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as MediaEpisodes[]
+            episodesList = await optimizedFetchOnGoGoAnime({
+                textToSearch: mediaInfo.title.romaji,
+                only: "episodes",
+                isDubbed: searchParams.dub == "true"
+            }) as MediaEpisodes[]
 
             hadFetchError = compareEpisodeIDs(episodesList, "gogoanime")
 
@@ -121,7 +125,7 @@ export default async function WatchEpisode({ params, searchParams }: {
             }
 
             // fetch episode data
-            episodeDataFetched = await aniwatch.episodesLinks({ episodeId: searchParams.q }) as EpisodeLinksAnimeWatch
+            episodeDataFetched = await aniwatch.episodesLinks({ episodeId: searchParams.q, category: searchParams.dub == "true" ? "dub" : "sub" }) as EpisodeLinksAnimeWatch
 
             if (!episodeDataFetched) hadFetchError = true
 
@@ -135,7 +139,8 @@ export default async function WatchEpisode({ params, searchParams }: {
                     textToSearch: mediaInfo.title.romaji,
                     only: "episodes",
                     format: mediaInfo.format,
-                    idToMatch: searchParams?.q?.split("?")[0]
+                    idToMatch: searchParams?.q?.split("?")[0],
+                    isDubbed: searchParams.dub == "true"
                 }) as EpisodeAnimeWatch[]
 
             }
@@ -152,6 +157,17 @@ export default async function WatchEpisode({ params, searchParams }: {
     }
 
     const imdbEpisodeInfo = imdbEpisodesList?.find(item => item.episode == Number(searchParams.episode))
+
+    const episodeTitle = () => {
+
+        if (searchParams.source == "gogoanime") {
+            return imdbEpisodesList[Number(searchParams.episode) - 1]?.title || imdbEpisodeInfo?.title || mediaInfo.title.romaji || mediaInfo.title.native
+        }
+        else {
+            return (episodesList[Number(searchParams.episode) - 1] as EpisodeAnimeWatch)?.title
+        }
+
+    }
 
     if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
 
@@ -191,24 +207,19 @@ export default async function WatchEpisode({ params, searchParams }: {
 
                     <div id={styles.heading_info_container}>
 
-                        {mediaInfo.format == "MOVIE" ? (
-                            <h1 className='display_flex_row align_items_center'>
-                                {mediaInfo.title.romaji || mediaInfo.title.native}
-                            </h1>
-                        ) : (
-                            <h1>
-                                {`EP ${searchParams.episode}`}
-                                <span>{" "}-{" "}</span>
-                                <span>
-                                    {searchParams.source == "gogoanime" ?
-                                        imdbEpisodesList[Number(searchParams.episode)]?.title || imdbEpisodeInfo?.title || mediaInfo.title.romaji || mediaInfo.title.native
-                                        :
-                                        (episodesList[Number(searchParams.episode) - 1] as EpisodeAnimeWatch)?.title
-                                    }
-                                </span>
-                            </h1>
-                        )}
+                        <h1 className='display_flex_row align_items_center'>
 
+                            {mediaInfo.format == "MOVIE" ? (
+
+                                mediaInfo.title.romaji || mediaInfo.title.native
+
+                            ) : (
+                                <React.Fragment>
+                                    EP {searchParams.episode}<span>{" - "}</span><span>{episodeTitle()}</span>
+                                </React.Fragment>
+                            )}
+
+                        </h1>
                         <MediaCardExpanded.Container
                             mediaInfo={mediaInfo as ApiDefaultResult}
                         >
@@ -277,6 +288,6 @@ export default async function WatchEpisode({ params, searchParams }: {
 
             </section>
 
-        </main>
+        </main >
     )
 }

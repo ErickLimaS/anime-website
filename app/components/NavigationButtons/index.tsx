@@ -102,6 +102,7 @@ export default function NavigationButtons({ propsFunction, buttonOptions, currVa
                         onClick={() => handlePropsFunctionWithBtnValue(button.value)}
                         aria-label={button.name}
                         title={getBtnTitleByBtnValue(button.value as SourceType["source"])}
+                        disabled={currValue == button.value}
                     >
 
                         {showSourceStatus && (

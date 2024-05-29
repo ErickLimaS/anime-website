@@ -65,11 +65,13 @@ export default {
     }),
 
     // GET EPISODES LINKS FOR ANIMES AND MOVIES
-    getEpisodeStreamingLinks: cache(async ({ episodeId, serverName }: { episodeId: string | number, serverName?: string }) => {
+    getEpisodeStreamingLinks: cache(async ({ episodeId, serverName, useAlternateLinkOption }: {
+        episodeId: string | number, serverName?: string, useAlternateLinkOption?: boolean
+    }) => {
 
         try {
             const { data } = await Axios({
-                url: `${CONSUMET_API_URL}/anime/gogoanime/watch/${episodeId}${serverName ? `?server=${serverName}` : ""}`,
+                url: `${CONSUMET_API_URL}${useAlternateLinkOption ? "/meta/anilist" : "/anime/gogoanime"}/watch/${episodeId}${serverName ? `?server=${serverName}` : ""}`,
                 method: 'GET'
             })
 
@@ -85,24 +87,4 @@ export default {
 
     }),
 
-    // ALTERNATIVE: GET EPISODES LINKS FOR ANIMES AND MOVIES
-    getEpisodeStreamingLinks2: cache(async ({ episodeId }: { episodeId: string }) => {
-
-        try {
-            const { data } = await Axios({
-                url: `${CONSUMET_API_URL}/meta/anilist/watch/${episodeId}`,
-                method: 'GET'
-            })
-
-            return data as EpisodeLinksGoGoAnime;
-        }
-        catch (error) {
-
-            console.log(error)
-
-            return null
-
-        }
-
-    })
 }

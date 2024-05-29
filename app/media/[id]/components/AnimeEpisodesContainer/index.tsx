@@ -123,7 +123,6 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   }, [user])
 
-  // PAGINATION
   useEffect(() => {
 
     const endOffset = itemOffset + rangeEpisodesPerPage;
@@ -159,6 +158,12 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   }, [episodesList, currSearchParams.get("source")])
 
+  useEffect(() => {
+
+    if (currEpisodesSource == "gogoanime") fetchEpisodesFromSource(currEpisodesSource)
+
+  }, [isEpisodesDubbed])
+
   async function getUserPreferredSource() {
 
     const useDoc = await getDoc(doc(db, "users", user!.uid))
@@ -187,9 +192,6 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   async function fetchEpisodesFromSource(newSourceChose: SourceType["source"]) {
 
-    // if data props has 0 length, it is set to get data from gogoanime
-    if ((newSourceChose == currEpisodesSource) && episodesList.length > 0) return
-
     setIsLoading(true)
 
     const paginationEndOffset = itemOffset + rangeEpisodesPerPage
@@ -214,7 +216,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         setCurrEpisodesSource(newSourceChose)
 
-        mediaEpisodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as MediaEpisodes[]
+        mediaEpisodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes", isDubbed: isEpisodesDubbed }) as MediaEpisodes[]
 
         if (!mediaEpisodesList) {
 
@@ -543,7 +545,6 @@ function OptionsPanel({ user, db, mediaInfo, imdb, callDubbedFunction, dubbedSta
 
   }
 
-
   return (
     <div id={styles.option_container}>
 
@@ -555,6 +556,7 @@ function OptionsPanel({ user, db, mediaInfo, imdb, callDubbedFunction, dubbedSta
             type='checkbox'
             name="isDubbed"
             checked={isDubActive}
+            aria-label='Dubbed Episodes'
             onChange={() => handleDubbedInputValueChange()}
           />
           <span />
