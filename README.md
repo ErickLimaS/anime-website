@@ -23,7 +23,7 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 ## :hammer: Features
 
 - [x] `Search`: Get a list of all animes and mangas you want using filters.
-- [x] `Watch`: Watch any available episode.
+- [x] `Watch`: Watch any available episode Dubbed or Subbed.
 - [x] `Read`: Read any manga chapter available.
 - [x] `Comment`: Write what you thougth of that episode or just tell something that every should know about.
 - [x] `Log In`: You can log in with Google, GitHub or Anonymously (with some restrictions).
@@ -35,7 +35,6 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 
 ## :pushpin: Under Development
 
-- [ ] `Add Dub Episodes Option`
 - [ ] `Add Reply to Comments`
 
 ## :heavy_check_mark: Tecnologies Used
