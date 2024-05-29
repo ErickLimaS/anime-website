@@ -43,8 +43,6 @@ async function ReadChapter({ params, searchParams }: {
 
     let mangaInfo = await manga.getInfoFromThisMedia({ id: mangaTitleUrlFrindly }) as MangaInfo
 
-    // if the query dont match any id result, it will search results for this query,
-    // than make the first request by the ID of the first search result 
     if (!mangaInfo) {
         const mangaClosestResult = await getClosestMangaResultByTitle(mangaTitleUrlFrindly, mediaInfo)
 

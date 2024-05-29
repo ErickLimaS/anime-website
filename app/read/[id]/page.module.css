@@ -1,5 +1,7 @@
 #container {
 
+    scroll-behavior: smooth;
+
     width: 96%;
 
     max-width: var(--breakpoint-md);

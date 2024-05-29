@@ -19,16 +19,18 @@
 
     position: absolute;
     z-index: 1;
-    top: 4px;
-    left: 4px;
+    top: 0;
+    left: 0;
 
-    padding: 0px 4px;
+    padding: 2px 6px;
 
     background-color: rgb(4, 112, 4);
-    border-radius: 4px;
+    border-radius: 8px 0 4px 0;
 
     font-size: var(--font-size--small-1);
     font-weight: 400;
+
+    box-shadow: 1px 1px 3px 1px var(--black-100);
 
 }
 

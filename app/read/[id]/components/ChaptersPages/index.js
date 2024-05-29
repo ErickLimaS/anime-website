@@ -10,9 +10,10 @@ import MangaSvg from "@/public/assets/book.svg"
 import RectangleSvg from "@/public/assets/rectangle.svg"
 
 // This file is in JAVASCRIPT for a REASON
-// THIS Library doesnt support TypeScript. With that, i couldnt just add a value to every prop it has.
-// making it a Js File was better than just having a bunch of undefined values :\
+// This Library doesnt support TypeScript.
+//
 // https://www.npmjs.com/package/page-flip
+
 export default function ChaptersPages({ chapters, initialPage }) {
 
     const [currPageNumber, setCurrPageNumber] = useState(initialPage || 0)
@@ -25,6 +26,8 @@ export default function ChaptersPages({ chapters, initialPage }) {
     const pagesComponentRef = useRef()
 
     useEffect(() => { setCurrPageNumber(0) }, [chapters, initialPage])
+
+    useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "smooth" }) }, [])
 
     function handleChangeViewFormat() {
 
@@ -83,8 +86,6 @@ export default function ChaptersPages({ chapters, initialPage }) {
                 Page <b>{currPageNumber + 1 >= chapters.length ? chapters.length : `${currPageNumber + 1}`}</b> <b className={styles.text_only_desktop}>{currPageNumber + 2 > chapters.length ? "" : ` - ${currPageNumber + 2}`}</b> out of <b>{chapters.length}</b>
             </span>
 
-            <p>Reading Direction: Left to Right</p>
-
         </section>
     )
 }
@@ -120,7 +121,13 @@ function PagesContainer({ isLoading, chapters, format, initialPage, changePageFu
 
                         {chapters.map((page, key) => (
                             <div key={key}>
-                                <Image src={page.img} alt={`Page ${page.page}`} fill sizes='550px' quality={100} />
+                                <Image
+                                    src={page.img}
+                                    alt={`Page ${page.page}`}
+                                    fill
+                                    sizes='550px'
+                                    quality={100}
+                                />
                             </div>
                         ))}
 
@@ -180,7 +187,13 @@ function FullScreenPagesView({ isLoading, chapters, format, showOnModal, currPag
                                 key={key}
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                <Image src={chapter.img} alt={`Page ${chapter.page}`} fill sizes='550px' quality={100} />
+                                <Image
+                                    src={chapter.img}
+                                    alt={`Page ${chapter.page}`}
+                                    fill
+                                    sizes='550px'
+                                    quality={100}
+                                />
                             </div>
                         ))}
 

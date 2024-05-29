@@ -34,6 +34,7 @@ import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/o
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';
+import { useSearchParams } from 'next/navigation';
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -82,19 +83,26 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
   const [itemOffset, setItemOffset] = useState<number>(0)
 
   const [currEpisodesSource, setCurrEpisodesSource] = useState<SourceType["source"]>("crunchyroll")
+
   const [currEpisodesWatched, setCurrEpisodesWatched] = useState<{
     mediaId: number;
     episodeNumber: number;
     episodeTitle: string;
   }[]>()
 
-  const [pageNumber, setPageNumber] = useState<number>(0)
+  const searchParams = useSearchParams()
 
+  const currSearchParams = new URLSearchParams(Array.from(searchParams.entries()))
+
+  const [pageNumber, setPageNumber] = useState<number>(0)
   const auth = getAuth()
 
   const [user] = useAuthState(auth)
 
   const db = getFirestore(initFirebase())
+
+  // the episodes array length will be divided by 20, getting the range of pagination
+  const rangeEpisodesPerPage = 20
 
   useEffect(() => {
 
@@ -116,8 +124,29 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   useEffect(() => { if (user) getUserEpisodesWatched() }, [user, mediaInfo.id, currEpisodesSource, itemOffset])
 
-  // the episodes array length will be divided by 20, getting the range of pagination
-  const rangeEpisodesPerPage = 20
+  useEffect(() => {
+
+    const paramsSource = currSearchParams.get("source") as SourceType["source"]
+
+    if (paramsSource == "crunchyroll" || paramsSource == "aniwatch" || paramsSource == "gogoanime") {
+
+      setCurrEpisodesSource(paramsSource)
+      fetchEpisodesFromSource(paramsSource)
+
+    }
+
+  }, [searchParams])
+
+  useEffect(() => {
+
+    const pageParams = Number(currSearchParams.get("page"))
+
+    if (episodesList && pageParams) {
+      setItemOffset((pageParams || 0) * rangeEpisodesPerPage % episodesList.length)
+    }
+
+  }, [episodesList, currSearchParams.get("source")])
+
 
   async function getUserPreferredSource() {
 
@@ -354,7 +383,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
           <AnimatePresence>
 
-            {currAnimesList && currAnimesList.map((episode: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode, key: number) => (
+            {currAnimesList && currAnimesList.map((episode: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode, key) => (
 
               !isLoading && (
                 <EpisodeBySource
@@ -415,6 +444,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
           <NavPaginateItems
             onPageChange={handleButtonPageNavigation}
             pageCount={pageNumber}
+            redirectToPage={Number(currSearchParams.get("page")) || 0}
           />
 
         </nav>
@@ -534,22 +564,20 @@ function OptionsPanel({ user, db, mediaInfo, imdb }: {
 
 }
 
-function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, index, imdb, crunchyrollInitialEpisodes }:
-  {
-    episodeInfo: ImdbEpisode | EpisodesType | MediaEpisodes | EpisodeAnimeWatch,
-    currEpisodesSource: SourceType["source"],
-    currEpisodesWatched?: {
-      mediaId: number;
-      episodeNumber: number;
-      episodeTitle: string;
-    }[],
-    itemOffset: number,
-    mediaInfo: ApiDefaultResult | ApiMediaResults,
-    index: number,
-    imdb: EpisodesContainerTypes["imdb"],
-    crunchyrollInitialEpisodes: EpisodesContainerTypes["crunchyrollInitialEpisodes"]
-  }
-) {
+function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, index, imdb, crunchyrollInitialEpisodes }: {
+  episodeInfo: ImdbEpisode | EpisodesType | MediaEpisodes | EpisodeAnimeWatch,
+  currEpisodesSource: SourceType["source"],
+  currEpisodesWatched?: {
+    mediaId: number;
+    episodeNumber: number;
+    episodeTitle: string;
+  }[],
+  itemOffset: number,
+  mediaInfo: ApiDefaultResult | ApiMediaResults,
+  index: number,
+  imdb: EpisodesContainerTypes["imdb"],
+  crunchyrollInitialEpisodes: EpisodesContainerTypes["crunchyrollInitialEpisodes"]
+}) {
 
   switch (currEpisodesSource) {
 
@@ -560,10 +588,10 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
         <CrunchyrollEpisode
           motionStyle={framerMotionEpisodePopup}
           key={index}
-          data={episodeInfo as EpisodesType}
+          episodeInfo={episodeInfo as EpisodesType}
           episodeNumber={index + itemOffset + 1}
           mediaId={mediaInfo.id}
-          episodesWatched={currEpisodesWatched}
+          episodesWatchedInfo={currEpisodesWatched}
         />
 
       )
@@ -575,13 +603,13 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
         <GoGoAnimeEpisode
           motionStyle={framerMotionEpisodePopup}
           key={index}
-          data={episodeInfo as MediaEpisodes}
+          episodeInfo={episodeInfo as MediaEpisodes}
           episodeNumber={index + itemOffset + 1}
-          title={imdb.episodesList[index + itemOffset]?.title}
+          episodeTitle={imdb.episodesList[index + itemOffset]?.title}
           episodeDescription={imdb.episodesList[index + itemOffset]?.description || undefined}
           backgroundImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
           mediaId={mediaInfo.id}
-          episodesWatched={currEpisodesWatched}
+          episodesWatchedInfo={currEpisodesWatched}
         />
 
       )
@@ -593,12 +621,12 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
         <AniwatchEpisode
           motionStyle={framerMotionEpisodePopup}
           key={index}
-          data={episodeInfo as EpisodeAnimeWatch}
+          episodeInfo={episodeInfo as EpisodeAnimeWatch}
           episodeNumber={index + itemOffset + 1}
           episodeDescription={imdb.episodesList[index + itemOffset]?.description || undefined}
-          backgroundImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
+          episodeImg={imdb.episodesList[index + itemOffset]?.img?.hd || crunchyrollInitialEpisodes[index + itemOffset]?.thumbnail}
           mediaId={mediaInfo.id}
-          episodesWatched={currEpisodesWatched}
+          episodesWatchedInfo={currEpisodesWatched}
         />
 
       )

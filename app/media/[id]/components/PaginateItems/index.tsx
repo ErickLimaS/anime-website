@@ -7,11 +7,12 @@ import ChevronRightSvg from "@/public/assets/chevron-right.svg"
 type NavTypes = {
 
     onPageChange: (event: { selected: number; }) => void,
-    pageCount: number
+    pageCount: number,
+    redirectToPage?: number
 
 }
 
-function NavPaginateItems({ onPageChange, pageCount }: NavTypes) {
+function NavPaginateItems({ onPageChange, pageCount, redirectToPage }: NavTypes) {
     return (
         <ReactPaginate
             nextLabel={<ChevronRightSvg alt="Icon to Right side" width={16} height={16} />}
@@ -19,6 +20,7 @@ function NavPaginateItems({ onPageChange, pageCount }: NavTypes) {
             pageRangeDisplayed={(typeof window !== "undefined") && window.matchMedia("(max-width: 440px)").matches ? 1 : 2}
             marginPagesDisplayed={1}
             pageCount={pageCount}
+            forcePage={redirectToPage || 0}
             previousLabel={<ChevronLeftSvg alt="Icon to left side" width={16} height={16} />}
             pageClassName={styles.li_item}
             pageLinkClassName="page-link"

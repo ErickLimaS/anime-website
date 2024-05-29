@@ -30,7 +30,7 @@ export async function generateMetadata({ params, searchParams }: {
 
     return {
         title: !mediaInfo ? "Error | AniProject" : `Episode ${searchParams.episode} - ${mediaInfo.title.romaji} | AniProject`,
-        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.romaji}, episode ${searchParams.episode}. ${mediaInfo.description && mediaInfo.description}`,
+        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.romaji}, episode ${searchParams.episode}. ${mediaInfo.description ? mediaInfo.description.replace(/(<([^>]+)>)/ig, '') : ""}`,
     }
 
 }
@@ -215,8 +215,8 @@ export default async function WatchEpisode({ params, searchParams }: {
 
                             <p>
                                 <MediaCardExpanded.Description
-                                description={imdbEpisodeInfo?.description || mediaInfo.description}
-                            />
+                                    description={imdbEpisodeInfo?.description || mediaInfo.description}
+                                />
                             </p>
 
                         </MediaCardExpanded.Container>
