@@ -13,6 +13,7 @@
     "@vidstack/react": "^1.10.9",
     "axios": "^1.6.6",
     "axios-retry": "^4.1.0",
+    "bad-words": "^3.0.4",
     "firebase": "^10.8.0",
     "framer-motion": "^11.0.3",
     "hls.js": "^1.5.7",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
+    "@types/bad-words": "^3.0.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
