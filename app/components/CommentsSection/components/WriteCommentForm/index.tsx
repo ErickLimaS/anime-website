@@ -154,6 +154,7 @@ export default function WriteCommentFormContainer({
                                 type='checkbox'
                                 name='spoiler'
                                 defaultChecked={false}
+                                aria-label="Spoiler Checkbox"
                             />
                             <span />
 

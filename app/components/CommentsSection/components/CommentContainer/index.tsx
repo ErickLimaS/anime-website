@@ -19,13 +19,13 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant';
 
-export default function Comment({ item, mediaId }: { item: Comment, mediaId: number }) {
+export default function Comment({ comment, mediaId }: { comment: Comment, mediaId: number }) {
 
     const [isLiked, setWasLiked] = useState<boolean>(false)
     const [wasDisliked, setWasDisliked] = useState<boolean>(false)
     const [wasDeleted, setWasDeleted] = useState<boolean>(false)
 
-    const [isSpoiler, setIsSpoiler] = useState<boolean>(item.isSpoiler)
+    const [isSpoiler, setIsSpoiler] = useState<boolean>(comment.isSpoiler)
 
     const [commentData, setCommentData] = useState<Comment>()
     const [commentDocId, setCommentDocId] = useState<string | DocumentData>()
@@ -37,11 +37,11 @@ export default function Comment({ item, mediaId }: { item: Comment, mediaId: num
 
     const db = getFirestore(initFirebase())
 
-    useEffect(() => { getCommentCurrLikesAndDislikes() }, [user, item, mediaId])
+    useEffect(() => { getCommentCurrLikesAndDislikes() }, [user, comment, mediaId])
 
     async function getCommentDoc() {
 
-        const queryComment = query(collection(db, 'comments', `${mediaId}`, "all"), where("createdAt", "==", item.createdAt))
+        const queryComment = query(collection(db, 'comments', `${mediaId}`, "all"), where("createdAt", "==", comment.createdAt))
 
         const commentDoc = await getDocs(queryComment)
 
@@ -146,7 +146,7 @@ export default function Comment({ item, mediaId }: { item: Comment, mediaId: num
     async function deleteCurrComment() {
 
         // Only deletes from Curr Media Collection
-        // Doesnt delete from User Doc comment history (so we can keep control)
+        // Doesnt delete from User Doc comment history, so we can keep control
 
         await deleteDoc(doc(db, 'comments', `${mediaId}`, "all", `${commentDocId}`)).then(() => {
 
@@ -194,8 +194,8 @@ export default function Comment({ item, mediaId }: { item: Comment, mediaId: num
                     <div className={styles.user_img_container}>
 
                         <Image
-                            src={item.userPhoto}
-                            alt={item.username}
+                            src={comment.userPhoto}
+                            alt={comment.username}
                             fill
                             sizes='72px'
                         />
@@ -206,17 +206,17 @@ export default function Comment({ item, mediaId }: { item: Comment, mediaId: num
 
                         <div className={styles.heading_container}>
                             <h5>
-                                {item.username.length > 25 ? `${item.username.slice(0, 25)}...` : item.username}
+                                {comment.username.length > 25 ? `${comment.username.slice(0, 25)}...` : comment.username}
                             </h5>
 
                             <p>
-                                {convertFromUnix(item.createdAt, { month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                                {convertFromUnix(comment.createdAt, { month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                             </p>
                         </div>
 
-                        <div className={styles.comment_text_container} onClick={() => item.isSpoiler && setIsSpoiler(!isSpoiler)}>
+                        <div className={styles.comment_text_container} onClick={() => comment.isSpoiler && setIsSpoiler(!isSpoiler)}>
 
-                            <p>{item.comment}</p>
+                            <p>{comment.comment}</p>
 
                         </div>
 
@@ -226,13 +226,21 @@ export default function Comment({ item, mediaId }: { item: Comment, mediaId: num
                                 <div className={styles.buttons_container}>
                                     <button onClick={() => handleLikesAndDislikesActions("like", isLiked ? false : true)}>
 
-                                        <SvgIcons type={"like"} isBtnActive={isLiked} commentData={commentData} />
+                                        <SvgIcons
+                                            type={"like"}
+                                            isBtnActive={isLiked}
+                                            commentData={commentData}
+                                        />
 
                                     </button>
 
                                     <button onClick={() => handleLikesAndDislikesActions("dislike", wasDisliked ? false : true)}>
 
-                                        <SvgIcons type={"dislike"} isBtnActive={wasDisliked} commentData={commentData} />
+                                        <SvgIcons
+                                            type={"dislike"}
+                                            isBtnActive={wasDisliked}
+                                            commentData={commentData}
+                                        />
 
                                     </button>
 
@@ -243,7 +251,7 @@ export default function Comment({ item, mediaId }: { item: Comment, mediaId: num
                                     </button>
                                     */}
 
-                                    {(user?.uid == item.userId.id) && (
+                                    {(user?.uid == comment.userId.id) && (
                                         <button className={styles.delete_btn} onClick={() => deleteCurrComment()}>
                                             <SvgTrash width={16} height={16} alt="Delete Icon" />Delete
                                         </button>
@@ -272,18 +280,18 @@ function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike"
         case 'like':
 
             if (isBtnActive) {
-                return <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes}  &#x2022; Likes</>
+                return <><SvgThumbUpFill width={16} height={16} alt="Thumbs Up" /> {(commentData.likes != 0) && commentData.likes}  &#x2022; Likes</>
             }
 
-            return <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {commentData.likes != 0 && commentData.likes} &#x2022; Like</>
+            return <><SvgThumbUp width={16} height={16} alt="Thumbs Up" /> {(commentData.likes != 0) && commentData.likes} &#x2022; Like</>
 
         case 'dislike':
 
             if (isBtnActive) {
-                return <><SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislikes</>
+                return <><SvgThumbDownFill width={16} height={16} alt="Thumbs Down" /> {(commentData.dislikes != 0) && commentData.dislikes} &#x2022; Dislikes</>
             }
 
-            return <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {commentData.dislikes != 0 && commentData.dislikes} &#x2022; Dislike</>
+            return <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {(commentData.dislikes != 0) && commentData.dislikes} &#x2022; Dislike</>
 
         default:
             return
