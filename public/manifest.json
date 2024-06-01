@@ -1,0 +1,17 @@
+{
+ "name": "AniProject",
+ "short_name": "AniProject",
+ "theme_color": "#030f16",
+ "background_color": "#030f16",
+ "display": "standalone",
+ "scope": "/",
+ "start_url": "/",
+ "description": "A anime platform that showcases popular and trending animes, mangas and movies. Explore the latest releases, keep watching your favorites, and discover what's popular in the anime world.",
+ "icons": [
+   {
+     "src": "/icon.png",
+     "sizes": "512x512",
+     "type": "image/png"
+   }
+ ]
+}
