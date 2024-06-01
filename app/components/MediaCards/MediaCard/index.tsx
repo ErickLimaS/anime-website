@@ -19,7 +19,7 @@ export function Container({ children, positionIndex, onDarkMode, isLoading, isHi
 
     return (
         <div
-            className={`${styles.media_item_container} ${onDarkMode ? styles.darkMode : ''} ${isHiddenOnDesktop ? styles.midia_item_container_hidden : ""}`}
+            className={`${styles.media_item_container} ${onDarkMode ? styles.darkMode : ''} ${isHiddenOnDesktop ? styles.media_item_container_hidden : ""}`}
             style={customStyle || undefined}
             data-loading={isLoading || false}
         >

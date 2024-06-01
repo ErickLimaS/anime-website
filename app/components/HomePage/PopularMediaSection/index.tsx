@@ -114,7 +114,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
 
                     {animesList.map((media, key: number) => (
 
-                        <MediaCard.Container key={key} onDarkMode isHiddenOnDesktop>
+                        <MediaCard.Container key={key} onDarkMode>
 
                             <MediaCard.MediaImg
                                 title={media.title.romaji || media.title.native}
@@ -149,7 +149,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                     >
                         {fetchedData?.map((media, key: number) => (
 
-                            <MediaCard.Container key={key} onDarkMode isHiddenOnDesktop>
+                            <MediaCard.Container key={key} onDarkMode>
 
                                 <MediaCard.MediaImg
                                     title={media.title.romaji || media.title.native}

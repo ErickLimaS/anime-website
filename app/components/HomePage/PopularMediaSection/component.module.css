@@ -18,6 +18,17 @@
     }
 }
 
+#popular_container>div:not(#popular_list_container):not(#title_container) {
+    display: none;
+}
+
+@media((min-width: 990px)) {
+    #popular_container>div:not(#popular_list_container):not(#title_container) {
+        display: initial;
+    }
+
+}
+
 @media((min-width: 990px)) {
     #popular_container {
 
@@ -193,6 +204,8 @@
 
 /* FETCHED DATA */
 #new_fetched_data_container {
+
+    display: none;
 
     margin: 32px auto;
 

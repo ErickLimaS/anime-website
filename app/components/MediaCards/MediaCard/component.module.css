@@ -13,8 +13,8 @@
 
 }
 
-@media(max-width: 989px) {
-    .midia_item_container_hidden {
+@media(min-width: 989px) {
+    .media_item_container_hidden {
         display: none !important;
     }
 }
