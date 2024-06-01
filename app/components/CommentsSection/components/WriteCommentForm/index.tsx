@@ -7,7 +7,8 @@ import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image';
 import {
     getFirestore, doc, arrayUnion, FieldPath, setDoc,
-    DocumentData, addDoc, collection
+    DocumentData, addDoc, collection,
+    updateDoc
 } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
@@ -15,6 +16,8 @@ import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import Filter from "bad-words"
 
 type CommentFormTypes = {
+    isAReply?: boolean,
+    commentToBeRepliedDocId?: string | DocumentData | undefined,
     isLoadingHook: boolean,
     setIsLoadingHook: React.Dispatch<React.SetStateAction<boolean>>,
     setIsUserModalOpenHook: React.Dispatch<React.SetStateAction<boolean>>,
@@ -26,7 +29,7 @@ type CommentFormTypes = {
 }
 
 export default function WriteCommentFormContainer({
-    isLoadingHook, setIsLoadingHook, setIsUserModalOpenHook, loadComments, mediaInfo, isOnWatchPage, episodeId, episodeNumber }:
+    isAReply, commentToBeRepliedDocId, isLoadingHook, setIsLoadingHook, setIsUserModalOpenHook, loadComments, mediaInfo, isOnWatchPage, episodeId, episodeNumber }:
     CommentFormTypes
 ) {
 
@@ -66,7 +69,7 @@ export default function WriteCommentFormContainer({
 
         const commentTimestamp = Math.floor(new Date().getTime() / 1000.0)
 
-        const commentData = {
+        const completeCommentData = {
 
             userId: doc(db, "users", user.uid),
             username: user.displayName,
@@ -76,40 +79,81 @@ export default function WriteCommentFormContainer({
             isSpoiler: form.spoiler.checked,
             likes: 0,
             dislikes: 0,
+            replies: [],
             fromEpisode: isOnWatchPage || null,
             episodeId: episodeId || null,
             episodeNumber: episodeNumber || null
 
         }
 
-        const commentCreatedDoc = await addDoc(collection(db, 'comments', `${mediaInfo.id}`, "all"), commentData)
+        const replyCommentData: ReplyComment = {
 
-        if (!commentCreatedDoc) return
+            userId: doc(db, "users", user.uid),
+            username: user.displayName,
+            userPhoto: user.photoURL,
+            createdAt: commentTimestamp,
+            comment: commentText,
+            isSpoiler: form.spoiler.checked,
+            replies: [],
+        }
 
-        form.comment.value = ""
-        setWasCommentCreatedSuccessfully(true)
+        if (isAReply) {
 
-        await setDoc(doc(db, 'users', user.uid), {
-            comments: {
-                written: arrayUnion(...[{
-                    commentRef: commentCreatedDoc.id,
-                    media: {
-                        id: mediaInfo.id,
-                        coverImage: {
-                            extraLarge: mediaInfo.coverImage.extraLarge
-                        },
-                        title: {
-                            romaji: mediaInfo.title.romaji
+            const commentCreatedDoc = await addDoc(collection(db, 'comments', `${mediaInfo.id}`, "replies"), replyCommentData)
+
+            if (!commentCreatedDoc) return
+
+            await updateDoc(doc(db, 'comments', `${mediaInfo.id}`, "all", `${commentToBeRepliedDocId}`),
+                {
+                    replies: arrayUnion(...[completeCommentData])
+
+                } as unknown as FieldPath,
+                { merge: true }
+            ).catch(async () =>
+
+                await updateDoc(doc(db, 'comments', `${mediaInfo.id}`, "replies", `${commentToBeRepliedDocId}`),
+                    {
+                        replies: arrayUnion(...[completeCommentData])
+
+                    } as unknown as FieldPath,
+                    { merge: true }
+                )
+
+            )
+
+        }
+        else {
+
+            const commentCreatedDoc = await addDoc(collection(db, 'comments', `${mediaInfo.id}`, "all"), completeCommentData)
+
+            if (!commentCreatedDoc) return
+
+            form.comment.value = ""
+            setWasCommentCreatedSuccessfully(true)
+
+            await setDoc(doc(db, 'users', user.uid), {
+                comments: {
+                    written: arrayUnion(...[{
+                        commentRef: commentCreatedDoc.id,
+                        media: {
+                            id: mediaInfo.id,
+                            coverImage: {
+                                extraLarge: mediaInfo.coverImage.extraLarge
+                            },
+                            title: {
+                                romaji: mediaInfo.title.romaji
+                            }
                         }
-                    }
-                }])
-            }
-        } as unknown as FieldPath, { merge: true })
+                    }])
+                }
+            } as unknown as FieldPath, { merge: true })
 
-        if (isOnWatchPage) {
-            await addDoc(collection(db, 'comments', `${mediaInfo.id}`, `${episodeNumber}`), {
-                commentRef: doc(db, 'comments', `${mediaInfo.id}`, "all", commentCreatedDoc.id)
-            })
+            if (isOnWatchPage) {
+                await addDoc(collection(db, 'comments', `${mediaInfo.id}`, `${episodeNumber}`), {
+                    commentRef: doc(db, 'comments', `${mediaInfo.id}`, "all", commentCreatedDoc.id)
+                })
+            }
+
         }
 
         loadComments()
@@ -134,12 +178,12 @@ export default function WriteCommentFormContainer({
 
             <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleCreateComment(e)}>
                 <label>
-                    {user ? `Comment as ${user.displayName}` : "Please log in to comment"}
+                    {user ? `${isAReply ? `Reply as ${user.displayName}` : `Comment as ${user.displayName}`}` : "Please log in to comment"}
                     <textarea
-                        rows={3} cols={70}
+                        rows={isAReply ? 2 : 3} cols={70}
                         name='comment'
                         onChange={(e) => wasCommentCreatedSuccessfully ? setWasCommentCreatedSuccessfully(false) : setCurrTextLength(e.target.value.length)}
-                        placeholder='Leave a comment'
+                        placeholder={isAReply ? "Reply with..." : 'Leave a comment'}
                         required
                     ></textarea>
                 </label>

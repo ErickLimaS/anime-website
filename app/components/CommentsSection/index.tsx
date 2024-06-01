@@ -180,6 +180,14 @@ export default function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, e
                                             key={comment.createdAt}
                                             comment={comment as Comment}
                                             mediaId={mediaInfo.id}
+                                            isLoadingHook={isLoading}
+                                            loadComments={getCommentsForCurrMedia}
+                                            mediaInfo={mediaInfo}
+                                            setIsLoadingHook={setIsLoading}
+                                            setIsUserModalOpenHook={setIsUserModalOpen}
+                                            episodeId={episodeId}
+                                            episodeNumber={episodeNumber}
+                                            isOnWatchPage={isOnWatchPage}
                                         />
                                     ))
                                 )}

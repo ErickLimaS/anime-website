@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import Image from 'next/image';
 import styles from "./component.module.css"
 import { convertFromUnix } from '@/app/lib/formatDateUnix';
@@ -7,8 +7,9 @@ import SvgThumbUp from "@/public/assets/hand-thumbs-up.svg"
 import SvgThumbUpFill from "@/public/assets/hand-thumbs-up-fill.svg"
 import SvgThumbDown from "@/public/assets/hand-thumbs-down.svg"
 import SvgThumbDownFill from "@/public/assets/hand-thumbs-down-fill.svg"
-import SvgTrash from "@/public/assets/trash.svg"
 import SvgReply from "@/public/assets/reply.svg"
+import SvgReplyFill from "@/public/assets/reply-fill.svg"
+import SvgTrash from "@/public/assets/trash.svg"
 import {
     DocumentData, FieldPath,
     arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs,
@@ -18,11 +19,37 @@ import { initFirebase } from '@/app/firebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant';
+import WriteCommentFormContainer from '../WriteCommentForm';
+import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
+import { AnimatePresence, motion } from 'framer-motion';
+import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 
-export default function Comment({ comment, mediaId }: { comment: Comment, mediaId: number }) {
+type CommentComponentTypes = {
+    comment: Comment | ReplyComment,
+    mediaId: number,
+    isLoadingHook: boolean,
+    setIsLoadingHook: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsUserModalOpenHook: React.Dispatch<React.SetStateAction<boolean>>,
+    loadComments: () => Promise<DocumentData[] | undefined>,
+    mediaInfo: ApiMediaResults | ApiDefaultResult,
+    isOnWatchPage?: boolean,
+    episodeId?: string,
+    episodeNumber?: number
+
+}
+
+export default function Comment({
+    comment, mediaId, isLoadingHook, setIsLoadingHook, setIsUserModalOpenHook, loadComments, mediaInfo, isOnWatchPage, episodeId, episodeNumber
+}: CommentComponentTypes) {
+
+
+    const uniqueReplyId = useId()
+
+    const [isAReply, setIsAReply] = useState<boolean>(false)
 
     const [isLiked, setWasLiked] = useState<boolean>(false)
     const [wasDisliked, setWasDisliked] = useState<boolean>(false)
+    const [isGettingAReply, setIsGettingAReply] = useState<boolean>(false)
     const [wasDeleted, setWasDeleted] = useState<boolean>(false)
 
     const [isSpoiler, setIsSpoiler] = useState<boolean>(comment.isSpoiler)
@@ -38,12 +65,24 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
     const db = getFirestore(initFirebase())
 
     useEffect(() => { getCommentCurrLikesAndDislikes() }, [user, comment, mediaId])
+    useEffect(() => { getCommentCurrLikesAndDislikes() }, [commentData == null])
 
     async function getCommentDoc() {
 
-        const queryComment = query(collection(db, 'comments', `${mediaId}`, "all"), where("createdAt", "==", comment.createdAt))
+        let queryComment = query(collection(db, 'comments', `${mediaId}`, "all"), where("createdAt", "==", comment.createdAt))
 
-        const commentDoc = await getDocs(queryComment)
+        let commentDoc = await getDocs(queryComment)
+
+        // Intended for Reply Comments
+        if (!commentDoc.docs[0]) {
+
+            queryComment = query(collection(db, 'comments', `${mediaId}`, "replies"), where("createdAt", "==", comment.createdAt))
+
+            commentDoc = await getDocs(queryComment)
+
+            setIsAReply(true)
+
+        }
 
         if (!commentDoc.docs[0]) return
 
@@ -57,7 +96,7 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
 
     }
 
-    async function handleLikesAndDislikesActions(buttonActionType: "like" | "dislike", isActionSetToTrue: boolean) {
+    async function handleLikesAndDislikesActions(buttonActionType: "like" | "dislike" | "reply", isActionSetToTrue: boolean) {
 
         if (!user) return setIsUserModalOpen(true)
 
@@ -72,12 +111,25 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
 
             case "like":
 
-                await updateDoc(doc(db, 'comments', `${mediaId}`, "all", commentDocId), {
+                if (isAReply) {
 
-                    likes: isActionSetToTrue ? commentDocData.likes + 1 : (commentDocData.likes == 0 ? 0 : commentDocData.likes - 1),
-                    dislikes: wasDisliked ? commentDocData.dislikes - 1 : commentDocData.dislikes
+                    await updateDoc(doc(db, 'comments', `${mediaId}`, "replies", commentDocId), {
 
-                })
+                        likes: isActionSetToTrue ? commentDocData.likes + 1 : (commentDocData.likes == 0 ? 0 : commentDocData.likes - 1),
+                        dislikes: wasDisliked ? commentDocData.dislikes - 1 : commentDocData.dislikes
+
+                    })
+                }
+                else {
+
+                    await updateDoc(doc(db, 'comments', `${mediaId}`, "all", commentDocId), {
+
+                        likes: isActionSetToTrue ? commentDocData.likes + 1 : (commentDocData.likes == 0 ? 0 : commentDocData.likes - 1),
+                        dislikes: wasDisliked ? commentDocData.dislikes - 1 : commentDocData.dislikes
+
+                    })
+
+                }
 
                 const commentLikedData = {
                     commentRef: commentDocId,
@@ -105,12 +157,27 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
 
             case "dislike":
 
-                await updateDoc(doc(db, 'comments', `${mediaId}`, "all", commentDocId), {
+                if (isAReply) {
 
-                    likes: isLiked ? commentDocData.likes - 1 : commentDocData.likes,
-                    dislikes: isActionSetToTrue ? commentDocData.dislikes + 1 : (commentDocData.dislikes == 0 ? 0 : commentDocData.dislikes - 1)
+                    await updateDoc(doc(db, 'comments', `${mediaId}`, "replies", commentDocId), {
 
-                })
+                        likes: isLiked ? commentDocData.likes - 1 : commentDocData.likes,
+                        dislikes: isActionSetToTrue ? commentDocData.dislikes + 1 : (commentDocData.dislikes == 0 ? 0 : commentDocData.dislikes - 1)
+
+                    })
+
+                }
+                else {
+
+
+                    await updateDoc(doc(db, 'comments', `${mediaId}`, "all", commentDocId), {
+
+                        likes: isLiked ? commentDocData.likes - 1 : commentDocData.likes,
+                        dislikes: isActionSetToTrue ? commentDocData.dislikes + 1 : (commentDocData.dislikes == 0 ? 0 : commentDocData.dislikes - 1)
+
+                    })
+
+                }
 
                 const commentDislikedData = {
                     commentRef: commentDocId,
@@ -135,6 +202,10 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
                 if (isLiked) setWasLiked(isActionSetToTrue ? false : true)
 
                 return
+
+            case "reply":
+
+
 
             default:
                 return
@@ -194,8 +265,8 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
                     <div className={styles.user_img_container}>
 
                         <Image
-                            src={comment.userPhoto}
-                            alt={comment.username}
+                            src={comment.userPhoto || ProfileFallbackImg}
+                            alt={comment.username || "User with no name"}
                             fill
                             sizes='72px'
                         />
@@ -206,7 +277,7 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
 
                         <div className={styles.heading_container}>
                             <h5>
-                                {comment.username.length > 25 ? `${comment.username.slice(0, 25)}...` : comment.username}
+                                {comment.username!.length > 25 ? `${comment.username!.slice(0, 25)}...` : comment.username}
                             </h5>
 
                             <p>
@@ -244,12 +315,18 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
 
                                     </button>
 
-                                    {/* 
-                                    <button onClick={() => console.log("")} disabled>
-                                        <SvgIcons type={"reply"} isBtnActive={"#"} commentData={#} />
-                                        <SvgReply width={16} height={16} alt="Reply" />Reply
+                                    <button
+                                        onClick={() => setIsGettingAReply(!isGettingAReply)}
+                                        aria-controls={uniqueReplyId}
+                                    >
+
+                                        <SvgIcons
+                                            type={"reply"}
+                                            isBtnActive={isGettingAReply}
+                                            commentData={commentData}
+                                        />
+
                                     </button>
-                                    */}
 
                                     {(user?.uid == comment.userId.id) && (
                                         <button className={styles.delete_btn} onClick={() => deleteCurrComment()}>
@@ -264,6 +341,53 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
 
                             </div>
                         )}
+
+                        <AnimatePresence>
+                            {isGettingAReply && (
+
+                                <motion.div
+                                    id={uniqueReplyId}
+                                    className={styles.reply_form_container}
+                                    aria-expanded={isGettingAReply}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                >
+
+                                    <WriteCommentFormContainer
+                                        isAReply
+                                        commentToBeRepliedDocId={commentDocId}
+                                        isLoadingHook={isLoadingHook}
+                                        loadComments={loadComments}
+                                        mediaInfo={mediaInfo}
+                                        setIsLoadingHook={setIsLoadingHook}
+                                        setIsUserModalOpenHook={setIsUserModalOpen}
+                                        episodeId={episodeId}
+                                        episodeNumber={episodeNumber}
+                                        isOnWatchPage={isOnWatchPage}
+                                    />
+
+                                    <CommentsReplies
+                                        commentReplies={comment.replies}
+                                        parentHooks={{
+                                            comment: comment,
+                                            mediaId: mediaId,
+                                            isLoadingHook: isLoadingHook,
+                                            loadComments: loadComments,
+                                            mediaInfo: mediaInfo,
+                                            setIsLoadingHook: setIsLoadingHook,
+                                            setIsUserModalOpenHook: setIsUserModalOpenHook,
+                                            episodeId: episodeId,
+                                            episodeNumber: episodeNumber,
+                                            isOnWatchPage: isOnWatchPage
+                                        }}
+                                    />
+
+                                </motion.div>
+
+                            )}
+                        </AnimatePresence>
+
                     </div>
 
                 </li >
@@ -273,7 +397,7 @@ export default function Comment({ comment, mediaId }: { comment: Comment, mediaI
     )
 }
 
-function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike", isBtnActive: boolean, commentData: { likes: number, dislikes: number } }) {
+function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike" | "reply", isBtnActive: boolean, commentData: Comment }) {
 
     switch (type) {
 
@@ -293,9 +417,43 @@ function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike"
 
             return <><SvgThumbDown width={16} height={16} alt="Thumbs Down" /> {(commentData.dislikes != 0) && commentData.dislikes} &#x2022; Dislike</>
 
+        case 'reply':
+
+            if (isBtnActive) {
+                return <><SvgReplyFill width={16} height={16} alt="Reply" /> {(commentData.replies?.length != 0) && commentData.replies?.length} &#x2022; Reply</>
+            }
+
+            return <><SvgReply width={16} height={16} alt="Reply" /> {(commentData.replies?.length != 0) && commentData.replies?.length} &#x2022; Reply</>
+
         default:
             return
 
     }
+
+}
+
+function CommentsReplies({ commentReplies, parentHooks }: { commentReplies: ReplyComment[], parentHooks: CommentComponentTypes }) {
+
+    return (
+        commentReplies?.length > 0 && (
+            commentReplies.map(commentMade => (
+
+                <Comment
+                    key={commentMade.createdAt}
+                    comment={commentMade}
+                    mediaId={parentHooks.mediaId}
+                    isLoadingHook={parentHooks.isLoadingHook}
+                    loadComments={parentHooks.loadComments}
+                    mediaInfo={parentHooks.mediaInfo}
+                    setIsLoadingHook={parentHooks.setIsLoadingHook}
+                    setIsUserModalOpenHook={parentHooks.setIsUserModalOpenHook}
+                    episodeId={parentHooks.episodeId}
+                    episodeNumber={parentHooks.episodeNumber}
+                    isOnWatchPage={parentHooks.isOnWatchPage}
+                />
+
+            ))
+        )
+    )
 
 }

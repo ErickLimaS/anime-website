@@ -162,7 +162,7 @@
 
 #write_comment_container form label textarea:focus {
 
-    border-radius: 8px;
+    border-radius: 4px;
     outline-width: 2px;
     outline-style: outset;
     outline-color: var(--brand-color);
