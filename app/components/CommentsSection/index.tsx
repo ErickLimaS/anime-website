@@ -1,36 +1,31 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import Image from 'next/image';
 import {
-    getFirestore, doc, arrayUnion, FieldPath, setDoc,
-    DocumentData, QueryDocumentSnapshot,
-    addDoc, collection, getDocs,
-    where, query
+    getFirestore, doc, setDoc,
+    DocumentData, QueryDocumentSnapshot, collection, getDocs,
+    where, query,
 } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import Comment from './components/Comment';
-import SvgCheck from "@/public/assets/check-circle-fill.svg"
+import CommentContainer from './components/CommentContainer';
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
-import { motion } from 'framer-motion';
-import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import ShowUpLoginPanelAnimated from '../UserLoginModal/animatedVariant';
+import WriteCommentFormContainer from './components/WriteCommentForm';
 
-type CommetsSectionTypes = {
+type CommentsSectionTypes = {
     mediaInfo: ApiMediaResults | ApiDefaultResult,
     isOnWatchPage?: boolean,
     episodeId?: string,
     episodeNumber?: number
 }
 
-function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }: CommetsSectionTypes) {
+export default function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }: CommentsSectionTypes) {
 
     const [commentsList, setCommentsList] = useState<DocumentData[]>([])
-    const [wasCommentCreatedSuccessfully, setWasCommentCreatedSuccessfully] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
@@ -41,7 +36,7 @@ function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }:
 
     const [user] = useAuthState(auth)
 
-    const db = getFirestore(initFirebase());
+    const db = getFirestore(initFirebase())
 
     useEffect(() => { getCommentsForCurrMedia() }, [mediaInfo, user, episodeId])
 
@@ -130,73 +125,6 @@ function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }:
 
     }
 
-    async function handleCreateComment(e: React.FormEvent<HTMLFormElement>) {
-
-        e.preventDefault()
-
-        if (!user) return setIsUserModalOpen(true)
-
-        const form = e.target as any
-
-        if (form.comment.value == "") return
-
-        setIsLoading(true)
-
-        const commentTimeStamp = Math.floor(new Date().getTime() / 1000.0)
-
-        const commentData = {
-
-            userId: doc(db, "users", user.uid),
-            username: user.displayName,
-            userPhoto: user.photoURL,
-            createdAt: commentTimeStamp,
-            comment: form.comment.value,
-            isSpoiler: form.spoiler.checked,
-            likes: 0,
-            dislikes: 0,
-            fromEpisode: isOnWatchPage || null,
-            episodeId: episodeId || null,
-            episodeNumber: episodeNumber || null
-
-        }
-
-        const commentCreatedDoc = await addDoc(collection(db, 'comments', `${mediaInfo.id}`, "all"), commentData)
-
-        if (commentCreatedDoc) {
-
-            form.comment.value = ""
-            setWasCommentCreatedSuccessfully(true)
-
-            await setDoc(doc(db, 'users', user.uid), {
-                comments: {
-                    written: arrayUnion(...[{
-                        commentRef: commentCreatedDoc.id,
-                        media: {
-                            id: mediaInfo.id,
-                            coverImage: {
-                                extraLarge: mediaInfo.coverImage.extraLarge
-                            },
-                            title: {
-                                romaji: mediaInfo.title.romaji
-                            }
-                        }
-                    }])
-                }
-            } as unknown as FieldPath, { merge: true })
-
-        }
-
-        if (isOnWatchPage) {
-            await addDoc(collection(db, 'comments', `${mediaInfo.id}`, `${episodeNumber}`), {
-                commentRef: doc(db, 'comments', `${mediaInfo.id}`, "all", commentCreatedDoc.id)
-            })
-        }
-
-        getCommentsForCurrMedia()
-
-        setIsLoading(false)
-    }
-
     return (
         <React.Fragment>
 
@@ -208,52 +136,16 @@ function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }:
 
             <div id={styles.container}>
 
-                <div id={styles.write_comment_container}>
-
-                    <div className={styles.img_container}>
-                        {user ? (
-                            <Image
-                                src={user.photoURL || ProfileFallbackImg}
-                                alt={user.displayName!}
-                                fill
-                                sizes='60px'
-                            />
-                        ) : (
-                            <span></span>
-                        )}
-                    </div>
-
-                    <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleCreateComment(e)}>
-                        <label>
-                            Leave your comment
-                            <textarea
-                                rows={3} cols={70}
-                                name='comment'
-                                onChange={() => wasCommentCreatedSuccessfully ? setWasCommentCreatedSuccessfully(false) : null}
-                                placeholder='Your comment here'
-                                required
-                            ></textarea>
-                        </label>
-
-                        <label id={styles.checkbox_row}>
-                            Is a Spoiler
-                            <input type='checkbox' name='spoiler' value="true"></input>
-                        </label>
-
-                        <motion.button
-                            type='submit'
-                            disabled={isLoading || user?.isAnonymous}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                            {wasCommentCreatedSuccessfully ?
-                                <><SvgCheck width={16} height={16} alt="Check" /> Comment Done</>
-                                :
-                                "Comment!"
-                            }
-                        </motion.button>
-                    </form>
-
-                </div>
+                <WriteCommentFormContainer
+                    isLoadingHook={isLoading}
+                    loadComments={getCommentsForCurrMedia}
+                    mediaInfo={mediaInfo}
+                    setIsLoadingHook={setIsLoading}
+                    setIsUserModalOpenHook={setIsUserModalOpen}
+                    episodeId={episodeId}
+                    episodeNumber={episodeNumber}
+                    isOnWatchPage={isOnWatchPage}
+                />
 
                 {/* ALL COMMENTS FROM DB FOR THIS MEDIA */}
                 <div id={styles.all_comments_container}>
@@ -283,11 +175,19 @@ function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }:
 
                             <ul>
                                 {!isLoading && (
-                                    commentsList.slice(0, commentsSliceRange).map((comment, key) => (
-                                        <Comment
-                                            key={key}
-                                            item={comment as Comment}
+                                    commentsList.slice(0, commentsSliceRange).map((comment) => (
+                                        <CommentContainer
+                                            key={comment.createdAt}
+                                            comment={comment as Comment}
                                             mediaId={mediaInfo.id}
+                                            isLoadingHook={isLoading}
+                                            loadComments={getCommentsForCurrMedia}
+                                            mediaInfo={mediaInfo}
+                                            setIsLoadingHook={setIsLoading}
+                                            setIsUserModalOpenHook={setIsUserModalOpen}
+                                            episodeId={episodeId}
+                                            episodeNumber={episodeNumber}
+                                            isOnWatchPage={isOnWatchPage}
                                         />
                                     ))
                                 )}
@@ -326,5 +226,3 @@ function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }:
     )
 
 }
-
-export default CommentsSection

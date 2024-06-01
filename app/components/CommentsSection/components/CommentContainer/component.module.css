@@ -199,3 +199,20 @@
 .comment_container small {
     color: var(--white-50);
 }
+
+/* REPLY CONTAINER */
+.reply_form_container {
+
+    margin-left: 5%;
+
+}
+
+@media(min-width: 460px) {
+
+    .reply_form_container {
+
+        margin-left: 5%;
+
+    }
+
+}

@@ -12,21 +12,27 @@ interface BookmarkItem {
 
 }
 
-interface Comment {
+interface ReplyComment {
 
-    username: string,
-    userPhoto: string,
+    username: string | null,
+    userPhoto: string | null,
     comment: string,
     isSpoiler: boolean,
     createdAt: number,
-    likes: number,
-    dislikes: number,
+    replies: Comment[],
     userId: {
         id: string
     },
-    fromEpisode: boolean,
-    episodeId: string,
-    episodeNumber: number
+
+}
+
+interface Comment extends ReplyComment {
+
+    likes: number,
+    dislikes: number,
+    fromEpisode: boolean | null,
+    episodeId: string | null,
+    episodeNumber: number | null
 
 }
 
