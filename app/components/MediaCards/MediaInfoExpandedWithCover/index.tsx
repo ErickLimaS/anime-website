@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import parse from "html-react-parser"
-import * as  AddToPlaylist from '../../Buttons/AddToPlaylist'
+import * as  AddToPlaylist from '../../Buttons/AddToFavourites'
 
 export function Container({ children, mediaInfo, customDescription }: { children: React.ReactNode, mediaInfo: ApiDefaultResult, customDescription?: string }) {
     return (

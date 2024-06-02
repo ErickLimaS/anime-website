@@ -15,7 +15,7 @@ import ProgressSvg from "@/public/assets/progress.svg"
 import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
-import * as AddToPlaylist from '@/app/components/Buttons/AddToPlaylist'
+import * as AddToFavourites from '@/app/components/Buttons/AddToFavourites'
 import ScoreRating from '@/app/components/DynamicAssets/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
 import { headers } from 'next/headers'
@@ -207,19 +207,19 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 mediaInfo={mediaInfo}
               />
 
-              <AddToPlaylist.Button
+              <AddToFavourites.Button
                 mediaInfo={mediaInfo as ApiDefaultResult}
               >
 
-                <AddToPlaylist.SvgIcon>
+                <AddToFavourites.SvgIcon>
                   <BookmarkSvg />
-                </AddToPlaylist.SvgIcon>
+                </AddToFavourites.SvgIcon>
 
-                <AddToPlaylist.SvgIcon>
+                <AddToFavourites.SvgIcon>
                   <BookmarkFillSvg />
-                </AddToPlaylist.SvgIcon>
+                </AddToFavourites.SvgIcon>
 
-              </AddToPlaylist.Button>
+              </AddToFavourites.Button>
 
             </div>
 

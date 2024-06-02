@@ -20,7 +20,7 @@ import { updateUserFavouriteMedias } from '@/app/lib/firebaseUserActions/userDoc
 export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[] }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [wasAddedToPlaylist, setWasAddedToPlaylist] = useState<boolean>(false)
+    const [wasAddedToFavourites, setWasAddedToFavourites] = useState<boolean>(false)
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
@@ -47,7 +47,7 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
 
         setIsLoading(true)
 
-        const bookmarkData = {
+        const favouriteMediaData = {
             id: mediaInfo.id,
             title: {
                 romaji: mediaInfo.title.romaji
@@ -62,11 +62,11 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
 
         await updateUserFavouriteMedias({
             userId: user.uid,
-            mediaData: bookmarkData,
-            isAddAction: !wasAddedToPlaylist
+            mediaData: favouriteMediaData,
+            isAddAction: !wasAddedToFavourites
         })
 
-        wasAddedToPlaylist ? setWasAddedToPlaylist(false) : setWasAddedToPlaylist(true)
+        wasAddedToFavourites ? setWasAddedToFavourites(false) : setWasAddedToFavourites(true)
 
         setIsLoading(false)
 
@@ -81,7 +81,7 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
 
         const wasMediaIdFoundOnDoc = userDoc.get("bookmarks")?.find((item: { id: number }) => item.id == mediaInfo.id)
 
-        if (wasMediaIdFoundOnDoc) setWasAddedToPlaylist(true)
+        if (wasMediaIdFoundOnDoc) setWasAddedToFavourites(true)
 
     }
 
@@ -100,18 +100,18 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
                 className={children ? styles.custom_text : ""}
                 onClick={() => handleMediaOnUserDoc()}
                 disabled={isLoading}
-                data-added={wasAddedToPlaylist}
-                aria-label={wasAddedToPlaylist ? "Click To Remove from Playlist" : "Click To Add To Playlist"}
-                title={wasAddedToPlaylist ? `Remove ${mediaInfo.title && mediaInfo.title?.romaji} from Playlist` : `Add ${mediaInfo.title && mediaInfo.title?.romaji} To Playlist`}
+                data-added={wasAddedToFavourites}
+                aria-label={wasAddedToFavourites ? "Click To Remove from Favourites" : "Click To Add To Favourites"}
+                title={wasAddedToFavourites ? `Remove ${mediaInfo.title && mediaInfo.title?.romaji} from Favourites` : `Add ${mediaInfo.title && mediaInfo.title?.romaji} To Favourites`}
             >
 
                 {isLoading ?
                     (<LoadingSvg alt="Loading Icon" width={16} height={16} />)
                     :
-                    ((!isLoading && wasAddedToPlaylist) ?
-                        (children ? children[1] : (<><Loading2Svg width={16} height={16} /> ON PLAYLIST</>))
+                    ((!isLoading && wasAddedToFavourites) ?
+                        (children ? children[1] : (<><Loading2Svg width={16} height={16} /> ON FAVOURITES</>))
                         :
-                        (children ? children[0] : "+ PLAYLIST")
+                        (children ? children[0] : "+ FAVOURITE")
                     )
                 }
 

@@ -11,7 +11,7 @@ import * as MediaCard from '../../MediaCards/MediaCard'
 import * as MediaCardClientSide from '../../MediaCards/MediaCard/variantClientSide'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import * as AddToPlaylistButton from '../../Buttons/AddToPlaylist'
+import * as AddToFavourites from '../../Buttons/AddToFavourites'
 import parse from "html-react-parser"
 import ScoreRating from '../../DynamicAssets/ScoreRating'
 import MediaFormatIcon from '../../DynamicAssets/MediaFormatIcon'
@@ -348,7 +348,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
 
                                     <Link href={`/media/${mediaSelect.id}`}>SEE MORE</Link>
 
-                                    <AddToPlaylistButton.Button
+                                    <AddToFavourites.Button
                                         mediaInfo={mediaSelect}
                                     />
 
