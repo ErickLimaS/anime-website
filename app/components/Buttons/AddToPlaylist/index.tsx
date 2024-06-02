@@ -15,6 +15,7 @@ import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { motion } from 'framer-motion';
 import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
+import { updateUserFavouriteMedias } from '@/app/lib/firebaseUserActions/userDocUpdateOptions'
 
 export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[] }) {
 
@@ -59,13 +60,11 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
             }
         }
 
-        await updateDoc(doc(db, 'users', user.uid),
-            {
-                bookmarks: !wasAddedToPlaylist ? arrayUnion(...[bookmarkData]) : arrayRemove(...[bookmarkData])
-
-            } as unknown as FieldPath,
-            { merge: true }
-        )
+        await updateUserFavouriteMedias({
+            userId: user.uid,
+            mediaData: bookmarkData,
+            isAddAction: !wasAddedToPlaylist
+        })
 
         wasAddedToPlaylist ? setWasAddedToPlaylist(false) : setWasAddedToPlaylist(true)
 

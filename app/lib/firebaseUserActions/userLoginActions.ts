@@ -1,6 +1,7 @@
 import { initFirebase } from "@/app/firebaseApp"
 import { updateProfile, User } from "firebase/auth"
 import { collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore"
+import { updateUserFavouriteMedias } from "./userDocUpdateOptions"
 
 type CreateUserComponentTypes = {
     userFirebase?: User,
@@ -28,7 +29,15 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
         } as UserAnilist
 
         if (userAnilist) {
+
+            mapAnilistFavouritesAndUpdateUserDoc({
+                favourites: userAnilist.favourites,
+                userId: `${userAnilist.id}`,
+                userDocFavourites: doesUserHasDoc.bookmarks
+            })
+
             localStorage.setItem("anilist-user", JSON.stringify(userData))
+
         }
 
         return userData
@@ -74,9 +83,41 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
 
     if (userAnilist) {
 
+        mapAnilistFavouritesAndUpdateUserDoc({
+            favourites: userAnilist.favourites,
+            userId: `${userAnilist.id}`
+        })
+
         localStorage.setItem("anilist-user", JSON.stringify(userAnilist))
 
         return userAnilist
+
+    }
+
+}
+
+function mapAnilistFavouritesAndUpdateUserDoc({ favourites, userId, userDocFavourites }: {
+    favourites: UserAnilist["favourites"],
+    userId: string,
+    userDocFavourites?: UserAnilist["favourites"]["anime"]["nodes"]
+}) {
+
+    const userFavouritesAnimesList = favourites.anime.nodes
+    const userFavouritesMangasList = favourites.manga.nodes
+
+    const allAnilistFavouritesOnSameList = [...userFavouritesAnimesList, ...userFavouritesMangasList]
+
+    if (userFavouritesAnimesList.length > 0 || userFavouritesMangasList.length > 0) {
+
+        allAnilistFavouritesOnSameList.map(async favouriteMedia => {
+
+            await updateUserFavouriteMedias({
+                isAddAction: true,
+                userId: userId,
+                mediaData: favouriteMedia
+            })
+
+        })
 
     }
 

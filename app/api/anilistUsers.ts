@@ -127,19 +127,29 @@ export default {
                             favourites {
                                 anime {
                                     nodes {
+                                        id
                                         title {
                                             romaji
-                                            english
-                                            native
+                                        }
+                                        format
+                                        description
+                                        coverImage {
+                                            extraLarge
+                                            large
                                         }
                                     }
                                 }
                                 manga {
                                     nodes {
+                                        id
                                         title {
                                             romaji
-                                            english
-                                            native
+                                        }
+                                        format
+                                        description
+                                        coverImage {
+                                            extraLarge
+                                            large
                                         }
                                     }
                                 }

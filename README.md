@@ -35,8 +35,7 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 
 ## :pushpin: Under Development
 
-- [ ] `Fetch User List from MyAnimeList`
-- [ ] `Fetch User List from AniList (if possible)`
+- [ ] `Fetch User List from AniList`
 
 ## :heavy_check_mark: Tecnologies Used
 
