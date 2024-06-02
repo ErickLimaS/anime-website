@@ -1,3 +1,6 @@
+
+export const BASE_ANILIST_URL = 'https://graphql.anilist.co/'
+
 // returns the current season when gets called
 export function getCurrentSeason() {
 

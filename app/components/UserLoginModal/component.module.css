@@ -115,7 +115,8 @@
 
 #login_buttons_container #anonymous_button,
 #login_buttons_container #google_button,
-#login_buttons_container #github_button {
+#login_buttons_container #github_button,
+#login_buttons_container #anilist_button {
 
     transition: all ease-in-out 100ms;
 
@@ -144,9 +145,14 @@
     background-color: #000;
 }
 
+#login_buttons_container #anilist_button {
+    background-color: #18202c;
+}
+
 #login_buttons_container #anonymous_button svg,
 #login_buttons_container #google_button svg,
-#login_buttons_container #github_button svg {
+#login_buttons_container #github_button svg,
+#login_buttons_container #anilist_button svg {
 
     transition: all ease-in-out 100ms;
 
@@ -162,9 +168,14 @@
     fill: #fff;
 }
 
+#login_buttons_container #anilist_button svg {
+    fill: #02a9ff;
+}
+
 #login_buttons_container #anonymous_button:hover svg,
 #login_buttons_container #google_button:hover svg,
-#login_buttons_container #github_button:hover svg {
+#login_buttons_container #github_button:hover svg,
+#login_buttons_container #anilist_button:hover svg {
 
     transform: scale(2.25);
 

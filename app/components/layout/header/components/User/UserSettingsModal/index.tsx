@@ -18,6 +18,7 @@ import * as contantOptions from "./contantOptions"
 type SettingsTypes = {
     onClick?: MouseEventHandler<HTMLDivElement> | MouseEventHandler<HTMLButtonElement> | ((value: void) => void | PromiseLike<void>) | null | undefined,
     auth: Auth,
+    anilistUser?: UserAnilist,
     newUser?: boolean
 }
 
@@ -52,9 +53,10 @@ const framerMotionBtnVariants = {
 
 }
 
-function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
+function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsTypes) {
 
     const [user] = useAuthState(auth)
+    const [userAnilist] = useState<UserAnilist | undefined>(anilistUser)
 
     const [isLoading, setIsLoading] = useState(false)
     const [wasSuccessfull, setWasSuccessfull] = useState<boolean | null>(null)
@@ -80,24 +82,25 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
         e.preventDefault()
 
-        if (!user) return
+        if (!user && !userAnilist) return
 
         setIsLoading(true)
         setWasSuccessfull(false)
 
         const form: any = e.target
 
-        // update user info
         if (newImgProfileSelected || form.username.value) {
 
-            await updateProfile(user, {
-                photoURL: newImgProfileSelected || user.photoURL,
-                displayName: user.isAnonymous ? user.displayName : form.username.value || user.displayName
-            })
+            if (user) {
+                await updateProfile(user, {
+                    photoURL: newImgProfileSelected || user.photoURL,
+                    displayName: user.isAnonymous ? user.displayName : form.username.value || user.displayName
+                })
+            }
 
         }
 
-        await updateDoc(doc(db, 'users', user.uid),
+        await updateDoc(doc(db, 'users', user ? user.uid : `${userAnilist!.id}`),
             {
                 videoSubtitleLanguage: form.language.value,
                 videoSource: form.source.value,
@@ -113,19 +116,20 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
     }
 
-    // delete field or account of user
     async function deleteOptions(option: "account" | "bookmarks" | "notifications" | "episodes") {
 
-        if (!user) return
+        if (!user && !userAnilist) return
 
         setIsLoading(true)
         setWasSuccessfull(false)
+
+        const userId = user ? user.uid : `${userAnilist!.id}`
 
         switch (option) {
 
             case "bookmarks":
 
-                await updateDoc(doc(db, 'users', user.uid),
+                await updateDoc(doc(db, 'users', userId),
                     {
                         bookmarks: deleteField()
                     }
@@ -138,7 +142,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
             case "episodes":
 
-                await updateDoc(doc(db, 'users', user.uid),
+                await updateDoc(doc(db, 'users', userId),
                     {
                         episodesWatchedBySource: deleteField()
                     }
@@ -151,7 +155,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
             case "notifications":
 
-                await updateDoc(doc(db, 'users', user.uid),
+                await updateDoc(doc(db, 'users', userId),
                     {
                         notifications: deleteField()
                     }
@@ -164,10 +168,14 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
             case "account":
 
-                await deleteDoc(doc(db, 'users', user.uid))
-                await deleteUser(user)
+                await deleteDoc(doc(db, 'users', userId))
 
-                auth.signOut()
+                if (user) {
+
+                    await deleteUser(user)
+                    auth.signOut()
+
+                }
 
                 window.location.reload()
 
@@ -180,19 +188,18 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
 
     }
 
-    // auto run to get current language saved
-    (async function getUserSettings() {
+    (async function getUserSavedSettings() {
 
-        if (!user) return
+        if (!user && !userAnilist) return
 
-        const data = await getDoc(doc(db, 'users', user.uid))
+        const userDoc = await getDoc(doc(db, 'users', user ? user.uid : `${userAnilist!.id}`))
 
-        setCurrentLang(await data.get("videoSubtitleLanguage") as string || "English")
-        setCurrentSource(await data.get("videoSource") as string || "crunchyroll")
-        setCurrentQuality(await data.get("videoQuality") as string || "auto")
-        setCurrentShowAdultContent(await data.get("showAdultContent") || false)
-        setCurrentSkipIntroAndOutro(await data.get("autoSkipIntroAndOutro") || false)
-        setCurrentNextEpisode(await data.get("autoNextEpisode") || false)
+        setCurrentLang(await userDoc.get("videoSubtitleLanguage") as string || "English")
+        setCurrentSource(await userDoc.get("videoSource") as string || "crunchyroll")
+        setCurrentQuality(await userDoc.get("videoQuality") as string || "auto")
+        setCurrentShowAdultContent(await userDoc.get("showAdultContent") || false)
+        setCurrentSkipIntroAndOutro(await userDoc.get("autoSkipIntroAndOutro") || false)
+        setCurrentNextEpisode(await userDoc.get("autoNextEpisode") || false)
 
     }())
 
@@ -228,7 +235,7 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                     )}
                 </div>
 
-                {user!.isAnonymous && (
+                {user?.isAnonymous && (
                     <div id={styles.anonymous_disclaimer_container}>
                         <h5>You are in Anonymous Mode!</h5>
                         <p>In this mode you <b>can not</b> make Comments or change your Username.</p>
@@ -240,18 +247,32 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                     <div className={styles.group_container}>
                         <h5><span><UserSvg alt="Person" width={16} height={16} /></span> User</h5>
 
+                        {(anilistUser && (
+                            <small style={{ "textAlign": "center", "fontSize": "var(--font-size--small-1)" }}>
+                                You only may change Username and Photo on <a
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href={`https://anilist.co/user/${anilistUser.name}/mangalist`}
+                                    style={{ "display": "inline-block", "fontSize": "var(--font-size--small-1)", "textDecoration": "underline" }}
+                                >
+                                    <b>AniList Website</b>
+                                </a>
+                            </small>
+                        ))}
+
                         <div className={`${styles.user_acc_info_container}`}>
                             <div>
-                                {user && (
+                                {(user || anilistUser) && (
                                     <>
                                         <label
                                             id={styles.img_container}
-                                            onClick={() => setOpenUserProfilePanel(!openUserProfilePanel)}
+                                            data-disabled={anilistUser != undefined}
+                                            onClick={() => user ? setOpenUserProfilePanel(!openUserProfilePanel) : undefined}
                                         >
-                                            Change Profile Image
                                             <Image
-                                                src={user.photoURL as string}
-                                                alt={user.displayName as string}
+                                                aria-label='Change Profile Image'
+                                                src={user?.photoURL || anilistUser?.avatar.large as string}
+                                                alt={user?.displayName || anilistUser?.name as string}
                                                 fill
                                                 sizes='(max-width: 400px) 95vw, (max-width: 520px) 109px, 140px'
                                             />
@@ -261,21 +282,24 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                             </div>
 
                             <div>
-                                {user && (
+                                {(user || anilistUser) && (
                                     <React.Fragment>
                                         <label>
                                             Change Username
                                             <input
                                                 type='text'
                                                 name='username'
-                                                disabled={user.isAnonymous}
-                                                defaultValue={user.displayName as string}
-                                                placeholder={user.displayName as string}
+                                                disabled={user?.isAnonymous || anilistUser?.isUserFromAnilist}
+                                                defaultValue={user?.displayName || anilistUser?.name}
+                                                placeholder={user?.displayName || anilistUser?.name}
                                             ></input>
                                         </label>
-                                        {user.isAnonymous && (
+
+                                        {(user?.isAnonymous && (
                                             <small>Can not change while <b>Anonymous</b></small>
-                                        )}
+                                        ))}
+
+
                                     </React.Fragment>
                                 )}
                                 <AnimatePresence
@@ -354,8 +378,10 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                         name='language'
                                         defaultValue={currentLang}
                                     >
-                                        {contantOptions.languagesOptions.map((item, key) => (
-                                            <option key={key} value={item.value}>{item.name}</option>
+                                        {contantOptions.languagesOptions.map((language) => (
+                                            <option key={language.value} value={language.value}>
+                                                {language.name}
+                                            </option>
                                         ))}
                                     </select>
                                 </label>
@@ -374,8 +400,10 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                         name='quality'
                                         defaultValue={currentQuality}
                                     >
-                                        {contantOptions.qualityOptions.map((item, key) => (
-                                            <option key={key} value={item.value}>{item.name}</option>
+                                        {contantOptions.qualityOptions.map((quality) => (
+                                            <option key={quality.name} value={quality.value}>
+                                                {quality.name}
+                                            </option>
                                         ))}
                                     </select>
                                 </label>
@@ -443,8 +471,10 @@ function UserSettingsModal({ onClick, auth, newUser }: SettingsTypes) {
                                             name='source'
                                             defaultValue={currentSource}
                                         >
-                                            {contantOptions.sourcesOptions.map((item, key) => (
-                                                <option key={key} value={item.value}>{item.name}</option>
+                                            {contantOptions.sourcesOptions.map((source) => (
+                                                <option key={source.value} value={source.value}>
+                                                    {source.name}
+                                                </option>
                                             ))}
                                         </select>
                                     </label>

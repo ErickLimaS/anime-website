@@ -78,12 +78,17 @@ npm install
    - Go to these repos and host your own instance:
      - <a href='https://github.com/consumet/api.consumet.org'>Consumet API</a>
      - <a href='https://github.com/ghoshRitesh12/aniwatch-api'>Aniwatch API</a>
-   - OPTIONAL: This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
-     - Go to <a href='https://github.com/manami-project/anime-offline-database'>anime-offline-database</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
-     - With the file downloaded, put it in the `/app/api/anime-info` directory, replacing the previous one.
+   - On Anilist Website:
+     - You need to first login on your account.
+     - Then go to <a href='https://anilist.co/settings/developer'>Developer Page</a> on the Settings and click "Create New Client".
+     - Now you need to add the name of your forked project/website and the URL to redirect when user accept the login, then hit "Save".
+     - Store the Client ID and Secret on your .".env.local".
    - On Firebase, get your configs to use the Authentication and Firestore Database.
      - All the Firebase info needed bellow can be found when you create a new project.
      - IMPORTANT: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
+   - OPTIONAL: This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
+     - Go to <a href='https://github.com/manami-project/anime-offline-database'>anime-offline-database</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
+     - With the file downloaded, put it in the `/app/api/anime-info` directory, replacing the previous one.
 
 With all that done, you will need to fill the `.env.local` like the example bellow:
 
@@ -92,6 +97,8 @@ NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
 NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.com
 // Make sure to add the pathname "/api/animes-database" bellow
 NEXT_PUBLIC_NEXT_INTERNAL_API_URL=https://url-to-where-your-website-is-hosted.com/api/animes-database
+NEXT_PUBLIC_ANILIST_CLIENT_ID=your-anilist-client-id
+NEXT_PUBLIC_ANILIST_CLIENT_SECRET=your-anilist-secret
 NEXT_PUBLIC_FIREBASE_API_KEY=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase-setting-related-to-this-field
