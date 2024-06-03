@@ -9,6 +9,7 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import KeepWatchingEpisodeInfo from './components/KeepWatchingEpisodeInfo'
 import { SwiperSlide } from 'swiper/react'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 const framerMotionVariants = {
     initial: {
@@ -26,19 +27,30 @@ const framerMotionVariants = {
 
 function KeepWatchingSection() {
 
-    const auth = getAuth()
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
 
+    const auth = getAuth()
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase());
 
     const [watchingList, setWatchingList] = useState<KeepWatchingItem[]>([])
 
-    useEffect(() => { if (user) getWatchingList() }, [user])
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => { if (user || anilistUser) getWatchingList() }, [user, anilistUser])
 
     async function getWatchingList() {
 
-        const userDoc = await getDoc(doc(db, "users", user!.uid))
+        const userDoc = await getDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`))
 
         const watchingList = userDoc.get("keepWatching")
 
@@ -61,7 +73,7 @@ function KeepWatchingSection() {
     return (
         <AnimatePresence initial={false}>
 
-            {(user && watchingList!.length > 0) && (
+            {((user || anilistUser) && watchingList!.length > 0) && (
                 <motion.section
                     id={styles.keep_watching_container}
                     variants={framerMotionVariants}
