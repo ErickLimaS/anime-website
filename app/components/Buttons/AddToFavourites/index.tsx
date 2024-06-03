@@ -3,12 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import Loading2Svg from "@/public/assets/bookmark-check-fill.svg"
-import {
-    getFirestore, doc,
-    updateDoc, arrayUnion,
-    arrayRemove, getDoc,
-    FieldPath
-} from 'firebase/firestore';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'

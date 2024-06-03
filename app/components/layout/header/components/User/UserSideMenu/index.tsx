@@ -60,7 +60,7 @@ function UserSideMenu() {
 
         }
 
-    }, [window, params])
+    }, [params])
 
     async function logUserOut() {
 

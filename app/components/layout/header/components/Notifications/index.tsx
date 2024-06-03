@@ -66,7 +66,7 @@ function NotificationsContainer() {
 
         }
 
-    }, [window])
+    }, [])
 
     function isCurrDateBiggerThanLastUpdate() {
 

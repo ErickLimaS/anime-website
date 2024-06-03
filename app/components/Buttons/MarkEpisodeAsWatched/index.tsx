@@ -20,7 +20,6 @@ type BtnTypes = {
     wasWatched?: boolean
 }
 
-
 export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasWatched, showAdditionalText }: BtnTypes) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(wasWatched || false)
