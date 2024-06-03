@@ -6,7 +6,7 @@ import * as MediaCardClientSide from '../../MediaCards/MediaCard/variantClientSi
 import * as MediaInfoExpanded from '../../MediaCards/MediaInfoExpandedWithCover'
 import NavigationButtons from '../../NavigationButtons'
 import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import anilist from "@/app/api/anilist"
+import anilist from "@/app/api/anilistMedias"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'

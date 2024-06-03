@@ -6,7 +6,7 @@ import FacebookSvg from "@/public/assets/facebook.svg"
 import InstagramSvg from "@/public/assets/instagram.svg"
 import YoutubeSvg from "@/public/assets/youtube.svg"
 import TwitterSvg from "@/public/assets/twitter-x.svg"
-import API from '../../../api/anilist'
+import API from '../../../api/anilistMedias'
 import { animesGenres } from '../header'
 
 async function Footer() {

@@ -2,7 +2,7 @@ import React from 'react'
 import styles from "./page.module.css"
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import gogoanime from '@/app/api/consumetGoGoAnime'
-import anilist from '@/app/api/anilist'
+import anilist from '@/app/api/anilistMedias'
 import * as MediaCardExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { EpisodeLinksGoGoAnime, MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import EpisodesListContainer from './components/EpisodesListContainer'

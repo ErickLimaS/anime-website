@@ -9,6 +9,7 @@ import {
 } from './anilistQueryConstants'
 import { cache } from 'react'
 import axiosRetry from 'axios-retry'
+import anilistUsers, { getHeadersWithAuthorization } from "./anilistUsers"
 
 const headers = {
     'Content-Type': 'application/json',
@@ -299,7 +300,7 @@ export default {
     }),
 
     // GET MEDIA INFO BY ID
-    getMediaInfo: cache(async ({ id, showAdultContent }: { id: number, showAdultContent?: boolean }) => {
+    getMediaInfo: cache(async ({ id, showAdultContent, accessToken }: { id: number, showAdultContent?: boolean, accessToken?: string }) => {
 
         try {
 
@@ -310,10 +311,12 @@ export default {
                 }
             }
 
+            const headersCustom = accessToken ? await getHeadersWithAuthorization({ accessToken: accessToken }) : headers
+
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
-                headers: headers,
+                headers: headersCustom,
                 data: graphqlQuery
             })
 

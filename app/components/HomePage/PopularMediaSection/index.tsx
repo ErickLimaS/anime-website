@@ -8,7 +8,7 @@ import ChevronRightIcon from '@/public/assets/chevron-right.svg';
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg';
 import SwiperCarouselContainer from '../../SwiperCarouselContainer'
 import { AnimatePresence, motion } from 'framer-motion'
-import anilist from '@/app/api/anilist'
+import anilist from '@/app/api/anilistMedias'
 import { SwiperSlide } from 'swiper/react'
 
 const framerMotionVariants = {

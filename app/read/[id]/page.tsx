@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from "./page.module.css"
-import anilist from '@/app/api/anilist'
+import anilist from '@/app/api/anilistMedias'
 import * as MediaCardExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { MangaChapters, MangaInfo, MangaPages } from '@/app/ts/interfaces/apiMangadexDataInterface'
 import manga from '@/app/api/consumetManga'

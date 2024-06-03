@@ -60,7 +60,7 @@ function NavigationSideBar({ params }: { params?: { format: string } }) {
             <nav id={styles.nav_container}>
                 <ul>
                     <li data-active={currParams == ""}>
-                        <Link href={`/watchlist`}>
+                        <Link href={`/favourites`}>
                             All {bookmarksMediaTypesQuantity && (<span>({bookmarksMediaTypesQuantity.all})</span>)}
                         </Link>
                     </li>

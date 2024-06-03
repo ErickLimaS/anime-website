@@ -2,7 +2,7 @@
 import React, { FormEvent, useState } from 'react'
 import styles from "./component.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import anilist from '@/app/api/anilist'
+import anilist from '@/app/api/anilistMedias'
 import SearchResultItemCard from '@/app/components/layout/header/components/SearchFormContainer/components/SearchResultItemCard'
 import LoadingIcon from '@/public/assets/ripple-1s-200px.svg'
 import SearchIcon from '@/public/assets/search.svg'

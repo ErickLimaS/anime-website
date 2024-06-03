@@ -17,7 +17,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { convertFromUnix, getCurrentUnixDate } from '@/app/lib/formatDateUnix'
-import anilist from '@/app/api/anilist'
+import anilist from '@/app/api/anilistMedias'
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
