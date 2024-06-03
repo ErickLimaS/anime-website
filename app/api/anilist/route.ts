@@ -6,20 +6,24 @@ import { NextRequest, NextResponse, } from "next/server";
 export async function POST(request: NextRequest) {
 
     try {
-        const anilistTokenData = await request.json()
+
+        const anilistTokenData: { accessToken: string, tokenType: string, expiresIn: string } = await request.json()
 
         if (!anilistTokenData) return NextResponse.json({
-            "message": "No Token Received"
+            "message": "No Token Received",
+            status: 404
         })
 
         cookies().set({
             name: 'access_token',
             value: JSON.stringify(anilistTokenData) || "",
-            httpOnly: true
+            httpOnly: true,
+            expires: Date.now() + Number(anilistTokenData.expiresIn)
         })
 
         return NextResponse.json({
-            "message": "Anilist Token Set!"
+            "message": "Anilist Token Set!",
+            status: 201
         })
 
     }
@@ -41,7 +45,8 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             "message": "Success",
-            "access_token": anilistAcessTokenData.accessToken
+            "access_token": anilistAcessTokenData.accessToken,
+            status: 200
         })
 
     }
@@ -61,7 +66,8 @@ export async function DELETE() {
         cookies().delete("access_token")
 
         return NextResponse.json({
-            "message": "Success"
+            "message": "Success",
+            status: 202
         })
 
     }
