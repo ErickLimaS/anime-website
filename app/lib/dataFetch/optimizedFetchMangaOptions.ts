@@ -1,6 +1,6 @@
 import manga from "@/app/api/consumetManga"
-import { MangaSearchResult } from "../ts/interfaces/apiMangadexDataInterface"
-import { ApiMediaResults } from "../ts/interfaces/apiAnilistDataInterface"
+import { MangaSearchResult } from "../../ts/interfaces/apiMangadexDataInterface"
+import { ApiMediaResults } from "../../ts/interfaces/apiAnilistDataInterface"
 
 export async function getClosestMangaResultByTitle(query: string, mediaInfo: ApiMediaResults) {
 

@@ -30,7 +30,7 @@ import GoGoAnimeEpisode from './components/EpisodeBySource/gogoanime';
 import AniwatchEpisode from './components/EpisodeBySource/aniwatch';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
-import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/optimizedFetchAnimeOptions';
+import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/dataFetch/optimizedFetchAnimeOptions';
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';

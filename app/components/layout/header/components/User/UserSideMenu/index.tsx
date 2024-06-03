@@ -18,7 +18,7 @@ import UserSettingsModal from '../UserSettingsModal'
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 import { useParams } from 'next/navigation'
 import axios from 'axios'
-import anilistUsers from "@/app/api/anilistUsers"
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 const framerMotionShowUp = {
 
@@ -56,48 +56,11 @@ function UserSideMenu() {
 
         if (typeof window !== 'undefined') {
 
-            checkUserIsLoggedWithAnilist()
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
 
         }
 
     }, [window, params])
-
-
-    async function checkUserIsLoggedWithAnilist() {
-
-        if (typeof window !== 'undefined') {
-
-            const anilistUserData = localStorage.getItem("anilist-user")
-
-            if (anilistUserData) {
-
-                setAnilistUser(JSON.parse(anilistUserData))
-
-                return
-
-            }
-
-            const anilistHashInfo = window.location.hash
-
-            const accessToken = anilistHashInfo.slice(anilistHashInfo.search(/\baccess_token=\b/), anilistHashInfo.search(/\b&token_type\b/)).slice(13)
-            const tokenType = anilistHashInfo.slice(anilistHashInfo.search(/\btoken_type=\b/), anilistHashInfo.search(/\b&expires_in\b/)).slice(11)
-            const expiresIn = anilistHashInfo.slice(anilistHashInfo.search(/\bexpires_in=\b/)).slice(11)
-
-            if (anilistHashInfo) {
-                axios.post(`${window.location.origin}/api/anilist`, {
-                    accessToken: accessToken,
-                    tokenType: tokenType,
-                    expiresIn: expiresIn
-                })
-            }
-
-            const userData = await anilistUsers.getCurrUserData({ accessToken: accessToken })
-
-            setAnilistUser(userData as UserAnilist)
-
-        }
-
-    }
 
     async function logUserOut() {
 

@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import MarkChapterAsReadButton from '@/app/components/Buttons/MarkChapterAsRead';
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import { getClosestMangaResultByTitle } from '@/app/lib/optimizedFetchMangaOptions';
+import { getClosestMangaResultByTitle } from '@/app/lib/dataFetch/optimizedFetchMangaOptions';
 import { stringToUrlFriendly } from '@/app/lib/convertStrings';
 
 const framerMotionLoadingChapters = {
