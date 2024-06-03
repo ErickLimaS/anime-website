@@ -14,8 +14,8 @@ interface BookmarkItem {
 
 interface ReplyComment {
 
-    username: string | null,
-    userPhoto: string | null,
+    username: string | undefined,
+    userPhoto: string | undefined,
     comment: string,
     isSpoiler: boolean,
     createdAt: number,

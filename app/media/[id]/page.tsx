@@ -25,7 +25,7 @@ import CommentsSection from '../../components/CommentsSection'
 import { getMediaInfo } from '@/app/api/consumetImdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import MediaRelatedContainer from './components/MediaRelatedContainer'
-import AddToNotificationsButton from '@/app/components/Buttons/AddToNotificationsButton'
+import AddToNotificationsButton from '@/app/components/Buttons/AddToNotification'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 

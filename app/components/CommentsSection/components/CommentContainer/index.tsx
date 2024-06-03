@@ -23,6 +23,7 @@ import WriteCommentFormContainer from '../WriteCommentForm';
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { AnimatePresence, motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions';
 
 type CommentComponentTypes = {
     comment: Comment | ReplyComment,
@@ -59,12 +60,24 @@ export default function Comment({
 
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
 
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
 
-    useEffect(() => { getCommentCurrLikesAndDislikes() }, [user, comment, mediaId])
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => { getCommentCurrLikesAndDislikes() }, [user, anilistUser, comment, mediaId])
     useEffect(() => { getCommentCurrLikesAndDislikes() }, [commentData == null])
 
     async function getCommentDoc() {
@@ -98,9 +111,9 @@ export default function Comment({
 
     async function handleLikesAndDislikesActions(buttonActionType: "like" | "dislike" | "reply", isActionSetToTrue: boolean) {
 
-        if (!user) return setIsUserModalOpen(true)
+        if (!user && !anilistUser) return setIsUserModalOpen(true)
 
-        if (user.isAnonymous) return
+        if (user?.isAnonymous) return
 
         const queryComment = await getCommentDoc()
 
@@ -138,7 +151,7 @@ export default function Comment({
                     wasReply: false
                 }
 
-                await setDoc(doc(db, 'users', user.uid), {
+                await setDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`), {
                     comments: {
                         interacted: isActionSetToTrue ? arrayUnion(...[commentLikedData]) : arrayRemove(...[commentLikedData])
                     }
@@ -186,7 +199,7 @@ export default function Comment({
                     wasReply: false
                 }
 
-                await setDoc(doc(db, 'users', user.uid), {
+                await setDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`), {
                     comments: {
                         interacted: isActionSetToTrue ? arrayUnion(...[commentDislikedData]) : arrayRemove(...[commentDislikedData])
                     }
@@ -204,7 +217,7 @@ export default function Comment({
                 return
 
             case "reply":
-
+                return
 
 
             default:
@@ -235,9 +248,9 @@ export default function Comment({
 
         setCommentData(docQuery?.commentDocData as Comment)
 
-        if (!user) return // bellow is just to check curr user interactions with this comment
+        if (!user && !anilistUser) return // bellow is just to check curr user interactions with this comment
 
-        const userDoc = await getDoc(doc(db, 'users', user.uid))
+        const userDoc = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
 
         const userInteractionWithCurrComment = userDoc.get("comments.interacted")?.find(
             (item: { commentRef: string }) => item.commentRef == docQuery?.commentDocId
@@ -328,7 +341,7 @@ export default function Comment({
 
                                     </button>
 
-                                    {(user?.uid == comment.userId.id) && (
+                                    {((user?.uid || `${anilistUser?.id}`) == comment.userId.id) && (
                                         <button className={styles.delete_btn} onClick={() => deleteCurrComment()}>
                                             <SvgTrash width={16} height={16} alt="Delete Icon" />Delete
                                         </button>

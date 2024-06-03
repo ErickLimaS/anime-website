@@ -18,6 +18,7 @@ import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilis
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { motion } from 'framer-motion';
 import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult | ApiMediaResults }) {
 
@@ -25,6 +26,8 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
     const [wasAddedToNotifications, setWasAddedToNotifications] = useState<boolean>(false)
 
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
+
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
 
     const auth = getAuth()
 
@@ -34,18 +37,28 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
     useEffect(() => {
 
-        if (!user || loading) return
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => {
+
+        if ((!user && !anilistUser) || loading) return
 
         setIsUserModalOpen(false)
         isUserAssignedToThisMediaNotications()
 
-    }, [user])
+    }, [user, anilistUser])
 
     const isMediaStillReleasing = mediaInfo.nextAiringEpisode?.airingAt ?? false
 
     async function handleMediaOnNotifications() {
 
-        if (!user) return setIsUserModalOpen(true)
+        if (!user && !anilistUser) return setIsUserModalOpen(true)
 
         setIsLoading(true)
 
@@ -63,10 +76,10 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
         if (wasAddedToNotifications) {
             // remove user from list to be notified
-            await deleteDoc(doc(db, 'notifications', `${mediaInfo.id}`, "usersAssigned", user.uid))
+            await deleteDoc(doc(db, 'notifications', `${mediaInfo.id}`, "usersAssigned", user?.uid || `${anilistUser?.id}`))
 
             // add Media Id to Notifications on User DOC
-            await updateDoc(doc(db, 'users', user.uid),
+            await updateDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
                 {
                     notifications: arrayRemove(...[
                         {
@@ -122,8 +135,8 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
             await setDoc(doc(db, "notifications", `${mediaInfo.id}`), mediaNotificationInfo)
 
             // Assign User to This Media Notifications
-            await setDoc(doc(db, "notifications", `${mediaInfo.id}`, "usersAssigned", user.uid), {
-                userRef: user.uid
+            await setDoc(doc(db, "notifications", `${mediaInfo.id}`, "usersAssigned", user?.uid || `${anilistUser?.id}`), {
+                userRef: user?.uid || `${anilistUser?.id}`
             })
 
         }
@@ -156,14 +169,14 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
             }
 
             // Assign User to This Media Notifications
-            await setDoc(doc(db, "notifications", `${mediaInfo.id}`, "usersAssigned", user.uid), {
-                userRef: user.uid
+            await setDoc(doc(db, "notifications", `${mediaInfo.id}`, "usersAssigned", user?.uid || `${anilistUser?.id}`), {
+                userRef: user?.uid || `${anilistUser?.id}`
             })
 
         }
 
         // Add Default Media Info to User Doc, so it keep track of which episode was last notified
-        await updateDoc(doc(db, 'users', user.uid),
+        await updateDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
             {
                 notifications: arrayUnion(...[
                     {
@@ -186,7 +199,7 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
     async function isUserAssignedToThisMediaNotications() {
 
-        if (!user) return setWasAddedToNotifications(false)
+        if (!user && !anilistUser) return setWasAddedToNotifications(false)
 
         const userAssignedNoticationsList = await getDoc(doc(db, 'notifications', `${mediaInfo.id}`))
 
@@ -194,7 +207,7 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
         setIsLoading(true)
 
-        const mediaOnUserNotifications = query(collection(db, 'notifications', `${mediaInfo.id}`, "usersAssigned"), where("userRef", "==", `${user.uid}`))
+        const mediaOnUserNotifications = query(collection(db, 'notifications', `${mediaInfo.id}`, "usersAssigned"), where("userRef", "==", `${user?.uid}` || `${anilistUser?.id}`))
 
         const mediaNotificationDoc = await getDocs(mediaOnUserNotifications)
 

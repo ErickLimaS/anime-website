@@ -11,6 +11,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { motion } from 'framer-motion';
 import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 import { updateUserFavouriteMedias } from '@/app/lib/firebaseUserActions/userDocUpdateOptions'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[] }) {
 
@@ -18,6 +19,8 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
     const [wasAddedToFavourites, setWasAddedToFavourites] = useState<boolean>(false)
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
 
     const auth = getAuth()
 
@@ -27,18 +30,28 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
 
     useEffect(() => {
 
-        if (!user || loading) return
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => {
+
+        if ((!user && !anilistUser) || loading) return
 
         setIsUserModalOpen(false)
         isMediaOnUserDoc()
 
-    }, [user])
+    }, [user, anilistUser])
 
     // WHEN BUTTON IS CLICKED, RUN FUNCTION TO ADD OR REMOVE MEDIA FROM FIRESTORE
     async function handleMediaOnUserDoc() {
 
         // Opens Login Modal
-        if (!user) return setIsUserModalOpen(true)
+        if (!user && !anilistUser) return setIsUserModalOpen(true)
 
         setIsLoading(true)
 
@@ -56,7 +69,7 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
         }
 
         await updateUserFavouriteMedias({
-            userId: user.uid,
+            userId: user?.uid || `${anilistUser?.id}`,
             mediaData: favouriteMediaData,
             isAddAction: !wasAddedToFavourites
         })
@@ -70,9 +83,9 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
     // IF MEDIA ID MATCHS ANY RESULT ON DB, IT SETS THIS COMPONENT BUTTON AS ACTIVE
     async function isMediaOnUserDoc() {
 
-        if (!user) return
+        if (!user && !anilistUser) return
 
-        const userDoc = await getDoc(doc(db, 'users', user.uid))
+        const userDoc = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
 
         const wasMediaIdFoundOnDoc = userDoc.get("bookmarks")?.find((item: { id: number }) => item.id == mediaInfo.id)
 

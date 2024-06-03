@@ -45,9 +45,9 @@ function UserSideMenu() {
     const [isUserLoginOpen, setIsUserLoginOpen] = useState<boolean>(false)
     const [isUserSettingsOpen, setIsUserSettingsOpen] = useState<boolean>(false)
 
-    const auth = getAuth()
-
     const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
+    const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
     const params = useParams()
