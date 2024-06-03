@@ -12,6 +12,7 @@ import {
 import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 type BtnTypes = {
     chapterNumber: number,
@@ -25,6 +26,8 @@ export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, m
     const [wasChapterRead, setWasChapterRead] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
     const auth = getAuth()
 
     const [user] = useAuthState(auth)
@@ -33,17 +36,27 @@ export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, m
 
     useEffect(() => {
 
-        if (!user) return
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => {
+
+        if (!user && !anilistUser) return
 
         wasChapterPreviouslyMarkedAsRead()
 
-    }, [user, chapterNumber])
+    }, [user, anilistUser, chapterNumber])
 
     async function wasChapterPreviouslyMarkedAsRead() {
 
-        if (!user) return
+        if (!user && !anilistUser) return
 
-        const userDoc = await getDoc(doc(db, 'users', user.uid))
+        const userDoc = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
 
         const chapterRead = userDoc.get("chaptersRead")[mediaId]?.find(
             (item: { chapterNumber: number }) => item.chapterNumber == chapterNumber
@@ -55,7 +68,7 @@ export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, m
 
     async function handleChapterReadAction() {
 
-        if (!user) return
+        if (!user && !anilistUser) return
 
         setIsLoading(true)
 
@@ -67,7 +80,7 @@ export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, m
 
         }
 
-        await setDoc(doc(db, 'users', user.uid),
+        await setDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
             {
                 chaptersRead: {
                     [mediaId]: !wasChapterRead ? arrayUnion(...[mangaChapterInfo]) : arrayRemove(...[mangaChapterInfo])
@@ -85,7 +98,7 @@ export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, m
     }
 
     return (
-        user && (
+        (user || anilistUser) && (
             <div className={styles.button_container}>
 
                 <motion.button

@@ -2,14 +2,13 @@ import { convertToUnix, lastHourOfTheDay } from '@/app/lib/formatDateUnix'
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Axios from 'axios'
 import {
+    BASE_ANILIST_URL,
     defaultApiQueryRequest, getCurrentSeason,
     mediaAiringApiQueryRequest, mediaByIdQueryRequest,
     mediaTrendingApiQueryRequest
 } from './anilistQueryConstants'
 import { cache } from 'react'
 import axiosRetry from 'axios-retry'
-
-const BASE_URL = 'https://graphql.anilist.co/'
 
 const headers = {
     'Content-Type': 'application/json',
@@ -73,7 +72,7 @@ export default {
             }
 
             const { data } = await Axios({
-                url: `${BASE_URL}`,
+                url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
                 headers: headers,
                 data: graphqlQuery
@@ -108,7 +107,7 @@ export default {
             }
 
             const { data } = await Axios({
-                url: `${BASE_URL}`,
+                url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
                 headers: headers,
                 data: graphqlQuery
@@ -148,7 +147,7 @@ export default {
             }
 
             const { data } = await Axios({
-                url: `${BASE_URL}`,
+                url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
                 headers: headers,
                 data: graphqlQuery
@@ -197,7 +196,7 @@ export default {
             }
 
             const { data } = await Axios({
-                url: `${BASE_URL}`,
+                url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
                 headers: headers,
                 data: graphqlQuery
@@ -237,7 +236,7 @@ export default {
             }
 
             const { data } = await Axios({
-                url: `${BASE_URL}`,
+                url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
                 headers: headers,
                 data: graphqlQuery
@@ -279,7 +278,7 @@ export default {
             }
 
             const { data } = await Axios({
-                url: `${BASE_URL}`,
+                url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
                 headers: headers,
                 data: graphqlQuery
@@ -312,7 +311,7 @@ export default {
             }
 
             const { data } = await Axios({
-                url: `${BASE_URL}`,
+                url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
                 headers: headers,
                 data: graphqlQuery

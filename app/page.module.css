@@ -47,11 +47,11 @@ span#box_shadow_end_section {
 @media(min-width: 768px) {
     #media_banner_container>div {
 
-        max-width: var(--breakpoint-md);
+        width: 100%;
 
         margin: auto;
 
-        grid-template-columns: 40% 60%;
+        grid-template-columns: 50% 50%;
         display: grid;
         justify-items: center;
 
@@ -167,7 +167,7 @@ span#box_shadow_end_section {
 @media((min-width: 768px)) {
     #media_banner_container .item_buttons {
 
-        max-width: 420px;
+        max-width: 430px;
 
         grid-template-columns: minmax(124px, 1fr) minmax(124px, 1fr);
 
@@ -186,12 +186,15 @@ span#box_shadow_end_section {
     }
 }
 
+#media_banner_container .item_buttons>a {
+    justify-content: center;
+}
+
 #media_banner_container .item_buttons>a,
 #media_banner_container .item_buttons>button {
 
     display: flex;
     align-items: center;
-    justify-content: center;
 
     width: 100%;
 
@@ -223,7 +226,7 @@ span#box_shadow_end_section {
 
     #media_banner_container .item_buttons>a,
     #media_banner_container .item_buttons>button {
-        padding: 20px 28px 16px 28px;
+        padding: 20px 16px 16px 16px;
     }
 
 }
@@ -247,6 +250,7 @@ span#box_shadow_end_section {
     border: 1px solid;
 
 }
+
 
 #player_button_container {
     width: 90%;

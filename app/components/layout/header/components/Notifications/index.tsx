@@ -19,6 +19,7 @@ import Link from 'next/link'
 import { convertFromUnix, getCurrentUnixDate } from '@/app/lib/formatDateUnix'
 import anilist from '@/app/api/anilist'
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 function NotificationsContainer() {
 
@@ -38,6 +39,8 @@ function NotificationsContainer() {
     const [hasNewNotifications, setHasNewNotifications] = useState<boolean>(false)
     const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false)
 
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
     const auth = getAuth()
     const [user] = useAuthState(auth)
     const db = getFirestore(initFirebase())
@@ -55,6 +58,16 @@ function NotificationsContainer() {
 
     }, [user])
 
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
     function isCurrDateBiggerThanLastUpdate() {
 
         const dateNow = getCurrentUnixDate()
@@ -66,7 +79,7 @@ function NotificationsContainer() {
 
     async function doesNotificationsIsOnLocalStorage() {
 
-        if (!user) return
+        if (!user && !anilistUser) return
 
         if (localStorage.getItem('notifications') == undefined) {
             return verifyNotificationsAssignedThenStore()
@@ -92,7 +105,7 @@ function NotificationsContainer() {
 
         let userAssignedNotifications: any[] = []
 
-        await getDoc(doc(db, "users", user!.uid)).then((res) => {
+        await getDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`)).then((res) => {
             userAssignedNotifications = res.data()?.notifications || []
         })
 
@@ -242,7 +255,7 @@ function NotificationsContainer() {
 
         async function updateNotificationsOnLocal() {
 
-            const notificationsOnUserDoc = await getDoc(doc(db, "users", user!.uid)).then(
+            const notificationsOnUserDoc = await getDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`)).then(
                 (res) => res.data()?.notifications || []
             )
 
@@ -261,7 +274,7 @@ function NotificationsContainer() {
                 await updateMediaOnNotificationsCollection(mediaInfo)
 
                 // removes older notication with previous data
-                await updateDoc(doc(db, 'users', user!.uid),
+                await updateDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
                     {
                         notifications: arrayRemove(...[
                             {
@@ -281,7 +294,7 @@ function NotificationsContainer() {
                 )
 
                 // then adds new data to media notification
-                await updateDoc(doc(db, 'users', user!.uid),
+                await updateDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
                     {
                         notifications: arrayUnion(...[
                             {
@@ -307,7 +320,7 @@ function NotificationsContainer() {
             finishedMediasNotifications.map(async (mediaNotification) => {
 
                 // removes older notication with previous data
-                await updateDoc(doc(db, 'users', user!.uid),
+                await updateDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
                     {
                         notifications: arrayRemove(...[mediaNotification])
 
@@ -318,7 +331,7 @@ function NotificationsContainer() {
                 )
 
                 // add new data to notification media
-                await updateDoc(doc(db, 'users', user!.uid),
+                await updateDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
                     {
                         notifications: arrayUnion(...[mediaNotification])
 
@@ -336,7 +349,7 @@ function NotificationsContainer() {
 
     }
 
-    if (user) {
+    if (user || anilistUser) {
         return (
             <AnimatePresence>
                 <motion.div

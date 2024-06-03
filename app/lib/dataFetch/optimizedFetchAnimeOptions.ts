@@ -1,10 +1,10 @@
 import aniwatch from "@/app/api/aniwatch"
-import { EpisodesFetchedAnimeWatch, MediaInfoAniwatch } from "../ts/interfaces/apiAnimewatchInterface"
-import simulateRange from "./simulateRange"
+import { EpisodesFetchedAnimeWatch, MediaInfoAniwatch } from "../../ts/interfaces/apiAnimewatchInterface"
+import simulateRange from "../simulateRange"
 import gogoanime from "@/app/api/consumetGoGoAnime"
-import { MediaEpisodes, MediaInfo, MediaSearchResult } from "../ts/interfaces/apiGogoanimeDataInterface"
-import stringToOnlyAlphabetic from "./convertStrings"
-import { checkAnilistTitleMisspelling } from "./checkApiMediaMisspelling"
+import { MediaEpisodes, MediaInfo, MediaSearchResult } from "../../ts/interfaces/apiGogoanimeDataInterface"
+import stringToOnlyAlphabetic from "../convertStrings"
+import { checkAnilistTitleMisspelling } from "../checkApiMediaMisspelling"
 
 // Always tries to give at least one result that resembles the query
 export async function optimizedFetchOnGoGoAnime({ textToSearch, only, isDubbed }: { textToSearch: string, only?: "episodes", isDubbed?: boolean }) {

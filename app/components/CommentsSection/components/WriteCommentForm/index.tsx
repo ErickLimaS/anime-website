@@ -2,7 +2,7 @@ import styles from "./component.module.css"
 import { initFirebase } from "@/app/firebaseApp"
 import { ApiDefaultResult, ApiMediaResults } from "@/app/ts/interfaces/apiAnilistDataInterface"
 import { getAuth } from "firebase/auth"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image';
 import {
@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import Filter from "bad-words"
+import { checkUserIsLoggedWithAnilist } from "@/app/lib/user/anilistUserLoginOptions"
 
 type CommentFormTypes = {
     isAReply?: boolean,
@@ -37,11 +38,23 @@ export default function WriteCommentFormContainer({
     const [currTextLength, setCurrTextLength] = useState<number>(0)
     const [inputCharLimit] = useState<number>(400)
 
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
     const auth = getAuth()
 
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
+
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
 
     function isCommentTextValid(text: string) {
 
@@ -55,7 +68,7 @@ export default function WriteCommentFormContainer({
 
         e.preventDefault()
 
-        if (!user) return setIsUserModalOpenHook(true)
+        if (!user && !anilistUser) return setIsUserModalOpenHook(true)
 
         const form = e.target as any
 
@@ -71,9 +84,9 @@ export default function WriteCommentFormContainer({
 
         const completeCommentData = {
 
-            userId: doc(db, "users", user.uid),
-            username: user.displayName,
-            userPhoto: user.photoURL,
+            userId: doc(db, "users", user?.uid || `${anilistUser?.id}`),
+            username: user?.displayName || anilistUser?.name,
+            userPhoto: user?.photoURL || anilistUser?.avatar.medium,
             createdAt: commentTimestamp,
             comment: commentText,
             isSpoiler: form.spoiler.checked,
@@ -88,9 +101,9 @@ export default function WriteCommentFormContainer({
 
         const replyCommentData: ReplyComment = {
 
-            userId: doc(db, "users", user.uid),
-            username: user.displayName,
-            userPhoto: user.photoURL,
+            userId: doc(db, "users", user?.uid || `${anilistUser?.id}`),
+            username: user?.displayName || anilistUser?.name,
+            userPhoto: user?.photoURL || anilistUser?.avatar.medium,
             createdAt: commentTimestamp,
             comment: commentText,
             isSpoiler: form.spoiler.checked,
@@ -131,7 +144,7 @@ export default function WriteCommentFormContainer({
             form.comment.value = ""
             setWasCommentCreatedSuccessfully(true)
 
-            await setDoc(doc(db, 'users', user.uid), {
+            await setDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`), {
                 comments: {
                     written: arrayUnion(...[{
                         commentRef: commentCreatedDoc.id,
@@ -168,8 +181,8 @@ export default function WriteCommentFormContainer({
             <div className={styles.img_container}>
 
                 <Image
-                    src={user?.photoURL || ProfileFallbackImg}
-                    alt={user?.displayName || "User Not Logged In Profile Picture"}
+                    src={user?.photoURL || anilistUser?.avatar.medium || ProfileFallbackImg}
+                    alt={user?.displayName || anilistUser?.name || "User Not Logged In Profile Picture"}
                     fill
                     sizes='60px'
                 />
@@ -178,7 +191,14 @@ export default function WriteCommentFormContainer({
 
             <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleCreateComment(e)}>
                 <label>
-                    {user ? `${isAReply ? `Reply as ${user.displayName}` : `Comment as ${user.displayName}`}` : "Please log in to comment"}
+
+                    {(user || anilistUser) &&
+                        `${isAReply ? `Reply as ${user?.displayName || anilistUser?.name}` : `Comment as ${user?.displayName || anilistUser?.name}`}`
+                    }
+                    {(!user && !anilistUser) &&
+                        "Please log in to comment"
+                    }
+
                     <textarea
                         rows={isAReply ? 2 : 3} cols={70}
                         name='comment'

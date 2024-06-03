@@ -6,16 +6,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
-import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import PlaySvg from "@/public/assets/play-circle.svg"
 import BookSvg from "@/public/assets/book.svg"
 import CalendarSvg from "@/public/assets/calendar3.svg"
 import ClockSvg from "@/public/assets/clock.svg"
 import ProgressSvg from "@/public/assets/progress.svg"
-import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
+import FavouriteSvg from "@/public/assets/heart.svg"
+import FavouriteFillSvg from "@/public/assets/heart-fill.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
-import * as AddToPlaylist from '@/app/components/Buttons/AddToPlaylist'
+import * as AddToFavourites from '@/app/components/Buttons/AddToFavourites'
 import ScoreRating from '@/app/components/DynamicAssets/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
 import { headers } from 'next/headers'
@@ -25,7 +25,7 @@ import CommentsSection from '../../components/CommentsSection'
 import { getMediaInfo } from '@/app/api/consumetImdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import MediaRelatedContainer from './components/MediaRelatedContainer'
-import AddToNotificationsButton from '@/app/components/Buttons/AddToNotificationsButton'
+import AddToNotificationsButton from '@/app/components/Buttons/AddToNotification'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -207,19 +207,19 @@ async function MediaPage({ params }: { params: { id: number } }) {
                 mediaInfo={mediaInfo}
               />
 
-              <AddToPlaylist.Button
+              <AddToFavourites.Button
                 mediaInfo={mediaInfo as ApiDefaultResult}
               >
 
-                <AddToPlaylist.SvgIcon>
-                  <BookmarkSvg />
-                </AddToPlaylist.SvgIcon>
+                <AddToFavourites.SvgIcon>
+                  <FavouriteSvg />
+                </AddToFavourites.SvgIcon>
 
-                <AddToPlaylist.SvgIcon>
-                  <BookmarkFillSvg />
-                </AddToPlaylist.SvgIcon>
+                <AddToFavourites.SvgIcon>
+                  <FavouriteFillSvg fill="var(--brand-color)" />
+                </AddToFavourites.SvgIcon>
 
-              </AddToPlaylist.Button>
+              </AddToFavourites.Button>
 
             </div>
 

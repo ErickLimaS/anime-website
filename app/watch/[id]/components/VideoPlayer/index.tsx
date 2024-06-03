@@ -27,6 +27,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface"
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
+import { checkUserIsLoggedWithAnilist } from "@/app/lib/user/anilistUserLoginOptions"
 
 type VideoPlayerType = {
     mediaSource: SourceType["source"],
@@ -78,8 +79,9 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
     const [enableAutoSkipIntroAndOutro, setEnableAutoSkipIntroAndOutro] = useState<boolean>(false)
     const [enableAutoNextEpisode, setEnableAutoNextEpisode] = useState<boolean>(false)
 
-    const auth = getAuth()
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
 
+    const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
@@ -90,19 +92,29 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
     useEffect(() => {
 
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => {
+
         setVideoUrl(videoInfo.urlSource)
         setEpisodeLastStop(Number(videoInfo.currentLastStop) || 0)
 
     }, [videoInfo.urlSource])
 
-    useEffect(() => { if (!loading) getUserPreferences() }, [user, loading, episodeInfo.episodeId])
+    useEffect(() => { if (!loading) getUserPreferences() }, [user, anilistUser, loading, episodeInfo.episodeId])
 
     useEffect(() => { fetchNextEpisodeInfo() }, [videoUrl, episodeInfo.episodeNumber])
 
     // subtitles, video quality, skip intro...
     async function getUserPreferences() {
 
-        const userDoc = user ? await getDoc(doc(db, "users", user.uid)) : null
+        const userDoc = (user || anilistUser) ? await getDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`)) : null
 
         async function getWasCurrEpisodeWatched(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
 
@@ -204,7 +216,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
     async function markCurrEpisodeAsWatched() {
 
-        if (!user) return
+        if (!user && !anilistUser) return
 
         const episodeData = {
 
@@ -214,7 +226,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
         }
 
-        await setDoc(doc(db, 'users', user.uid),
+        await setDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
             {
                 episodesWatched: {
                     [mediaInfo.id]: arrayUnion(...[episodeData])
@@ -255,7 +267,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
             updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
         }
 
-        await setDoc(doc(db, "users", user!.uid),
+        await setDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`),
             {
                 keepWatching: {
                     [mediaInfo.id]: episodeData
@@ -271,12 +283,14 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
         const currentTime = Math.round(e.currentTime)
         const duration = Math.round(e.duration)
 
+        const isUserLoggedIn = (user || anilistUser)
+
         if (episodeInfo.episodeIntro || episodeInfo.episodeOutro) {
 
             if (episodeInfo.episodeIntro && (currentTime >= episodeInfo.episodeIntro.start) && (currentTime < episodeInfo.episodeIntro.end)) {
 
                 if (timeskipLimit == null) setTimeskipLimit(() => episodeInfo.episodeIntro!.end)
-                if (user && enableAutoSkipIntroAndOutro && timeskipLimit != null && (currentTime >= episodeInfo.episodeIntro.start + 4)) { // adds 4 seconds to match the btn animation
+                if (isUserLoggedIn && enableAutoSkipIntroAndOutro && timeskipLimit != null && (currentTime >= episodeInfo.episodeIntro.start + 4)) { // adds 4 seconds to match the btn animation
                     skipEpisodeIntroOrOutro()
                 }
 
@@ -284,7 +298,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
             else if (episodeInfo.episodeOutro && (currentTime >= episodeInfo.episodeOutro.start) && (currentTime < episodeInfo.episodeOutro.end)) {
 
                 if (timeskipLimit == null) setTimeskipLimit(() => episodeInfo.episodeOutro!.end)
-                if (user && enableAutoSkipIntroAndOutro && timeskipLimit != null && (currentTime >= episodeInfo.episodeOutro.start + 4)) { // adds 4 seconds to match the btn animation
+                if (isUserLoggedIn && enableAutoSkipIntroAndOutro && timeskipLimit != null && (currentTime >= episodeInfo.episodeOutro.start + 4)) { // adds 4 seconds to match the btn animation
                     skipEpisodeIntroOrOutro()
                 }
 
@@ -296,7 +310,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
         }
 
         // saves video progress on DB, when every 45 seconds passes
-        if (user && (currentTime % 45 === 0)) handleEpisodeTimeTrackingOnKeepWatching(currentTime, duration)
+        if (isUserLoggedIn && (currentTime % 45 === 0)) handleEpisodeTimeTrackingOnKeepWatching(currentTime, duration)
 
         // show next episode button
         if (nextEpisodeInfo && Math.round((currentTime / duration) * 100) > 95) {

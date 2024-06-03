@@ -270,7 +270,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons {
 @media((min-width: 590px)) {
     ul.carousel_container li.carousel_item div.item_info .item_buttons {
 
-        grid-template-columns: 200px 200px;
+        grid-template-columns: 220px 220px;
 
         gap: 16px 24px;
 
@@ -290,7 +290,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons {
 ul.carousel_container li.carousel_item div.item_info .item_buttons>a,
 ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
-    padding: 10px 8px;
+    padding: 14px 8px;
 
     border-radius: 4px;
 
@@ -306,7 +306,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
 
     ul.carousel_container li.carousel_item div.item_info .item_buttons>a,
     ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
-        padding: 20px 28px 16px 28px;
+        padding: 20px 16px 16px 16px;
     }
 
 }
@@ -399,7 +399,7 @@ ul.carousel_container li.carousel_item div.item_info .item_buttons>button {
     /* padding: 0 15px; */
 
     height: fit-content;
-    
+
 }
 
 @media((min-width: 1220px)) {

@@ -8,10 +8,11 @@ import { getAuth, User } from 'firebase/auth'
 import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/optimizedFetchAnimeOptions'
+import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/dataFetch/optimizedFetchAnimeOptions'
 import { motion } from 'framer-motion'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
@@ -24,8 +25,9 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
     const [sourceName, setSourceName] = useState<string>()
 
-    const auth = getAuth()
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
 
+    const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
     const db = getFirestore(initFirebase());
@@ -34,10 +36,20 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
     useEffect(() => {
 
-        if (user && !loading) handleEpisodesMarkedAsWatched()
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => {
+
+        if (anilistUser || (user && !loading)) handleEpisodesMarkedAsWatched()
         else fetchMediaEpisodeUrl()
 
-    }, [user, episodeNumber])
+    }, [user, anilistUser, episodeNumber])
 
     useEffect(() => {
 
@@ -47,9 +59,14 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
     async function handleEpisodesMarkedAsWatched() {
 
-        const userDoc = await getDoc(doc(db, 'users', user!.uid))
+        const userDoc = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
 
-        if (!userDoc) return fetchMediaEpisodeUrl()
+        if (!userDoc) {
+
+            fetchMediaEpisodeUrl()
+
+            return
+        }
 
         const lastEpisodeWatched = await checkIfMediaIsOnKeepWatchingList()
 
@@ -81,7 +98,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
     async function checkIfMediaIsOnKeepWatchingList() {
 
-        const userDoc = await getDoc(doc(db, 'users', user!.uid))
+        const userDoc = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
 
         let userKeepWatchingList = await userDoc.get("keepWatching")
 
@@ -201,7 +218,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
             />
 
             <EpisodeNumber
-                user={user}
+                user={user || anilistUser}
                 episodeNumber={episodeNumber}
             />
 
@@ -238,7 +255,7 @@ function ProgressBar({ episodeLastStop, episodeDuration }: { episodeLastStop: nu
 
 }
 
-function EpisodeNumber({ user, episodeNumber }: { user: User | null | undefined, episodeNumber: number | undefined }) {
+function EpisodeNumber({ user, episodeNumber }: { user: User | UserAnilist | null | undefined, episodeNumber: number | undefined }) {
     return (
         ((user && episodeNumber) && (
             <span id={styles.continue_span}>

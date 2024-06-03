@@ -15,6 +15,7 @@ import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
 import ShowUpLoginPanelAnimated from '../UserLoginModal/animatedVariant';
 import WriteCommentFormContainer from './components/WriteCommentForm';
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions';
 
 type CommentsSectionTypes = {
     mediaInfo: ApiMediaResults | ApiDefaultResult,
@@ -32,13 +33,25 @@ export default function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, e
 
     const [commentsSliceRange, setCommentsSliceRange] = useState<number>(3)
 
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
     const auth = getAuth()
 
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
 
-    useEffect(() => { getCommentsForCurrMedia() }, [mediaInfo, user, episodeId])
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => { getCommentsForCurrMedia() }, [mediaInfo, user, anilistUser, episodeId])
 
     function handleCommentsSliceRange() { setCommentsSliceRange(commentsSliceRange + 10) }
 

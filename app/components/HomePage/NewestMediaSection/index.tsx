@@ -47,7 +47,7 @@ function NewestMediaSection({ initialAnimesList }: { initialAnimesList: ApiDefau
 
         if (isAdultContentSetToShow) return isAdultContentSetToShow
 
-        const userAdultContentPreference: boolean = await getUserAdultContentPreference(user)
+        const userAdultContentPreference: boolean = await getUserAdultContentPreference(user.uid)
 
         setIsAdultContentSetToShow(userAdultContentPreference)
 

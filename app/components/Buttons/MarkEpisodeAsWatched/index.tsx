@@ -11,6 +11,7 @@ import {
 import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 type BtnTypes = {
     episodeNumber: number,
@@ -20,11 +21,12 @@ type BtnTypes = {
     wasWatched?: boolean
 }
 
-
 export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasWatched, showAdditionalText }: BtnTypes) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(wasWatched || false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
 
     const auth = getAuth()
 
@@ -32,11 +34,21 @@ export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle
 
     const db = getFirestore(initFirebase())
 
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
     useEffect(() => { setWasEpisodeWatched(wasWatched || false) }, [wasWatched])
 
     async function handleEpisodeWatchedAction() {
 
-        if (!user) return
+        if (!user && !anilistUser) return
 
         setIsLoading(true)
 
@@ -48,7 +60,7 @@ export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle
 
         }
 
-        await setDoc(doc(db, 'users', user.uid),
+        await setDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
             {
                 episodesWatched: {
                     [mediaId]: wasEpisodeWatched ? arrayRemove(...[animesEpisodeInfo]) : arrayUnion(...[animesEpisodeInfo])
@@ -67,7 +79,7 @@ export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle
     }
 
     return (
-        user && (
+        (user || anilistUser) && (
             <div className={styles.button_container}>
 
                 <motion.button

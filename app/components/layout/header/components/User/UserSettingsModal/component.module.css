@@ -87,7 +87,7 @@
 }
 
 #modal #close_menu_btn {
-    
+
     height: 32px;
     width: 32px;
 
@@ -214,12 +214,16 @@
 
 }
 
+#modal form .user_acc_info_container #img_container img {
+    object-fit: cover;
+}
+
 #modal form .user_acc_info_container #img_container::after {
 
     transition: all ease-in-out 200ms;
 }
 
-#modal form .user_acc_info_container #img_container:hover::after {
+#modal form .user_acc_info_container #img_container[data-disabled=undefined]:hover::after {
 
     content: "Change Image";
     display: flex;
@@ -239,7 +243,7 @@
 
 }
 
-#modal form .user_acc_info_container #img_container:hover img {
+#modal form .user_acc_info_container #img_container[data-disabled=undefined]:hover img {
     filter: brightness(0.2);
 }
 

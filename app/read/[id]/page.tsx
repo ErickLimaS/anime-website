@@ -7,7 +7,7 @@ import manga from '@/app/api/consumetManga'
 import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
 import ChaptersPages from './components/ChaptersPages/index'
 import ChaptersListContainer from './components/ChaptersListContainer'
-import { getClosestMangaResultByTitle } from '@/app/lib/optimizedFetchMangaOptions'
+import { getClosestMangaResultByTitle } from '@/app/lib/dataFetch/optimizedFetchMangaOptions'
 import { stringToUrlFriendly } from '@/app/lib/convertStrings'
 import { FetchEpisodeError } from '@/app/components/MediaFetchErrorPage'
 

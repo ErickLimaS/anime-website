@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import { User, getAuth } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSearchParams } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
@@ -9,20 +9,33 @@ import { initFirebase } from '@/app/firebaseApp'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 function KeepWatchingResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
 
     const [keepWatchingList, setKeepWatchingList] = useState<KeepWatchingItem[]>([])
     const [filteredKeepWatchingList, setFilteredKeepWatchingList] = useState<KeepWatchingItem[]>([])
 
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
     const searchParams = useSearchParams()
 
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
     useEffect(() => { setFilteredKeepWatchingList([]) }, [searchParams.size == 0])
 
-    useEffect(() => { if (user?.uid) getUserKeepWatching() }, [user])
+    useEffect(() => { if (user?.uid || anilistUser?.id) getUserKeepWatching() }, [user, anilistUser])
 
     useEffect(() => {
 
@@ -57,7 +70,7 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: "tit
 
         const db = getFirestore(initFirebase())
 
-        let keepWatchingList = await getDoc(doc(db, 'users', (user as User).uid)).then(doc => doc.get("keepWatching"))
+        let keepWatchingList = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`)).then(doc => doc.get("keepWatching"))
 
         let listFromObjectToArray = Object.keys(keepWatchingList).map(key => {
 
@@ -102,7 +115,7 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: "tit
         <React.Fragment>
 
             <ShowUpLoginPanelAnimated
-                apperanceCondition={(!user && !loading) ? true : false}
+                apperanceCondition={((!user && !anilistUser) && !loading) ? true : false}
                 auth={auth}
             />
 

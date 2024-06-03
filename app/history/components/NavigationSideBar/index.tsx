@@ -1,25 +1,38 @@
 "use client"
 import Link from 'next/link'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import styles from "./component.module.css"
-import { User, getAuth } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 function NavigationSideBar({ params }: { params?: { format: string } }) {
 
     const [currParams, setCurrParams] = useState("")
     const [keepWatchingTypesQuantity, setKeepWatchingTypesQuantity] = useState<{ all: number, anime: number, manga: number, movie: number }>()
 
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
 
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
     useLayoutEffect(() => {
 
-        if (!loading && user) getKeepWatchingList()
+        if (!loading && (user || anilistUser)) getKeepWatchingList()
 
         setCurrParams(params?.format || "")
 
@@ -27,7 +40,7 @@ function NavigationSideBar({ params }: { params?: { format: string } }) {
 
     async function getKeepWatchingList() {
 
-        let keepWatchingList = await getDoc(doc(db, 'users', (user as User).uid)).then(doc => doc.get("keepWatching"))
+        let keepWatchingList = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`)).then(doc => doc.get("keepWatching"))
 
         let keepWatchingListFromObjectToArray = Object.keys(keepWatchingList).map(key => {
 

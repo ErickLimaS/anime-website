@@ -14,6 +14,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import { useSearchParams } from 'next/navigation'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 type ComponentTypes = {
     sourceName: SourceType["source"],
@@ -32,6 +33,8 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
         episodeTitle: string;
     }[]>()
 
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
@@ -39,7 +42,17 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
 
     const searchParams = useSearchParams()
 
-    useEffect(() => { if (user) getEpisodesWatchedList() }, [user, mediaId, sourceName])
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
+    useEffect(() => { if (user || anilistUser) getEpisodesWatchedList() }, [user, anilistUser, mediaId, sourceName])
 
     useEffect(() => {
 
@@ -57,7 +70,7 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
 
     async function getEpisodesWatchedList() {
 
-        const userDoc = await getDoc(doc(db, 'users', user!.uid))
+        const userDoc = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
 
         const episodesWatchedList = userDoc.get("episodesWatched")
 

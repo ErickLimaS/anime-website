@@ -6,19 +6,18 @@ import GitHubSvg from '@/public/assets/github.svg'
 import AnonymousSvg from '@/public/assets/person-fill.svg'
 import CloseSvg from '@/public/assets/x.svg'
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg'
+import AnilistSvg from '@/public/assets/anilist.svg'
 import {
     signInWithPopup, GoogleAuthProvider,
     GithubAuthProvider, Auth, signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     updateProfile,
-    signInAnonymously,
-    User
+    signInAnonymously
 } from 'firebase/auth'
-import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
-import { initFirebase } from '@/app/firebaseApp'
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import UserSettingsModal from '@/app/components/layout/header/components/User/UserSettingsModal'
+import { createNewUserDocument } from '@/app/lib/firebaseUserActions/userLoginActions'
 
 type ModalTypes = {
     onClick?: MouseEventHandler<HTMLDivElement>,
@@ -57,50 +56,13 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
     const [loginError, setLoginError] = useState<{ code: string, message: string } | null>(null)
 
     const googleProvider = new GoogleAuthProvider()
-    const githubProvider = new GithubAuthProvider()
+    // const githubProvider = new GithubAuthProvider()
 
     const [user] = useAuthState(auth)
-    const db = getFirestore(initFirebase())
-
-    async function createNewUserDocument(user: User) {
-
-        const doesUserHasDoc = await getDoc(doc(db, "users", user.uid)).then(res => res.data())
-
-        if (doesUserHasDoc) return
-
-        // if user is anonymous, set a placeholder Name and Photo
-        if (user.isAnonymous) {
-            await updateProfile(
-                user, {
-                displayName: "Anonymous",
-                photoURL: "https://i.pinimg.com/736x/fc/4e/f7/fc4ef7ec7265a1ebb69b4b8d23982d9d.jpg"
-            })
-        }
-
-        setIsSettingsMenuOpen(true) // requires user to custom his new profile on Settings Panel
-
-        const defaultNewUserDocValues = {
-            bookmarks: [],
-            keepWatching: [],
-            notifications: [],
-            comments: {},
-            episodesWatched: {},
-            chaptersRead: {},
-            videoSource: "gogoanime",
-            showAdultContent: false,
-            autoNextEpisode: true,
-            autoSkipIntroAndOutro: false,
-            videoQuality: "auto",
-            videoSubtitleLanguage: "English",
-        }
-
-        await setDoc(doc(collection(db, "users"), user.uid), defaultNewUserDocValues)
-
-    }
 
     const signInGoogle = async () => {
         await signInWithPopup(auth, googleProvider)
-            .then(async (res) => await createNewUserDocument(res.user))
+            .then(async (res) => await createNewUserDocument({ userFirebase: res.user, openMenuFunctionHook: setIsSettingsMenuOpen }))
             .catch((err: any) => {
 
                 setLoginError({
@@ -111,22 +73,22 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
             })
     }
 
-    const signInGithub = async () => {
-        await signInWithPopup(auth, githubProvider)
-            .then(async (res) => await createNewUserDocument(res.user))
-            .catch((err: any) => {
+    // const signInGithub = async () => {
+    //     await signInWithPopup(auth, githubProvider)
+    //         .then(async (res) => await createNewUserDocument({ userFirebase: res.user, openMenuFunctionHook: setIsSettingsMenuOpen }))
+    //         .catch((err: any) => {
 
-                setLoginError({
-                    code: err.code,
-                    message: err.message
-                })
+    //             setLoginError({
+    //                 code: err.code,
+    //                 message: err.message
+    //             })
 
-            })
-    }
+    //         })
+    // }
 
     const signAnonymously = async () => {
         await signInAnonymously(auth)
-            .then(async (res) => await createNewUserDocument(res.user))
+            .then(async (res) => await createNewUserDocument({ userFirebase: res.user, openMenuFunctionHook: setIsSettingsMenuOpen }))
             .catch((err: any) => {
 
                 setLoginError({
@@ -135,6 +97,12 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
                 })
 
             })
+    }
+
+    const signWithAnilist = async () => {
+
+        window.location.href = ` https://anilist.co/api/v2/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_ANILIST_CLIENT_ID}&response_type=token`
+
     }
 
     async function handleLoginForm(e: React.FormEvent<HTMLFormElement>) {
@@ -194,7 +162,7 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
             })
 
             // add default values to user doc
-            await createNewUserDocument(res.user)
+            await createNewUserDocument({ userFirebase: res.user, openMenuFunctionHook: setIsSettingsMenuOpen })
 
             setLoginError(null)
         }
@@ -242,9 +210,10 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
                 </div>
 
                 <LoginAlternativesButtons
-                    withGitHub={() => signInGithub()}
+                    // withGitHub={() => signInGithub()}
                     anonymously={() => signAnonymously()}
                     withGoogle={() => signInGoogle()}
+                    withAnilist={() => signWithAnilist()}
                 />
 
                 <div id={styles.span_container}>
@@ -381,7 +350,9 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
     )
 }
 
-function LoginAlternativesButtons({ withGoogle, withGitHub, anonymously }: { withGoogle: () => void, withGitHub: () => void, anonymously: () => void }) {
+function LoginAlternativesButtons({ withGoogle, anonymously, withGitHub, withAnilist }: {
+    withGoogle: () => void, anonymously: () => void, withAnilist: () => void, withGitHub?: () => void
+}) {
 
     return (
         <div id={styles.login_buttons_container}>
@@ -399,11 +370,20 @@ function LoginAlternativesButtons({ withGoogle, withGitHub, anonymously }: { wit
                 <small>Anonymously</small>
             </div>
 
+            {/* People is not using this log in button. From 80 acc logged in, only 1 person used it.
+                <div>
+                    <button title='GitHub' id={styles.github_button} onClick={() => withGitHub()}>
+                        <GitHubSvg width={16} height={16} alt={"GitHub icon"} />
+                    </button>
+                    <small>GitHub</small>
+                </div> 
+            */}
+
             <div>
-                <button title='GitHub' id={styles.github_button} onClick={() => withGitHub()}>
-                    <GitHubSvg width={16} height={16} alt={"GitHub icon"} />
+                <button title='Anilist' id={styles.anilist_button} onClick={() => withAnilist()} >
+                    <AnilistSvg width={16} height={16} alt={"Anilist icon"} />
                 </button>
-                <small>GitHub</small>
+                <small>Anilist</small>
             </div>
         </div>
     )

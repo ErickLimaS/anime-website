@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './component.module.css'
 import PersonIcon from '@/public/assets/person-circle.svg'
 import ChevronDownSvg from '@/public/assets/chevron-down.svg'
@@ -16,6 +16,9 @@ import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 import UserSettingsModal from '../UserSettingsModal'
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
+import { useParams } from 'next/navigation'
+import axios from 'axios'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 const framerMotionShowUp = {
 
@@ -42,9 +45,38 @@ function UserSideMenu() {
     const [isUserLoginOpen, setIsUserLoginOpen] = useState<boolean>(false)
     const [isUserSettingsOpen, setIsUserSettingsOpen] = useState<boolean>(false)
 
-    const auth = getAuth()
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
 
+    const auth = getAuth()
     const [user, loading] = useAuthState(auth)
+
+    const params = useParams()
+
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [params])
+
+    async function logUserOut() {
+
+        if (anilistUser) {
+            localStorage.removeItem("anilist-user")
+
+            setAnilistUser(undefined)
+
+            axios.delete(`${window.location.origin}/api/anilist`)
+
+            return
+        }
+
+        auth.signOut()
+
+    }
 
     return (
         <div id={styles.user_container}>
@@ -55,7 +87,7 @@ function UserSideMenu() {
                 auth={auth}
             />
 
-            {!user && (
+            {(!user && !anilistUser) && (
                 <React.Fragment>
                     <button
                         onClick={() => setIsUserLoginOpen(!isUserLoginOpen)}
@@ -85,7 +117,7 @@ function UserSideMenu() {
                 </React.Fragment>
             )}
 
-            {user && (
+            {(user || anilistUser) && (
                 <React.Fragment>
                     <button
                         onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -97,8 +129,12 @@ function UserSideMenu() {
                     >
                         <span id={styles.img_container}>
                             <Image
-                                src={user.photoURL ? user.photoURL as string : "https://i.pinimg.com/736x/fc/4e/f7/fc4ef7ec7265a1ebb69b4b8d23982d9d.jpg"}
-                                alt={user.displayName as string}
+                                src={user ?
+                                    user.photoURL || "https://i.pinimg.com/736x/fc/4e/f7/fc4ef7ec7265a1ebb69b4b8d23982d9d.jpg"
+                                    :
+                                    anilistUser?.avatar.medium || "https://i.pinimg.com/736x/fc/4e/f7/fc4ef7ec7265a1ebb69b4b8d23982d9d.jpg"
+                                }
+                                alt={user ? user.displayName as string : anilistUser!.name}
                                 fill
                                 sizes='32px'
                             >
@@ -142,7 +178,7 @@ function UserSideMenu() {
                                         </button>
                                     </li>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                        <button onClick={() => auth.signOut()}>
+                                        <button onClick={() => logUserOut()}>
                                             <LogoutSvg width={16} height={16} alt={"Logout Icon"} /> Log Out
                                         </button>
                                     </li>
@@ -156,6 +192,7 @@ function UserSideMenu() {
                             <UserSettingsModal
                                 onClick={() => setIsUserSettingsOpen(!isUserSettingsOpen)}
                                 auth={auth}
+                                anilistUser={anilistUser}
                                 aria-expanded={isUserSettingsOpen}
                             />
 
