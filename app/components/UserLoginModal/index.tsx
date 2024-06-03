@@ -17,7 +17,6 @@ import {
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import UserSettingsModal from '@/app/components/layout/header/components/User/UserSettingsModal'
-import Link from 'next/link'
 import { createNewUserDocument } from '@/app/lib/firebaseUserActions/userLoginActions'
 
 type ModalTypes = {
@@ -57,7 +56,7 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
     const [loginError, setLoginError] = useState<{ code: string, message: string } | null>(null)
 
     const googleProvider = new GoogleAuthProvider()
-    const githubProvider = new GithubAuthProvider()
+    // const githubProvider = new GithubAuthProvider()
 
     const [user] = useAuthState(auth)
 
@@ -74,18 +73,18 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
             })
     }
 
-    const signInGithub = async () => {
-        await signInWithPopup(auth, githubProvider)
-            .then(async (res) => await createNewUserDocument({ userFirebase: res.user, openMenuFunctionHook: setIsSettingsMenuOpen }))
-            .catch((err: any) => {
+    // const signInGithub = async () => {
+    //     await signInWithPopup(auth, githubProvider)
+    //         .then(async (res) => await createNewUserDocument({ userFirebase: res.user, openMenuFunctionHook: setIsSettingsMenuOpen }))
+    //         .catch((err: any) => {
 
-                setLoginError({
-                    code: err.code,
-                    message: err.message
-                })
+    //             setLoginError({
+    //                 code: err.code,
+    //                 message: err.message
+    //             })
 
-            })
-    }
+    //         })
+    // }
 
     const signAnonymously = async () => {
         await signInAnonymously(auth)
@@ -98,6 +97,12 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
                 })
 
             })
+    }
+
+    const signWithAnilist = async () => {
+
+        window.location.href = ` https://anilist.co/api/v2/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_ANILIST_CLIENT_ID}&response_type=token`
+
     }
 
     async function handleLoginForm(e: React.FormEvent<HTMLFormElement>) {
@@ -205,9 +210,10 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
                 </div>
 
                 <LoginAlternativesButtons
-                    withGitHub={() => signInGithub()}
+                    // withGitHub={() => signInGithub()}
                     anonymously={() => signAnonymously()}
                     withGoogle={() => signInGoogle()}
+                    withAnilist={() => signWithAnilist()}
                 />
 
                 <div id={styles.span_container}>
@@ -344,7 +350,9 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
     )
 }
 
-function LoginAlternativesButtons({ withGoogle, withGitHub, anonymously }: { withGoogle: () => void, withGitHub: () => void, anonymously: () => void }) {
+function LoginAlternativesButtons({ withGoogle, anonymously, withGitHub, withAnilist }: {
+    withGoogle: () => void, anonymously: () => void, withAnilist: () => void, withGitHub?: () => void
+}) {
 
     return (
         <div id={styles.login_buttons_container}>
@@ -372,13 +380,9 @@ function LoginAlternativesButtons({ withGoogle, withGitHub, anonymously }: { wit
             */}
 
             <div>
-                <Link
-                    title='Anilist'
-                    id={styles.anilist_button}
-                    href={`https://anilist.co/api/v2/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_ANILIST_CLIENT_ID}&response_type=token`}
-                >
+                <button title='Anilist' id={styles.anilist_button} onClick={() => withAnilist()} >
                     <AnilistSvg width={16} height={16} alt={"Anilist icon"} />
-                </Link>
+                </button>
                 <small>Anilist</small>
             </div>
         </div>

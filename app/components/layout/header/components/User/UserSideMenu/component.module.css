@@ -61,6 +61,7 @@
 #user_container #user_btn #img_container img {
 
     border-radius: 50%;
+    object-fit: cover;
 
 }
 

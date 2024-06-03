@@ -214,6 +214,10 @@
 
 }
 
+#modal form .user_acc_info_container #img_container img {
+    object-fit: cover;
+}
+
 #modal form .user_acc_info_container #img_container::after {
 
     transition: all ease-in-out 200ms;
