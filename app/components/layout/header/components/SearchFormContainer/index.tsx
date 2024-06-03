@@ -79,7 +79,7 @@ function SearchFormContainer() {
 
         let isAdultContentAllowed = false
 
-        if (user) isAdultContentAllowed = await getUserAdultContentPreference(user)
+        if (user) isAdultContentAllowed = await getUserAdultContentPreference(user.uid)
 
         if (searchInputValue.length == 0) return
 
