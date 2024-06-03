@@ -1,5 +1,5 @@
 "use client"
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import styles from "./component.module.css"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import anilist from '@/app/api/anilist'
@@ -61,7 +61,7 @@ function SearchFormContainer() {
 
         setIsLoading(true)
 
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_NEXT_INTERNAL_API_URL}?title=${value}`)
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API}?title=${value}`)
 
         setSearchResultsList(data.data as MediaDbOffline[])
 

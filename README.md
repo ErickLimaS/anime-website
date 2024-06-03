@@ -6,6 +6,9 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 
 <p align="center">You can access this website on <a href='https://aniproject-dev.vercel.app/'>Vercel</a> or <a href='https://aniproject-website.onrender.com'>Render (really slow)</a>.</p>
 
+> [!CAUTION]
+> Please note that this project is strictly non-commercial. It is not permitted to generate revenue or include advertisements using this project. Violating this policy may result in legal actions by the respective owners of these intellectual properties. 
+
 ## Navigation
 
 - [Features](#hammer-features)
@@ -26,7 +29,8 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 - [x] `Watch`: Watch any available episode Dubbed or Subbed.
 - [x] `Read`: Read any manga chapter available.
 - [x] `Comment`: Write what you thougth of that episode or just tell something that every should know about.
-- [x] `Log In`: You can log in with Google, GitHub or Anonymously (with some restrictions).
+- [x] `Log In`: You can log in with Google, Anilist or Anonymously (with some restrictions).
+- [x] `Anilist Integration`: Use your Anilist account and carry over your settings.
 - [x] `Keep Watching`: Continue the episode from where you stop last time.
 - [x] `Be Notified`: When a New Episode is Released, you get a notification on the website.
 - [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.
@@ -35,7 +39,8 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 
 ## :pushpin: Under Development
 
-- [ ] `Fetch User List from AniList`
+- [ ] `Many Bugs Fixes (Dub Option, styles, etc)`
+- [ ] `Choose Media Titles Language`
 
 ## :heavy_check_mark: Tecnologies Used
 
@@ -77,11 +82,11 @@ npm install
    - Go to these repos and host your own instance:
      - <a href='https://github.com/consumet/api.consumet.org'>Consumet API</a>
      - <a href='https://github.com/ghoshRitesh12/aniwatch-api'>Aniwatch API</a>
-   - On Anilist Website:
+   - About Anilist OAuth:
      - You need to first login on your account.
      - Then go to <a href='https://anilist.co/settings/developer'>Developer Page</a> on the Settings and click "Create New Client".
      - Now you need to add the name of your forked project/website and the URL to redirect when user accept the login, then hit "Save".
-     - Store the Client ID and Secret on your .".env.local".
+     - Store the Client ID and Secret on your ".env.local".
    - On Firebase, get your configs to use the Authentication and Firestore Database.
      - All the Firebase info needed bellow can be found when you create a new project.
      - IMPORTANT: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
@@ -92,12 +97,16 @@ npm install
 With all that done, you will need to fill the `.env.local` like the example bellow:
 
 ```javascript
+// Consumet
 NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
+// Aniwatch
 NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.com
-// Make sure to add the pathname "/api/animes-database" bellow
-NEXT_PUBLIC_NEXT_INTERNAL_API_URL=https://url-to-where-your-website-is-hosted.com/api/animes-database
+// Next.js Route Handler - Make sure to add the pathname "/api/animes-database" bellow
+NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API=https://url-to-where-your-website-is-hosted.com/api/animes-database
+// Anilist OAuth Settings
 NEXT_PUBLIC_ANILIST_CLIENT_ID=your-anilist-client-id
-NEXT_PUBLIC_ANILIST_CLIENT_SECRET=your-anilist-secret
+ANILIST_CLIENT_SECRET=your-anilist-secret
+// Firebase
 NEXT_PUBLIC_FIREBASE_API_KEY=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase-setting-related-to-this-field
@@ -124,8 +133,9 @@ With Firebase Authentication, theres 4 methods of Login/Signup:
 
 - Email
 - Google
-- GitHub
+- Anilist
 - Anonymous
+- <s>GitHub</s>
 
 It is used to store on User Document things like:
 
