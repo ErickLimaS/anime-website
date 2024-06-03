@@ -9,8 +9,11 @@ import { initFirebase } from '@/app/firebaseApp'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
 function PlaylistItemsResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
+
+    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
@@ -20,9 +23,19 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
 
     const searchParams = useSearchParams();
 
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+        }
+
+    }, [])
+
     useEffect(() => { setUserFilteredBookmarks([]) }, [searchParams.size == 0])
 
-    useEffect(() => { if (user?.uid) getUserBookmarksList() }, [user])
+    useEffect(() => { if (user || anilistUser) getUserBookmarksList() }, [user, anilistUser])
 
     useEffect(() => {
 
@@ -51,7 +64,7 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
 
         const db = getFirestore(initFirebase());
 
-        const bookmarksList: BookmarkItem[] = await getDoc(doc(db, 'users', (user as User).uid)).then(doc => doc.get("bookmarks"))
+        const bookmarksList: BookmarkItem[] = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`)).then(doc => doc.get("bookmarks"))
 
         if (!params) {
 
@@ -79,7 +92,7 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
         <React.Fragment>
 
             <ShowUpLoginPanelAnimated
-                apperanceCondition={(!user && !loading) ? true : false}
+                apperanceCondition={((!user && !anilistUser) && !loading) ? true : false}
                 auth={auth}
             />
 

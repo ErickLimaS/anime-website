@@ -117,6 +117,8 @@
 
     transition: all ease-in-out 100ms;
 
+    color: var(--white-100);
+
     font-size: var(--font-size--small-1);
 
     font-weight: 500;

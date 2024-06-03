@@ -79,7 +79,7 @@ export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle
     }
 
     return (
-        (user && anilistUser) && (
+        (user || anilistUser) && (
             <div className={styles.button_container}>
 
                 <motion.button

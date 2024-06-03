@@ -15,7 +15,7 @@ import {
   MediaInfoAniwatch
 } from '@/app/ts/interfaces/apiAnimewatchInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { getAuth, User } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import {
   doc, DocumentData,
   DocumentSnapshot, FieldPath,
@@ -35,6 +35,7 @@ import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';
 import { useSearchParams } from 'next/navigation';
+import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions';
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -97,14 +98,26 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
   const currSearchParams = new URLSearchParams(Array.from(searchParams.entries()))
 
   const [pageNumber, setPageNumber] = useState<number>(0)
-  const auth = getAuth()
 
+  const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+
+  const auth = getAuth()
   const [user] = useAuthState(auth)
 
   const db = getFirestore(initFirebase())
 
   // the episodes array length will be divided by 20, getting the range of pagination
   const rangeEpisodesPerPage = 20
+
+  useEffect(() => {
+
+    if (typeof window !== 'undefined') {
+
+      checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+
+    }
+
+  }, [])
 
   useEffect(() => {
 
@@ -118,10 +131,10 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   useEffect(() => {
 
-    if (user) getUserPreferredSource()
+    if (user || anilistUser) getUserPreferredSource()
     else fetchEpisodesFromSource(crunchyrollInitialEpisodes.length == 0 ? "gogoanime" : "crunchyroll")
 
-  }, [user])
+  }, [user, anilistUser])
 
   useEffect(() => {
 
@@ -133,7 +146,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   }, [episodesList, itemOffset, crunchyrollInitialEpisodes, currEpisodesSource])
 
-  useEffect(() => { if (user) getUserEpisodesWatched() }, [user, mediaInfo.id, currEpisodesSource, itemOffset])
+  useEffect(() => { if (user || anilistUser) getUserEpisodesWatched() }, [user, anilistUser, mediaInfo.id, currEpisodesSource, itemOffset])
 
   useEffect(() => {
 
@@ -166,7 +179,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   async function getUserPreferredSource() {
 
-    const useDoc = await getDoc(doc(db, "users", user!.uid))
+    const useDoc = await getDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`))
 
     const userSelectedSource = await useDoc.get("videoSource").toLowerCase() || "crunchyroll"
 
@@ -178,9 +191,9 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   async function getUserEpisodesWatched() {
 
-    if (!user) return
+    if (!user && !anilistUser) return
 
-    const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user!.uid))
+    const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
 
     const userEpisodesWatchedList = userDoc.get("episodesWatched")
 
@@ -338,7 +351,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         <OptionsPanel
           callDubbedFunction={() => setIsEpisodesDubbed(!isEpisodesDubbed)}
           dubbedStateValue={isEpisodesDubbed}
-          user={user}
+          userId={user?.uid || `${anilistUser?.id}`}
           db={db}
           mediaInfo={mediaInfo}
           imdb={imdb}
@@ -470,8 +483,8 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
   )
 }
 
-function OptionsPanel({ user, db, mediaInfo, imdb, callDubbedFunction, dubbedStateValue }: {
-  user: User | null | undefined,
+function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedStateValue }: {
+  userId: string | undefined,
   db: Firestore,
   imdb: {
     mediaSeasons: ImdbMediaInfo["seasons"],
@@ -493,9 +506,9 @@ function OptionsPanel({ user, db, mediaInfo, imdb, callDubbedFunction, dubbedSta
 
     setIsOptionsModalOpen(!isOptionsModalOpen)
 
-    if (!user) return
+    if (!userId) return
 
-    const userDoc = await getDoc(doc(db, 'users', user!.uid)).then((res) => res.data())
+    const userDoc = await getDoc(doc(db, 'users', userId)).then((res) => res.data())
 
     if (userDoc!.episodesWatched[mediaInfo.id]?.length == imdb.episodesList?.length) {
       setAllEpisodesWatched(true)
@@ -507,7 +520,7 @@ function OptionsPanel({ user, db, mediaInfo, imdb, callDubbedFunction, dubbedSta
 
   async function handleMarkAllEpisodesAsWatched() {
 
-    if (!user) return
+    if (!userId) return
 
     function mapAllEpisodesInfo(index: number) {
 
@@ -523,7 +536,7 @@ function OptionsPanel({ user, db, mediaInfo, imdb, callDubbedFunction, dubbedSta
 
     imdb.episodesList.map((episode, key) => allEpisodes.push(mapAllEpisodesInfo(key)))
 
-    await setDoc(doc(db, 'users', user.uid),
+    await setDoc(doc(db, 'users', userId),
       {
         episodesWatched: {
           [mediaInfo.id]: allEpisodesWatched ? null : allEpisodes
