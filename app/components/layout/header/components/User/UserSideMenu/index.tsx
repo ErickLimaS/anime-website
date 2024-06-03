@@ -7,7 +7,7 @@ import ChevronUpSvg from '@/public/assets/chevron-up.svg'
 import LogoutSvg from '@/public/assets/logout.svg'
 import SettingsSvg from '@/public/assets/gear-fill.svg'
 import HistorySvg from '@/public/assets/clock-history.svg'
-import BookmarkSvg from '@/public/assets/bookmark-check-fill.svg'
+import FavouriteSvg from '@/public/assets/heart.svg'
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg'
 import { getAuth } from 'firebase/auth'
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -163,8 +163,8 @@ function UserSideMenu() {
 
                                 <ul role='menu'>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                        <Link href={"/watchlist"}>
-                                            <BookmarkSvg width={16} height={16} alt={"Watchlist Icon"} /> Watchlist
+                                        <Link href={"/favourites"}>
+                                            <FavouriteSvg width={16} height={16} alt={"Favourites Icon"} /> Favourites
                                         </Link>
                                     </li>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
