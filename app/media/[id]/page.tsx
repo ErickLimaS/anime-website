@@ -6,13 +6,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
-import BookmarkFillSvg from "@/public/assets/bookmark-check-fill.svg"
 import PlaySvg from "@/public/assets/play-circle.svg"
 import BookSvg from "@/public/assets/book.svg"
 import CalendarSvg from "@/public/assets/calendar3.svg"
 import ClockSvg from "@/public/assets/clock.svg"
 import ProgressSvg from "@/public/assets/progress.svg"
-import BookmarkSvg from "@/public/assets/bookmark-plus.svg"
+import FavouriteSvg from "@/public/assets/heart.svg"
+import FavouriteFillSvg from "@/public/assets/heart-fill.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
 import * as AddToFavourites from '@/app/components/Buttons/AddToFavourites'
@@ -212,11 +212,11 @@ async function MediaPage({ params }: { params: { id: number } }) {
               >
 
                 <AddToFavourites.SvgIcon>
-                  <BookmarkSvg />
+                  <FavouriteSvg />
                 </AddToFavourites.SvgIcon>
 
                 <AddToFavourites.SvgIcon>
-                  <BookmarkFillSvg />
+                  <FavouriteFillSvg fill="var(--brand-color)" />
                 </AddToFavourites.SvgIcon>
 
               </AddToFavourites.Button>

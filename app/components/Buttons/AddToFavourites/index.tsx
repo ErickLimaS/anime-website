@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
-import Loading2Svg from "@/public/assets/bookmark-check-fill.svg"
+import FavouriteSvg from "@/public/assets/heart.svg"
+import FavouriteFillSvg from "@/public/assets/heart-fill.svg"
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
@@ -13,7 +14,7 @@ import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 import { updateUserFavouriteMedias } from '@/app/lib/firebaseUserActions/userDocUpdateOptions'
 import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
 
-export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[] }) {
+export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDefaultResult, svgOnlyColor?: string, children?: React.ReactNode[] }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [wasAddedToFavourites, setWasAddedToFavourites] = useState<boolean>(false)
@@ -109,17 +110,24 @@ export function Button({ mediaInfo, children }: { mediaInfo: ApiDefaultResult, c
                 onClick={() => handleMediaOnUserDoc()}
                 disabled={isLoading}
                 data-added={wasAddedToFavourites}
+                data-unique-color={svgOnlyColor != undefined}
                 aria-label={wasAddedToFavourites ? "Click To Remove from Favourites" : "Click To Add To Favourites"}
                 title={wasAddedToFavourites ? `Remove ${mediaInfo.title && mediaInfo.title?.romaji} from Favourites` : `Add ${mediaInfo.title && mediaInfo.title?.romaji} To Favourites`}
             >
 
-                {isLoading ?
+                {isLoading &&
                     (<LoadingSvg alt="Loading Icon" width={16} height={16} />)
-                    :
-                    ((!isLoading && wasAddedToFavourites) ?
-                        (children ? children[1] : (<><Loading2Svg width={16} height={16} /> ON FAVOURITES</>))
-                        :
-                        (children ? children[0] : "+ FAVOURITE")
+                }
+
+                {(!isLoading && wasAddedToFavourites) &&
+                    (children ?
+                        children[1] : (<><FavouriteFillSvg width={16} height={16} fill={svgOnlyColor || "var(--brand-color)"} /> ON FAVOURITES</>)
+                    )
+                }
+
+                {(!isLoading && !wasAddedToFavourites) &&
+                    (children ?
+                        children[0] : (<><FavouriteSvg width={16} height={16} fill={svgOnlyColor || "var(--white-100)"} /> FAVOURITE</>)
                     )
                 }
 

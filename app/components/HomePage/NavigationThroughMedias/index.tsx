@@ -349,6 +349,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                                     <Link href={`/media/${mediaSelect.id}`}>SEE MORE</Link>
 
                                     <AddToFavourites.Button
+                                        svgOnlyColor={"var(--brand-color"}
                                         mediaInfo={mediaSelect}
                                     />
 

@@ -142,7 +142,6 @@ export default async function Home() {
 
       </section>
 
-
       {/* SECTION => SHOWS MEDIAS SORTED BY LATEST UPDATES ON ANILIST */}
       <section className={`${styles.medias_sections_container}`}>
 
