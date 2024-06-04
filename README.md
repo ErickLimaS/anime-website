@@ -116,6 +116,8 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_APP_ID=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_DATABASE_URL=firebase-setting-related-to-this-field
+// Bellow is the url to dev enviroment. You'll need to change it when on hosted mode to the respective url
+NEXT_PUBLIC_WEBSITE_ORIGIN_URL=http://localhost:3000
 ```
 
 4. Now run `npm run dev` to initialize the website

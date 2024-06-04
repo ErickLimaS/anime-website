@@ -197,7 +197,7 @@ export default {
         try {
 
             const setCookieResult = await Axios({
-                url: `${window.location.origin}/api/anilist/media-title-language`,
+                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist/media-title-language`,
                 method: "POST",
                 data: { titleLanguage: lang }
             })
@@ -222,8 +222,6 @@ export default {
                 data: graphqlQuery
             })
 
-            console.log(data)
-
             return setCookieResult
         }
         catch (err) {
@@ -239,7 +237,7 @@ export default {
 
         try {
             const setAdultContentResult = await Axios({
-                url: `${window.location.origin}/api/anilist/adult-content`,
+                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist/adult-content`,
                 method: "POST",
                 data: { isAdultContentEnabled: isEnabled }
             })
