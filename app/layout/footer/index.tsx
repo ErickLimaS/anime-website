@@ -6,12 +6,12 @@ import FacebookSvg from "@/public/assets/facebook.svg"
 import InstagramSvg from "@/public/assets/instagram.svg"
 import YoutubeSvg from "@/public/assets/youtube.svg"
 import TwitterSvg from "@/public/assets/twitter-x.svg"
-import API from '../../../api/anilistMedias'
+import anilistMedias from '@/app/api/anilistMedias'
 import { animesGenres } from '../header'
 
 async function Footer() {
 
-    const animesReleasingList = await API.getReleasingThisWeek({ type: "ANIME" })
+    const animesReleasingList = await anilistMedias.getReleasingThisWeek({ type: "ANIME" })
 
     return (
         <footer id={styles.footer}>

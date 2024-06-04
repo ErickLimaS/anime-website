@@ -269,4 +269,23 @@ export default {
 
     },
 
+    handleSubtitleLanguageSetting: async ({ lang }: { lang?: string }) => {
+
+        try {
+
+            const cookieSetResult = await userSettingsActions.setSubtitleLanguageCookie({ lang: lang })
+
+            return cookieSetResult
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+
+    },
+
 }

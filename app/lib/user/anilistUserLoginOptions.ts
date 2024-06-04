@@ -30,3 +30,53 @@ export async function handleAnilistUserLoginWithRedux() {
     }
 
 }
+
+export async function addUserCookies({ isAdultContentEnabled, titleLanguage, subtitleLanguage }: {
+    isAdultContentEnabled: string, titleLanguage: string, subtitleLanguage: string
+}) {
+
+    try {
+
+        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`, {
+            isAdultContentEnabled: isAdultContentEnabled
+        })
+
+        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`, {
+            titleLanguage: titleLanguage
+        })
+
+        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`, {
+            subtitleLanguage: subtitleLanguage
+        })
+
+    }
+    catch (err) {
+
+        console.log(err)
+
+        return err
+
+    }
+}
+
+export async function removeCookiesAndRefreshPage() {
+
+    try {
+
+        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`)
+        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`)
+        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`)
+        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`)
+
+        // window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/`
+
+    }
+    catch (err) {
+
+        console.log(err)
+
+        return err
+
+    }
+
+}

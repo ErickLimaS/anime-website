@@ -154,7 +154,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
         <section id={styles.media_title_container}>
 
           <HeadingTextAndMediaLogo
-            imdbMediaLogos={imdbMediaInfo.logos}
+            imdbMediaLogos={imdbMediaInfo?.logos}
             mediaTitles={mediaInfo.title}
             preferredLanguage={searchParams.lang}
           />
@@ -649,7 +649,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 }
 
 function HeadingTextAndMediaLogo({ imdbMediaLogos, preferredLanguage, mediaTitles }: {
-  imdbMediaLogos: ImdbMediaInfo["logos"], mediaTitles: ApiMediaResults["title"], preferredLanguage?: string
+  imdbMediaLogos: ImdbMediaInfo["logos"] | undefined, mediaTitles: ApiMediaResults["title"], preferredLanguage?: string
 }) {
 
   const userPreferredTitleLanguage = preferredLanguage ? (mediaTitles as any)[preferredLanguage.toLowerCase()] : null
@@ -657,7 +657,7 @@ function HeadingTextAndMediaLogo({ imdbMediaLogos, preferredLanguage, mediaTitle
   return (
     <React.Fragment>
 
-      {imdbMediaLogos?.length > 0 ? (
+      {imdbMediaLogos && imdbMediaLogos?.length > 0 ? (
 
         <React.Fragment>
 

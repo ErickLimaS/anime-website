@@ -16,7 +16,7 @@ import {
 } from 'firebase/auth'
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import { useAuthState } from 'react-firebase-hooks/auth'
-import UserSettingsModal from '@/app/components/layout/header/components/User/UserSettingsModal'
+import UserSettingsModal from '@/app/layout/header/components/User/UserSettingsModal'
 import { createNewUserDocument } from '@/app/lib/firebaseUserActions/userLoginActions'
 
 type ModalTypes = {

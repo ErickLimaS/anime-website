@@ -121,12 +121,16 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
 
             await anilistUsersActions.handleAdultContentSetting({ isEnabled: `${form.showAdultContent.checked}` })
 
+            await anilistUsersActions.handleSubtitleLanguageSetting({ lang: form.language.value })
+
         }
         else {
 
             await userSettingsActions.setMediaTitleLanguageCookie({ lang: form.mediaTitlePreferredLang.value })
 
             await userSettingsActions.setAdultContentCookie({ isEnabled: `${form.showAdultContent.checked}` })
+
+            await userSettingsActions.setSubtitleLanguageCookie({ lang: form.language.value })
 
         }
 

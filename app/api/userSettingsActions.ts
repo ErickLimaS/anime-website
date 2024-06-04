@@ -47,6 +47,30 @@ export default {
 
         }
 
-    }
+    }, 
+    
+    setSubtitleLanguageCookie: async ({ lang }: { lang?: string }) => {
+
+        try {
+
+            const setAdultContentResult = await Axios({
+                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`,
+                method: "POST",
+                data: { subtitleLanguage: lang }
+            })
+
+            return setAdultContentResult
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return err
+
+        }
+
+    },
+
 
 }
