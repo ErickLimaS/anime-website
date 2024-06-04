@@ -252,13 +252,26 @@ input.expand_description:checked::before {
     .buttons_container>button {
 
         padding: 16px 4px;
+        gap: 0 8px !important;
 
     }
+}
+
+.buttons_container>button[data-added=true] svg {
+
+    fill: var(--brand-color) !important;
+
 }
 
 .buttons_container>button:hover {
 
     background-color: var(--white-100);
     color: var(--black-100);
+
+}
+
+.buttons_container>button:hover svg {
+
+    fill: var(--brand-color) !important;
 
 }

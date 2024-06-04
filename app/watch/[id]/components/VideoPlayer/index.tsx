@@ -37,6 +37,7 @@ type VideoPlayerType = {
     videoInfo: {
         urlSource: string,
         currentLastStop?: string,
+        subtitleLang: string,
         subtitlesList?: EpisodeLinksAnimeWatch["tracks"] | undefined,
         videoQualities?: {
             url: string,
@@ -129,16 +130,16 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
         }
 
-        async function getUserPreferredLanguage(userDoc: DocumentSnapshot<DocumentData, DocumentData> | null) {
+        async function getUserPreferredLanguage() {
 
-            let subtitleLanguage = await userDoc?.get("videoSubtitleLanguage") || "English"
+            let subtitleLanguage = videoInfo.subtitleLang
 
             let subtitleListMapped: SubtitlesType[] = []
 
             // get user language and filter through the available subtitles to this media
             videoInfo.subtitlesList?.map((subtitle) => {
 
-                function itsTheDefaultLang(subtitleLabel: string, defaultSubtitle: boolean) {
+                function itsTheDefaultLang(subtitleLabel: string) {
 
                     const isChoseSubtitle = subtitleLabel?.toLowerCase().includes(subtitleLanguage.toLowerCase())
 
@@ -153,7 +154,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
                         kind: subtitle.kind,
                         srcLang: subtitle.label,
                         src: subtitle.file,
-                        default: itsTheDefaultLang(subtitle.label, subtitle.default),
+                        default: itsTheDefaultLang(subtitle.label),
                         label: subtitle.label,
                         type: subtitle.kind
                     }
@@ -184,7 +185,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
         }
 
-        getUserPreferredLanguage(userDoc)
+        getUserPreferredLanguage()
 
         if (!userDoc) {
 

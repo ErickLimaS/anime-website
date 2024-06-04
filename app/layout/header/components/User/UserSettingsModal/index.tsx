@@ -503,6 +503,9 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                             ))}
                                         </select>
                                     </label>
+                                    {userAnilist && (
+                                        <small>Changing this option will also change on your AniList Account</small>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -543,8 +546,11 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
 
                                         </label>
                                         <p>Show Adult Content (+18)</p>
-
                                     </div>
+
+                                    {userAnilist && (
+                                        <small style={{ marginTop: "16px", display: "block" }}>Changing this option will also change on your AniList Account</small>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -554,7 +560,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                     {!newUser && (
                         <div >
                             <h5 style={{ marginBottom: "16px" }}>
-                                <span><DeleteSvg alt="Play" width={16} height={16} /></span> Delete <span style={{ color: "var(--white-75)" }}>(can not be reverted!)</span>
+                                <span><DeleteSvg alt="Play" width={16} height={16} /></span> Delete
                             </h5>
 
                             <div className={styles.btns_container}>
@@ -566,7 +572,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                         whileTap="tap"
                                         data-active={deleteBookmarksClick}
                                     >
-                                        Delete Watchlist
+                                        Delete Favourites
                                     </motion.button>
 
                                 </label>

@@ -71,6 +71,10 @@
 
 }
 
+#img_container img {
+    object-fit: cover;
+}
+
 #img_intro_container small {
 
     padding: 16px 32px;

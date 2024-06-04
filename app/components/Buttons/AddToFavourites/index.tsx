@@ -111,7 +111,7 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
 
                 {(!isLoading && wasAddedToFavourites) &&
                     (children ?
-                        children[1] : (<><FavouriteFillSvg width={16} height={16} fill={svgOnlyColor || "var(--brand-color)"} /> ON FAVOURITES</>)
+                        children[1] : (<><FavouriteFillSvg width={16} height={16} fill={svgOnlyColor || "var(--brand-color)"} /> FAVOURITED</>)
                     )
                 }
 

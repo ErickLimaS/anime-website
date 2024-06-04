@@ -681,7 +681,7 @@ function HeadingTextAndMediaLogo({ imdbMediaLogos, preferredLanguage, mediaTitle
         <React.Fragment>
 
           <small>
-            {userPreferredTitleLanguage == mediaTitles.romaji ? mediaTitles.native : mediaTitles.romaji}
+            {(userPreferredTitleLanguage == imdbMediaLogos) && mediaTitles.romaji ? mediaTitles.native : mediaTitles.romaji}
           </small>
 
           <h1 id={styles.heading_title}>

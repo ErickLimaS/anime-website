@@ -25,15 +25,22 @@ export async function middleware(request: NextRequest) {
 
     const accessToken = tokenOnCookie ? JSON.parse(tokenOnCookie.value!).accessToken : undefined
 
+    const isParamsOnPathname = request.nextUrl.search == `?lang=${mediaTitleLang}`
+
     if (mediaTitleLang && accessToken) {
 
-        const isParamsOnPathname = request.nextUrl.search == `?lang=${mediaTitleLang}`
+        if (!isParamsOnPathname && request.nextUrl.pathname.slice(0, 6) == "/media") {
 
-        if (!isParamsOnPathname) {
             return NextResponse.redirect(`${request.nextUrl.origin}${request.nextUrl.pathname}?lang=${mediaTitleLang}`, { headers: { authorization: `Bearer ${accessToken}` } })
         }
 
         return NextResponse.next({ headers: { authorization: `Bearer ${accessToken}` } })
+
+    }
+
+    if (!isParamsOnPathname && mediaTitleLang && request.nextUrl.pathname.slice(0, 6) == "/media") {
+
+        return NextResponse.redirect(`${request.nextUrl.origin}${request.nextUrl.pathname}?lang=${mediaTitleLang}`)
 
     }
 

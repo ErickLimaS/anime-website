@@ -1,7 +1,5 @@
 "use client"
-import anilistUsers from "@/app/api/anilistUsers"
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import axios from "axios"
+import { createSlice } from "@reduxjs/toolkit"
 import { removeCookiesAndRefreshPage } from "../../user/anilistUserLoginOptions"
 
 const initialState: { value: UserAnilist | null } = {

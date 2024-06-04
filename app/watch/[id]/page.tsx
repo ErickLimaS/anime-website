@@ -15,6 +15,7 @@ import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface
 import { getMediaInfo } from '@/app/api/consumetImdb'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 import { FetchEpisodeError } from '@/app/components/MediaFetchErrorPage'
+import { cookies } from 'next/headers'
 
 export const revalidate = 900 // revalidate cached data every 15 minutes
 
@@ -53,6 +54,7 @@ export default async function WatchEpisode({ params, searchParams }: {
 
     let episodeDataFetched: EpisodeLinksGoGoAnime | EpisodeLinksAnimeWatch | null = null
     let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | undefined = undefined
+    const subtitleLanguage = cookies().get("subtitle_language")?.value || "English"
     let episodesList: EpisodeAnimeWatch[] | MediaEpisodes[] = []
     let videoUrlSrc: string | undefined = undefined
     let imdbEpisodesList: ImdbEpisode[] = []
@@ -191,6 +193,7 @@ export default async function WatchEpisode({ params, searchParams }: {
                         mediaInfo={mediaInfo}
                         videoInfo={{
                             urlSource: videoUrlSrc as string,
+                            subtitleLang: subtitleLanguage,
                             subtitlesList: episodeSubtitles,
                             currentLastStop: searchParams.t || undefined,
                             videoQualities: undefined,

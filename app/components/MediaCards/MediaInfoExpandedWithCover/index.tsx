@@ -49,7 +49,7 @@ export function Description({ description }: { description: string }) {
             {/* <input type='checkbox' className={styles.expand_description} /> */}
 
             {/* <span className={`${styles.paragrath_container} ${styles.watch_page_custom_line_limit}`}> */}
-            {parse(description) || "Description Not Available"}
+            <p>{parse(description) || "Description Not Available"}</p>
             {/* </span> */}
 
         </React.Fragment>
