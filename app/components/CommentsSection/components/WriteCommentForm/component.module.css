@@ -21,6 +21,7 @@
 
 #write_comment_container .img_container img {
     border-radius: 50%;
+    object-fit: cover;
 }
 
 #write_comment_container form label:first-child {

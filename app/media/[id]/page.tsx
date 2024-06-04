@@ -492,7 +492,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
                         <MediaCard.MediaImgLink
                           mediaId={media.node.mediaRecommendation.id}
-                          title={media.node.mediaRecommendation.title.romaji || media.node.mediaRecommendation.title.native}
+                          title={media.node.mediaRecommendation.title.userPreferred || media.node.mediaRecommendation.title.romaji}
                           formatOrType={media.node.mediaRecommendation.format}
                           url={media.node.mediaRecommendation.coverImage.large}
                         />
@@ -503,7 +503,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                         />
 
                         <MediaCard.LinkTitle
-                          title={media.node.mediaRecommendation.title.romaji || media.node.mediaRecommendation.title.native}
+                          title={media.node.mediaRecommendation.title.userPreferred || media.node.mediaRecommendation.title.romaji}
                           id={media.node.mediaRecommendation.id}
                         />
 

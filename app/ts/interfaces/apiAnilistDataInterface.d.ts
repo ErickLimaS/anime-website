@@ -2,6 +2,8 @@ export interface ApiDefaultResult {
     title: {
         romaji: string,
         native: string,
+        english: string,
+        userPreferred: string
     },
     startDate: {
         year: number,

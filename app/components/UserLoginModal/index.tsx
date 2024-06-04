@@ -101,7 +101,7 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
 
     const signWithAnilist = async () => {
 
-        window.location.href = ` https://anilist.co/api/v2/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_ANILIST_CLIENT_ID}&response_type=token`
+        window.location.href = `https://anilist.co/api/v2/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_ANILIST_CLIENT_ID}&response_type=token`
 
     }
 

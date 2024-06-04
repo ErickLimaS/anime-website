@@ -14,6 +14,7 @@ import { Auth, deleteUser, updateProfile } from 'firebase/auth'
 import Image from 'next/image'
 import { initFirebase } from '@/app/firebaseApp'
 import * as contantOptions from "./contantOptions"
+import anilistUsersActions from '@/app/api/anilistUsers'
 
 type SettingsTypes = {
     onClick?: MouseEventHandler<HTMLDivElement> | MouseEventHandler<HTMLButtonElement> | ((value: void) => void | PromiseLike<void>) | null | undefined,
@@ -71,6 +72,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
 
     const [currentLang, setCurrentLang] = useState<string | null>(null)
     const [currentSource, setCurrentSource] = useState<string | null>(null)
+    const [currentTitleLang, setCurrentTitleLang] = useState<string | null>(null)
     const [currentQuality, setCurrentQuality] = useState<string | null>(null)
     const [currentShowAdultContent, setCurrentShowAdultContent] = useState<boolean | null>(null)
     const [currentSkipIntroAndOutro, setCurrentSkipIntroAndOutro] = useState<boolean | null>(null)
@@ -102,6 +104,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
 
         await updateDoc(doc(db, 'users', user ? user.uid : `${userAnilist!.id}`),
             {
+                mediaTitlePreferredLang: form.mediaTitlePreferredLang.value,
                 videoSubtitleLanguage: form.language.value,
                 videoSource: form.source.value,
                 videoQuality: form.quality.value,
@@ -110,6 +113,14 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                 autoSkipIntroAndOutro: form.skipIntroAndOutro.checked
             }
         ).then(onClick as ((value: void) => void | PromiseLike<void>) | null | undefined)
+
+        if (userAnilist) {
+
+            await anilistUsersActions.handleMediaTitleLanguageSetting({ lang: form.mediaTitlePreferredLang.value })
+
+            await anilistUsersActions.handleAdultContentSetting({ isEnabled: `${form.showAdultContent.checked}` })
+
+        }
 
         setIsLoading(false)
         setWasSuccessfull(true)
@@ -196,6 +207,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
 
         setCurrentLang(await userDoc.get("videoSubtitleLanguage") as string || "English")
         setCurrentSource(await userDoc.get("videoSource") as string || "crunchyroll")
+        setCurrentTitleLang(await userDoc.get("mediaTitlePreferredLang") as string || "romaji")
         setCurrentQuality(await userDoc.get("videoQuality") as string || "auto")
         setCurrentShowAdultContent(await userDoc.get("showAdultContent") || false)
         setCurrentSkipIntroAndOutro(await userDoc.get("autoSkipIntroAndOutro") || false)
@@ -292,6 +304,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                                 disabled={user?.isAnonymous || anilistUser?.isUserFromAnilist}
                                                 defaultValue={user?.displayName || anilistUser?.name}
                                                 placeholder={user?.displayName || anilistUser?.name}
+                                                required
                                             ></input>
                                         </label>
 
@@ -463,10 +476,30 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                         <h5><span><SourceSvg alt="Globe" width={16} height={16} /></span> Source</h5>
 
                         <div>
+                            {currentTitleLang && (
+                                <>
+                                    <label>
+                                        Media Title Language
+                                        <select
+                                            name='mediaTitlePreferredLang'
+                                            defaultValue={currentTitleLang}
+                                        >
+                                            {contantOptions.titlePrefferedLanguages.map((option) => (
+                                                <option key={option.value} value={option.value}>
+                                                    {option.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                </>
+                            )}
+                        </div>
+
+                        <div>
                             {currentSource && (
                                 <>
                                     <label>
-                                        Select Main Source of Episodes
+                                        Main Source of Episodes
                                         <select
                                             name='source'
                                             defaultValue={currentSource}

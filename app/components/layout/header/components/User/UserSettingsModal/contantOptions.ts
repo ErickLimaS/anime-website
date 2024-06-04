@@ -60,6 +60,14 @@ export const imagesOptions = [
 
 ]
 
+export const titlePrefferedLanguages = [
+
+    { name: "Romaji (Shingeki no Kyojin)", value: "romaji" },
+    { name: "English (Attack on Titan)", value: "english" },
+    { name: "Native (進撃の巨人)", value: "native" }
+
+]
+
 export const sourcesOptions = [
 
     { name: "Crunchyroll", value: "crunchyroll" },

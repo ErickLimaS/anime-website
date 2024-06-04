@@ -258,7 +258,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         setCurrEpisodesSource(newSourceChose)
 
         const searchResultsListForCurrMedia = await optimizedFetchOnAniwatch({
-          textToSearch: mediaInfo.title.romaji,
+          textToSearch: mediaInfo.title.english,
           only: "search_list",
           format: mediaInfo.format,
           mediaTotalEpisodes: imdb.episodesList.length

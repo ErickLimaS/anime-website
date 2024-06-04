@@ -83,6 +83,8 @@ export function defaultApiQueryRequest(otherQueryFields?: unknown, otherMediasFi
                         title{
                                 romaji
                                 native
+                                english
+                                userPreferred
                             }
                             description(asHtml: true)
                             isAdult
@@ -250,6 +252,8 @@ export function mediaByIdQueryRequest(otherQueryFields?: unknown, otherMediasFie
                             title{
                                 romaji
                                 native
+                                english
+                                userPreferred
                             }
                             description(asHtml: true)
                             isAdult
@@ -519,6 +523,8 @@ export function mediaAiringApiQueryRequest(otherQueryFields?: unknown, otherMedi
                                 title {
                                     romaji,
                                     native
+                                    english
+                                    userPreferred
                                 }id
                                 coverImage{
                                     extraLarge

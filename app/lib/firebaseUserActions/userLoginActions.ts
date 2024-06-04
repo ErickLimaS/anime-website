@@ -63,6 +63,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
         episodesWatched: {},
         chaptersRead: {},
         videoSource: "gogoanime",
+        mediaTitlePreferredLang: "romaji",
         showAdultContent: userAnilist ? userAnilist.options.displayAdultContent : false,
         autoNextEpisode: true,
         autoSkipIntroAndOutro: false,

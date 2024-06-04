@@ -1,30 +1,30 @@
 import Axios from "axios";
 import { cache } from "react";
 import { BASE_ANILIST_URL } from "./anilistQueryConstants";
-import axiosRetry from "axios-retry";
 import { createNewUserDocument } from "../lib/firebaseUserActions/userLoginActions";
 
-async function getHeadersWithAuthorization({ accessToken }: { accessToken?: string }) {
+export async function getHeadersWithAuthorization({ accessToken }: { accessToken?: string }) {
+
+    if (accessToken) {
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+            'Accept': 'application/json',
+        }
+    }
 
     const { data } = await Axios({
-        url: `${window.location.origin}/api/anilist`,
+        url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`,
         method: "GET"
     })
 
     return {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken ? accessToken : data.access_token}`,
+        'Authorization': `Bearer ${data.access_token}`,
         'Accept': 'application/json',
     }
 
 }
-
-axiosRetry(Axios, {
-    retries: 2,
-    retryDelay: (retryAttempt) => retryAttempt * 2000,
-    retryCondition: (error) => error.response?.status == 400 || error.response?.status == 500 || error.response?.status == 503,
-    onRetry: (retryNumber) => console.log(`retry: ${retryNumber} ${retryNumber == 2 ? " - Last Attempt" : ""}`)
-})
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -191,5 +191,90 @@ export default {
         }
 
     }),
+
+    handleMediaTitleLanguageSetting: async ({ lang }: { lang?: string }) => {
+
+        try {
+
+            const setCookieResult = await Axios({
+                url: `${window.location.origin}/api/anilist/media-title-language`,
+                method: "POST",
+                data: { titleLanguage: lang }
+            })
+
+            const graphqlQuery = {
+                "query": `mutation ($lang: UserTitleLanguage) {
+                    UpdateUser (titleLanguage: $lang){
+                        options{
+                            titleLanguage
+                        }
+                    }
+                }`,
+                "variables": {
+                    'lang': lang?.toUpperCase()
+                }
+            }
+
+            const { data } = await Axios({
+                url: `${BASE_ANILIST_URL}`,
+                method: 'POST',
+                headers: await getHeadersWithAuthorization({}),
+                data: graphqlQuery
+            })
+
+            console.log(data)
+
+            return setCookieResult
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+    },
+
+    handleAdultContentSetting: async ({ isEnabled }: { isEnabled?: string }) => {
+
+        try {
+            const setAdultContentResult = await Axios({
+                url: `${window.location.origin}/api/anilist/adult-content`,
+                method: "POST",
+                data: { isAdultContentEnabled: isEnabled }
+            })
+
+            const graphqlQuery = {
+                "query": `mutation ($isEnabled: Boolean) {
+                    UpdateUser (displayAdultContent: $isEnabled){
+                        options{
+                            displayAdultContent
+                        }
+                    }
+                }`,
+                "variables": {
+                    'isEnabled': isEnabled == "true"
+                }
+            }
+
+            await Axios({
+                url: `${BASE_ANILIST_URL}`,
+                method: 'POST',
+                headers: await getHeadersWithAuthorization({}),
+                data: graphqlQuery
+            })
+
+            return setAdultContentResult
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+
+    },
 
 }
