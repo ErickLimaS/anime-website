@@ -61,3 +61,25 @@ export async function GET(request: NextRequest) {
     }
 
 }
+
+export async function DELETE() {
+
+    try {
+
+        cookies().delete("is_adult_content_enabled")
+
+        return NextResponse.json({
+            "message": "Success",
+            status: 202
+        })
+
+    }
+    catch (err) {
+
+        return NextResponse.json({
+            "message": err
+        })
+
+    }
+
+}

@@ -40,7 +40,6 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 ## :pushpin: Under Development
 
 - [ ] `Many Bugs Fixes (Dub Option, styles, etc)`
-- [ ] `Choose Media Titles Language`
 - [ ] `Favourites Page Sections: Finished, Dropped, OnGoing, Later`
 
 ## :heavy_check_mark: Tecnologies Used

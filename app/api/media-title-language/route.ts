@@ -61,3 +61,24 @@ export async function GET(request: NextRequest) {
     }
 
 }
+
+export async function DELETE() {
+
+    try {
+
+        cookies().delete("media_title_language")
+
+        return NextResponse.json({
+            "message": "Success",
+            status: 202
+        })
+
+    }
+    catch (err) {
+
+        return NextResponse.json({
+            "message": err
+        })
+
+    }
+}

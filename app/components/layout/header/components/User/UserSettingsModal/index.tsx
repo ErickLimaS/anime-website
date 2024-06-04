@@ -15,6 +15,7 @@ import Image from 'next/image'
 import { initFirebase } from '@/app/firebaseApp'
 import * as contantOptions from "./contantOptions"
 import anilistUsersActions from '@/app/api/anilistUsers'
+import userSettingsActions from '@/app/api/userSettingsActions'
 
 type SettingsTypes = {
     onClick?: MouseEventHandler<HTMLDivElement> | MouseEventHandler<HTMLButtonElement> | ((value: void) => void | PromiseLike<void>) | null | undefined,
@@ -119,6 +120,13 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
             await anilistUsersActions.handleMediaTitleLanguageSetting({ lang: form.mediaTitlePreferredLang.value })
 
             await anilistUsersActions.handleAdultContentSetting({ isEnabled: `${form.showAdultContent.checked}` })
+
+        }
+        else {
+
+            await userSettingsActions.setMediaTitleLanguageCookie({ lang: form.mediaTitlePreferredLang.value })
+
+            await userSettingsActions.setAdultContentCookie({ isEnabled: `${form.showAdultContent.checked}` })
 
         }
 

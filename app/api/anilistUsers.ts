@@ -2,6 +2,7 @@ import Axios from "axios";
 import { cache } from "react";
 import { BASE_ANILIST_URL } from "./anilistQueryConstants";
 import { createNewUserDocument } from "../lib/firebaseUserActions/userLoginActions";
+import userSettingsActions from "./userSettingsActions";
 
 export async function getHeadersWithAuthorization({ accessToken }: { accessToken?: string }) {
 
@@ -196,11 +197,7 @@ export default {
 
         try {
 
-            const setCookieResult = await Axios({
-                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist/media-title-language`,
-                method: "POST",
-                data: { titleLanguage: lang }
-            })
+            const cookieSetResult = await userSettingsActions.setMediaTitleLanguageCookie({ lang: lang })
 
             const graphqlQuery = {
                 "query": `mutation ($lang: UserTitleLanguage) {
@@ -222,7 +219,7 @@ export default {
                 data: graphqlQuery
             })
 
-            return setCookieResult
+            return cookieSetResult
         }
         catch (err) {
 
@@ -236,11 +233,8 @@ export default {
     handleAdultContentSetting: async ({ isEnabled }: { isEnabled?: string }) => {
 
         try {
-            const setAdultContentResult = await Axios({
-                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist/adult-content`,
-                method: "POST",
-                data: { isAdultContentEnabled: isEnabled }
-            })
+
+            const cookieSetResult = await userSettingsActions.setAdultContentCookie({ isEnabled: isEnabled })
 
             const graphqlQuery = {
                 "query": `mutation ($isEnabled: Boolean) {
@@ -262,7 +256,7 @@ export default {
                 data: graphqlQuery
             })
 
-            return setAdultContentResult
+            return cookieSetResult
 
         }
         catch (err) {

@@ -17,7 +17,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import UserSettingsModal from '../UserSettingsModal'
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks'
-import { removeUserInfo } from '@/app/lib/redux/features/manageUserData'
+import { removeCookiesAndRefreshPage, removeUserInfo } from '@/app/lib/redux/features/manageUserData'
 import { useParams } from 'next/navigation'
 import { handleAnilistUserLoginWithRedux } from '@/app/lib/user/anilistUserLoginOptions'
 
@@ -76,6 +76,8 @@ function UserSideMenu() {
 
             return
         }
+
+        await removeCookiesAndRefreshPage()
 
         auth.signOut()
 

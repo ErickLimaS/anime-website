@@ -9,11 +9,17 @@ const initialState: { value: UserAnilist | null } = {
 
 }
 
-async function removeCookieAndRefreshPage() {
+export async function removeCookiesAndRefreshPage() {
 
-    const res = await axios.delete(`${window.location.origin}/api/anilist`)
+    const removeUserCookie = await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`)
+    const removeAdultCookie = await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`)
+    const removeLanguageCookie = await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`)
 
-    if (res) window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/`
+    if (removeUserCookie && removeAdultCookie && removeLanguageCookie) {
+
+        window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/`
+
+    }
 
 }
 
@@ -32,7 +38,7 @@ export const userInfo = createSlice({
 
             state.value = null
 
-            removeCookieAndRefreshPage()
+            removeCookiesAndRefreshPage()
 
         },
     }

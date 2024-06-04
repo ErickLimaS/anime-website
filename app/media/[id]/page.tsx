@@ -652,7 +652,7 @@ function HeadingTextAndMediaLogo({ imdbMediaLogos, preferredLanguage, mediaTitle
   imdbMediaLogos: ImdbMediaInfo["logos"], mediaTitles: ApiMediaResults["title"], preferredLanguage?: string
 }) {
 
-  const userPreferredTitleLanguage = preferredLanguage ? mediaTitles.userPreferred : null
+  const userPreferredTitleLanguage = preferredLanguage ? (mediaTitles as any)[preferredLanguage.toLowerCase()] : null
 
   return (
     <React.Fragment>
