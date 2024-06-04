@@ -16,6 +16,7 @@ import SvgFilter from "@/public/assets/filter-right.svg"
 import ShowUpLoginPanelAnimated from '../UserLoginModal/animatedVariant';
 import WriteCommentFormContainer from './components/WriteCommentForm';
 import { useAppSelector } from '@/app/lib/redux/hooks';
+import { UserComment } from '@/app/ts/interfaces/firestoreDataInterface';
 
 type CommentsSectionTypes = {
     mediaInfo: ApiMediaResults | ApiDefaultResult,
@@ -181,7 +182,7 @@ export default function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, e
                                     commentsList.slice(0, commentsSliceRange).map((comment) => (
                                         <CommentContainer
                                             key={comment.createdAt}
-                                            comment={comment as Comment}
+                                            comment={comment as UserComment}
                                             mediaId={mediaInfo.id}
                                             isLoadingHook={isLoading}
                                             loadComments={getCommentsForCurrMedia}

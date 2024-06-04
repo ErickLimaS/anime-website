@@ -15,6 +15,7 @@ import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import Filter from "bad-words"
 import { useAppSelector } from "@/app/lib/redux/hooks"
+import { ReplyComment } from "@/app/ts/interfaces/firestoreDataInterface"
 
 type CommentFormTypes = {
     isAReply?: boolean,
