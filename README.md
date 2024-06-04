@@ -50,6 +50,7 @@ Front-end (on netlify.com):
 - `Next.js`
 - `TypeScript`
 - `Axios`
+- `Redux`
 - `Firebase`
 - `GraphQL`
 - `Framer Motion`
@@ -60,8 +61,8 @@ Front-end (on netlify.com):
 
 Back-End:
 
-- `Firebase`
-- `Next.js API Routes`
+- `Firebase: Firestore Database`
+- `Next.js (API) Route Handler`
 
 ## :computer: How Can I Run It?
 
