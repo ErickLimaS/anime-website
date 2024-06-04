@@ -13,6 +13,7 @@ import { motion } from 'framer-motion'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { useAppSelector } from '@/app/lib/redux/hooks'
+import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
 
 export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
