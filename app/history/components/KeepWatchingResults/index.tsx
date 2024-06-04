@@ -9,29 +9,20 @@ import { initFirebase } from '@/app/firebaseApp'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { handleAnilistUserLoginWithRedux } from '@/app/lib/user/anilistUserLoginOptions'
+import { useAppSelector } from '@/app/lib/redux/hooks'
 
 function KeepWatchingResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
 
     const [keepWatchingList, setKeepWatchingList] = useState<KeepWatchingItem[]>([])
     const [filteredKeepWatchingList, setFilteredKeepWatchingList] = useState<KeepWatchingItem[]>([])
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
     const searchParams = useSearchParams()
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     useEffect(() => { setFilteredKeepWatchingList([]) }, [searchParams.size == 0])
 

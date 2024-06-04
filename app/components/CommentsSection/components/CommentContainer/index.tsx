@@ -23,7 +23,7 @@ import WriteCommentFormContainer from '../WriteCommentForm';
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { AnimatePresence, motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions';
+import { useAppSelector } from '@/app/lib/redux/hooks';
 
 type CommentComponentTypes = {
     comment: Comment | ReplyComment,
@@ -60,22 +60,12 @@ export default function Comment({
 
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     useEffect(() => { getCommentCurrLikesAndDislikes() }, [user, anilistUser, comment, mediaId])
     useEffect(() => { getCommentCurrLikesAndDislikes() }, [commentData == null])

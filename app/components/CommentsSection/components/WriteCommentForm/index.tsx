@@ -2,7 +2,7 @@ import styles from "./component.module.css"
 import { initFirebase } from "@/app/firebaseApp"
 import { ApiDefaultResult, ApiMediaResults } from "@/app/ts/interfaces/apiAnilistDataInterface"
 import { getAuth } from "firebase/auth"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import Image from 'next/image';
 import {
@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import SvgCheck from "@/public/assets/check-circle-fill.svg"
 import Filter from "bad-words"
-import { checkUserIsLoggedWithAnilist } from "@/app/lib/user/anilistUserLoginOptions"
+import { useAppSelector } from "@/app/lib/redux/hooks"
 
 type CommentFormTypes = {
     isAReply?: boolean,
@@ -38,23 +38,13 @@ export default function WriteCommentFormContainer({
     const [currTextLength, setCurrTextLength] = useState<number>(0)
     const [inputCharLimit] = useState<number>(400)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
 
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     function isCommentTextValid(text: string) {
 

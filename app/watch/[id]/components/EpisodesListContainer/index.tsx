@@ -14,7 +14,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { convertFromUnix } from '@/app/lib/formatDateUnix'
 import { useSearchParams } from 'next/navigation'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { useAppSelector } from '@/app/lib/redux/hooks'
 
 type ComponentTypes = {
     sourceName: SourceType["source"],
@@ -33,7 +33,7 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
         episodeTitle: string;
     }[]>()
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
@@ -41,16 +41,6 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
     const db = getFirestore(initFirebase())
 
     const searchParams = useSearchParams()
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     useEffect(() => { if (user || anilistUser) getEpisodesWatchedList() }, [user, anilistUser, mediaId, sourceName])
 

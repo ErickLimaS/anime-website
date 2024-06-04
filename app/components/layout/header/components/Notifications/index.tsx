@@ -19,7 +19,7 @@ import Link from 'next/link'
 import { convertFromUnix, getCurrentUnixDate } from '@/app/lib/formatDateUnix'
 import anilist from '@/app/api/anilistMedias'
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks'
 
 function NotificationsContainer() {
 
@@ -39,7 +39,7 @@ function NotificationsContainer() {
     const [hasNewNotifications, setHasNewNotifications] = useState<boolean>(false)
     const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
@@ -57,16 +57,6 @@ function NotificationsContainer() {
         doesNotificationsIsOnLocalStorage()
 
     }, [user])
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     function isCurrDateBiggerThanLastUpdate() {
 

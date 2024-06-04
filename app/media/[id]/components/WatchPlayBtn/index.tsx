@@ -12,7 +12,7 @@ import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/d
 import { motion } from 'framer-motion'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { useAppSelector } from '@/app/lib/redux/hooks'
 
 export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
@@ -25,7 +25,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
     const [sourceName, setSourceName] = useState<string>()
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
@@ -33,16 +33,6 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
     const db = getFirestore(initFirebase());
 
     const router = useRouter()
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     useEffect(() => {
 

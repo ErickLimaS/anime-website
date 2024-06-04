@@ -27,7 +27,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface"
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
-import { checkUserIsLoggedWithAnilist } from "@/app/lib/user/anilistUserLoginOptions"
+import { useAppSelector } from "@/app/lib/redux/hooks"
 
 type VideoPlayerType = {
     mediaSource: SourceType["source"],
@@ -79,7 +79,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
     const [enableAutoSkipIntroAndOutro, setEnableAutoSkipIntroAndOutro] = useState<boolean>(false)
     const [enableAutoNextEpisode, setEnableAutoNextEpisode] = useState<boolean>(false)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
@@ -89,16 +89,6 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
     const router = useRouter()
 
     const searchParams = useSearchParams()
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     useEffect(() => {
 

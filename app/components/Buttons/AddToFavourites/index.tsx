@@ -12,7 +12,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { motion } from 'framer-motion';
 import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 import { updateUserFavouriteMedias } from '@/app/lib/firebaseUserActions/userDocUpdateOptions'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { useAppSelector } from '@/app/lib/redux/hooks'
 
 export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDefaultResult, svgOnlyColor?: string, children?: React.ReactNode[] }) {
 
@@ -21,7 +21,7 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
 
@@ -31,22 +31,12 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
 
     useEffect(() => {
 
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
-
-    useEffect(() => {
-
         if ((!user && !anilistUser) || loading) return
 
         setIsUserModalOpen(false)
         isMediaOnUserDoc()
 
-    }, [user, anilistUser])
+    }, [user, anilistUser, loading])
 
     // WHEN BUTTON IS CLICKED, RUN FUNCTION TO ADD OR REMOVE MEDIA FROM FIRESTORE
     async function handleMediaOnUserDoc() {

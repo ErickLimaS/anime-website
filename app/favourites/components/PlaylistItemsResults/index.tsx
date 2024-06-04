@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import { User, getAuth } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSearchParams } from 'next/navigation'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
@@ -9,11 +9,11 @@ import { initFirebase } from '@/app/firebaseApp'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { useAppSelector } from '@/app/lib/redux/hooks'
 
 function PlaylistItemsResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
@@ -21,17 +21,7 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
     const [userBookmarksList, setUserBookmarksList] = useState<BookmarkItem[]>([])
     const [userFilteredBookmarks, setUserFilteredBookmarks] = useState<BookmarkItem[]>([])
 
-    const searchParams = useSearchParams();
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
+    const searchParams = useSearchParams()
 
     useEffect(() => { setUserFilteredBookmarks([]) }, [searchParams.size == 0])
 

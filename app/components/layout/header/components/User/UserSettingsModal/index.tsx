@@ -19,7 +19,7 @@ import anilistUsersActions from '@/app/api/anilistUsers'
 type SettingsTypes = {
     onClick?: MouseEventHandler<HTMLDivElement> | MouseEventHandler<HTMLButtonElement> | ((value: void) => void | PromiseLike<void>) | null | undefined,
     auth: Auth,
-    anilistUser?: UserAnilist,
+    anilistUser?: UserAnilist | null,
     newUser?: boolean
 }
 
@@ -57,7 +57,7 @@ const framerMotionBtnVariants = {
 function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsTypes) {
 
     const [user] = useAuthState(auth)
-    const [userAnilist] = useState<UserAnilist | undefined>(anilistUser)
+    const [userAnilist] = useState<UserAnilist | undefined | null>(anilistUser)
 
     const [isLoading, setIsLoading] = useState(false)
     const [wasSuccessfull, setWasSuccessfull] = useState<boolean | null>(null)

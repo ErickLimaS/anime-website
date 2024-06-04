@@ -1,39 +1,32 @@
 import anilistUsers from "@/app/api/anilistUsers"
 import axios from "axios"
-import { Dispatch, SetStateAction } from "react"
+import { addUserInfo } from "@/app/lib/redux/features/manageUserData"
+import { makeStore } from "../redux/store"
 
-export async function checkUserIsLoggedWithAnilist({ setUserDataHook }: { setUserDataHook: Dispatch<SetStateAction<UserAnilist | undefined>> }) {
+export const userCustomStore = makeStore()
 
-    if (typeof window !== 'undefined') {
+export async function handleAnilistUserLoginWithRedux() {
 
-        const anilistUserData = localStorage.getItem("anilist-user")
+    const anilistUrlAccessInfo = window.location.hash
 
-        if (anilistUserData) {
+    const accessToken = anilistUrlAccessInfo.slice(anilistUrlAccessInfo.search(/\baccess_token=\b/), anilistUrlAccessInfo.search(/\b&token_type\b/)).slice(13)
+    const tokenType = anilistUrlAccessInfo.slice(anilistUrlAccessInfo.search(/\btoken_type=\b/), anilistUrlAccessInfo.search(/\b&expires_in\b/)).slice(11)
+    const expiresIn = anilistUrlAccessInfo.slice(anilistUrlAccessInfo.search(/\bexpires_in=\b/)).slice(11)
 
-            setUserDataHook(JSON.parse(anilistUserData))
+    if (anilistUrlAccessInfo) {
+        axios.post(`${window.location.origin}/api/anilist`, {
+            accessToken: accessToken,
+            tokenType: tokenType,
+            expiresIn: expiresIn
+        })
+    }
 
-            return
+    const userData = await anilistUsers.getCurrUserData({ accessToken: accessToken })
 
-        }
+    if (userData) {
+        localStorage.setItem("anilist-user", JSON.stringify(userData))
 
-        const anilistAccessInfo = window.location.hash
-
-        const accessToken = anilistAccessInfo.slice(anilistAccessInfo.search(/\baccess_token=\b/), anilistAccessInfo.search(/\b&token_type\b/)).slice(13)
-        const tokenType = anilistAccessInfo.slice(anilistAccessInfo.search(/\btoken_type=\b/), anilistAccessInfo.search(/\b&expires_in\b/)).slice(11)
-        const expiresIn = anilistAccessInfo.slice(anilistAccessInfo.search(/\bexpires_in=\b/)).slice(11)
-
-        if (anilistAccessInfo) {
-            axios.post(`${window.location.origin}/api/anilist`, {
-                accessToken: accessToken,
-                tokenType: tokenType,
-                expiresIn: expiresIn
-            })
-        }
-
-        const userData = await anilistUsers.getCurrUserData({ accessToken: accessToken })
-
-        setUserDataHook(userData as UserAnilist)
-
+        userCustomStore.dispatch(addUserInfo(userData))
     }
 
 }

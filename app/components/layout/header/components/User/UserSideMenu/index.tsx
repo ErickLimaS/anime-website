@@ -16,9 +16,10 @@ import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 import UserSettingsModal from '../UserSettingsModal'
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
+import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks'
+import { removeUserInfo } from '@/app/lib/redux/features/manageUserData'
 import { useParams } from 'next/navigation'
-import axios from 'axios'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { handleAnilistUserLoginWithRedux } from '@/app/lib/user/anilistUserLoginOptions'
 
 const framerMotionShowUp = {
 
@@ -45,31 +46,33 @@ function UserSideMenu() {
     const [isUserLoginOpen, setIsUserLoginOpen] = useState<boolean>(false)
     const [isUserSettingsOpen, setIsUserSettingsOpen] = useState<boolean>(false)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+    const dispatch = useAppDispatch()
+
+    const params = useParams()
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
-
-    const params = useParams()
 
     useEffect(() => {
 
         if (typeof window !== 'undefined') {
 
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
+            if ((!user && !loading) && !anilistUser) {
+
+                handleAnilistUserLoginWithRedux()
+
+            }
 
         }
 
-    }, [params])
+    }, [user, loading, params])
 
     async function logUserOut() {
 
         if (anilistUser) {
-            localStorage.removeItem("anilist-user")
 
-            setAnilistUser(undefined)
-
-            axios.delete(`${window.location.origin}/api/anilist`)
+            dispatch(removeUserInfo(undefined))
 
             return
         }

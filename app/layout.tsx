@@ -6,6 +6,7 @@ import Footer from "./components/layout/footer";
 import NextTopLoader from 'nextjs-toploader';
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
+import StoreProvider from "./lib/redux/StoreProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,19 +29,21 @@ export default function RootLayout({
 
       <body className={inter.className}>
 
-        <Header />
+        <StoreProvider>
+          <Header />
 
-        <NextTopLoader
-          color="var(--brand-color)"
-          showSpinner={false}
-        />
+          <NextTopLoader
+            color="var(--brand-color)"
+            showSpinner={false}
+          />
 
-        <Analytics />
+          <Analytics />
 
-        {children}
+          {children}
 
-        <Footer />
+          <Footer />
 
+        </StoreProvider>
       </body>
     </html>
   );
