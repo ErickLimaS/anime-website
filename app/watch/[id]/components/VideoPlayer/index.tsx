@@ -27,7 +27,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface"
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
-import { checkUserIsLoggedWithAnilist } from "@/app/lib/user/anilistUserLoginOptions"
+import { useAppSelector } from "@/app/lib/redux/hooks"
+import { KeepWatchingItem } from "@/app/ts/interfaces/firestoreDataInterface"
 
 type VideoPlayerType = {
     mediaSource: SourceType["source"],
@@ -36,6 +37,7 @@ type VideoPlayerType = {
     videoInfo: {
         urlSource: string,
         currentLastStop?: string,
+        subtitleLang: string,
         subtitlesList?: EpisodeLinksAnimeWatch["tracks"] | undefined,
         videoQualities?: {
             url: string,
@@ -79,7 +81,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
     const [enableAutoSkipIntroAndOutro, setEnableAutoSkipIntroAndOutro] = useState<boolean>(false)
     const [enableAutoNextEpisode, setEnableAutoNextEpisode] = useState<boolean>(false)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
@@ -89,16 +91,6 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
     const router = useRouter()
 
     const searchParams = useSearchParams()
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     useEffect(() => {
 
@@ -138,16 +130,16 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
         }
 
-        async function getUserPreferredLanguage(userDoc: DocumentSnapshot<DocumentData, DocumentData> | null) {
+        async function getUserPreferredLanguage() {
 
-            let subtitleLanguage = await userDoc?.get("videoSubtitleLanguage") || "English"
+            let subtitleLanguage = videoInfo.subtitleLang
 
             let subtitleListMapped: SubtitlesType[] = []
 
             // get user language and filter through the available subtitles to this media
             videoInfo.subtitlesList?.map((subtitle) => {
 
-                function itsTheDefaultLang(subtitleLabel: string, defaultSubtitle: boolean) {
+                function itsTheDefaultLang(subtitleLabel: string) {
 
                     const isChoseSubtitle = subtitleLabel?.toLowerCase().includes(subtitleLanguage.toLowerCase())
 
@@ -162,7 +154,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
                         kind: subtitle.kind,
                         srcLang: subtitle.label,
                         src: subtitle.file,
-                        default: itsTheDefaultLang(subtitle.label, subtitle.default),
+                        default: itsTheDefaultLang(subtitle.label),
                         label: subtitle.label,
                         type: subtitle.kind
                     }
@@ -193,7 +185,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
         }
 
-        getUserPreferredLanguage(userDoc)
+        getUserPreferredLanguage()
 
         if (!userDoc) {
 
@@ -386,7 +378,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
                 autoPlay
                 src={videoUrl}
                 className={styles.container}
-                title={mediaInfo.title.romaji}
+                title={mediaInfo.title.userPreferred}
                 currentTime={episodeLastStop}
                 onVolumeChange={(e) => localStorage.setItem("videoPlayerVolume", `${e.volume}`)}
                 volume={Number(localStorage.getItem("videoPlayerVolume")) || 0.5}

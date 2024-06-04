@@ -9,7 +9,8 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import KeepWatchingEpisodeInfo from './components/KeepWatchingEpisodeInfo'
 import { SwiperSlide } from 'swiper/react'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { useAppSelector } from '@/app/lib/redux/hooks'
+import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
 
 const framerMotionVariants = {
     initial: {
@@ -27,7 +28,7 @@ const framerMotionVariants = {
 
 function KeepWatchingSection() {
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
@@ -35,16 +36,6 @@ function KeepWatchingSection() {
     const db = getFirestore(initFirebase());
 
     const [watchingList, setWatchingList] = useState<KeepWatchingItem[]>([])
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     useEffect(() => { if (user || anilistUser) getWatchingList() }, [user, anilistUser])
 

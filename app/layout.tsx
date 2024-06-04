@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "./components/layout/header";
-import Footer from "./components/layout/footer";
+import Header from "./layout/header";
+import Footer from "./layout/footer";
 import NextTopLoader from 'nextjs-toploader';
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
+import StoreProvider from "./lib/redux/StoreProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,18 +29,22 @@ export default function RootLayout({
 
       <body className={inter.className}>
 
-        <Header />
-
-        <NextTopLoader
-          color="var(--brand-color)"
-          showSpinner={false}
-        />
-
         <Analytics />
 
-        {children}
+        <StoreProvider>
+          
+          <Header />
 
-        <Footer />
+          <NextTopLoader
+            color="var(--brand-color)"
+            showSpinner={false}
+          />
+
+          {children}
+
+          <Footer />
+
+        </StoreProvider>
 
       </body>
     </html>

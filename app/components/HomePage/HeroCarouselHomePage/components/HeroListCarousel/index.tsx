@@ -7,17 +7,17 @@ import { AnimatePresence, motion } from 'framer-motion'
 function ListItemHeroCarousel({ animeInfo, handleFunction }: { animeInfo: ApiDefaultResult, handleFunction?: any }) {
     return (
         <li className={styles.container}>
-            <div title={`Watch ${animeInfo.title.romaji}`} onClick={handleFunction}>
+            <div title={`Watch ${animeInfo.title.userPreferred}`} onClick={handleFunction}>
                 <Image
                     src={animeInfo.bannerImage}
-                    alt={`Cover for ${animeInfo.title.romaji}`}
+                    alt={`Cover for ${animeInfo.title.userPreferred}`}
                     fill
                     sizes='(max-width: 1199px) 75vw, 25vw'
                 />
                 <AnimatePresence>
                     <motion.span initial={{ height: 0 }} animate={{ height: "100%", transition: { duration: 0.6 } }} exit={{ height: 0 }}>
                         <span className={styles.title}>
-                            {animeInfo.title.romaji || "Not Available"}
+                            {animeInfo.title.userPreferred || "Not Available"}
                         </span>
                     </motion.span>
                 </AnimatePresence>

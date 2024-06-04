@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse, } from "next/server";
 
 // HANDLES ACCESS TOKEN FOR ANILIST USERS
-
 export async function POST(request: NextRequest) {
 
     try {
@@ -41,12 +40,20 @@ export async function GET(request: NextRequest) {
 
     try {
 
-        const anilistAcessTokenData = JSON.parse(request.cookies.get("access_token")?.value as string)
+        const anilistAccessTokenData = request.cookies.get("access_token") ?
+            JSON.parse(request.cookies.get("access_token")!.value).accessToken : null
+
+        if (anilistAccessTokenData) {
+            return NextResponse.json({
+                "message": "Success",
+                "access_token": anilistAccessTokenData,
+                status: 200
+            })
+        }
 
         return NextResponse.json({
-            "message": "Success",
-            "access_token": anilistAcessTokenData.accessToken,
-            status: 200
+            "message": "No Cookie Found",
+            status: 404
         })
 
     }

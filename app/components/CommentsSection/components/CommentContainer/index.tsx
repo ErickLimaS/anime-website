@@ -23,10 +23,11 @@ import WriteCommentFormContainer from '../WriteCommentForm';
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { AnimatePresence, motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions';
+import { useAppSelector } from '@/app/lib/redux/hooks';
+import { ReplyComment, UserComment } from '@/app/ts/interfaces/firestoreDataInterface';
 
 type CommentComponentTypes = {
-    comment: Comment | ReplyComment,
+    comment: UserComment | ReplyComment,
     mediaId: number,
     isLoadingHook: boolean,
     setIsLoadingHook: React.Dispatch<React.SetStateAction<boolean>>,
@@ -55,27 +56,17 @@ export default function Comment({
 
     const [isSpoiler, setIsSpoiler] = useState<boolean>(comment.isSpoiler)
 
-    const [commentData, setCommentData] = useState<Comment>()
+    const [commentData, setCommentData] = useState<UserComment>()
     const [commentDocId, setCommentDocId] = useState<string | DocumentData>()
 
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
-
-    useEffect(() => {
-
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
 
     useEffect(() => { getCommentCurrLikesAndDislikes() }, [user, anilistUser, comment, mediaId])
     useEffect(() => { getCommentCurrLikesAndDislikes() }, [commentData == null])
@@ -104,7 +95,7 @@ export default function Comment({
 
         return {
             commentDocId: commentDocId,
-            commentDocData: commentDocData as Comment | DocumentData
+            commentDocData: commentDocData as UserComment | DocumentData
         }
 
     }
@@ -161,7 +152,7 @@ export default function Comment({
 
                 const queryUpdatedComment = await getCommentDoc()
 
-                setCommentData(queryUpdatedComment!.commentDocData as Comment)
+                setCommentData(queryUpdatedComment!.commentDocData as UserComment)
 
                 setWasLiked(isActionSetToTrue)
                 if (wasDisliked) setWasDisliked(isActionSetToTrue ? false : true)
@@ -209,7 +200,7 @@ export default function Comment({
 
                 const queryDislikesUpdate = await getCommentDoc()
 
-                setCommentData(queryDislikesUpdate?.commentDocData as Comment)
+                setCommentData(queryDislikesUpdate?.commentDocData as UserComment)
 
                 setWasDisliked(isActionSetToTrue)
                 if (isLiked) setWasLiked(isActionSetToTrue ? false : true)
@@ -246,7 +237,7 @@ export default function Comment({
 
         setCommentDocId(docQuery?.commentDocId)
 
-        setCommentData(docQuery?.commentDocData as Comment)
+        setCommentData(docQuery?.commentDocData as UserComment)
 
         if (!user && !anilistUser) return // bellow is just to check curr user interactions with this comment
 
@@ -410,7 +401,7 @@ export default function Comment({
     )
 }
 
-function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike" | "reply", isBtnActive: boolean, commentData: Comment }) {
+function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike" | "reply", isBtnActive: boolean, commentData: UserComment }) {
 
     switch (type) {
 

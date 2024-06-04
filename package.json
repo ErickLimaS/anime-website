@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.5",
     "@vercel/analytics": "^1.2.2",
     "@vidstack/react": "^1.10.9",
     "axios": "^1.6.6",
@@ -18,7 +19,7 @@
     "framer-motion": "^11.0.3",
     "hls.js": "^1.5.7",
     "html-react-parser": "^5.1.1",
-    "next": "14.1.0",
+    "next": "^14.2.3",
     "nextjs-toploader": "^1.6.6",
     "popmotion": "^11.0.5",
     "react": "^18",
@@ -26,6 +27,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-pageflip": "^2.0.3",
     "react-paginate": "^8.2.0",
+    "react-redux": "^9.1.2",
     "sharp": "^0.33.3",
     "swiper": "^11.0.6"
   },

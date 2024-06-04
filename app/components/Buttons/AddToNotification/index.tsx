@@ -18,7 +18,7 @@ import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilis
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { motion } from 'framer-motion';
 import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions'
+import { useAppSelector } from '@/app/lib/redux/hooks'
 
 function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult | ApiMediaResults }) {
 
@@ -27,7 +27,7 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
     const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
 
-    const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const auth = getAuth()
 
@@ -37,22 +37,12 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
     useEffect(() => {
 
-        if (typeof window !== 'undefined') {
-
-            checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-        }
-
-    }, [])
-
-    useEffect(() => {
-
         if ((!user && !anilistUser) || loading) return
 
         setIsUserModalOpen(false)
         isUserAssignedToThisMediaNotications()
 
-    }, [user, anilistUser])
+    }, [user, anilistUser, loading])
 
     const isMediaStillReleasing = mediaInfo.nextAiringEpisode?.airingAt ?? false
 
@@ -241,9 +231,9 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
                     disabled={isLoading}
                     data-added={wasAddedToNotifications}
                     title={wasAddedToNotifications ?
-                        `Remove ${mediaInfo.title && mediaInfo.title?.romaji} From Notifications`
+                        `Remove ${mediaInfo.title && mediaInfo.title?.userPreferred} From Notifications`
                         :
-                        `Get Notified When ${mediaInfo.title && mediaInfo.title?.romaji} Get a New Episode`
+                        `Get Notified When ${mediaInfo.title && mediaInfo.title?.userPreferred} Get a New Episode`
                     }
                 >
 

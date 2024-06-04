@@ -1,6 +1,6 @@
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import React from 'react'
-import anilist from "@/app/api/anilist"
+import anilist from "@/app/api/anilistMedias"
 import styles from "./page.module.css"
 import Link from 'next/link'
 import Image from 'next/image'
@@ -31,7 +31,7 @@ export const revalidate = 43200 // revalidate cached data every 12 hours
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
 
-  const mediaData = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
+  const mediaData = await anilist.getMediaInfo({ id: params.id, accessToken: headers().get("Authorization")?.slice(7) }) as ApiMediaResults
 
   return {
     title: `${mediaData.title.romaji || mediaData.title.native} | AniProject`,
@@ -40,14 +40,18 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 
 }
 
-async function MediaPage({ params }: { params: { id: number } }) {
+export default async function MediaPage({ params, searchParams }: { params: { id: number }, searchParams: { lang?: string } }) {
 
-  const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
+  const mediaInfo = await anilist.getMediaInfo({ id: params.id, accessToken: headers().get("Authorization")?.slice(7) }) as ApiMediaResults
 
   const isOnMobileScreen = checkDeviceIsMobile(headers()) || false
 
   // GET MEDIA INFO ON IMDB
-  const imdbMediaInfo = await getMediaInfo({ search: true, seachTitle: mediaInfo.title.romaji, releaseYear: mediaInfo.startDate.year }) as ImdbMediaInfo
+  const imdbMediaInfo = await getMediaInfo({
+    search: true,
+    seachTitle: mediaInfo.title.english,
+    releaseYear: mediaInfo.startDate.year
+  }) as ImdbMediaInfo
 
   function getCrunchyrollEpisodes() {
 
@@ -143,39 +147,17 @@ async function MediaPage({ params }: { params: { id: number } }) {
       <div
         id={styles.banner_background_container}
         style={{ background: bcgImgBasedOnScreenDisplay() }}
-      >
-      </div>
+      />
 
       <div id={styles.media_info_container} className={(imdbMediaInfo?.logos && imdbMediaInfo?.logos[0]) ? `${styles.custom_position}` : ``}>
 
         <section id={styles.media_title_container}>
-          {(imdbMediaInfo && imdbMediaInfo?.logos.length > 0) ? (
-            <h1>
-              {(mediaInfo.title?.romaji).toUpperCase() || mediaInfo.title.native}
-            </h1>
-          ) : (
-            <small>
-              {mediaInfo.title.native}
-            </small>
-          )}
 
-          {(imdbMediaInfo?.logos.length > 0) ? (
-            <div
-              className={styles.heading_img_container}
-              style={{ aspectRatio: imdbMediaInfo.logos[0]?.aspectRatio }}
-            >
-              <Image
-                src={imdbMediaInfo.logos[0]?.url}
-                alt={mediaInfo.title.romaji}
-                fill
-                sizes='(max-width: 520px) 100%, 280px'
-              />
-            </div>
-          ) : (
-            <h1 id={styles.heading_title}>
-              {(mediaInfo.title?.romaji).toUpperCase()}
-            </h1>
-          )}
+          <HeadingTextAndMediaLogo
+            imdbMediaLogos={imdbMediaInfo?.logos}
+            mediaTitles={mediaInfo.title}
+            preferredLanguage={searchParams.lang}
+          />
 
           <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>
 
@@ -510,7 +492,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
 
                         <MediaCard.MediaImgLink
                           mediaId={media.node.mediaRecommendation.id}
-                          title={media.node.mediaRecommendation.title.romaji || media.node.mediaRecommendation.title.native}
+                          title={media.node.mediaRecommendation.title.userPreferred || media.node.mediaRecommendation.title.romaji}
                           formatOrType={media.node.mediaRecommendation.format}
                           url={media.node.mediaRecommendation.coverImage.large}
                         />
@@ -521,7 +503,7 @@ async function MediaPage({ params }: { params: { id: number } }) {
                         />
 
                         <MediaCard.LinkTitle
-                          title={media.node.mediaRecommendation.title.romaji || media.node.mediaRecommendation.title.native}
+                          title={media.node.mediaRecommendation.title.userPreferred || media.node.mediaRecommendation.title.romaji}
                           id={media.node.mediaRecommendation.id}
                         />
 
@@ -666,4 +648,51 @@ async function MediaPage({ params }: { params: { id: number } }) {
   )
 }
 
-export default MediaPage
+function HeadingTextAndMediaLogo({ imdbMediaLogos, preferredLanguage, mediaTitles }: {
+  imdbMediaLogos: ImdbMediaInfo["logos"] | undefined, mediaTitles: ApiMediaResults["title"], preferredLanguage?: string
+}) {
+
+  const userPreferredTitleLanguage = preferredLanguage ? (mediaTitles as any)[preferredLanguage.toLowerCase()] : null
+
+  return (
+    <React.Fragment>
+
+      {imdbMediaLogos && imdbMediaLogos?.length > 0 ? (
+
+        <React.Fragment>
+
+          <h1>
+            {(userPreferredTitleLanguage || mediaTitles.romaji).toUpperCase()}
+          </h1>
+
+          <div className={styles.heading_img_container} style={{ aspectRatio: imdbMediaLogos[0]?.aspectRatio }}>
+            <Image
+              src={imdbMediaLogos[0]?.url}
+              alt={userPreferredTitleLanguage || mediaTitles.romaji}
+              fill
+              sizes='(max-width: 520px) 100%, 280px'
+            />
+          </div>
+
+        </React.Fragment>
+
+      ) : (
+
+        <React.Fragment>
+
+          <small>
+            {(userPreferredTitleLanguage == imdbMediaLogos) && mediaTitles.romaji ? mediaTitles.native : mediaTitles.romaji}
+          </small>
+
+          <h1 id={styles.heading_title}>
+            {(userPreferredTitleLanguage || mediaTitles.romaji).toUpperCase()}
+          </h1>
+
+        </React.Fragment>
+
+      )}
+
+    </React.Fragment>
+  )
+
+}

@@ -29,7 +29,7 @@ function MediaRelatedContainer({ mediaList, swiperOptions }: {
             }}
         >
 
-            {mediaList?.map((media, key: number) => (
+            {mediaList?.map((media, key) => (
 
                 <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
 
@@ -37,7 +37,7 @@ function MediaRelatedContainer({ mediaList, swiperOptions }: {
 
                         <MediaCard.MediaImgLink
                             mediaId={media.id}
-                            title={media.title.romaji || media.title.native}
+                            title={media.title.userPreferred || media.title.romaji}
                             formatOrType={media.format}
                             url={media.coverImage.large}
                         />
@@ -48,7 +48,7 @@ function MediaRelatedContainer({ mediaList, swiperOptions }: {
                         />
 
                         <MediaCard.LinkTitle
-                            title={media.title.romaji || media.title.native}
+                            title={media.title.userPreferred || media.title.romaji}
                             id={media.id}
                         />
 

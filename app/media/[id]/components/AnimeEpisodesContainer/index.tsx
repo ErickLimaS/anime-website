@@ -35,7 +35,7 @@ import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';
 import { useSearchParams } from 'next/navigation';
-import { checkUserIsLoggedWithAnilist } from '@/app/lib/user/anilistUserLoginOptions';
+import { useAppSelector } from '@/app/lib/redux/hooks';
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -99,7 +99,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   const [pageNumber, setPageNumber] = useState<number>(0)
 
-  const [anilistUser, setAnilistUser] = useState<UserAnilist | undefined>(undefined)
+  const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
   const auth = getAuth()
   const [user] = useAuthState(auth)
@@ -108,16 +108,6 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   // the episodes array length will be divided by 20, getting the range of pagination
   const rangeEpisodesPerPage = 20
-
-  useEffect(() => {
-
-    if (typeof window !== 'undefined') {
-
-      checkUserIsLoggedWithAnilist({ setUserDataHook: setAnilistUser })
-
-    }
-
-  }, [])
 
   useEffect(() => {
 
@@ -258,7 +248,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         setCurrEpisodesSource(newSourceChose)
 
         const searchResultsListForCurrMedia = await optimizedFetchOnAniwatch({
-          textToSearch: mediaInfo.title.romaji,
+          textToSearch: mediaInfo.title.english,
           only: "search_list",
           format: mediaInfo.format,
           mediaTotalEpisodes: imdb.episodesList.length

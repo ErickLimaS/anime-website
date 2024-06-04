@@ -83,6 +83,8 @@ export function defaultApiQueryRequest(otherQueryFields?: unknown, otherMediasFi
                         title{
                                 romaji
                                 native
+                                english
+                                userPreferred
                             }
                             description(asHtml: true)
                             isAdult
@@ -93,8 +95,10 @@ export function defaultApiQueryRequest(otherQueryFields?: unknown, otherMediasFi
                                             type
                                             format
                                             title{
-                                                native
                                                 romaji
+                                                native
+                                                english
+                                                userPreferred
                                             }
                                             coverImage{
                                                 large
@@ -160,6 +164,8 @@ export function defaultApiQueryRequest(otherQueryFields?: unknown, otherMediasFi
                                                 title{
                                                     romaji
                                                     native
+                                                    english
+                                                    userPreferred
                                                 }
                                             }
                                         }
@@ -174,6 +180,9 @@ export function defaultApiQueryRequest(otherQueryFields?: unknown, otherMediasFi
                                                     format
                                                     title{
                                                         romaji
+                                                        native
+                                                        english
+                                                        userPreferred
                                                     }
                                                     coverImage{
                                                         extraLarge
@@ -250,6 +259,8 @@ export function mediaByIdQueryRequest(otherQueryFields?: unknown, otherMediasFie
                             title{
                                 romaji
                                 native
+                                english
+                                userPreferred
                             }
                             description(asHtml: true)
                             isAdult
@@ -339,6 +350,9 @@ export function mediaByIdQueryRequest(otherQueryFields?: unknown, otherMediasFie
                                                     format
                                                     title{
                                                         romaji
+                                                        native
+                                                        english
+                                                        userPreferred
                                                     }
                                                     coverImage{
                                                         extraLarge
@@ -519,6 +533,8 @@ export function mediaAiringApiQueryRequest(otherQueryFields?: unknown, otherMedi
                                 title {
                                     romaji,
                                     native
+                                    english
+                                    userPreferred
                                 }id
                                 coverImage{
                                     extraLarge
@@ -594,9 +610,12 @@ export function mediaTrendingApiQueryRequest(otherQueryFields?: unknown, otherMe
                     idMal
                     isAdult
                     title {
-                    romaji,
-                     native
-                    }id
+                        romaji
+                        native
+                        english
+                        userPreferred
+                    }
+                    id
                     coverImage{
                     extraLarge
                     large

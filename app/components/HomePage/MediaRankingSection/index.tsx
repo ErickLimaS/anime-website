@@ -5,7 +5,7 @@ import * as MediaCard from '../../MediaCards/MediaCard'
 import * as MediaCardClientSide from '../../MediaCards/MediaCard/variantClientSide'
 import NavigationButtons from '../../NavigationButtons'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import anilist from "@/app/api/anilist"
+import anilist from "@/app/api/anilistMedias"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { AnimatePresence, motion } from 'framer-motion'

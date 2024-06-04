@@ -16,7 +16,7 @@ import {
 } from 'firebase/auth'
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import { useAuthState } from 'react-firebase-hooks/auth'
-import UserSettingsModal from '@/app/components/layout/header/components/User/UserSettingsModal'
+import UserSettingsModal from '@/app/layout/header/components/User/UserSettingsModal'
 import { createNewUserDocument } from '@/app/lib/firebaseUserActions/userLoginActions'
 
 type ModalTypes = {
@@ -101,7 +101,7 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
 
     const signWithAnilist = async () => {
 
-        window.location.href = ` https://anilist.co/api/v2/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_ANILIST_CLIENT_ID}&response_type=token`
+        window.location.href = `https://anilist.co/api/v2/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_ANILIST_CLIENT_ID}&response_type=token`
 
     }
 

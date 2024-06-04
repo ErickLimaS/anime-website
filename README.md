@@ -40,7 +40,7 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 ## :pushpin: Under Development
 
 - [ ] `Many Bugs Fixes (Dub Option, styles, etc)`
-- [ ] `Choose Media Titles Language`
+- [ ] `Favourites Page Sections: Finished, Dropped, OnGoing, Later`
 
 ## :heavy_check_mark: Tecnologies Used
 
@@ -50,6 +50,7 @@ Front-end (on netlify.com):
 - `Next.js`
 - `TypeScript`
 - `Axios`
+- `Redux`
 - `Firebase`
 - `GraphQL`
 - `Framer Motion`
@@ -60,8 +61,8 @@ Front-end (on netlify.com):
 
 Back-End:
 
-- `Firebase`
-- `Next.js API Routes`
+- `Firebase: Firestore Database`
+- `Next.js (API) Route Handler`
 
 ## :computer: How Can I Run It?
 
@@ -115,6 +116,8 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_APP_ID=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_DATABASE_URL=firebase-setting-related-to-this-field
+// Bellow is the url to dev enviroment. You'll need to change it when on hosted mode to the respective url
+NEXT_PUBLIC_WEBSITE_ORIGIN_URL=http://localhost:3000
 ```
 
 4. Now run `npm run dev` to initialize the website

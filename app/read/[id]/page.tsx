@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from "./page.module.css"
-import anilist from '@/app/api/anilist'
+import anilist from '@/app/api/anilistMedias'
 import * as MediaCardExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import { MangaChapters, MangaInfo, MangaPages } from '@/app/ts/interfaces/apiMangadexDataInterface'
 import manga from '@/app/api/consumetManga'
@@ -21,8 +21,8 @@ export async function generateMetadata({ params, searchParams }: {
     const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
 
     return {
-        title: !mediaInfo ? "Error | AniProject" : `Chapter ${searchParams.chapter} - ${mediaInfo.title.romaji} | AniProject`,
-        description: `Read ${mediaInfo.title.romaji} - Chapter ${searchParams.chapter}. ${mediaInfo.description && mediaInfo.description}`,
+        title: !mediaInfo ? "Error | AniProject" : `Chapter ${searchParams.chapter} - ${mediaInfo.title.userPreferred} | AniProject`,
+        description: `Read ${mediaInfo.title.userPreferred} - Chapter ${searchParams.chapter}. ${mediaInfo.description && mediaInfo.description}`,
     }
 }
 
@@ -39,7 +39,7 @@ async function ReadChapter({ params, searchParams }: {
 
     const currMangaChapters = await manga.getChapterPages({ chapterId: searchParams.q }) as MangaPages[]
 
-    const mangaTitleUrlFrindly = stringToUrlFriendly(mediaInfo.title.romaji).toLowerCase()
+    const mangaTitleUrlFrindly = stringToUrlFriendly(mediaInfo.title.userPreferred).toLowerCase()
 
     let mangaInfo = await manga.getInfoFromThisMedia({ id: mangaTitleUrlFrindly }) as MangaInfo
 
@@ -68,7 +68,7 @@ async function ReadChapter({ params, searchParams }: {
             <div id={styles.heading_container}>
 
                 <h1>
-                    <span>{mediaInfo.title.romaji}: </span>
+                    <span>{mediaInfo.title.userPreferred}: </span>
                     {currChapterInfo!.title == currChapterInfo!.chapterNumber ? `Chapter ${currChapterInfo!.chapterNumber}` : currChapterInfo!.title}
                 </h1>
 

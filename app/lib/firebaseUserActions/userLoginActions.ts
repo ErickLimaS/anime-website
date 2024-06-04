@@ -2,6 +2,7 @@ import { initFirebase } from "@/app/firebaseApp"
 import { updateProfile, User } from "firebase/auth"
 import { collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore"
 import { updateUserFavouriteMedias } from "./userDocUpdateOptions"
+import { addUserCookies } from "../user/anilistUserLoginOptions"
 
 type CreateUserComponentTypes = {
     userFirebase?: User,
@@ -40,6 +41,12 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
 
         }
 
+        addUserCookies({
+            isAdultContentEnabled: `${userAnilist?.options.displayAdultContent}` || `${false}`,
+            subtitleLanguage: doesUserHasDoc.videoSubtitleLanguage || "English",
+            titleLanguage: userAnilist?.options.titleLanguage || "romaji",
+        })
+
         return userData
 
     }
@@ -63,6 +70,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
         episodesWatched: {},
         chaptersRead: {},
         videoSource: "gogoanime",
+        mediaTitlePreferredLang: "romaji",
         showAdultContent: userAnilist ? userAnilist.options.displayAdultContent : false,
         autoNextEpisode: true,
         autoSkipIntroAndOutro: false,
@@ -89,6 +97,12 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
         })
 
         localStorage.setItem("anilist-user", JSON.stringify(userAnilist))
+
+        addUserCookies({
+            isAdultContentEnabled: `${userAnilist?.options.displayAdultContent}` || `${false}`,
+            subtitleLanguage: "English",
+            titleLanguage: userAnilist?.options.titleLanguage || "romaji",
+        })
 
         return userAnilist
 

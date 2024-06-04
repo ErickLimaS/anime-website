@@ -39,7 +39,7 @@ export function MediaInfo({ mediaInfo }: { mediaInfo: ApiDefaultResult }) {
 
             <h4>
                 <Link href={`/media/${mediaInfo.id}`}>
-                    {mediaInfo.title && (mediaInfo.title.romaji || mediaInfo.title.native || "Not Available")}
+                    {mediaInfo.title && (mediaInfo.title.userPreferred || "Not Available")}
                 </Link>
             </h4>
 
