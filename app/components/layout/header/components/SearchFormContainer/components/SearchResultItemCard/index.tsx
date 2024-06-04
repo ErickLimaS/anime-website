@@ -45,7 +45,7 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
                 <Link href={`/media/${mediaFromAnilist?.id || mediaFromOfflineDB?.anilistId}`}>
                     <Image
                         src={mediaFromAnilist?.coverImage?.large || mediaFromAnilist?.coverImage?.medium || mediaFromOfflineDB?.picture || mediaFromOfflineDB?.thumbnail}
-                        alt={`Cover Art for ${mediaFromAnilist?.title.romaji}`}
+                        alt={`Cover Art for ${mediaFromAnilist?.title.userPreferred}`}
                         fill
                         sizes='90px'
                     ></Image>
@@ -56,13 +56,13 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
                 
                 <h5 onClick={handleChoseResult}>
                     <Link href={`/media/${mediaFromAnilist?.id || mediaFromOfflineDB?.anilistId}`}>
-                        {mediaFromAnilist?.title.romaji ? mediaFromAnilist.title.romaji : (mediaFromAnilist?.title?.romaji || mediaFromOfflineDB?.title || `No Title`)}
+                        {mediaFromAnilist?.title.userPreferred ? mediaFromAnilist.title.userPreferred : (mediaFromAnilist?.title?.romaji || mediaFromOfflineDB?.title || `No Title`)}
                     </Link>
                 </h5>
 
                 <div>
 
-                    {mediaFromAnilist?.genres != undefined && (
+                    {mediaFromAnilist?.genres && (
                         <ul className={`display_flex_row ${styles.genres_container}`}>
                             {mediaFromAnilist.genres.slice(0, 3).map((item: string, key) => (
                                 <li key={key}>
@@ -74,7 +74,7 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
                         </ul>
                     )}
 
-                    {mediaFromOfflineDB?.tags != undefined && (
+                    {mediaFromOfflineDB?.tags && (
                         <ul className={`display_flex_row ${styles.genres_container}`}>
                             {mediaFromOfflineDB.tags.slice(0, 3).map((item: string, key) => (
                                 <li key={key}>

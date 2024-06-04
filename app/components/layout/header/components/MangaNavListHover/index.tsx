@@ -101,7 +101,7 @@ function MangaNavListHover() {
 
                                         <MediaCard.MediaImgLink
                                             mediaId={media.id}
-                                            title={media.title.romaji || media.title.native}
+                                            title={media.title.userPreferred}
                                             formatOrType={media.format}
                                             url={media.coverImage.large}
                                         />
@@ -112,7 +112,7 @@ function MangaNavListHover() {
                                         />
 
                                         <MediaCard.LinkTitle
-                                            title={media.title.romaji || media.title.native}
+                                            title={media.title.userPreferred}
                                             id={media.id}
                                         />
 

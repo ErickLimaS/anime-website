@@ -10,6 +10,7 @@ import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 import { useAppSelector } from '@/app/lib/redux/hooks'
+import { BookmarkItem } from '@/app/ts/interfaces/firestoreDataInterface'
 
 function PlaylistItemsResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
 
@@ -42,8 +43,8 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
         let filteredBookmarks = !params?.format ? userBookmarksList : userFilteredBookmarks
 
         if (params?.sort) {
-            if (params.sort == "title_desc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1)
-            else if (params.sort == "title_asc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.romaji > b.title.romaji ? -1 : 1).reverse()
+            if (params.sort == "title_desc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.userPreferred > b.title.userPreferred ? -1 : 1)
+            else if (params.sort == "title_asc") filteredBookmarks = filteredBookmarks.sort((a, b) => a.title.userPreferred > b.title.userPreferred ? -1 : 1).reverse()
         }
 
         setUserFilteredBookmarks(filteredBookmarks)
@@ -113,13 +114,13 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
 
                                         <MediaCard.MediaImgLink
                                             mediaId={media.id}
-                                            title={media.title.romaji}
+                                            title={media.title.userPreferred}
                                             formatOrType={media.format}
                                             url={media.coverImage.extraLarge}
                                         />
 
                                         <MediaCard.LinkTitle
-                                            title={media.title.romaji}
+                                            title={media.title.userPreferred}
                                             id={media.id}
                                         />
 
@@ -135,13 +136,13 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
 
                                         <MediaCard.MediaImgLink
                                             mediaId={media.id}
-                                            title={media.title.romaji}
+                                            title={media.title.userPreferred}
                                             formatOrType={media.format}
                                             url={media.coverImage.extraLarge}
                                         />
 
                                         <MediaCard.LinkTitle
-                                            title={media.title.romaji}
+                                            title={media.title.userPreferred}
                                             id={media.id}
                                         />
 

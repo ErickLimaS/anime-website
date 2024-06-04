@@ -131,7 +131,7 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
                                             transition={{ delay: 3 }}
                                             src={`https://www.youtube.com/embed/${animesList[currMediaOnScreenIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0&playlist=${animesList[currMediaOnScreenIndex].trailer.id}`}
                                             frameBorder={0}
-                                            title={animesList[currMediaOnScreenIndex].title.romaji + " Trailer"}
+                                            title={animesList[currMediaOnScreenIndex].title.userPreferred + " Trailer"}
                                         />
                                     </motion.div>
                                 </AnimatePresence>
@@ -141,7 +141,7 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
                             <div className={styles.carousel_position_wrapper}>
                                 <div className={styles.item_info}>
 
-                                    <h2><Link href={`/media/${animesList[currMediaOnScreenIndex]?.id}`}>{animesList[currMediaOnScreenIndex]?.title.romaji}</Link></h2>
+                                    <h2><Link href={`/media/${animesList[currMediaOnScreenIndex]?.id}`}>{animesList[currMediaOnScreenIndex]?.title.userPreferred}</Link></h2>
 
                                     <div className={`${styles.item_info_inside} display_flex_row`}>
 
@@ -226,8 +226,8 @@ function HeroCarousel({ animesList, isOnMobileScreen }: { animesList: ApiDefault
                                             animeInfo={item as ApiDefaultResult}
                                             handleFunction={(e: { target: { outerText: string } }) => setPage(
                                                 [
-                                                    animesList.findIndex((item) => item.title.romaji == e.target.outerText),
-                                                    animesList.findIndex((item) => item.title.romaji == e.target.outerText)
+                                                    animesList.findIndex((item) => item.title.userPreferred == e.target.outerText),
+                                                    animesList.findIndex((item) => item.title.userPreferred == e.target.outerText)
                                                 ]
                                             )}
                                         />

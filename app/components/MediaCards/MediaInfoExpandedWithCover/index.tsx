@@ -14,7 +14,7 @@ export function Container({ children, mediaInfo, customDescription }: { children
             <Link id={styles.img_container} href={`/media/${mediaInfo.id}`}>
                 <Image
                     src={mediaInfo.coverImage && mediaInfo.coverImage.extraLarge}
-                    alt={`Cover Art for ${mediaInfo.title && mediaInfo.title.romaji || mediaInfo.title.native}`}
+                    alt={`Cover Art for ${mediaInfo.title.userPreferred}`}
                     fill
                     sizes='(max-width: 580px) 25vw, (max-width: 820px) 15vw, 220px'
                 ></Image>
@@ -28,7 +28,7 @@ export function Container({ children, mediaInfo, customDescription }: { children
 
                 <h4>
                     <Link href={`/media/${mediaInfo.id}`}>
-                        {mediaInfo.title && mediaInfo.title.romaji || mediaInfo.title.native}
+                        {mediaInfo.title.userPreferred}
                     </Link>
                 </h4>
 

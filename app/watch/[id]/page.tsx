@@ -29,8 +29,8 @@ export async function generateMetadata({ params, searchParams }: {
     const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
 
     return {
-        title: !mediaInfo ? "Error | AniProject" : `Episode ${searchParams.episode} - ${mediaInfo.title.romaji} | AniProject`,
-        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.romaji} - episode ${searchParams.episode} ${searchParams.dub ? "Dubbed" : ""}. ${mediaInfo.description ? mediaInfo.description.replace(/(<([^>]+)>)/ig, '') : ""}`,
+        title: !mediaInfo ? "Error | AniProject" : `Episode ${searchParams.episode} - ${mediaInfo.title.userPreferred} | AniProject`,
+        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.userPreferred} - episode ${searchParams.episode} ${searchParams.dub ? "Dubbed" : ""}. ${mediaInfo.description ? mediaInfo.description.replace(/(<([^>]+)>)/ig, '') : ""}`,
     }
 
 }
@@ -58,7 +58,11 @@ export default async function WatchEpisode({ params, searchParams }: {
     let imdbEpisodesList: ImdbEpisode[] = []
 
     // get media info on imdb
-    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo({ search: true, seachTitle: mediaInfo.title.romaji, releaseYear: mediaInfo.startDate.year }) as ImdbMediaInfo
+    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo({
+        search: true,
+        seachTitle: mediaInfo.title.english || mediaInfo.title.romaji,
+        releaseYear: mediaInfo.startDate.year
+    }) as ImdbMediaInfo
 
     // get episodes on imdb
     imdbMediaInfo?.seasons?.map(itemA => itemA.episodes?.map(itemB => imdbEpisodesList.push(itemB)))
@@ -105,7 +109,7 @@ export default async function WatchEpisode({ params, searchParams }: {
 
             // Episodes for this media
             episodesList = await optimizedFetchOnGoGoAnime({
-                textToSearch: mediaInfo.title.romaji,
+                textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
                 only: "episodes",
                 isDubbed: searchParams.dub == "true"
             }) as MediaEpisodes[]
@@ -118,7 +122,10 @@ export default async function WatchEpisode({ params, searchParams }: {
 
             if (!searchParams.q) {
 
-                episodesList = await optimizedFetchOnAniwatch({ textToSearch: mediaInfo.title.romaji, only: "episodes" }) as EpisodeAnimeWatch[]
+                episodesList = await optimizedFetchOnAniwatch({
+                    textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
+                    only: "episodes"
+                }) as EpisodeAnimeWatch[]
 
                 searchParams.q = episodesList[0].episodeId
 
@@ -136,7 +143,7 @@ export default async function WatchEpisode({ params, searchParams }: {
             if (episodesList.length == 0) {
 
                 episodesList = await optimizedFetchOnAniwatch({
-                    textToSearch: mediaInfo.title.romaji,
+                    textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
                     only: "episodes",
                     format: mediaInfo.format,
                     idToMatch: searchParams?.q?.split("?")[0],
@@ -161,7 +168,7 @@ export default async function WatchEpisode({ params, searchParams }: {
     const episodeTitle = () => {
 
         if (searchParams.source == "gogoanime") {
-            return imdbEpisodesList[Number(searchParams.episode) - 1]?.title || imdbEpisodeInfo?.title || mediaInfo.title.romaji || mediaInfo.title.native
+            return imdbEpisodesList[Number(searchParams.episode) - 1]?.title || imdbEpisodeInfo?.title || mediaInfo.title.userPreferred || mediaInfo.title.romaji
         }
         else {
             return (episodesList[Number(searchParams.episode) - 1] as EpisodeAnimeWatch)?.title
@@ -211,7 +218,7 @@ export default async function WatchEpisode({ params, searchParams }: {
 
                             {mediaInfo.format == "MOVIE" ? (
 
-                                mediaInfo.title.romaji || mediaInfo.title.native
+                                mediaInfo.title.userPreferred
 
                             ) : (
                                 <React.Fragment>

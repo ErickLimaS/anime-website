@@ -81,10 +81,10 @@ async function Footer() {
 
                         <ul className={`${styles.grid_template} display_grid`}>
                             {animesReleasingList && (
-                                animesReleasingList.slice(0, 10).map((item, key: number) => (
+                                animesReleasingList.slice(0, 10).map((media, key) => (
                                     <li key={key}>
-                                        <Link href={`/media/${item.id}`}>
-                                            {item.title.romaji}
+                                        <Link href={`/media/${media.id}`}>
+                                            {media.title.userPreferred}
                                         </Link>
                                     </li>
                                 )))

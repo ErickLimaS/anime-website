@@ -102,7 +102,7 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
                 data-added={wasAddedToFavourites}
                 data-unique-color={svgOnlyColor != undefined}
                 aria-label={wasAddedToFavourites ? "Click To Remove from Favourites" : "Click To Add To Favourites"}
-                title={wasAddedToFavourites ? `Remove ${mediaInfo.title && mediaInfo.title?.romaji} from Favourites` : `Add ${mediaInfo.title && mediaInfo.title?.romaji} To Favourites`}
+                title={wasAddedToFavourites ? `Remove ${mediaInfo.title && mediaInfo.title?.userPreferred} from Favourites` : `Add ${mediaInfo.title && mediaInfo.title?.userPreferred} To Favourites`}
             >
 
                 {isLoading &&

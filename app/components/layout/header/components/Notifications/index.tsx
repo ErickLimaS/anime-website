@@ -20,6 +20,7 @@ import { convertFromUnix, getCurrentUnixDate } from '@/app/lib/formatDateUnix'
 import anilist from '@/app/api/anilistMedias'
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks'
+import { NotificationsCollectionFirebase } from '@/app/ts/interfaces/firestoreDataInterface'
 
 function NotificationsContainer() {
 

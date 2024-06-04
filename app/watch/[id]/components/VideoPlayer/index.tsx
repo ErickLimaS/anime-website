@@ -28,6 +28,7 @@ import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface"
 import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
 import { useAppSelector } from "@/app/lib/redux/hooks"
+import { KeepWatchingItem } from "@/app/ts/interfaces/firestoreDataInterface"
 
 type VideoPlayerType = {
     mediaSource: SourceType["source"],
@@ -376,7 +377,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
                 autoPlay
                 src={videoUrl}
                 className={styles.container}
-                title={mediaInfo.title.romaji}
+                title={mediaInfo.title.userPreferred}
                 currentTime={episodeLastStop}
                 onVolumeChange={(e) => localStorage.setItem("videoPlayerVolume", `${e.volume}`)}
                 volume={Number(localStorage.getItem("videoPlayerVolume")) || 0.5}

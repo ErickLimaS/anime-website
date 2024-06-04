@@ -10,6 +10,7 @@ import { initFirebase } from '@/app/firebaseApp'
 import KeepWatchingEpisodeInfo from './components/KeepWatchingEpisodeInfo'
 import { SwiperSlide } from 'swiper/react'
 import { useAppSelector } from '@/app/lib/redux/hooks'
+import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
 
 const framerMotionVariants = {
     initial: {

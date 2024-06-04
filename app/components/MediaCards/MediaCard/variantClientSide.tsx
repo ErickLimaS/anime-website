@@ -74,7 +74,7 @@ export function ListItemContainer({ children, positionIndex, showCoverArt, alter
                     <Link href={`/media/${showCoverArt.mediaInfo.id}`}>
                         <Image
                             src={showCoverArt.mediaInfo.coverImage.large}
-                            alt={`Cover Art For ${showCoverArt.mediaInfo.title.romaji}`}
+                            alt={`Cover Art For ${showCoverArt.mediaInfo.title.userPreferred}`}
                             fill
                             sizes='100%'
                         />

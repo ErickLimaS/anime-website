@@ -89,7 +89,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                                     <MediaCard.Container key={key} positionIndex={key + 1} onDarkMode isHiddenOnDesktop>
 
                                         <MediaCard.MediaImg
-                                            title={media.title.romaji || media.title.native}
+                                            title={media.title.userPreferred}
                                             formatOrType={media.format}
                                             url={media.coverImage.large}
                                         />
@@ -100,7 +100,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                                         />
 
                                         <MediaCard.LinkTitle
-                                            title={media.title.romaji || media.title.native}
+                                            title={media.title.userPreferred}
                                             id={media.id}
                                         />
 
@@ -117,7 +117,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                         <MediaCard.Container key={key} onDarkMode>
 
                             <MediaCard.MediaImg
-                                title={media.title.romaji || media.title.native}
+                                title={media.title.userPreferred}
                                 formatOrType={media.format}
                                 url={media.coverImage.large}
                             />
@@ -128,7 +128,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                             />
 
                             <MediaCard.LinkTitle
-                                title={media.title.romaji || media.title.native}
+                                title={media.title.userPreferred}
                                 id={media.id}
                             />
 
@@ -152,7 +152,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                             <MediaCard.Container key={key} onDarkMode>
 
                                 <MediaCard.MediaImg
-                                    title={media.title.romaji || media.title.native}
+                                    title={media.title.userPreferred}
                                     formatOrType={media.format}
                                     url={media.coverImage.large}
                                 />
@@ -163,7 +163,7 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
                                 />
 
                                 <MediaCard.LinkTitle
-                                    title={media.title.romaji || media.title.native}
+                                    title={media.title.userPreferred}
                                     id={media.id}
                                 />
 

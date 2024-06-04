@@ -231,9 +231,9 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
                     disabled={isLoading}
                     data-added={wasAddedToNotifications}
                     title={wasAddedToNotifications ?
-                        `Remove ${mediaInfo.title && mediaInfo.title?.romaji} From Notifications`
+                        `Remove ${mediaInfo.title && mediaInfo.title?.userPreferred} From Notifications`
                         :
-                        `Get Notified When ${mediaInfo.title && mediaInfo.title?.romaji} Get a New Episode`
+                        `Get Notified When ${mediaInfo.title && mediaInfo.title?.userPreferred} Get a New Episode`
                     }
                 >
 

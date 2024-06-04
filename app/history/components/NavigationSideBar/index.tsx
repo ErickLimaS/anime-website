@@ -7,6 +7,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import { useAppSelector } from '@/app/lib/redux/hooks'
+import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
 
 function NavigationSideBar({ params }: { params?: { format: string } }) {
 

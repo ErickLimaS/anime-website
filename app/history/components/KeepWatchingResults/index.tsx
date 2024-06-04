@@ -9,8 +9,8 @@ import { initFirebase } from '@/app/firebaseApp'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
-import { handleAnilistUserLoginWithRedux } from '@/app/lib/user/anilistUserLoginOptions'
 import { useAppSelector } from '@/app/lib/redux/hooks'
+import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
 
 function KeepWatchingResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
 
@@ -35,8 +35,8 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: "tit
         let filteredBookmarks = !params?.format ? keepWatchingList : filteredKeepWatchingList
 
         if (sortType) {
-            if (sortType == "title_desc") filteredBookmarks = filteredBookmarks.sort((media1, media2) => media1.title.romaji > media2.title.romaji ? -1 : 1)
-            else if (sortType == "title_asc") filteredBookmarks = filteredBookmarks.sort((media1, media2) => media1.title.romaji > media2.title.romaji ? -1 : 1).reverse()
+            if (sortType == "title_desc") filteredBookmarks = filteredBookmarks.sort((media1, media2) => media1.title.userPreferred > media2.title.userPreferred ? -1 : 1)
+            else if (sortType == "title_asc") filteredBookmarks = filteredBookmarks.sort((media1, media2) => media1.title.userPreferred > media2.title.userPreferred ? -1 : 1).reverse()
         }
 
         setFilteredKeepWatchingList(filteredBookmarks)
@@ -90,10 +90,10 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: "tit
 
         if (sortType) {
             if (params.sort == "title_desc") {
-                filteredKeepWatching = filteredKeepWatching.sort((media1, media2) => media1.title.romaji > media2.title.romaji ? -1 : 1)
+                filteredKeepWatching = filteredKeepWatching.sort((media1, media2) => media1.title.userPreferred > media2.title.userPreferred ? -1 : 1)
             }
             else if (params.sort == "title_asc") {
-                filteredKeepWatching = filteredKeepWatching.sort((media1, media2) => media1.title.romaji > media2.title.romaji ? -1 : 1).reverse()
+                filteredKeepWatching = filteredKeepWatching.sort((media1, media2) => media1.title.userPreferred > media2.title.userPreferred ? -1 : 1).reverse()
             }
         }
 
@@ -135,13 +135,13 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: "tit
 
                                         <MediaCard.MediaImgLink
                                             mediaId={media.id}
-                                            title={media.title.romaji}
+                                            title={media.title.userPreferred}
                                             formatOrType={media.format}
                                             url={media.coverImage.extraLarge}
                                         />
 
                                         <MediaCard.LinkTitle
-                                            title={media.title.romaji}
+                                            title={media.title.userPreferred}
                                             id={media.id}
                                         />
 
@@ -157,13 +157,13 @@ function KeepWatchingResults({ params }: { params?: { format: string, sort: "tit
 
                                         <MediaCard.MediaImgLink
                                             mediaId={media.id}
-                                            title={media.title.romaji}
+                                            title={media.title.userPreferred}
                                             formatOrType={media.format}
                                             url={media.coverImage.extraLarge}
                                         />
 
                                         <MediaCard.LinkTitle
-                                            title={media.title.romaji}
+                                            title={media.title.userPreferred}
                                             id={media.id}
                                         />
 

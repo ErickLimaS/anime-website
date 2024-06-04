@@ -29,7 +29,10 @@ export default function RootLayout({
 
       <body className={inter.className}>
 
+        <Analytics />
+
         <StoreProvider>
+          
           <Header />
 
           <NextTopLoader
@@ -37,13 +40,12 @@ export default function RootLayout({
             showSpinner={false}
           />
 
-          <Analytics />
-
           {children}
 
           <Footer />
 
         </StoreProvider>
+
       </body>
     </html>
   );

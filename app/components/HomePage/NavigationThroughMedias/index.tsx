@@ -214,7 +214,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                                 >
 
                                     <MediaCard.MediaImg
-                                        title={media.title.romaji || media.title.native}
+                                        title={media.title.userPreferred}
                                         formatOrType={media.format}
                                         url={media.coverImage.large}
                                     />
@@ -225,7 +225,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                                     />
 
                                     <MediaCard.Title
-                                        title={media.title.romaji || media.title.native}
+                                        title={media.title.userPreferred}
                                     />
 
                                 </MediaCardClientSide.FramerMotionContainer>
@@ -283,7 +283,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
 
                                     <Image
                                         src={mediaSelect.coverImage.large}
-                                        alt={mediaSelect.title.romaji}
+                                        alt={mediaSelect.title.userPreferred}
                                         fill
                                         sizes='(max-width: 430px) 45vw, (max-width: 620px) 33vw, (max-width: 876px) 15vw, 10vw'
                                     />
@@ -293,7 +293,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                                 <motion.div className={styles.info_container}>
 
                                     <motion.h5>
-                                        {mediaSelect.title.romaji}
+                                        {mediaSelect.title.userPreferred}
                                         {(mediaSelect.seasonYear && (<span> ({mediaSelect.seasonYear})</span>))}
                                     </motion.h5>
 
@@ -329,7 +329,7 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                                         className="yt_embed_video"
                                         src={`https://www.youtube.com/embed/${mediaSelect.trailer.id}`}
                                         frameBorder={0}
-                                        title={mediaSelect.title.romaji + " Trailer"}
+                                        title={mediaSelect.title.userPreferred + " Trailer"}
                                         allow="accelerometer; autoplay; encrypted-media; gyroscope;"
                                         allowFullScreen></iframe>
                                 </motion.div>

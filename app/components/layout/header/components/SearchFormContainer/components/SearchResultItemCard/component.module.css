@@ -72,8 +72,8 @@ li.result_container:hover {
 
 @media(min-width: 768px) {
     .result_info_container h5 a {
+        
         margin-bottom: 8px;
-        font-size: var(--font-size--small-1);
 
     }
 }
@@ -95,6 +95,8 @@ li.result_container:hover {
 .result_info_container>div>*,
 .result_info_container ul li {
 
+    display: flex;
+
     margin-bottom: 4px;
     font-size: var(--font-size--small-1);
 
@@ -110,6 +112,12 @@ li.result_container:hover {
         margin-bottom: 8px;
 
     }
+}
+
+.result_info_container .genres_container a{
+
+    font-size: var(--font-size--small-1);
+
 }
 
 .result_info_container p {
