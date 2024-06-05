@@ -26,6 +26,7 @@ import { getMediaInfo } from '@/app/api/consumetImdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import MediaRelatedContainer from './components/MediaRelatedContainer'
 import AddToNotificationsButton from '@/app/components/Buttons/AddToNotification'
+import stringToOnlyAlphabetic from '@/app/lib/convertStrings'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -95,17 +96,16 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
   }
 
-  function convertMediaStatus() {
+  function convertMediaStatus(status: string) {
 
-    if (mediaInfo.status == "NOT_YET_RELEASED") {
+    if (status == "NOT_YET_RELEASED") {
       return "TO BE RELEASED"
     }
-    else if (mediaInfo.status == "FINISHED") {
+    else if (status == "FINISHED") {
       return "COMPLETE"
-
     }
 
-    return mediaInfo.status || "Not Available"
+    return stringToOnlyAlphabetic(status) || "Not Available"
 
   }
 
@@ -229,7 +229,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                 <h2>SOURCE</h2>
 
                 <p>
-                  {mediaInfo.source.toUpperCase() || "Not Available"}
+                  {stringToOnlyAlphabetic(mediaInfo.source.toUpperCase()) || "Not Available"}
                 </p>
 
               </li>
@@ -243,7 +243,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                 <h2>STATUS</h2>
 
                 <p>
-                  {convertMediaStatus()}
+                  {convertMediaStatus(mediaInfo.status || "Not Available")}
                 </p>
 
               </li>

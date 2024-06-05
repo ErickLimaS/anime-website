@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import MediaFormatIcon from '../../DynamicAssets/MediaFormatIcon'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import stringToOnlyAlphabetic from '@/app/lib/convertStrings'
 
 type ComponentTypes = {
     children: React.ReactNode
@@ -79,7 +80,7 @@ export function MediaImg({ url, formatOrType, title }: { url: string, formatOrTy
 
                 <span className={styles.media_format_title}>
 
-                    {formatOrType == "TV" ? "ANIME" : formatOrType}
+                    {formatOrType == "TV" ? "ANIME" : stringToOnlyAlphabetic(formatOrType)}
 
                 </span>
 
@@ -113,7 +114,7 @@ export function MediaImgLink({ url, mediaId, formatOrType, title }: { url: strin
 
                 <span className={styles.media_format_title}>
 
-                    {formatOrType == "TV" ? "ANIME" : formatOrType}
+                    {formatOrType == "TV" ? "ANIME" : stringToOnlyAlphabetic(formatOrType)}
 
                 </span>
 
