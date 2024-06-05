@@ -330,7 +330,7 @@ h2.heading_style {
 
 }
 
-#info_list_container .info_item p {
+#info_list_container .info_item>p {
 
     text-align: center;
     width: 75%;
@@ -362,7 +362,7 @@ h2.heading_style {
     }
 }
 
-#info_list_container li p {
+#info_list_container li>p {
 
     font-family: var(--font-family-sans-serif);
 
@@ -378,8 +378,16 @@ h2.heading_style {
 
 #info_list_container li p.width_min_content {
 
-    width: 71%;
+    width: 60%;
 
+}
+
+@media(min-width: 600px) {
+    #info_list_container li p.width_min_content {
+
+        width: 71%;
+
+    }
 }
 
 /* DESCRIPTION and RATING SCORE */

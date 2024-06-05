@@ -214,14 +214,13 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
           <ul>
             {(mediaInfo.type != "MANGA") && (
-              <li className={`${styles.info_item} ${styles.action_btn}`}>
 
-                <PlayBtn
-                  mediaId={mediaInfo.id}
-                  mediaTitle={mediaInfo.title.romaji}
-                />
+              <PlayBtn
+                mediaId={mediaInfo.id}
+                mediaTitle={mediaInfo.title.romaji}
+                mediaFormat={mediaInfo.format}
+              />
 
-              </li>
             )}
 
             {(mediaInfo.format == "MOVIE") ? (

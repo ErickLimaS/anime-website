@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
+import pageStyles from "../../page.module.css"
 import PlaySvg from "@/public/assets/play2.svg"
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px-custom-color.svg"
 import { useRouter } from 'next/navigation'
@@ -9,22 +10,26 @@ import { initFirebase } from '@/app/firebaseApp'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/dataFetch/optimizedFetchAnimeOptions'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface'
 import { EpisodeAnimeWatch } from '@/app/ts/interfaces/apiAnimewatchInterface'
 import { useAppSelector } from '@/app/lib/redux/hooks'
 import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
+import DubbedCheckboxButton from '../AnimeEpisodesContainer/components/ActiveDubbButton'
+import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
-export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
+export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId: number, mediaTitle: string, mediaFormat: string }) {
 
     const [episodeId, setEpisodeId] = useState<string | null>("")
     const [episodeNumber, setEpisodeNumber] = useState<number>()
     const [episodeLastStop, setEpisodeLastStop] = useState<number>()
     const [episodeDuration, setEpisodeDuration] = useState<number>()
 
+    const [isDubbedActive, setIsDubbedActive] = useState<boolean>(false)
+
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    const [sourceName, setSourceName] = useState<string>()
+    const [sourceName, setSourceName] = useState<SourceType["source"]>()
 
     const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
@@ -35,18 +40,39 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
     const router = useRouter()
 
+    const sourceOptions = [
+        { name: "GoGoAnime", value: "gogoanime" },
+        { name: "Aniwatch", value: "aniwatch" }
+    ]
+
     useEffect(() => {
 
         if (anilistUser || (user && !loading)) handleEpisodesMarkedAsWatched()
-        else fetchMediaEpisodeUrl()
+        else fetchMediaEpisodeUrl({ hasUser: anilistUser || user ? true : false })
 
     }, [user, anilistUser, episodeNumber])
 
     useEffect(() => {
 
-        if (mediaId && sourceName && episodeId) setIsLoading(false)
+        if (sourceName) fetchMediaEpisodeUrl({ source: sourceName })
 
-    }, [mediaId, sourceName, episodeNumber, episodeId])
+    }, [sourceName, isDubbedActive])
+
+    useEffect(() => {
+
+        if (mediaId && episodeId) setIsLoading(false)
+
+    }, [mediaId, episodeNumber, episodeId])
+
+    useEffect(() => {
+
+        if (typeof window !== 'undefined') {
+
+            setIsDubbedActive(localStorage.getItem("dubEpisodes") == "true")
+
+        }
+
+    }, [typeof window])
 
     async function handleEpisodesMarkedAsWatched() {
 
@@ -54,7 +80,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
         if (!userDoc) {
 
-            fetchMediaEpisodeUrl()
+            fetchMediaEpisodeUrl({})
 
             return
         }
@@ -83,7 +109,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
         }
 
         // IF NO EPISODE WATCHED, IT FETCHS THE MEDIA'S FIRST EPISODE 
-        return fetchMediaEpisodeUrl()
+        return fetchMediaEpisodeUrl({ source: episodesWatchedList })
 
     }
 
@@ -115,16 +141,24 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
     }
 
-    async function fetchMediaEpisodeUrl(lastEpisodeWatchedNumber?: number) {
+    async function fetchMediaEpisodeUrl({ hasUser, lastEpisodeWatchedNumber, source }: { hasUser?: boolean, lastEpisodeWatchedNumber?: number, source?: string }) {
 
         setIsLoading(true)
+
+        if (hasUser) {
+            const userDoc = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
+
+            const userPreferredSource = userDoc.get("videoSource") || "gogoanime"
+
+            source = userPreferredSource
+        }
 
         async function fetchOnGoGoAnime() {
 
             const searchResultsForMedia = optimizedFetchOnGoGoAnime({
                 textToSearch: mediaTitle,
                 only: "episodes",
-                isDubbed: typeof window !== 'undefined' ? Boolean(localStorage.getItem('dubEpisodes')) : false
+                isDubbed: isDubbedActive
             })
 
             setSourceName("gogoanime")
@@ -135,11 +169,49 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
         async function fetchOnAniWatch() {
 
-            const searchResultsForMedia = optimizedFetchOnAniwatch({ textToSearch: mediaTitle, only: "episodes" })
+            const searchResultsForMedia = optimizedFetchOnAniwatch({
+                textToSearch: mediaTitle,
+                only: "episodes",
+                isDubbed: isDubbedActive,
+                format: mediaFormat
+            })
 
             setSourceName("aniwatch")
 
             return searchResultsForMedia
+
+        }
+
+        if (source) {
+
+            let currMediaInfo: MediaEpisodes[] | EpisodeAnimeWatch[] | null = null
+
+            switch (source) {
+
+                case "gogoanime":
+
+                    currMediaInfo = await fetchOnGoGoAnime() as MediaEpisodes[]
+
+                    break
+
+                case "aniwatch":
+
+                    currMediaInfo = await fetchOnAniWatch() as EpisodeAnimeWatch[]
+
+                    break
+
+                default:
+
+                    break
+
+
+            }
+
+            if (currMediaInfo) setEpisodeId((currMediaInfo[0] as EpisodeAnimeWatch)?.episodeId || (currMediaInfo[0] as MediaEpisodes)?.id || null)
+
+            setIsLoading(false)
+
+            return
 
         }
 
@@ -195,42 +267,87 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
     }
 
     return (
-        <motion.button
-            id={styles.container}
-            role='link'
-            onClick={() => handlePlayBtn()}
-            disabled={isLoading || episodeId == null}
-            aria-label={episodeNumber ? `Continue Episode ${episodeNumber}` : "Watch Episode 1"}
-            title={isLoading ?
-                "Loading" : episodeId == null ?
-                    "Not Available At This Moment"
-                    :
-                    `Watch ${episodeNumber ? `Episode ${episodeNumber} - ${mediaTitle} ` : mediaTitle}`
-            }
-        >
+        <React.Fragment>
 
-            <ProgressBar
-                episodeDuration={episodeDuration}
-                episodeLastStop={episodeLastStop}
-            />
+            <li className={`${pageStyles.info_item} ${pageStyles.action_btn}`}>
+                <motion.button
+                    id={styles.container}
+                    role='link'
+                    onClick={() => handlePlayBtn()}
+                    disabled={isLoading || episodeId == null}
+                    aria-label={episodeNumber ? `Continue Episode ${episodeNumber}` : "Watch Episode 1"}
+                    title={isLoading ?
+                        "Loading" : episodeId == null ?
+                            "Not Available At This Moment"
+                            :
+                            `Watch ${episodeNumber ? `Episode ${episodeNumber} - ${mediaTitle} ` : mediaTitle}`
+                    }
+                >
 
-            <EpisodeNumber
-                user={user || anilistUser}
-                episodeNumber={episodeNumber}
-            />
+                    <ProgressBar
+                        episodeDuration={episodeDuration}
+                        episodeLastStop={episodeLastStop}
+                    />
 
-            {isLoading ?
-                <LoadingSvg fill="#fff" width={16} height={16} />
-                :
-                <PlaySvg fill="#fff" width={16} height={16} />
-            }
+                    <EpisodeNumber
+                        user={user || anilistUser}
+                        episodeNumber={episodeNumber}
+                        mediaFormat={mediaFormat}
+                    />
 
-            <SourceName
-                movieId={episodeId}
-                sourceName={sourceName}
-            />
+                    {isLoading ?
+                        <LoadingSvg fill="#fff" width={16} height={16} />
+                        :
+                        <PlaySvg fill="#fff" width={16} height={16} />
+                    }
 
-        </motion.button>
+                    <SourceName
+                        movieId={episodeId}
+                        sourceName={sourceName}
+                    />
+
+                </motion.button>
+            </li>
+
+            {mediaFormat == "MOVIE" && (
+                <li className={`${pageStyles.info_item}`}>
+                    <h2>MOVIE</h2>
+
+                    <div id={styles.movie_options_settings_container}>
+
+                        <DubbedCheckboxButton
+                            isDubActive={isDubbedActive}
+                            clickAction={() => setIsDubbedActive(!isDubbedActive)}
+                            styleRow
+                        />
+
+                        <AnimatePresence>
+                            {sourceName && (
+                                <motion.label
+                                    initial={{ height: 0 }}
+                                    animate={{ height: "auto" }}
+                                >
+                                    Source
+                                    <select
+                                        defaultValue={sourceName}
+                                        onChange={(e) => setSourceName(e.target.value as SourceType["source"])}
+                                    >
+                                        {sourceOptions.map((source) => (
+                                            <option value={source.value} key={source.value}>
+                                                {source.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </motion.label>
+                            )}
+                        </AnimatePresence>
+
+                    </div>
+
+                </li>
+            )}
+
+        </React.Fragment>
     )
 }
 
@@ -252,12 +369,20 @@ function ProgressBar({ episodeLastStop, episodeDuration }: { episodeLastStop: nu
 
 }
 
-function EpisodeNumber({ user, episodeNumber }: { user: User | UserAnilist | null | undefined, episodeNumber: number | undefined }) {
+function EpisodeNumber({ user, episodeNumber, mediaFormat }: { user: User | UserAnilist | null | undefined, mediaFormat: string, episodeNumber: number | undefined }) {
     return (
         ((user && episodeNumber) && (
-            <span id={styles.continue_span}>
-                EPISODE {episodeNumber}
-            </span>
+
+            mediaFormat == "MOVIE" ? (
+                <span id={styles.continue_span}>
+                    CONTINUE
+                </span>
+            ) : (
+                <span id={styles.continue_span}>
+                    EPISODE {episodeNumber}
+                </span>
+            )
+
         ))
     )
 }

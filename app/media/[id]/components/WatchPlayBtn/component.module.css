@@ -64,3 +64,57 @@
     transform-origin: 0 0;
 
 }
+
+/* MOVIE OPTIONS */
+#movie_options_settings_container {
+
+    position: absolute;
+
+    margin-left: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px 0;
+
+}
+
+@media(min-width: 600px) {
+
+    #movie_options_settings_container {
+
+        gap: 8px 0;
+
+    }
+
+}
+
+#movie_options_settings_container label~p {
+
+    color: var(--white-100);
+
+}
+
+#movie_options_settings_container label {
+
+    max-width: 120px;
+
+    font-size: var(--font-size--small-1);
+    color: var(--white-100);
+
+}
+
+#movie_options_settings_container select {
+
+    padding: 8px 8px;
+    font-weight: 500;
+    font-family: var(--font-family-sans-serif);
+
+    border-radius: 4px;
+
+    width: 100%;
+
+    background-color: var(--black-75);
+    color: var(--white-100);
+
+}

@@ -40,7 +40,7 @@ interface KeepWatchingItem {
 
     title: ApiDefaultResult["title"],
     updatedAt: number,
-    source: string,
+    source: SourceType["source"],
     format: string,
     episode: string,
     episodeId: string,
