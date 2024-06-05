@@ -17,7 +17,7 @@ import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
 
 export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, mediaTitle: string }) {
 
-    const [movieId, setMovieId] = useState<string | null>("")
+    const [episodeId, setEpisodeId] = useState<string | null>("")
     const [episodeNumber, setEpisodeNumber] = useState<number>()
     const [episodeLastStop, setEpisodeLastStop] = useState<number>()
     const [episodeDuration, setEpisodeDuration] = useState<number>()
@@ -44,9 +44,9 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
     useEffect(() => {
 
-        if (mediaId && sourceName && movieId) setIsLoading(false)
+        if (mediaId && sourceName && episodeId) setIsLoading(false)
 
-    }, [mediaId, sourceName, episodeNumber, movieId])
+    }, [mediaId, sourceName, episodeNumber, episodeId])
 
     async function handleEpisodesMarkedAsWatched() {
 
@@ -106,7 +106,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
         if (!mediaLastEpisodeWatched) return null
 
         setSourceName(mediaLastEpisodeWatched.source)
-        setMovieId(mediaLastEpisodeWatched.episodeId)
+        setEpisodeId(mediaLastEpisodeWatched.episodeId)
         setEpisodeNumber(Number(mediaLastEpisodeWatched.episode))
         setEpisodeDuration(mediaLastEpisodeWatched.episodeDuration)
         setEpisodeLastStop(mediaLastEpisodeWatched.episodeTimeLastStop)
@@ -121,7 +121,11 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
         async function fetchOnGoGoAnime() {
 
-            const searchResultsForMedia = optimizedFetchOnGoGoAnime({ textToSearch: mediaTitle, only: "episodes" })
+            const searchResultsForMedia = optimizedFetchOnGoGoAnime({
+                textToSearch: mediaTitle,
+                only: "episodes",
+                isDubbed: typeof window !== 'undefined' ? Boolean(localStorage.getItem('dubEpisodes')) : false
+            })
 
             setSourceName("gogoanime")
 
@@ -146,7 +150,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
         if (!currMediaInfo) {
 
             setIsLoading(false)
-            setMovieId(null)
+            setEpisodeId(null)
 
             return
 
@@ -160,7 +164,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
             if (nextEpisodeAfterLastWatched) {
 
-                setMovieId(sourceName == "gogoanime" ? (nextEpisodeAfterLastWatched as MediaEpisodes)!.id : (nextEpisodeAfterLastWatched as EpisodeAnimeWatch)!.episodeId)
+                setEpisodeId(sourceName == "gogoanime" ? (nextEpisodeAfterLastWatched as MediaEpisodes)!.id : (nextEpisodeAfterLastWatched as EpisodeAnimeWatch)!.episodeId)
 
                 // adds 1 to get the next episode after the last watched
                 setEpisodeNumber(lastEpisodeWatchedNumber + 1)
@@ -172,7 +176,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
             }
         }
 
-        if (currMediaInfo) setMovieId((currMediaInfo[0] as EpisodeAnimeWatch)?.episodeId || (currMediaInfo[0] as MediaEpisodes)?.id || null)
+        if (currMediaInfo) setEpisodeId((currMediaInfo[0] as EpisodeAnimeWatch)?.episodeId || (currMediaInfo[0] as MediaEpisodes)?.id || null)
 
         setIsLoading(false)
 
@@ -182,7 +186,9 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
 
         setIsLoading(true)
 
-        const mediaPathname = `/watch/${mediaId}?source=${sourceName}&episode=${episodeNumber || 1}&q=${movieId}${episodeNumber ? `&t=${episodeLastStop}` : ""}`
+        const isDub = typeof window !== 'undefined' ? Boolean(localStorage.getItem('dubEpisodes')) : false
+
+        const mediaPathname = `/watch/${mediaId}?source=${sourceName}&episode=${episodeNumber || 1}&q=${episodeId}${episodeNumber ? `&t=${episodeLastStop}` : ""}${isDub ? "&dub=true" : ""}`
 
         router.push(mediaPathname)
 
@@ -193,10 +199,10 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
             id={styles.container}
             role='link'
             onClick={() => handlePlayBtn()}
-            disabled={isLoading || movieId == null}
+            disabled={isLoading || episodeId == null}
             aria-label={episodeNumber ? `Continue Episode ${episodeNumber}` : "Watch Episode 1"}
             title={isLoading ?
-                "Loading" : movieId == null ?
+                "Loading" : episodeId == null ?
                     "Not Available At This Moment"
                     :
                     `Watch ${episodeNumber ? `Episode ${episodeNumber} - ${mediaTitle} ` : mediaTitle}`
@@ -220,7 +226,7 @@ export default function PlayBtn({ mediaId, mediaTitle }: { mediaId: number, medi
             }
 
             <SourceName
-                movieId={movieId}
+                movieId={episodeId}
                 sourceName={sourceName}
             />
 
