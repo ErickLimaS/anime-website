@@ -30,7 +30,7 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 - [x] `Read`: Read any manga chapter available.
 - [x] `Comment`: Write what you thougth of that episode or just tell something that every should know about.
 - [x] `Log In`: You can log in with Google, Anilist or Anonymously (with some restrictions).
-- [x] `Anilist Integration`: Use your Anilist account and carry over your settings.
+- [x] `Anilist Integration`: Use your Anilist account, carry over your settings, animes and mangas.
 - [x] `Keep Watching`: Continue the episode from where you stop last time.
 - [x] `Be Notified`: When a New Episode is Released, you get a notification on the website.
 - [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.

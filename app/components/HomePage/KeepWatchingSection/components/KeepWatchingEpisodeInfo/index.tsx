@@ -56,11 +56,11 @@ function KeepWatchingEpisodeInfo({ animeInfo, darkMode }: ComponentTypes) {
                     <div id={styles.img_container}>
 
                         <Image
-                            title={animeInfo.title.userPreferred}
+                            title={animeInfo.title.romaji}
                             src={animeInfo.episodeImg || fallbackImg}
                             placeholder='blur'
                             blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
-                            alt={animeInfo.title && animeInfo.title.userPreferred || "Not Available"}
+                            alt={animeInfo.title && animeInfo.title.romaji || "Not Available"}
                             fill
                             sizes='(max-width: 324px) 100vw, (max-width: 495px) 50vw, (max-width: 1025px) 200px, (max-width: 1479px) 180px, 174px'
                         ></Image>
@@ -105,10 +105,10 @@ function KeepWatchingEpisodeInfo({ animeInfo, darkMode }: ComponentTypes) {
                         <Link
                             href={`/media/${animeInfo.id}`}
                         >
-                            {animeInfo.title && animeInfo.title.userPreferred}
+                            {animeInfo.title && animeInfo.title.romaji}
                         </Link>
 
-                        <button onClick={() => removeFromKeepWatching()} title={`Remove ${animeInfo.title.userPreferred} from Keep Watching`}>
+                        <button onClick={() => removeFromKeepWatching()} title={`Remove ${animeInfo.title.romaji} from Keep Watching`}>
 
                             <DeleteSvg width={16} height={16} alt="Delete" />
 
