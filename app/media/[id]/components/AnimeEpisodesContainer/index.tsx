@@ -36,6 +36,7 @@ import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
 import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';
 import { useSearchParams } from 'next/navigation';
 import { useAppSelector } from '@/app/lib/redux/hooks';
+import DubbedCheckboxButton from './components/ActiveDubbButton';
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -540,35 +541,13 @@ function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedS
 
   }
 
-  function handleDubbedInputValueChange() {
-
-    localStorage.setItem("dubEpisodes", dubbedStateValue ? "false" : "true")
-
-    callDubbedFunction()
-
-  }
-
   return (
     <div id={styles.option_container}>
 
-      <div id={styles.dub_input_container}>
-
-        <label>
-
-          <input
-            type='checkbox'
-            name="isDubbed"
-            checked={isDubActive}
-            aria-label='Dubbed Episodes'
-            onChange={() => handleDubbedInputValueChange()}
-          />
-          <span />
-
-        </label>
-
-        <p>Dubbed</p>
-
-      </div>
+      <DubbedCheckboxButton
+        isDubActive={isDubActive}
+        clickAction={() => callDubbedFunction()}
+      />
 
       <button
         id={styles.options_btn}

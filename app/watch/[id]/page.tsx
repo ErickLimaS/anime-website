@@ -16,6 +16,7 @@ import { getMediaInfo } from '@/app/api/consumetImdb'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 import { FetchEpisodeError } from '@/app/components/MediaFetchErrorPage'
 import { cookies } from 'next/headers'
+import { AlertWrongMediaVideoOnMediaId } from './components/AlertContainer'
 
 export const revalidate = 900 // revalidate cached data every 15 minutes
 
@@ -24,21 +25,30 @@ export async function generateMetadata({ params, searchParams }: {
     searchParams: { episode: string, dub?: string } // EPISODE NUMBER, DUBBED
 }) {
 
-    // ACTES AS DEFAULT VALUE FOR PAGE PROPS
-    if (Object.keys(searchParams).length === 0) searchParams = { episode: "1" }
-
     const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
 
+    let pageTitle = ""
+
+    if (mediaInfo.format == "MOVIE") {
+        pageTitle = `Watch ${mediaInfo.title.userPreferred} | AniProject`
+    }
+    else {
+        // ACTES AS DEFAULT VALUE FOR PAGE PROPS
+        if (Object.keys(searchParams).length === 0) searchParams = { episode: "1" }
+
+        pageTitle = `Episode ${searchParams.episode} - ${mediaInfo.title.userPreferred} | AniProject`
+    }
+
     return {
-        title: !mediaInfo ? "Error | AniProject" : `Episode ${searchParams.episode} - ${mediaInfo.title.userPreferred} | AniProject`,
-        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.userPreferred} - episode ${searchParams.episode} ${searchParams.dub ? "Dubbed" : ""}. ${mediaInfo.description ? mediaInfo.description.replace(/(<([^>]+)>)/ig, '') : ""}`,
+        title: mediaInfo ? pageTitle : "Error | AniProject",
+        description: !mediaInfo ? "" : `Watch ${mediaInfo.title.userPreferred}${mediaInfo.format != "MOVIE" ? ` - episode ${searchParams.episode} ` : ""}${searchParams.dub ? "Dubbed" : ""}. ${mediaInfo.description ? mediaInfo.description.replace(/(<([^>]+)>)/ig, '') : ""}`,
     }
 
 }
 
 export default async function WatchEpisode({ params, searchParams }: {
     params: { id: number }, // ANILIST ANIME ID
-    searchParams: { episode: string, source: SourceType["source"], q: string, t: string, dub?: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP, DUBBED
+    searchParams: { episode: string, source: SourceType["source"], q: string, t: string, dub?: string, alert?: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP, DUBBED
 }) {
 
     // ACTES AS DEFAULT VALUE FOR PAGE PROPS
@@ -47,6 +57,7 @@ export default async function WatchEpisode({ params, searchParams }: {
     const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
 
     let hadFetchError = false
+    let videoIdDoesntMatch = false
 
     if (!mediaInfo) hadFetchError = true
 
@@ -72,7 +83,6 @@ export default async function WatchEpisode({ params, searchParams }: {
     function compareEpisodeIDs(episodesList: { id?: string, episodeId?: string }[], sourceName: SourceType["source"]) {
 
         // Compare Episode ID from params with episodes fetched ID
-
         switch (sourceName) {
             case "aniwatch":
                 const aniwatchEpisodeIdFromParamsIsOnEpisodesList = episodesList.find(episode => episode.episodeId == searchParams.q)
@@ -82,7 +92,8 @@ export default async function WatchEpisode({ params, searchParams }: {
             case 'gogoanime':
 
                 const gogoanimeEpisodeIdFromParamsIsOnEpisodesList = episodesList.find(episode => episode.id == searchParams.q)
-
+                console.log(episodesList)
+                console.log(searchParams.q)
                 return gogoanimeEpisodeIdFromParamsIsOnEpisodesList == undefined
 
             default:
@@ -116,7 +127,7 @@ export default async function WatchEpisode({ params, searchParams }: {
                 isDubbed: searchParams.dub == "true"
             }) as MediaEpisodes[]
 
-            hadFetchError = compareEpisodeIDs(episodesList, "gogoanime")
+            videoIdDoesntMatch = compareEpisodeIDs(episodesList, "gogoanime")
 
             break
 
@@ -156,7 +167,7 @@ export default async function WatchEpisode({ params, searchParams }: {
 
             episodeSubtitles = episodeDataFetched.tracks
 
-            hadFetchError = compareEpisodeIDs(episodesList, "aniwatch")
+            videoIdDoesntMatch = compareEpisodeIDs(episodesList, "aniwatch")
 
             break
 
@@ -178,7 +189,20 @@ export default async function WatchEpisode({ params, searchParams }: {
 
     }
 
-    if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
+    if (hadFetchError) {
+        return <FetchEpisodeError
+            mediaId={params.id}
+            searchParams={searchParams}
+        />
+    }
+
+    if (videoIdDoesntMatch && searchParams.alert != "false") {
+        return <AlertWrongMediaVideoOnMediaId
+            mediaId={params.id}
+            mediaTitle={mediaInfo.title.userPreferred}
+            isActive={videoIdDoesntMatch}
+        />
+    }
 
     return (
         <main id={styles.container}>

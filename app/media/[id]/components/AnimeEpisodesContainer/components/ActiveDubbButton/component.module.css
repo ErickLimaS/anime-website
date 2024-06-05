@@ -1,0 +1,93 @@
+#dub_input_container {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#dub_input_container.row {
+
+    flex-direction: row;
+    gap: 0 8px;
+
+}
+
+@media(min-width: 600px) {
+
+    #dub_input_container.row {
+
+        gap: 0 16px;
+
+    }
+
+}
+
+#dub_input_container label {
+
+    position: relative;
+    display: inline-block;
+    height: 25px;
+    width: 40px;
+
+    background-color: var(--black-05);
+
+    border-radius: 16px;
+
+}
+
+#dub_input_container input {
+
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+}
+
+#dub_input_container span {
+
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    border-radius: 16px;
+    box-shadow: inset 0px 0px 3px 0px var(--white-50);
+
+}
+
+#dub_input_container span::before {
+
+    transition: all ease-in-out 100ms;
+
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 4px;
+    bottom: 4px;
+
+    box-shadow: 0px 0px 3px 0px var(--white-50);
+    border-radius: 50%;
+
+    background-color: var(--white-25);
+
+}
+
+#dub_input_container input:checked+span::before {
+
+    -webkit-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
+
+    background-color: var(--brand-color);
+}
+
+#dub_input_container p {
+
+    font-size: var(--font-size--small-1);
+
+}

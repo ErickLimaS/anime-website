@@ -78,11 +78,11 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
 
             case "gogoanime":
 
-                return `${(media as MediaEpisodes).id}`
+                return `${(media as MediaEpisodes).id}${searchParams.get("dub") ? `&dub=true` : ""}`
 
             case "aniwatch":
 
-                return `${(media as EpisodeAnimeWatch).episodeId}`
+                return `${(media as EpisodeAnimeWatch).episodeId}${searchParams.get("dub") ? `&dub=true` : ""}`
 
             default:
 
