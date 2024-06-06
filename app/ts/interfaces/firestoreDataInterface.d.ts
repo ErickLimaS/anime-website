@@ -47,6 +47,7 @@ interface KeepWatchingItem {
     episodeImg: string,
     episodeTimeLastStop: number,
     episodeDuration: number,
+    dub: boolean,
     coverImage: {
         extraLarge: string,
         large: string
