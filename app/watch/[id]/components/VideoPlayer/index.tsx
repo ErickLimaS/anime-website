@@ -34,6 +34,7 @@ type VideoPlayerType = {
     mediaSource: SourceType["source"],
     mediaInfo: ApiMediaResults,
     mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[],
+    fetchDubEpisodes?: boolean,
     videoInfo: {
         urlSource: string,
         currentLastStop?: string,
@@ -63,7 +64,7 @@ type SubtitlesType = {
     default: boolean | undefined,
 }
 
-export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEpisodes, episodeInfo }: VideoPlayerType) {
+export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEpisodes, episodeInfo, fetchDubEpisodes }: VideoPlayerType) {
 
     const [subtitles, setSubtitles] = useState<SubtitlesType[] | undefined>(undefined)
 
@@ -103,87 +104,86 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
     useEffect(() => { fetchNextEpisodeInfo() }, [videoUrl, episodeInfo.episodeNumber])
 
-    // subtitles, video quality, skip intro...
+    async function getWasCurrEpisodeWatched(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+
+        const episodesWatchedList = await userDoc?.get("episodesWatched")
+
+        const episodeAddedOnWatchedList = episodesWatchedList[mediaInfo.id]?.find(
+            (item: { episodeNumber: string; }) => Number(item.episodeNumber) == Number(episodeInfo.episodeNumber)
+        )
+
+        setWasWatched(episodeAddedOnWatchedList ? true : false)
+
+    }
+
+    async function getIsAutoSkipEnabled(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+
+        const userAutoSkipIntroAndOutro = await userDoc.get("autoSkipIntroAndOutro") == true || false
+        const userNextEpisode = await userDoc.get("autoNextEpisode") == true || false
+
+        setEnableAutoSkipIntroAndOutro(userAutoSkipIntroAndOutro)
+        setEnableAutoNextEpisode(userNextEpisode)
+
+    }
+
+    async function getUserPreferredLanguage() {
+
+        let subtitleLanguage = videoInfo.subtitleLang
+
+        let subtitleListMapped: SubtitlesType[] = []
+
+        // get user language and filter through the available subtitles to this media
+        videoInfo.subtitlesList?.map((subtitle) => {
+
+            function itsTheDefaultLang(subtitleLabel: string) {
+
+                const isChoseSubtitle = subtitleLabel?.toLowerCase().includes(subtitleLanguage.toLowerCase())
+
+                if (!isChoseSubtitle) return false
+
+                return isChoseSubtitle
+
+            }
+
+            subtitleListMapped.push(
+                {
+                    kind: subtitle.kind,
+                    srcLang: subtitle.label,
+                    src: subtitle.file,
+                    default: itsTheDefaultLang(subtitle.label),
+                    label: subtitle.label,
+                    type: subtitle.kind
+                }
+            )
+
+        })
+
+        setSubtitles(subtitleListMapped)
+    }
+
+    async function getCurrEpisodeLastStop(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
+
+        if (videoInfo.currentLastStop) return
+
+        let keepWatchingList = userDoc.get("keepWatching")
+
+        let convertedListFromObjectToArray = Object.keys(keepWatchingList).map(key => {
+
+            return keepWatchingList[key]
+
+        })
+
+        keepWatchingList = convertedListFromObjectToArray
+            .filter(media => media.length != 0 && media)
+            .find((media: KeepWatchingItem) => media.id == mediaInfo.id)
+
+        if (keepWatchingList) return setEpisodeLastStop(keepWatchingList.episodeTimeLastStop)
+
+    }
+
     async function getUserPreferences() {
 
         const userDoc = (user || anilistUser) ? await getDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`)) : null
-
-        async function getWasCurrEpisodeWatched(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
-
-            const episodesWatchedList = await userDoc?.get("episodesWatched")
-
-            const episodeAddedOnWatchedList = episodesWatchedList[mediaInfo.id]?.find(
-                (item: { episodeNumber: string; }) => Number(item.episodeNumber) == Number(episodeInfo.episodeNumber)
-            )
-
-            setWasWatched(episodeAddedOnWatchedList ? true : false)
-
-        }
-
-        async function getIsAutoSkipEnabled(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
-
-            const userAutoSkipIntroAndOutro = await userDoc.get("autoSkipIntroAndOutro") == true || false
-            const userNextEpisode = await userDoc.get("autoNextEpisode") == true || false
-
-            setEnableAutoSkipIntroAndOutro(userAutoSkipIntroAndOutro)
-            setEnableAutoNextEpisode(userNextEpisode)
-
-        }
-
-        async function getUserPreferredLanguage() {
-
-            let subtitleLanguage = videoInfo.subtitleLang
-
-            let subtitleListMapped: SubtitlesType[] = []
-
-            // get user language and filter through the available subtitles to this media
-            videoInfo.subtitlesList?.map((subtitle) => {
-
-                function itsTheDefaultLang(subtitleLabel: string) {
-
-                    const isChoseSubtitle = subtitleLabel?.toLowerCase().includes(subtitleLanguage.toLowerCase())
-
-                    if (!isChoseSubtitle) return false
-
-                    return isChoseSubtitle
-
-                }
-
-                subtitleListMapped.push(
-                    {
-                        kind: subtitle.kind,
-                        srcLang: subtitle.label,
-                        src: subtitle.file,
-                        default: itsTheDefaultLang(subtitle.label),
-                        label: subtitle.label,
-                        type: subtitle.kind
-                    }
-                )
-
-            })
-
-            setSubtitles(subtitleListMapped)
-        }
-
-        async function getCurrEpisodeLastStop(userDoc: DocumentSnapshot<DocumentData, DocumentData>) {
-
-            if (videoInfo.currentLastStop) return
-
-            let keepWatchingList = userDoc.get("keepWatching")
-
-            let convertedListFromObjectToArray = Object.keys(keepWatchingList).map(key => {
-
-                return keepWatchingList[key]
-
-            })
-
-            keepWatchingList = convertedListFromObjectToArray
-                .filter(media => media.length != 0 && media)
-                .find((media: KeepWatchingItem) => media.id == mediaInfo.id)
-
-            if (keepWatchingList) return setEpisodeLastStop(keepWatchingList.episodeTimeLastStop)
-
-        }
 
         getUserPreferredLanguage()
 
@@ -194,15 +194,14 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
             setEnableAutoSkipIntroAndOutro(false)
             setEnableAutoNextEpisode(true)
 
-        }
-        else {
-
-            getWasCurrEpisodeWatched(userDoc)
-            getIsAutoSkipEnabled(userDoc)
-            getIsAutoSkipEnabled(userDoc)
-            getCurrEpisodeLastStop(userDoc)
+            return
 
         }
+
+        getWasCurrEpisodeWatched(userDoc)
+        getIsAutoSkipEnabled(userDoc)
+        getIsAutoSkipEnabled(userDoc)
+        getCurrEpisodeLastStop(userDoc)
 
     }
 
@@ -326,30 +325,42 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
         if (!nextEpisodeInfo) return
 
-        if (mediaSource == "gogoanime") {
+        let nextEpisodeId: string = ""
+        let nextEpisode: EpisodeLinksGoGoAnime | EpisodeLinksAnimeWatch | null = null
 
-            const nextEpisodeId = (nextEpisodeInfo as MediaEpisodes).id
+        switch (mediaSource) {
 
-            const episodeInfo = await gogoanime.getEpisodeStreamingLinks({
-                episodeId: nextEpisodeId,
-                useAlternateLinkOption: true
-            }) as EpisodeLinksGoGoAnime
+            case "gogoanime":
 
-            nextEpisodeInfo = episodeInfo.sources.find(item => item.quality == "default").url
+                nextEpisodeId = (nextEpisodeInfo as MediaEpisodes).id
 
-            setNextEpisodeInfo({ id: nextEpisodeId, src: episodeInfo.sources[0].url })
+                nextEpisode = await gogoanime.getEpisodeStreamingLinks({
+                    episodeId: nextEpisodeId,
+                    useAlternateLinkOption: true
+                })
 
-        }
-        else if (mediaSource == "aniwatch") {
+                let nextEpisodeVideoUrl = nextEpisode!.sources.find(item => item.quality == "default").url
 
-            const nextEpisodeId = (nextEpisodeInfo as EpisodeAnimeWatch).episodeId
+                setNextEpisodeInfo({ id: nextEpisodeId, src: nextEpisodeVideoUrl || nextEpisode!.sources[0].url })
 
-            const episodeInfo = await aniwatch.episodesLinks({
-                episodeId: nextEpisodeId,
-                category: searchParams.get("dub") == "true" ? "dub" : "sub"
-            }) as EpisodeLinksAnimeWatch
+                break
 
-            setNextEpisodeInfo({ id: nextEpisodeId, src: episodeInfo.sources[0].url })
+            case "aniwatch":
+
+                nextEpisodeId = (nextEpisodeInfo as EpisodeAnimeWatch).episodeId
+
+                nextEpisode = await aniwatch.episodesLinks({
+                    episodeId: nextEpisodeId,
+                    category: searchParams?.get("dub") == "true" ? "dub" : "sub"
+                })
+
+                setNextEpisodeInfo({ id: nextEpisodeId, src: nextEpisode!.sources[0].url })
+
+                break
+
+            default:
+
+                break
 
         }
 
@@ -366,7 +377,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
         if (!nextEpisodeInfo) return
 
-        router.push(`/watch/${mediaInfo.id}?source=${mediaSource}&episode=${Number(episodeInfo.episodeNumber) + 1}&q=${nextEpisodeInfo.id}`)
+        router.push(`/watch/${mediaInfo.id}?source=${mediaSource}&episode=${Number(episodeInfo.episodeNumber) + 1}&q=${nextEpisodeInfo.id}${searchParams?.get("dub") == "true" ? `&dub=true` : ""}`)
         setVideoUrl(nextEpisodeInfo.src)
 
     }
