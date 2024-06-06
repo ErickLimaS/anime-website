@@ -12,17 +12,21 @@ import { initFirebase } from '@/app/firebaseApp'
 import { AnimatePresence, motion } from 'framer-motion'
 import fallbackImg from '@/public/photo-placeholder.jpg'
 import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
+import { useAppSelector } from '@/app/lib/redux/hooks'
 
 type ComponentTypes = {
     animeInfo: KeepWatchingItem,
+    deleteFromListHook: () => void,
     darkMode?: boolean
 }
 
-function KeepWatchingEpisodeInfo({ animeInfo, darkMode }: ComponentTypes) {
+function KeepWatchingEpisodeInfo({ animeInfo, darkMode, deleteFromListHook }: ComponentTypes) {
 
     const [wasDeleted, setWasDeleted] = useState<boolean>(false)
 
     const auth = getAuth()
+
+    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
     const [user] = useAuthState(auth)
 
@@ -30,7 +34,7 @@ function KeepWatchingEpisodeInfo({ animeInfo, darkMode }: ComponentTypes) {
 
     async function removeFromKeepWatching() {
 
-        await setDoc(doc(db, 'users', user!.uid),
+        await setDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
             {
                 keepWatching: {
                     [animeInfo.id]: arrayRemove(...[animeInfo])
@@ -38,15 +42,24 @@ function KeepWatchingEpisodeInfo({ animeInfo, darkMode }: ComponentTypes) {
             } as unknown as FieldPath,
             { merge: true }
 
-        )
+        ).then(() => {
 
-        setWasDeleted(true)
+            setWasDeleted(true)
+
+            setTimeout(() => {
+
+                deleteFromListHook()
+
+            }, 350)
+
+        })
 
     }
 
     return (
         <AnimatePresence>
             {!wasDeleted && (
+
                 <motion.div
                     className={`${styles.media_item_container} ${darkMode ? styles.darkMode : ''}`}
                     data-deleted={wasDeleted}

@@ -11,7 +11,7 @@ import { ApiAiringMidiaResults, ApiDefaultResult } from "./ts/interfaces/apiAnil
 import { Metadata } from "next";
 import * as AddToPlaylistButton from "./components/Buttons/AddToFavourites";
 import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import KeepWatchingSection from "./components/HomePage/KeepWatchingSection";
 import PopularMediaSection from "./components/HomePage/PopularMediaSection";
 
@@ -26,26 +26,50 @@ export default async function Home() {
 
   const isOnMobileScreen = checkDeviceIsMobile(headers())
 
+  const accessTokenCookie = cookies().get("access_token")?.value
+
+  const userAuthorization = accessTokenCookie ? JSON.parse(accessTokenCookie).accessToken : undefined
+
   // section 3
-  const listAnimesTrending = await anilist.getMediaForThisFormat({ type: "ANIME" }) as ApiDefaultResult[]
+  const listAnimesTrending = await anilist.getMediaForThisFormat({
+    type: "ANIME",
+    accessToken: userAuthorization
+
+  }) as ApiDefaultResult[]
 
   // section 1
   const listAnimesTrendingWithBackground = listAnimesTrending.filter(item => item.bannerImage)
 
   // section 2
-  const listAnimesReleasingByPopularity = await anilist.getNewReleases({ type: "ANIME", showAdultContent: false, status: "RELEASING", page: 1, perPage: 12 }).then(
+  const listAnimesReleasingByPopularity = await anilist.getNewReleases({
+    type: "ANIME",
+    showAdultContent: false,
+    status: "RELEASING",
+    page: 1,
+    perPage: 12,
+    accessToken: userAuthorization
+  }).then(
     res => (res as ApiDefaultResult[])
   )
 
   // section 3
-  const listMediasToBannerSection = await anilist.getMediaForThisFormat({ type: "ANIME", sort: "SCORE_DESC" }).then(
+  const listMediasToBannerSection = await anilist.getMediaForThisFormat({
+    type: "ANIME",
+    sort: "SCORE_DESC",
+    accessToken: userAuthorization
+  }).then(
     res => (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
   )
 
   const randomIndexForBannerSection = Math.floor(Math.random() * (listMediasToBannerSection?.length || 10)) + 1
 
   // section 4 data
-  const listMediasReleasedToday = await anilist.getReleasingByDaysRange({ type: "ANIME", days: 1, perPage: 11 }).then(
+  const listMediasReleasedToday = await anilist.getReleasingByDaysRange({
+    type: "ANIME",
+    days: 1,
+    perPage: 11,
+    accessToken: userAuthorization
+  }).then(
     res => ((res as ApiAiringMidiaResults[]).sort((a, b) => a.media.popularity - b.media.popularity).reverse())
   ).then(res => res.map((item) => item.media))
 

@@ -14,17 +14,27 @@ export async function getHeadersWithAuthorization({ accessToken }: { accessToken
         }
     }
 
-    const { data } = await Axios({
-        url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`,
-        method: "GET"
-    })
+    try {
 
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${data.access_token}`,
-        'Accept': 'application/json',
+        const { data } = await Axios({
+            url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`,
+            method: "GET"
+        })
+
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data.access_token}`,
+            'Accept': 'application/json',
+        }
+
     }
+    catch (err) {
 
+        return {
+            'Content-Type': 'application/json',
+        }
+
+    }
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -274,6 +284,25 @@ export default {
         try {
 
             const cookieSetResult = await userSettingsActions.setSubtitleLanguageCookie({ lang: lang })
+
+            return cookieSetResult
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+
+    },
+
+    handlePlayWrongMediaSetting: async ({ isEnabled }: { isEnabled?: string }) => {
+
+        try {
+
+            const cookieSetResult = await userSettingsActions.setPlayWrongMediaCookie({ playWrongMedia: isEnabled })
 
             return cookieSetResult
 

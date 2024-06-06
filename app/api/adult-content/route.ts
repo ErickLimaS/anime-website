@@ -8,7 +8,8 @@ export async function POST(request: NextRequest) {
         const isAdultContentEnabled: string = await request.json().then((res) => res.isAdultContentEnabled)
 
         if (!isAdultContentEnabled) return NextResponse.json({
-            "message": "No Data Received",
+            "message": "No Data Received"
+        }, {
             status: 404
         })
 
@@ -18,7 +19,8 @@ export async function POST(request: NextRequest) {
         })
 
         return NextResponse.json({
-            "message": "Adult Content Cookie Set!",
+            "message": "Adult Content Cookie Set!"
+        }, {
             status: 201
         })
 
@@ -27,6 +29,8 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             "message": err
+        }, {
+            status: 500
         })
 
     }
@@ -41,13 +45,15 @@ export async function GET(request: NextRequest) {
 
         if (isAdultContentEnabled) {
             return NextResponse.json({
-                "isAdultContentEnabled": isAdultContentEnabled.value,
+                "isAdultContentEnabled": isAdultContentEnabled.value
+            }, {
                 status: 201
             })
         }
 
         return NextResponse.json({
-            "message": "No Cookie Found",
+            "message": "No Cookie Found"
+        }, {
             status: 404
         })
 
@@ -56,7 +62,9 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             "message": err
-        },)
+        }, {
+            status: 500
+        })
 
     }
 
@@ -69,7 +77,8 @@ export async function DELETE() {
         cookies().delete("is_adult_content_enabled")
 
         return NextResponse.json({
-            "message": "Success",
+            "message": "Success"
+        }, {
             status: 202
         })
 
@@ -78,6 +87,8 @@ export async function DELETE() {
 
         return NextResponse.json({
             "message": err
+        }, {
+            status: 500
         })
 
     }

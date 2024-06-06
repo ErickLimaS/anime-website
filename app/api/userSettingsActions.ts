@@ -47,8 +47,8 @@ export default {
 
         }
 
-    }, 
-    
+    },
+
     setSubtitleLanguageCookie: async ({ lang }: { lang?: string }) => {
 
         try {
@@ -72,5 +72,27 @@ export default {
 
     },
 
+    setPlayWrongMediaCookie: async ({ playWrongMedia }: { playWrongMedia?: string }) => {
+
+        try {
+
+            const setPlayWrongMedia = await Axios({
+                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/wrong-media-enabled`,
+                method: "POST",
+                data: { isEnabled: playWrongMedia }
+            })
+
+            return setPlayWrongMedia
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return err
+
+        }
+
+    },
 
 }

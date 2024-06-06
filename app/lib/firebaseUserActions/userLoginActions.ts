@@ -45,6 +45,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
             isAdultContentEnabled: `${userAnilist?.options.displayAdultContent}` || `${false}`,
             subtitleLanguage: doesUserHasDoc.videoSubtitleLanguage || "English",
             titleLanguage: userAnilist?.options.titleLanguage || "romaji",
+            playWrongMedia: doesUserHasDoc.playVideoWhenMediaAndVideoIdMismatch ? `${doesUserHasDoc.playVideoWhenMediaAndVideoIdMismatch}` : "false",
         })
 
         return userData
@@ -74,6 +75,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
         showAdultContent: userAnilist ? userAnilist.options.displayAdultContent : false,
         autoNextEpisode: true,
         autoSkipIntroAndOutro: false,
+        playVideoWhenMediaAndVideoIdMismatch: false,
         videoQuality: "auto",
         videoSubtitleLanguage: "English",
     }
@@ -102,6 +104,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
             isAdultContentEnabled: `${userAnilist?.options.displayAdultContent}` || `${false}`,
             subtitleLanguage: "English",
             titleLanguage: userAnilist?.options.titleLanguage || "romaji",
+            playWrongMedia: "false"
         })
 
         return userAnilist

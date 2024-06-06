@@ -43,9 +43,9 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
 
 export default async function MediaPage({ params, searchParams }: { params: { id: number }, searchParams: { lang?: string } }) {
 
-  const mediaInfo = await anilist.getMediaInfo({ id: params.id, accessToken: headers().get("Authorization")?.slice(7) }) as ApiMediaResults
-
   const isOnMobileScreen = checkDeviceIsMobile(headers()) || false
+
+  const mediaInfo = await anilist.getMediaInfo({ id: params.id, accessToken: headers().get("Authorization")?.slice(7) }) as ApiMediaResults
 
   // GET MEDIA INFO ON IMDB
   const imdbMediaInfo = await getMediaInfo({

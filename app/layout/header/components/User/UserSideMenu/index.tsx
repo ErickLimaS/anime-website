@@ -18,7 +18,7 @@ import UserSettingsModal from '../UserSettingsModal'
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks'
 import { removeUserInfo } from '@/app/lib/redux/features/manageUserData'
-import { removeCookiesAndRefreshPage } from '@/app/lib/user/anilistUserLoginOptions'
+import { checkAccessTokenStillValid, removeCookies } from '@/app/lib/user/anilistUserLoginOptions'
 import { useParams } from 'next/navigation'
 import { handleAnilistUserLoginWithRedux } from '@/app/lib/user/anilistUserLoginOptions'
 
@@ -69,6 +69,16 @@ function UserSideMenu() {
 
     }, [user, loading, params])
 
+    useEffect(() => {
+
+        if (typeof window !== 'undefined' && anilistUser) {
+
+            checkAccessTokenStillValid()
+
+        }
+
+    }, [anilistUser])
+
     async function logUserOut() {
 
         if (anilistUser) {
@@ -78,7 +88,7 @@ function UserSideMenu() {
             return
         }
 
-        await removeCookiesAndRefreshPage()
+        await removeCookies()
 
         auth.signOut()
 

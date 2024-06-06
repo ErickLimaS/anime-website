@@ -8,10 +8,15 @@ import YoutubeSvg from "@/public/assets/youtube.svg"
 import TwitterSvg from "@/public/assets/twitter-x.svg"
 import anilistMedias from '@/app/api/anilistMedias'
 import { animesGenres } from '../header'
+import { cookies } from 'next/headers'
 
 async function Footer() {
 
-    const animesReleasingList = await anilistMedias.getReleasingThisWeek({ type: "ANIME" })
+    const accessTokenCookie = cookies().get("access_token")?.value
+
+    const userAuthorization = accessTokenCookie ? JSON.parse(accessTokenCookie).accessToken : undefined
+
+    const animesReleasingList = await anilistMedias.getReleasingThisWeek({ type: "ANIME", accessToken: userAuthorization })
 
     return (
         <footer id={styles.footer}>

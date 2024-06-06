@@ -36,6 +36,20 @@ function KeepWatchingSection() {
     const db = getFirestore(initFirebase());
 
     const [watchingList, setWatchingList] = useState<KeepWatchingItem[]>([])
+    const [deletedFromWatchingList, setDeletedFromWatchingList] = useState<KeepWatchingItem[]>([])
+
+    useEffect(() => {
+
+        const filterAvailableMedias = deletedFromWatchingList.map(mediaRemoved => watchingList.filter(media => media.id != mediaRemoved.id))[0]
+
+        if (deletedFromWatchingList.length != 0) {
+
+            setWatchingList(() => filterAvailableMedias)
+            setDeletedFromWatchingList([])
+
+        }
+
+    }, [deletedFromWatchingList])
 
     useEffect(() => { if (user || anilistUser) getWatchingList() }, [user, anilistUser])
 
@@ -85,13 +99,14 @@ function KeepWatchingSection() {
                             }}
                         >
 
-                            {watchingList.map((media, key) => (
+                            {watchingList.map((media) => (
 
-                                <SwiperSlide key={key} className="custom_swiper_list_item" role="listitem">
+                                <SwiperSlide key={media.id} className="custom_swiper_list_item" role="listitem">
 
                                     <KeepWatchingEpisodeInfo
                                         animeInfo={media}
                                         darkMode
+                                        deleteFromListHook={() => setDeletedFromWatchingList((currMedias) => [...currMedias, media])}
                                     />
 
                                 </SwiperSlide>

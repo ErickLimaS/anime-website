@@ -9,7 +9,8 @@ export async function POST(request: NextRequest) {
         const anilistTokenData: { accessToken: string, tokenType: string, expiresIn: string } = await request.json()
 
         if (!anilistTokenData) return NextResponse.json({
-            "message": "No Token Received",
+            "message": "No Token Received"
+        }, {
             status: 404
         })
 
@@ -21,16 +22,20 @@ export async function POST(request: NextRequest) {
         })
 
         return NextResponse.json({
-            "message": "Anilist Token Set!",
+            "message": "Anilist Token Set!"
+        }, {
             status: 201
-        })
+        }
+        )
 
     }
     catch (err) {
 
         return NextResponse.json({
             "message": err
-        },)
+        }, {
+            status: 500
+        })
 
     }
 
@@ -46,13 +51,15 @@ export async function GET(request: NextRequest) {
         if (anilistAccessTokenData) {
             return NextResponse.json({
                 "message": "Success",
-                "access_token": anilistAccessTokenData,
+                "access_token": anilistAccessTokenData
+            }, {
                 status: 200
             })
         }
 
         return NextResponse.json({
-            "message": "No Cookie Found",
+            "message": "No Cookie Found"
+        }, {
             status: 404
         })
 
@@ -61,7 +68,9 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             "message": err
-        },)
+        }, {
+            status: 500
+        })
 
     }
 }
@@ -73,7 +82,8 @@ export async function DELETE() {
         cookies().delete("access_token")
 
         return NextResponse.json({
-            "message": "Success",
+            "message": "Success"
+        }, {
             status: 202
         })
 
@@ -82,7 +92,9 @@ export async function DELETE() {
 
         return NextResponse.json({
             "message": err
-        },)
+        }, {
+            status: 500
+        })
 
     }
 }

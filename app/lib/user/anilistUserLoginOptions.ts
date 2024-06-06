@@ -1,7 +1,8 @@
 import anilistUsers from "@/app/api/anilistUsers"
 import axios from "axios"
-import { addUserInfo } from "@/app/lib/redux/features/manageUserData"
+import { addUserInfo, removeUserInfo } from "@/app/lib/redux/features/manageUserData"
 import { makeStore } from "../redux/store"
+import userSettingsActions from "@/app/api/userSettingsActions"
 
 export const userCustomStore = makeStore()
 
@@ -31,23 +32,36 @@ export async function handleAnilistUserLoginWithRedux() {
 
 }
 
-export async function addUserCookies({ isAdultContentEnabled, titleLanguage, subtitleLanguage }: {
-    isAdultContentEnabled: string, titleLanguage: string, subtitleLanguage: string
+export async function checkAccessTokenStillValid() {
+
+    try {
+
+        await axios.get(`${window.location.origin}/api/anilist`)
+
+        return
+
+    }
+    catch (err) {
+
+        userCustomStore.dispatch(removeUserInfo())
+
+    }
+
+}
+
+export async function addUserCookies({ isAdultContentEnabled, titleLanguage, subtitleLanguage, playWrongMedia }: {
+    isAdultContentEnabled: string, titleLanguage: string, subtitleLanguage: string, playWrongMedia: string
 }) {
 
     try {
 
-        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`, {
-            isAdultContentEnabled: isAdultContentEnabled
-        })
+        await userSettingsActions.setMediaTitleLanguageCookie({ lang: titleLanguage })
 
-        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`, {
-            titleLanguage: titleLanguage
-        })
+        await userSettingsActions.setAdultContentCookie({ isEnabled: isAdultContentEnabled })
 
-        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`, {
-            subtitleLanguage: subtitleLanguage
-        })
+        await userSettingsActions.setSubtitleLanguageCookie({ lang: subtitleLanguage })
+
+        await userSettingsActions.setPlayWrongMediaCookie({ playWrongMedia: playWrongMedia })
 
     }
     catch (err) {
@@ -59,16 +73,15 @@ export async function addUserCookies({ isAdultContentEnabled, titleLanguage, sub
     }
 }
 
-export async function removeCookiesAndRefreshPage() {
+export async function removeCookies() {
 
     try {
 
-        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`)
         await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`)
         await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`)
         await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`)
-
-        // window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/`
+        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/wrong-media-enabled`)
+        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`)
 
     }
     catch (err) {

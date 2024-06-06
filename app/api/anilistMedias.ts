@@ -9,11 +9,7 @@ import {
 } from './anilistQueryConstants'
 import { cache } from 'react'
 import axiosRetry from 'axios-retry'
-import anilistUsers, { getHeadersWithAuthorization } from "./anilistUsers"
-
-const headers = {
-    'Content-Type': 'application/json',
-}
+import { getHeadersWithAuthorization } from "./anilistUsers"
 
 // returns medias with adult content
 function filterMediasWithAdultContent(mediasList: ApiDefaultResult[] | ApiAiringMidiaResults[], reponseType?: "mediaByFormat") {
@@ -43,17 +39,20 @@ axiosRetry(Axios, {
 export default {
 
     // HOME PAGE
-    getNewReleases: cache(async ({ type, format, sort, showAdultContent, status, page, perPage }: {
+    getNewReleases: cache(async ({ type, format, sort, showAdultContent, status, page, perPage, accessToken }: {
         type: string,
         format?: string,
         sort?: string,
         showAdultContent?: boolean,
         status?: "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS",
         page?: number,
-        perPage?: number
+        perPage?: number,
+        accessToken?: string
     }) => {
 
         const season = getCurrentSeason()
+
+        const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
         try {
 
@@ -75,7 +74,7 @@ export default {
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
-                headers: headers,
+                headers: headersCustom,
                 data: graphqlQuery
             })
 
@@ -92,9 +91,11 @@ export default {
     }),
 
     //SEARCH
-    getSeachResults: cache(async ({ query, showAdultContent }: { query: string, showAdultContent?: boolean }) => {
+    getSeachResults: cache(async ({ query, showAdultContent, accessToken }: { query: string, showAdultContent?: boolean, accessToken?: string }) => {
 
         try {
+
+            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const graphqlQuery = {
                 "query": defaultApiQueryRequest(', $search: String', ', search: $search'),
@@ -110,7 +111,7 @@ export default {
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
-                headers: headers,
+                headers: headersCustom,
                 data: graphqlQuery
             })
 
@@ -128,9 +129,17 @@ export default {
     }),
 
     // RELEASING THIS WEEK
-    getReleasingThisWeek: cache(async ({ type, format, page, showAdultContent }: { type: string, format?: string, page?: number, showAdultContent?: boolean }) => {
+    getReleasingThisWeek: cache(async ({ type, format, page, showAdultContent, accessToken }: {
+        type: string,
+        format?: string,
+        page?: number,
+        showAdultContent?: boolean,
+        accessToken?: string
+    }) => {
 
         try {
+
+            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const thisYear = new Date().getFullYear()
 
@@ -150,7 +159,7 @@ export default {
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
-                headers: headers,
+                headers: headersCustom,
                 data: graphqlQuery
             })
 
@@ -168,15 +177,18 @@ export default {
     }),
 
     // RELEASING BY DAYS RANGE
-    getReleasingByDaysRange: cache(async ({ type, days, pageNumber, perPage, showAdultContent }: {
+    getReleasingByDaysRange: cache(async ({ type, days, pageNumber, perPage, showAdultContent, accessToken }: {
         type: string,
         days: 1 | 7 | 30,
         pageNumber?: number,
         perPage?: number,
-        showAdultContent?: boolean
+        showAdultContent?: boolean,
+        accessToken?: string
     }) => {
 
         try {
+
+            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const dateInUnix = convertToUnix(days)
 
@@ -199,7 +211,7 @@ export default {
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
-                headers: headers,
+                headers: headersCustom,
                 data: graphqlQuery
             })
 
@@ -218,9 +230,11 @@ export default {
     }),
 
     // TRENDING
-    getTrendingMedia: cache(async ({ sort, showAdultContent }: { sort?: string, showAdultContent?: boolean }) => {
+    getTrendingMedia: cache(async ({ sort, showAdultContent, accessToken }: { sort?: string, showAdultContent?: boolean, accessToken?: string }) => {
 
         try {
+
+            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const thisYear = new Date().getFullYear()
 
@@ -239,7 +253,7 @@ export default {
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
-                headers: headers,
+                headers: headersCustom,
                 data: graphqlQuery
             })
 
@@ -257,15 +271,18 @@ export default {
     }),
 
     // MEDIAS WITH INDICATED FORMAT    
-    getMediaForThisFormat: cache(async ({ type, sort, pageNumber, perPage, showAdultContent }: {
+    getMediaForThisFormat: cache(async ({ type, sort, pageNumber, perPage, showAdultContent, accessToken }: {
         type: string,
         sort?: string,
         pageNumber?: number,
         perPage?: number,
-        showAdultContent?: boolean
+        showAdultContent?: boolean,
+        accessToken?: string
     }) => {
 
         try {
+
+            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const graphqlQuery = {
                 "query": defaultApiQueryRequest(),
@@ -281,7 +298,7 @@ export default {
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,
                 method: 'POST',
-                headers: headers,
+                headers: headersCustom,
                 data: graphqlQuery
             })
 
@@ -311,7 +328,7 @@ export default {
                 }
             }
 
-            const headersCustom = accessToken ? await getHeadersWithAuthorization({ accessToken: accessToken }) : headers
+            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,

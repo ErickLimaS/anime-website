@@ -5,21 +5,21 @@ export async function POST(request: NextRequest) {
 
     try {
 
-        const titleLanguage: string = await request.json().then((res) => res.titleLanguage)
+        const isPlayWrongMediaEnabled: string = await request.json().then((res) => res.isEnabled)
 
-        if (!titleLanguage) return NextResponse.json({
+        if (!isPlayWrongMediaEnabled) return NextResponse.json({
             "message": "No Data Received"
         }, {
             status: 404
         })
 
         cookies().set({
-            name: 'media_title_language',
-            value: titleLanguage
+            name: 'wrong_media_enabled',
+            value: `${isPlayWrongMediaEnabled}`
         })
 
         return NextResponse.json({
-            "message": "Media Title Language Cookie Set!"
+            "message": "Play Wrong Media Cookie Set!"
         }, {
             status: 201
         })
@@ -41,11 +41,11 @@ export async function GET(request: NextRequest) {
 
     try {
 
-        const mediaTitleLanguage = request.cookies.get("media_title_language")
+        const isPlayWrongMediaEnabled = request.cookies.get("wrong_media_enabled")
 
-        if (mediaTitleLanguage) {
+        if (isPlayWrongMediaEnabled) {
             return NextResponse.json({
-                "mediaTitleLanguage": mediaTitleLanguage.value
+                "wrongMediaEnabled": isPlayWrongMediaEnabled.value
             }, {
                 status: 201
             })
@@ -74,7 +74,7 @@ export async function DELETE() {
 
     try {
 
-        cookies().delete("media_title_language")
+        cookies().delete("wrong_media_enabled")
 
         return NextResponse.json({
             "message": "Success"

@@ -271,8 +271,10 @@ export function mediaByIdQueryRequest(otherQueryFields?: unknown, otherMediasFie
                                             type
                                             format
                                             title{
-                                                native
                                                 romaji
+                                                native
+                                                english
+                                                userPreferred
                                             }
                                             coverImage{
                                                 large

@@ -88,7 +88,8 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
 
                                     <MediaCard.Container key={key} positionIndex={key + 1} onDarkMode isHiddenOnDesktop>
 
-                                        <MediaCard.MediaImg
+                                        <MediaCard.MediaImgLink
+                                            mediaId={media.id}
                                             title={media.title.userPreferred}
                                             formatOrType={media.format}
                                             url={media.coverImage.large}
@@ -116,7 +117,8 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
 
                         <MediaCard.Container key={key} onDarkMode>
 
-                            <MediaCard.MediaImg
+                            <MediaCard.MediaImgLink
+                                mediaId={media.id}
                                 title={media.title.userPreferred}
                                 formatOrType={media.format}
                                 url={media.coverImage.large}
@@ -151,7 +153,8 @@ function PopularMediaSection({ animesList }: { animesList: ApiDefaultResult[] })
 
                             <MediaCard.Container key={key} onDarkMode>
 
-                                <MediaCard.MediaImg
+                                <MediaCard.MediaImgLink
+                                    mediaId={media.id}
                                     title={media.title.userPreferred}
                                     formatOrType={media.format}
                                     url={media.coverImage.large}
