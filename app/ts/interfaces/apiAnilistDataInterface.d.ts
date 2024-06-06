@@ -37,7 +37,7 @@ export interface ApiDefaultResult {
         color: string | StaticImport,
     },
     bannerImage: string | StaticImport,
-    type: string,
+    type: "ANIME" | "MANGA",
     format: string,
     genres: string[],
     trending: number,

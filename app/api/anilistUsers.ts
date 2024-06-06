@@ -203,6 +203,47 @@ export default {
 
     }),
 
+    addOrRemoveFromAnilistFavourites: async ({ format, mediaId }: { format: "anime" | "manga", mediaId: number }) => {
+
+        try {
+
+            const graphqlQuery = {
+                "query": `mutation ($id: Int) {
+                    ToggleFavourite (animeId: $id){
+                        ${format} {
+                            nodes {
+                                id
+                                title {
+                                    romaji
+                                }
+                            }
+                        }
+                    }
+                }`,
+                "variables": {
+                    "id": mediaId,
+                }
+            }
+
+            const { data } = await Axios({
+                url: `${BASE_ANILIST_URL}`,
+                method: 'POST',
+                headers: await getHeadersWithAuthorization({}),
+                data: graphqlQuery
+            })
+
+            return data
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+    },
+
     handleMediaTitleLanguageSetting: async ({ lang }: { lang?: string }) => {
 
         try {
