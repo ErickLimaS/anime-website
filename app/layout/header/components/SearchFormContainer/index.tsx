@@ -127,7 +127,8 @@ function SearchFormContainer() {
                             type="text"
                             placeholder='Search...'
                             name='searchField'
-                            onChange={(e) => fetchSearchResultsOnInputChange(e.target.value)}
+                            onChange={(e) => setSearchInputValue(e.target.value)}
+                            // onChange={(e) => fetchSearchResultsOnInputChange(e.target.value)}
                         />
                         <button
                             type='submit'
