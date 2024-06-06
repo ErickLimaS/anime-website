@@ -136,6 +136,8 @@
 }
 
 #heading_info_container h1 {
+    
+    display: block;
 
     margin-bottom: 24px;
 

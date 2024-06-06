@@ -1,6 +1,6 @@
 import anilistUsers from "@/app/api/anilistUsers"
 import axios from "axios"
-import { addUserInfo } from "@/app/lib/redux/features/manageUserData"
+import { addUserInfo, removeUserInfo } from "@/app/lib/redux/features/manageUserData"
 import { makeStore } from "../redux/store"
 
 export const userCustomStore = makeStore()
@@ -29,6 +29,23 @@ export async function handleAnilistUserLoginWithRedux() {
         userCustomStore.dispatch(addUserInfo(userData))
     }
 
+}
+
+export async function checkAccessTokenStillValid() {
+
+    try {
+
+        await axios.get(`${window.location.origin}/api/anilist`)
+
+        return
+
+    }
+    catch (err) {
+
+        userCustomStore.dispatch(removeUserInfo())
+
+    }
+    
 }
 
 export async function addUserCookies({ isAdultContentEnabled, titleLanguage, subtitleLanguage, playWrongMedia }: {

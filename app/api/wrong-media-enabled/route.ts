@@ -8,7 +8,8 @@ export async function POST(request: NextRequest) {
         const isPlayWrongMediaEnabled: string = await request.json().then((res) => res.isEnabled)
 
         if (!isPlayWrongMediaEnabled) return NextResponse.json({
-            "message": "No Data Received",
+            "message": "No Data Received"
+        }, {
             status: 404
         })
 
@@ -18,7 +19,8 @@ export async function POST(request: NextRequest) {
         })
 
         return NextResponse.json({
-            "message": "Play Wrong Media Cookie Set!",
+            "message": "Play Wrong Media Cookie Set!"
+        }, {
             status: 201
         })
 
@@ -27,7 +29,9 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             "message": err
-        },)
+        }, {
+            status: 500
+        })
 
     }
 
@@ -41,13 +45,15 @@ export async function GET(request: NextRequest) {
 
         if (isPlayWrongMediaEnabled) {
             return NextResponse.json({
-                "wrongMediaEnabled": isPlayWrongMediaEnabled.value,
+                "wrongMediaEnabled": isPlayWrongMediaEnabled.value
+            }, {
                 status: 201
             })
         }
 
         return NextResponse.json({
-            "message": "No Cookie Found",
+            "message": "No Cookie Found"
+        }, {
             status: 404
         })
 
@@ -56,7 +62,9 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             "message": err
-        },)
+        }, {
+            status: 500
+        })
 
     }
 
@@ -69,7 +77,8 @@ export async function DELETE() {
         cookies().delete("wrong_media_enabled")
 
         return NextResponse.json({
-            "message": "Success",
+            "message": "Success"
+        }, {
             status: 202
         })
 
@@ -78,6 +87,8 @@ export async function DELETE() {
 
         return NextResponse.json({
             "message": err
+        }, {
+            status: 500
         })
 
     }

@@ -95,6 +95,9 @@ export async function GET(request: NextRequest) {
             data: resultsLimitedByPage,
             allResultsLength: totalResultsLength,
             lastUpdate: (AnimeDataOffline as { lastUpdate: string }).lastUpdate
+        },
+        {
+            status: 200
         }
     )
 

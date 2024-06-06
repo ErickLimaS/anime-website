@@ -14,12 +14,12 @@ export async function getHeadersWithAuthorization({ accessToken }: { accessToken
         }
     }
 
-    const { data } = await Axios({
-        url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`,
-        method: "GET"
-    })
+    try {
 
-    if (data.status == 200) {
+        const { data } = await Axios({
+            url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`,
+            method: "GET"
+        })
 
         return {
             'Content-Type': 'application/json',
@@ -28,11 +28,13 @@ export async function getHeadersWithAuthorization({ accessToken }: { accessToken
         }
 
     }
+    catch (err) {
 
-    return {
-        'Content-Type': 'application/json',
+        return {
+            'Content-Type': 'application/json',
+        }
+        
     }
-    
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
