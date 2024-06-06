@@ -196,11 +196,11 @@ export default async function WatchEpisode({ params, searchParams }: {
         />
     }
 
-    if (videoIdDoesntMatch && searchParams.alert != "false") {
+    if (videoIdDoesntMatch && searchParams?.alert == "true") {
         return <AlertWrongMediaVideoOnMediaId
             mediaId={params.id}
             mediaTitle={mediaInfo.title.userPreferred}
-            isActive={videoIdDoesntMatch}
+            mediaFormat={mediaInfo.format}
         />
     }
 
@@ -254,6 +254,13 @@ export default async function WatchEpisode({ params, searchParams }: {
                             )}
 
                         </h1>
+
+                        {videoIdDoesntMatch && (
+
+                            <small id={styles.alert_wrong_media}>This video {`doesn't`} belong to this media</small>
+
+                        )}
+
                         <MediaCardExpanded.Container
                             mediaInfo={mediaInfo as ApiDefaultResult}
                         >

@@ -31,8 +31,8 @@ export async function handleAnilistUserLoginWithRedux() {
 
 }
 
-export async function addUserCookies({ isAdultContentEnabled, titleLanguage, subtitleLanguage }: {
-    isAdultContentEnabled: string, titleLanguage: string, subtitleLanguage: string
+export async function addUserCookies({ isAdultContentEnabled, titleLanguage, subtitleLanguage, playWrongMedia }: {
+    isAdultContentEnabled: string, titleLanguage: string, subtitleLanguage: string, playWrongMedia: string
 }) {
 
     try {
@@ -49,6 +49,10 @@ export async function addUserCookies({ isAdultContentEnabled, titleLanguage, sub
             subtitleLanguage: subtitleLanguage
         })
 
+        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/wrong-media-enabled`, {
+            isEnabled: playWrongMedia
+        })
+
     }
     catch (err) {
 
@@ -59,16 +63,15 @@ export async function addUserCookies({ isAdultContentEnabled, titleLanguage, sub
     }
 }
 
-export async function removeCookiesAndRefreshPage() {
+export async function removeCookies() {
 
     try {
 
-        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`)
         await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`)
         await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`)
         await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`)
-
-        // window.location.href = `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/`
+        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/wrong-media-enabled`)
+        await axios.delete(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`)
 
     }
     catch (err) {

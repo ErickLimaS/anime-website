@@ -1,6 +1,6 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit"
-import { removeCookiesAndRefreshPage } from "../../user/anilistUserLoginOptions"
+import { removeCookies } from "../../user/anilistUserLoginOptions"
 
 const initialState: { value: UserAnilist | null } = {
 
@@ -23,7 +23,7 @@ export const userInfo = createSlice({
 
             state.value = null
 
-            removeCookiesAndRefreshPage()
+            removeCookies()
 
         },
     }
