@@ -76,6 +76,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
     const [currentTitleLang, setCurrentTitleLang] = useState<string | null>(null)
     const [currentQuality, setCurrentQuality] = useState<string | null>(null)
     const [currentShowAdultContent, setCurrentShowAdultContent] = useState<boolean | null>(null)
+    const [currentPlayWrongMediaEnabled, setCurrentPlayWrongMediaEnabled] = useState<boolean | null>(null)
     const [currentSkipIntroAndOutro, setCurrentSkipIntroAndOutro] = useState<boolean | null>(null)
     const [currentNextEpisode, setCurrentNextEpisode] = useState<boolean | null>(null)
 
@@ -111,7 +112,8 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                 videoQuality: form.quality.value,
                 showAdultContent: form.showAdultContent.checked,
                 autoNextEpisode: form.autoNextEpisode.checked,
-                autoSkipIntroAndOutro: form.skipIntroAndOutro.checked
+                autoSkipIntroAndOutro: form.skipIntroAndOutro.checked,
+                playVideoWhenMediaAndVideoIdMismatch: form.playVideoWhenMismatch.checked
             }
         ).then(onClick as ((value: void) => void | PromiseLike<void>) | null | undefined)
 
@@ -123,6 +125,8 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
 
             await anilistUsersActions.handleSubtitleLanguageSetting({ lang: form.language.value })
 
+            await anilistUsersActions.handlePlayWrongMediaSetting({ isEnabled: `${form.playVideoWhenMismatch.checked}` })
+
         }
         else {
 
@@ -131,6 +135,8 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
             await userSettingsActions.setAdultContentCookie({ isEnabled: `${form.showAdultContent.checked}` })
 
             await userSettingsActions.setSubtitleLanguageCookie({ lang: form.language.value })
+
+            await userSettingsActions.setPlayWrongMediaCookie({ playWrongMedia: `${form.playVideoWhenMismatch.checked}` })
 
         }
 
@@ -224,6 +230,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
         setCurrentShowAdultContent(await userDoc.get("showAdultContent") || false)
         setCurrentSkipIntroAndOutro(await userDoc.get("autoSkipIntroAndOutro") || false)
         setCurrentNextEpisode(await userDoc.get("autoNextEpisode") || false)
+        setCurrentPlayWrongMediaEnabled(await userDoc.get("playVideoWhenMediaAndVideoIdMismatch") || false)
 
     }())
 
@@ -534,7 +541,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                         </div>
 
                         <div>
-                            {(currentSource != null) && (
+                            {(currentShowAdultContent != null) && (
                                 <>
                                     <div className={styles.checkbox_container}>
 
@@ -553,6 +560,26 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                     {userAnilist && (
                                         <small style={{ marginTop: "16px", display: "block" }}>Changing this option will also change on your AniList Account</small>
                                     )}
+                                </>
+                            )}
+                        </div>
+
+                        <div>
+                            {(currentPlayWrongMediaEnabled != null) && (
+                                <>
+                                    <div className={styles.checkbox_container}>
+
+                                        <label>
+                                            <input
+                                                type='checkbox'
+                                                name='playVideoWhenMismatch'
+                                                defaultChecked={(currentPlayWrongMediaEnabled == true) as boolean}
+                                            ></input>
+                                            <span />
+
+                                        </label>
+                                        <p>{`Don't`} show wrong media alert on Watch Page</p>
+                                    </div>
                                 </>
                             )}
                         </div>

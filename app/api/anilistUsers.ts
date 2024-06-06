@@ -33,7 +33,7 @@ export async function getHeadersWithAuthorization({ accessToken }: { accessToken
         return {
             'Content-Type': 'application/json',
         }
-        
+
     }
 }
 
@@ -284,6 +284,25 @@ export default {
         try {
 
             const cookieSetResult = await userSettingsActions.setSubtitleLanguageCookie({ lang: lang })
+
+            return cookieSetResult
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+
+    },
+
+    handlePlayWrongMediaSetting: async ({ isEnabled }: { isEnabled?: string }) => {
+
+        try {
+
+            const cookieSetResult = await userSettingsActions.setPlayWrongMediaCookie({ playWrongMedia: isEnabled })
 
             return cookieSetResult
 

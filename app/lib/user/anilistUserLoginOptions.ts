@@ -2,6 +2,7 @@ import anilistUsers from "@/app/api/anilistUsers"
 import axios from "axios"
 import { addUserInfo, removeUserInfo } from "@/app/lib/redux/features/manageUserData"
 import { makeStore } from "../redux/store"
+import userSettingsActions from "@/app/api/userSettingsActions"
 
 export const userCustomStore = makeStore()
 
@@ -45,7 +46,7 @@ export async function checkAccessTokenStillValid() {
         userCustomStore.dispatch(removeUserInfo())
 
     }
-    
+
 }
 
 export async function addUserCookies({ isAdultContentEnabled, titleLanguage, subtitleLanguage, playWrongMedia }: {
@@ -54,21 +55,13 @@ export async function addUserCookies({ isAdultContentEnabled, titleLanguage, sub
 
     try {
 
-        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`, {
-            isAdultContentEnabled: isAdultContentEnabled
-        })
+        await userSettingsActions.setMediaTitleLanguageCookie({ lang: titleLanguage })
 
-        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`, {
-            titleLanguage: titleLanguage
-        })
+        await userSettingsActions.setAdultContentCookie({ isEnabled: isAdultContentEnabled })
 
-        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`, {
-            subtitleLanguage: subtitleLanguage
-        })
+        await userSettingsActions.setSubtitleLanguageCookie({ lang: subtitleLanguage })
 
-        await axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/wrong-media-enabled`, {
-            isEnabled: playWrongMedia
-        })
+        await userSettingsActions.setPlayWrongMediaCookie({ playWrongMedia: playWrongMedia })
 
     }
     catch (err) {
