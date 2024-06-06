@@ -254,6 +254,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
             episodeImg: episodeInfo.episodeImg || null,
             episodeTimeLastStop: saveNextEpisodeInfo ? 0 : currentEpisodeTime,
             episodeDuration: videoDuration,
+            dub: searchParams?.get("dub") == "true" ? true : false,
             source: mediaSource,
             updatedAt: Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) / 1000
         }

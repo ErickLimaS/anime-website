@@ -90,8 +90,12 @@ function KeepWatchingEpisodeInfo({ animeInfo, darkMode, deleteFromListHook }: Co
 
                         <div className={styles.overlay_info_container}>
 
-                            <Link href={`/watch/${animeInfo.id}?source=${animeInfo.source}&episode=${animeInfo.episode}&q=${animeInfo.episodeId}&t=${animeInfo.episodeTimeLastStop || 0}`}>
+                            <Link
+                                href={`/watch/${animeInfo.id}?source=${animeInfo.source}&episode=${animeInfo.episode}&q=${animeInfo.episodeId}&t=${animeInfo.episodeTimeLastStop || 0}${animeInfo.dub ? "&dub=true" : ""}`}
+                            >
+
                                 {animeInfo.format != "MOVIE" ? "CONTINUE EPISODE" : "CONTINUE"}
+
                             </Link>
 
                         </div>
