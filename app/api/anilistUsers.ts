@@ -19,12 +19,20 @@ export async function getHeadersWithAuthorization({ accessToken }: { accessToken
         method: "GET"
     })
 
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${data.access_token}`,
-        'Accept': 'application/json',
+    if (data.status == 200) {
+
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data.access_token}`,
+            'Accept': 'application/json',
+        }
+
     }
 
+    return {
+        'Content-Type': 'application/json',
+    }
+    
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
