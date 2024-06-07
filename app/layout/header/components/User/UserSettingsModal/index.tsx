@@ -16,6 +16,7 @@ import { initFirebase } from '@/app/firebaseApp'
 import * as contantOptions from "./contantOptions"
 import anilistUsersActions from '@/app/api/anilistUsers'
 import userSettingsActions from '@/app/api/userSettingsActions'
+import { removeCookies } from '@/app/lib/user/anilistUserLoginOptions'
 
 type SettingsTypes = {
     onClick?: MouseEventHandler<HTMLDivElement> | MouseEventHandler<HTMLButtonElement> | ((value: void) => void | PromiseLike<void>) | null | undefined,
@@ -205,6 +206,8 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                     auth.signOut()
 
                 }
+                
+                removeCookies()
 
                 window.location.reload()
 

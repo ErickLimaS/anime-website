@@ -36,7 +36,7 @@ export async function checkAccessTokenStillValid() {
 
     try {
 
-        await axios.get(`${window.location.origin}/api/anilist`)
+        await axios.get(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`)
 
         return
 
