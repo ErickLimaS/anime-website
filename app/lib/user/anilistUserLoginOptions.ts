@@ -15,7 +15,7 @@ export async function handleAnilistUserLoginWithRedux() {
     const expiresIn = anilistUrlAccessInfo.slice(anilistUrlAccessInfo.search(/\bexpires_in=\b/)).slice(11)
 
     if (anilistUrlAccessInfo) {
-        axios.post(`${window.location.origin}/api/anilist`, {
+        axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`, {
             accessToken: accessToken,
             tokenType: tokenType,
             expiresIn: expiresIn

@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
         const tokenType = anilistAccessHashOnURL.slice(anilistAccessHashOnURL.search(/\btoken_type=\b/), anilistAccessHashOnURL.search(/\b&expires_in\b/)).slice(11)
         const expiresIn = anilistAccessHashOnURL.slice(anilistAccessHashOnURL.search(/\bexpires_in=\b/)).slice(11)
 
-        axios.post(`${window.location.origin}/api/anilist`, {
+        axios.post(`${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`, {
             accessToken: accessTokenHash,
             tokenType: tokenType,
             expiresIn: expiresIn
