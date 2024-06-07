@@ -15,10 +15,10 @@ import { updateUserFavouriteMedias } from '@/app/lib/firebaseUserActions/userDoc
 import { useAppSelector } from '@/app/lib/redux/hooks'
 import anilistUsers from '@/app/api/anilistUsers'
 
-export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDefaultResult, svgOnlyColor?: string, children?: React.ReactNode[] }) {
+export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[], svgOnlyColor?: string, isActiveOnAnilist?: boolean }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [wasAddedToFavourites, setWasAddedToFavourites] = useState<boolean>(false)
+    const [wasAddedToFavourites, setWasAddedToFavourites] = useState<boolean>(isActiveOnAnilist || false)
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
@@ -117,13 +117,13 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
 
                 {(!isLoading && wasAddedToFavourites) &&
                     (children ?
-                        children[1] : (<><FavouriteFillSvg width={16} height={16} fill={svgOnlyColor || "var(--brand-color)"} /> FAVOURITED</>)
+                        children[1] : (<><FavouriteFillSvg width={16} height={16} fill={"var(--brand-color)"} /> FAVOURITED</>)
                     )
                 }
 
                 {(!isLoading && !wasAddedToFavourites) &&
                     (children ?
-                        children[0] : (<><FavouriteSvg width={16} height={16} fill={svgOnlyColor || "var(--white-100)"} /> FAVOURITE</>)
+                        children[0] : (<><FavouriteSvg width={16} height={16} fill={"var(--white-100)"} /> FAVOURITE</>)
                     )
                 }
 

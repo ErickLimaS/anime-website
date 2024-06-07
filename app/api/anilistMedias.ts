@@ -5,7 +5,8 @@ import {
     BASE_ANILIST_URL,
     defaultApiQueryRequest, getCurrentSeason,
     mediaAiringApiQueryRequest, mediaByIdQueryRequest,
-    mediaTrendingApiQueryRequest
+    mediaTrendingApiQueryRequest,
+    queryMediaWithUserAuthenticated
 } from './anilistQueryConstants'
 import { cache } from 'react'
 import axiosRetry from 'axios-retry'
@@ -317,18 +318,18 @@ export default {
     }),
 
     // GET MEDIA INFO BY ID
-    getMediaInfo: cache(async ({ id, showAdultContent, accessToken }: { id: number, showAdultContent?: boolean, accessToken?: string }) => {
+    getMediaInfo: cache(async ({ id, accessToken }: { id: number, accessToken?: string }) => {
 
         try {
 
+            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
+
             const graphqlQuery = {
-                "query": mediaByIdQueryRequest('$id: Int', 'id: $id'),
+                "query": headersCustom.Authorization ? queryMediaWithUserAuthenticated('$id: Int', 'id: $id') : mediaByIdQueryRequest('$id: Int', 'id: $id'),
                 "variables": {
                     'id': id
                 }
             }
-
-            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,

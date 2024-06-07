@@ -294,7 +294,7 @@ export default {
 
             const graphqlQuery = {
                 "query": `mutation ($id: Int) {
-                    DeleteMediaListEntry (mediaId: $mediaId){
+                    DeleteMediaListEntry (id: $id){
                         deleted
                     }
                 }`,

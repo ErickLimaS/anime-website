@@ -112,6 +112,10 @@ h2.heading_style {
 
 #media_title_container #btns_actions_container {
 
+    position: relative;
+
+    margin-left: auto;
+
     display: flex;
     flex-direction: row;
     gap: 8px;
@@ -141,14 +145,14 @@ h2.heading_style {
 
 }
 
-#media_title_container ul {
+#media_title_container #genres_container ul {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 8px;
 }
 
-#media_title_container ul li {
+#media_title_container #genres_container ul li {
 
     border: 2px solid var(--white-75);
     border-radius: 8px;
@@ -159,7 +163,7 @@ h2.heading_style {
 
 }
 
-#media_title_container ul li a {
+#media_title_container #genres_container ul li a {
 
     padding: 8px;
 
@@ -171,6 +175,7 @@ h2.heading_style {
 
     gap: 16px;
     justify-content: space-between;
+    align-items: flex-start;
 
 }
 
@@ -181,7 +186,7 @@ h2.heading_style {
     gap: 16px;
 
     white-space: break-spaces;
-    /* flex-wrap: wrap; */
+    flex-wrap: wrap;
 }
 
 #media_title_container #genres_and_type_container span {

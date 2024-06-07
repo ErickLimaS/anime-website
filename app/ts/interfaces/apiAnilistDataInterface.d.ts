@@ -27,6 +27,17 @@ export interface ApiDefaultResult {
     seasonYear: number,
     isAdult: Boolean,
     id: number,
+    isFavourite: boolean,
+    mediaListEntry: {
+        id: number,
+        mediaId: number,
+        status: string,
+        media: {
+            title: {
+                romaji: string,
+            }
+        }
+    },
     trailer: {
         id: string,
     }
