@@ -31,7 +31,7 @@ function filterMediasWithAdultContent(mediasList: ApiDefaultResult[] | ApiAiring
 // HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
 axiosRetry(Axios, {
     retries: 3,
-    retryDelay: (retryAttempt) => retryAttempt * 2000,
+    retryDelay: (retryAttempt) => retryAttempt * 1200,
     retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503,
     onRetry: (retryNumber) => console.log(`retry: ${retryNumber} ${retryNumber == 3 ? " - Last Attempt" : ""}`)
 })

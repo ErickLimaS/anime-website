@@ -98,7 +98,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
             if (user) {
                 await updateProfile(user, {
                     photoURL: newImgProfileSelected || user.photoURL,
-                    displayName: user.isAnonymous ? user.displayName : form.username.value || user.displayName
+                    displayName: user.isAnonymous ? user.displayName : form.username.value.slice(0, 40) || user.displayName
                 })
             }
 
@@ -324,7 +324,6 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                                 defaultValue={user?.displayName || anilistUser?.name}
                                                 placeholder={user?.displayName || anilistUser?.name}
                                                 required
-                                                pattern='/^[a-zA-Z0-9]{2,20}$/'
                                                 title="Only letters and numbers."
                                             ></input>
                                         </label>
