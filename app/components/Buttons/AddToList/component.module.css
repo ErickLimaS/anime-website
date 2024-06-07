@@ -72,9 +72,9 @@
     background-color: var(--background);
     border-radius: 8px;
 
-    padding: 8px 16px;
+    padding: 16px;
 
-    box-shadow: 0px 0px 4px 0px var(--white-25);
+    box-shadow: 0px 0px 4px 2px var(--white-25);
 
 }
 
@@ -86,6 +86,19 @@
 
 }
 
+#user_media_status_list ul li {
+
+    border-bottom: 1px solid var(--white-50);
+    padding-bottom: 4px;
+
+}
+
+#user_media_status_list ul li:last-child {
+
+    border-bottom: 0;
+
+}
+
 #user_media_status_list ul li button {
 
     padding: 8px;
@@ -94,8 +107,10 @@
     height: 100%;
 
     border: 0;
+    border-radius: 4px;
     background-color: transparent;
 
+    font-size: var(--font-size--small-1);
     color: var(--white-100);
 
 }
