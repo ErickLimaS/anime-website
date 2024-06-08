@@ -112,7 +112,7 @@ export default {
 
     }),
 
-    getCurrUserData: cache(async ({ accessToken }: { accessToken?: string }) => {
+    getCurrUserData: cache(async ({ accessToken, getOnlyId }: { accessToken?: string, getOnlyId?: boolean }) => {
 
         try {
 
@@ -188,6 +188,8 @@ export default {
 
             const userDataFromAnilist = data.data.Viewer
 
+            if (getOnlyId) return userDataFromAnilist.id
+
             const userDocFetchedOrCreated = await createNewUserDocument({ userAnilist: userDataFromAnilist }) as UserAnilist
 
             return userDocFetchedOrCreated || undefined
@@ -198,6 +200,85 @@ export default {
             console.log(err)
 
             return undefined
+
+        }
+
+    }),
+
+    getCurrUserLists: cache(async ({ accessToken, userId, mediaType }: { userId: number, mediaType: "ANIME" | "MANGA", accessToken?: string }) => {
+
+        try {
+
+            const graphqlQuery = {
+                "query": `
+                    query ($userId: Int, $type: MediaType){
+                        MediaListCollection (userId: $userId, type: $type) {
+                            user {
+                                id
+                                name
+                            }
+                            lists {
+                                name
+                                status
+                                entries {
+                                    id
+                                    userId
+                                    mediaId
+                                    media {
+                                        id
+                                        title {
+                                            userPreferred
+                                            romaji
+                                            english
+                                            native
+                                        }
+                                        coverImage{
+                                            extraLarge
+                                            large
+                                            medium
+                                            color
+                                        }
+                                        type
+                                        format
+                                        bannerImage
+                                        season
+                                        seasonYear
+                                        startDate{
+                                            year
+                                            month
+                                            day
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+                `,
+                "variables": {
+                    "userId": userId,
+                    "type": mediaType.toUpperCase()
+                }
+            }
+
+            const { data } = await Axios({
+                url: `${BASE_ANILIST_URL}`,
+                method: 'POST',
+                headers: await getHeadersWithAuthorization({ accessToken: accessToken }),
+                data: graphqlQuery
+            })
+
+            const userDataFromAnilist = data.data.MediaListCollection
+
+            return userDataFromAnilist
+
+        }
+        catch (err: any) {
+
+            console.log(err.response.data.errors)
+
+            return err.response
 
         }
 

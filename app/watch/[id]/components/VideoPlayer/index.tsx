@@ -390,7 +390,7 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
                 autoPlay
                 src={videoUrl}
                 className={styles.container}
-                title={mediaInfo.title.userPreferred}
+                title={`Ep. ${episodeInfo.episodeNumber} - ${mediaInfo.title.userPreferred}`}
                 currentTime={episodeLastStop}
                 onVolumeChange={(e) => localStorage.setItem("videoPlayerVolume", `${e.volume}`)}
                 volume={Number(localStorage.getItem("videoPlayerVolume")) || 0.5}
