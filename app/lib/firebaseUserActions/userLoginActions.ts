@@ -66,6 +66,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
     const defaultNewUserDocValues = {
         bookmarks: [],
         keepWatching: [],
+        mediaListSavedByStatus: [],
         notifications: [],
         comments: {},
         episodesWatched: {},
