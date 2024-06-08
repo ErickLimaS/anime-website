@@ -79,17 +79,17 @@ function NavigationSideBar({ isOnMobile, mediaFetched, params }: {
         const keepWatchingList = keepWatchingListFromObjectToArray.filter(item => item.length != 0 && item)
         const activityLists: { name: string, medias: ListItemOnMediasSaved[] }[] = []
 
-        Object.keys(userDoc!.mediaListSavedByStatus).map(list => activityLists.push({ name: list, medias: userDoc!.mediaListSavedByStatus[list] }))
+        Object.keys(userDoc!.mediaListSavedByStatus)?.map(list => activityLists.push({ name: list, medias: userDoc!.mediaListSavedByStatus[list] }))
 
         setMediasQuantity(
             {
                 all: keepWatchingList.length,
-                completed: activityLists.find((list) => list.name == "completed")?.medias.length || 0,
-                planning: activityLists.find((list) => list.name == "planning")?.medias.length || 0,
-                current: activityLists.find((list) => list.name == "current")?.medias.length || 0,
-                dropped: activityLists.find((list) => list.name == "dropped")?.medias.length || 0,
-                paused: activityLists.find((list) => list.name == "paused")?.medias.length || 0,
-                repeating: activityLists.find((list) => list.name == "repeating")?.medias.length || 0,
+                completed: activityLists?.find((list) => list.name == "completed")?.medias.length || 0,
+                planning: activityLists?.find((list) => list.name == "planning")?.medias.length || 0,
+                current: activityLists?.find((list) => list.name == "current")?.medias.length || 0,
+                dropped: activityLists?.find((list) => list.name == "dropped")?.medias.length || 0,
+                paused: activityLists?.find((list) => list.name == "paused")?.medias.length || 0,
+                repeating: activityLists?.find((list) => list.name == "repeating")?.medias.length || 0,
             }
         )
 

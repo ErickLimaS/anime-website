@@ -63,7 +63,7 @@ export default function MediasContainer({ mediaFetched, params }: ComponentTypes
 
             const activityLists: { name: string, medias: ListItemOnMediasSaved[] }[] = []
 
-            Object.keys(userDoc!.mediaListSavedByStatus).map((list) => activityLists.push({
+            Object.keys(userDoc!.mediaListSavedByStatus)?.map((list) => activityLists.push({
                 name: list,
                 medias: userDoc!.mediaListSavedByStatus[list]
             }))
