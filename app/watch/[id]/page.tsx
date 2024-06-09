@@ -146,7 +146,7 @@ export default async function WatchEpisode({ params, searchParams }: {
                 episodesList = await optimizedFetchOnAniwatch({
                     textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
                     only: "episodes"
-                }) as EpisodeAnimeWatch[]
+                }).then((res: any) => res?.episodes) as EpisodeAnimeWatch[]
 
                 searchParams.q = episodesList[0].episodeId
 
@@ -169,7 +169,7 @@ export default async function WatchEpisode({ params, searchParams }: {
                     format: mediaInfo.format,
                     idToMatch: searchParams?.q?.split("?")[0],
                     isDubbed: searchParams.dub == "true"
-                }) as EpisodeAnimeWatch[]
+                }).then((res: any) => res?.episodes) as EpisodeAnimeWatch[]
 
             }
 

@@ -164,7 +164,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
   useEffect(() => {
 
-    if (currEpisodesSource == "gogoanime") fetchEpisodesFromSource(currEpisodesSource)
+    if (currEpisodesSource != "crunchyroll") fetchEpisodesFromSource(currEpisodesSource)
 
   }, [isEpisodesDubbed])
 
@@ -200,7 +200,11 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
     const paginationEndOffset = itemOffset + rangeEpisodesPerPage
 
-    let mediaEpisodesList: EpisodeAnimeWatch[] | MediaEpisodes[]
+    let mediaEpisodesList: MediaEpisodes[] | {
+      episodesDub: number,
+      episodesSub: number,
+      episodes: EpisodesFetchedAnimeWatch["episodes"]
+    }
 
     switch (newSourceChose) {
 
@@ -220,7 +224,11 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         setCurrEpisodesSource(newSourceChose)
 
-        mediaEpisodesList = await optimizedFetchOnGoGoAnime({ textToSearch: mediaInfo.title.romaji, only: "episodes", isDubbed: isEpisodesDubbed }) as MediaEpisodes[]
+        mediaEpisodesList = await optimizedFetchOnGoGoAnime({
+          textToSearch: mediaInfo.title.english,
+          only: "episodes",
+          isDubbed: isEpisodesDubbed
+        }) as MediaEpisodes[]
 
         if (!mediaEpisodesList) {
 
@@ -252,26 +260,35 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
           textToSearch: mediaInfo.title.english,
           only: "search_list",
           format: mediaInfo.format,
-          mediaTotalEpisodes: imdb.episodesList.length
+          mediaTotalEpisodes: mediaInfo.nextAiringEpisode?.episode || imdb.episodesList.length
         }) as MediaInfoAniwatch[]
 
         setMediaResultsInfoArray(searchResultsListForCurrMedia)
 
         mediaEpisodesList = await optimizedFetchOnAniwatch({
-          textToSearch: mediaInfo.title.romaji,
+          textToSearch: mediaInfo.title.english,
           only: "episodes",
           format: mediaInfo.format,
-          mediaTotalEpisodes: imdb.episodesList.length
+          mediaTotalEpisodes: mediaInfo.nextAiringEpisode?.episode || imdb.episodesList.length
+        }) as {
+          episodesDub: number,
+          episodesSub: number,
+          episodes: EpisodesFetchedAnimeWatch["episodes"]
+        }
 
-        }) as EpisodesFetchedAnimeWatch["episodes"]
+        const episodesFilteredByDubOrSub = isEpisodesDubbed ?
+          mediaEpisodesList.episodes.slice(0, mediaEpisodesList.episodesDub)
+          :
+          mediaEpisodesList.episodes.slice(0, mediaEpisodesList.episodesSub)
 
-        setEpisodesList(mediaEpisodesList)
 
-        if (mediaEpisodesList) {
+        setEpisodesList(episodesFilteredByDubOrSub)
 
-          setCurrAnimesList(mediaEpisodesList.slice(itemOffset, paginationEndOffset))
+        if (episodesFilteredByDubOrSub) {
 
-          setPageNumber(Math.ceil(mediaEpisodesList.length / rangeEpisodesPerPage))
+          setCurrAnimesList(episodesFilteredByDubOrSub.slice(itemOffset, paginationEndOffset))
+
+          setPageNumber(Math.ceil(episodesFilteredByDubOrSub.length / rangeEpisodesPerPage))
 
         }
         else {
