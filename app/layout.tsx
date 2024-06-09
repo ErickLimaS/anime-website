@@ -31,14 +31,14 @@ export default function RootLayout({
 
         <Analytics />
 
+        <NextTopLoader
+          color="var(--brand-color)"
+          showSpinner={false}
+        />
+
         <StoreProvider>
           
           <Header />
-
-          <NextTopLoader
-            color="var(--brand-color)"
-            showSpinner={false}
-          />
 
           {children}
 

@@ -10,6 +10,10 @@ import MenuList from './components/MenuList'
 import SearchFormContainer from './components/SearchFormContainer'
 import NewsNavListHover from './components/NewsNavListHover'
 import NotificationsContainer from './components/Notifications'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import anilistMedias from '@/app/api/anilistMedias'
+import news from '@/app/api/consumetNews'
+import { News } from '@/app/ts/interfaces/newsInterface'
 
 export const animesGenres = [
     { name: "Action", value: "action" },
@@ -24,7 +28,11 @@ export const animesGenres = [
     { name: "Sports", value: "sports" },
 ]
 
-function Header() {
+async function Header() {
+
+    const animeList: ApiDefaultResult[] = await anilistMedias.getMediaForThisFormat({ type: "ANIME" }) as ApiDefaultResult[]
+    const trendingMangas = await anilistMedias.getMediaForThisFormat({ type: "MANGA", sort: "TRENDING_DESC" }) as ApiDefaultResult[]
+    const recentNews = await news.getNews({}) as News[]
 
     return (
         <header id={styles.background}>
@@ -53,20 +61,26 @@ function Header() {
                         <li className='display_flex_row align_items_center'>
                             Animes <ChevronDownIcon alt="Open Animes List" width={16} height={16} />
 
-                            <AnimeNavListHover />
+                            <AnimeNavListHover
+                                animeData={animeList}
+                            />
                         </li>
 
                         <li className='display_flex_row align_items_center'>
                             Mangas <ChevronDownIcon alt="Open Mangas List" width={16} height={16} />
 
-                            <MangaNavListHover />
+                            <MangaNavListHover
+                                mangaList={trendingMangas}
+                            />
                         </li>
                         <li className='display_flex_row align_items_center'>
                             <Link href={'/news'}>News <ChevronDownIcon alt="Open News List" width={16} height={16} /></Link>
 
-                            <NewsNavListHover />
+                            <NewsNavListHover
+                                newsList={recentNews}
+                            />
                         </li>
-                        
+
                     </ul>
                 </div>
 

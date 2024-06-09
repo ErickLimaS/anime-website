@@ -1,4 +1,3 @@
-"use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import Link from 'next/link'
@@ -8,19 +7,7 @@ import { News } from '@/app/ts/interfaces/newsInterface'
 import SvgCalendar from "@/public/assets/calendar3.svg"
 import Image from 'next/image'
 
-function NewsNavListHover() {
-
-    const [newsList, setNewsList] = useState<News[] | null>(null)
-
-    useEffect(() => { fetchRecentNews() }, [])
-
-    const fetchRecentNews = async () => {
-
-        const recentNews = await news.getNews({}) as News[]
-
-        setNewsList(recentNews)
-
-    }
+function NewsNavListHover({ newsList }: { newsList: News[] | null }) {
 
     function replaceInvalidNewsIdOnUrl(newsId: string) {
 

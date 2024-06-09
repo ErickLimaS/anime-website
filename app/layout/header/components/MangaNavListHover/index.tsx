@@ -1,26 +1,12 @@
-"use client"
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styles from "./component.module.css"
 import * as MediaInfoExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import Link from 'next/link'
-import anilist from '@/app/api/anilistMedias'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 
-function MangaNavListHover() {
-
-    const [mangaList, setMangaList] = useState<ApiDefaultResult[]>()
-
-    useEffect(() => { fetchTrendingMangasList() }, [])
-
-    const fetchTrendingMangasList = async () => {
-
-        const trendingMangas = await anilist.getMediaForThisFormat({ type: "MANGA", sort: "TRENDING_DESC" }) as ApiDefaultResult[]
-
-        setMangaList(trendingMangas)
-
-    }
+function MangaNavListHover({ mangaList }: { mangaList: ApiDefaultResult[] }) {
 
     return (
         <ul id={styles.manga_header_nav_container}>
