@@ -112,7 +112,7 @@ export default {
 
     }),
 
-    getCurrUserData: cache(async ({ accessToken }: { accessToken?: string }) => {
+    getCurrUserData: cache(async ({ accessToken, getOnlyId }: { accessToken?: string, getOnlyId?: boolean }) => {
 
         try {
 
@@ -188,6 +188,8 @@ export default {
 
             const userDataFromAnilist = data.data.Viewer
 
+            if (getOnlyId) return userDataFromAnilist.id
+
             const userDocFetchedOrCreated = await createNewUserDocument({ userAnilist: userDataFromAnilist }) as UserAnilist
 
             return userDocFetchedOrCreated || undefined
@@ -202,6 +204,204 @@ export default {
         }
 
     }),
+
+    getCurrUserLists: cache(async ({ accessToken, userId, mediaType }: { userId: number, mediaType: "ANIME" | "MANGA", accessToken?: string }) => {
+
+        try {
+
+            const graphqlQuery = {
+                "query": `
+                    query ($userId: Int, $type: MediaType){
+                        MediaListCollection (userId: $userId, type: $type) {
+                            user {
+                                id
+                                name
+                            }
+                            lists {
+                                name
+                                status
+                                entries {
+                                    id
+                                    userId
+                                    mediaId
+                                    media {
+                                        id
+                                        title {
+                                            userPreferred
+                                            romaji
+                                            english
+                                            native
+                                        }
+                                        coverImage{
+                                            extraLarge
+                                            large
+                                            medium
+                                            color
+                                        }
+                                        type
+                                        format
+                                        bannerImage
+                                        season
+                                        seasonYear
+                                        startDate{
+                                            year
+                                            month
+                                            day
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+                `,
+                "variables": {
+                    "userId": userId,
+                    "type": mediaType.toUpperCase()
+                }
+            }
+
+            const { data } = await Axios({
+                url: `${BASE_ANILIST_URL}`,
+                method: 'POST',
+                headers: await getHeadersWithAuthorization({ accessToken: accessToken }),
+                data: graphqlQuery
+            })
+
+            const userDataFromAnilist = data.data.MediaListCollection
+
+            return userDataFromAnilist
+
+        }
+        catch (err: any) {
+
+            console.log(err.response.data.errors)
+
+            return err.response
+
+        }
+
+    }),
+
+    addOrRemoveFromAnilistFavourites: async ({ format, mediaId }: { format: "anime" | "manga", mediaId: number }) => {
+
+        try {
+
+            const graphqlQuery = {
+                "query": `mutation ($id: Int) {
+                    ToggleFavourite (animeId: $id){
+                        ${format} {
+                            nodes {
+                                id
+                                title {
+                                    romaji
+                                }
+                            }
+                        }
+                    }
+                }`,
+                "variables": {
+                    "id": mediaId,
+                }
+            }
+
+            const { data } = await Axios({
+                url: `${BASE_ANILIST_URL}`,
+                method: 'POST',
+                headers: await getHeadersWithAuthorization({}),
+                data: graphqlQuery
+            })
+
+            return data
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+    },
+
+    addMediaToSelectedList: async ({ status, mediaId }: {
+        status: "COMPLETED" | "CURRENT" | "PLANNING" | "DROPPED" | "PAUSED" | "REPEATING",
+        mediaId: number
+    }) => {
+
+        try {
+
+            const graphqlQuery = {
+                "query": `mutation ($mediaId: Int, $status: MediaListStatus) {
+                    SaveMediaListEntry (mediaId: $mediaId, status: $status){
+                        id
+                        status
+                        media {
+                            title {
+                                romaji
+                            }
+                        }
+                    }
+                }`,
+                "variables": {
+                    "mediaId": mediaId,
+                    "status": status
+                }
+            }
+
+            const { data } = await Axios({
+                url: `${BASE_ANILIST_URL}`,
+                method: 'POST',
+                headers: await getHeadersWithAuthorization({}),
+                data: graphqlQuery
+            })
+
+            return data
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+    },
+
+    removeMediaFromSelectedList: async ({ listItemEntryId }: { listItemEntryId: number }) => {
+
+        try {
+
+            const graphqlQuery = {
+                "query": `mutation ($id: Int) {
+                    DeleteMediaListEntry (id: $id){
+                        deleted
+                    }
+                }`,
+                "variables": {
+                    "id": listItemEntryId
+                }
+            }
+
+            const { data } = await Axios({
+                url: `${BASE_ANILIST_URL}`,
+                method: 'POST',
+                headers: await getHeadersWithAuthorization({}),
+                data: graphqlQuery
+            })
+
+            return data
+
+        }
+        catch (err) {
+
+            console.log(err)
+
+            return null
+
+        }
+    },
 
     handleMediaTitleLanguageSetting: async ({ lang }: { lang?: string }) => {
 

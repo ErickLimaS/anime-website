@@ -13,11 +13,12 @@ import { motion } from 'framer-motion';
 import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 import { updateUserFavouriteMedias } from '@/app/lib/firebaseUserActions/userDocUpdateOptions'
 import { useAppSelector } from '@/app/lib/redux/hooks'
+import anilistUsers from '@/app/api/anilistUsers'
 
-export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDefaultResult, svgOnlyColor?: string, children?: React.ReactNode[] }) {
+export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[], svgOnlyColor?: string, isActiveOnAnilist?: boolean }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [wasAddedToFavourites, setWasAddedToFavourites] = useState<boolean>(false)
+    const [wasAddedToFavourites, setWasAddedToFavourites] = useState<boolean>(isActiveOnAnilist || false)
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
@@ -39,7 +40,7 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
     }, [user, anilistUser, loading])
 
     // WHEN BUTTON IS CLICKED, RUN FUNCTION TO ADD OR REMOVE MEDIA FROM FIRESTORE
-    async function handleMediaOnUserDoc() {
+    async function handleMediaOnFavourites() {
 
         // Opens Login Modal
         if (!user && !anilistUser) return setIsUserModalOpen(true)
@@ -63,6 +64,11 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
             userId: user?.uid || `${anilistUser?.id}`,
             mediaData: favouriteMediaData,
             isAddAction: !wasAddedToFavourites
+        })
+
+        await anilistUsers.addOrRemoveFromAnilistFavourites({
+            format: mediaInfo.type.toLowerCase() as "anime" | "manga",
+            mediaId: mediaInfo.id
         })
 
         wasAddedToFavourites ? setWasAddedToFavourites(false) : setWasAddedToFavourites(true)
@@ -97,7 +103,7 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
                 whileTap={{ scale: 0.85 }}
                 id={styles.container}
                 className={children ? styles.custom_text : ""}
-                onClick={() => handleMediaOnUserDoc()}
+                onClick={() => handleMediaOnFavourites()}
                 disabled={isLoading}
                 data-added={wasAddedToFavourites}
                 data-unique-color={svgOnlyColor != undefined}
@@ -111,13 +117,13 @@ export function Button({ mediaInfo, svgOnlyColor, children }: { mediaInfo: ApiDe
 
                 {(!isLoading && wasAddedToFavourites) &&
                     (children ?
-                        children[1] : (<><FavouriteFillSvg width={16} height={16} fill={svgOnlyColor || "var(--brand-color)"} /> FAVOURITED</>)
+                        children[1] : (<><FavouriteFillSvg width={16} height={16} fill={"var(--brand-color)"} /> FAVOURITED</>)
                     )
                 }
 
                 {(!isLoading && !wasAddedToFavourites) &&
                     (children ?
-                        children[0] : (<><FavouriteSvg width={16} height={16} fill={svgOnlyColor || "var(--white-100)"} /> FAVOURITE</>)
+                        children[0] : (<><FavouriteSvg width={16} height={16} fill={"var(--white-100)"} /> FAVOURITE</>)
                     )
                 }
 

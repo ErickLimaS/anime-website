@@ -40,7 +40,7 @@ function NotificationsContainer() {
     const [hasNewNotifications, setHasNewNotifications] = useState<boolean>(false)
     const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false)
 
-    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+    const anilistUser = useAppSelector((state) => (state.UserInfo)?.value)
 
     const auth = getAuth()
     const [user] = useAuthState(auth)

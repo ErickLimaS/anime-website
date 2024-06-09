@@ -25,7 +25,11 @@ export async function generateMetadata({ params, searchParams }: {
     searchParams: { episode: string, dub?: string } // EPISODE NUMBER, DUBBED
 }) {
 
-    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
+    const accessTokenCookie = cookies().get("access_token")?.value
+
+    const userAuthorization = accessTokenCookie ? JSON.parse(accessTokenCookie).accessToken : undefined
+
+    const mediaInfo = await anilist.getMediaInfo({ id: params.id, accessToken: userAuthorization }) as ApiDefaultResult
 
     let pageTitle = ""
 
@@ -51,10 +55,14 @@ export default async function WatchEpisode({ params, searchParams }: {
     searchParams: { episode: string, source: SourceType["source"], q: string, t: string, dub?: string, alert?: string } // EPISODE NUMBER, SOURCE, EPISODE ID, TIME LAST STOP, DUBBED
 }) {
 
+    const accessTokenCookie = cookies().get("access_token")?.value
+
+    const userAuthorization = accessTokenCookie ? JSON.parse(accessTokenCookie).accessToken : undefined
+
+    const mediaInfo = await anilist.getMediaInfo({ id: params.id, accessToken: userAuthorization }) as ApiMediaResults
+
     // ACTES AS DEFAULT VALUE FOR PAGE PROPS
     if (Object.keys(searchParams).length === 0) searchParams = { episode: "1", source: "aniwatch", q: "", t: "0" }
-
-    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
 
     let hadFetchError = false
     let videoIdDoesntMatch = false

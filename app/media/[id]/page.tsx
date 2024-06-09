@@ -13,9 +13,11 @@ import ClockSvg from "@/public/assets/clock.svg"
 import ProgressSvg from "@/public/assets/progress.svg"
 import FavouriteSvg from "@/public/assets/heart.svg"
 import FavouriteFillSvg from "@/public/assets/heart-fill.svg"
+import PlusSvg from "@/public/assets/plus-lg.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
 import * as AddToFavourites from '@/app/components/Buttons/AddToFavourites'
+import * as AddToList from '@/app/components/Buttons/AddToList'
 import ScoreRating from '@/app/components/DynamicAssets/ScoreRating'
 import PlayBtn from './components/WatchPlayBtn'
 import { headers } from 'next/headers'
@@ -161,7 +163,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
           <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>
 
-            <div className='display_flex_row align_items_center'>
+            <div id={styles.genres_container} className='display_flex_row align_items_center'>
 
               {mediaInfo.genres && (
                 <ul>
@@ -189,12 +191,29 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                 mediaInfo={mediaInfo}
               />
 
-              <AddToFavourites.Button
+              <AddToList.Button
+                statusOnAnilist={mediaInfo.mediaListEntry?.status}
+                listEntryId={mediaInfo.mediaListEntry?.id}
                 mediaInfo={mediaInfo as ApiDefaultResult}
               >
 
                 <AddToFavourites.SvgIcon>
-                  <FavouriteSvg />
+                  <PlusSvg fill="var(--white-100)" />
+                </AddToFavourites.SvgIcon>
+
+                <AddToFavourites.SvgIcon>
+                  <PlusSvg fill="var(--brand-color)" />
+                </AddToFavourites.SvgIcon>
+
+              </AddToList.Button>
+
+              <AddToFavourites.Button
+                isActiveOnAnilist={mediaInfo.isFavourite}
+                mediaInfo={mediaInfo as ApiDefaultResult}
+              >
+
+                <AddToFavourites.SvgIcon>
+                  <FavouriteSvg fill="var(--white-100)" />
                 </AddToFavourites.SvgIcon>
 
                 <AddToFavourites.SvgIcon>
@@ -204,8 +223,8 @@ export default async function MediaPage({ params, searchParams }: { params: { id
               </AddToFavourites.Button>
 
             </div>
-
           </div>
+
 
         </section>
 

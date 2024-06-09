@@ -56,6 +56,19 @@ interface KeepWatchingItem {
 
 }
 
+interface ListItemOnMediasSaved {
+
+    id: number,
+    title: ApiDefaultResult["title"],
+    description: string,
+    format: string,
+    coverImage: {
+        extraLarge: string,
+        large: string
+    },
+
+}
+
 interface NotificationsCollectionFirebase {
 
     mediaId: string,

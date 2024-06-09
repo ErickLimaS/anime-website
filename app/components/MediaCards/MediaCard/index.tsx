@@ -62,6 +62,14 @@ export function MediaInfo({ mediaInfo }: { mediaInfo: ApiDefaultResult }) {
 
 export function MediaImg({ url, formatOrType, title }: { url: string, formatOrType: string, title: string }) {
 
+    function checkFormatAvailable() {
+
+        if (!formatOrType) return "Not Available"
+
+        return formatOrType == "TV" ? "ANIME" : stringToOnlyAlphabetic(formatOrType)
+
+    }
+
     return (
         <div id={styles.img_container}>
             <Image
@@ -80,7 +88,7 @@ export function MediaImg({ url, formatOrType, title }: { url: string, formatOrTy
 
                 <span className={styles.media_format_title}>
 
-                    {formatOrType == "TV" ? "ANIME" : stringToOnlyAlphabetic(formatOrType)}
+                    {checkFormatAvailable()}
 
                 </span>
 
@@ -92,6 +100,14 @@ export function MediaImg({ url, formatOrType, title }: { url: string, formatOrTy
 }
 
 export function MediaImgLink({ url, mediaId, formatOrType, title }: { url: string, mediaId: number | string, formatOrType: string, title: string }) {
+
+    function checkFormatAvailable() {
+
+        if (!formatOrType) return "Not Available"
+
+        return formatOrType == "TV" ? "ANIME" : stringToOnlyAlphabetic(formatOrType)
+
+    }
 
     return (
         <Link
@@ -114,7 +130,7 @@ export function MediaImgLink({ url, mediaId, formatOrType, title }: { url: strin
 
                 <span className={styles.media_format_title}>
 
-                    {formatOrType == "TV" ? "ANIME" : stringToOnlyAlphabetic(formatOrType)}
+                    {checkFormatAvailable()}
 
                 </span>
 

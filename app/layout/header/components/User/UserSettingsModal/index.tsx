@@ -16,6 +16,7 @@ import { initFirebase } from '@/app/firebaseApp'
 import * as contantOptions from "./contantOptions"
 import anilistUsersActions from '@/app/api/anilistUsers'
 import userSettingsActions from '@/app/api/userSettingsActions'
+import { removeCookies } from '@/app/lib/user/anilistUserLoginOptions'
 
 type SettingsTypes = {
     onClick?: MouseEventHandler<HTMLDivElement> | MouseEventHandler<HTMLButtonElement> | ((value: void) => void | PromiseLike<void>) | null | undefined,
@@ -98,7 +99,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
             if (user) {
                 await updateProfile(user, {
                     photoURL: newImgProfileSelected || user.photoURL,
-                    displayName: user.isAnonymous ? user.displayName : form.username.value || user.displayName
+                    displayName: user.isAnonymous ? user.displayName : form.username.value.slice(0, 40) || user.displayName
                 })
             }
 
@@ -205,6 +206,8 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                     auth.signOut()
 
                 }
+                
+                removeCookies()
 
                 window.location.reload()
 
@@ -324,7 +327,6 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                                 defaultValue={user?.displayName || anilistUser?.name}
                                                 placeholder={user?.displayName || anilistUser?.name}
                                                 required
-                                                pattern='/^[a-zA-Z0-9]{2,20}$/'
                                                 title="Only letters and numbers."
                                             ></input>
                                         </label>

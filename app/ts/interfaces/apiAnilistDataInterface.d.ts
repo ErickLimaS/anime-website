@@ -27,6 +27,17 @@ export interface ApiDefaultResult {
     seasonYear: number,
     isAdult: Boolean,
     id: number,
+    isFavourite: boolean,
+    mediaListEntry: {
+        id: number,
+        mediaId: number,
+        status: string,
+        media: {
+            title: {
+                romaji: string,
+            }
+        }
+    },
     trailer: {
         id: string,
     }
@@ -37,7 +48,7 @@ export interface ApiDefaultResult {
         color: string | StaticImport,
     },
     bannerImage: string | StaticImport,
-    type: string,
+    type: "ANIME" | "MANGA",
     format: string,
     genres: string[],
     trending: number,

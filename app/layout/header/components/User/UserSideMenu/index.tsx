@@ -6,7 +6,7 @@ import ChevronDownSvg from '@/public/assets/chevron-down.svg'
 import ChevronUpSvg from '@/public/assets/chevron-up.svg'
 import LogoutSvg from '@/public/assets/logout.svg'
 import SettingsSvg from '@/public/assets/gear-fill.svg'
-import HistorySvg from '@/public/assets/clock-history.svg'
+import StarListSvg from '@/public/assets/list-stars.svg'
 import FavouriteSvg from '@/public/assets/heart.svg'
 import LoadingSvg from '@/public/assets/Eclipse-1s-200px.svg'
 import { getAuth } from 'firebase/auth'
@@ -47,7 +47,7 @@ function UserSideMenu() {
     const [isUserLoginOpen, setIsUserLoginOpen] = useState<boolean>(false)
     const [isUserSettingsOpen, setIsUserSettingsOpen] = useState<boolean>(false)
 
-    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+    const anilistUser = useAppSelector((state) => (state.UserInfo)?.value)
     const dispatch = useAppDispatch()
 
     const params = useParams()
@@ -184,8 +184,8 @@ function UserSideMenu() {
                                         </Link>
                                     </li>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>
-                                        <Link href={"/history"}>
-                                            <HistorySvg width={16} height={16} alt={"History Icon"} /> Latests Watched
+                                        <Link href={"/my-lists"}>
+                                            <StarListSvg width={16} height={16} alt={"History Icon"} /> My Lists
                                         </Link>
                                     </li>
                                     <li role='menuitem' onClick={() => setIsUserMenuOpen(false)}>

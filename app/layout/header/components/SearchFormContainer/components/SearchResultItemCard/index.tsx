@@ -99,14 +99,6 @@ function SearchResultItemCard({ handleChoseResult, mediaFromAnilist, mediaFromOf
                             <small>
                                 {mediaFromAnilist.type == 'ANIME' && 'First aired in '}
                                 {mediaFromAnilist.type == 'MANGA' && 'Published in '}
-                                {mediaFromAnilist.type == 'MOVIE' && 'First aired in '}
-                                {mediaFromAnilist.startDate && (
-                                    <>
-                                        {mediaFromAnilist.startDate.month && mediaFromAnilist.startDate.month.toString() + '/' || ''}
-                                        {mediaFromAnilist.startDate.day && mediaFromAnilist.startDate.day.toString() + '/' || ''}
-                                        {mediaFromAnilist.startDate.year && mediaFromAnilist.startDate.year.toString()}
-                                    </>
-                                )}
                             </small>
                         ) : (
                             <small>

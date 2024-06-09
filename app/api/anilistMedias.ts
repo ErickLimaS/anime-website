@@ -5,7 +5,8 @@ import {
     BASE_ANILIST_URL,
     defaultApiQueryRequest, getCurrentSeason,
     mediaAiringApiQueryRequest, mediaByIdQueryRequest,
-    mediaTrendingApiQueryRequest
+    mediaTrendingApiQueryRequest,
+    queryMediaWithUserAuthenticated
 } from './anilistQueryConstants'
 import { cache } from 'react'
 import axiosRetry from 'axios-retry'
@@ -30,7 +31,7 @@ function filterMediasWithAdultContent(mediasList: ApiDefaultResult[] | ApiAiring
 // HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
 axiosRetry(Axios, {
     retries: 3,
-    retryDelay: (retryAttempt) => retryAttempt * 2000,
+    retryDelay: (retryAttempt) => retryAttempt * 1200,
     retryCondition: (error) => error.response?.status == 500 || error.response?.status == 503,
     onRetry: (retryNumber) => console.log(`retry: ${retryNumber} ${retryNumber == 3 ? " - Last Attempt" : ""}`)
 })
@@ -317,18 +318,18 @@ export default {
     }),
 
     // GET MEDIA INFO BY ID
-    getMediaInfo: cache(async ({ id, showAdultContent, accessToken }: { id: number, showAdultContent?: boolean, accessToken?: string }) => {
+    getMediaInfo: cache(async ({ id, accessToken }: { id: number, accessToken?: string }) => {
 
         try {
 
+            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
+
             const graphqlQuery = {
-                "query": mediaByIdQueryRequest('$id: Int', 'id: $id'),
+                "query": headersCustom.Authorization ? queryMediaWithUserAuthenticated('$id: Int', 'id: $id') : mediaByIdQueryRequest('$id: Int', 'id: $id'),
                 "variables": {
                     'id': id
                 }
             }
-
-            const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const { data } = await Axios({
                 url: `${BASE_ANILIST_URL}`,
