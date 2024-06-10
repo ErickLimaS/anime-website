@@ -33,13 +33,14 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 - [x] `Anilist Integration`: Use your Anilist account, carry over your settings, animes and mangas.
 - [x] `Keep Watching`: Continue the episode from where you stop last time.
 - [x] `Be Notified`: When a New Episode is Released, you get a notification on the website.
-- [x] `Add your favourite animes e mangas to lists`: Save them as Completed, Dropped, and more.
-- [x] `Save the episodes you watched`: And keep watching from there later
+- [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.
+- [x] `Bookmark the episodes you watched`: And keep watching from there later
 - [x] `News Feed`: Keep up with the latest news of animes, mangas and the industry.
 
 ## :pushpin: Under Development
 
-- [ ] `Many Bugs Fixes (API Fetchs, Styles, etc)`
+- [ ] `Many Bugs Fixes (Dub Option, styles, etc)`
+- [ ] `Favourites Page Sections: Finished, Dropped, OnGoing, Later`
 
 ## :heavy_check_mark: Tecnologies Used
 

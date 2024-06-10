@@ -1,12 +1,26 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
 import * as MediaInfoExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
 import Link from 'next/link'
+import anilist from '@/app/api/anilistMedias'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import { animesGenres } from '../../index'
 
-function AnimeNavListHover({ animeData }: { animeData: ApiDefaultResult[] }) {
+function AnimeNavListHover() {
+
+    const [animeData, setAnimeData] = useState<ApiDefaultResult[]>()
+
+    useEffect(() => { fetchAnimeList() }, [])
+
+    async function fetchAnimeList() {
+
+        const animeList: ApiDefaultResult[] = await anilist.getMediaForThisFormat({ type: "ANIME" }) as ApiDefaultResult[]
+
+        setAnimeData(animeList)
+
+    }
 
     return (
         <ul id={styles.anime_header_nav_container}>
