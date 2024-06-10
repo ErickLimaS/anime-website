@@ -52,7 +52,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
   // GET MEDIA INFO ON IMDB
   const imdbMediaInfo = await getMediaInfo({
     search: true,
-    seachTitle: mediaInfo.title.english,
+    seachTitle: mediaInfo.title.romaji,
     releaseYear: mediaInfo.startDate.year
   }) as ImdbMediaInfo
 
@@ -195,6 +195,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                 statusOnAnilist={mediaInfo.mediaListEntry?.status}
                 listEntryId={mediaInfo.mediaListEntry?.id}
                 mediaInfo={mediaInfo as ApiDefaultResult}
+                imdbEpisodesList={getImdbEpisodesListWithNoSeasons()}
               >
 
                 <AddToFavourites.SvgIcon>
