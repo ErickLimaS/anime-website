@@ -211,7 +211,7 @@ function MediasListOnAnilist({ mediaFetched }: { mediaFetched: ComponentTypes["m
 
         mediaFetched!.map((list) => (
 
-            <div key={list.name} className={styles.list_container} id={list.status.toLowerCase()}>
+            <div key={list.name} className={styles.list_container} id={list.status?.toLowerCase() || "custom"}>
 
                 <h2>{list.name.toUpperCase()}</h2>
 

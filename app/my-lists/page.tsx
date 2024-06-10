@@ -39,7 +39,7 @@ async function MyListsPage({ params, searchParams }: {
     searchParams?: {
         format: string,
         sort: "title_desc" | "title_asc",
-        type: "ANIME" | "tv" | "movie" | "MANGA"
+        type: "ANIME" | "MANGA" | "tv" | "movie"
     }
 }
 ) {
