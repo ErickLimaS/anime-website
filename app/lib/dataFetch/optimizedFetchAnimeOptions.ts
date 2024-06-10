@@ -90,7 +90,7 @@ export async function optimizedFetchOnAniwatch({ textToSearch, only, format, med
 
     if (only == "search_list") return mediasWithSameTitle.length > 0 ? mediasWithSameTitle : resultsForMediaSearch
 
-    if (!mediasWithSameTitle) {
+    if (mediasWithSameTitle.length == 0) {
 
         mediasWithSameTitle = resultsForMediaSearch.filter((media) =>
             stringToOnlyAlphabetic(media.name).toLowerCase().includes(titleFixed) || resultsForMediaSearch[0]
@@ -109,7 +109,13 @@ export async function optimizedFetchOnAniwatch({ textToSearch, only, format, med
 
         const mediaEpisodesList = await aniwatch.getEpisodes({ episodeId: mediaFoundByID?.id || mediasWithSameTitle[0].id }) as EpisodesFetchedAnimeWatch
 
-        return mediaEpisodesList?.episodes?.length == 0 ? null : mediaEpisodesList.episodes
+        return mediaEpisodesList?.episodes?.length == 0 ? null : {
+
+            episodesDub: mediaFoundByID?.episodes?.dub || mediasWithSameTitle[0]?.episodes?.dub || 0,
+            episodesSub: mediaFoundByID?.episodes?.sub || mediasWithSameTitle[0]?.episodes?.sub || 0,
+            episodes: mediaEpisodesList.episodes
+
+        }
 
     }
 

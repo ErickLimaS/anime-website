@@ -33,18 +33,20 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 - [x] `Anilist Integration`: Use your Anilist account, carry over your settings, animes and mangas.
 - [x] `Keep Watching`: Continue the episode from where you stop last time.
 - [x] `Be Notified`: When a New Episode is Released, you get a notification on the website.
-- [x] `Bookmark your favourite animes e mangas`: Save for later your animes and mangas.
-- [x] `Bookmark the episodes you watched`: And keep watching from there later
+- [x] `Mark your favourite animes e mangas`: Save them as Completed, Dropped, Planning, and more.
+- [x] `Mark the episodes you watched`: And keep watching from there later
 - [x] `News Feed`: Keep up with the latest news of animes, mangas and the industry.
 
-## :pushpin: Under Development
+## :pushpin: Under Development (unordered)
 
-- [ ] `Many Bugs Fixes (Dub Option, styles, etc)`
-- [ ] `Favourites Page Sections: Finished, Dropped, OnGoing, Later`
+- [ ] `Bug Fixes`
+- [ ] `New Sources`
+- [ ] `Select Layout Theme`
+- [ ] `Schedule Page/Section`
 
 ## :heavy_check_mark: Tecnologies Used
 
-Front-end (on netlify.com):
+Front-end:
 
 - `React`
 - `Next.js`
@@ -84,16 +86,17 @@ npm install
      - <a href='https://github.com/consumet/api.consumet.org'>Consumet API</a>
      - <a href='https://github.com/ghoshRitesh12/aniwatch-api'>Aniwatch API</a>
    - About Anilist OAuth:
-     - You need to first login on your account.
+     - You need to first login on your account on Anilist.
      - Then go to <a href='https://anilist.co/settings/developer'>Developer Page</a> on the Settings and click "Create New Client".
      - Now you need to add the name of your forked project/website and the URL to redirect when user accept the login, then hit "Save".
      - Store the Client ID and Secret on your ".env.local".
+     - TIP: Create 2 of these, one for the dev env and other to production.
    - On Firebase, get your configs to use the Authentication and Firestore Database.
      - All the Firebase info needed bellow can be found when you create a new project.
      - IMPORTANT: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
    - OPTIONAL: This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
      - Go to <a href='https://github.com/manami-project/anime-offline-database'>anime-offline-database</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
-     - With the file downloaded, put it in the `/app/api/anime-info` directory, replacing the previous one.
+     - With the file downloaded, put it in the `/app/api/animes-database` directory, replacing the previous one.
 
 With all that done, you will need to fill the `.env.local` like the example bellow:
 
@@ -101,12 +104,14 @@ With all that done, you will need to fill the `.env.local` like the example bell
 // Consumet
 NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
 // Aniwatch
-NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.com
-// Next.js Route Handler - Make sure to add the pathname "/api/animes-database" bellow
-NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API=https://url-to-where-your-website-is-hosted.com/api/animes-database
+NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.
 // Anilist OAuth Settings
 NEXT_PUBLIC_ANILIST_CLIENT_ID=your-anilist-client-id
 ANILIST_CLIENT_SECRET=your-anilist-secret
+// Next.js Route Handler - Make sure to add the pathname "/api/animes-database" bellow
+NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API=https://url-to-where-your-website-is-hosted.com/api/animes-database
+// Bellow is the url to dev enviroment. You'll need to change it when on hosted mode to the respective url
+NEXT_PUBLIC_WEBSITE_ORIGIN_URL=http://localhost:3000
 // Firebase
 NEXT_PUBLIC_FIREBASE_API_KEY=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase-setting-related-to-this-field
@@ -116,8 +121,6 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_APP_ID=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_DATABASE_URL=firebase-setting-related-to-this-field
-// Bellow is the url to dev enviroment. You'll need to change it when on hosted mode to the respective url
-NEXT_PUBLIC_WEBSITE_ORIGIN_URL=http://localhost:3000
 ```
 
 4. Now run `npm run dev` to initialize the website
@@ -149,7 +152,8 @@ It is used to store on User Document things like:
 - Notifications
 - Bookmarked Medias
 - Currently Watching Medias
-- Episodes Watched/Chapters Read
+- Episodes Watched
+- Chapters Read
 
 ### Collections and Documents
 

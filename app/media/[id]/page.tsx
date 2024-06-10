@@ -52,7 +52,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
   // GET MEDIA INFO ON IMDB
   const imdbMediaInfo = await getMediaInfo({
     search: true,
-    seachTitle: mediaInfo.title.english,
+    seachTitle: mediaInfo.title.romaji,
     releaseYear: mediaInfo.startDate.year
   }) as ImdbMediaInfo
 
@@ -195,6 +195,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                 statusOnAnilist={mediaInfo.mediaListEntry?.status}
                 listEntryId={mediaInfo.mediaListEntry?.id}
                 mediaInfo={mediaInfo as ApiDefaultResult}
+                imdbEpisodesList={getImdbEpisodesListWithNoSeasons()}
               >
 
                 <AddToFavourites.SvgIcon>
@@ -509,20 +510,20 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                       <MediaCard.Container positionIndex={key + 1} onDarkMode>
 
                         <MediaCard.MediaImgLink
-                          mediaId={media.node.mediaRecommendation.id}
-                          title={media.node.mediaRecommendation.title.userPreferred || media.node.mediaRecommendation.title.romaji}
-                          formatOrType={media.node.mediaRecommendation.format}
-                          url={media.node.mediaRecommendation.coverImage.large}
+                          mediaId={media.node.mediaRecommendation?.id}
+                          title={media.node.mediaRecommendation?.title.userPreferred || media.node.mediaRecommendation?.title.romaji}
+                          formatOrType={media.node.mediaRecommendation?.format}
+                          url={media.node.mediaRecommendation?.coverImage.large}
                         />
 
                         <MediaCard.SmallTag
-                          seasonYear={media.node.mediaRecommendation.seasonYear}
-                          tags={media.node.mediaRecommendation.genres[0]}
+                          seasonYear={media.node.mediaRecommendation?.seasonYear}
+                          tags={media.node.mediaRecommendation?.genres[0]}
                         />
 
                         <MediaCard.LinkTitle
-                          title={media.node.mediaRecommendation.title.userPreferred || media.node.mediaRecommendation.title.romaji}
-                          id={media.node.mediaRecommendation.id}
+                          title={media.node.mediaRecommendation?.title.userPreferred || media.node.mediaRecommendation?.title.romaji}
+                          id={media.node.mediaRecommendation?.id}
                         />
 
                       </MediaCard.Container>

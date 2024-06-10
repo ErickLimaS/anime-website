@@ -174,7 +174,7 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
                 only: "episodes",
                 isDubbed: isDubbedActive,
                 format: mediaFormat
-            })
+            }).then((res: any) => res.episodes)
 
             setSourceName("aniwatch")
 

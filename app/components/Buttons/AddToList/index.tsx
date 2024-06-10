@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, FieldPath } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp'
 import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
@@ -11,6 +11,7 @@ import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 import { removeMediaOnListByStatus, updateUserMediaListByStatus } from '@/app/lib/firebaseUserActions/userDocUpdateOptions'
 import { useAppSelector } from '@/app/lib/redux/hooks'
 import anilistUsers from '@/app/api/anilistUsers'
+import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface';
 
 type StatusTypes = "COMPLETED" | "CURRENT" | "PLANNING" | "DROPPED" | "PAUSED" | "REPEATING"
 
@@ -23,8 +24,8 @@ const btnValues = [
     { name: "Repeating", value: "REPEATING" },
 ]
 
-export function Button({ mediaInfo, statusOnAnilist, listEntryId, children }: {
-    mediaInfo: ApiDefaultResult, statusOnAnilist?: string, listEntryId?: number, children?: React.ReactNode[]
+export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesList, children }: {
+    mediaInfo: ApiDefaultResult, imdbEpisodesList?: ImdbEpisode[], statusOnAnilist?: string, listEntryId?: number, children?: React.ReactNode[]
 }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -70,6 +71,36 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, children }: {
             if (wasMediaFound) setMediaStatus(btn.value as StatusTypes)
 
         })
+
+    }
+
+    async function addToUserDocEpisodesWatched(action: "add" | "remove") {
+
+        if (!imdbEpisodesList) return
+
+        function mapAllEpisodesInfo(index: number) {
+
+            return {
+                mediaId: mediaInfo.id,
+                episodeNumber: index + 1,
+                episodeTitle: imdbEpisodesList![index]?.title || `${index + 1}`
+            }
+
+        }
+
+        const allEpisodes: { mediaId: number, episodeNumber: number, episodeTitle: string }[] = []
+
+        imdbEpisodesList.map((episode, key) => allEpisodes.push(mapAllEpisodesInfo(key)))
+
+        await setDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`),
+            {
+                episodesWatched: {
+                    [mediaInfo.id]: action == "add" ? allEpisodes : null
+                }
+
+            } as unknown as FieldPath,
+            { merge: true }
+        )
 
     }
 
@@ -125,6 +156,8 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, children }: {
 
         }
 
+        if (status == "COMPLETED") await addToUserDocEpisodesWatched("add")
+
         await updateUserMediaListByStatus({
             status: status,
             userId: user?.uid || `${anilistUser?.id}`,
@@ -178,6 +211,7 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, children }: {
                     <motion.div
                         id={styles.user_media_status_list}
                         aria-expanded={isMenuOpen}
+                        data-is-loading={isLoading}
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
