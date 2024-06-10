@@ -133,8 +133,6 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
 
             const filterNewList = userMediaList.filter((media: { id: number }) => media.id != mediaInfo.id)
 
-            if (status == "COMPLETED") await addToUserDocEpisodesWatched("remove")
-
             await removeMediaOnListByStatus({
                 newListFiltered: filterNewList,
                 status: mediaStatus,

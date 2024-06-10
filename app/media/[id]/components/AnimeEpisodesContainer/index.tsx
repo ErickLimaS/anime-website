@@ -520,43 +520,46 @@ function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedS
 
     if (userDoc!.episodesWatched[mediaInfo.id]?.length == imdb.episodesList?.length) {
       setAllEpisodesWatched(true)
+
+      return
+
     }
 
     setAllEpisodesWatched(false)
 
   }
 
-  // async function handleMarkAllEpisodesAsWatched() {
+  async function handleMarkAllEpisodesAsWatched() {
 
-  //   if (!userId) return
+    if (!userId) return
 
-  //   function mapAllEpisodesInfo(index: number) {
+    function mapAllEpisodesInfo(index: number) {
 
-  //     return {
-  //       mediaId: mediaInfo.id,
-  //       episodeNumber: index + 1,
-  //       episodeTitle: imdb.episodesList[index]?.title
-  //     }
+      return {
+        mediaId: mediaInfo.id,
+        episodeNumber: index + 1,
+        episodeTitle: imdb.episodesList[index]?.title
+      }
 
-  //   }
+    }
 
-  //   const allEpisodes: { mediaId: number, episodeNumber: number, episodeTitle: string }[] = []
+    const allEpisodes: { mediaId: number, episodeNumber: number, episodeTitle: string }[] = []
 
-  //   imdb.episodesList.map((episode, key) => allEpisodes.push(mapAllEpisodesInfo(key)))
+    imdb.episodesList.map((episode, key) => allEpisodes.push(mapAllEpisodesInfo(key)))
 
-  //   await setDoc(doc(db, 'users', userId),
-  //     {
-  //       episodesWatched: {
-  //         [mediaInfo.id]: allEpisodesWatched ? null : allEpisodes
-  //       }
+    await setDoc(doc(db, 'users', userId),
+      {
+        episodesWatched: {
+          [mediaInfo.id]: allEpisodesWatched ? null : allEpisodes
+        }
 
-  //     } as unknown as FieldPath,
-  //     { merge: true }
-  //   ).then(() =>
-  //     setAllEpisodesWatched(!allEpisodesWatched)
-  //   )
+      } as unknown as FieldPath,
+      { merge: true }
+    ).then(() =>
+      setAllEpisodesWatched(!allEpisodesWatched)
+    )
 
-  // }
+  }
 
   return (
     <div id={styles.option_container}>
@@ -566,7 +569,7 @@ function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedS
         clickAction={() => callDubbedFunction()}
       />
 
-      {/* <button
+      <button
         id={styles.options_btn}
         onClick={() => toggleOpenOptionsModal()}
         data-active={isOptionsModalOpen}
@@ -605,7 +608,7 @@ function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedS
           </motion.div>
 
         )}
-      </AnimatePresence> */}
+      </AnimatePresence>
 
     </div>
   )
