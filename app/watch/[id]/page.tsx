@@ -169,7 +169,7 @@ export default async function WatchEpisode({ params, searchParams }: {
                     format: mediaInfo.format,
                     idToMatch: searchParams?.q?.split("?")[0],
                     isDubbed: searchParams.dub == "true"
-                }).then((res: any) => res?.episodes) as EpisodeAnimeWatch[]
+                }).then((res: any) => searchParams?.dub == "true" ? res?.episodes.slice(0, res.episodesDub) : res?.episodes) as EpisodeAnimeWatch[]
 
             }
 
