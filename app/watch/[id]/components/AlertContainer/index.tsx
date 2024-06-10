@@ -30,7 +30,7 @@ export function AlertWrongMediaVideoOnMediaId({ mediaTitle, mediaId, mediaFormat
         currSearchParams.delete("alert")
         setRedirectUrl(`${pathname}${decodeURI(`?${currSearchParams}`)}`)
 
-    }, [])
+    }, [currSearchParams])
 
     return (
         <div id={styles.alert_container}>

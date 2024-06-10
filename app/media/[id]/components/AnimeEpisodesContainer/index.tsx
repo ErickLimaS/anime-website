@@ -79,7 +79,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [episodesList, setEpisodesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]>(crunchyrollInitialEpisodes)
 
-  const [isEpisodesDubbed, setIsEpisodesDubbed] = useState<boolean>(false)
+  const [isEpisodesDubbed, setIsEpisodesDubbed] = useState<boolean | null>(null)
 
   const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<MediaInfoAniwatch[]>([])
 
@@ -114,7 +114,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
     if (typeof window !== 'undefined') {
 
-      setIsEpisodesDubbed(localStorage.getItem("dubEpisodes") == "true")
+      if (isEpisodesDubbed == null) setIsEpisodesDubbed(localStorage.getItem("dubEpisodes") == "true")
 
     }
 
@@ -227,7 +227,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         mediaEpisodesList = await optimizedFetchOnGoGoAnime({
           textToSearch: mediaInfo.title.english,
           only: "episodes",
-          isDubbed: isEpisodesDubbed
+          isDubbed: isEpisodesDubbed || false
         }) as MediaEpisodes[]
 
         if (!mediaEpisodesList) {
@@ -358,7 +358,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         <OptionsPanel
           callDubbedFunction={() => setIsEpisodesDubbed(!isEpisodesDubbed)}
-          dubbedStateValue={isEpisodesDubbed}
+          dubbedStateValue={isEpisodesDubbed || false}
           userId={user?.uid || `${anilistUser?.id}`}
           db={db}
           mediaInfo={mediaInfo}
@@ -432,7 +432,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
                   crunchyrollInitialEpisodes={crunchyrollInitialEpisodes}
                   itemOffset={itemOffset}
                   currEpisodesWatched={currEpisodesWatched}
-                  useDubbedRoute={isEpisodesDubbed}
+                  useDubbedRoute={isEpisodesDubbed || false}
                 />
               )
 
