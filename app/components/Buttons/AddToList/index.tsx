@@ -213,6 +213,7 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
                     <motion.div
                         id={styles.user_media_status_list}
                         aria-expanded={isMenuOpen}
+                        data-is-loading={isLoading}
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
