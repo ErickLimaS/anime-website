@@ -4,6 +4,7 @@ import ErrorImg from "@/public/error-img-4.png"
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import styles from "./errorStyles.module.css"
+import { usePathname } from 'next/navigation'
 
 function ErrorPage({ error, reset }: {
     error: Error & { digest?: string }
@@ -14,6 +15,8 @@ function ErrorPage({ error, reset }: {
         console.error(error)
     }, [error])
 
+    const pathname = usePathname()
+    
     return (
 
         <div id={styles.error_container}>
@@ -28,6 +31,10 @@ function ErrorPage({ error, reset }: {
 
                 <p>Sometimes is due to the API Hosting! <b>Reloading Page Might Work!</b></p>
 
+                {pathname.slice(0, 6) == "/watch" && (
+                    <p>On videos, try to change between <b>dub</b> and <b>sub</b> options.</p>
+                )}
+
                 <span>
                     <b>{error.name}</b>: {error.message}
                 </span>
@@ -37,7 +44,7 @@ function ErrorPage({ error, reset }: {
             <div id={styles.buttons_container}>
 
                 <motion.button
-                    onClick={() => reset()}
+                    onClick={() => window.location.reload()}
                     whileTap={{ scale: 0.9 }}
                 >
                     Try again

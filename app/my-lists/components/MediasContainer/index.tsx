@@ -166,7 +166,7 @@ function KeepWatchingListSection({ keepWatchingList, loading }: { keepWatchingLi
 function MediasListOnUserDoc({ userLists }: { userLists: { name: string, medias: ListItemOnMediasSaved[] }[] }) {
 
     return (
-        userLists.map((list) => (
+        userLists?.map((list) => (
 
             <div key={list.name} className={styles.list_container} id={list.name.toLowerCase()}>
 
