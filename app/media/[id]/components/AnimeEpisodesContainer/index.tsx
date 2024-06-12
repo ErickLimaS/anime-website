@@ -564,16 +564,18 @@ function OptionsPanel({ userId, isAnilistUser, db, mediaInfo, imdb, callDubbedFu
         clickAction={() => callDubbedFunction()}
       />
 
-      <button
-        id={styles.options_btn}
-        onClick={() => toggleOpenOptionsModal()}
-        data-active={isOptionsModalOpen}
-        aria-controls={styles.episodes_options_panel}
-        aria-label={isOptionsModalOpen ? `Close Options Menu` : `Open Options Menu`}
+      {userId && (
+        <button
+          id={styles.options_btn}
+          onClick={() => toggleOpenOptionsModal()}
+          data-active={isOptionsModalOpen}
+          aria-controls={styles.episodes_options_panel}
+          aria-label={isOptionsModalOpen ? `Close Options Menu` : `Open Options Menu`}
 
-      >
-        <DotsSvg width={16} height={16} />
-      </button>
+        >
+          <DotsSvg width={16} height={16} />
+        </button>
+      )}
 
       <AnimatePresence>
         {isOptionsModalOpen && (
