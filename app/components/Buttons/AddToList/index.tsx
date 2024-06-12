@@ -23,8 +23,8 @@ const btnValues = [
     { name: "Repeating", value: "REPEATING" },
 ]
 
-export function Button({ mediaInfo, statusOnAnilist, listEntryId, children }: {
-    mediaInfo: ApiDefaultResult, statusOnAnilist?: string, listEntryId?: number, children?: React.ReactNode[]
+export function Button({ mediaInfo, statusOnAnilist, listEntryId, amountWatchedOrRead, children }: {
+    mediaInfo: ApiDefaultResult, statusOnAnilist?: string, listEntryId?: number, amountWatchedOrRead?: number, children?: React.ReactNode[]
 }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -134,7 +134,9 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, children }: {
         if (anilistUser) {
             await anilistUsers.addMediaToSelectedList({
                 status: status,
-                mediaId: mediaInfo.id
+                mediaId: mediaInfo.id,
+                episodeOrChapterNumber: status == "COMPLETED" ? mediaInfo.episodes : amountWatchedOrRead || 0,
+                numberWatchedOrReadUntilNow: amountWatchedOrRead || 0
             })
         }
 

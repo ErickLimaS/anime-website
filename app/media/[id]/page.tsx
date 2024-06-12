@@ -58,7 +58,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
   function getCrunchyrollEpisodes() {
 
-    const episodesFromCrunchyroll = mediaInfo.streamingEpisodes?.sort((a, b) => {
+    const sortEpisodesByEpisode = mediaInfo.streamingEpisodes?.sort((a, b) => {
       const numA = Number(a.title.slice(a.title?.search(/\b \b/), a.title?.search(/\b - \b/)))
       const numB = Number(b.title.slice(b.title?.search(/\b \b/), b.title?.search(/\b - \b/)))
 
@@ -66,7 +66,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
     })
 
-    return episodesFromCrunchyroll
+    return sortEpisodesByEpisode
 
   }
 
@@ -195,6 +195,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                 statusOnAnilist={mediaInfo.mediaListEntry?.status}
                 listEntryId={mediaInfo.mediaListEntry?.id}
                 mediaInfo={mediaInfo as ApiDefaultResult}
+                amountWatchedOrRead={mediaInfo.mediaListEntry?.progress}
               >
 
                 <AddToFavourites.SvgIcon>
@@ -238,6 +239,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                 mediaId={mediaInfo.id}
                 mediaTitle={mediaInfo.title.romaji}
                 mediaFormat={mediaInfo.format}
+                anilistLastEpisodeWatched={mediaInfo.mediaListEntry?.status != "COMPLETED" ? mediaInfo.mediaListEntry?.progress : undefined}
               />
 
             )}

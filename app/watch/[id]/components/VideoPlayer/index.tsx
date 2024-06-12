@@ -29,12 +29,12 @@ import SkipSvg from "@/public/assets/chevron-double-right.svg"
 import PlaySvg from "@/public/assets/play.svg"
 import { useAppSelector } from "@/app/lib/redux/hooks"
 import { KeepWatchingItem } from "@/app/ts/interfaces/firestoreDataInterface"
+import anilistUsers from "@/app/api/anilistUsers"
 
 type VideoPlayerType = {
     mediaSource: SourceType["source"],
     mediaInfo: ApiMediaResults,
-    mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[],
-    fetchDubEpisodes?: boolean,
+    mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[]
     videoInfo: {
         urlSource: string,
         currentLastStop?: string,
@@ -64,7 +64,7 @@ type SubtitlesType = {
     default: boolean | undefined,
 }
 
-export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEpisodes, episodeInfo, fetchDubEpisodes }: VideoPlayerType) {
+export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEpisodes, episodeInfo }: VideoPlayerType) {
 
     const [subtitles, setSubtitles] = useState<SubtitlesType[] | undefined>(undefined)
 
@@ -225,7 +225,19 @@ export default function VideoPlayer({ mediaSource, videoInfo, mediaInfo, mediaEp
 
             } as unknown as FieldPath,
             { merge: true }
-        ).then(() => setWasWatched(true))
+        ).then(async () => {
+
+            if (anilistUser) {
+                await anilistUsers.addMediaToSelectedList({
+                    mediaId: mediaInfo.id,
+                    status: (mediaInfo.episodes == Number(episodeInfo.episodeNumber)) ? "COMPLETED" : "CURRENT",
+                    episodeOrChapterNumber: Number(episodeInfo.episodeNumber)
+                })
+            }
+
+            setWasWatched(true)
+
+        })
 
     }
 

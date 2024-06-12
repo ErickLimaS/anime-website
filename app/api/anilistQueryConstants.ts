@@ -534,6 +534,7 @@ export function queryMediaWithUserAuthenticated(otherQueryFields?: unknown, othe
                                 id
                                 mediaId
                                 status
+                                progress
                                 media {
                                 title{
                                     romaji

@@ -144,6 +144,7 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
                             <MarkEpisodeAsWatchedButton
                                 episodeNumber={(episode as MediaEpisodes).number}
                                 episodeTitle={sourceName == "aniwatch" ? (episode as ImdbEpisode).title : `${(episode as MediaEpisodes).number}`}
+                                maxEpisodesNumber={episodesList.length}
                                 mediaId={mediaId}
                                 showAdditionalText={true}
                                 wasWatched={episodesWatchedList?.find((item) => item.episodeNumber == (episode as MediaEpisodes).number) ? true : false}

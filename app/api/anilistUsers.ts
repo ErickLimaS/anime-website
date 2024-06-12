@@ -325,18 +325,21 @@ export default {
         }
     },
 
-    addMediaToSelectedList: async ({ status, mediaId }: {
+    addMediaToSelectedList: async ({ status, mediaId, episodeOrChapterNumber, numberWatchedOrReadUntilNow }: {
         status: "COMPLETED" | "CURRENT" | "PLANNING" | "DROPPED" | "PAUSED" | "REPEATING",
-        mediaId: number
+        mediaId: number,
+        episodeOrChapterNumber?: number,
+        numberWatchedOrReadUntilNow?: number
     }) => {
 
         try {
 
             const graphqlQuery = {
-                "query": `mutation ($mediaId: Int, $status: MediaListStatus) {
-                    SaveMediaListEntry (mediaId: $mediaId, status: $status){
+                "query": `mutation ($mediaId: Int, $status: MediaListStatus, $progress: Int) {
+                    SaveMediaListEntry (mediaId: $mediaId, status: $status, progress: $progress){
                         id
                         status
+                        progress
                         media {
                             title {
                                 romaji
@@ -346,7 +349,8 @@ export default {
                 }`,
                 "variables": {
                     "mediaId": mediaId,
-                    "status": status
+                    "status": status,
+                    "progress": episodeOrChapterNumber || numberWatchedOrReadUntilNow || 0
                 }
             }
 
