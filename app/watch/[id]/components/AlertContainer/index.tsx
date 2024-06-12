@@ -60,9 +60,9 @@ export function AlertWrongMediaVideoOnMediaId({ mediaTitle, mediaId, mediaFormat
 
                 <div id={styles.redirect_btns_container}>
 
-                    <Link href={redirectUrl}>
+                    <a href={redirectUrl}>
                         Continue Anyway
-                    </Link>
+                    </a>
 
                     <Link href={`/media/${mediaId}`}>
                         Back to {mediaTitle.slice(0, 10)}... Page
