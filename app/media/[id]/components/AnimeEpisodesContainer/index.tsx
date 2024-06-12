@@ -37,6 +37,7 @@ import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling
 import { useSearchParams } from 'next/navigation';
 import { useAppSelector } from '@/app/lib/redux/hooks';
 import DubbedCheckboxButton from './components/ActiveDubbButton';
+import anilistUsers from '@/app/api/anilistUsers';
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -344,6 +345,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
           callDubbedFunction={() => setIsEpisodesDubbed(!isEpisodesDubbed)}
           dubbedStateValue={isEpisodesDubbed}
           userId={user?.uid || `${anilistUser?.id}`}
+          isAnilistUser={user != undefined || anilistUser?.isUserFromAnilist || false}
           db={db}
           mediaInfo={mediaInfo}
           imdb={imdb}
@@ -476,9 +478,10 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
   )
 }
 
-function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedStateValue }: {
+function OptionsPanel({ userId, isAnilistUser, db, mediaInfo, imdb, callDubbedFunction, dubbedStateValue }: {
   userId: string | undefined,
   db: Firestore,
+  isAnilistUser: boolean,
   imdb: {
     mediaSeasons: ImdbMediaInfo["seasons"],
     episodesList: ImdbEpisode[],
@@ -537,9 +540,19 @@ function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedS
 
       } as unknown as FieldPath,
       { merge: true }
-    ).then(() =>
+    ).then(async () => {
+
+      if (isAnilistUser) {
+        await anilistUsers.addMediaToSelectedList({
+          mediaId: mediaInfo.id,
+          status: allEpisodesWatched ? "PAUSED" : "COMPLETED",
+          episodeOrChapterNumber: allEpisodesWatched ? 0 : mediaInfo.episodes || 0
+        })
+      }
+
       setAllEpisodesWatched(!allEpisodesWatched)
-    )
+
+    })
 
   }
 
@@ -582,7 +595,7 @@ function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedS
                   onClick={() => handleMarkAllEpisodesAsWatched()}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <CheckFillSvg width={16} height={16} /> {allEpisodesWatched ? "Unmark" : "Mark"} All Episodes as Watched
+                  <CheckFillSvg width={16} height={16} /> {allEpisodesWatched ? "Unmark" : "Mark"} all episodes as watched
                 </motion.button>
               </li>
             </ul>
