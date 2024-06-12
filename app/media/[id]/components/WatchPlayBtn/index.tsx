@@ -224,7 +224,7 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat, anilistLastE
                 only: "episodes",
                 isDubbed: isDubbedActive,
                 format: mediaFormat
-            })
+            }).then((res: any) => res.episodes)
 
             setSourceName("aniwatch")
 

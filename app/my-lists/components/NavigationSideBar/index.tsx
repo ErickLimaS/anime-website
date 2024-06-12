@@ -183,37 +183,42 @@ function NavigationSideBar({ isOnMobile, mediaFetched, params }: {
                                             <ul>
                                                 <li onClick={() => setIsFiltersMenuOpen(false)}>
                                                     <Link href={`#completed`}>
-                                                        Completed <span>{mediasQuantity?.completed || mediaFetched?.find((list) => list.status.toUpperCase() == "COMPLETED")?.entries.length || "0"}</span>
+                                                        Completed <span>{mediasQuantity?.completed || mediaFetched?.find((list) => list.status?.toUpperCase() == "COMPLETED")?.entries.length || "0"}</span>
                                                     </Link>
                                                 </li>
                                                 <li onClick={() => setIsFiltersMenuOpen(false)} >
                                                     <Link href={`#current`}>
-                                                        Watching <span>{mediasQuantity?.current || mediaFetched?.find((list) => list.status.toUpperCase() == "CURRENT")?.entries.length || "0"}</span>
+                                                        Watching <span>{mediasQuantity?.current || mediaFetched?.find((list) => list.status?.toUpperCase() == "CURRENT")?.entries.length || "0"}</span>
                                                     </Link>
                                                 </li>
                                                 {/* <li onClick={() => setIsFiltersMenuOpen(false)} >
                                                     <Link href={`#current`}>
-                                                        Reading <span>{mediasQuantity?.current || mediaFetched?.find((list) => list.status.toUpperCase() == "CURRENT")?.entries.length || "0"}</span>
+                                                        Reading <span>{mediasQuantity?.current || mediaFetched?.find((list) => list.status?.toUpperCase() == "CURRENT")?.entries.length || "0"}</span>
                                                     </Link>
                                                 </li> */}
                                                 <li onClick={() => setIsFiltersMenuOpen(false)}>
                                                     <Link href={`#planning`}>
-                                                        Planning <span>{mediasQuantity?.planning || mediaFetched?.find((list) => list.status.toUpperCase() == "PLANNING")?.entries.length || "0"}</span>
+                                                        Planning <span>{mediasQuantity?.planning || mediaFetched?.find((list) => list.status?.toUpperCase() == "PLANNING")?.entries.length || "0"}</span>
                                                     </Link>
                                                 </li>
                                                 <li onClick={() => setIsFiltersMenuOpen(false)}>
                                                     <Link href={`#dropped`}>
-                                                        Dropped <span>{mediasQuantity?.dropped || mediaFetched?.find((list) => list.status.toUpperCase() == "DROPPED")?.entries.length || "0"}</span>
+                                                        Dropped <span>{mediasQuantity?.dropped || mediaFetched?.find((list) => list.status?.toUpperCase() == "DROPPED")?.entries.length || "0"}</span>
                                                     </Link>
                                                 </li>
                                                 <li onClick={() => setIsFiltersMenuOpen(false)}>
                                                     <Link href={`#paused`}>
-                                                        Paused <span>{mediasQuantity?.paused || mediaFetched?.find((list) => list.status.toUpperCase() == "PAUSED")?.entries.length || "0"}</span>
+                                                        Paused <span>{mediasQuantity?.paused || mediaFetched?.find((list) => list.status?.toUpperCase() == "PAUSED")?.entries.length || "0"}</span>
                                                     </Link>
                                                 </li>
                                                 <li onClick={() => setIsFiltersMenuOpen(false)}>
                                                     <Link href={`#repeating`}>
-                                                        Repeating <span>{mediasQuantity?.repeating || mediaFetched?.find((list) => list.status.toUpperCase() == "REPEATING")?.entries.length || "0"}</span>
+                                                        Repeating <span>{mediasQuantity?.repeating || mediaFetched?.find((list) => list.status?.toUpperCase() == "REPEATING")?.entries.length || "0"}</span>
+                                                    </Link>
+                                                </li>
+                                                <li onClick={() => setIsFiltersMenuOpen(false)}>
+                                                    <Link href={`#custom`}>
+                                                        Custom
                                                     </Link>
                                                 </li>
                                             </ul>

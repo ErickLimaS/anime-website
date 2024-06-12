@@ -99,7 +99,15 @@
 
 }
 
+#user_media_status_list[data-is-loading=true] ul li button {
+
+    filter: brightness(50%);
+
+}
+
 #user_media_status_list ul li button {
+
+    transition: all ease-in-out 100ms;
 
     padding: 8px;
 

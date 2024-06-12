@@ -57,6 +57,8 @@ export interface EpisodeLinksAnimeWatch {
 
 export interface EpisodesFetchedAnimeWatch {
 
+    episodesDub: number,
+    episodesSub: number,
     totalEpisodes: number,
     episodes: EpisodeAnimeWatch[]
 
