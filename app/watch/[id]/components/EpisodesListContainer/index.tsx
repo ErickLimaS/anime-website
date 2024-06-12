@@ -22,10 +22,11 @@ type ComponentTypes = {
     activeEpisodeNumber: number,
     episodesList: MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[],
     episodesListOnImdb: ImdbEpisode[] | undefined,
-    nextAiringEpisodeInfo?: { episode: number, airingAt: number }
+    nextAiringEpisodeInfo?: { episode: number, airingAt: number },
+    anilistLastEpisodeWatched?: number,
 }
 
-export default function EpisodesListContainer({ sourceName, mediaId, activeEpisodeNumber, episodesList, nextAiringEpisodeInfo, episodesListOnImdb }: ComponentTypes) {
+export default function EpisodesListContainer({ sourceName, mediaId, activeEpisodeNumber, episodesList, nextAiringEpisodeInfo, episodesListOnImdb, anilistLastEpisodeWatched }: ComponentTypes) {
 
     const [episodesWatchedList, setEpisodesWatchedList] = useState<{
         mediaId: number;
@@ -57,6 +58,18 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
         setTimeout(centerActiveListItemEpisode, 2000)
 
     }, [activeEpisodeNumber])
+
+    function wasEpisodeWatched({ listIndex, episodeNumber }: { listIndex: number, episodeNumber: number }) {
+
+        if (anilistLastEpisodeWatched) return listIndex < anilistLastEpisodeWatched
+
+        const isEpisodeOnUserDoc = episodesWatchedList?.find((item) => item.episodeNumber == episodeNumber)
+
+        if (isEpisodeOnUserDoc) return true
+
+        return false
+
+    }
 
     async function getEpisodesWatchedList() {
 
@@ -147,7 +160,7 @@ export default function EpisodesListContainer({ sourceName, mediaId, activeEpiso
                                 maxEpisodesNumber={episodesList.length}
                                 mediaId={mediaId}
                                 showAdditionalText={true}
-                                wasWatched={episodesWatchedList?.find((item) => item.episodeNumber == (episode as MediaEpisodes).number) ? true : false}
+                                wasWatched={wasEpisodeWatched({ listIndex: key, episodeNumber: (episode as MediaEpisodes).number })}
                             />
 
                         </div>

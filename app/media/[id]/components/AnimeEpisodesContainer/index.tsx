@@ -44,7 +44,8 @@ type EpisodesContainerTypes = {
     episodesList: ImdbEpisode[],
   },
   mediaInfo: ApiDefaultResult | ApiMediaResults,
-  crunchyrollInitialEpisodes: EpisodesType[]
+  crunchyrollInitialEpisodes: EpisodesType[],
+  episodesWatchedOnAnilist?: number
 }
 
 const framerMotionLoadingEpisodes = {
@@ -74,7 +75,7 @@ const framerMotionEpisodePopup = {
   }
 }
 
-export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialEpisodes }: EpisodesContainerTypes) {
+export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialEpisodes, episodesWatchedOnAnilist }: EpisodesContainerTypes) {
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [episodesList, setEpisodesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]>(crunchyrollInitialEpisodes)
@@ -413,6 +414,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
                   currEpisodesSource={currEpisodesSource}
                   imdb={imdb}
                   crunchyrollInitialEpisodes={crunchyrollInitialEpisodes}
+                  wasEpisodeWatchedOnAnilist={episodesWatchedOnAnilist ? key < episodesWatchedOnAnilist : undefined}
                   itemOffset={itemOffset}
                   currEpisodesWatched={currEpisodesWatched}
                   useDubbedRoute={isEpisodesDubbed}
@@ -595,21 +597,23 @@ function OptionsPanel({ userId, db, mediaInfo, imdb, callDubbedFunction, dubbedS
 
 }
 
-function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, index, imdb, crunchyrollInitialEpisodes, useDubbedRoute }: {
-  episodeInfo: ImdbEpisode | EpisodesType | MediaEpisodes | EpisodeAnimeWatch,
-  currEpisodesSource: SourceType["source"],
-  currEpisodesWatched?: {
-    mediaId: number;
-    episodeNumber: number;
-    episodeTitle: string;
-  }[],
-  itemOffset: number,
-  mediaInfo: ApiDefaultResult | ApiMediaResults,
-  index: number,
-  imdb: EpisodesContainerTypes["imdb"],
-  crunchyrollInitialEpisodes: EpisodesContainerTypes["crunchyrollInitialEpisodes"],
-  useDubbedRoute: boolean
-}) {
+function EpisodeBySource(
+  { episodeInfo, currEpisodesSource, currEpisodesWatched, itemOffset, mediaInfo, index, imdb, crunchyrollInitialEpisodes, wasEpisodeWatchedOnAnilist, useDubbedRoute }: {
+    episodeInfo: ImdbEpisode | EpisodesType | MediaEpisodes | EpisodeAnimeWatch,
+    currEpisodesSource: SourceType["source"],
+    currEpisodesWatched?: {
+      mediaId: number;
+      episodeNumber: number;
+      episodeTitle: string;
+    }[],
+    itemOffset: number,
+    mediaInfo: ApiDefaultResult | ApiMediaResults,
+    index: number,
+    imdb: EpisodesContainerTypes["imdb"],
+    crunchyrollInitialEpisodes: EpisodesContainerTypes["crunchyrollInitialEpisodes"],
+    useDubbedRoute: boolean,
+    wasEpisodeWatchedOnAnilist?: boolean
+  }) {
 
   switch (currEpisodesSource) {
 
@@ -635,6 +639,7 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
         <GoGoAnimeEpisode
           motionStyle={framerMotionEpisodePopup}
           key={index}
+          wasEpisodeWatchedOnAnilist={wasEpisodeWatchedOnAnilist}
           episodeInfo={episodeInfo as MediaEpisodes}
           episodeNumber={index + itemOffset + 1}
           episodeTitle={imdb.episodesList[index + itemOffset]?.title}
@@ -654,6 +659,7 @@ function EpisodeBySource({ episodeInfo, currEpisodesSource, currEpisodesWatched,
         <AniwatchEpisode
           motionStyle={framerMotionEpisodePopup}
           key={index}
+          wasEpisodeWatchedOnAnilist={wasEpisodeWatchedOnAnilist}
           episodeInfo={episodeInfo as EpisodeAnimeWatch}
           episodeNumber={index + itemOffset + 1}
           episodeDescription={imdb.episodesList[index + itemOffset]?.description || undefined}

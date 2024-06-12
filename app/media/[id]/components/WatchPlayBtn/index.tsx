@@ -106,9 +106,32 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat, anilistLastE
                 }
             )[0]
 
+            if (anilistLastEpisodeWatched) {
+
+                await fetchMediaEpisodeUrl({
+                    source: userPreferredSource,
+                    lastEpisodeWatchedNumber: anilistLastEpisodeWatched > lastestEpisodeMarkedAsWatched.episodeNumber ?
+                        anilistLastEpisodeWatched : lastestEpisodeMarkedAsWatched.episodeNumber
+                })
+
+                return
+
+            }
+
             await fetchMediaEpisodeUrl({
                 source: userPreferredSource,
                 lastEpisodeWatchedNumber: lastestEpisodeMarkedAsWatched.episodeNumber
+            })
+
+            return
+
+        }
+
+        if (anilistLastEpisodeWatched) {
+
+            await fetchMediaEpisodeUrl({
+                source: userPreferredSource,
+                lastEpisodeWatchedNumber: anilistLastEpisodeWatched
             })
 
             return

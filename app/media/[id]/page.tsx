@@ -444,6 +444,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                 <EpisodesContainer
                   crunchyrollInitialEpisodes={getCrunchyrollEpisodes()}
                   mediaInfo={mediaInfo}
+                  episodesWatchedOnAnilist={mediaInfo.mediaListEntry?.progress || undefined}
                   imdb={{
                     mediaSeasons: imdbMediaInfo?.seasons,
                     episodesList: getImdbEpisodesListWithNoSeasons()

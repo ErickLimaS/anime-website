@@ -307,6 +307,7 @@ export default async function WatchEpisode({ params, searchParams }: {
                     {mediaInfo.format != "MOVIE" && (
                         <EpisodesListContainer
                             sourceName={searchParams.source}
+                            anilistLastEpisodeWatched={mediaInfo.mediaListEntry?.progress || undefined}
                             episodesList={episodesList}
                             nextAiringEpisodeInfo={mediaInfo.nextAiringEpisode}
                             episodesListOnImdb={imdbEpisodesList.length > 0 ? imdbEpisodesList : undefined}

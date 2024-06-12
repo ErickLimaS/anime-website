@@ -20,10 +20,25 @@ type ComponentTypes = {
         episodeNumber: number;
         episodeTitle: string;
     }[],
-    useDubbedRoute: boolean
+    useDubbedRoute: boolean,
+    wasEpisodeWatchedOnAnilist?: boolean
 }
 
-export default function GoGoAnimeEpisode({ episodeInfo, mediaId, episodeTitle, backgroundImg, episodeDescription, motionStyle, episodesWatchedInfo, episodeNumber, useDubbedRoute }: ComponentTypes) {
+export default function GoGoAnimeEpisode(
+    { episodeInfo, mediaId, episodeTitle, backgroundImg, episodeDescription, motionStyle, episodesWatchedInfo, episodeNumber, useDubbedRoute, wasEpisodeWatchedOnAnilist }: ComponentTypes
+) {
+
+    function wasEpisodeWatched() {
+
+        if (wasEpisodeWatchedOnAnilist) return true
+
+        const isEpisodeOnUserDoc = episodesWatchedInfo?.find((episode) => episode.episodeNumber == episodeNumber) ? true : false
+
+        if (isEpisodeOnUserDoc) return true
+
+        return false
+
+    }
 
     return (
         <motion.li className={styles.container} variants={motionStyle} initial="initial" animate="animate" exit="initial">
@@ -52,9 +67,7 @@ export default function GoGoAnimeEpisode({ episodeInfo, mediaId, episodeTitle, b
                     episodeNumber={episodeNumber}
                     episodeTitle={`${episodeInfo.number}`}
                     mediaId={mediaId}
-                    wasWatched={
-                        episodesWatchedInfo?.find((episode) => episode.episodeNumber == episodeNumber) ? true : false
-                    }
+                    wasWatched={wasEpisodeWatched()}
                 />
 
             </div>
