@@ -8,7 +8,7 @@ import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { AnimatePresence, motion } from 'framer-motion';
 import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
-import { removeMediaOnListByStatus, updateUserMediaListByStatus } from '@/app/lib/firebaseUserActions/userDocUpdateOptions'
+import { removeMediaOnListByStatus, updateUserMediaListByStatus } from '@/app/lib/user/userDocUpdateOptions'
 import { useAppSelector } from '@/app/lib/redux/hooks'
 import anilistUsers from '@/app/api/anilistUsers'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface';
@@ -24,8 +24,8 @@ const btnValues = [
     { name: "Repeating", value: "REPEATING" },
 ]
 
-export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesList, children }: {
-    mediaInfo: ApiDefaultResult, imdbEpisodesList?: ImdbEpisode[], statusOnAnilist?: string, listEntryId?: number, children?: React.ReactNode[]
+export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesList, amountWatchedOrRead, children }: {
+    mediaInfo: ApiDefaultResult, imdbEpisodesList?: ImdbEpisode[], statusOnAnilist?: string, listEntryId?: number, amountWatchedOrRead?: number, children?: React.ReactNode[]
 }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -167,7 +167,9 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
         if (anilistUser) {
             await anilistUsers.addMediaToSelectedList({
                 status: status,
-                mediaId: mediaInfo.id
+                mediaId: mediaInfo.id,
+                episodeOrChapterNumber: status == "COMPLETED" ? mediaInfo.episodes : amountWatchedOrRead || 0,
+                numberWatchedOrReadUntilNow: amountWatchedOrRead || 0
             })
         }
 

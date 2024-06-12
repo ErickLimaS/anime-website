@@ -32,6 +32,7 @@ export interface ApiDefaultResult {
         id: number,
         mediaId: number,
         status: string,
+        progress: number,
         media: {
             title: {
                 romaji: string,

@@ -10,7 +10,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { AnimatePresence, motion } from 'framer-motion'
 import simulateRange from '@/app/lib/simulateRange'
-import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'
+import { getUserAdultContentPreference } from '@/app/lib/user/userDocFetchOptions'
 
 export const revalidate = 1800 // revalidate cached data every 30 min
 

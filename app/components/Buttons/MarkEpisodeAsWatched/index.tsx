@@ -12,16 +12,18 @@ import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAppSelector } from '@/app/lib/redux/hooks'
+import anilistUsers from '@/app/api/anilistUsers'
 
 type BtnTypes = {
     episodeNumber: number,
     episodeTitle: string,
     mediaId: number,
+    maxEpisodesNumber?: number,
     showAdditionalText?: boolean,
     wasWatched?: boolean
 }
 
-export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasWatched, showAdditionalText }: BtnTypes) {
+export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle, mediaId, wasWatched, maxEpisodesNumber, showAdditionalText }: BtnTypes) {
 
     const [wasEpisodeWatched, setWasEpisodeWatched] = useState<boolean>(wasWatched || false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -58,11 +60,19 @@ export default function MarkEpisodeAsWatchedButton({ episodeNumber, episodeTitle
 
             } as unknown as FieldPath,
             { merge: true }
-        ).then(() =>
+        ).then(async () => {
+
+            if (anilistUser) {
+                await anilistUsers.addMediaToSelectedList({
+                    mediaId: mediaId,
+                    status: (maxEpisodesNumber == episodeNumber) ? "COMPLETED" : "CURRENT",
+                    episodeOrChapterNumber: wasEpisodeWatched ? episodeNumber - 1 : episodeNumber
+                })
+            }
 
             setWasEpisodeWatched(!wasEpisodeWatched)
 
-        )
+        })
 
         setIsLoading(false)
 

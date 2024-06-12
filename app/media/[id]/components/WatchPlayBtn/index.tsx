@@ -18,7 +18,9 @@ import { KeepWatchingItem } from '@/app/ts/interfaces/firestoreDataInterface'
 import DubbedCheckboxButton from '../AnimeEpisodesContainer/components/ActiveDubbButton'
 import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface'
 
-export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId: number, mediaTitle: string, mediaFormat: string }) {
+export default function PlayBtn({ mediaId, mediaTitle, mediaFormat, anilistLastEpisodeWatched }: {
+    mediaId: number, mediaTitle: string, mediaFormat: string, anilistLastEpisodeWatched?: number
+}) {
 
     const [episodeId, setEpisodeId] = useState<string | null>("")
     const [episodeNumber, setEpisodeNumber] = useState<number>()
@@ -47,7 +49,7 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
 
     useEffect(() => {
 
-        if (anilistUser || (user && !loading)) handleEpisodesMarkedAsWatched()
+        if (anilistUser || (user && !loading)) checkLastEpisodeWatched()
         else fetchMediaEpisodeUrl({ hasUser: anilistUser || user ? true : false })
 
     }, [user, anilistUser, episodeNumber])
@@ -74,7 +76,7 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
 
     }, [typeof window])
 
-    async function handleEpisodesMarkedAsWatched() {
+    async function checkLastEpisodeWatched() {
 
         const userDoc = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
 
@@ -89,9 +91,9 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
 
         if (lastEpisodeWatched) return // Priority for Keep Watching Episodes
 
-        const episodesWatchedList = userDoc.get("episodesWatched")
-
         const userPreferredSource = userDoc.get("videoSource") || "gogoanime"
+
+        const episodesWatchedList = userDoc.get("episodesWatched")
 
         if (episodesWatchedList) setSourceName(userPreferredSource)
 
@@ -99,12 +101,40 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
 
             // SORT ARRAY TO GET THE HIGHEST EPISODE NUMBER ON FIRST INDEX
             const lastestEpisodeMarkedAsWatched = episodesWatchedList[mediaId].sort(
-                function (a: { episodeTitle: number }, b: { episodeTitle: number }) {
-                    return b.episodeTitle - a.episodeTitle
+                function (a: { episodeNumber: number }, b: { episodeNumber: number }) {
+                    return b.episodeNumber - a.episodeNumber
                 }
-            )
+            )[0]
 
-            fetchMediaEpisodeUrl(lastestEpisodeMarkedAsWatched[0].episodeTitle) // EPISODE TITLE HAS THE EPISODE NUMBER
+            if (anilistLastEpisodeWatched) {
+
+                await fetchMediaEpisodeUrl({
+                    source: userPreferredSource,
+                    lastEpisodeWatchedNumber: anilistLastEpisodeWatched > lastestEpisodeMarkedAsWatched.episodeNumber ?
+                        anilistLastEpisodeWatched : lastestEpisodeMarkedAsWatched.episodeNumber
+                })
+
+                return
+
+            }
+
+            await fetchMediaEpisodeUrl({
+                source: userPreferredSource,
+                lastEpisodeWatchedNumber: lastestEpisodeMarkedAsWatched.episodeNumber
+            })
+
+            return
+
+        }
+
+        if (anilistLastEpisodeWatched) {
+
+            await fetchMediaEpisodeUrl({
+                source: userPreferredSource,
+                lastEpisodeWatchedNumber: anilistLastEpisodeWatched
+            })
+
+            return
 
         }
 
@@ -153,9 +183,29 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
             source = userPreferredSource
         }
 
+        function findNextEpisode({ episodes }: { episodes: MediaEpisodes[] | EpisodeAnimeWatch[] }) {
+            // adds 1 to get the next episode after the last watched
+            const nextEpisodeAfterLastWatched = episodes.find((episode: { number: number }) => episode.number == lastEpisodeWatchedNumber! + 1)
+
+            if (nextEpisodeAfterLastWatched) {
+
+                setEpisodeId(sourceName == "gogoanime" ? (nextEpisodeAfterLastWatched as MediaEpisodes)!.id : (nextEpisodeAfterLastWatched as EpisodeAnimeWatch)!.episodeId)
+
+                // adds 1 to get the next episode after the last watched
+                setEpisodeNumber(lastEpisodeWatchedNumber! + 1)
+
+                setIsLoading(false)
+
+                return true
+
+            }
+
+            return false
+        }
+
         async function fetchOnGoGoAnime() {
 
-            const searchResultsForMedia = optimizedFetchOnGoGoAnime({
+            const searchResultsForMedia = await optimizedFetchOnGoGoAnime({
                 textToSearch: mediaTitle,
                 only: "episodes",
                 isDubbed: isDubbedActive
@@ -169,7 +219,7 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
 
         async function fetchOnAniWatch() {
 
-            const searchResultsForMedia = optimizedFetchOnAniwatch({
+            const searchResultsForMedia = await optimizedFetchOnAniwatch({
                 textToSearch: mediaTitle,
                 only: "episodes",
                 isDubbed: isDubbedActive,
@@ -207,7 +257,19 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
 
             }
 
-            if (currMediaInfo) setEpisodeId((currMediaInfo[0] as EpisodeAnimeWatch)?.episodeId || (currMediaInfo[0] as MediaEpisodes)?.id || null)
+            if (currMediaInfo) {
+
+                if (lastEpisodeWatchedNumber) {
+
+                    const isRedirectingToNextEpisode = findNextEpisode({ episodes: currMediaInfo })
+
+                    if (isRedirectingToNextEpisode) return
+
+                }
+                else {
+                    setEpisodeId((currMediaInfo[0] as EpisodeAnimeWatch)?.episodeId || (currMediaInfo[0] as MediaEpisodes)?.id || null)
+                }
+            }
 
             setIsLoading(false)
 
@@ -215,11 +277,11 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
 
         }
 
-        let currMediaInfo: MediaEpisodes[] | EpisodeAnimeWatch[] = await fetchOnGoGoAnime() as MediaEpisodes[]
+        let currMediaEpisodes: MediaEpisodes[] | EpisodeAnimeWatch[] = await fetchOnGoGoAnime() as MediaEpisodes[]
 
-        if (!currMediaInfo) currMediaInfo = await fetchOnAniWatch() as EpisodeAnimeWatch[] // High chances of getting the wrong media
+        if (!currMediaEpisodes) currMediaEpisodes = await fetchOnAniWatch() as EpisodeAnimeWatch[] // High chances of getting the wrong media
 
-        if (!currMediaInfo) {
+        if (!currMediaEpisodes) {
 
             setIsLoading(false)
             setEpisodeId(null)
@@ -229,26 +291,16 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
         }
 
         // if user has watched a episode and the episode is NOT the last, redirects to the next episode
-        if (lastEpisodeWatchedNumber && (currMediaInfo.length > lastEpisodeWatchedNumber)) {
+        if (lastEpisodeWatchedNumber && (currMediaEpisodes.length > lastEpisodeWatchedNumber)) {
 
             // adds 1 to get the next episode after the last watched
-            const nextEpisodeAfterLastWatched = currMediaInfo.find((episode: { number: number }) => episode.number == lastEpisodeWatchedNumber + 1)
+            const isRedirectingToNextEpisode = findNextEpisode({ episodes: currMediaEpisodes })
 
-            if (nextEpisodeAfterLastWatched) {
+            if (isRedirectingToNextEpisode) return
 
-                setEpisodeId(sourceName == "gogoanime" ? (nextEpisodeAfterLastWatched as MediaEpisodes)!.id : (nextEpisodeAfterLastWatched as EpisodeAnimeWatch)!.episodeId)
-
-                // adds 1 to get the next episode after the last watched
-                setEpisodeNumber(lastEpisodeWatchedNumber + 1)
-
-                setIsLoading(false)
-
-                return
-
-            }
         }
 
-        if (currMediaInfo) setEpisodeId((currMediaInfo[0] as EpisodeAnimeWatch)?.episodeId || (currMediaInfo[0] as MediaEpisodes)?.id || null)
+        if (currMediaEpisodes) setEpisodeId((currMediaEpisodes[0] as EpisodeAnimeWatch)?.episodeId || (currMediaEpisodes[0] as MediaEpisodes)?.id || null)
 
         setIsLoading(false)
 
@@ -258,9 +310,9 @@ export default function PlayBtn({ mediaId, mediaTitle, mediaFormat }: { mediaId:
 
         setIsLoading(true)
 
-        const isDub = typeof window !== 'undefined' ? Boolean(localStorage.getItem('dubEpisodes')) : false
+        const isDub = typeof window !== 'undefined' ? localStorage.getItem('dubEpisodes') == "true" : false
 
-        const mediaPathname = `/watch/${mediaId}?source=${sourceName}&episode=${episodeNumber || 1}&q=${episodeId}${episodeNumber ? `&t=${episodeLastStop}` : ""}${isDub ? "&dub=true" : ""}`
+        const mediaPathname = `/watch/${mediaId}?source=${sourceName}&episode=${episodeNumber || 1}&q=${episodeId}${episodeNumber ? `&t=${episodeLastStop || 0}` : ""}${isDub ? "&dub=true" : ""}`
 
         router.push(mediaPathname)
 

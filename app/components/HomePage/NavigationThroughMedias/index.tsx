@@ -20,7 +20,7 @@ import { getAuth } from 'firebase/auth'
 import SwiperCarousel from './swiperCarousel'
 import { SwiperSlide } from 'swiper/react'
 import { convertToUnix } from '@/app/lib/formatDateUnix'
-import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'
+import { getUserAdultContentPreference } from '@/app/lib/user/userDocFetchOptions'
 
 export const revalidate = 1800 // revalidate cached data every 30 min
 

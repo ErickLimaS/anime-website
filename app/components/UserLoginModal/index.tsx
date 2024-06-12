@@ -17,7 +17,7 @@ import {
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import UserSettingsModal from '@/app/layout/header/components/User/UserSettingsModal'
-import { createNewUserDocument } from '@/app/lib/firebaseUserActions/userLoginActions'
+import { createNewUserDocument } from '@/app/lib/user/userLoginActions'
 
 type ModalTypes = {
     onClick?: MouseEventHandler<HTMLDivElement>,

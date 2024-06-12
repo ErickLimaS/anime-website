@@ -12,7 +12,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import axios from 'axios'
 import { MediaDbOffline } from '@/app/ts/interfaces/dbOffilineInterface'
-import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'
+import { getUserAdultContentPreference } from '@/app/lib/user/userDocFetchOptions'
 
 const framerMotionshowUpMotion = {
 

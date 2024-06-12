@@ -2,7 +2,7 @@ import { initFirebase } from "@/app/firebaseApp"
 import { updateProfile, User } from "firebase/auth"
 import { collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore"
 import { updateUserFavouriteMedias } from "./userDocUpdateOptions"
-import { addUserCookies } from "../user/anilistUserLoginOptions"
+import { addUserCookies } from "./anilistUserLoginOptions"
 
 type CreateUserComponentTypes = {
     userFirebase?: User,
@@ -31,7 +31,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
 
         if (userAnilist) {
 
-            mapAnilistFavouritesAndUpdateUserDoc({
+            updatesUserDocWithAnilistFavourites({
                 favourites: userAnilist.favourites,
                 userId: `${userAnilist.id}`,
                 userDocFavourites: doesUserHasDoc.bookmarks
@@ -94,7 +94,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
 
     if (userAnilist) {
 
-        mapAnilistFavouritesAndUpdateUserDoc({
+        updatesUserDocWithAnilistFavourites({
             favourites: userAnilist.favourites,
             userId: `${userAnilist.id}`
         })
@@ -114,7 +114,7 @@ export async function createNewUserDocument({ userFirebase, userAnilist, openMen
 
 }
 
-function mapAnilistFavouritesAndUpdateUserDoc({ favourites, userId, userDocFavourites }: {
+function updatesUserDocWithAnilistFavourites({ favourites, userId, userDocFavourites }: {
     favourites: UserAnilist["favourites"],
     userId: string,
     userDocFavourites?: UserAnilist["favourites"]["anime"]["nodes"]
