@@ -9,7 +9,7 @@ import { ApiAiringMidiaResults, ApiDefaultResult } from '@/app/ts/interfaces/api
 import anilist from "@/app/api/anilistMedias"
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
-import { getUserAdultContentPreference } from '@/app/lib/firebaseUserActions/userDocFetchOptions'
+import { getUserAdultContentPreference } from '@/app/lib/user/userDocFetchOptions'
 
 export const revalidate = 1800 // revalidate the data every 30 min
 

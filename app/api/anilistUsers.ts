@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { cache } from "react";
 import { BASE_ANILIST_URL } from "./anilistQueryConstants";
-import { createNewUserDocument } from "../lib/firebaseUserActions/userLoginActions";
+import { createNewUserDocument } from "../lib/user/userLoginActions";
 import userSettingsActions from "./userSettingsActions";
 
 export async function getHeadersWithAuthorization({ accessToken }: { accessToken?: string }) {

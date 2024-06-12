@@ -8,7 +8,7 @@ import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { AnimatePresence, motion } from 'framer-motion';
 import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
-import { removeMediaOnListByStatus, updateUserMediaListByStatus } from '@/app/lib/firebaseUserActions/userDocUpdateOptions'
+import { removeMediaOnListByStatus, updateUserMediaListByStatus } from '@/app/lib/user/userDocUpdateOptions'
 import { useAppSelector } from '@/app/lib/redux/hooks'
 import anilistUsers from '@/app/api/anilistUsers'
 
