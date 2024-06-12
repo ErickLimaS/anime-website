@@ -433,7 +433,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
                   currEpisodesSource={currEpisodesSource}
                   imdb={imdb}
                   crunchyrollInitialEpisodes={crunchyrollInitialEpisodes}
-                  wasEpisodeWatchedOnAnilist={episodesWatchedOnAnilist ? key < episodesWatchedOnAnilist : undefined}
+                  wasEpisodeWatchedOnAnilist={episodesWatchedOnAnilist ? (key + itemOffset + 1) < episodesWatchedOnAnilist : undefined}
                   itemOffset={itemOffset}
                   currEpisodesWatched={currEpisodesWatched}
                   useDubbedRoute={isEpisodesDubbed || false}
