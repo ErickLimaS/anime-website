@@ -12,7 +12,7 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 ## Navigation
 
 - [Features](#hammer-features)
-- [Under Development](#pushpin-under-development)
+- [Under Development](#pushpin-under-development-unordered)
 - [Tecnologies Used](#heavy_check_mark-tecnologies-used)
 - [How Can i Run It](#computer-how-can-i-run-it)
 - [How Fireabase is Organized](#open_file_folder-how-firebase-is-organized)
@@ -40,7 +40,9 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 ## :pushpin: Under Development (unordered)
 
 - [ ] `Bug Fixes`
-- [ ] `New Sources`
+- [ ] `AniList Reviews/Comments`
+- [ ] `AniList Threads`
+- [ ] `New Media Sources`
 - [ ] `New Video Player Features`
 - [ ] `Profile Page`
 - [ ] `Edit Media Progress Info`
