@@ -41,6 +41,9 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 
 - [ ] `Bug Fixes`
 - [ ] `New Sources`
+- [ ] `New Video Player Features`
+- [ ] `Profile Page`
+- [ ] `Edit Media Progress Info`
 - [ ] `Select Layout Theme`
 - [ ] `Schedule Page/Section`
 
@@ -48,7 +51,6 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 
 Front-end:
 
-- `React`
 - `Next.js`
 - `TypeScript`
 - `Axios`
