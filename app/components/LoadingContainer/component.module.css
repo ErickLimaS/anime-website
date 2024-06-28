@@ -1,0 +1,55 @@
+#container {
+
+    display: flex;
+
+    margin: auto;
+
+    height: 80vh;
+    width: 100%;
+
+    animation: forwards showUp 450ms;
+
+}
+
+@keyframes showUp {
+
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+#content_container {
+
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+#content_container #img_container {
+
+    position: relative;
+
+    aspect-ratio: 1117/393;
+
+    width: 80vw;
+    max-width: 200px;
+
+}
+
+#content_container>p {
+
+    margin: auto;
+    margin-top: 16px;
+
+    font-size: var(--font-size--h5);
+    color: var(--white-50);
+    font-weight: 600;
+
+}
