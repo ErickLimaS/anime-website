@@ -29,10 +29,10 @@ export default function RootLayout({
 
       <body className={inter.className}>
 
-        <Analytics />
+        <Analytics /> {/* Vercel */}
 
         <StoreProvider>
-          
+
           <Header />
 
           <NextTopLoader
