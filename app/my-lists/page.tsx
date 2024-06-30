@@ -39,7 +39,7 @@ async function MyListsPage({ params, searchParams }: {
     searchParams?: {
         format: string,
         sort: "title_desc" | "title_asc",
-        type: "ANIME" | "MANGA" | "tv" | "movie"
+        type: "manga" | "tv" | "movie"
     }
 }
 ) {
@@ -75,7 +75,7 @@ async function MyListsPage({ params, searchParams }: {
 
                 <div id={styles.heading_container}>
 
-                    <h1>My Lists</h1>
+                    <h1>My Lists <span>{searchParams?.type ? `/ ${searchParams.type == "tv" ? "ANIME" : searchParams.type.toUpperCase()}` : ""}</span></h1>
 
                 </div>
 

@@ -52,7 +52,6 @@
 
 }
 
-
 /* MAIN CONTENT */
 #main_content_container {
 
@@ -85,6 +84,13 @@
     font-size: var(--font-size--h3);
     color: var(--white-100);
     font-weight: 600;
+
+}
+
+#heading_container h1 span {
+
+    color: var(--brand-color);
+    font-size: var(--font-size--h5);
 
 }
 

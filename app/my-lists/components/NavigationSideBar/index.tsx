@@ -42,12 +42,15 @@ function NavigationSideBar({ isOnMobile, mediaFetched, params }: {
         }[]
     }[],
     params?: {
-        format: string, type: "ANIME" | "tv" | "movie" | "MANGA",
+        format: string,
+        type: "tv" | "movie" | "manga",
     },
 }) {
 
     const [currParams, setCurrParams] = useState("")
-    const [mediasQuantity, setMediasQuantity] = useState<{ all: number, completed: number, planning: number, current: number, dropped: number, paused: number, repeating: number }>()
+    const [mediasQuantity, setMediasQuantity] = useState<{
+        all: number, completed: number, planning: number, current: number, dropped: number, paused: number, repeating: number, keepWatching: number
+    }>()
 
     const [isFiltersMenuOpen, setIsFiltersMenuOpen] = useState(false)
 
@@ -81,17 +84,25 @@ function NavigationSideBar({ isOnMobile, mediaFetched, params }: {
 
         Object.keys(userDoc!.mediaListSavedByStatus)?.map(list => activityLists.push({ name: list, medias: userDoc!.mediaListSavedByStatus[list] }))
 
-        setMediasQuantity(
-            {
-                all: keepWatchingList.length,
-                completed: activityLists?.find((list) => list.name == "completed")?.medias.length || 0,
-                planning: activityLists?.find((list) => list.name == "planning")?.medias.length || 0,
-                current: activityLists?.find((list) => list.name == "current")?.medias.length || 0,
-                dropped: activityLists?.find((list) => list.name == "dropped")?.medias.length || 0,
-                paused: activityLists?.find((list) => list.name == "paused")?.medias.length || 0,
-                repeating: activityLists?.find((list) => list.name == "repeating")?.medias.length || 0,
-            }
-        )
+        const mediasQuantityFiltered = {
+            all: 0,
+            completed: activityLists?.find((list) => list.name == "completed")?.medias.length || 0,
+            planning: activityLists?.find((list) => list.name == "planning")?.medias.length || 0,
+            current: activityLists?.find((list) => list.name == "current")?.medias.length || 0,
+            dropped: activityLists?.find((list) => list.name == "dropped")?.medias.length || 0,
+            paused: activityLists?.find((list) => list.name == "paused")?.medias.length || 0,
+            repeating: activityLists?.find((list) => list.name == "repeating")?.medias.length || 0,
+            keepWatching: keepWatchingList.length
+        }
+
+        mediasQuantityFiltered.all = mediasQuantityFiltered.completed
+            + mediasQuantityFiltered.current
+            + mediasQuantityFiltered.dropped
+            + mediasQuantityFiltered.paused
+            + mediasQuantityFiltered.planning
+            + mediasQuantityFiltered.repeating
+
+        setMediasQuantity(mediasQuantityFiltered)
 
     }
 
@@ -150,14 +161,7 @@ function NavigationSideBar({ isOnMobile, mediaFetched, params }: {
                                         <nav id={styles.nav_container}>
                                             <ul>
                                                 <li
-                                                    data-active={currParams == "" || currParams == undefined || currParams == null}
-                                                    onClick={() => setIsFiltersMenuOpen(false)}>
-                                                    <Link href={`/my-lists`}>
-                                                        All
-                                                    </Link>
-                                                </li>
-                                                <li
-                                                    data-active={currParams.toLowerCase() == "tv" || currParams.toLowerCase() == "anime"}
+                                                    data-active={!currParams.toLowerCase() || currParams.toLowerCase() == "tv"}
                                                     onClick={() => setIsFiltersMenuOpen(false)}
                                                 >
                                                     <Link href={{ query: { "type": "tv" } }}>
@@ -181,6 +185,13 @@ function NavigationSideBar({ isOnMobile, mediaFetched, params }: {
 
                                         <nav id={styles.nav_container}>
                                             <ul>
+                                                {params?.type != "manga" && (
+                                                    <li onClick={() => setIsFiltersMenuOpen(false)}>
+                                                        <Link href={`#keep-watching`}>
+                                                            Keep Watching <span>{mediasQuantity?.keepWatching || "0"}</span>
+                                                        </Link>
+                                                    </li>
+                                                )}
                                                 <li onClick={() => setIsFiltersMenuOpen(false)}>
                                                     <Link href={`#completed`}>
                                                         Completed <span>{mediasQuantity?.completed || mediaFetched?.find((list) => list.status?.toUpperCase() == "COMPLETED")?.entries.length || "0"}</span>
@@ -188,14 +199,9 @@ function NavigationSideBar({ isOnMobile, mediaFetched, params }: {
                                                 </li>
                                                 <li onClick={() => setIsFiltersMenuOpen(false)} >
                                                     <Link href={`#current`}>
-                                                        Watching <span>{mediasQuantity?.current || mediaFetched?.find((list) => list.status?.toUpperCase() == "CURRENT")?.entries.length || "0"}</span>
+                                                        {params?.type == "manga" ? "Reading" : "Watching"} <span>{mediasQuantity?.current || mediaFetched?.find((list) => list.status?.toUpperCase() == "CURRENT")?.entries.length || "0"}</span>
                                                     </Link>
                                                 </li>
-                                                {/* <li onClick={() => setIsFiltersMenuOpen(false)} >
-                                                    <Link href={`#current`}>
-                                                        Reading <span>{mediasQuantity?.current || mediaFetched?.find((list) => list.status?.toUpperCase() == "CURRENT")?.entries.length || "0"}</span>
-                                                    </Link>
-                                                </li> */}
                                                 <li onClick={() => setIsFiltersMenuOpen(false)}>
                                                     <Link href={`#planning`}>
                                                         Planning <span>{mediasQuantity?.planning || mediaFetched?.find((list) => list.status?.toUpperCase() == "PLANNING")?.entries.length || "0"}</span>
@@ -214,11 +220,6 @@ function NavigationSideBar({ isOnMobile, mediaFetched, params }: {
                                                 <li onClick={() => setIsFiltersMenuOpen(false)}>
                                                     <Link href={`#repeating`}>
                                                         Repeating <span>{mediasQuantity?.repeating || mediaFetched?.find((list) => list.status?.toUpperCase() == "REPEATING")?.entries.length || "0"}</span>
-                                                    </Link>
-                                                </li>
-                                                <li onClick={() => setIsFiltersMenuOpen(false)}>
-                                                    <Link href={`#custom`}>
-                                                        Custom
                                                     </Link>
                                                 </li>
                                             </ul>
