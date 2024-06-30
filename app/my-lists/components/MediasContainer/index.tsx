@@ -26,7 +26,7 @@ type ComponentTypes = {
     }[] | undefined,
     params?: {
         format: string,
-        type: "ANIME" | "tv" | "movie" | "MANGA",
+        type: "tv" | "movie" | "manga",
         sort: "title_desc" | "title_asc"
     }
 }
@@ -83,7 +83,7 @@ export default function MediasContainer({ mediaFetched, params }: ComponentTypes
 
             <div id={styles.container}>
 
-                {(params?.type == null || params?.type == "ANIME" || params?.type == "tv") && (
+                {(params?.type == null || params?.type == "tv") && (
 
                     <KeepWatchingListSection
                         keepWatchingList={keepWatchingList}
@@ -114,7 +114,7 @@ function KeepWatchingListSection({ keepWatchingList, loading }: { keepWatchingLi
 
     return (
 
-        <div className={styles.list_container}>
+        <div className={styles.list_container} id="keep-watching">
 
             <h2>KEEP WATCHING</h2>
 
