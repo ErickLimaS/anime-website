@@ -62,6 +62,7 @@ function ChaptersListContainer({ mediaId, currChapterId, chaptersList }: Compone
                             <MarkChapterAsReadButton
                                 chapterNumber={Number(chapter.chapterNumber)}
                                 chapterTitle={chapter.title}
+                                maxChaptersNumber={chaptersList.length}
                                 mediaId={mediaId}
                                 showAdditionalText={true}
                             />

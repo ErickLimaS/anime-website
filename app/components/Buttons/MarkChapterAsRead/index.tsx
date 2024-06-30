@@ -13,16 +13,18 @@ import { initFirebase } from '@/app/firebaseApp'
 import styles from "./component.module.css"
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAppSelector } from '@/app/lib/redux/hooks'
+import anilistUsers from '@/app/api/anilistUsers'
 
 type BtnTypes = {
     chapterNumber: number,
     chapterTitle: string,
     mediaId: number,
     showAdditionalText?: boolean,
-    wasChapterReadOnAnilist?: boolean
+    wasChapterReadOnAnilist?: boolean,
+    maxChaptersNumber?: number
 }
 
-export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, showAdditionalText, wasChapterReadOnAnilist }: BtnTypes) {
+export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, showAdditionalText, wasChapterReadOnAnilist, maxChaptersNumber }: BtnTypes) {
 
     const [wasChapterRead, setWasChapterRead] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -80,7 +82,15 @@ export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, m
                 }
             } as unknown as FieldPath,
             { merge: true }
-        ).then(() => {
+        ).then(async () => {
+
+            if (anilistUser) {
+                await anilistUsers.addMediaToSelectedList({
+                    mediaId: mediaId,
+                    status: (maxChaptersNumber == chapterNumber) ? "COMPLETED" : "CURRENT",
+                    episodeOrChapterNumber: wasChapterRead ? chapterNumber - 1 : chapterNumber
+                })
+            }
 
             setWasChapterRead(!wasChapterRead)
 
