@@ -63,6 +63,7 @@ body {
 }
 
 body {
+  min-height: 80vh;
   background-color: var(--background);
 }
 

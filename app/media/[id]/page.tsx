@@ -29,6 +29,7 @@ import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface
 import MediaRelatedContainer from './components/MediaRelatedContainer'
 import AddToNotificationsButton from '@/app/components/Buttons/AddToNotification'
 import stringToOnlyAlphabetic from '@/app/lib/convertStrings'
+import HeadingTextAndMediaLogo from './components/HeadingTextAndMediaLogo'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -668,53 +669,4 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
     </main>
   )
-}
-
-function HeadingTextAndMediaLogo({ imdbMediaLogos, preferredLanguage, mediaTitles }: {
-  imdbMediaLogos: ImdbMediaInfo["logos"] | undefined, mediaTitles: ApiMediaResults["title"], preferredLanguage?: string
-}) {
-
-  const userPreferredTitleLanguage = preferredLanguage ? (mediaTitles as any)[preferredLanguage.toLowerCase()] : null
-
-  return (
-    <React.Fragment>
-
-      {imdbMediaLogos && imdbMediaLogos?.length > 0 ? (
-
-        <React.Fragment>
-
-          <h1>
-            {(userPreferredTitleLanguage || mediaTitles.romaji).toUpperCase()}
-          </h1>
-
-          <div className={styles.heading_img_container} style={{ aspectRatio: imdbMediaLogos[0]?.aspectRatio }}>
-            <Image
-              src={imdbMediaLogos[0]?.url}
-              alt={userPreferredTitleLanguage || mediaTitles.romaji}
-              fill
-              sizes='(max-width: 520px) 100%, 280px'
-            />
-          </div>
-
-        </React.Fragment>
-
-      ) : (
-
-        <React.Fragment>
-
-          <small>
-            {(userPreferredTitleLanguage == imdbMediaLogos) && mediaTitles.romaji ? mediaTitles.native : mediaTitles.romaji}
-          </small>
-
-          <h1 id={styles.heading_title}>
-            {(userPreferredTitleLanguage || mediaTitles.romaji).toUpperCase()}
-          </h1>
-
-        </React.Fragment>
-
-      )}
-
-    </React.Fragment>
-  )
-
 }

@@ -607,7 +607,7 @@ h2.heading_style {
     overflow: auto;
 
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(141px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
 
     justify-content: center;
     gap: 16px;
@@ -618,6 +618,14 @@ h2.heading_style {
 
     #similar_container ul {
         justify-content: initial;
+    }
+
+}
+
+@media(min-width:900px) {
+
+    #similar_container ul {
+        grid-template-columns: repeat(auto-fill, minmax(141px, 1fr));
     }
 
 }
