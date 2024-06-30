@@ -18,10 +18,11 @@ type BtnTypes = {
     chapterNumber: number,
     chapterTitle: string,
     mediaId: number,
-    showAdditionalText?: boolean
+    showAdditionalText?: boolean,
+    wasChapterReadOnAnilist?: boolean
 }
 
-export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, showAdditionalText }: BtnTypes) {
+export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, mediaId, showAdditionalText, wasChapterReadOnAnilist }: BtnTypes) {
 
     const [wasChapterRead, setWasChapterRead] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -43,6 +44,8 @@ export default function MarkChapterAsReadButton({ chapterNumber, chapterTitle, m
     }, [user, anilistUser, chapterNumber])
 
     async function wasChapterPreviouslyMarkedAsRead() {
+
+        if (wasChapterReadOnAnilist) return setWasChapterRead(wasChapterReadOnAnilist)
 
         if (!user && !anilistUser) return
 

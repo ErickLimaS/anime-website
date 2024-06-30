@@ -33,7 +33,7 @@ const framerMotionLoadingChapters = {
   }
 }
 
-function MangaChaptersContainer({ mediaInfo }: { mediaInfo: ApiMediaResults }) {
+function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInfo: ApiMediaResults, chaptersReadOnAnilist?: number }) {
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [chaptersList, setChaptersList] = useState<MangaChapters[]>([])
@@ -177,6 +177,7 @@ function MangaChaptersContainer({ mediaInfo }: { mediaInfo: ApiMediaResults }) {
               <MarkChapterAsReadButton
                 chapterNumber={Number(chapter.chapterNumber)}
                 chapterTitle={chapter.title}
+                wasChapterReadOnAnilist={chaptersReadOnAnilist ? Number(chapter.chapterNumber) <= chaptersReadOnAnilist : undefined}
                 mediaId={mediaInfo.id}
                 showAdditionalText
               />

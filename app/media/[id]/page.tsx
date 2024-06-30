@@ -464,6 +464,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
                 <MangaChaptersContainer
                   mediaInfo={mediaInfo}
+                  chaptersReadOnAnilist={mediaInfo.mediaListEntry?.progress || undefined}
                 />
 
               </section>
