@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import styles from "./component.module.css"
-import pageStyles from "../../page.module.css"
+import pageStyles from "../../components/PageHeading/GridInfo/component.module.css"
 import PlaySvg from "@/public/assets/play2.svg"
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px-custom-color.svg"
 import { useRouter } from 'next/navigation'

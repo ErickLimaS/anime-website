@@ -7,6 +7,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
 import StoreProvider from "./lib/redux/StoreProvider";
+import LoadingPageContainer from "./components/LoadingContainer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,7 +41,7 @@ export default function RootLayout({
             showSpinner={false}
           />
 
-          {children}
+          {children || <LoadingPageContainer />}
 
           <Footer />
 

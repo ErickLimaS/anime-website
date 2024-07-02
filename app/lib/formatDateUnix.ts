@@ -14,6 +14,20 @@ export function convertToUnix(days: number) {
     return timestamp
 }
 
+// used on Media Page Components
+export function getMediaReleaseDate(date?: { month: number, day: number, year: number }) {
+
+    if (date) {
+
+        return new Date(Date.parse(`${date.month} ${date.day} ${date.year}`)).
+            toLocaleString('en-US', { month: 'long', day: "numeric", year: "numeric" })
+
+    }
+
+    return "Not Available"
+
+}
+
 // receive a unix timestamp and converts to date 
 export function convertFromUnix(
     unixTimestamp: number,
