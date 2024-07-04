@@ -20,8 +20,6 @@ import {
   getDoc, getFirestore
 } from 'firebase/firestore';
 import { initFirebase } from '@/app/firebaseApp';
-import ErrorImg from "@/public/error-img-2.png"
-import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
 import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/dataFetch/optimizedFetchAnimeOptions';
@@ -32,6 +30,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAppSelector } from '@/app/lib/redux/hooks';
 import EpisodesOptionsPanel from './components/EpisodesOptionsPanel';
 import { EpisodeBySource } from './components/EpisodeBySource';
+import ErrorPanel from './ErrorPanel';
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -481,13 +480,11 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         )}
 
         {((episodesList?.length == 0 || episodesList == null) && !isLoading) && (
-          <div id={styles.no_episodes_container}>
 
-            <Image src={ErrorImg} alt='Error' height={200} />
+          <ErrorPanel
+            currEpisodesSource={currEpisodesSource}
+          />
 
-            <p>Not available on <span>{currEpisodesSource}</span></p>
-
-          </div>
         )}
 
         {totalNumberPages && (
