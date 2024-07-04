@@ -13,19 +13,26 @@ type NavTypes = {
 }
 
 export default function PaginationButtons({ onPageChange, pageCount, redirectToPage }: NavTypes) {
+
+    const pageRange = (typeof window !== "undefined") && window.matchMedia("(max-width: 440px)").matches ? 1 : 4
+
     return (
         <ReactPaginate
-            nextLabel={<ChevronRightSvg alt="Icon to Right side" width={16} height={16} />}
+            nextLabel={
+                <ChevronRightSvg alt="Icon to Right side" width={16} height={16} />
+            }
+            previousLabel={
+                <ChevronLeftSvg alt="Icon to left side" width={16} height={16} />
+            }
             onPageChange={onPageChange}
-            pageRangeDisplayed={(typeof window !== "undefined") && window.matchMedia("(max-width: 440px)").matches ? 1 : 2}
+            pageRangeDisplayed={pageRange}
             marginPagesDisplayed={1}
             pageCount={pageCount}
             forcePage={redirectToPage || 0}
-            previousLabel={<ChevronLeftSvg alt="Icon to left side" width={16} height={16} />}
             pageClassName={styles.li_item}
             pageLinkClassName="page-link"
-            previousClassName={styles.previous_btn}
             previousLinkClassName="page-link"
+            previousClassName={styles.previous_btn}
             nextClassName={styles.next_btn}
             nextLinkClassName="page-item"
             breakLabel="..."
