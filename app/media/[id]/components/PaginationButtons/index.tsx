@@ -12,7 +12,7 @@ type NavTypes = {
 
 }
 
-function NavPaginateItems({ onPageChange, pageCount, redirectToPage }: NavTypes) {
+export default function PaginationButtons({ onPageChange, pageCount, redirectToPage }: NavTypes) {
     return (
         <ReactPaginate
             nextLabel={<ChevronRightSvg alt="Icon to Right side" width={16} height={16} />}
@@ -37,5 +37,3 @@ function NavPaginateItems({ onPageChange, pageCount, redirectToPage }: NavTypes)
         />
     )
 }
-
-export default NavPaginateItems

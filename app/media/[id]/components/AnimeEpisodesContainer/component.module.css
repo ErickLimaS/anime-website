@@ -256,6 +256,14 @@
 
 #loading_episodes_container>div {
 
+    display: flex;
+    flex-direction: column;
+    gap: 16px 0;
+
+}
+
+#loading_episodes_container .loading_img_placeholder {
+
     box-shadow: 0px 0px 4px 0px var(--white-05);
 
     display: flex;
@@ -266,6 +274,17 @@
     background-color: var(--black-50);
 
     border-radius: 8px;
+
+}
+
+#loading_episodes_container .loading_text_placeholder {
+
+    display: block;
+    width: 100%;
+    height: 12px;
+
+    background-color: var(--white-05);
+    border-radius: 4px;
 
 }
 

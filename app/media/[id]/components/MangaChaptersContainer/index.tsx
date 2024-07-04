@@ -4,7 +4,7 @@ import styles from "./component.module.css";
 import Link from 'next/link';
 import { MangaChapters, MangaInfo } from '@/app/ts/interfaces/apiMangadexDataInterface';
 import BookSvg from "@/public/assets/book.svg"
-import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
+import PaginationButtons from '@/app/media/[id]/components/PaginationButtons';
 import Image from 'next/image';
 import ErrorImg from "@/public/error-img-2.png"
 import manga from '@/app/api/consumetManga';
@@ -191,7 +191,7 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
       {chaptersList.length > 0 && (
         <nav id={styles.pagination_buttons_container}>
 
-          <NavPaginateItems
+          <PaginationButtons
             onPageChange={handleButtonPageNavigation}
             pageCount={pageNumber}
           />
