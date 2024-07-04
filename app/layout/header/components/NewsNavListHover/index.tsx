@@ -7,6 +7,7 @@ import news from '@/app/api/consumetNews'
 import { News } from '@/app/ts/interfaces/newsInterface'
 import SvgCalendar from "@/public/assets/calendar3.svg"
 import Image from 'next/image'
+import ErrorPlaceholder from '../ErrorPlaceholder'
 
 function NewsNavListHover() {
 
@@ -25,6 +26,12 @@ function NewsNavListHover() {
     function replaceInvalidNewsIdOnUrl(newsId: string) {
 
         return newsId.replace(/\/?daily-briefs\//, "")
+
+    }
+
+    if (!newsList) {
+
+        return <ErrorPlaceholder />
 
     }
 

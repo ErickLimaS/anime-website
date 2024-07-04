@@ -7,6 +7,7 @@ import anilist from '@/app/api/anilistMedias'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
+import ErrorPlaceholder from '../ErrorPlaceholder'
 
 function MangaNavListHover() {
 
@@ -19,6 +20,12 @@ function MangaNavListHover() {
         const trendingMangas = await anilist.getMediaForThisFormat({ type: "MANGA", sort: "TRENDING_DESC" }) as ApiDefaultResult[]
 
         setMangaList(trendingMangas)
+
+    }
+
+    if (!mangaList) {
+
+        return <ErrorPlaceholder />
 
     }
 

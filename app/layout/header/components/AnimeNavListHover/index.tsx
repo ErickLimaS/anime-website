@@ -7,6 +7,7 @@ import anilist from '@/app/api/anilistMedias'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import { animesGenres } from '../../index'
+import ErrorPlaceholder from '../ErrorPlaceholder'
 
 function AnimeNavListHover() {
 
@@ -19,6 +20,12 @@ function AnimeNavListHover() {
         const animeList: ApiDefaultResult[] = await anilist.getMediaForThisFormat({ type: "ANIME" }) as ApiDefaultResult[]
 
         setAnimeData(animeList)
+
+    }
+
+    if (!animeData) {
+
+        return <ErrorPlaceholder />
 
     }
 
