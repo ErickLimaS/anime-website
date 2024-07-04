@@ -256,6 +256,14 @@
 
 #loading_episodes_container>div {
 
+    display: flex;
+    flex-direction: column;
+    gap: 16px 0;
+
+}
+
+#loading_episodes_container .loading_img_placeholder {
+
     box-shadow: 0px 0px 4px 0px var(--white-05);
 
     display: flex;
@@ -269,35 +277,14 @@
 
 }
 
-/* NO EPISODES */
-#no_episodes_container {
+#loading_episodes_container .loading_text_placeholder {
 
-    box-shadow: inset 0px 0px 20px 1px var(--background);
+    display: block;
+    width: 100%;
+    height: 12px;
 
-    border-radius: 8px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 340px;
-    max-height: 60vh;
-
-    background-color: var(--white-100);
-
-}
-
-#no_episodes_container p {
-
-    font-weight: 500;
-    color: var(--black-100) !important;
-
-}
-
-#no_episodes_container p span {
-
-    color: var(--brand-color) !important;
+    background-color: var(--white-05);
+    border-radius: 4px;
 
 }
 

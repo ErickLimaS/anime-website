@@ -83,10 +83,42 @@
 
     animation: 2.5s ease-in-out infinite alternate loopLoading;
 
-    height: 66px;
+    height: 67px;
     width: 100%;
     background: var(--white-25);
 
+}
+
+@media(min-width: 520px) {
+    #loading_chapters_container>div {
+
+        height: 68px;
+
+    }
+}
+
+@media(min-width: 960px) {
+    #loading_chapters_container>div {
+
+        height: 68.3px;
+
+    }
+}
+
+@media(min-width: 1020px) {
+    #loading_chapters_container>div {
+
+        height: 69.2px;
+
+    }
+}
+
+@media(min-width: 1440px) {
+    #loading_chapters_container>div {
+
+        height: 70.2px;
+
+    }
 }
 
 @keyframes loopLoading {
@@ -108,17 +140,17 @@
 /* CHAPTER ITEM RESULT */
 .chapter_container {
 
-    background: var(--brand-color);
+    background: var(--brand-dark-color);
     border: 1px solid var(--brand-color);
 
     display: grid;
-    grid-template-columns: 15% 75% 10%;
+    grid-template-columns: 15% 70% 15%;
     align-items: center;
     justify-items: start;
 
 }
 
-@media(min-width: 520px) {
+@media(min-width: 1020px) {
     .chapter_container {
         grid-template-columns: 10% 80% 10%;
     }

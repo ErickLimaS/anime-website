@@ -4,9 +4,7 @@ import styles from "./component.module.css";
 import Link from 'next/link';
 import { MangaChapters, MangaInfo } from '@/app/ts/interfaces/apiMangadexDataInterface';
 import BookSvg from "@/public/assets/book.svg"
-import NavPaginateItems from '@/app/media/[id]/components/PaginateItems';
-import Image from 'next/image';
-import ErrorImg from "@/public/error-img-2.png"
+import PaginationButtons from '@/app/media/[id]/components/PaginationButtons';
 import manga from '@/app/api/consumetManga';
 import { AnimatePresence, motion } from 'framer-motion';
 import simulateRange from '@/app/lib/simulateRange';
@@ -14,18 +12,32 @@ import MarkChapterAsReadButton from '@/app/components/Buttons/MarkChapterAsRead'
 import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { getClosestMangaResultByTitle } from '@/app/lib/dataFetch/optimizedFetchMangaOptions';
 import { stringToUrlFriendly } from '@/app/lib/convertStrings';
+import { useSearchParams } from 'next/navigation';
+import ErrorPanel from '../ErrorPanel';
 
 const framerMotionLoadingChapters = {
   initial: {
-    opacity: 0,
-    scale: 0
+    opacity: 0.5
   },
   animate: {
     opacity: 1,
-    scale: 1,
     transition: {
-      staggerChildren: 0.1,
+      repeat: Infinity,
+      duration: 1,
+      repeatType: "reverse",
     },
+  },
+  exit: {
+    opacity: 0
+  },
+}
+
+const framerMotionShowUpChapters = {
+  initial: {
+    opacity: 0.5
+  },
+  animate: {
+    opacity: 1
   },
   exit: {
     opacity: 0,
@@ -39,11 +51,17 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
   const [chaptersList, setChaptersList] = useState<MangaChapters[]>([])
 
   const [currMangasList, setCurrMangasList] = useState<MangaChapters[] | null>(null)
-  const [pageNumber, setPageNumber] = useState<number>(0)
+
+  const [totalNumberPages, setTotalNumberPages] = useState<number>(0)
+  const [currActivePage, setCurrActivePage] = useState<number>(0)
 
   const [itemOffset, setItemOffset] = useState<number>(0)
 
   const rangeChaptersPerPage = 10
+
+  const searchParams = useSearchParams()
+
+  const currSearchParams = new URLSearchParams(Array.from(searchParams.entries()))
 
   useEffect(() => {
 
@@ -54,6 +72,39 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
 
   }, [itemOffset, rangeChaptersPerPage])
 
+  // handles which page last chapter read is on
+  useEffect(() => {
+
+    if (!chaptersReadOnAnilist) return
+
+    for (let pageIndex = 0; pageIndex < totalNumberPages; pageIndex++) {
+
+      const chaptersOnPage = pageIndex * rangeChaptersPerPage % chaptersList.length
+
+      if (Number(chaptersList[pageIndex * chaptersOnPage]?.chapterNumber) >= chaptersReadOnAnilist) {
+
+        handleButtonPageNavigation({ selected: pageIndex - 1 })
+
+        setCurrActivePage(pageIndex - 1)
+
+        return
+
+      }
+
+      if ((pageIndex + 1) == totalNumberPages) {
+
+        handleButtonPageNavigation({ selected: pageIndex })
+
+        setCurrActivePage(pageIndex)
+
+        return
+
+      }
+
+    }
+
+  }, [totalNumberPages])
+
   function handleButtonPageNavigation(event: { selected: number }) {
 
     setIsLoading(true) // Needed to refresh chapters component "Mark Chapters Read"
@@ -62,7 +113,7 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
 
     setItemOffset(newOffset)
 
-    setTimeout(() => setIsLoading(false), 500)  // Needed to refresh chapters component "Mark Chapters Read"
+    setTimeout(() => setIsLoading(false), 400)  // Needed to refresh chapters component "Mark Chapters Read"
 
   }
 
@@ -98,7 +149,7 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
 
     setCurrMangasList(mangaInfo.chapters.filter(item => item.pages != 0).slice(itemOffset, endOffset))
 
-    setPageNumber(Math.ceil(mangaInfo.chapters.filter(item => item.pages != 0).length / rangeChaptersPerPage))
+    setTotalNumberPages(Math.ceil(mangaInfo.chapters.filter(item => item.pages != 0).length / rangeChaptersPerPage))
 
     setIsLoading(false)
 
@@ -111,17 +162,13 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
         <motion.ol
           id={styles.container}
           data-loading={isLoading}
-          variants={framerMotionLoadingChapters}
-          initial="initial"
-          animate="animate"
-          exit="exit"
         >
 
           {/* LOADING */}
           {isLoading && (
-            <motion.div
+            <motion.li
               id={styles.loading_chapters_container}
-              variants={framerMotionLoadingChapters}
+              variants={framerMotionLoadingChapters as any}
               initial="initial"
               animate="animate"
               exit="exit"
@@ -131,31 +178,20 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
 
                 <motion.div
                   key={key}
-                  variants={framerMotionLoadingChapters}
+                  variants={framerMotionLoadingChapters as any}
                 />
 
               ))}
 
-            </motion.div>
+            </motion.li>
           )}
 
-          {/* SHOWS WHEN THERES NO RESULTS  */}
-          {!isLoading && (chaptersList.length == 0 || currMangasList == null) && (
-            <div id={styles.no_chapters_container}>
-
-              <Image src={ErrorImg} alt='Error' height={200} />
-
-              <p>No chapters available.</p>
-
-            </div>
-          )}
-
-          {(currMangasList && !isLoading) && currMangasList.map((chapter, key) => (
+          {!isLoading && currMangasList?.map((chapter, key) => (
             <motion.li
               key={key}
               title={`Chapter ${chapter.chapterNumber} - ${mediaInfo.title.romaji}`}
               data-disabled={chapter.pages == 0}
-              variants={framerMotionLoadingChapters}
+              variants={framerMotionShowUpChapters}
               className={styles.chapter_container}
             >
 
@@ -185,15 +221,25 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
             </motion.li>
           ))}
 
+          {/* SHOWS WHEN THERES NO RESULTS  */}
+          {!isLoading && (chaptersList.length == 0 || currMangasList == null) && (
+
+            <ErrorPanel
+              errorText={<>No chapters available.</>}
+            />
+
+          )}
+
         </motion.ol>
       </AnimatePresence>
 
-      {chaptersList.length > 0 && (
+      {totalNumberPages && (
         <nav id={styles.pagination_buttons_container}>
 
-          <NavPaginateItems
+          <PaginationButtons
             onPageChange={handleButtonPageNavigation}
-            pageCount={pageNumber}
+            pageCount={totalNumberPages}
+            redirectToPage={Number(currSearchParams.get("page")) || currActivePage}
           />
 
         </nav>

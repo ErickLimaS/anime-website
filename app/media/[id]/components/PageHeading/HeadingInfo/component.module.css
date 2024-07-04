@@ -1,0 +1,127 @@
+#media_title_container small,
+#media_title_container h1 {
+
+    color: var(--white-100);
+    font-weight: 500;
+
+    font-size: var(--font-size--small-1);
+
+}
+
+.heading_img_container {
+
+    position: relative;
+    max-width: 280px;
+    margin: 24px auto;
+
+}
+
+@media((min-width: 620px)) {
+    .heading_img_container {
+        margin: 24px 0;
+        max-height: 120px;
+    }
+}
+
+#media_title_container h1#heading_title {
+
+    font-size: var(--font-size--h1);
+
+}
+
+#media_title_container h1 {
+
+    margin: 8px 0;
+
+    font-weight: 600;
+
+}
+
+#media_title_container #btns_actions_container {
+
+    position: relative;
+
+    margin-left: auto;
+
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+
+}
+
+#media_title_container #btns_actions_container>button {
+
+    box-shadow: 3px 3px 4px var(--black-75);
+
+    display: flex;
+
+    border: 1px solid var(--white-100);
+
+    text-align: center;
+
+    padding: 16px;
+    background-color: transparent;
+
+    border-radius: 8px;
+
+}
+
+#media_title_container #btns_actions_container>button[data-added=true] {
+
+    background-color: var(--brand-color);
+
+}
+
+#media_title_container #genres_container ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#media_title_container #genres_container ul li {
+
+    border: 2px solid var(--white-75);
+    border-radius: 8px;
+
+    background-color: var(--white-25);
+
+    color: var(--white-100);
+
+}
+
+#media_title_container #genres_container ul li a {
+
+    padding: 8px;
+
+    display: block;
+    font-size: var(--font-size--small-1);
+}
+
+#media_title_container #genres_and_type_container {
+
+    gap: 16px;
+    justify-content: space-between;
+    align-items: flex-start;
+
+}
+
+#media_title_container #genres_and_type_container>div:not(#btns_actions_container) {
+
+    margin: auto 0;
+
+    gap: 16px;
+
+    white-space: break-spaces;
+    flex-wrap: wrap;
+}
+
+#media_title_container #genres_and_type_container span {
+
+    margin: auto 0;
+
+    color: var(--white-75);
+
+    font-weight: 500;
+
+}

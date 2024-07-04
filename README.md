@@ -84,39 +84,40 @@ Back-End:
 npm install
 ```
 
-3. Now you will need to create a `.env.local` file on the `project root folder` with the url to where your Consumet and Aniwatch is setted and the settings to your Firebase Account.
+3. Now you will need to create a `.env.local` file on the `project root folder`, and follow the instructions bellow.
 
-   - Go to these repos and host your own instance:
-     - <a href='https://github.com/consumet/api.consumet.org'>Consumet API</a>
-     - <a href='https://github.com/ghoshRitesh12/aniwatch-api'>Aniwatch API</a>
-   - About Anilist OAuth:
+   - You'll need the data from Consumet and Aniwatch API to get things to work, so go to these repos and host your own instance:
+     - <a href='https://github.com/consumet/api.consumet.org' target="_blank" rel="noreferrer">Consumet API</a>
+     - <a href='https://github.com/ghoshRitesh12/aniwatch-api' target="_blank" rel="noreferrer">Aniwatch API</a>
+   - About Login with Anilist (OAuth):
      - You need to first login on your account on Anilist.
      - Then go to <a href='https://anilist.co/settings/developer'>Developer Page</a> on the Settings and click "Create New Client".
      - Now you need to add the name of your forked project/website and the URL to redirect when user accept the login, then hit "Save".
      - Store the Client ID and Secret on your ".env.local".
      - TIP: Create 2 of these, one for the dev env and other to production.
-   - On Firebase, get your configs to use the Authentication and Firestore Database.
-     - All the Firebase info needed bellow can be found when you create a new project.
+   - On Firebase, to use Google, Email and Anonymous Login and their Database:
+     - Create a project for this fork/clone you did on  <a href='https://console.firebase.google.com/' target="_blank" rel="noreferrer">Firebase</a>.
+     - All the Firebase info needed on `.env.local` can be found when you create a new project.
      - IMPORTANT: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
    - OPTIONAL: This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
-     - Go to <a href='https://github.com/manami-project/anime-offline-database'>anime-offline-database</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
+     - Go to <a href='https://github.com/manami-project/anime-offline-database' target="_blank" rel="noreferrer">anime-offline-database</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
      - With the file downloaded, put it in the `/app/api/animes-database` directory, replacing the previous one.
 
 With all that done, you will need to fill the `.env.local` like the example bellow:
 
 ```javascript
-// Consumet
+// Consumet API
 NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
-// Aniwatch
+// Aniwatch API
 NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.
 // Anilist OAuth Settings
 NEXT_PUBLIC_ANILIST_CLIENT_ID=your-anilist-client-id
 ANILIST_CLIENT_SECRET=your-anilist-secret
 // Next.js Route Handler - Make sure to add the pathname "/api/animes-database" bellow
 NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API=https://url-to-where-your-website-is-hosted.com/api/animes-database
-// Bellow is the url to dev enviroment. You'll need to change it when on hosted mode to the respective url
+// Bellow is the url to use ONLY on Dev Enviroment. You WILL NEED TO CHANGE IT when on hosted mode to the respective url. Look for something like Enviroment Variables to do it.
 NEXT_PUBLIC_WEBSITE_ORIGIN_URL=http://localhost:3000
-// Firebase
+// Firebase Settings
 NEXT_PUBLIC_FIREBASE_API_KEY=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase-setting-related-to-this-field

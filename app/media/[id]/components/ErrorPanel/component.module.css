@@ -1,0 +1,30 @@
+#no_episodes_container {
+
+    box-shadow: inset 0px 0px 20px 1px var(--background);
+
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 340px;
+    max-height: 60vh;
+
+    background-color: var(--white-100);
+
+}
+
+#no_episodes_container p {
+
+    font-weight: 500;
+    color: var(--black-100) !important;
+
+}
+
+#no_episodes_container p span {
+
+    color: var(--brand-color) !important;
+
+}

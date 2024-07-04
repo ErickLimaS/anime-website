@@ -12,20 +12,40 @@ type NavTypes = {
 
 }
 
-function NavPaginateItems({ onPageChange, pageCount, redirectToPage }: NavTypes) {
+export default function PaginationButtons({ onPageChange, pageCount, redirectToPage }: NavTypes) {
+
+    function maxBtnsByScreenSize() {
+
+        if (window.matchMedia("(max-width: 440px)").matches) {
+            return 1
+        }
+        else if (window.matchMedia("(max-width: 760px)").matches) {
+            return 2
+        }
+
+        return 4
+
+    }
+
+    const pageRange = (typeof window !== "undefined") ? maxBtnsByScreenSize() : 1
+
     return (
         <ReactPaginate
-            nextLabel={<ChevronRightSvg alt="Icon to Right side" width={16} height={16} />}
+            nextLabel={
+                <ChevronRightSvg alt="Icon to Right side" width={16} height={16} />
+            }
+            previousLabel={
+                <ChevronLeftSvg alt="Icon to left side" width={16} height={16} />
+            }
             onPageChange={onPageChange}
-            pageRangeDisplayed={(typeof window !== "undefined") && window.matchMedia("(max-width: 440px)").matches ? 1 : 2}
+            pageRangeDisplayed={pageRange}
             marginPagesDisplayed={1}
             pageCount={pageCount}
             forcePage={redirectToPage || 0}
-            previousLabel={<ChevronLeftSvg alt="Icon to left side" width={16} height={16} />}
             pageClassName={styles.li_item}
             pageLinkClassName="page-link"
-            previousClassName={styles.previous_btn}
             previousLinkClassName="page-link"
+            previousClassName={styles.previous_btn}
             nextClassName={styles.next_btn}
             nextLinkClassName="page-item"
             breakLabel="..."
@@ -37,5 +57,3 @@ function NavPaginateItems({ onPageChange, pageCount, redirectToPage }: NavTypes)
         />
     )
 }
-
-export default NavPaginateItems

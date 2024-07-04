@@ -7,10 +7,11 @@ import news from '@/app/api/consumetNews'
 import { News } from '@/app/ts/interfaces/newsInterface'
 import SvgCalendar from "@/public/assets/calendar3.svg"
 import Image from 'next/image'
+import ErrorPlaceholder from '../ErrorPlaceholder'
 
 function NewsNavListHover() {
 
-    const [newsList, setNewsList] = useState<News[] | null>(null)
+    const [newsList, setNewsList] = useState<News[] | null>([])
 
     useEffect(() => { fetchRecentNews() }, [])
 
@@ -28,6 +29,12 @@ function NewsNavListHover() {
 
     }
 
+    if (!newsList) {
+
+        return <ErrorPlaceholder />
+
+    }
+
     return (
         <div id={styles.news_header_nav_container}>
 
@@ -37,9 +44,9 @@ function NewsNavListHover() {
                 </Link>
             </div>
 
-            <ul data-loading={newsList == undefined}>
+            <ul data-loading={newsList.length == 0}>
 
-                {!newsList && (<LoadingSvg width={200} height={200} alt="Loading" />)}
+                {newsList.length == 0 && (<LoadingSvg width={200} height={200} alt="Loading" />)}
 
                 {newsList && (
 

@@ -33,7 +33,7 @@ export default {
 
             console.log(err)
 
-            return err
+            return null
 
         }
 

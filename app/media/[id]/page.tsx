@@ -1,35 +1,21 @@
-import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import React from 'react'
 import anilist from "@/app/api/anilistMedias"
 import styles from "./page.module.css"
-import Link from 'next/link'
 import Image from 'next/image'
 import parse from "html-react-parser"
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
-import PlaySvg from "@/public/assets/play-circle.svg"
-import BookSvg from "@/public/assets/book.svg"
-import CalendarSvg from "@/public/assets/calendar3.svg"
-import ClockSvg from "@/public/assets/clock.svg"
-import ProgressSvg from "@/public/assets/progress.svg"
-import FavouriteSvg from "@/public/assets/heart.svg"
-import FavouriteFillSvg from "@/public/assets/heart-fill.svg"
-import PlusSvg from "@/public/assets/plus-lg.svg"
 import EpisodesContainer from './components/AnimeEpisodesContainer'
 import MangaChaptersContainer from './components/MangaChaptersContainer'
-import * as AddToFavourites from '@/app/components/Buttons/AddToFavourites'
-import * as AddToList from '@/app/components/Buttons/AddToList'
 import ScoreRating from '@/app/components/DynamicAssets/ScoreRating'
-import PlayBtn from './components/WatchPlayBtn'
 import { headers } from 'next/headers'
 import { checkDeviceIsMobile } from '@/app/lib/checkMobileOrDesktop'
-import { convertFromUnix } from '@/app/lib/formatDateUnix'
-import CommentsSection from '../../components/CommentsSection'
+import { convertFromUnix, getMediaReleaseDate } from '@/app/lib/formatDateUnix'
 import { getMediaInfo } from '@/app/api/consumetImdb'
 import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import MediaRelatedContainer from './components/MediaRelatedContainer'
-import AddToNotificationsButton from '@/app/components/Buttons/AddToNotification'
-import stringToOnlyAlphabetic from '@/app/lib/convertStrings'
-import HeadingTextAndMediaLogo from './components/HeadingTextAndMediaLogo'
+import CommentsSection from '../../components/CommentsSection'
+import PageHeading from './components/PageHeading'
 
 export const revalidate = 43200 // revalidate cached data every 12 hours
 
@@ -99,26 +85,6 @@ export default async function MediaPage({ params, searchParams }: { params: { id
 
   }
 
-  function convertMediaStatus(status: string) {
-
-    if (status == "NOT_YET_RELEASED") {
-      return "TO BE RELEASED"
-    }
-    else if (status == "FINISHED") {
-      return "COMPLETE"
-    }
-
-    return stringToOnlyAlphabetic(status) || "Not Available"
-
-  }
-
-  function getEpisodesQuantity() {
-
-    const imdbEpisodes = getImdbEpisodesListWithNoSeasons()
-
-    return imdbEpisodes.length || mediaInfo.episodes || "Not Available"
-  }
-
   function bcgImgBasedOnScreenDisplay() {
 
     if (isOnMobileScreen) {
@@ -130,19 +96,6 @@ export default async function MediaPage({ params, searchParams }: { params: { id
     }
   }
 
-  function getDate(date: { month: number, day: number, year: number }) {
-
-    if (mediaInfo.startDate) {
-
-      return new Date(Date.parse(`${date.month} ${date.day} ${date.year}`)).
-        toLocaleString('en-US', { month: 'long', day: "numeric", year: "numeric" })
-
-    }
-
-    return "Not Available"
-
-  }
-
   return (
     <main id={styles.container}>
 
@@ -152,208 +105,17 @@ export default async function MediaPage({ params, searchParams }: { params: { id
         style={{ background: bcgImgBasedOnScreenDisplay() }}
       />
 
-      <div id={styles.media_info_container} className={(imdbMediaInfo?.logos && imdbMediaInfo?.logos[0]) ? `${styles.custom_position}` : ``}>
+      <div
+        id={styles.media_info_container}
+        className={(imdbMediaInfo?.logos && imdbMediaInfo?.logos[0]) ? `${styles.custom_position}` : ``}
+      >
 
-        <section id={styles.media_title_container}>
-
-          <HeadingTextAndMediaLogo
-            imdbMediaLogos={imdbMediaInfo?.logos}
-            mediaTitles={mediaInfo.title}
-            preferredLanguage={searchParams.lang}
-          />
-
-          <div id={styles.genres_and_type_container} className='display_flex_row align_items_center'>
-
-            <div id={styles.genres_container} className='display_flex_row align_items_center'>
-
-              {mediaInfo.genres && (
-                <ul>
-                  {mediaInfo.genres.slice(0, 3).map((genre, key) => (
-                    <li key={key}>
-                      <Link href={`/search?genre=[${genre.toLowerCase()}]`}>
-                        {genre}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {mediaInfo.format && (
-                <span style={{ color: mediaInfo.coverImage?.color || "var(--white-100)" }}>
-                  {(mediaInfo.format == "TV" ? "anime" : mediaInfo.format).toUpperCase()}
-                </span>
-              )}
-
-            </div>
-
-            <div id={styles.btns_actions_container}>
-
-              <AddToNotificationsButton
-                mediaInfo={mediaInfo}
-              />
-
-              <AddToList.Button
-                statusOnAnilist={mediaInfo.mediaListEntry?.status}
-                listEntryId={mediaInfo.mediaListEntry?.id}
-                mediaInfo={mediaInfo as ApiDefaultResult}
-                imdbEpisodesList={getImdbEpisodesListWithNoSeasons()}
-                amountWatchedOrRead={mediaInfo.mediaListEntry?.progress}
-              >
-
-                <AddToFavourites.SvgIcon>
-                  <PlusSvg fill="var(--white-100)" />
-                </AddToFavourites.SvgIcon>
-
-                <AddToFavourites.SvgIcon>
-                  <PlusSvg fill="var(--brand-color)" />
-                </AddToFavourites.SvgIcon>
-
-              </AddToList.Button>
-
-              <AddToFavourites.Button
-                isActiveOnAnilist={mediaInfo.isFavourite}
-                mediaInfo={mediaInfo as ApiDefaultResult}
-              >
-
-                <AddToFavourites.SvgIcon>
-                  <FavouriteSvg fill="var(--white-100)" />
-                </AddToFavourites.SvgIcon>
-
-                <AddToFavourites.SvgIcon>
-                  <FavouriteFillSvg fill="var(--brand-color)" />
-                </AddToFavourites.SvgIcon>
-
-              </AddToFavourites.Button>
-
-            </div>
-          </div>
-
-
-        </section>
-
-        {/* GENERAL INFO */}
-        <section id={styles.info_list_container}>
-
-          <ul>
-            {(mediaInfo.type != "MANGA") && (
-
-              <PlayBtn
-                mediaId={mediaInfo.id}
-                mediaTitle={mediaInfo.title.romaji}
-                mediaFormat={mediaInfo.format}
-                anilistLastEpisodeWatched={mediaInfo.mediaListEntry?.status != "COMPLETED" ? mediaInfo.mediaListEntry?.progress : undefined}
-              />
-
-            )}
-
-            {(mediaInfo.format == "MOVIE") ? (
-              <li className={`${styles.info_item}`}>
-
-                <h2>SOURCE</h2>
-
-                <p>
-                  {stringToOnlyAlphabetic(mediaInfo.source.toUpperCase()) || "Not Available"}
-                </p>
-
-              </li>
-            ) : (
-              <li className={`${styles.info_item}`}>
-
-                <span>
-                  <ProgressSvg width={16} height={16} alt="Progress" />
-                </span>
-
-                <h2>STATUS</h2>
-
-                <p>
-                  {convertMediaStatus(mediaInfo.status || "Not Available")}
-                </p>
-
-              </li>
-            )}
-
-            {(mediaInfo.type == "ANIME" && mediaInfo.format != "MOVIE" && mediaInfo.status != "NOT_YET_RELEASED") && (
-              <li className={`${styles.info_item}`}>
-
-                <span>
-                  <PlaySvg width={16} height={16} alt="Episodes" />
-                </span>
-
-                <h2>EPISODES</h2>
-
-                <p>
-                  {getEpisodesQuantity()}
-                </p>
-
-              </li>
-            )}
-
-            {mediaInfo.type == "MANGA" && (
-              <li className={`${styles.info_item}`}>
-
-                <span>
-                  <BookSvg width={16} height={16} alt="Volumes" />
-                </span>
-
-                <h2>VOLUMES</h2>
-
-                <p>
-                  {mediaInfo.volumes || "Not Available"}
-                </p>
-
-              </li>
-            )}
-
-            <li className={`${styles.info_item}`}>
-
-              <span>
-                <CalendarSvg width={16} height={16} alt="Release" />
-              </span>
-
-              <h2>RELEASE</h2>
-
-              <p className={styles.width_min_content}>
-                {getDate(mediaInfo.startDate)}
-              </p>
-
-            </li>
-
-            <li className={`${styles.info_item}`}>
-
-              {mediaInfo.type == "ANIME" && (
-                <React.Fragment>
-
-                  <span>
-                    <ClockSvg width={16} height={16} alt="Length" />
-                  </span>
-
-                  <h2>LENGTH</h2>
-
-                  <p>
-                    {mediaInfo.duration == null ? "Not Available" : `${mediaInfo.duration} min` || "Not Available"}
-                  </p>
-
-                </React.Fragment>
-              )}
-
-              {mediaInfo.type == "MANGA" && (
-                <React.Fragment>
-
-                  <span>
-                    <BookSvg width={16} height={16} alt="Chapters" />
-                  </span>
-
-                  <h2>CHAPTERS</h2>
-
-                  <p>{mediaInfo.chapters || "Not Available"}</p>
-                </React.Fragment>
-              )}
-
-            </li>
-
-          </ul>
-
-        </section>
+        <PageHeading
+          searchParams={searchParams}
+          mediaInfo={mediaInfo}
+          imdbMediaInfo={imdbMediaInfo}
+          imdbEpisodes={getImdbEpisodesListWithNoSeasons()}
+        />
 
         <section id={styles.info_container}>
 
@@ -626,7 +388,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                   <li>
                     <p>Ended in
                       <span>
-                        {getDate(mediaInfo.endDate)}
+                        {getMediaReleaseDate(mediaInfo.startDate ? mediaInfo.endDate : undefined)}
                       </span>
                     </p>
                   </li>

@@ -7,10 +7,11 @@ import anilist from '@/app/api/anilistMedias'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
+import ErrorPlaceholder from '../ErrorPlaceholder'
 
 function MangaNavListHover() {
 
-    const [mangaList, setMangaList] = useState<ApiDefaultResult[]>()
+    const [mangaList, setMangaList] = useState<ApiDefaultResult[] | null>([])
 
     useEffect(() => { fetchTrendingMangasList() }, [])
 
@@ -19,6 +20,12 @@ function MangaNavListHover() {
         const trendingMangas = await anilist.getMediaForThisFormat({ type: "MANGA", sort: "TRENDING_DESC" }) as ApiDefaultResult[]
 
         setMangaList(trendingMangas)
+
+    }
+
+    if (!mangaList) {
+
+        return <ErrorPlaceholder />
 
     }
 
@@ -68,7 +75,7 @@ function MangaNavListHover() {
                 <div id={styles.manga_card_container}>
                     <h5>Manga of the Day</h5>
 
-                    {mangaList ? (
+                    {mangaList.length > 0 ? (
                         <MediaInfoExpanded.Container
                             mediaInfo={mangaList[0]}
                         >
@@ -92,7 +99,7 @@ function MangaNavListHover() {
                 <div id={styles.list_picked_container}>
                     <h5>Picked for you</h5>
 
-                    {mangaList ? (
+                    {mangaList.length > 0 ? (
                         <ul>
                             {mangaList?.slice(1, 6).map((media) => (
                                 <li key={media.id}>

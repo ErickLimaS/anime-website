@@ -7,10 +7,11 @@ import anilist from '@/app/api/anilistMedias'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg"
 import { animesGenres } from '../../index'
+import ErrorPlaceholder from '../ErrorPlaceholder'
 
 function AnimeNavListHover() {
 
-    const [animeData, setAnimeData] = useState<ApiDefaultResult[]>()
+    const [animeData, setAnimeData] = useState<ApiDefaultResult[] | null>([])
 
     useEffect(() => { fetchAnimeList() }, [])
 
@@ -22,13 +23,19 @@ function AnimeNavListHover() {
 
     }
 
+    if (!animeData) {
+
+        return <ErrorPlaceholder />
+
+    }
+
     return (
         <ul id={styles.anime_header_nav_container}>
             <li>
                 <div id={styles.anime_card_container}>
                     <h5>Anime of the Day</h5>
 
-                    {animeData ? (
+                    {animeData.length > 0 ? (
                         <MediaInfoExpanded.Container mediaInfo={animeData[0]} >
 
                             <MediaInfoExpanded.Description
@@ -64,7 +71,7 @@ function AnimeNavListHover() {
                 <div>
                     <h5>Anime Trailer You May Like</h5>
 
-                    {(animeData && animeData[animeData.length - 1]?.trailer?.id) ? (
+                    {(animeData.length > 0 && animeData[animeData.length - 1]?.trailer?.id) ? (
                         <iframe
                             className="yt_embed_video"
                             src={`https://www.youtube.com/embed/${animeData[animeData.length - 1].trailer.id} `

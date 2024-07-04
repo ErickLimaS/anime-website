@@ -2,7 +2,7 @@ import { ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface'
 import Image from 'next/image'
 import React from 'react'
-import styles from "../../page.module.css"
+import styles from "./component.module.css"
 
 export default function HeadingTextAndMediaLogo({ imdbMediaLogos, preferredLanguage, mediaTitles }: {
     imdbMediaLogos: ImdbMediaInfo["logos"] | undefined, mediaTitles: ApiMediaResults["title"], preferredLanguage?: string
