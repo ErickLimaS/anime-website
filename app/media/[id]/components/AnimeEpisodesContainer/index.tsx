@@ -30,7 +30,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAppSelector } from '@/app/lib/redux/hooks';
 import EpisodesOptionsPanel from './components/EpisodesOptionsPanel';
 import { EpisodeBySource } from './components/EpisodeBySource';
-import ErrorPanel from './ErrorPanel';
+import ErrorPanel from '../ErrorPanel';
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -482,7 +482,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         {((episodesList?.length == 0 || episodesList == null) && !isLoading) && (
 
           <ErrorPanel
-            currEpisodesSource={currEpisodesSource}
+            errorText={<>Not available on <span>{currEpisodesSource}</span></>}
           />
 
         )}
