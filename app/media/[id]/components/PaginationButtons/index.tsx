@@ -14,7 +14,20 @@ type NavTypes = {
 
 export default function PaginationButtons({ onPageChange, pageCount, redirectToPage }: NavTypes) {
 
-    const pageRange = (typeof window !== "undefined") && window.matchMedia("(max-width: 440px)").matches ? 1 : 4
+    function maxBtnsByScreenSize() {
+
+        if (window.matchMedia("(max-width: 440px)").matches) {
+            return 1
+        }
+        else if (window.matchMedia("(max-width: 760px)").matches) {
+            return 2
+        }
+
+        return 4
+
+    }
+
+    const pageRange = (typeof window !== "undefined") ? maxBtnsByScreenSize() : 1
 
     return (
         <ReactPaginate
