@@ -206,7 +206,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                     auth.signOut()
 
                 }
-                
+
                 removeCookies()
 
                 window.location.reload()
@@ -286,7 +286,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                 You only may change Username and Photo on <a
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    href={`https://anilist.co/user/${anilistUser.name}/mangalist`}
+                                    href={`https://anilist.co/user/${anilistUser.name}`}
                                     style={{ "display": "inline-block", "fontSize": "var(--font-size--small-1)", "textDecoration": "underline" }}
                                 >
                                     <b>AniList Website</b>
