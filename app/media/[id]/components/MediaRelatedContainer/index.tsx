@@ -37,6 +37,7 @@ function MediaRelatedContainer({ mediaList, swiperOptions }: {
 
                         <MediaCard.MediaImgLink
                             mediaId={media.id}
+                            mediaInfo={media}
                             title={media.title.userPreferred || media.title.romaji}
                             formatOrType={media.format}
                             url={media.coverImage.large}

@@ -88,6 +88,18 @@ export function defaultApiQueryRequest(otherQueryFields?: unknown, otherMediasFi
                             }
                             description(asHtml: true)
                             isAdult
+                            isFavourite
+                            mediaListEntry {
+                                    id
+                                    mediaId
+                                    status
+                                    progress
+                                    media {
+                                    title{
+                                        romaji
+                                    }
+                                }
+                            }
                             status
                             relations{
                                 nodes{
@@ -120,6 +132,19 @@ export function defaultApiQueryRequest(otherQueryFields?: unknown, otherMediasFi
                                     }
                                     updatedAt
                                     favourites
+                                    
+                                                    isFavourite
+                                                    mediaListEntry {
+                                                        id
+                                                        mediaId
+                                                        status
+                                                        progress
+                                                        media {
+                                                        title{
+                                                            romaji
+                                                            }
+                                                        }
+                                                    }
                                     tags{
                                         name
                                         description
@@ -626,6 +651,19 @@ export function queryMediaWithUserAuthenticated(otherQueryFields?: unknown, othe
                                                     genres
                                                     type
                                                     format
+                                                    description
+                                                    isFavourite
+                                                    mediaListEntry {
+                                                        id
+                                                        mediaId
+                                                        status
+                                                        progress
+                                                        media {
+                                                        title{
+                                                            romaji
+                                                            }
+                                                        }
+                                                    }
                                                     title{
                                                         romaji
                                                         native
@@ -725,6 +763,17 @@ export function queryMediaWithUserAuthenticated(otherQueryFields?: unknown, othe
                                     volumes
                                     countryOfOrigin
                                     isLicensed
+                                    mediaListEntry {
+                                                        id
+                                                        mediaId
+                                                        status
+                                                        progress
+                                                        media {
+                                                        title{
+                                                            romaji
+                                                            }
+                                                        }
+                                    }
                                     source
                                     hashtag
                                     updatedAt

@@ -12,26 +12,16 @@ import { removeMediaOnListByStatus, updateUserMediaListByStatus } from '@/app/li
 import { useAppSelector } from '@/app/lib/redux/hooks'
 import anilistUsers from '@/app/api/anilistUsers'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface';
-
-type StatusTypes = "COMPLETED" | "CURRENT" | "PLANNING" | "DROPPED" | "PAUSED" | "REPEATING"
-
-const btnValues = [
-    { name: "Completed", value: "COMPLETED" },
-    { name: "Watching", value: "CURRENT" },
-    { name: "Planning", value: "PLANNING" },
-    { name: "Dropped", value: "DROPPED" },
-    { name: "Paused", value: "PAUSED" },
-    { name: "Repeating", value: "REPEATING" },
-]
+import { userMediaStatusEntries } from '@/app/lib/dataConstants/anilist';
 
 export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesList, amountWatchedOrRead, children }: {
-    mediaInfo: ApiDefaultResult, imdbEpisodesList?: ImdbEpisode[], statusOnAnilist?: string, listEntryId?: number, amountWatchedOrRead?: number, children?: React.ReactNode[]
+    mediaInfo: ApiDefaultResult, imdbEpisodesList?: ImdbEpisode[], statusOnAnilist?: ApiDefaultResult["mediaListEntry"]["status"], listEntryId?: number, amountWatchedOrRead?: number, children?: React.ReactNode[]
 }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
 
-    const [mediaStatus, setMediaStatus] = useState<StatusTypes | null>(statusOnAnilist as StatusTypes || null)
+    const [mediaStatus, setMediaStatus] = useState<ApiDefaultResult["mediaListEntry"]["status"] | null>(statusOnAnilist || null)
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
@@ -64,11 +54,11 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
 
         if (!userMediaLists) return
 
-        btnValues.map((btn) => {
+        userMediaStatusEntries.map((btn) => {
 
             const wasMediaFound = userMediaLists[btn.value.toLowerCase()]?.find((media: { id: number }) => media.id == mediaInfo.id)
 
-            if (wasMediaFound) setMediaStatus(btn.value as StatusTypes)
+            if (wasMediaFound) setMediaStatus(btn.value as ApiDefaultResult["mediaListEntry"]["status"])
 
         })
 
@@ -104,7 +94,7 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
 
     }
 
-    async function handleAddMediaOnList({ status }: { status: StatusTypes }) {
+    async function handleAddMediaOnList({ status }: { status: ApiDefaultResult["mediaListEntry"]["status"] }) {
 
         // Opens Login Modal
         if (!user && !anilistUser) return setIsUserModalOpen(true)
@@ -220,13 +210,13 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
                     >
                         <ul>
 
-                            {btnValues.map((btn) => (
+                            {userMediaStatusEntries.map((btn) => (
                                 <li key={btn.value}>
                                     <motion.button
                                         data-active={mediaStatus == btn.value}
                                         disabled={isLoading}
                                         onClick={() => handleAddMediaOnList(
-                                            { status: btn.value as StatusTypes }
+                                            { status: btn.value as ApiDefaultResult["mediaListEntry"]["status"] }
                                         )}
                                         whileTap={{ scale: 0.9 }}
                                     >

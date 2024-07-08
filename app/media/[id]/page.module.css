@@ -278,9 +278,9 @@ h2.heading_style {
 
 }
 
-#similar_container ul {
+#similar_container>ul {
 
-    overflow: auto;
+    /* overflow: auto; */
 
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
@@ -292,7 +292,7 @@ h2.heading_style {
 
 @media(min-width:700px) {
 
-    #similar_container ul {
+    #similar_container>ul {
         justify-content: initial;
     }
 
@@ -300,7 +300,7 @@ h2.heading_style {
 
 @media(min-width:900px) {
 
-    #similar_container ul {
+    #similar_container>ul {
         grid-template-columns: repeat(auto-fill, minmax(141px, 1fr));
     }
 

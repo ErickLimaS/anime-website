@@ -214,6 +214,8 @@ function NavigationThroughMedias({ headingTitle, route, mediaFormat, isFetchByDa
                                 >
 
                                     <MediaCard.MediaImg
+                                        hideOptionsButton
+                                        mediaInfo={media}
                                         title={media.title.userPreferred}
                                         formatOrType={media.format}
                                         url={media.coverImage.large}

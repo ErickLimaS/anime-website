@@ -277,6 +277,7 @@ export default async function MediaPage({ params, searchParams }: { params: { id
                       <MediaCard.Container positionIndex={key + 1} onDarkMode>
 
                         <MediaCard.MediaImgLink
+                          mediaInfo={media.node.mediaRecommendation}
                           mediaId={media.node.mediaRecommendation?.id}
                           title={media.node.mediaRecommendation?.title.userPreferred || media.node.mediaRecommendation?.title.romaji}
                           formatOrType={media.node.mediaRecommendation?.format}

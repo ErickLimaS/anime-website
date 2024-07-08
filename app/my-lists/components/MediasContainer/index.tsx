@@ -139,6 +139,8 @@ function KeepWatchingListSection({ keepWatchingList, loading }: { keepWatchingLi
                         <MediaCard.Container onDarkMode>
 
                             <MediaCard.MediaImgLink
+                                hideOptionsButton
+                                mediaInfo={media as any}
                                 mediaId={media.id}
                                 title={media.title.userPreferred}
                                 formatOrType={media.format}
@@ -180,6 +182,8 @@ function MediasListOnUserDoc({ userLists }: { userLists: { name: string, medias:
                             <MediaCard.Container onDarkMode>
 
                                 <MediaCard.MediaImgLink
+                                    hideOptionsButton
+                                    mediaInfo={entrie as any}
                                     mediaId={entrie.id}
                                     title={entrie.title.userPreferred}
                                     formatOrType={entrie.format}
@@ -223,6 +227,8 @@ function MediasListOnAnilist({ mediaFetched }: { mediaFetched: ComponentTypes["m
                             <MediaCard.Container onDarkMode>
 
                                 <MediaCard.MediaImgLink
+                                    hideOptionsButton
+                                    mediaInfo={entrie.media as any}
                                     mediaId={entrie.media.id}
                                     title={entrie.media.title.userPreferred}
                                     formatOrType={entrie.media.format}
