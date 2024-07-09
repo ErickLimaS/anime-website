@@ -11,6 +11,7 @@ import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
 import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 import { useAppSelector } from '@/app/lib/redux/hooks'
 import { BookmarkItem } from '@/app/ts/interfaces/firestoreDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 
 function PlaylistItemsResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
 
@@ -113,6 +114,8 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
                                     <MediaCard.Container onDarkMode>
 
                                         <MediaCard.MediaImgLink
+                                            hideOptionsButton
+                                            mediaInfo={media as ApiDefaultResult}
                                             mediaId={media.id}
                                             title={media.title.userPreferred}
                                             formatOrType={media.format}
@@ -135,6 +138,8 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
                                     <MediaCard.Container onDarkMode>
 
                                         <MediaCard.MediaImgLink
+                                            hideOptionsButton
+                                            mediaInfo={media as ApiDefaultResult}
                                             mediaId={media.id}
                                             title={media.title.userPreferred}
                                             formatOrType={media.format}
