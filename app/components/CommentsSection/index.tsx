@@ -15,8 +15,9 @@ import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
 import SvgFilter from "@/public/assets/filter-right.svg"
 import ShowUpLoginPanelAnimated from '../UserLoginModal/animatedVariant';
 import WriteCommentFormContainer from './components/WriteCommentForm';
-import { useAppSelector } from '@/app/lib/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
 import { UserComment } from '@/app/ts/interfaces/firestoreDataInterface';
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal';
 
 type CommentsSectionTypes = {
     mediaInfo: ApiMediaResults | ApiDefaultResult,
@@ -30,11 +31,10 @@ export default function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, e
     const [commentsList, setCommentsList] = useState<DocumentData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
-
     const [commentsSliceRange, setCommentsSliceRange] = useState<number>(3)
 
     const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+    const dispatch = useAppDispatch()
 
     const auth = getAuth()
 
@@ -130,103 +130,94 @@ export default function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, e
     }
 
     return (
-        <React.Fragment>
+        <div id={styles.container}>
 
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={isUserModalOpen}
-                customOnClickAction={() => setIsUserModalOpen(false)}
-                auth={auth}
+            <WriteCommentFormContainer
+                isLoadingHook={isLoading}
+                loadComments={getCommentsForCurrMedia}
+                mediaInfo={mediaInfo}
+                setIsLoadingHook={setIsLoading}
+                setIsUserModalOpenHook={() => dispatch(toggleShowLoginModalValue())}
+                episodeId={episodeId}
+                episodeNumber={episodeNumber}
+                isOnWatchPage={isOnWatchPage}
             />
 
-            <div id={styles.container}>
+            {/* ALL COMMENTS FROM DB FOR THIS MEDIA */}
+            <div id={styles.all_comments_container}>
 
-                <WriteCommentFormContainer
-                    isLoadingHook={isLoading}
-                    loadComments={getCommentsForCurrMedia}
-                    mediaInfo={mediaInfo}
-                    setIsLoadingHook={setIsLoading}
-                    setIsUserModalOpenHook={setIsUserModalOpen}
-                    episodeId={episodeId}
-                    episodeNumber={episodeNumber}
-                    isOnWatchPage={isOnWatchPage}
-                />
+                {commentsList.length > 0 && (
+                    <React.Fragment>
+                        <div id={styles.comments_heading}>
+                            {commentsList.length > 1 && (
+                                <div id={styles.custom_select}>
 
-                {/* ALL COMMENTS FROM DB FOR THIS MEDIA */}
-                <div id={styles.all_comments_container}>
+                                    <SvgFilter width={16} height={16} alt="Filter" />
 
-                    {commentsList.length > 0 && (
-                        <React.Fragment>
-                            <div id={styles.comments_heading}>
-                                {commentsList.length > 1 && (
-                                    <div id={styles.custom_select}>
+                                    <select
+                                        onChange={(e) => handleCommentsSortBy(e.target.value as "date" | "likes" | "dislikes")}
+                                        title="Choose How To Sort The Comments"
+                                    >
+                                        <option selected value="date">Most Recent</option>
+                                        <option value="likes">Most Likes</option>
+                                        <option value="dislikes">Most Dislikes</option>
+                                    </select>
 
-                                        <SvgFilter width={16} height={16} alt="Filter" />
-
-                                        <select
-                                            onChange={(e) => handleCommentsSortBy(e.target.value as "date" | "likes" | "dislikes")}
-                                            title="Choose How To Sort The Comments"
-                                        >
-                                            <option selected value="date">Most Recent</option>
-                                            <option value="likes">Most Likes</option>
-                                            <option value="dislikes">Most Dislikes</option>
-                                        </select>
-
-                                    </div>
-                                )}
-
-                                <p>{commentsList.length} comment{commentsList.length > 1 ? "s" : ""}</p>
-                            </div>
-
-                            <ul>
-                                {!isLoading && (
-                                    commentsList.slice(0, commentsSliceRange).map((comment) => (
-                                        <CommentContainer
-                                            key={comment.createdAt}
-                                            comment={comment as UserComment}
-                                            mediaId={mediaInfo.id}
-                                            isLoadingHook={isLoading}
-                                            loadComments={getCommentsForCurrMedia}
-                                            mediaInfo={mediaInfo}
-                                            setIsLoadingHook={setIsLoading}
-                                            setIsUserModalOpenHook={setIsUserModalOpen}
-                                            episodeId={episodeId}
-                                            episodeNumber={episodeNumber}
-                                            isOnWatchPage={isOnWatchPage}
-                                        />
-                                    ))
-                                )}
-                            </ul>
-
-                            {commentsList.length > commentsSliceRange && (
-
-                                <button onClick={() => handleCommentsSliceRange()}>
-                                    SEE MORE COMMENTS
-                                </button>
-
+                                </div>
                             )}
-                        </React.Fragment>
-                    )}
 
-                    {isLoading && (
-                        <div>
-
-                            <SvgLoading width={120} height={120} alt="Loading" />
-
+                            <p>{commentsList.length} comment{commentsList.length > 1 ? "s" : ""}</p>
                         </div>
-                    )}
 
-                    {(commentsList.length == 0 && !isLoading) && (
-                        <div id={styles.no_comments_container}>
+                        <ul>
+                            {!isLoading && (
+                                commentsList.slice(0, commentsSliceRange).map((comment) => (
+                                    <CommentContainer
+                                        key={comment.createdAt}
+                                        comment={comment as UserComment}
+                                        mediaId={mediaInfo.id}
+                                        isLoadingHook={isLoading}
+                                        loadComments={getCommentsForCurrMedia}
+                                        mediaInfo={mediaInfo}
+                                        setIsLoadingHook={setIsLoading}
+                                        setIsUserModalOpenHook={() => dispatch(toggleShowLoginModalValue())}
+                                        episodeId={episodeId}
+                                        episodeNumber={episodeNumber}
+                                        isOnWatchPage={isOnWatchPage}
+                                    />
+                                ))
+                            )}
+                        </ul>
 
-                            <p>No Comments Yet</p>
+                        {commentsList.length > commentsSliceRange && (
 
-                        </div>
-                    )}
+                            <button onClick={() => handleCommentsSliceRange()}>
+                                SEE MORE COMMENTS
+                            </button>
 
-                </div>
+                        )}
+                    </React.Fragment>
+                )}
+
+                {isLoading && (
+                    <div>
+
+                        <SvgLoading width={120} height={120} alt="Loading" />
+
+                    </div>
+                )}
+
+                {(commentsList.length == 0 && !isLoading) && (
+                    <div id={styles.no_comments_container}>
+
+                        <p>No Comments Yet</p>
+
+                    </div>
+                )}
 
             </div>
-        </React.Fragment>
+
+        </div>
     )
 
 }

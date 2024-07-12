@@ -7,10 +7,10 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
-import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
-import { useAppSelector } from '@/app/lib/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
 import { KeepWatchingItem, ListItemOnMediasSaved } from '@/app/ts/interfaces/firestoreDataInterface'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
 
 type ComponentTypes = {
 
@@ -42,7 +42,11 @@ export default function MediasContainer({ mediaFetched, params }: ComponentTypes
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
+    const dispatch = useAppDispatch()
+
     useEffect(() => { if (user?.uid || anilistUser?.id) getUserLists() }, [user, anilistUser])
+
+    useEffect(() => { if ((!user && !anilistUser) && !loading) dispatch(toggleShowLoginModalValue()) }, [user, anilistUser, loading])
 
     async function getUserLists() {
 
@@ -74,39 +78,32 @@ export default function MediasContainer({ mediaFetched, params }: ComponentTypes
     }
 
     return (
-        <React.Fragment>
 
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={((!user && !anilistUser) && !loading) ? true : false}
-                auth={auth}
-            />
+        <div id={styles.container}>
 
-            <div id={styles.container}>
+            {(params?.type == null || params?.type == "tv") && (
 
-                {(params?.type == null || params?.type == "tv") && (
+                <KeepWatchingListSection
+                    keepWatchingList={keepWatchingList}
+                    loading={loading}
+                />
 
-                    <KeepWatchingListSection
-                        keepWatchingList={keepWatchingList}
-                        loading={loading}
-                    />
+            )}
 
-                )}
+            {(user && userLists && params?.type != "MANGA".toLowerCase()) && (
+                <MediasListOnUserDoc
+                    userLists={userLists}
+                />
+            )}
 
-                {(user && userLists && params?.type != "MANGA".toLowerCase()) && (
-                    <MediasListOnUserDoc
-                        userLists={userLists}
-                    />
-                )}
+            {anilistUser && mediaFetched && (
+                <MediasListOnAnilist
+                    mediaFetched={mediaFetched}
+                />
+            )}
 
-                {anilistUser && mediaFetched && (
-                    <MediasListOnAnilist
-                        mediaFetched={mediaFetched}
-                    />
-                )}
+        </div >
 
-            </div >
-
-        </React.Fragment>
     )
 }
 

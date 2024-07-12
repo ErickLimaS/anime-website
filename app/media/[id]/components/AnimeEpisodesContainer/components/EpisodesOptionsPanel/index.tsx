@@ -8,6 +8,8 @@ import React, { useEffect, useState } from 'react'
 import DubbedCheckboxButton from '../ActiveDubbButton'
 import DotsSvg from "@/public/assets/three-dots-vertical.svg";
 import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
+import { useAppDispatch } from '@/app/lib/redux/hooks'
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
 
 export default function EpisodesOptionsPanel({ userId, isAnilistUser, db, mediaInfo, imdb, callDubbedFunction, dubbedStateValue }: {
     userId: string | undefined,
@@ -26,6 +28,8 @@ export default function EpisodesOptionsPanel({ userId, isAnilistUser, db, mediaI
     const [allEpisodesWatched, setAllEpisodesWatched] = useState<boolean>(false)
 
     const [isDubActive, setIsDubActive] = useState(false)
+
+    const dispatch = useAppDispatch()
 
     useEffect(() => { setIsDubActive(dubbedStateValue) }, [dubbedStateValue])
 
@@ -50,7 +54,7 @@ export default function EpisodesOptionsPanel({ userId, isAnilistUser, db, mediaI
 
     async function handleMarkAllEpisodesAsWatched() {
 
-        if (!userId) return
+        if (!userId) return dispatch(toggleShowLoginModalValue())
 
         function mapAllEpisodesInfo(index: number) {
 

@@ -21,6 +21,8 @@ import { removeUserInfo } from '@/app/lib/redux/features/manageUserData'
 import { checkAccessTokenStillValid, removeCookies } from '@/app/lib/user/anilistUserLoginOptions'
 import { useParams } from 'next/navigation'
 import { handleAnilistUserLoginWithRedux } from '@/app/lib/user/anilistUserLoginOptions'
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
+import { usePathname } from 'next/navigation'
 
 const framerMotionShowUp = {
 
@@ -44,13 +46,15 @@ const framerMotionShowUp = {
 function UserSideMenu() {
 
     const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false)
-    const [isUserLoginOpen, setIsUserLoginOpen] = useState<boolean>(false)
     const [isUserSettingsOpen, setIsUserSettingsOpen] = useState<boolean>(false)
 
     const anilistUser = useAppSelector((state) => (state.UserInfo)?.value)
+    const isLoginModalOpen = useAppSelector((state) => (state.ShowLoginModal)?.value)
     const dispatch = useAppDispatch()
 
     const params = useParams()
+
+    const pathname = usePathname()
 
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
@@ -94,19 +98,36 @@ function UserSideMenu() {
 
     }
 
+    function checkRoutesToOptionalCloseButton() {
+
+        const notAllowedCloseButtonRoutes = [
+            "/my-lists",
+            "/favourites"
+        ]
+
+        for (let i = 0; i < notAllowedCloseButtonRoutes.length; i++) {
+
+            if (notAllowedCloseButtonRoutes[i] == pathname) return undefined
+
+        }
+
+        return dispatch(toggleShowLoginModalValue())
+
+    }
+
     return (
         <div id={styles.user_container}>
 
             <ShowUpLoginPanelAnimated
-                apperanceCondition={isUserLoginOpen}
-                customOnClickAction={() => setIsUserLoginOpen(!isUserLoginOpen)}
+                apperanceCondition={isLoginModalOpen}
+                customOnClickAction={() => checkRoutesToOptionalCloseButton()}
                 auth={auth}
             />
 
             {(!user && !anilistUser) && (
                 <React.Fragment>
                     <button
-                        onClick={() => setIsUserLoginOpen(!isUserLoginOpen)}
+                        onClick={() => dispatch(toggleShowLoginModalValue())}
                         aria-controls={styles.user_menu_list}
                         aria-label={isUserMenuOpen ? 'Click to Hide User Menu' : 'Click to Show User Menu'}
                         className={`display_flex_row align_items_center ${styles.heading_btn}`}

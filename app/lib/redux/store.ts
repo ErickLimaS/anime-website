@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import UserInfoReducer from "@/app/lib/redux/features/manageUserData"
+import ShowLoginModalReducer from "@/app/lib/redux/features/loginModal"
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
-            UserInfo: UserInfoReducer
+            UserInfo: UserInfoReducer,
+            ShowLoginModal: ShowLoginModalReducer
         }
     })
 }

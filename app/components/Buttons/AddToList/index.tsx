@@ -7,12 +7,12 @@ import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { AnimatePresence, motion } from 'framer-motion';
-import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 import { removeMediaOnListByStatus, updateUserMediaListByStatus } from '@/app/lib/user/userDocUpdateOptions'
-import { useAppSelector } from '@/app/lib/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
 import anilistUsers from '@/app/api/anilistUsers'
 import { ImdbEpisode } from '@/app/ts/interfaces/apiImdbInterface';
 import { userMediaStatusEntries } from '@/app/lib/dataConstants/anilist';
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal';
 
 export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesList, amountWatchedOrRead, children }: {
     mediaInfo: ApiDefaultResult, imdbEpisodesList?: ImdbEpisode[], statusOnAnilist?: ApiDefaultResult["mediaListEntry"]["status"], listEntryId?: number, amountWatchedOrRead?: number, children?: React.ReactNode[]
@@ -23,13 +23,12 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
 
     const [mediaStatus, setMediaStatus] = useState<ApiDefaultResult["mediaListEntry"]["status"] | null>(statusOnAnilist || null)
 
-    const [isUserModalOpen, setIsUserModalOpen] = useState(false)
-
     const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+    const dispatch = useAppDispatch()
 
     const auth = getAuth()
 
-    const [user, loading] = useAuthState(auth)
+    const [user] = useAuthState(auth)
 
     const db = getFirestore(initFirebase())
 
@@ -97,7 +96,7 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
     async function handleAddMediaOnList({ status }: { status: ApiDefaultResult["mediaListEntry"]["status"] }) {
 
         // Opens Login Modal
-        if (!user && !anilistUser) return setIsUserModalOpen(true)
+        if (!user && !anilistUser) return dispatch(toggleShowLoginModalValue())
 
         setIsLoading(true)
 
@@ -171,13 +170,6 @@ export function Button({ mediaInfo, statusOnAnilist, listEntryId, imdbEpisodesLi
 
     return (
         <React.Fragment>
-
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={isUserModalOpen}
-                customOnClickAction={() => setIsUserModalOpen(false)}
-                aria-controls={styles.user_media_status_list}
-                auth={auth}
-            />
 
             <motion.button
                 whileTap={{ scale: 0.85 }}

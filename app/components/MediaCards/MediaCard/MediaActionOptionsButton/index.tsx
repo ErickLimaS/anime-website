@@ -5,25 +5,17 @@ import { AnimatePresence, motion } from 'framer-motion'
 import PlusSvg from "@/public/assets/plus-lg.svg"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import OptionsPanel from './OptionsPanel'
-import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
-import { getAuth } from 'firebase/auth'
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
 
 export default function MediaActionOptionsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult }) {
 
     const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false)
 
-    const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+    const dispatch = useAppDispatch()
 
-    const auth = getAuth()
-    
     return (
         <React.Fragment>
-
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={isUserModalOpen}
-                customOnClickAction={() => setIsUserModalOpen(false)}
-                auth={auth}
-            />
 
             <div className={styles.options_btn_container}>
 
@@ -41,7 +33,7 @@ export default function MediaActionOptionsButton({ mediaInfo }: { mediaInfo: Api
             <AnimatePresence>
                 {isPanelOpen && (
                     <OptionsPanel
-                        toggleLoginModalVisibility={() => setIsUserModalOpen(!isUserModalOpen)}
+                        toggleLoginModalVisibility={() => dispatch(toggleShowLoginModalValue())}
                         isPanelOpen={isPanelOpen}
                         setIsPanelOpen={setIsPanelOpen}
                         isFavourite={mediaInfo.isFavourite ? mediaInfo.isFavourite : false}

@@ -368,7 +368,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         <EpisodesOptionsPanel
           callDubbedFunction={() => setIsEpisodesDubbed(!isEpisodesDubbed)}
           dubbedStateValue={isEpisodesDubbed || false}
-          userId={user?.uid || `${anilistUser?.id}`}
+          userId={user?.uid || anilistUser ? `${anilistUser?.id}` : undefined}
           isAnilistUser={user != undefined || anilistUser?.isUserFromAnilist || false}
           db={db}
           mediaInfo={mediaInfo}

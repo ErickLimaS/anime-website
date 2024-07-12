@@ -18,13 +18,13 @@ import {
 import { initFirebase } from '@/app/firebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
-import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant';
 import WriteCommentFormContainer from '../WriteCommentForm';
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
 import { AnimatePresence, motion } from 'framer-motion';
 import ProfileFallbackImg from "@/public/profile_fallback.jpg"
-import { useAppSelector } from '@/app/lib/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
 import { ReplyComment, UserComment } from '@/app/ts/interfaces/firestoreDataInterface';
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal';
 
 type CommentComponentTypes = {
     comment: UserComment | ReplyComment,
@@ -44,7 +44,6 @@ export default function Comment({
     comment, mediaId, isLoadingHook, setIsLoadingHook, setIsUserModalOpenHook, loadComments, mediaInfo, isOnWatchPage, episodeId, episodeNumber
 }: CommentComponentTypes) {
 
-
     const uniqueReplyId = useId()
 
     const [isAReply, setIsAReply] = useState<boolean>(false)
@@ -59,9 +58,8 @@ export default function Comment({
     const [commentData, setCommentData] = useState<UserComment>()
     const [commentDocId, setCommentDocId] = useState<string | DocumentData>()
 
-    const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
-
     const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+    const dispatch = useAppDispatch()
 
     const auth = getAuth()
     const [user] = useAuthState(auth)
@@ -102,7 +100,7 @@ export default function Comment({
 
     async function handleLikesAndDislikesActions(buttonActionType: "like" | "dislike" | "reply", isActionSetToTrue: boolean) {
 
-        if (!user && !anilistUser) return setIsUserModalOpen(true)
+        if (!user && !anilistUser) return dispatch(toggleShowLoginModalValue())
 
         if (user?.isAnonymous) return
 
@@ -254,151 +252,139 @@ export default function Comment({
 
     }
 
-    return (
-        <React.Fragment>
+    return (!wasDeleted && (
+        <li className={styles.comment_container} data-has-spoiler={isSpoiler}>
 
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={isUserModalOpen}
-                customOnClickAction={() => setIsUserModalOpen(false)}
-                auth={auth}
-            />
+            <div className={styles.user_img_container}>
 
-            {!wasDeleted && (
-                <li className={styles.comment_container} data-has-spoiler={isSpoiler}>
+                <Image
+                    src={comment.userPhoto || ProfileFallbackImg}
+                    alt={comment.username || "User with no name"}
+                    fill
+                    sizes='72px'
+                />
 
-                    <div className={styles.user_img_container}>
+            </div>
 
-                        <Image
-                            src={comment.userPhoto || ProfileFallbackImg}
-                            alt={comment.username || "User with no name"}
-                            fill
-                            sizes='72px'
-                        />
+            <div className={styles.comment_data}>
 
-                    </div>
+                <div className={styles.heading_container}>
+                    <h5>
+                        {comment.username!.length > 25 ? `${comment.username!.slice(0, 25)}...` : comment.username}
+                    </h5>
 
-                    <div className={styles.comment_data}>
+                    <p>
+                        {convertFromUnix(comment.createdAt, { month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                </div>
 
-                        <div className={styles.heading_container}>
-                            <h5>
-                                {comment.username!.length > 25 ? `${comment.username!.slice(0, 25)}...` : comment.username}
-                            </h5>
+                <div className={styles.comment_text_container} onClick={() => comment.isSpoiler && setIsSpoiler(!isSpoiler)}>
 
-                            <p>
-                                {convertFromUnix(comment.createdAt, { month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
-                            </p>
+                    <p>{comment.comment}</p>
+
+                </div>
+
+                {commentData && (
+                    <div className={`${styles.flex} display_flex_row space_beetween align_items_center`}>
+
+                        <div className={styles.buttons_container}>
+                            <button onClick={() => handleLikesAndDislikesActions("like", isLiked ? false : true)}>
+
+                                <SvgIcons
+                                    type={"like"}
+                                    isBtnActive={isLiked}
+                                    commentData={commentData}
+                                />
+
+                            </button>
+
+                            <button onClick={() => handleLikesAndDislikesActions("dislike", wasDisliked ? false : true)}>
+
+                                <SvgIcons
+                                    type={"dislike"}
+                                    isBtnActive={wasDisliked}
+                                    commentData={commentData}
+                                />
+
+                            </button>
+
+                            <button
+                                onClick={() => setIsGettingAReply(!isGettingAReply)}
+                                aria-controls={uniqueReplyId}
+                            >
+
+                                <SvgIcons
+                                    type={"reply"}
+                                    isBtnActive={isGettingAReply}
+                                    commentData={commentData}
+                                />
+
+                            </button>
+
+                            {((user?.uid || `${anilistUser?.id}`) == comment.userId.id) && (
+                                <button className={styles.delete_btn} onClick={() => deleteCurrComment()}>
+                                    <SvgTrash width={16} height={16} alt="Delete Icon" />Delete
+                                </button>
+                            )}
                         </div>
 
-                        <div className={styles.comment_text_container} onClick={() => comment.isSpoiler && setIsSpoiler(!isSpoiler)}>
-
-                            <p>{comment.comment}</p>
-
-                        </div>
-
-                        {commentData && (
-                            <div className={`${styles.flex} display_flex_row space_beetween align_items_center`}>
-
-                                <div className={styles.buttons_container}>
-                                    <button onClick={() => handleLikesAndDislikesActions("like", isLiked ? false : true)}>
-
-                                        <SvgIcons
-                                            type={"like"}
-                                            isBtnActive={isLiked}
-                                            commentData={commentData}
-                                        />
-
-                                    </button>
-
-                                    <button onClick={() => handleLikesAndDislikesActions("dislike", wasDisliked ? false : true)}>
-
-                                        <SvgIcons
-                                            type={"dislike"}
-                                            isBtnActive={wasDisliked}
-                                            commentData={commentData}
-                                        />
-
-                                    </button>
-
-                                    <button
-                                        onClick={() => setIsGettingAReply(!isGettingAReply)}
-                                        aria-controls={uniqueReplyId}
-                                    >
-
-                                        <SvgIcons
-                                            type={"reply"}
-                                            isBtnActive={isGettingAReply}
-                                            commentData={commentData}
-                                        />
-
-                                    </button>
-
-                                    {((user?.uid || `${anilistUser?.id}`) == comment.userId.id) && (
-                                        <button className={styles.delete_btn} onClick={() => deleteCurrComment()}>
-                                            <SvgTrash width={16} height={16} alt="Delete Icon" />Delete
-                                        </button>
-                                    )}
-                                </div>
-
-                                {commentData.episodeNumber && (
-                                    <small>On Episode {commentData.episodeNumber}</small>
-                                )}
-
-                            </div>
+                        {commentData.episodeNumber && (
+                            <small>On Episode {commentData.episodeNumber}</small>
                         )}
 
-                        <AnimatePresence>
-                            {isGettingAReply && (
-
-                                <motion.div
-                                    id={uniqueReplyId}
-                                    className={styles.reply_form_container}
-                                    aria-expanded={isGettingAReply}
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                >
-
-                                    <WriteCommentFormContainer
-                                        isAReply
-                                        commentToBeRepliedDocId={commentDocId}
-                                        isLoadingHook={isLoadingHook}
-                                        loadComments={loadComments}
-                                        mediaInfo={mediaInfo}
-                                        setIsLoadingHook={setIsLoadingHook}
-                                        setIsUserModalOpenHook={setIsUserModalOpen}
-                                        episodeId={episodeId}
-                                        episodeNumber={episodeNumber}
-                                        isOnWatchPage={isOnWatchPage}
-                                    />
-
-                                    <CommentsReplies
-                                        commentReplies={comment.replies}
-                                        parentHooks={{
-                                            comment: comment,
-                                            mediaId: mediaId,
-                                            isLoadingHook: isLoadingHook,
-                                            loadComments: loadComments,
-                                            mediaInfo: mediaInfo,
-                                            setIsLoadingHook: setIsLoadingHook,
-                                            setIsUserModalOpenHook: setIsUserModalOpenHook,
-                                            episodeId: episodeId,
-                                            episodeNumber: episodeNumber,
-                                            isOnWatchPage: isOnWatchPage
-                                        }}
-                                    />
-
-                                </motion.div>
-
-                            )}
-                        </AnimatePresence>
-
                     </div>
+                )}
 
-                </li >
-            )}
-        </React.Fragment>
+                <AnimatePresence>
+                    {isGettingAReply && (
 
-    )
+                        <motion.div
+                            id={uniqueReplyId}
+                            className={styles.reply_form_container}
+                            aria-expanded={isGettingAReply}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                        >
+
+                            <WriteCommentFormContainer
+                                isAReply
+                                commentToBeRepliedDocId={commentDocId}
+                                isLoadingHook={isLoadingHook}
+                                loadComments={loadComments}
+                                mediaInfo={mediaInfo}
+                                setIsLoadingHook={setIsLoadingHook}
+                                setIsUserModalOpenHook={() => dispatch(toggleShowLoginModalValue())}
+                                episodeId={episodeId}
+                                episodeNumber={episodeNumber}
+                                isOnWatchPage={isOnWatchPage}
+                            />
+
+                            <CommentsReplies
+                                commentReplies={comment.replies}
+                                parentHooks={{
+                                    comment: comment,
+                                    mediaId: mediaId,
+                                    isLoadingHook: isLoadingHook,
+                                    loadComments: loadComments,
+                                    mediaInfo: mediaInfo,
+                                    setIsLoadingHook: setIsLoadingHook,
+                                    setIsUserModalOpenHook: setIsUserModalOpenHook,
+                                    episodeId: episodeId,
+                                    episodeNumber: episodeNumber,
+                                    isOnWatchPage: isOnWatchPage
+                                }}
+                            />
+
+                        </motion.div>
+
+                    )}
+                </AnimatePresence>
+
+            </div>
+
+        </li >
+    ))
 }
 
 function SvgIcons({ type, isBtnActive, commentData }: { type: "like" | "dislike" | "reply", isBtnActive: boolean, commentData: UserComment }) {

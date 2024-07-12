@@ -17,17 +17,16 @@ import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { motion } from 'framer-motion';
-import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
-import { useAppSelector } from '@/app/lib/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
 
 function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult | ApiMediaResults }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [wasAddedToNotifications, setWasAddedToNotifications] = useState<boolean>(false)
 
-    const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
-
     const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+    const dispatch = useAppDispatch()
 
     const auth = getAuth()
 
@@ -39,7 +38,7 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
         if ((!user && !anilistUser) || loading) return
 
-        setIsUserModalOpen(false)
+        dispatch(toggleShowLoginModalValue())
         isUserAssignedToThisMediaNotications()
 
     }, [user, anilistUser, loading])
@@ -48,7 +47,7 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
     async function handleMediaOnNotifications() {
 
-        if (!user && !anilistUser) return setIsUserModalOpen(true)
+        if (!user && !anilistUser) return dispatch(toggleShowLoginModalValue())
 
         setIsLoading(true)
 
@@ -216,38 +215,28 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
     if (isMediaStillReleasing) {
         return (
-            <React.Fragment>
+            <motion.button
+                whileTap={{ scale: 0.85 }}
+                id={styles.container}
+                onClick={() => handleMediaOnNotifications()}
+                disabled={isLoading}
+                data-added={wasAddedToNotifications}
+                title={wasAddedToNotifications ?
+                    `Remove ${mediaInfo.title && mediaInfo.title?.userPreferred} From Notifications`
+                    :
+                    `Get Notified When ${mediaInfo.title && mediaInfo.title?.userPreferred} Get a New Episode`
+                }
+            >
 
-                <ShowUpLoginPanelAnimated
-                    apperanceCondition={isUserModalOpen}
-                    customOnClickAction={() => setIsUserModalOpen(false)}
-                    auth={auth}
-                />
+                {isLoading && (
+                    <LoadingSvg alt="Loading Icon" width={16} height={16} />
+                )}
 
-                <motion.button
-                    whileTap={{ scale: 0.85 }}
-                    id={styles.container}
-                    onClick={() => handleMediaOnNotifications()}
-                    disabled={isLoading}
-                    data-added={wasAddedToNotifications}
-                    title={wasAddedToNotifications ?
-                        `Remove ${mediaInfo.title && mediaInfo.title?.userPreferred} From Notifications`
-                        :
-                        `Get Notified When ${mediaInfo.title && mediaInfo.title?.userPreferred} Get a New Episode`
-                    }
-                >
+                {!isLoading && (
+                    wasAddedToNotifications ? <BellFillSvg width={16} height={16} /> : <BellSvg width={16} height={16} />
+                )}
 
-                    {isLoading && (
-                        <LoadingSvg alt="Loading Icon" width={16} height={16} />
-                    )}
-
-                    {!isLoading && (
-                        wasAddedToNotifications ? <BellFillSvg width={16} height={16} /> : <BellSvg width={16} height={16} />
-                    )}
-
-                </motion.button>
-
-            </React.Fragment>
+            </motion.button>
         )
     }
 }

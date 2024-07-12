@@ -22,7 +22,7 @@ type CommentFormTypes = {
     commentToBeRepliedDocId?: string | DocumentData | undefined,
     isLoadingHook: boolean,
     setIsLoadingHook: React.Dispatch<React.SetStateAction<boolean>>,
-    setIsUserModalOpenHook: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsUserModalOpenHook: () => void,
     loadComments: () => Promise<DocumentData[] | undefined>,
     mediaInfo: ApiMediaResults | ApiDefaultResult,
     isOnWatchPage?: boolean,
@@ -59,7 +59,7 @@ export default function WriteCommentFormContainer({
 
         e.preventDefault()
 
-        if (!user && !anilistUser) return setIsUserModalOpenHook(true)
+        if (!user && !anilistUser) return setIsUserModalOpenHook
 
         const form = e.target as any
 
