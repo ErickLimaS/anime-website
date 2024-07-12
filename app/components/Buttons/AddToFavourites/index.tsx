@@ -34,10 +34,12 @@ export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist, c
 
     useEffect(() => {
 
-        if ((!user && !anilistUser) || loading) return
+        if (!loading) {
 
-        dispatch(toggleShowLoginModalValue())
-        isMediaOnUserDoc()
+            if (!user && !anilistUser) dispatch(toggleShowLoginModalValue())
+            if (!user && !anilistUser) isMediaOnUserDoc()
+
+        }
 
     }, [user, anilistUser, loading])
 

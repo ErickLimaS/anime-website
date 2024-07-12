@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import PlusSvg from "@/public/assets/plus-lg.svg"
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import OptionsPanel from './OptionsPanel'
-import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
+import { useAppDispatch } from '@/app/lib/redux/hooks'
 import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
 
 export default function MediaActionOptionsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult }) {

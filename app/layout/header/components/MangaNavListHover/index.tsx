@@ -107,6 +107,7 @@ function MangaNavListHover() {
                                     <MediaCard.Container>
 
                                         <MediaCard.MediaImgLink
+                                            mediaInfo={media}
                                             mediaId={media.id}
                                             title={media.title.userPreferred}
                                             formatOrType={media.format}
