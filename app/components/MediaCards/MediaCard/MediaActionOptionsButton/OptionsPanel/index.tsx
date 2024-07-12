@@ -7,7 +7,6 @@ import { removeMediaOnListByStatus, updateUserMediaListByStatus } from '@/app/li
 import { getAuth } from 'firebase/auth'
 import { getFirestore, getDoc, doc } from 'firebase/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
 import FavouriteSvgFill from "@/public/assets/heart-fill.svg"
 import FavouriteSvg from "@/public/assets/heart.svg"
 import CheckFillSvg from "@/public/assets/check-circle-fill.svg"
@@ -33,21 +32,20 @@ const framerMotionOpenPanelTransition = {
     }
 }
 
-export default function OptionsPanel({ isPanelOpen, setIsPanelOpen, isFavourite, mediaListEntryInfo, mediaTitle, mediaInfo, amountWatchedOrRead }: {
+export default function OptionsPanel({ isPanelOpen, setIsPanelOpen, isFavourite, mediaListEntryInfo, mediaTitle, mediaInfo, amountWatchedOrRead, toggleLoginModalVisibility }: {
     isPanelOpen: boolean,
     setIsPanelOpen: React.Dispatch<React.SetStateAction<boolean>>,
     isFavourite: boolean | undefined,
     mediaListEntryInfo: ApiDefaultResult["mediaListEntry"] | null,
     mediaTitle: ApiDefaultResult["title"],
     mediaInfo: ApiDefaultResult,
+    toggleLoginModalVisibility: () => void,
     amountWatchedOrRead?: number,
 }) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [mediaStatus, setMediaStatus] = useState<ApiDefaultResult["mediaListEntry"]["status"] | null>(mediaListEntryInfo?.status || null)
-
-    const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
     const anilistUser = useAppSelector((state) => (state.UserInfo).value)
 
@@ -91,7 +89,7 @@ export default function OptionsPanel({ isPanelOpen, setIsPanelOpen, isFavourite,
     async function handleAddMediaOnList({ status }: { status: ApiDefaultResult["mediaListEntry"]["status"] }) {
 
         // Opens Login Modal
-        if (!user && !anilistUser) return setIsUserModalOpen(true)
+        if (!user && !anilistUser) return toggleLoginModalVisibility
 
         setIsLoading(true)
 
@@ -162,81 +160,74 @@ export default function OptionsPanel({ isPanelOpen, setIsPanelOpen, isFavourite,
     }
 
     return (
-        <>
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={isUserModalOpen}
-                customOnClickAction={() => setIsUserModalOpen(false)}
-                auth={auth}
-            />
+        <motion.div
+            data-disabled-scroll={window.matchMedia("(max-width: 768px)").matches ? true : false}
+            className={styles.options_panel_overlay}
+            onClick={() => setIsPanelOpen(!isPanelOpen)}
+            variants={framerMotionOpenPanelTransition}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+        >
 
             <motion.div
-                className={styles.options_panel_overlay}
-                onClick={() => setIsPanelOpen(!isPanelOpen)}
-                variants={framerMotionOpenPanelTransition}
-                initial="initial"
-                animate="animate"
-                exit="exit"
+                onClick={(e) => e.stopPropagation()}
+                className={styles.options_panel}
             >
 
-                <motion.div
-                    onClick={(e) => e.stopPropagation()}
-                    className={styles.options_panel}
-                >
+                <div className={styles.panel_heading}>
+                    <h5>{mediaTitle.userPreferred}</h5>
 
-                    <div className={styles.panel_heading}>
-                        <h5>{mediaTitle.userPreferred}</h5>
+                    <motion.button
+                        onClick={() => setIsPanelOpen(!isPanelOpen)}
+                        whileTap={{ scale: 0.9 }}
+                        aria-label='Close Menu'
+                    >
+                        <XSvg />
+                    </motion.button>
+                </div>
 
-                        <motion.button
-                            onClick={() => setIsPanelOpen(!isPanelOpen)}
-                            whileTap={{ scale: 0.9 }}
-                            aria-label='Close Menu'
+                <ul>
+                    <li>
+                        <AddToFavourites.Button
+                            isActiveOnAnilist={isFavourite}
+                            mediaInfo={mediaInfo}
+                            customText={isFavourite ? "On Favourites" : "Add to Favourites"}
                         >
-                            <XSvg />
-                        </motion.button>
-                    </div>
 
-                    <ul>
-                        <li>
-                            <AddToFavourites.Button
-                                isActiveOnAnilist={isFavourite}
-                                mediaInfo={mediaInfo}
-                                customText={isFavourite ? "On Favourites" : "Add to Favourites"}
+                            <AddToFavourites.SvgIcon>
+                                <FavouriteSvg fill="var(--brand-color)" />
+                            </AddToFavourites.SvgIcon>
+
+                            <AddToFavourites.SvgIcon>
+                                <FavouriteSvgFill fill="var(--brand-color)" />
+                            </AddToFavourites.SvgIcon>
+
+                        </AddToFavourites.Button>
+                    </li>
+                    {userMediaStatusEntries.map((btn) => (
+                        <li key={btn.value}>
+                            <motion.button
+                                data-active={mediaStatus == btn.value}
+                                disabled={isLoading}
+                                onClick={() => handleAddMediaOnList(
+                                    { status: btn.value }
+                                )}
+                                whileTap={{ scale: 0.9 }}
                             >
-
-                                <AddToFavourites.SvgIcon>
-                                    <FavouriteSvg fill="var(--brand-color)" />
-                                </AddToFavourites.SvgIcon>
-
-                                <AddToFavourites.SvgIcon>
-                                    <FavouriteSvgFill fill="var(--brand-color)" />
-                                </AddToFavourites.SvgIcon>
-
-                            </AddToFavourites.Button>
+                                {mediaStatus == btn.value ?
+                                    <><CheckFillSvg /> Setted as {btn.name}</>
+                                    :
+                                    <><CheckSvg /> Set as {btn.name}</>
+                                }
+                            </motion.button>
                         </li>
-                        {userMediaStatusEntries.map((btn) => (
-                            <li key={btn.value}>
-                                <motion.button
-                                    data-active={mediaStatus == btn.value}
-                                    disabled={isLoading}
-                                    onClick={() => handleAddMediaOnList(
-                                        { status: btn.value }
-                                    )}
-                                    whileTap={{ scale: 0.9 }}
-                                >
-                                    {mediaStatus == btn.value ?
-                                        <><CheckFillSvg /> Setted as {btn.name}</>
-                                        :
-                                        <><CheckSvg /> Set as {btn.name}</>
-                                    }
-                                </motion.button>
-                            </li>
-                        ))}
-                    </ul>
-
-                </motion.div>
+                    ))}
+                </ul>
 
             </motion.div>
-        </>
+
+        </motion.div>
     )
 
 }
