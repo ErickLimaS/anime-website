@@ -36,8 +36,7 @@ export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist, c
 
         if (!loading) {
 
-            if (!user && !anilistUser) dispatch(toggleShowLoginModalValue())
-            if (!user && !anilistUser) isMediaOnUserDoc()
+            isMediaOnUserDoc()
 
         }
 
