@@ -89,16 +89,66 @@ npm install
    - You'll need the data from Consumet and Aniwatch API to get things to work, so go to these repos and host your own instance:
      - <a href='https://github.com/consumet/api.consumet.org' target="_blank" rel="noreferrer">Consumet API</a>
      - <a href='https://github.com/ghoshRitesh12/aniwatch-api' target="_blank" rel="noreferrer">Aniwatch API</a>
-   - About Login with Anilist (OAuth):
+     
+   - **Anilist Login** (OAuth):
      - You need to first login on your account on Anilist.
      - Then go to <a href='https://anilist.co/settings/developer'>Developer Page</a> on the Settings and click "Create New Client".
      - Now you need to add the name of your forked project/website and the URL to redirect when user accept the login, then hit "Save".
      - Store the Client ID and Secret on your ".env.local".
      - TIP: Create 2 of these, one for the dev env and other to production.
-   - On Firebase, to use Google, Email and Anonymous Login and their Database:
-     - Create a project for this fork/clone you did on  <a href='https://console.firebase.google.com/' target="_blank" rel="noreferrer">Firebase</a>.
-     - All the Firebase info needed on `.env.local` can be found when you create a new project.
-     - IMPORTANT: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
+       
+   - **Firebase** (to use Google, Email and Anonymous Login and the Firestore Database):
+     - Create a project for this fork/clone you did on <a href='https://console.firebase.google.com/' target="_blank" rel="noreferrer">Firebase</a>.
+     - All the Firebase info needed on `.env.local` **can be found when you create a new project**.
+     - **IMPORTANT**: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
+     - **IMPORTANT**: You'll need to **change the Rules** on **Firestore Database**. There is 2 options depending of what login methods you will use:
+       - With **ALL** Login Methods available:
+         ```javascript
+            rules_version = '2';
+            
+            service cloud.firestore {
+              match /databases/{database}/documents {
+         
+                match /{document=**} {
+                  // will allow any write and read operation. No conditions due to Anilist OAuth Login.
+                  allow read, write: if true;
+                }
+         
+              }
+            }
+         ```
+       - With **ONLY** Firebase Login Methods (no Anilist Login):
+         ```javascript
+           rules_version = '2';
+                  
+           service cloud.firestore {
+             match /databases/{database}/documents {
+           
+               match /users/{document=**} {
+                 // allows only requests if a userUID is available.
+                 allow read, write: request.auth.uid != null;
+               }
+         
+               match /comments/{document=**} {
+                 // allows only write request if a userUID is available. 
+                 allow read: if true;
+                 allow write: request.auth.uid != null;
+               }
+         
+               match /notifications/{document=**} {
+                 // allows only write request if a userUID is available. 
+                 allow read: if true;
+                 allow write: request.auth.uid != null;
+               }
+             
+               match /{document=**} {
+                 // will allow any other write and read operation. No conditions. 
+                 allow read, write: if true;
+               }
+         
+             }
+           }
+         ```
    - OPTIONAL: This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
      - Go to <a href='https://github.com/manami-project/anime-offline-database' target="_blank" rel="noreferrer">anime-offline-database</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
      - With the file downloaded, put it in the `/app/api/animes-database` directory, replacing the previous one.
