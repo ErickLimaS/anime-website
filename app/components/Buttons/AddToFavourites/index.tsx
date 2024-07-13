@@ -115,13 +115,13 @@ export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist, c
 
             {(!isLoading && wasAddedToFavourites) &&
                 (children ?
-                    children[1] : (<><FavouriteFillSvg width={16} height={16} fill={"var(--brand-color)"} /> FAVOURITED</>)
+                    children[1] : (<><FavouriteFillSvg width={16} height={16} fill={svgOnlyColor || "var(--brand-color)"} /> FAVOURITED</>)
                 )
             }
 
             {(!isLoading && !wasAddedToFavourites) &&
                 (children ?
-                    children[0] : (<><FavouriteSvg width={16} height={16} fill={"var(--white-100)"} /> FAVOURITE</>)
+                    children[0] : (<><FavouriteSvg width={16} height={16} fill={svgOnlyColor || "var(--white-100)"} /> FAVOURITE</>)
                 )
             }
 

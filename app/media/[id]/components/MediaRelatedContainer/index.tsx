@@ -36,6 +36,7 @@ function MediaRelatedContainer({ mediaList, swiperOptions }: {
                     <MediaCard.Container key={key} positionIndex={key + 1} onDarkMode>
 
                         <MediaCard.MediaImgLink
+                            hideOptionsButton
                             mediaId={media.id}
                             mediaInfo={media}
                             title={media.title.userPreferred || media.title.romaji}

@@ -22,7 +22,7 @@
 
 }
 
-.list_container ul {
+.list_container>ul {
 
     background-color: var(--black-25);
     border-radius: 4px;

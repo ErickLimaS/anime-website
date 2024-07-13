@@ -172,15 +172,13 @@ function MediasListOnUserDoc({ userLists }: { userLists: { name: string, medias:
                 <h2>{list.name == "current" ? "WATCHING" : list.name.toUpperCase()}</h2>
 
                 <ul>
-
-                    {list.medias.map((entrie: any, key: any) => (
+                    {list.medias.map((entrie, key) => (
                         <li key={key}>
-
                             <MediaCard.Container onDarkMode>
 
                                 <MediaCard.MediaImgLink
                                     hideOptionsButton
-                                    mediaInfo={entrie as any}
+                                    mediaInfo={entrie as ApiDefaultResult}
                                     mediaId={entrie.id}
                                     title={entrie.title.userPreferred}
                                     formatOrType={entrie.format}
@@ -218,14 +216,13 @@ function MediasListOnAnilist({ mediaFetched }: { mediaFetched: ComponentTypes["m
 
                 <ul>
 
-                    {list.entries.map((entrie: any, key: any) => (
+                    {list.entries.map((entrie, key) => (
                         <li key={key}>
 
                             <MediaCard.Container onDarkMode>
 
                                 <MediaCard.MediaImgLink
-                                    hideOptionsButton
-                                    mediaInfo={entrie.media as any}
+                                    mediaInfo={entrie.media as ApiDefaultResult}
                                     mediaId={entrie.media.id}
                                     title={entrie.media.title.userPreferred}
                                     formatOrType={entrie.media.format}
