@@ -8,9 +8,10 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
-import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
-import { useAppSelector } from '@/app/lib/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
 import { BookmarkItem } from '@/app/ts/interfaces/firestoreDataInterface'
+import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
 
 function PlaylistItemsResults({ params }: { params?: { format: string, sort: "title_desc" | "title_asc" } }) {
 
@@ -22,11 +23,15 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
     const [userBookmarksList, setUserBookmarksList] = useState<BookmarkItem[]>([])
     const [userFilteredBookmarks, setUserFilteredBookmarks] = useState<BookmarkItem[]>([])
 
+    const dispatch = useAppDispatch()
+
     const searchParams = useSearchParams()
 
     useEffect(() => { setUserFilteredBookmarks([]) }, [searchParams.size == 0])
 
     useEffect(() => { if (user || anilistUser) getUserBookmarksList() }, [user, anilistUser])
+
+    useEffect(() => { if ((!user && !anilistUser) && !loading) dispatch(toggleShowLoginModalValue()) }, [user, anilistUser, loading])
 
     useEffect(() => {
 
@@ -82,11 +87,6 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
     return (
         <React.Fragment>
 
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={((!user && !anilistUser) && !loading) ? true : false}
-                auth={auth}
-            />
-
             {loading && (
 
                 <div style={{ height: "400px", width: "100%", display: "flex" }}>
@@ -113,6 +113,8 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
                                     <MediaCard.Container onDarkMode>
 
                                         <MediaCard.MediaImgLink
+                                            hideOptionsButton
+                                            mediaInfo={media as ApiDefaultResult}
                                             mediaId={media.id}
                                             title={media.title.userPreferred}
                                             formatOrType={media.format}
@@ -135,6 +137,8 @@ function PlaylistItemsResults({ params }: { params?: { format: string, sort: "ti
                                     <MediaCard.Container onDarkMode>
 
                                         <MediaCard.MediaImgLink
+                                            hideOptionsButton
+                                            mediaInfo={media as ApiDefaultResult}
                                             mediaId={media.id}
                                             title={media.title.userPreferred}
                                             formatOrType={media.format}

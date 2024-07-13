@@ -238,8 +238,21 @@ export default {
                                             medium
                                             color
                                         }
+                                        description
                                         type
                                         format
+                                        isFavourite
+                                        mediaListEntry {
+                                            id
+                                            mediaId
+                                            status
+                                            progress
+                                            media {
+                                                title{
+                                                    romaji
+                                                }
+                                            }
+                                        }
                                         bannerImage
                                         season
                                         seasonYear

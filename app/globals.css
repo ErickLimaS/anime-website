@@ -67,6 +67,10 @@ body {
   background-color: var(--background);
 }
 
+body:has(*[data-disabled-scroll=true]) {
+  overflow: hidden;
+}
+
 /* *:focus{
 
   outline: solid;

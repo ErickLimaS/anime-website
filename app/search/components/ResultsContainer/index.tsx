@@ -91,6 +91,8 @@ function ResultsContainer({ mediasList, totalLength, lastUpdate }: { mediasList:
                                     <MediaCard.Container onDarkMode>
 
                                         <MediaCard.MediaImgLink
+                                            hideOptionsButton
+                                            mediaInfo={media as any}
                                             title={media.title}
                                             formatOrType={media.type}
                                             url={media.picture}

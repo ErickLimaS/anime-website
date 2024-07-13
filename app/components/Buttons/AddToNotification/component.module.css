@@ -37,7 +37,8 @@
     gap: 0 8px;
 
     background-color: var(--white-100) !important;
-    color: var(--black-100) !important;
+    color: #ee9b0d !important;
 
     border-color: var(--black-100) !important;
+
 }

@@ -10,19 +10,21 @@ import { getAuth } from 'firebase/auth'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { motion } from 'framer-motion';
-import ShowUpLoginPanelAnimated from '../../UserLoginModal/animatedVariant'
 import { updateUserFavouriteMedias } from '@/app/lib/user/userDocUpdateOptions'
-import { useAppSelector } from '@/app/lib/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
 import anilistUsers from '@/app/api/anilistUsers'
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
 
-export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist }: { mediaInfo: ApiDefaultResult, children?: React.ReactNode[], svgOnlyColor?: string, isActiveOnAnilist?: boolean }) {
+export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist, customText }: {
+    mediaInfo: ApiDefaultResult, children?: React.ReactNode[], svgOnlyColor?: string, isActiveOnAnilist?: boolean, customText?: string
+}) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [wasAddedToFavourites, setWasAddedToFavourites] = useState<boolean>(isActiveOnAnilist || false)
 
-    const [isUserModalOpen, setIsUserModalOpen] = useState(false)
-
     const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+
+    const dispatch = useAppDispatch()
 
     const auth = getAuth()
 
@@ -32,10 +34,11 @@ export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist }:
 
     useEffect(() => {
 
-        if ((!user && !anilistUser) || loading) return
+        if (!loading) {
 
-        setIsUserModalOpen(false)
-        isMediaOnUserDoc()
+            isMediaOnUserDoc()
+
+        }
 
     }, [user, anilistUser, loading])
 
@@ -43,7 +46,7 @@ export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist }:
     async function handleMediaOnFavourites() {
 
         // Opens Login Modal
-        if (!user && !anilistUser) return setIsUserModalOpen(true)
+        if (!user && !anilistUser) return dispatch(toggleShowLoginModalValue())
 
         setIsLoading(true)
 
@@ -91,45 +94,40 @@ export function Button({ mediaInfo, children, svgOnlyColor, isActiveOnAnilist }:
     }
 
     return (
-        <React.Fragment>
+        <motion.button
+            whileTap={{ scale: 0.85 }}
+            id={styles.container}
+            className={children ? styles.custom_text : ""}
+            onClick={() => handleMediaOnFavourites()}
+            disabled={isLoading}
+            data-added={wasAddedToFavourites}
+            data-unique-color={svgOnlyColor != undefined}
+            aria-label={wasAddedToFavourites ? "Click To Remove from Favourites" : "Click To Add To Favourites"}
+            title={wasAddedToFavourites ?
+                `Remove ${mediaInfo.title && mediaInfo.title?.userPreferred} from Favourites`
+                : `Add ${mediaInfo.title && mediaInfo.title?.userPreferred} To Favourites`
+            }
+        >
 
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={isUserModalOpen}
-                customOnClickAction={() => setIsUserModalOpen(false)}
-                auth={auth}
-            />
+            {isLoading &&
+                (<LoadingSvg alt="Loading Icon" width={16} height={16} />)
+            }
 
-            <motion.button
-                whileTap={{ scale: 0.85 }}
-                id={styles.container}
-                className={children ? styles.custom_text : ""}
-                onClick={() => handleMediaOnFavourites()}
-                disabled={isLoading}
-                data-added={wasAddedToFavourites}
-                data-unique-color={svgOnlyColor != undefined}
-                aria-label={wasAddedToFavourites ? "Click To Remove from Favourites" : "Click To Add To Favourites"}
-                title={wasAddedToFavourites ? `Remove ${mediaInfo.title && mediaInfo.title?.userPreferred} from Favourites` : `Add ${mediaInfo.title && mediaInfo.title?.userPreferred} To Favourites`}
-            >
+            {(!isLoading && wasAddedToFavourites) &&
+                (children ?
+                    children[1] : (<><FavouriteFillSvg width={16} height={16} fill={svgOnlyColor || "var(--brand-color)"} /> FAVOURITED</>)
+                )
+            }
 
-                {isLoading &&
-                    (<LoadingSvg alt="Loading Icon" width={16} height={16} />)
-                }
+            {(!isLoading && !wasAddedToFavourites) &&
+                (children ?
+                    children[0] : (<><FavouriteSvg width={16} height={16} fill={svgOnlyColor || "var(--white-100)"} /> FAVOURITE</>)
+                )
+            }
 
-                {(!isLoading && wasAddedToFavourites) &&
-                    (children ?
-                        children[1] : (<><FavouriteFillSvg width={16} height={16} fill={"var(--brand-color)"} /> FAVOURITED</>)
-                    )
-                }
+            {customText || ""}
 
-                {(!isLoading && !wasAddedToFavourites) &&
-                    (children ?
-                        children[0] : (<><FavouriteSvg width={16} height={16} fill={"var(--white-100)"} /> FAVOURITE</>)
-                    )
-                }
-
-            </motion.button>
-
-        </React.Fragment>
+        </motion.button>
     )
 }
 

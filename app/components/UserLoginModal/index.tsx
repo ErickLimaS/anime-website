@@ -191,6 +191,7 @@ export default function UserModal({ onClick, auth, }: ModalTypes) {
             exit={{ opacity: 0 }}
         >
             <motion.div
+                data-disabled-scroll={true}
                 onClick={(e) => e.stopPropagation()}
                 id={styles.modal}
                 variants={framerMotionDropIn}

@@ -7,12 +7,30 @@
 
 .list_container h2 {
 
-    padding-top: 68px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    margin-top: 68px;
 
     margin-bottom: 16px;
 
     font-size: var(--font-size--h4);
     color: var(--white-75);
+
+    cursor: pointer;
+
+}
+
+.list_container h2 svg {
+
+    transition: all ease-in-out 100ms;
+
+}
+
+.list_container h2 svg[data-inverted=false] {
+
+    transform: rotate(180deg);
 
 }
 
@@ -22,7 +40,7 @@
 
 }
 
-.list_container ul {
+.list_container>ul {
 
     background-color: var(--black-25);
     border-radius: 4px;

@@ -57,6 +57,7 @@ function MenuList() {
 
                     <motion.div
                         variants={framerMotionShowUpMotion}
+                        data-disabled-scroll={true}
                         initial="hidden"
                         animate="visible"
                         exit="exit"

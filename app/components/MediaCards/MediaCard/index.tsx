@@ -2,9 +2,9 @@ import React from 'react'
 import styles from './component.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
-import MediaFormatIcon from '../../DynamicAssets/MediaFormatIcon'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
-import stringToOnlyAlphabetic from '@/app/lib/convertStrings'
+import MediaTypeIconSpan from './MediaTypeIconSpan'
+import MediaActionOptionsButton from './MediaActionOptionsButton'
 
 type ComponentTypes = {
     children: React.ReactNode
@@ -60,83 +60,76 @@ export function MediaInfo({ mediaInfo }: { mediaInfo: ApiDefaultResult }) {
 
 }
 
-export function MediaImg({ url, formatOrType, title }: { url: string, formatOrType: string, title: string }) {
-
-    function checkFormatAvailable() {
-
-        if (!formatOrType) return "Not Available"
-
-        return formatOrType == "TV" ? "ANIME" : stringToOnlyAlphabetic(formatOrType)
-
-    }
+export function MediaImg({ url, formatOrType, title, mediaInfo, hideOptionsButton }: {
+    url: string, formatOrType: string, title: string, mediaInfo: ApiDefaultResult, hideOptionsButton?: boolean
+}) {
 
     return (
-        <div id={styles.img_container}>
-            <Image
-                src={url}
-                placeholder='blur'
-                blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
-                alt={`Cover Art for ${title || "Not Available"}`}
-                fill
-                sizes='(max-width: 400px) 40vw, 140px'
-                title={title}
-            />
+        <>
 
-            <span className={styles.media_type_icon}>
+            <div id={styles.img_container}>
+                <Image
+                    src={url}
+                    placeholder='blur'
+                    blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
+                    alt={`Cover Art for ${title || "Not Available"}`}
+                    fill
+                    sizes='(max-width: 400px) 40vw, 140px'
+                    title={title}
+                />
 
-                <MediaFormatIcon format={formatOrType} />
+                <MediaTypeIconSpan
+                    formatOrType={formatOrType}
+                />
 
-                <span className={styles.media_format_title}>
+            </div>
 
-                    {checkFormatAvailable()}
+            {!hideOptionsButton && (
+                <MediaActionOptionsButton
+                    mediaInfo={mediaInfo}
+                />
+            )}
 
-                </span>
-
-            </span>
-
-        </div>
+        </>
     )
 
 }
 
-export function MediaImgLink({ url, mediaId, formatOrType, title }: { url: string, mediaId: number | string, formatOrType: string, title: string }) {
-
-    function checkFormatAvailable() {
-
-        if (!formatOrType) return "Not Available"
-
-        return formatOrType == "TV" ? "ANIME" : stringToOnlyAlphabetic(formatOrType)
-
-    }
+export function MediaImgLink({ url, mediaId, formatOrType, title, mediaInfo, hideOptionsButton }: {
+    url: string, mediaId: number | string, formatOrType: string, title: string, mediaInfo: ApiDefaultResult, hideOptionsButton?: boolean
+}) {
 
     return (
-        <Link
-            id={styles.img_container}
-            href={`/media/${mediaId}`}
-        >
-            <Image
-                src={url}
-                placeholder='blur'
-                blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
-                alt={`Cover Art for ${title || "Not Available"}`}
-                fill
-                sizes='(max-width: 520px) 45vw, (max-width: 772px) 33vw, (max-width: 1200px) 141px, 192px'
-                title={title}
-            />
+        <>
 
-            <span className={styles.media_type_icon}>
+            <Link
+                id={styles.img_container}
+                href={`/media/${mediaId}`}
+            >
+                <Image
+                    src={url}
+                    placeholder='blur'
+                    blurDataURL="https://upload.wikimedia.org/wikipedia/commons/8/8d/ERR0R_NO_IMAGE_FOUND.jpg"
+                    alt={`Cover Art for ${title || "Not Available"}`}
+                    fill
+                    sizes='(max-width: 520px) 45vw, (max-width: 772px) 33vw, (max-width: 1200px) 141px, 192px'
+                    title={title}
+                />
 
-                <MediaFormatIcon format={formatOrType} />
+                <MediaTypeIconSpan
+                    formatOrType={formatOrType}
+                />
 
-                <span className={styles.media_format_title}>
 
-                    {checkFormatAvailable()}
+            </Link>
 
-                </span>
+            {!hideOptionsButton && (
+                <MediaActionOptionsButton
+                    mediaInfo={mediaInfo}
+                />
+            )}
 
-            </span>
-
-        </Link>
+        </>
     )
 
 }
@@ -145,7 +138,7 @@ export function SmallTag({ seasonYear, tags }: { seasonYear: number, tags: strin
 
     return (
         tags && (
-            <small>{seasonYear || "Not Available"}, {tags.slice(0, 1).toUpperCase() + tags.slice(1)}</small>
+            <small>{seasonYear && `${seasonYear},`} {tags.slice(0, 1).toUpperCase() + tags.slice(1)}</small>
         ))
 
 }

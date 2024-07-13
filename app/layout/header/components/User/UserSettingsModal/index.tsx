@@ -206,7 +206,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                     auth.signOut()
 
                 }
-                
+
                 removeCookies()
 
                 window.location.reload()
@@ -244,6 +244,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            data-disabled-scroll={true}
         >
             <motion.div
                 onClick={(e) => e.stopPropagation()}
@@ -286,7 +287,7 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                 You only may change Username and Photo on <a
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    href={`https://anilist.co/user/${anilistUser.name}/mangalist`}
+                                    href={`https://anilist.co/user/${anilistUser.name}`}
                                     style={{ "display": "inline-block", "fontSize": "var(--font-size--small-1)", "textDecoration": "underline" }}
                                 >
                                     <b>AniList Website</b>
@@ -464,10 +465,10 @@ function UserSettingsModal({ onClick, auth, anilistUser, newUser }: SettingsType
                                             <span />
 
                                         </label>
-                                        <p>Skip Openings And Endings</p>
+                                        <p>Skip Openings And Endings (<b>Aniwatch only!</b>)</p>
                                     </div>
 
-                                    <small style={{ marginTop: "16px", display: "block" }}>Only works with <b>Aniwatch</b></small>
+                                    {/* <small style={{ marginTop: "16px", display: "block" }}>Only works with <b>Aniwatch</b></small> */}
                                 </>
                             )}
                         </div>

@@ -7,10 +7,12 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { initFirebase } from '@/app/firebaseApp'
 import * as MediaCard from '@/app/components/MediaCards/MediaCard'
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg"
-import ShowUpLoginPanelAnimated from '@/app/components/UserLoginModal/animatedVariant'
-import { useAppSelector } from '@/app/lib/redux/hooks'
+import SvgCaretDown from "@/public/assets/chevron-down.svg"
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
 import { KeepWatchingItem, ListItemOnMediasSaved } from '@/app/ts/interfaces/firestoreDataInterface'
 import { ApiDefaultResult } from '@/app/ts/interfaces/apiAnilistDataInterface'
+import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal'
+import { AnimatePresence, motion } from 'framer-motion'
 
 type ComponentTypes = {
 
@@ -42,7 +44,11 @@ export default function MediasContainer({ mediaFetched, params }: ComponentTypes
     const auth = getAuth()
     const [user, loading] = useAuthState(auth)
 
+    const dispatch = useAppDispatch()
+
     useEffect(() => { if (user?.uid || anilistUser?.id) getUserLists() }, [user, anilistUser])
+
+    useEffect(() => { if ((!user && !anilistUser) && !loading) dispatch(toggleShowLoginModalValue()) }, [user, anilistUser, loading])
 
     async function getUserLists() {
 
@@ -74,49 +80,51 @@ export default function MediasContainer({ mediaFetched, params }: ComponentTypes
     }
 
     return (
-        <React.Fragment>
 
-            <ShowUpLoginPanelAnimated
-                apperanceCondition={((!user && !anilistUser) && !loading) ? true : false}
-                auth={auth}
-            />
+        <div id={styles.container}>
 
-            <div id={styles.container}>
+            {(params?.type == null || params?.type == "tv") && (
 
-                {(params?.type == null || params?.type == "tv") && (
+                <KeepWatchingListSection
+                    keepWatchingList={keepWatchingList}
+                    loading={loading}
+                />
 
-                    <KeepWatchingListSection
-                        keepWatchingList={keepWatchingList}
-                        loading={loading}
-                    />
+            )}
 
-                )}
+            {(user && userLists && params?.type != "MANGA".toLowerCase()) && (
 
-                {(user && userLists && params?.type != "MANGA".toLowerCase()) && (
-                    <MediasListOnUserDoc
-                        userLists={userLists}
-                    />
-                )}
+                userLists.map((list) => (
+                    <MediasListOnUserDoc userList={list} key={list.name} />
+                ))
 
-                {anilistUser && mediaFetched && (
-                    <MediasListOnAnilist
-                        mediaFetched={mediaFetched}
-                    />
-                )}
+            )}
 
-            </div >
+            {anilistUser && mediaFetched && (
+                mediaFetched.map((list) => (
 
-        </React.Fragment>
+                    <MediasListOnAnilist list={list} key={list.name} />
+
+                ))
+            )}
+
+        </div >
+
     )
 }
 
 function KeepWatchingListSection({ keepWatchingList, loading }: { keepWatchingList: KeepWatchingItem[], loading: boolean }) {
 
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
+
     return (
 
         <div className={styles.list_container} id="keep-watching">
 
-            <h2>KEEP WATCHING</h2>
+            <h2 onClick={() => setIsCollapsed(!isCollapsed)}>
+                KEEP WATCHING
+                <SvgCaretDown data-inverted={isCollapsed} />
+            </h2>
 
             {loading && (
                 <div style={{ height: "400px", width: "100%", display: "flex" }}>
@@ -124,125 +132,160 @@ function KeepWatchingListSection({ keepWatchingList, loading }: { keepWatchingLi
                 </div>
             )}
 
-            <ul>
+            <AnimatePresence>
+                {!isCollapsed && (
+                    <motion.ul>
 
-                {!keepWatchingList && (
-                    <li>
-                        No media in keep watching list
-                    </li>
+                        {!keepWatchingList && (
+                            <li>
+                                No media in keep watching list
+                            </li>
+                        )}
+
+                        {keepWatchingList?.map((media) => (
+
+                            <li key={media.id}>
+
+                                <MediaCard.Container onDarkMode>
+
+                                    <MediaCard.MediaImgLink
+                                        hideOptionsButton
+                                        mediaInfo={media as any}
+                                        mediaId={media.id}
+                                        title={media.title.userPreferred}
+                                        formatOrType={media.format}
+                                        url={media.coverImage.extraLarge}
+                                    />
+
+                                    <MediaCard.LinkTitle
+                                        title={media.title.romaji}
+                                        id={media.id}
+                                    />
+
+                                </MediaCard.Container>
+
+                            </li>
+
+                        ))}
+
+                    </motion.ul>
                 )}
-
-                {keepWatchingList?.map((media) => (
-
-                    <li key={media.id}>
-
-                        <MediaCard.Container onDarkMode>
-
-                            <MediaCard.MediaImgLink
-                                mediaId={media.id}
-                                title={media.title.userPreferred}
-                                formatOrType={media.format}
-                                url={media.coverImage.extraLarge}
-                            />
-
-                            <MediaCard.LinkTitle
-                                title={media.title.romaji}
-                                id={media.id}
-                            />
-
-                        </MediaCard.Container>
-
-                    </li>
-
-                ))}
-
-            </ul>
+            </AnimatePresence>
         </div>
 
     )
 
 }
 
-function MediasListOnUserDoc({ userLists }: { userLists: { name: string, medias: ListItemOnMediasSaved[] }[] }) {
+function MediasListOnUserDoc({ userList }: { userList: { name: string, medias: ListItemOnMediasSaved[] } }) {
+
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
 
     return (
-        userLists?.map((list) => (
 
-            <div key={list.name} className={styles.list_container} id={list.name.toLowerCase()}>
+        <div className={styles.list_container} id={userList.name.toLowerCase()}>
 
-                <h2>{list.name == "current" ? "WATCHING" : list.name.toUpperCase()}</h2>
+            <h2 onClick={() => setIsCollapsed(!isCollapsed)}>
+                {userList.name == "current" ? "WATCHING" : userList.name.toUpperCase()}
+                <SvgCaretDown data-inverted={isCollapsed} />
+            </h2>
 
-                <ul>
+            <AnimatePresence>
+                {!isCollapsed && (
+                    <motion.ul>
+                        {userList.medias.map((entrie, key) => (
+                            <li key={key}>
+                                <MediaCard.Container onDarkMode>
 
-                    {list.medias.map((entrie: any, key: any) => (
-                        <li key={key}>
+                                    <MediaCard.MediaImgLink
+                                        hideOptionsButton
+                                        mediaInfo={entrie as ApiDefaultResult}
+                                        mediaId={entrie.id}
+                                        title={entrie.title.userPreferred}
+                                        formatOrType={entrie.format}
+                                        url={entrie.coverImage.extraLarge}
+                                    />
 
-                            <MediaCard.Container onDarkMode>
+                                    <MediaCard.LinkTitle
+                                        title={entrie.title.romaji}
+                                        id={entrie.id}
+                                    />
 
-                                <MediaCard.MediaImgLink
-                                    mediaId={entrie.id}
-                                    title={entrie.title.userPreferred}
-                                    formatOrType={entrie.format}
-                                    url={entrie.coverImage.extraLarge}
-                                />
+                                </MediaCard.Container>
 
-                                <MediaCard.LinkTitle
-                                    title={entrie.title.romaji}
-                                    id={entrie.id}
-                                />
+                            </li>
+                        ))}
 
-                            </MediaCard.Container>
+                    </motion.ul>
+                )}
+            </AnimatePresence>
 
-                        </li>
-                    ))}
+        </div>
 
-                </ul>
-
-            </div>
-
-        ))
     )
 
 }
 
-function MediasListOnAnilist({ mediaFetched }: { mediaFetched: ComponentTypes["mediaFetched"] }) {
+function MediasListOnAnilist({ list }: {
+    list: {
+        name: string;
+        status: string;
+        entries: {
+            id: number;
+            userId: number;
+            mediaId: number;
+            media: ApiDefaultResult;
+        }[]
+    }
+}) {
+
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
 
     return (
 
-        mediaFetched!.map((list) => (
+        <div key={list.name} className={styles.list_container} id={list.status?.toLowerCase() || "custom"}>
 
-            <div key={list.name} className={styles.list_container} id={list.status?.toLowerCase() || "custom"}>
+            <h2 onClick={() => setIsCollapsed(!isCollapsed)}>
+                {list.name.toUpperCase()}
+                <SvgCaretDown data-inverted={isCollapsed} />
+            </h2>
 
-                <h2>{list.name.toUpperCase()}</h2>
+            <AnimatePresence>
+                {!isCollapsed && (
+                    <motion.ul
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                    >
 
-                <ul>
+                        {list.entries.map((entrie, key) => (
+                            <li key={key}>
 
-                    {list.entries.map((entrie: any, key: any) => (
-                        <li key={key}>
+                                <MediaCard.Container onDarkMode>
 
-                            <MediaCard.Container onDarkMode>
+                                    <MediaCard.MediaImgLink
+                                        mediaInfo={entrie.media as ApiDefaultResult}
+                                        mediaId={entrie.media.id}
+                                        title={entrie.media.title.userPreferred}
+                                        formatOrType={entrie.media.format}
+                                        url={entrie.media.coverImage.extraLarge}
+                                    />
 
-                                <MediaCard.MediaImgLink
-                                    mediaId={entrie.media.id}
-                                    title={entrie.media.title.userPreferred}
-                                    formatOrType={entrie.media.format}
-                                    url={entrie.media.coverImage.extraLarge}
-                                />
+                                    <MediaCard.LinkTitle
+                                        title={entrie.media.title.userPreferred}
+                                        id={entrie.media.id}
+                                    />
 
-                                <MediaCard.LinkTitle
-                                    title={entrie.media.title.userPreferred}
-                                    id={entrie.media.id}
-                                />
+                                </MediaCard.Container>
 
-                            </MediaCard.Container>
+                            </li>
+                        ))}
 
-                        </li>
-                    ))}
+                    </motion.ul>
+                )}
+            </AnimatePresence>
 
-                </ul>
+        </div>
 
-            </div>
-
-        ))
     )
 }

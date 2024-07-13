@@ -62,6 +62,18 @@ interface ListItemOnMediasSaved {
     title: ApiDefaultResult["title"],
     description: string,
     format: string,
+    isFavourite: boolean,
+    mediaListEntry: {
+        id: number,
+        mediaId: number,
+        status: "COMPLETED" | "CURRENT" | "PLANNING" | "DROPPED" | "PAUSED" | "REPEATING",
+        progress: number,
+        media: {
+            title: {
+                romaji: string,
+            }
+        }
+    },
     coverImage: {
         extraLarge: string,
         large: string

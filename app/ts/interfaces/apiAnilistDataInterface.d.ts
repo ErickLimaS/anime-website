@@ -31,7 +31,7 @@ export interface ApiDefaultResult {
     mediaListEntry: {
         id: number,
         mediaId: number,
-        status: string,
+        status: "COMPLETED" | "CURRENT" | "PLANNING" | "DROPPED" | "PAUSED" | "REPEATING",
         progress: number,
         media: {
             title: {
