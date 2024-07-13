@@ -38,9 +38,8 @@ function AddToNotificationsButton({ mediaInfo }: { mediaInfo: ApiDefaultResult |
 
         if (!loading) {
 
-            if (!user && !anilistUser) dispatch(toggleShowLoginModalValue())
-            if (!user && !anilistUser) isUserAssignedToThisMediaNotications()
-                
+            isUserAssignedToThisMediaNotications()
+
         }
 
     }, [user, anilistUser, loading])
