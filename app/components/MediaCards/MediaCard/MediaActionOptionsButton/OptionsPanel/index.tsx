@@ -89,7 +89,7 @@ export default function OptionsPanel({ isPanelOpen, setIsPanelOpen, isFavourite,
     async function handleAddMediaOnList({ status }: { status: ApiDefaultResult["mediaListEntry"]["status"] }) {
 
         // Opens Login Modal
-        if (!user && !anilistUser) return toggleLoginModalVisibility
+        if (!user && !anilistUser) return toggleLoginModalVisibility()
 
         setIsLoading(true)
 
