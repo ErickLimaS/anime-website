@@ -31,7 +31,7 @@ type CommentComponentTypes = {
     mediaId: number,
     isLoadingHook: boolean,
     setIsLoadingHook: React.Dispatch<React.SetStateAction<boolean>>,
-    setIsUserModalOpenHook: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsUserModalOpenHook: () => void,
     loadComments: () => Promise<DocumentData[] | undefined>,
     mediaInfo: ApiMediaResults | ApiDefaultResult,
     isOnWatchPage?: boolean,
@@ -369,7 +369,7 @@ export default function Comment({
                                     loadComments: loadComments,
                                     mediaInfo: mediaInfo,
                                     setIsLoadingHook: setIsLoadingHook,
-                                    setIsUserModalOpenHook: setIsUserModalOpenHook,
+                                    setIsUserModalOpenHook: () => setIsUserModalOpenHook(),
                                     episodeId: episodeId,
                                     episodeNumber: episodeNumber,
                                     isOnWatchPage: isOnWatchPage
@@ -436,7 +436,7 @@ function CommentsReplies({ commentReplies, parentHooks }: { commentReplies: Repl
                     loadComments={parentHooks.loadComments}
                     mediaInfo={parentHooks.mediaInfo}
                     setIsLoadingHook={parentHooks.setIsLoadingHook}
-                    setIsUserModalOpenHook={parentHooks.setIsUserModalOpenHook}
+                    setIsUserModalOpenHook={() => parentHooks.setIsUserModalOpenHook()}
                     episodeId={parentHooks.episodeId}
                     episodeNumber={parentHooks.episodeNumber}
                     isOnWatchPage={parentHooks.isOnWatchPage}

@@ -59,7 +59,7 @@ export default function WriteCommentFormContainer({
 
         e.preventDefault()
 
-        if (!user && !anilistUser) return setIsUserModalOpenHook
+        if (!user && !anilistUser) return setIsUserModalOpenHook()
 
         const form = e.target as any
 
