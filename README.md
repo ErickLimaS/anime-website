@@ -86,7 +86,7 @@ npm install
 
 3. Now you will need to create a `.env.local` file on the `project root folder`, and follow the instructions bellow.
 
-   - You'll need the data from Consumet and Aniwatch API to get things to work, so go to these repos and host your own instance:
+   - **External APIs** (go to these repos, host your own instance and save the URL to use on ``.env.local``):
      - <a href='https://github.com/consumet/api.consumet.org' target="_blank" rel="noreferrer">Consumet API</a>
      - <a href='https://github.com/ghoshRitesh12/aniwatch-api' target="_blank" rel="noreferrer">Aniwatch API</a>
      
@@ -186,7 +186,7 @@ npm run dev
 
 5. That's it! It should be running.
 
-## :open_file_folder: How Firebase is Organized
+## :open_file_folder: How Firebase Database is Organized
 
 ### Authentication
 
