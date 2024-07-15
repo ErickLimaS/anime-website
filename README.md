@@ -15,7 +15,7 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 - [Under Development](#pushpin-under-development-unordered)
 - [Tecnologies Used](#heavy_check_mark-tecnologies-used)
 - [How Can i Run It](#computer-how-can-i-run-it)
-- [How Fireabase is Organized](#open_file_folder-how-firebase-is-organized)
+- [How Fireabase Database is Organized](#open_file_folder-how-firebase-database-is-organized)
   - [Authentication](#authentication)
   - [Collections and Documents](#collections-and-documents)
     - [Users](#users)
