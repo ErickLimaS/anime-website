@@ -84,7 +84,7 @@ Back-End:
 npm install
 ```
 
-3. Now you will need to create a `.env.local` file on the `project root folder`, and follow the instructions bellow.
+3. Now you will need to create a `.env.local` file or fill the `.env.example` on the `project root folder`, and follow the instructions bellow.
 
    - **External APIs** (go to these repos, host your own instance and save the URL to use on ``.env.local``):
      - <a href='https://github.com/consumet/api.consumet.org' target="_blank" rel="noreferrer">Consumet API</a>
@@ -141,11 +141,6 @@ npm install
                  allow write: request.auth.uid != null;
                }
              
-               match /{document=**} {
-                 // will allow any other write and read operation. No conditions. 
-                 allow read, write: if true;
-               }
-         
              }
            }
          ```
@@ -153,13 +148,13 @@ npm install
      - Go to <a href='https://github.com/manami-project/anime-offline-database' target="_blank" rel="noreferrer">anime-offline-database</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
      - With the file downloaded, put it in the `/app/api/animes-database` directory, replacing the previous one.
 
-With all that done, you will need to fill the `.env.local` like the example bellow:
+With all that done, you can follow the pre-made `.env.example` on the root folder or fill the `.env.local` like the example bellow:
 
 ```javascript
 // Consumet API
 NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
 // Aniwatch API
-NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.
+NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.com
 // Anilist OAuth Settings
 NEXT_PUBLIC_ANILIST_CLIENT_ID=your-anilist-client-id
 ANILIST_CLIENT_SECRET=your-anilist-secret
