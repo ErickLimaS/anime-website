@@ -41,7 +41,7 @@ Project of animes and mangas website, utilizing the AniList, Consumet and Aniwat
 ## :rocket: Quick Deploy
 
 > [!IMPORTANT]  
-> You NEED to make some configurations to use the project properly. Give a look on the [How Can i Run It](#computer-how-can-i-run-it) then use the info you got on the Vercel Env Variables. 
+> You NEED to make some configurations to use the project properly. Give a look on the [How Can i Run It Section](#computer-how-can-i-run-it) then use the info you got there on Vercel or any other platform `Enviroment Variables Section`. 
 
 On Vercel: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FErickLimaS%2Fanime-website&env=NEXT_PUBLIC_ANIWATCH_API_URL,NEXT_PUBLIC_CONSUMET_API_URL&envDescription=First%2C%20click%20on%20%22Learn%20More%22%20to%20ensure%20all%20variables%20is%20correct%20and%20setted.%20To%20watch%2C%20you'll%20need%20to%20deploy%20the%20Consumet%20and%20Aniwatch%20API.%20To%20the%20login%20system%2C%20you'll%20need%20to%20setup%20a%20Firebase%20Project%2C%20and%20or%20set%20the%20Dev%20Mode%20on%20Anilist%20to%20use%20their%20login.%20&envLink=https%3A%2F%2Fgithub.com%2FErickLimaS%2Fanime-website%3Ftab%3Dreadme-ov-file%23computer-how-can-i-run-it)
 
