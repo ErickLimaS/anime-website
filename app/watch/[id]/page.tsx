@@ -76,23 +76,127 @@ export default async function WatchEpisode({ params, searchParams }: {
     const subtitleLanguage = cookies().get("subtitle_language")?.value || "English"
     let episodesList: EpisodeAnimeWatch[] | MediaEpisodes[] = []
     let videoUrlSrc: string | undefined = undefined
+    let imdbEpisodeInfo: ImdbEpisode | undefined
     let imdbEpisodesList: ImdbEpisode[] = []
 
-    // get media info on imdb
-    const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo({
-        search: true,
-        seachTitle: mediaInfo.title.english || mediaInfo.title.romaji,
-        releaseYear: mediaInfo.startDate.year
-    }) as ImdbMediaInfo
+    const loadImdbMediaAndEpisodeInfo = async () => {
 
-    // get episodes on imdb
-    imdbMediaInfo?.seasons?.map(itemA => itemA.episodes?.map(itemB => imdbEpisodesList.push(itemB)))
+        const imdbMediaInfo: ImdbMediaInfo = await getMediaInfo({
+            search: true,
+            seachTitle: mediaInfo.title.english || mediaInfo.title.romaji,
+            releaseYear: mediaInfo.startDate.year
+        }) as ImdbMediaInfo
+
+        // get episodes on imdb
+        imdbMediaInfo?.seasons?.map(itemA => itemA.episodes?.map(
+            itemB => imdbEpisodesList.push(itemB))
+        )
+
+        imdbEpisodeInfo = imdbEpisodesList?.find(item => item.episode == Number(searchParams.episode))
+
+    }
+
+    async function getGogoanimeStreamingLink() {
+
+        episodeDataFetched = await gogoanime.getEpisodeStreamingLinks({ episodeId: searchParams.q, useAlternateLinkOption: true }) as EpisodeLinksGoGoAnime
+
+        if (!episodeDataFetched) {
+
+            hadFetchError = true
+
+            return
+
+        }
+
+        // Episode link source
+        videoUrlSrc = episodeDataFetched.sources.find(item => item.quality == "default").url
+        if (!videoUrlSrc) videoUrlSrc = episodeDataFetched.sources[0].url
+
+        // Episodes for this media
+        episodesList = await optimizedFetchOnGoGoAnime({
+            textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
+            only: "episodes",
+            isDubbed: searchParams.dub == "true"
+        }) as MediaEpisodes[]
+
+        videoIdDoesntMatch = compareEpisodeIDs(episodesList, "gogoanime")
+
+    }
+
+    async function getAniwatchStreamingLink() {
+
+        if (!searchParams.q) {
+
+            episodesList = await optimizedFetchOnAniwatch({
+                textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
+                only: "episodes"
+            }).then((res: any) => res?.episodes) as EpisodeAnimeWatch[]
+
+            searchParams.q = episodesList[0].episodeId
+
+        }
+
+        // fetch episode data
+        episodeDataFetched = await aniwatch.episodesLinks({ episodeId: searchParams.q, category: searchParams.dub == "true" ? "dub" : "sub" }) as EpisodeLinksAnimeWatch
+
+        if (!episodeDataFetched) hadFetchError = true
+
+        // fetch episode link source
+        videoUrlSrc = episodeDataFetched.sources[0].url
+
+        // fetch episodes for this media
+        if (episodesList.length == 0) {
+
+            episodesList = await optimizedFetchOnAniwatch({
+                textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
+                only: "episodes",
+                format: mediaInfo.format,
+                idToMatch: searchParams?.q?.split("?")[0],
+                isDubbed: searchParams.dub == "true"
+            }).then((res: any) => searchParams?.dub == "true" ? res?.episodes.slice(0, res.episodesDub) : res?.episodes) as EpisodeAnimeWatch[]
+
+        }
+
+        episodeSubtitles = episodeDataFetched.tracks
+
+        videoIdDoesntMatch = compareEpisodeIDs(episodesList, "aniwatch")
+
+    }
+
+    const getVideoStreamingLinkFromSource = async () => {
+
+        switch (searchParams.source) {
+
+            case ("gogoanime"):
+
+                await getGogoanimeStreamingLink()
+
+                break
+
+            case ("aniwatch"):
+
+                await getAniwatchStreamingLink()
+
+                break
+
+            default:
+                hadFetchError = true
+
+        }
+
+    }
+
+    await Promise.all([
+        loadImdbMediaAndEpisodeInfo(),
+        getVideoStreamingLinkFromSource()
+    ])
 
     function compareEpisodeIDs(episodesList: { id?: string, episodeId?: string }[], sourceName: SourceType["source"]) {
 
         // Compare Episode ID from params with episodes fetched ID
         switch (sourceName) {
             case "aniwatch":
+
                 const aniwatchEpisodeIdFromParamsIsOnEpisodesList = episodesList.find(episode => episode.episodeId == searchParams.q)
 
                 return aniwatchEpisodeIdFromParamsIsOnEpisodesList == undefined
@@ -100,8 +204,7 @@ export default async function WatchEpisode({ params, searchParams }: {
             case 'gogoanime':
 
                 const gogoanimeEpisodeIdFromParamsIsOnEpisodesList = episodesList.find(episode => episode.id == searchParams.q)
-                console.log(episodesList)
-                console.log(searchParams.q)
+
                 return gogoanimeEpisodeIdFromParamsIsOnEpisodesList == undefined
 
             default:
@@ -109,82 +212,6 @@ export default async function WatchEpisode({ params, searchParams }: {
         }
 
     }
-
-    switch (searchParams.source) {
-
-        case ("gogoanime"):
-
-            episodeDataFetched = await gogoanime.getEpisodeStreamingLinks({ episodeId: searchParams.q, useAlternateLinkOption: true }) as EpisodeLinksGoGoAnime
-
-            if (!episodeDataFetched) {
-
-                hadFetchError = true
-
-                break
-
-            }
-
-            // Episode link source
-            videoUrlSrc = episodeDataFetched.sources.find(item => item.quality == "default").url
-            if (!videoUrlSrc) videoUrlSrc = episodeDataFetched.sources[0].url
-
-            // Episodes for this media
-            episodesList = await optimizedFetchOnGoGoAnime({
-                textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
-                only: "episodes",
-                isDubbed: searchParams.dub == "true"
-            }) as MediaEpisodes[]
-
-            videoIdDoesntMatch = compareEpisodeIDs(episodesList, "gogoanime")
-
-            break
-
-        case ("aniwatch"):
-
-            if (!searchParams.q) {
-
-                episodesList = await optimizedFetchOnAniwatch({
-                    textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
-                    only: "episodes"
-                }).then((res: any) => res?.episodes) as EpisodeAnimeWatch[]
-
-                searchParams.q = episodesList[0].episodeId
-
-            }
-
-            // fetch episode data
-            episodeDataFetched = await aniwatch.episodesLinks({ episodeId: searchParams.q, category: searchParams.dub == "true" ? "dub" : "sub" }) as EpisodeLinksAnimeWatch
-
-            if (!episodeDataFetched) hadFetchError = true
-
-            // fetch episode link source
-            videoUrlSrc = episodeDataFetched.sources[0].url
-
-            // fetch episodes for this media
-            if (episodesList.length == 0) {
-
-                episodesList = await optimizedFetchOnAniwatch({
-                    textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
-                    only: "episodes",
-                    format: mediaInfo.format,
-                    idToMatch: searchParams?.q?.split("?")[0],
-                    isDubbed: searchParams.dub == "true"
-                }).then((res: any) => searchParams?.dub == "true" ? res?.episodes.slice(0, res.episodesDub) : res?.episodes) as EpisodeAnimeWatch[]
-
-            }
-
-            episodeSubtitles = episodeDataFetched.tracks
-
-            videoIdDoesntMatch = compareEpisodeIDs(episodesList, "aniwatch")
-
-            break
-
-        default:
-            hadFetchError = true
-
-    }
-
-    const imdbEpisodeInfo = imdbEpisodesList?.find(item => item.episode == Number(searchParams.episode))
 
     const episodeTitle = () => {
 
@@ -197,7 +224,7 @@ export default async function WatchEpisode({ params, searchParams }: {
 
     }
 
-    if (hadFetchError) {
+    if (hadFetchError || videoUrlSrc == undefined || episodeDataFetched == undefined) {
         return <FetchEpisodeError
             mediaId={params.id}
             searchParams={searchParams}
@@ -224,7 +251,7 @@ export default async function WatchEpisode({ params, searchParams }: {
                         mediaSource={searchParams.source}
                         mediaInfo={mediaInfo}
                         videoInfo={{
-                            urlSource: videoUrlSrc as string,
+                            urlSource: videoUrlSrc,
                             subtitleLang: subtitleLanguage,
                             subtitlesList: episodeSubtitles,
                             currentLastStop: searchParams.t || undefined,
@@ -233,7 +260,7 @@ export default async function WatchEpisode({ params, searchParams }: {
                         }}
                         episodeInfo={{
                             episodeId: searchParams.q,
-                            episodeIntro: (episodeDataFetched as EpisodeLinksAnimeWatch)?.intro,
+                            episodeIntro: searchParams.source == "aniwatch" ? (episodeDataFetched as EpisodeLinksAnimeWatch).intro : undefined,
                             episodeOutro: (episodeDataFetched as EpisodeLinksAnimeWatch)?.outro,
                             episodeNumber: searchParams.episode,
                             episodeImg: imdbEpisodesList[Number(searchParams.episode) - 1]?.img?.hd || mediaInfo.bannerImage || null,
