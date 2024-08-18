@@ -3,7 +3,7 @@
     z-index: 1;
 
     position: sticky;
-    top: 0;
+    top: 60px;
 
     background: black;
 
@@ -13,6 +13,7 @@
     #container .background {
 
         position: relative;
+        top: 0;
 
     }
 }
@@ -54,16 +55,16 @@
 
 }
 
-/* MOBILE */
-@media(min-width: 768px) {
-    .only_mobile {
+/* DESKTOP */
+@media(max-width: 767px) {
+    .only_desktop {
         display: none;
     }
 }
 
-/* DESKTOP */
-@media(max-width: 767px) {
-    .only_desktop {
+/* MOBILE */
+@media(min-width: 768px) {
+    .only_mobile {
         display: none;
     }
 }
@@ -136,7 +137,7 @@
 }
 
 #heading_info_container h1 {
-    
+
     display: block;
 
     margin-bottom: 24px;
