@@ -487,7 +487,7 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
 
         )}
 
-        {totalNumberPages && (
+        {totalNumberPages >= 1 && (
           <nav id={styles.pagination_buttons_container}>
 
             <PaginationButtons

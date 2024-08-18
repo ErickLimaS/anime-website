@@ -233,7 +233,7 @@ function MangaChaptersContainer({ mediaInfo, chaptersReadOnAnilist }: { mediaInf
         </motion.ol>
       </AnimatePresence>
 
-      {totalNumberPages && (
+      {totalNumberPages >= 1 && (
         <nav id={styles.pagination_buttons_container}>
 
           <PaginationButtons
