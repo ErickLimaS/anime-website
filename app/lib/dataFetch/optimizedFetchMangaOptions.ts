@@ -1,4 +1,4 @@
-import manga from "@/app/api/consumetManga"
+import manga from "@/app/api/consumet/consumetManga"
 import { MangaSearchResult } from "../../ts/interfaces/apiMangadexDataInterface"
 import { ApiMediaResults } from "../../ts/interfaces/apiAnilistDataInterface"
 

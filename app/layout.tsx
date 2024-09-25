@@ -34,7 +34,7 @@ export default function RootLayout({
 
         <StoreProvider>
 
-          <Header />
+          {/* <Header /> */}
 
           <NextTopLoader
             color="var(--brand-color)"
@@ -43,7 +43,7 @@ export default function RootLayout({
 
           {children || <LoadingPageContainer />}
 
-          <Footer />
+          {/* <Footer /> */}
 
         </StoreProvider>
 

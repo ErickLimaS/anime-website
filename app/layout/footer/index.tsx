@@ -6,7 +6,7 @@ import FacebookSvg from "@/public/assets/facebook.svg";
 import InstagramSvg from "@/public/assets/instagram.svg";
 import YoutubeSvg from "@/public/assets/youtube.svg";
 import TwitterSvg from "@/public/assets/twitter-x.svg";
-import anilistMedias from "@/app/api/anilistMedias";
+import anilistMedias from "@/app/api/anilist/anilistMedias";
 import { animesGenres } from "../header";
 import { cookies } from "next/headers";
 

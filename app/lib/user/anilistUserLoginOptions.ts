@@ -1,8 +1,8 @@
-import anilistUsers from "@/app/api/anilistUsers"
+import anilistUsers from "@/app/api/anilist/anilistUsers"
 import axios from "axios"
 import { addUserInfo, removeUserInfo } from "@/app/lib/redux/features/manageUserData"
 import { makeStore } from "../redux/store"
-import userSettingsActions from "@/app/api/userSettingsActions"
+import userSettingsActions from "@/app/api/cookie/userCookieSettingsActions"
 
 export const userCustomStore = makeStore()
 

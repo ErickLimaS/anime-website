@@ -1,7 +1,7 @@
 import aniwatch from "@/app/api/aniwatch"
 import { EpisodesFetchedAnimeWatch, MediaInfoAniwatch } from "../../ts/interfaces/apiAnimewatchInterface"
 import simulateRange from "../simulateRange"
-import gogoanime from "@/app/api/consumetGoGoAnime"
+import gogoanime from "@/app/api/consumet/consumetGoGoAnime"
 import { MediaEpisodes, MediaInfo, MediaSearchResult } from "../../ts/interfaces/apiGogoanimeDataInterface"
 import stringToOnlyAlphabetic from "../convertStrings"
 import { checkAnilistTitleMisspelling } from "../checkApiMediaMisspelling"

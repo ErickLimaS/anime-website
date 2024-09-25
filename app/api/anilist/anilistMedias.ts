@@ -2,15 +2,14 @@ import { convertToUnix, lastHourOfTheDay } from '@/app/lib/formatDateUnix'
 import { ApiAiringMidiaResults, ApiDefaultResult, ApiTrendingMidiaResults } from '@/app/ts/interfaces/apiAnilistDataInterface'
 import Axios from 'axios'
 import {
-    BASE_ANILIST_URL,
-    defaultApiQueryRequest, getCurrentSeason,
-    mediaAiringApiQueryRequest, mediaByIdQueryRequest,
-    mediaTrendingApiQueryRequest,
-    queryMediaWithUserAuthenticated
+    requestMedias,
+    requestMediasByDateAndTimeRelease, requestMediaById,
+    mediaTrendingApiQueryRequest
 } from './anilistQueryConstants'
 import { cache } from 'react'
 import axiosRetry from 'axios-retry'
 import { getHeadersWithAuthorization } from "./anilistUsers"
+import { BASE_ANILIST_URL, getCurrentSeason } from './utils'
 
 // returns medias with adult content
 function filterMediasWithAdultContent(mediasList: ApiDefaultResult[] | ApiAiringMidiaResults[], reponseType?: "mediaByFormat") {
@@ -58,7 +57,7 @@ export default {
         try {
 
             const graphqlQuery = {
-                "query": defaultApiQueryRequest(status ? ", $status: MediaStatus" : undefined, status ? ', status: $status' : undefined),
+                "query": requestMedias(status ? ", $status: MediaStatus" : undefined, status ? ', status: $status' : undefined),
                 "variables": {
                     'type': `${type}`,
                     'format': `${(format === 'MOVIE' && 'MOVIE') || (type === 'MANGA' && 'MANGA') || (type === 'ANIME' && 'TV')}`,
@@ -99,7 +98,7 @@ export default {
             const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const graphqlQuery = {
-                "query": defaultApiQueryRequest(', $search: String', ', search: $search'),
+                "query": requestMedias(', $search: String', ', search: $search'),
                 "variables": {
                     'page': 1,
                     'sort': 'TRENDING_DESC',
@@ -145,7 +144,7 @@ export default {
             const thisYear = new Date().getFullYear()
 
             const graphqlQuery = {
-                "query": defaultApiQueryRequest(),
+                "query": requestMedias(),
                 "variables": {
                     'type': type || "ANIME",
                     'page': page || 1,
@@ -194,10 +193,7 @@ export default {
             const dateInUnix = convertToUnix(days)
 
             const graphqlQuery = {
-                "query": mediaAiringApiQueryRequest(
-                    `, $airingAt_greater: Int, $airingAt_lesser: Int`,
-                    `, airingAt_greater: $airingAt_greater, airingAt_lesser: $airingAt_lesser`
-                ),
+                "query": requestMediasByDateAndTimeRelease(),
                 "variables": {
                     'page': pageNumber || 1,
                     'perPage': perPage || 5,
@@ -286,7 +282,7 @@ export default {
             const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const graphqlQuery = {
-                "query": defaultApiQueryRequest(),
+                "query": requestMedias(),
                 "variables": {
                     'page': pageNumber || 1,
                     'sort': sort || 'TRENDING_DESC',
@@ -325,7 +321,7 @@ export default {
             const headersCustom = await getHeadersWithAuthorization({ accessToken: accessToken })
 
             const graphqlQuery = {
-                "query": headersCustom.Authorization ? queryMediaWithUserAuthenticated('$id: Int', 'id: $id') : mediaByIdQueryRequest('$id: Int', 'id: $id'),
+                "query": requestMediaById(headersCustom.Authorization ? true : false),
                 "variables": {
                     'id': id
                 }

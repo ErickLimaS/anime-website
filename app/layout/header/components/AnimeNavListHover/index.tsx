@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./component.module.css";
 import * as MediaInfoExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
 import Link from "next/link";
-import anilist from "@/app/api/anilistMedias";
+import anilist from "@/app/api/anilist/anilistMedias";
 import { ApiDefaultResult } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg";
 import { animesGenres } from "../../index";
