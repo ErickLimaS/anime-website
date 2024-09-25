@@ -13,6 +13,7 @@ import { getAuth } from "firebase/auth";
 import axios from "axios";
 import { MediaDbOffline } from "@/app/ts/interfaces/dbOffilineInterface";
 import { getUserAdultContentPreference } from "@/app/lib/user/userDocFetchOptions";
+import { useAppSelector } from "@/app/lib/redux/hooks";
 
 const framerMotionshowUpMotion = {
   hidden: {
@@ -38,9 +39,9 @@ function SearchFormContainer() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [searchType, setSearchType] = useState<"offline" | "anilist">(
-    "offline"
-  ); // OFFLINE stands for using internal NEXT API
+  const [searchType, setSearchType] = useState<"json-database" | "anilist">(
+    "json-database"
+  );
 
   const [searchResultsList, setSearchResultsList] = useState<
     ApiDefaultResult[] | MediaDbOffline[] | null
@@ -51,25 +52,27 @@ function SearchFormContainer() {
   const auth = getAuth();
   const [user] = useAuthState(auth);
 
-  async function fetchSearchResultsOnInputChange(value: string) {
-    if (searchType == "anilist") setSearchResultsList(null);
+  const anilistUser = useAppSelector((state) => state.UserInfo.value);
 
-    setSearchType("offline");
+  // async function fetchSearchResultsOnInputChange(value: string) {
+  //   if (searchType == "anilist") setSearchResultsList(null);
 
-    setSearchInputValue(value);
+  //   setSearchType("json-database");
 
-    if (value.length <= 2) return setSearchResultsList(null);
+  //   setSearchInputValue(value);
 
-    setIsLoading(true);
+  //   if (value.length <= 2) return setSearchResultsList(null);
 
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API}?title=${value}`
-    );
+  //   setIsLoading(true);
 
-    setSearchResultsList(data.data as MediaDbOffline[]);
+  //   const { data } = await axios.get(
+  //     `${process.env.NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API}?title=${value}`
+  //   );
 
-    setIsLoading(false);
-  }
+  //   setSearchResultsList(data.data as MediaDbOffline[]);
+
+  //   setIsLoading(false);
+  // }
 
   async function handleSearchFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -82,6 +85,9 @@ function SearchFormContainer() {
 
     if (user)
       isAdultContentAllowed = await getUserAdultContentPreference(user.uid);
+
+    if (anilistUser)
+      isAdultContentAllowed = anilistUser.options.displayAdultContent;
 
     if (searchInputValue.length == 0) return;
 
@@ -223,7 +229,7 @@ function SearchFormContainer() {
                         : undefined
                     }
                     mediaFromOfflineDB={
-                      searchType == "offline"
+                      searchType == "json-database"
                         ? (item as MediaDbOffline)
                         : undefined
                     }

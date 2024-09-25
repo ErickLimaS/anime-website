@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./layout/header";
 import Footer from "./layout/footer";
-import NextTopLoader from 'nextjs-toploader';
+import NextTopLoader from "nextjs-toploader";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
 import StoreProvider from "./lib/redux/StoreProvider";
@@ -13,8 +13,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "AniProject",
-  description: "A anime platform that showcases popular and trending animes, mangas and movies. Explore the latest releases, keep watching your favorites, and discover what's popular in the anime world.",
-  manifest: '/manifest.json'
+  description:
+    "A anime platform that showcases popular and trending animes, mangas and movies. Explore the latest releases, keep watching your favorites, and discover what's popular in the anime world.",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -22,31 +23,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
-
-      <Script src='/register-sw.js' />
+      <Script src="/register-sw.js" />
 
       <body className={inter.className}>
-
         <Analytics /> {/* Vercel */}
-
         <StoreProvider>
+          <Header />
 
-          {/* <Header /> */}
-
-          <NextTopLoader
-            color="var(--brand-color)"
-            showSpinner={false}
-          />
+          <NextTopLoader color="var(--brand-color)" showSpinner={false} />
 
           {children || <LoadingPageContainer />}
 
-          {/* <Footer /> */}
-
+          <Footer />
         </StoreProvider>
-
       </body>
     </html>
   );
