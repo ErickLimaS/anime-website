@@ -45,6 +45,7 @@ footer#footer {
 
 }
 
+#info_container li,
 #info_container a {
 
     color: var(--white-75);
@@ -53,7 +54,7 @@ footer#footer {
 }
 
 @media((max-width: 541px)) {
-    #info_container a span{
+    #info_container a span {
 
         display: none;
 
