@@ -273,7 +273,7 @@ export default function EpisodesContainer({
         setCurrEpisodesSource(newSourceChose);
 
         mediaEpisodesList = (await optimizedFetchOnGoGoAnime({
-          textToSearch: mediaInfo.title.english,
+          textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
           only: "episodes",
           isDubbed: isEpisodesDubbed || false,
         })) as GogoanimeMediaEpisodes[];
@@ -312,7 +312,7 @@ export default function EpisodesContainer({
         setCurrEpisodesSource(newSourceChose);
 
         const searchResultsListForCurrMedia = (await optimizedFetchOnAniwatch({
-          textToSearch: mediaInfo.title.english,
+          textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
           only: "search_list",
           format: mediaInfo.format,
           mediaTotalEpisodes:
@@ -322,7 +322,8 @@ export default function EpisodesContainer({
         setMediaResultsInfoArray(searchResultsListForCurrMedia);
 
         mediaEpisodesList = (await optimizedFetchOnAniwatch({
-          textToSearch: mediaInfo.title.english,
+          textToSearch:
+            mediaInfo.title.english || mediaInfo.title.userPreferred,
           only: "episodes",
           format: mediaInfo.format,
           mediaTotalEpisodes:
