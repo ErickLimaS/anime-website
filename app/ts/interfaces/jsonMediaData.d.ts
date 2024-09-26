@@ -1,12 +1,10 @@
-import { MediaInfo } from "./anilistMediaData";
-
 export interface MediaOnJSONFile {
-  title: MediaInfo["title"];
-  description: "";
+  title: string;
+  description: ""; // undefined
   thumbnail: string;
   coverImage: {
-    extraLarge: string;
-    large: string;
+    extraLarge: string; // undefined
+    large: string; // undefined
   };
   picture: string;
   tags: strings[];
@@ -14,12 +12,16 @@ export interface MediaOnJSONFile {
     season: string;
     year: number;
   };
-  format: MediaInfo["format"];
-  type: MediaInfo["format"];
+  format: string;
+  type: string;
   status: string;
   sources: string[];
   id: number;
-  episodes: 0;
+  episodes: number;
+  duration?: {
+    value: number;
+    unit: string;
+  };
   anilistId: string;
   isFavourite: false;
   mediaListEntry: null;
