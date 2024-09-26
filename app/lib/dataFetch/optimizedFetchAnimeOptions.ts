@@ -1,15 +1,15 @@
 import aniwatch from "@/app/api/aniwatch";
 import {
   EpisodesFetchedAnimeWatch,
-  MediaInfoAniwatch,
-} from "../../ts/interfaces/apiAnimewatchInterface";
+  AniwatchMediaData,
+} from "../../ts/interfaces/aniwatchData";
 import simulateRange from "../simulateRange";
 import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
 import {
-  MediaEpisodes,
-  MediaInfo,
-  MediaSearchResult,
-} from "../../ts/interfaces/apiGogoanimeDataInterface";
+  GogoanimeMediaEpisodes,
+  GogoanimeMediaData,
+  GogoanimeMediaSearchResult,
+} from "../../ts/interfaces/gogoanimeData";
 import stringToOnlyAlphabetic from "../convertStrings";
 import { checkAnilistTitleMisspelling } from "../checkApiMediaMisspelling";
 
@@ -29,13 +29,13 @@ export async function optimizedFetchOnGoGoAnime({
 
   let mediaInfo = (await gogoanime.getInfoFromThisMedia({
     id: titleFixed,
-  })) as MediaInfo;
+  })) as GogoanimeMediaData;
 
   if (mediaInfo && !only) return mediaInfo;
 
   const resultsForMediaSearch = (await gogoanime.searchMedia({
     query: titleFixed,
-  })) as MediaSearchResult[];
+  })) as GogoanimeMediaSearchResult[];
 
   let closestResultsByMediaTitle;
 
@@ -55,12 +55,12 @@ export async function optimizedFetchOnGoGoAnime({
   mediaInfo =
     ((await gogoanime.getInfoFromThisMedia({
       id: closestResultsByMediaTitle[0]?.id || resultsForMediaSearch![0]?.id,
-    })) as MediaInfo) || null;
+    })) as GogoanimeMediaData) || null;
 
   if (!mediaInfo) return null;
 
   if (only == "episodes") {
-    const episodesList: MediaEpisodes[] = [];
+    const episodesList: GogoanimeMediaEpisodes[] = [];
 
     simulateRange(mediaInfo.totalEpisodes).map((item, key) => {
       episodesList.push({
@@ -96,7 +96,7 @@ export async function optimizedFetchOnAniwatch({
 
   let resultsForMediaSearch = (await aniwatch
     .searchMedia({ query: titleFixed })
-    .then((res) => res!.animes)) as MediaInfoAniwatch[];
+    .then((res) => res!.animes)) as AniwatchMediaData[];
 
   if (format) {
     const filterFormat = resultsForMediaSearch.filter(
@@ -106,7 +106,7 @@ export async function optimizedFetchOnAniwatch({
     if (filterFormat.length > 0) resultsForMediaSearch = filterFormat;
   }
 
-  let mediasWithSameTitle: MediaInfoAniwatch[] | undefined =
+  let mediasWithSameTitle: AniwatchMediaData[] | undefined =
     resultsForMediaSearch.filter(
       (media) => stringToOnlyAlphabetic(media.name).toLowerCase() == titleFixed
     );
@@ -159,16 +159,16 @@ export async function optimizedFetchOnAniwatch({
     return mediaEpisodesList?.episodes?.length == 0
       ? null
       : {
-        episodesDub:
+          episodesDub:
             mediaFoundByID?.episodes?.dub ||
             mediasWithSameTitle[0]?.episodes?.dub ||
             0,
-        episodesSub:
+          episodesSub:
             mediaFoundByID?.episodes?.sub ||
             mediasWithSameTitle[0]?.episodes?.sub ||
             0,
-        episodes: mediaEpisodesList.episodes,
-      };
+          episodes: mediaEpisodesList.episodes,
+        };
   }
 
   return mediasWithSameTitle;

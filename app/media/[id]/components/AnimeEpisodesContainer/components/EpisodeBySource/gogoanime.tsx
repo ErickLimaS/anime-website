@@ -3,12 +3,12 @@ import React from "react";
 import Image from "next/image";
 import styles from "./component.module.css";
 import placeholderImg from "@/public/photo-placeholder.jpg";
-import { MediaEpisodes } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import { GogoanimeMediaEpisodes } from "@/app/ts/interfaces/gogoanimeData";
 import MarkEpisodeAsWatchedButton from "@/app/components/Buttons/MarkEpisodeAsWatched";
 import { motion, Variants } from "framer-motion";
 
 type ComponentTypes = {
-  episodeInfo: MediaEpisodes;
+  episodeInfo: GogoanimeMediaEpisodes;
   mediaId: number;
   episodeTitle: string;
   episodeNumber: number;

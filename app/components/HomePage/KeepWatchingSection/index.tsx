@@ -10,7 +10,7 @@ import { initFirebase } from "@/app/firebaseApp";
 import KeepWatchingEpisodeInfo from "./components/KeepWatchingEpisodeInfo";
 import { SwiperSlide } from "swiper/react";
 import { useAppSelector } from "@/app/lib/redux/hooks";
-import { KeepWatchingItem } from "@/app/ts/interfaces/firestoreDataInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
 
 const framerMotionVariants = {
   initial: {
@@ -34,9 +34,9 @@ function KeepWatchingSection() {
 
   const db = getFirestore(initFirebase());
 
-  const [watchingList, setWatchingList] = useState<KeepWatchingItem[]>([]);
+  const [watchingList, setWatchingList] = useState<KeepWatchingMediaData[]>([]);
   const [deletedFromWatchingList, setDeletedFromWatchingList] = useState<
-    KeepWatchingItem[]
+    KeepWatchingMediaData[]
   >([]);
 
   useEffect(() => {
@@ -63,13 +63,12 @@ function KeepWatchingSection() {
 
     if (!watchingList) return setWatchingList([]);
 
-    const changeWatchingListFromObjectToArray: KeepWatchingItem[] = Object.keys(
-      watchingList
-    )
-      .map((key) => {
-        return watchingList[key];
-      })
-      .filter((item) => item.length != 0 && item);
+    const changeWatchingListFromObjectToArray: KeepWatchingMediaData[] =
+      Object.keys(watchingList)
+        .map((key) => {
+          return watchingList[key];
+        })
+        .filter((item) => item.length != 0 && item);
 
     const watchingListSortedByDate = changeWatchingListFromObjectToArray
       .sort(function (x, y) {

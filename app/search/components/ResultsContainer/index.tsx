@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./component.module.css";
 import * as MediaCard from "@/app/components/MediaCards/MediaCard";
-import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/jsonMediaData";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SelectSort from "@/app/components/SelectSortInputs";

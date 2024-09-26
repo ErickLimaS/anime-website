@@ -2,7 +2,7 @@ import Image from "next/image";
 import ErrorImg from "@/public/error-img-4.png";
 import Link from "next/link";
 import styles from "./component.module.css";
-import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 
 export function FetchEpisodeError({
   mediaId,

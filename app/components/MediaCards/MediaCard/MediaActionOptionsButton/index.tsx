@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import styles from "../component.module.css";
 import { AnimatePresence, motion } from "framer-motion";
 import PlusSvg from "@/public/assets/plus-lg.svg";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import OptionsPanel from "./OptionsPanel";
 import { useAppDispatch } from "@/app/lib/redux/hooks";
 import { toggleShowLoginModalValue } from "@/app/lib/redux/features/loginModal";
-import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreDataInterface";
-import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/jsonMediaData";
 
 export default function MediaActionOptionsButton({
   mediaInfo,

@@ -1,4 +1,4 @@
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 
 export const userMediaStatusEntries: {
   name: string;

@@ -9,8 +9,8 @@ import { initFirebase } from "@/app/firebaseApp";
 import * as MediaCard from "@/app/components/MediaCards/MediaCard";
 import SvgLoading from "@/public/assets/Eclipse-1s-200px.svg";
 import { useAppDispatch, useAppSelector } from "@/app/lib/redux/hooks";
-import { BookmarkItem } from "@/app/ts/interfaces/firestoreDataInterface";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { BookmarkItem } from "@/app/ts/interfaces/firestoreData";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import { toggleShowLoginModalValue } from "@/app/lib/redux/features/loginModal";
 
 function PlaylistItemsResults({
@@ -152,24 +152,24 @@ function PlaylistItemsResults({
                   </li>
                 ))
               : userBookmarksList.map((media, key) => (
-                <li key={key}>
-                  <MediaCard.Container onDarkMode>
-                    <MediaCard.MediaImgLink
-                      hideOptionsButton
-                      mediaInfo={media as MediaData}
-                      mediaId={media.id}
-                      title={media.title.userPreferred}
-                      formatOrType={media.format}
-                      url={media.coverImage.extraLarge}
-                    />
+                  <li key={key}>
+                    <MediaCard.Container onDarkMode>
+                      <MediaCard.MediaImgLink
+                        hideOptionsButton
+                        mediaInfo={media as MediaData}
+                        mediaId={media.id}
+                        title={media.title.userPreferred}
+                        formatOrType={media.format}
+                        url={media.coverImage.extraLarge}
+                      />
 
-                    <MediaCard.LinkTitle
-                      title={media.title.userPreferred}
-                      id={media.id}
-                    />
-                  </MediaCard.Container>
-                </li>
-              ))}
+                      <MediaCard.LinkTitle
+                        title={media.title.userPreferred}
+                        id={media.id}
+                      />
+                    </MediaCard.Container>
+                  </li>
+                ))}
           </ul>
         </div>
       )}

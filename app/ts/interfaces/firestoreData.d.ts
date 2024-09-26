@@ -1,4 +1,4 @@
-import { MediaData } from "./apiAnilistDataInterface";
+import { MediaData } from "./anilistMediaData";
 
 interface BookmarkItem {
   title: MediaData["title"];

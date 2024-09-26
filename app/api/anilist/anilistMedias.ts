@@ -3,7 +3,7 @@ import {
   AiringMediaResult,
   MediaData,
   TrendingMediaResult,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import Axios from "axios";
 import {
   requestMedias,

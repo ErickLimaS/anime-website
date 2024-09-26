@@ -14,12 +14,12 @@ import {
   optimizedFetchOnGoGoAnime,
 } from "@/app/lib/dataFetch/optimizedFetchAnimeOptions";
 import { AnimatePresence, motion } from "framer-motion";
-import { MediaEpisodes } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
-import { EpisodeAnimeWatch } from "@/app/ts/interfaces/apiAnimewatchInterface";
+import { GogoanimeMediaEpisodes } from "@/app/ts/interfaces/gogoanimeData";
+import { EpisodeAnimeWatch } from "@/app/ts/interfaces/aniwatchData";
 import { useAppSelector } from "@/app/lib/redux/hooks";
-import { KeepWatchingItem } from "@/app/ts/interfaces/firestoreDataInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
 import DubbedCheckboxButton from "../AnimeEpisodesContainer/components/ActiveDubbButton";
-import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 
 export default function PlayBtn({
   mediaId,
@@ -146,17 +146,20 @@ export default function PlayBtn({
 
     let userKeepWatchingList = await userDoc.get("keepWatching");
 
-    const listFromObjectToArray = Object.keys(userKeepWatchingList).map((key) => {
-      return userKeepWatchingList[key];
-    });
+    const listFromObjectToArray = Object.keys(userKeepWatchingList).map(
+      (key) => {
+        return userKeepWatchingList[key];
+      }
+    );
 
     userKeepWatchingList = listFromObjectToArray.filter(
       (item) => item.length != 0 && item
     );
 
-    const mediaLastEpisodeWatched: KeepWatchingItem = userKeepWatchingList.find(
-      (item: KeepWatchingItem) => item.id == mediaId
-    );
+    const mediaLastEpisodeWatched: KeepWatchingMediaData =
+      userKeepWatchingList.find(
+        (item: KeepWatchingMediaData) => item.id == mediaId
+      );
 
     if (!mediaLastEpisodeWatched) return null;
 
@@ -193,7 +196,7 @@ export default function PlayBtn({
     function findNextEpisode({
       episodes,
     }: {
-      episodes: MediaEpisodes[] | EpisodeAnimeWatch[];
+      episodes: GogoanimeMediaEpisodes[] | EpisodeAnimeWatch[];
     }) {
       // adds 1 to get the next episode after the last watched
       const nextEpisodeAfterLastWatched = episodes.find(
@@ -204,7 +207,7 @@ export default function PlayBtn({
       if (nextEpisodeAfterLastWatched) {
         setEpisodeId(
           sourceName == "gogoanime"
-            ? (nextEpisodeAfterLastWatched as MediaEpisodes)!.id
+            ? (nextEpisodeAfterLastWatched as GogoanimeMediaEpisodes)!.id
             : (nextEpisodeAfterLastWatched as EpisodeAnimeWatch)!.episodeId
         );
 
@@ -248,11 +251,13 @@ export default function PlayBtn({
     }
 
     if (source) {
-      let currMediaInfo: MediaEpisodes[] | EpisodeAnimeWatch[] | null = null;
+      let currMediaInfo: GogoanimeMediaEpisodes[] | EpisodeAnimeWatch[] | null =
+        null;
 
       switch (source) {
         case "gogoanime":
-          currMediaInfo = (await fetchOnGoGoAnime()) as MediaEpisodes[];
+          currMediaInfo =
+            (await fetchOnGoGoAnime()) as GogoanimeMediaEpisodes[];
 
           break;
 
@@ -275,7 +280,7 @@ export default function PlayBtn({
         } else {
           setEpisodeId(
             (currMediaInfo[0] as EpisodeAnimeWatch)?.episodeId ||
-              (currMediaInfo[0] as MediaEpisodes)?.id ||
+              (currMediaInfo[0] as GogoanimeMediaEpisodes)?.id ||
               null
           );
         }
@@ -286,8 +291,8 @@ export default function PlayBtn({
       return;
     }
 
-    let currMediaEpisodes: MediaEpisodes[] | EpisodeAnimeWatch[] =
-      (await fetchOnGoGoAnime()) as MediaEpisodes[];
+    let currMediaEpisodes: GogoanimeMediaEpisodes[] | EpisodeAnimeWatch[] =
+      (await fetchOnGoGoAnime()) as GogoanimeMediaEpisodes[];
 
     if (!currMediaEpisodes)
       currMediaEpisodes = (await fetchOnAniWatch()) as EpisodeAnimeWatch[]; // High chances of getting the wrong media
@@ -315,7 +320,7 @@ export default function PlayBtn({
     if (currMediaEpisodes)
       setEpisodeId(
         (currMediaEpisodes[0] as EpisodeAnimeWatch)?.episodeId ||
-          (currMediaEpisodes[0] as MediaEpisodes)?.id ||
+          (currMediaEpisodes[0] as GogoanimeMediaEpisodes)?.id ||
           null
       );
 

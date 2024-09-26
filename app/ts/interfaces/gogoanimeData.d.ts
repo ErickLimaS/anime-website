@@ -1,4 +1,4 @@
-export interface MediaInfo {
+export interface GogoanimeMediaData {
   id: string;
   title: string;
   url: string;
@@ -8,17 +8,17 @@ export interface MediaInfo {
   release: string;
   description: string;
   status: string;
-  episodes: MediaEpisodes[];
+  episodes: GogoanimeMediaEpisodes[];
   fromOtherSource?: boolean;
 }
 
-export interface MediaEpisodes {
+export interface GogoanimeMediaEpisodes {
   id: string;
   number: number;
   url: string;
 }
 
-export interface MediaSearchResult {
+export interface GogoanimeMediaSearchResult {
   id: string;
   title: string;
   url: string;

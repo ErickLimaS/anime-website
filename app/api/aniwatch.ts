@@ -2,7 +2,7 @@ import {
   EpisodeLinksAnimeWatch,
   EpisodesFetchedAnimeWatch,
   MediaInfoFetchedAnimeWatch,
-} from "@/app/ts/interfaces/apiAnimewatchInterface";
+} from "@/app/ts/interfaces/aniwatchData";
 import Axios from "axios";
 import axiosRetry from "axios-retry";
 import { cache } from "react";

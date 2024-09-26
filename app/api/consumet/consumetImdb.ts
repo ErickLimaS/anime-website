@@ -1,8 +1,5 @@
 import stringToOnlyAlphabetic from "@/app/lib/convertStrings";
-import {
-  ImdbMediaInfo,
-  ImdbSearchItem,
-} from "@/app/ts/interfaces/apiImdbInterface";
+import { ImdbMediaInfo, ImdbSearchItem } from "@/app/ts/interfaces/imdb";
 import Axios from "axios";
 import axiosRetry from "axios-retry";
 import { cache } from "react";

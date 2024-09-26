@@ -3,7 +3,7 @@ import styles from "./component.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, Variants } from "framer-motion";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 
 type ComponentTypes = {
   children: React.ReactNode;
@@ -44,9 +44,9 @@ export function FramerMotionContainer({
       onClick={
         framerMotionProps
           ? () =>
-            framerMotionProps.framerMotionExpandCardFunction(
-              String(framerMotionProps.mediaId)
-            )
+              framerMotionProps.framerMotionExpandCardFunction(
+                String(framerMotionProps.mediaId)
+              )
           : undefined
       } // framer motion
       className={`${styles.media_item_container} ${onDarkMode ? styles.darkMode : ""} ${isHiddenOnDesktop ? styles.midia_item_container_hidden : ""}`}

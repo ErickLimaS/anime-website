@@ -1,4 +1,4 @@
-import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import React from "react";
 import anilist from "@/app/api/anilist/anilistMedias";
 import styles from "./page.module.css";
@@ -12,10 +12,7 @@ import { headers } from "next/headers";
 import { checkDeviceIsMobile } from "@/app/lib/checkMobileOrDesktop";
 import { convertFromUnix, getMediaReleaseDate } from "@/app/lib/formatDateUnix";
 import { getMediaInfo } from "@/app/api/consumet/consumetImdb";
-import {
-  ImdbEpisode,
-  ImdbMediaInfo,
-} from "@/app/ts/interfaces/apiImdbInterface";
+import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import MediaRelatedContainer from "./components/MediaRelatedContainer";
 import CommentsSection from "../../components/CommentsSection";
 import PageHeading from "./components/PageHeading";

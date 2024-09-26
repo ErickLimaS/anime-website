@@ -3,7 +3,7 @@ import { initFirebase } from "@/app/firebaseApp";
 import {
   MediaData,
   MediaDataFullInfo,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import { getAuth } from "firebase/auth";
 import { FormEvent, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -24,7 +24,7 @@ import ProfileFallbackImg from "@/public/profile_fallback.jpg";
 import SvgCheck from "@/public/assets/check-circle-fill.svg";
 import Filter from "bad-words";
 import { useAppSelector } from "@/app/lib/redux/hooks";
-import { ReplyComment } from "@/app/ts/interfaces/firestoreDataInterface";
+import { ReplyComment } from "@/app/ts/interfaces/firestoreData";
 
 type CommentFormTypes = {
   isAReply?: boolean;

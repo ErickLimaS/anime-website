@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./carouselComponent.module.css";
 import Link from "next/link";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import { wrap } from "popmotion";
 import { AnimatePresence, motion } from "framer-motion";
 import * as AddToFavourites from "../../Buttons/AddToFavourites";

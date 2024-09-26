@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./component.module.css";
-import { MediaEpisodes } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import { GogoanimeMediaEpisodes } from "@/app/ts/interfaces/gogoanimeData";
 import Link from "next/link";
 import MarkEpisodeAsWatchedButton from "@/app/components/Buttons/MarkEpisodeAsWatched";
-import { EpisodeAnimeWatch } from "@/app/ts/interfaces/apiAnimewatchInterface";
+import { EpisodeAnimeWatch } from "@/app/ts/interfaces/aniwatchData";
 import { motion } from "framer-motion";
-import { ImdbEpisode } from "@/app/ts/interfaces/apiImdbInterface";
-import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+import { ImdbEpisode } from "@/app/ts/interfaces/imdb";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { initFirebase } from "@/app/firebaseApp";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -20,7 +20,7 @@ type ComponentTypes = {
   sourceName: SourceType["source"];
   mediaId: number;
   activeEpisodeNumber: number;
-  episodesList: MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[];
+  episodesList: GogoanimeMediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[];
   episodesListOnImdb: ImdbEpisode[] | undefined;
   nextAiringEpisodeInfo?: { episode: number; airingAt: number };
   anilistLastEpisodeWatched?: number;
@@ -102,12 +102,12 @@ export default function EpisodesListContainer({
   }
 
   function getMediaIdParamByMediaSource(
-    media: EpisodeAnimeWatch | MediaEpisodes,
+    media: EpisodeAnimeWatch | GogoanimeMediaEpisodes,
     source: SourceType["source"]
   ) {
     switch (source) {
       case "gogoanime":
-        return `${(media as MediaEpisodes).id}${searchParams.get("dub") ? `&dub=true` : ""}`;
+        return `${(media as GogoanimeMediaEpisodes).id}${searchParams.get("dub") ? `&dub=true` : ""}`;
 
       case "aniwatch":
         return `${(media as EpisodeAnimeWatch).episodeId}${searchParams.get("dub") ? `&dub=true` : ""}`;
@@ -130,21 +130,21 @@ export default function EpisodesListContainer({
           <motion.li
             key={key}
             data-active={
-              (episode as MediaEpisodes).number == activeEpisodeNumber
+              (episode as GogoanimeMediaEpisodes).number == activeEpisodeNumber
             }
           >
             <Link
-              title={`Episode ${(episode as MediaEpisodes).number}`}
-              href={`/watch/${mediaId}?source=${sourceName}&episode=${(episode as MediaEpisodes).number}&q=${getMediaIdParamByMediaSource(episode as MediaEpisodes, sourceName)}`}
+              title={`Episode ${(episode as GogoanimeMediaEpisodes).number}`}
+              href={`/watch/${mediaId}?source=${sourceName}&episode=${(episode as GogoanimeMediaEpisodes).number}&q=${getMediaIdParamByMediaSource(episode as GogoanimeMediaEpisodes, sourceName)}`}
             >
               <div className={styles.img_container}>
-                <span>{(episode as MediaEpisodes).number}</span>
+                <span>{(episode as GogoanimeMediaEpisodes).number}</span>
               </div>
             </Link>
 
             <div className={styles.episode_info_container}>
               <Link
-                href={`/watch/${mediaId}?source=${sourceName}&episode=${(episode as MediaEpisodes).number}&q=${getMediaIdParamByMediaSource(episode as MediaEpisodes, sourceName)}`}
+                href={`/watch/${mediaId}?source=${sourceName}&episode=${(episode as GogoanimeMediaEpisodes).number}&q=${getMediaIdParamByMediaSource(episode as GogoanimeMediaEpisodes, sourceName)}`}
               >
                 {sourceName == "aniwatch" &&
                   (episode as EpisodeAnimeWatch).isFiller && (
@@ -155,24 +155,24 @@ export default function EpisodesListContainer({
                   {sourceName == "gogoanime"
                     ? episodesListOnImdb
                       ? episodesListOnImdb[key].title
-                      : `Episode ${(episode as MediaEpisodes).number}`
+                      : `Episode ${(episode as GogoanimeMediaEpisodes).number}`
                     : (episode as EpisodeAnimeWatch).title}
                 </h4>
               </Link>
 
               <MarkEpisodeAsWatchedButton
-                episodeNumber={(episode as MediaEpisodes).number}
+                episodeNumber={(episode as GogoanimeMediaEpisodes).number}
                 episodeTitle={
                   sourceName == "aniwatch"
                     ? (episode as ImdbEpisode).title
-                    : `${(episode as MediaEpisodes).number}`
+                    : `${(episode as GogoanimeMediaEpisodes).number}`
                 }
                 maxEpisodesNumber={episodesList.length}
                 mediaId={mediaId}
                 showAdditionalText={true}
                 wasWatched={wasEpisodeWatched({
                   listIndex: key,
-                  episodeNumber: (episode as MediaEpisodes).number,
+                  episodeNumber: (episode as GogoanimeMediaEpisodes).number,
                 })}
               />
             </div>

@@ -17,11 +17,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { initFirebase } from "@/app/firebaseApp";
 import { AnimatePresence, motion } from "framer-motion";
 import fallbackImg from "@/public/photo-placeholder.jpg";
-import { KeepWatchingItem } from "@/app/ts/interfaces/firestoreDataInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
 import { useAppSelector } from "@/app/lib/redux/hooks";
 
 type ComponentTypes = {
-  animeInfo: KeepWatchingItem;
+  animeInfo: KeepWatchingMediaData;
   deleteFromListHook: () => void;
   darkMode?: boolean;
 };

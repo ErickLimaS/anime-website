@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import styles from "./component.module.css";
-import { EpisodesType } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { EpisodesType } from "@/app/ts/interfaces/anilistMediaData";
 import MarkEpisodeAsWatchedButton from "@/app/components/Buttons/MarkEpisodeAsWatched";
 import { motion, Variants } from "framer-motion";
 

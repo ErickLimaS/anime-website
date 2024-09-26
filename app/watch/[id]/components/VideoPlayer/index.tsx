@@ -2,7 +2,7 @@
 import styles from "./component.module.css";
 import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
-import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import { initFirebase } from "@/app/firebaseApp";
 import { getAuth } from "firebase/auth";
 import {
@@ -26,26 +26,26 @@ import { CaptionsFileFormat, CaptionsParserFactory } from "media-captions";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   EpisodeLinksGoGoAnime,
-  MediaEpisodes,
-} from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+  GogoanimeMediaEpisodes,
+} from "@/app/ts/interfaces/gogoanimeData";
 import {
   EpisodeAnimeWatch,
   EpisodeLinksAnimeWatch,
-} from "@/app/ts/interfaces/apiAnimewatchInterface";
+} from "@/app/ts/interfaces/aniwatchData";
 import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
 import aniwatch from "@/app/api/aniwatch";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import SkipSvg from "@/public/assets/chevron-double-right.svg";
 import PlaySvg from "@/public/assets/play.svg";
 import { useAppSelector } from "@/app/lib/redux/hooks";
-import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreDataInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
 import anilistUsers from "@/app/api/anilist/anilistUsers";
 
 type VideoPlayerType = {
   mediaSource: SourceType["source"];
   mediaInfo: MediaDataFullInfo;
-  mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[];
+  mediaEpisodes?: GogoanimeMediaEpisodes[] | EpisodeAnimeWatch[];
   videoInfo: {
     urlSource: string;
     currentLastStop?: string;
@@ -383,7 +383,7 @@ export default function VideoPlayer({
 
     switch (mediaSource) {
       case "gogoanime":
-        nextEpisodeId = (nextEpisodeInfo as MediaEpisodes).id;
+        nextEpisodeId = (nextEpisodeInfo as GogoanimeMediaEpisodes).id;
 
         nextEpisode = await gogoanime.getEpisodeStreamingLinks({
           episodeId: nextEpisodeId,

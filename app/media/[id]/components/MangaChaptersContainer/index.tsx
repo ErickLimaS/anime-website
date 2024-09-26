@@ -3,16 +3,16 @@ import React, { useEffect, useState } from "react";
 import styles from "./component.module.css";
 import Link from "next/link";
 import {
-  MangaChapters,
-  MangaInfo,
-} from "@/app/ts/interfaces/apiMangadexDataInterface";
+  MangadexMangaChapters,
+  MangadexMangaInfo,
+} from "@/app/ts/interfaces/mangadex";
 import BookSvg from "@/public/assets/book.svg";
 import PaginationButtons from "@/app/media/[id]/components/PaginationButtons";
 import manga from "@/app/api/consumet/consumetManga";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import simulateRange from "@/app/lib/simulateRange";
 import MarkChapterAsReadButton from "@/app/components/Buttons/MarkChapterAsRead";
-import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import { getClosestMangaResultByTitle } from "@/app/lib/dataFetch/optimizedFetchMangaOptions";
 import { stringToUrlFriendly } from "@/app/lib/convertStrings";
 import { useSearchParams } from "next/navigation";
@@ -56,11 +56,11 @@ function MangaChaptersContainer({
   chaptersReadOnAnilist?: number;
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [chaptersList, setChaptersList] = useState<MangaChapters[]>([]);
+  const [chaptersList, setChaptersList] = useState<MangadexMangaChapters[]>([]);
 
-  const [currMangasList, setCurrMangasList] = useState<MangaChapters[] | null>(
-    null
-  );
+  const [currMangasList, setCurrMangasList] = useState<
+    MangadexMangaChapters[] | null
+  >(null);
 
   const [totalNumberPages, setTotalNumberPages] = useState<number>(0);
   const [currActivePage, setCurrActivePage] = useState<number>(0);
@@ -131,7 +131,7 @@ function MangaChaptersContainer({
 
     let mangaInfo = (await manga.getInfoFromThisMedia({
       id: mangaTitleUrlFrindly,
-    })) as MangaInfo;
+    })) as MangadexMangaInfo;
 
     if (!mangaInfo) {
       const mangaClosestResult = await getClosestMangaResultByTitle(
@@ -141,7 +141,7 @@ function MangaChaptersContainer({
 
       mangaInfo = (await manga.getInfoFromThisMedia({
         id: mangaClosestResult as string,
-      })) as MangaInfo;
+      })) as MangadexMangaInfo;
 
       if (!mangaInfo) {
         setIsLoading(false);

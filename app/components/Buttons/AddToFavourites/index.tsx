@@ -7,15 +7,15 @@ import FavouriteFillSvg from "@/public/assets/heart-fill.svg";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { initFirebase } from "@/app/firebaseApp";
 import { getAuth } from "firebase/auth";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { motion } from "framer-motion";
 import { updateUserFavouriteMedias } from "@/app/lib/user/userDocUpdateOptions";
 import { useAppDispatch, useAppSelector } from "@/app/lib/redux/hooks";
 import anilistUsers from "@/app/api/anilist/anilistUsers";
 import { toggleShowLoginModalValue } from "@/app/lib/redux/features/loginModal";
-import { KeepWatchingMediaData} from "@/app/ts/interfaces/firestoreDataInterface";
-import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/jsonMediaData";
 
 export function Button({
   mediaInfo,
@@ -119,11 +119,11 @@ export function Button({
       title={
         wasAddedToFavourites
           ? `Remove ${
-            mediaInfo.title && mediaInfo.title?.userPreferred
-          } from Favourites`
+              mediaInfo.title && mediaInfo.title?.userPreferred
+            } from Favourites`
           : `Add ${
-            mediaInfo.title && mediaInfo.title?.userPreferred
-          } To Favourites`
+              mediaInfo.title && mediaInfo.title?.userPreferred
+            } To Favourites`
       }
     >
       {isLoading && <LoadingSvg alt="Loading Icon" width={16} height={16} />}

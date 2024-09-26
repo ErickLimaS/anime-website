@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from "react";
 import styles from "./component.module.css";
 import aniwatch from "@/app/api/aniwatch";
-import { EpisodeLinksAnimeWatch } from "@/app/ts/interfaces/apiAnimewatchInterface";
+import { EpisodeLinksAnimeWatch } from "@/app/ts/interfaces/aniwatchData";
 import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
-import { EpisodeLinksGoGoAnime } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import { EpisodeLinksGoGoAnime } from "@/app/ts/interfaces/gogoanimeData";
 import CloudOfflineSvg from "@/public/assets/cloud-offline.svg";
 import CloudOnlineSvg from "@/public/assets/cloud.svg";
-import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 
 type PropsType = {
   propsFunction: (parameter: string | number) => void;

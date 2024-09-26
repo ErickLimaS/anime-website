@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import AnimeDataOffline from "./anime-offline-database.json";
-import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/jsonMediaData";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

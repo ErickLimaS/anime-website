@@ -3,14 +3,14 @@ import styles from "./page.module.css";
 import {
   MediaData,
   MediaDataFullInfo,
-} from "../../ts/interfaces/apiAnilistDataInterface";
+} from "../../ts/interfaces/anilistMediaData";
 import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
 import anilist from "@/app/api/anilist/anilistMedias";
 import * as MediaCardExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
 import {
   EpisodeLinksGoGoAnime,
-  MediaEpisodes,
-} from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+  GogoanimeMediaEpisodes,
+} from "@/app/ts/interfaces/gogoanimeData";
 import EpisodesListContainer from "./components/EpisodesListContainer";
 import CommentsSection from "@/app/components/CommentsSection";
 import aniwatch from "@/app/api/aniwatch";
@@ -18,17 +18,14 @@ import VideoPlayer from "./components/VideoPlayer";
 import {
   EpisodeAnimeWatch,
   EpisodeLinksAnimeWatch,
-} from "@/app/ts/interfaces/apiAnimewatchInterface";
+} from "@/app/ts/interfaces/aniwatchData";
 import {
   optimizedFetchOnAniwatch,
   optimizedFetchOnGoGoAnime,
 } from "@/app/lib/dataFetch/optimizedFetchAnimeOptions";
-import {
-  ImdbEpisode,
-  ImdbMediaInfo,
-} from "@/app/ts/interfaces/apiImdbInterface";
+import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import { getMediaInfo } from "@/app/api/consumet/consumetImdb";
-import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import { FetchEpisodeError } from "@/app/components/MediaFetchErrorPage";
 import { cookies } from "next/headers";
 import { AlertWrongMediaVideoOnMediaId } from "./components/AlertContainer";
@@ -127,7 +124,7 @@ export default async function WatchEpisode({
     undefined;
   const subtitleLanguage =
     cookies().get("subtitle_language")?.value || "English";
-  let episodesList: EpisodeAnimeWatch[] | MediaEpisodes[] = [];
+  let episodesList: EpisodeAnimeWatch[] | GogoanimeMediaEpisodes[] = [];
   let videoUrlSrc: string | undefined = undefined;
   let imdbEpisodeInfo: ImdbEpisode | undefined;
   const imdbEpisodesList: ImdbEpisode[] = [];
@@ -172,7 +169,7 @@ export default async function WatchEpisode({
       textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
       only: "episodes",
       isDubbed: searchParams.dub == "true",
-    })) as MediaEpisodes[];
+    })) as GogoanimeMediaEpisodes[];
 
     videoIdDoesntMatch = compareEpisodeIDs(episodesList, "gogoanime");
   }
@@ -182,7 +179,7 @@ export default async function WatchEpisode({
       episodesList = (await optimizedFetchOnAniwatch({
         textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
         only: "episodes",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }).then((res: any) => res?.episodes)) as EpisodeAnimeWatch[];
 
       searchParams.q = episodesList[0].episodeId;
@@ -205,8 +202,8 @@ export default async function WatchEpisode({
         textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
         only: "episodes",
         format: mediaInfo.format,
-        idToMatch: searchParams?.q?.split("?")[0]
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        idToMatch: searchParams?.q?.split("?")[0],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }).then((res: any) =>
         searchParams?.dub == "true"
           ? res?.episodes.slice(0, res.episodesDub)

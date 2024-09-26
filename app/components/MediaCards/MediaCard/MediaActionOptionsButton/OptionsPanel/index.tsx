@@ -16,11 +16,11 @@ import CheckFillSvg from "@/public/assets/check-circle-fill.svg";
 import XSvg from "@/public/assets/x.svg";
 import CheckSvg from "@/public/assets/check-circle.svg";
 import styles from "./component.module.css";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreDataInterface";
-import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/jsonMediaData";
 
 const framerMotionOpenPanelTransition = {
   initial: {

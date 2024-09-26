@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import styles from "./component.module.css";
-import { MangaChapters } from "@/app/ts/interfaces/apiMangadexDataInterface";
+import { MangadexMangaChapters } from "@/app/ts/interfaces/mangadex";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import MarkChapterAsReadButton from "@/app/components/Buttons/MarkChapterAsRead";
@@ -9,7 +9,7 @@ import MarkChapterAsReadButton from "@/app/components/Buttons/MarkChapterAsRead"
 type ComponentTypes = {
   mediaId: number;
   currChapterId: string;
-  chaptersList: MangaChapters[];
+  chaptersList: MangadexMangaChapters[];
 };
 
 function ChaptersListContainer({

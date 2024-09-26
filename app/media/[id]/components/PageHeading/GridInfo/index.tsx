@@ -5,10 +5,10 @@ import CalendarSvg from "@/public/assets/calendar3.svg";
 import ClockSvg from "@/public/assets/clock.svg";
 import ProgressSvg from "@/public/assets/progress.svg";
 import styles from "./component.module.css";
-import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import PlayBtn from "../../WatchPlayBtn";
 import stringToOnlyAlphabetic from "@/app/lib/convertStrings";
-import { ImdbEpisode } from "@/app/ts/interfaces/apiImdbInterface";
+import { ImdbEpisode } from "@/app/ts/interfaces/imdb";
 import { getMediaReleaseDate } from "@/app/lib/formatDateUnix";
 
 export default function GridHeadingMediaInfo({

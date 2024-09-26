@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import * as MediaCard from "../../MediaCards/MediaCard";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import Link from "next/link";
 import styles from "./component.module.css";
 import ChevronRightIcon from "@/public/assets/chevron-right.svg";

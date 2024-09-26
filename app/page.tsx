@@ -7,10 +7,7 @@ import NavigationThroughMedias from "./components/HomePage/NavigationThroughMedi
 import parse from "html-react-parser";
 import NewestMediaSection from "./components/HomePage/NewestMediaSection";
 import MediaRankingSection from "./components/HomePage/MediaRankingSection";
-import {
-  AiringMediaResult,
-  MediaData,
-} from "./ts/interfaces/apiAnilistDataInterface";
+import { AiringMediaResult, MediaData } from "./ts/interfaces/anilistMediaData";
 import { Metadata } from "next";
 import * as AddToPlaylistButton from "./components/Buttons/AddToFavourites";
 import { checkDeviceIsMobile } from "./lib/checkMobileOrDesktop";

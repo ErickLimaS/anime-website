@@ -1,14 +1,8 @@
 export interface MediaInfoFetchedAnimeWatch {
-  animes: MediaInfoAniwatch[];
+  animes: AniwatchMediaData[];
 }
 
-export interface MediaInfoFetchedAnimeWatchSuggestions {
-  //curr not used
-
-  suggestions: MediaInfoAniwatchSuggestions[];
-}
-
-export interface MediaInfoAniwatch {
+export interface AniwatchMediaData {
   id: string;
   name: string;
   poster: string;
@@ -16,7 +10,7 @@ export interface MediaInfoAniwatch {
   type: string;
   rating: number | null;
   episodes: {
-    episodes: any;
+    episodes: unknown;
     sub: number;
     dub: number;
   };

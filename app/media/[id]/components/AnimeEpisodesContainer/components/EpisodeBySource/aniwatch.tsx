@@ -4,7 +4,7 @@ import Image from "next/image";
 import styles from "./component.module.css";
 import placeholderImg from "@/public/photo-placeholder.jpg";
 import MarkEpisodeAsWatchedButton from "@/app/components/Buttons/MarkEpisodeAsWatched";
-import { EpisodeAnimeWatch } from "@/app/ts/interfaces/apiAnimewatchInterface";
+import { EpisodeAnimeWatch } from "@/app/ts/interfaces/aniwatchData";
 import { motion, Variants } from "framer-motion";
 
 type ComponentTypes = {

@@ -25,9 +25,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { convertFromUnix, getCurrentUnixDate } from "@/app/lib/formatDateUnix";
 import anilist from "@/app/api/anilist/anilistMedias";
-import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import { useAppSelector } from "@/app/lib/redux/hooks";
-import { NotificationsCollectionFirebase } from "@/app/ts/interfaces/firestoreDataInterface";
+import { NotificationsCollectionFirebase } from "@/app/ts/interfaces/firestoreData";
 
 function NotificationsContainer() {
   //

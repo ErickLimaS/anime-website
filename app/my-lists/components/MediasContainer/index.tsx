@@ -12,23 +12,23 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/redux/hooks";
 import {
   KeepWatchingMediaData,
   ListItemOnMediasSaved,
-} from "@/app/ts/interfaces/firestoreDataInterface";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/firestoreData";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import { toggleShowLoginModalValue } from "@/app/lib/redux/features/loginModal";
 import { AnimatePresence, motion } from "framer-motion";
 
 type ComponentTypes = {
   mediaFetched:
     | {
-      name: string;
-      status: string;
-      entries: {
-        id: number;
-        userId: number;
-        mediaId: number;
-        media: MediaData;
-      }[];
-    }[]
+        name: string;
+        status: string;
+        entries: {
+          id: number;
+          userId: number;
+          mediaId: number;
+          media: MediaData;
+        }[];
+      }[]
     | undefined;
   params?: {
     format: string;

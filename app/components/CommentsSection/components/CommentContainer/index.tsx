@@ -33,14 +33,11 @@ import WriteCommentFormContainer from "../WriteCommentForm";
 import {
   MediaData,
   MediaDataFullInfo,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import { AnimatePresence, motion } from "framer-motion";
 import ProfileFallbackImg from "@/public/profile_fallback.jpg";
 import { useAppDispatch, useAppSelector } from "@/app/lib/redux/hooks";
-import {
-  ReplyComment,
-  UserComment,
-} from "@/app/ts/interfaces/firestoreDataInterface";
+import { ReplyComment, UserComment } from "@/app/ts/interfaces/firestoreData";
 import { toggleShowLoginModalValue } from "@/app/lib/redux/features/loginModal";
 
 type CommentComponentTypes = {

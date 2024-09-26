@@ -1,6 +1,6 @@
 import manga from "@/app/api/consumet/consumetManga";
-import { MangaSearchResult } from "../../ts/interfaces/apiMangadexDataInterface";
-import { MediaDataFullInfo } from "../../ts/interfaces/apiAnilistDataInterface";
+import { MangadexMangaSearchResult } from "../../ts/interfaces/mangadex";
+import { MediaDataFullInfo } from "../../ts/interfaces/anilistMediaData";
 
 export async function getClosestMangaResultByTitle(
   query: string,
@@ -8,7 +8,7 @@ export async function getClosestMangaResultByTitle(
 ) {
   const searchResultsForMedia = (await manga.searchMedia({
     query: query,
-  })) as MangaSearchResult[];
+  })) as MangadexMangaSearchResult[];
 
   // FILTER RESULTS WITH SAME RELEASE YEAR
   const closestResults = searchResultsForMedia

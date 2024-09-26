@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   AiringMediaResult,
   MediaData,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import anilist from "@/app/api/anilist/anilistMedias";
 import CloseSvg from "@/public/assets/x.svg";
 import PlaySvg from "@/public/assets/play.svg";

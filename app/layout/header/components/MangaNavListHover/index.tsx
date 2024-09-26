@@ -4,7 +4,7 @@ import styles from "./component.module.css";
 import * as MediaInfoExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
 import Link from "next/link";
 import anilist from "@/app/api/anilist/anilistMedias";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import * as MediaCard from "@/app/components/MediaCards/MediaCard";
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg";
 import ErrorPlaceholder from "../ErrorPlaceholder";

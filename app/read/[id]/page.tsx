@@ -3,15 +3,15 @@ import styles from "./page.module.css";
 import anilist from "@/app/api/anilist/anilistMedias";
 import * as MediaCardExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
 import {
-  MangaChapters,
-  MangaInfo,
-  MangaPages,
-} from "@/app/ts/interfaces/apiMangadexDataInterface";
+  MangadexMangaChapters,
+  MangadexMangaInfo,
+  MangadexMangaPages,
+} from "@/app/ts/interfaces/mangadex";
 import manga from "@/app/api/consumet/consumetManga";
 import {
   MediaData,
   MediaDataFullInfo,
-} from "../../ts/interfaces/apiAnilistDataInterface";
+} from "../../ts/interfaces/anilistMediaData";
 import ChaptersPages from "./components/ChaptersPages/index";
 import ChaptersListContainer from "./components/ChaptersListContainer";
 import { getClosestMangaResultByTitle } from "@/app/lib/dataFetch/optimizedFetchMangaOptions";
@@ -57,13 +57,13 @@ async function ReadChapter({
     id: params.id,
   })) as MediaDataFullInfo;
 
-  let currChapterInfo: MangaChapters | undefined = undefined;
-  let allAvailableChaptersList: MangaChapters[] | undefined = undefined;
+  let currChapterInfo: MangadexMangaChapters | undefined = undefined;
+  let allAvailableChaptersList: MangadexMangaChapters[] | undefined = undefined;
   let hadFetchError = false;
 
   const currMangaChapters = (await manga.getChapterPages({
     chapterId: searchParams.q,
-  })) as MangaPages[];
+  })) as MangadexMangaPages[];
 
   const mangaTitleUrlFrindly = stringToUrlFriendly(
     mediaInfo.title.userPreferred
@@ -71,7 +71,7 @@ async function ReadChapter({
 
   let mangaInfo = (await manga.getInfoFromThisMedia({
     id: mangaTitleUrlFrindly,
-  })) as MangaInfo;
+  })) as MangadexMangaInfo;
 
   if (!mangaInfo) {
     const mangaClosestResult = await getClosestMangaResultByTitle(
@@ -81,7 +81,7 @@ async function ReadChapter({
 
     mangaInfo = (await manga.getInfoFromThisMedia({
       id: mangaClosestResult as string,
-    })) as MangaInfo;
+    })) as MangadexMangaInfo;
 
     if (!mangaInfo) hadFetchError = true;
   }

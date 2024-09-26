@@ -1,5 +1,5 @@
-import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
-import { ImdbMediaInfo } from "@/app/ts/interfaces/apiImdbInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
+import { ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import Image from "next/image";
 import React from "react";
 import styles from "./component.module.css";

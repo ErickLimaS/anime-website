@@ -1,7 +1,7 @@
 "use client";
 import React, { FormEvent, useState } from "react";
 import styles from "./component.module.css";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import anilist from "@/app/api/anilist/anilistMedias";
 import SearchResultItemCard from "./components/SearchResultItemCard";
 import LoadingIcon from "@/public/assets/ripple-1s-200px.svg";
@@ -10,7 +10,7 @@ import CloseSvg from "@/public/assets/x.svg";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/jsonMediaData";
 import { getUserAdultContentPreference } from "@/app/lib/user/userDocFetchOptions";
 import { useAppSelector } from "@/app/lib/redux/hooks";
 

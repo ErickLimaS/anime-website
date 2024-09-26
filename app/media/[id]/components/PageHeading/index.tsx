@@ -1,11 +1,8 @@
 import React from "react";
 import GridHeadingMediaInfo from "./GridInfo";
 import HeadingInfo from "./HeadingInfo";
-import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
-import {
-  ImdbEpisode,
-  ImdbMediaInfo,
-} from "@/app/ts/interfaces/apiImdbInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
+import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 
 export default function PageHeading({
   mediaInfo,

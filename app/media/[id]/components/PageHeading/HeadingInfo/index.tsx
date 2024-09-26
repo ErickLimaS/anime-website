@@ -4,13 +4,10 @@ import AddToNotificationsButton from "@/app/components/Buttons/AddToNotification
 import {
   MediaData,
   MediaDataFullInfo,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import Link from "next/link";
 import HeadingTextAndMediaLogo from "./MediaTitleOrLogo";
-import {
-  ImdbEpisode,
-  ImdbMediaInfo,
-} from "@/app/ts/interfaces/apiImdbInterface";
+import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import * as AddToFavourites from "@/app/components/Buttons/AddToFavourites";
 import * as AddToList from "@/app/components/Buttons/AddToList";
 import FavouriteSvg from "@/public/assets/heart.svg";

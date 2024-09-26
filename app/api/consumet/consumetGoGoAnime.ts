@@ -1,11 +1,11 @@
 import {
-  MediaInfo,
-  MediaSearchResult,
-} from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+  GogoanimeMediaData,
+  GogoanimeMediaSearchResult,
+} from "@/app/ts/interfaces/gogoanimeData";
 import {
-  MangaInfo,
-  MangaSearchResult,
-} from "@/app/ts/interfaces/apiMangadexDataInterface";
+  MangadexMangaInfo,
+  MangadexMangaSearchResult,
+} from "@/app/ts/interfaces/mangadex";
 import Axios from "axios";
 import axiosRetry from "axios-retry";
 import { cache } from "react";
@@ -35,7 +35,9 @@ export default {
           method: "GET",
         });
 
-        return data.results as MediaSearchResult[] | MangaSearchResult[];
+        return data.results as
+          | GogoanimeMediaSearchResult[]
+          | MangadexMangaSearchResult[];
       } catch (error) {
         console.log(error);
 
@@ -52,7 +54,7 @@ export default {
         method: "GET",
       });
 
-      return data as MediaInfo | MangaInfo;
+      return data as GogoanimeMediaData | MangadexMangaInfo;
     } catch (error) {
       console.log(error);
 

@@ -2,11 +2,11 @@ import React from "react";
 import styles from "./component.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import MediaTypeIconSpan from "./MediaTypeIconSpan";
 import MediaActionOptionsButton from "./MediaActionOptionsButton";
-import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreDataInterface";
-import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/jsonMediaData";
 
 type ComponentTypes = {
   children: React.ReactNode;

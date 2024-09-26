@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import styles from "./component.module.css";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import { AnimatePresence, motion } from "framer-motion";
 
 function ListItemHeroCarousel({

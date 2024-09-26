@@ -2,7 +2,7 @@ import MediaFormatIcon from "@/app/components/DynamicAssets/MediaFormatIcon";
 import stringToOnlyAlphabetic from "@/app/lib/convertStrings";
 import React from "react";
 import styles from "../component.module.css";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 
 export default function MediaTypeIconSpan({
   formatOrType,

@@ -1,4 +1,4 @@
-import { MediaInfo } from "./apiAnilistDataInterface";
+import { MediaInfo } from "./anilistMediaData";
 
 export interface MediaOnJSONFile {
   title: MediaInfo["title"];

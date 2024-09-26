@@ -1,9 +1,9 @@
 import React, { MouseEventHandler, useId } from "react";
 import styles from "./component.module.css";
 import Image from "next/image";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import Link from "next/link";
-import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/jsonMediaData";
 
 type SearchResultsTypes = {
   handleChoseResult?: MouseEventHandler<HTMLDivElement>;

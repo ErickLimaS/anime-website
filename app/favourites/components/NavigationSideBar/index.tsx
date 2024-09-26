@@ -7,7 +7,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { initFirebase } from "@/app/firebaseApp";
 import { useAppSelector } from "@/app/lib/redux/hooks";
-import { BookmarkItem } from "@/app/ts/interfaces/firestoreDataInterface";
+import { BookmarkItem } from "@/app/ts/interfaces/firestoreData";
 
 function NavigationSideBar({ params }: { params?: { format: string } }) {
   const [currParams, setCurrParams] = useState("");

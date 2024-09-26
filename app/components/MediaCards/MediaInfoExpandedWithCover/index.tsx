@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./component.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import parse from "html-react-parser";
 import * as AddToPlaylist from "../../Buttons/AddToFavourites";
 

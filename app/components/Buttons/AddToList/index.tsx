@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { initFirebase } from "@/app/firebaseApp";
 import { getAuth } from "firebase/auth";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -19,7 +19,7 @@ import {
 } from "@/app/lib/user/userDocUpdateOptions";
 import { useAppDispatch, useAppSelector } from "@/app/lib/redux/hooks";
 import anilistUsers from "@/app/api/anilist/anilistUsers";
-import { ImdbEpisode } from "@/app/ts/interfaces/apiImdbInterface";
+import { ImdbEpisode } from "@/app/ts/interfaces/imdb";
 import { userMediaStatusEntries } from "@/app/lib/dataConstants/anilist";
 import { toggleShowLoginModalValue } from "@/app/lib/redux/features/loginModal";
 

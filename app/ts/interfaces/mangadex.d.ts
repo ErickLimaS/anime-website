@@ -1,10 +1,11 @@
-export interface MangaInfo {
+export interface MangadexMangaInfo {
   id: string;
   title: string;
   rating: number;
-  chapters: MangaChapters[];
+  chapters: MangadexMangaChapters[];
 }
-export interface MangaSearchResult {
+
+export interface MangadexMangaSearchResult {
   id: string;
   title: string;
   lastChapter: string;
@@ -17,7 +18,8 @@ export interface MangaSearchResult {
   description: string;
   status: string;
 }
-export interface MangaChapters {
+
+export interface MangadexMangaChapters {
   id: string;
   chapterNumber: string;
   volumeNumber: string;
@@ -25,7 +27,7 @@ export interface MangaChapters {
   pages: number;
 }
 
-export interface MangaPages {
+export interface MangadexMangaPages {
   page: number;
   img: string;
 }

@@ -8,7 +8,7 @@ import NavigationButtons from "../../NavigationButtons";
 import {
   AiringMediaResult,
   MediaData,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import anilist from "@/app/api/anilist/anilistMedias";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";

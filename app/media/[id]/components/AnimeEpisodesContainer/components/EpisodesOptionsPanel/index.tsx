@@ -3,11 +3,8 @@ import styles from "../../component.module.css";
 import {
   MediaData,
   MediaDataFullInfo,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
-import {
-  ImdbMediaInfo,
-  ImdbEpisode,
-} from "@/app/ts/interfaces/apiImdbInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
+import { ImdbMediaInfo, ImdbEpisode } from "@/app/ts/interfaces/imdb";
 import { Firestore, getDoc, doc, setDoc, FieldPath } from "firebase/firestore";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";

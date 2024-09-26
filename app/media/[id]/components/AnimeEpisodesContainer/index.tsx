@@ -2,20 +2,20 @@
 import React, { useEffect, useState } from "react";
 import styles from "./component.module.css";
 import NavigationButtons from "../../../../components/NavigationButtons";
-import { MediaEpisodes } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import { GogoanimeMediaEpisodes } from "@/app/ts/interfaces/gogoanimeData";
 import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg";
 import {
   MediaData,
   MediaDataFullInfo,
   EpisodesType,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import PaginationButtons from "@/app/media/[id]/components/PaginationButtons";
 import aniwatch from "@/app/api/aniwatch";
 import {
   EpisodeAnimeWatch,
   EpisodesFetchedAnimeWatch,
-  MediaInfoAniwatch,
-} from "@/app/ts/interfaces/apiAnimewatchInterface";
+  AniwatchMediaData,
+} from "@/app/ts/interfaces/aniwatchData";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import {
@@ -32,11 +32,8 @@ import {
   optimizedFetchOnAniwatch,
   optimizedFetchOnGoGoAnime,
 } from "@/app/lib/dataFetch/optimizedFetchAnimeOptions";
-import {
-  ImdbEpisode,
-  ImdbMediaInfo,
-} from "@/app/ts/interfaces/apiImdbInterface";
-import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import { checkAnilistTitleMisspelling } from "@/app/lib/checkApiMediaMisspelling";
 import { useSearchParams } from "next/navigation";
 import { useAppSelector } from "@/app/lib/redux/hooks";
@@ -79,7 +76,10 @@ export default function EpisodesContainer({
 }: EpisodesContainerTypes) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [episodesList, setEpisodesList] = useState<
-    EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]
+    | EpisodesType[]
+    | GogoanimeMediaEpisodes[]
+    | EpisodeAnimeWatch[]
+    | ImdbEpisode[]
   >(crunchyrollInitialEpisodes);
 
   const [isEpisodesDubbed, setIsEpisodesDubbed] = useState<boolean | null>(
@@ -87,12 +87,12 @@ export default function EpisodesContainer({
   );
 
   const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<
-    MediaInfoAniwatch[]
+    AniwatchMediaData[]
   >([]);
 
   const [currAnimesList, setCurrAnimesList] = useState<
     | EpisodesType[]
-    | MediaEpisodes[]
+    | GogoanimeMediaEpisodes[]
     | EpisodeAnimeWatch[]
     | ImdbEpisode[]
     | null
@@ -246,7 +246,7 @@ export default function EpisodesContainer({
     const paginationEndOffset = itemOffset + rangeEpisodesPerPage;
 
     let mediaEpisodesList:
-      | MediaEpisodes[]
+      | GogoanimeMediaEpisodes[]
       | {
           episodesDub: number;
           episodesSub: number;
@@ -276,7 +276,7 @@ export default function EpisodesContainer({
           textToSearch: mediaInfo.title.english,
           only: "episodes",
           isDubbed: isEpisodesDubbed || false,
-        })) as MediaEpisodes[];
+        })) as GogoanimeMediaEpisodes[];
 
         if (!mediaEpisodesList) {
           setIsLoading(false);
@@ -290,10 +290,10 @@ export default function EpisodesContainer({
           return;
         }
 
-        setEpisodesList(mediaEpisodesList as MediaEpisodes[]);
+        setEpisodesList(mediaEpisodesList as GogoanimeMediaEpisodes[]);
 
         setCurrAnimesList(
-          (mediaEpisodesList as MediaEpisodes[]).slice(
+          (mediaEpisodesList as GogoanimeMediaEpisodes[]).slice(
             itemOffset,
             paginationEndOffset
           )
@@ -301,7 +301,8 @@ export default function EpisodesContainer({
 
         setTotalNumberPages(
           Math.ceil(
-            (mediaEpisodesList as MediaEpisodes[]).length / rangeEpisodesPerPage
+            (mediaEpisodesList as GogoanimeMediaEpisodes[]).length /
+              rangeEpisodesPerPage
           )
         );
 
@@ -316,7 +317,7 @@ export default function EpisodesContainer({
           format: mediaInfo.format,
           mediaTotalEpisodes:
             mediaInfo.nextAiringEpisode?.episode || imdb.episodesList.length,
-        })) as MediaInfoAniwatch[];
+        })) as AniwatchMediaData[];
 
         setMediaResultsInfoArray(searchResultsListForCurrMedia);
 
@@ -479,7 +480,7 @@ export default function EpisodesContainer({
                 (
                   episode:
                     | EpisodesType
-                    | MediaEpisodes
+                    | GogoanimeMediaEpisodes
                     | EpisodeAnimeWatch
                     | ImdbEpisode,
                   key

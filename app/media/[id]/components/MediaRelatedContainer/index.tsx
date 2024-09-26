@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Navigation, Pagination } from "swiper/modules";
 import styles from "./component.module.css";
 import * as MediaCard from "@/app/components/MediaCards/MediaCard";
-import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 
 function MediaRelatedContainer({
   mediaList,

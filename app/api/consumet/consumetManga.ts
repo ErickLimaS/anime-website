@@ -1,8 +1,8 @@
 import {
-  MangaInfo,
-  MangaPages,
-  MangaSearchResult,
-} from "@/app/ts/interfaces/apiMangadexDataInterface";
+  MangadexMangaInfo,
+  MangadexMangaPages,
+  MangadexMangaSearchResult,
+} from "@/app/ts/interfaces/mangadex";
 import Axios from "axios";
 import axiosRetry from "axios-retry";
 import { cache } from "react";
@@ -32,7 +32,7 @@ export default {
           method: "GET",
         });
 
-        return data.results as MangaSearchResult[];
+        return data.results as MangadexMangaSearchResult[];
       } catch (error) {
         console.log(error);
 
@@ -50,13 +50,13 @@ export default {
       });
 
       // sort ASC chapters
-      const dataSorted = (data as MangaInfo).chapters.sort(
+      const dataSorted = (data as MangadexMangaInfo).chapters.sort(
         (a, b) => Number(a.chapterNumber) - Number(b.chapterNumber)
       );
 
       data.chapters = dataSorted;
 
-      return data as MangaInfo;
+      return data as MangadexMangaInfo;
     } catch (error) {
       console.log(error);
 
@@ -72,7 +72,7 @@ export default {
         method: "GET",
       });
 
-      return data as MangaPages[];
+      return data as MangadexMangaPages[];
     } catch (error) {
       console.log(error);
 

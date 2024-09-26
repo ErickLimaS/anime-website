@@ -2,14 +2,11 @@ import {
   EpisodesType,
   MediaData,
   MediaDataFullInfo,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
-import { EpisodeAnimeWatch } from "@/app/ts/interfaces/apiAnimewatchInterface";
-import { MediaEpisodes } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
-import {
-  ImdbEpisode,
-  ImdbMediaInfo,
-} from "@/app/ts/interfaces/apiImdbInterface";
-import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
+import { EpisodeAnimeWatch } from "@/app/ts/interfaces/aniwatchData";
+import { GogoanimeMediaEpisodes } from "@/app/ts/interfaces/gogoanimeData";
+import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import AniwatchEpisode from "./aniwatch";
 import CrunchyrollEpisode from "./crunchyroll";
 import GoGoAnimeEpisode from "./gogoanime";
@@ -48,7 +45,11 @@ export function EpisodeBySource({
   wasEpisodeWatchedOnAnilist,
   useDubbedRoute,
 }: {
-  episodeInfo: ImdbEpisode | EpisodesType | MediaEpisodes | EpisodeAnimeWatch;
+  episodeInfo:
+    | ImdbEpisode
+    | EpisodesType
+    | GogoanimeMediaEpisodes
+    | EpisodeAnimeWatch;
   currEpisodesSource: SourceType["source"];
   currEpisodesWatched?: {
     mediaId: number;
@@ -82,7 +83,7 @@ export function EpisodeBySource({
           motionStyle={framerMotionEpisodePopup}
           key={index}
           wasEpisodeWatchedOnAnilist={wasEpisodeWatchedOnAnilist}
-          episodeInfo={episodeInfo as MediaEpisodes}
+          episodeInfo={episodeInfo as GogoanimeMediaEpisodes}
           episodeNumber={index + itemOffset + 1}
           episodeTitle={imdb.episodesList[index + itemOffset]?.title}
           episodeDescription={

@@ -24,7 +24,7 @@ import { getAuth } from "firebase/auth";
 import {
   MediaData,
   MediaDataFullInfo,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/app/lib/redux/hooks";

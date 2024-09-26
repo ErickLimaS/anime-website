@@ -18,13 +18,13 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import {
   MediaData,
   MediaDataFullInfo,
-} from "@/app/ts/interfaces/apiAnilistDataInterface";
+} from "@/app/ts/interfaces/anilistMediaData";
 import CommentContainer from "./components/CommentContainer";
 import SvgLoading from "@/public/assets/ripple-1s-200px.svg";
 import SvgFilter from "@/public/assets/filter-right.svg";
 import WriteCommentFormContainer from "./components/WriteCommentForm";
 import { useAppDispatch, useAppSelector } from "@/app/lib/redux/hooks";
-import { UserComment } from "@/app/ts/interfaces/firestoreDataInterface";
+import { UserComment } from "@/app/ts/interfaces/firestoreData";
 import { toggleShowLoginModalValue } from "@/app/lib/redux/features/loginModal";
 
 type CommentsSectionTypes = {
