@@ -286,3 +286,8 @@ In this document, has info of all episodes already notified to any user and the 
 ### News Article Page
 
 ![News Article Page 1](https://github.com/ErickLimaS/anime-website/assets/69987890/de58a15a-eed4-4cdc-9249-900a90c21c50)
+
+## Inspiration 
+
+- <a href='https://preview.themeforest.net/item/vodi-video-wordpress-theme-for-movies-tv-shows/full_screen_preview/23738703' target="_blank" rel="noreferrer">Template</a> 
+- <a href='https://dribbble.com/shots/20333170-The-Trailers-Concept-Site-Part-2' target="_blank" rel="noreferrer">Media Page</a> 

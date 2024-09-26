@@ -148,22 +148,6 @@ async function Footer() {
                     Aniwatch API
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="https://preview.themeforest.net/item/vodi-video-wordpress-theme-for-movies-tv-shows/full_screen_preview/23738703"
-                    target="_blank"
-                  >
-                    Inspiration 1
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="https://dribbble.com/shots/20333170-The-Trailers-Concept-Site-Part-2"
-                    target="_blank"
-                  >
-                    Inspiration 2
-                  </Link>
-                </li>
                 {/* REMOVE THE ITEM BELLOW IF YOU FORKED THIS PROJECT */}
                 <li>
                   <Link
