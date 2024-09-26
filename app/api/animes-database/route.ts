@@ -7,7 +7,9 @@ export async function GET(request: NextRequest) {
 
   const resultsLimit = 12;
 
-  let dataToBeSorted = (AnimeDataOffline as { data: MediaOnJSONFile[] }).data;
+  let dataToBeSorted: MediaOnJSONFile[] = (
+    AnimeDataOffline as { data: MediaOnJSONFile[] }
+  ).data;
 
   if (searchParams.get("type")) {
     dataToBeSorted = dataToBeSorted.filter(
