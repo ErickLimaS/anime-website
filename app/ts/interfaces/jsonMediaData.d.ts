@@ -7,6 +7,7 @@ export interface MediaOnJSONFile {
     large: string; // undefined
   };
   picture: string;
+  thumbnail?: string;
   tags: strings[];
   animeSeason: {
     season: string;
@@ -18,11 +19,12 @@ export interface MediaOnJSONFile {
   sources: string[];
   id: number;
   episodes: number;
-  duration?: {
+  duration: {
     value: number;
     unit: string;
-  };
+  } | null;
   anilistId: string;
+  relatedAnime: string[];
   isFavourite: false;
   mediaListEntry: null;
   anilistId?: string;
