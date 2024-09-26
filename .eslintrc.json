@@ -10,7 +10,7 @@
   ],
   "rules": {
     "@stylistic/indent": [
-      "error",
+      "warn",
       2
     ]
   }
