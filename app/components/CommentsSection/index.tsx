@@ -1,223 +1,257 @@
-"use client"
-import React, { useEffect, useState } from 'react'
-import styles from "./component.module.css"
+"use client";
+import React, { useEffect, useState } from "react";
+import styles from "./component.module.css";
 import {
-    getFirestore, doc, setDoc,
-    DocumentData, QueryDocumentSnapshot, collection, getDocs,
-    where, query,
-} from 'firebase/firestore';
-import { initFirebase } from '@/app/firebaseApp'
-import { getAuth } from 'firebase/auth'
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { ApiDefaultResult, ApiMediaResults } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import CommentContainer from './components/CommentContainer';
-import SvgLoading from "@/public/assets/ripple-1s-200px.svg"
-import SvgFilter from "@/public/assets/filter-right.svg"
-import ShowUpLoginPanelAnimated from '../UserLoginModal/animatedVariant';
-import WriteCommentFormContainer from './components/WriteCommentForm';
-import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
-import { UserComment } from '@/app/ts/interfaces/firestoreDataInterface';
-import { toggleShowLoginModalValue } from '@/app/lib/redux/features/loginModal';
+  getFirestore,
+  doc,
+  setDoc,
+  DocumentData,
+  QueryDocumentSnapshot,
+  collection,
+  getDocs,
+  where,
+  query,
+} from "firebase/firestore";
+import { initFirebase } from "@/app/firebaseApp";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  MediaData,
+  MediaDataFullInfo,
+} from "@/app/ts/interfaces/apiAnilistDataInterface";
+import CommentContainer from "./components/CommentContainer";
+import SvgLoading from "@/public/assets/ripple-1s-200px.svg";
+import SvgFilter from "@/public/assets/filter-right.svg";
+import WriteCommentFormContainer from "./components/WriteCommentForm";
+import { useAppDispatch, useAppSelector } from "@/app/lib/redux/hooks";
+import { UserComment } from "@/app/ts/interfaces/firestoreDataInterface";
+import { toggleShowLoginModalValue } from "@/app/lib/redux/features/loginModal";
 
 type CommentsSectionTypes = {
-    mediaInfo: ApiMediaResults | ApiDefaultResult,
-    isOnWatchPage?: boolean,
-    episodeId?: string,
-    episodeNumber?: number
-}
+  mediaInfo: MediaDataFullInfo | MediaData;
+  isOnWatchPage?: boolean;
+  episodeId?: string;
+  episodeNumber?: number;
+};
 
-export default function CommentsSection({ mediaInfo, isOnWatchPage, episodeId, episodeNumber }: CommentsSectionTypes) {
+export default function CommentsSection({
+  mediaInfo,
+  isOnWatchPage,
+  episodeId,
+  episodeNumber,
+}: CommentsSectionTypes) {
+  const [commentsList, setCommentsList] = useState<DocumentData[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const [commentsList, setCommentsList] = useState<DocumentData[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [commentsSliceRange, setCommentsSliceRange] = useState<number>(3);
 
-    const [commentsSliceRange, setCommentsSliceRange] = useState<number>(3)
+  const anilistUser = useAppSelector((state) => state.UserInfo.value);
+  const dispatch = useAppDispatch();
 
-    const anilistUser = useAppSelector((state) => (state.UserInfo).value)
-    const dispatch = useAppDispatch()
+  const auth = getAuth();
 
-    const auth = getAuth()
+  const [user] = useAuthState(auth);
 
-    const [user] = useAuthState(auth)
+  const db = getFirestore(initFirebase());
 
-    const db = getFirestore(initFirebase())
+  useEffect(() => {
+    getCommentsForCurrMedia();
+  }, [mediaInfo, user, anilistUser, episodeId]);
 
-    useEffect(() => { getCommentsForCurrMedia() }, [mediaInfo, user, anilistUser, episodeId])
+  function handleCommentsSliceRange() {
+    setCommentsSliceRange(commentsSliceRange + 10);
+  }
 
-    function handleCommentsSliceRange() { setCommentsSliceRange(commentsSliceRange + 10) }
+  async function handleCommentsSortBy(
+    sortBy: "date" | "likes" | "dislikes",
+    commentsUnsorted?: DocumentData[]
+  ) {
+    setIsLoading(true);
 
-    async function handleCommentsSortBy(sortBy: "date" | "likes" | "dislikes", commentsUnsorted?: DocumentData[]) {
+    if (!commentsUnsorted) commentsUnsorted = await getCommentsForCurrMedia();
 
-        setIsLoading(true)
+    let sortedComments;
 
-        if (!commentsUnsorted) commentsUnsorted = await getCommentsForCurrMedia()
+    switch (sortBy) {
+      case "date":
+        sortedComments = commentsUnsorted!.sort(
+          (x, y) => y.createdAt - x.createdAt
+        );
+        setCommentsList(sortedComments);
 
-        let sortedComments
+        break;
 
-        switch (sortBy) {
-            case "date":
+      case "likes":
+        sortedComments = commentsUnsorted!.sort((x, y) => y.likes - x.likes);
+        setCommentsList(sortedComments);
 
-                sortedComments = commentsUnsorted!.sort((x, y) => y.createdAt - x.createdAt)
-                setCommentsList(sortedComments)
+        break;
 
-                break
+      case "dislikes":
+        sortedComments = commentsUnsorted!.sort(
+          (x, y) => y.dislikes - x.dislikes
+        );
+        setCommentsList(sortedComments);
 
-            case "likes":
+        break;
 
-                sortedComments = commentsUnsorted!.sort((x, y) => y.likes - x.likes)
-                setCommentsList(sortedComments)
+      default:
+        sortedComments = commentsUnsorted!.sort(
+          (x, y) => y.createdAt - x.createdAt
+        );
+        setCommentsList(sortedComments);
 
-                break
-
-            case "dislikes":
-
-                sortedComments = commentsUnsorted!.sort((x, y) => y.dislikes - x.dislikes)
-                setCommentsList(sortedComments)
-
-                break
-
-            default:
-
-                sortedComments = commentsUnsorted!.sort((x, y) => y.createdAt - x.createdAt)
-                setCommentsList(sortedComments)
-
-                break
-
-        }
-
-        setIsLoading(false)
-
+        break;
     }
 
-    async function getCommentsForCurrMedia() {
+    setIsLoading(false);
+  }
 
-        setIsLoading(true)
+  async function getCommentsForCurrMedia() {
+    setIsLoading(true);
 
-        let mediaComments = await getDocs(collection(db, 'comments', `${mediaInfo.id}`, isOnWatchPage ? `${episodeId}` : "all"))
+    let mediaComments = await getDocs(
+      collection(
+        db,
+        "comments",
+        `${mediaInfo.id}`,
+        isOnWatchPage ? `${episodeId}` : "all"
+      )
+    );
 
-        if (!mediaComments) {
+    if (!mediaComments) {
+      await setDoc(doc(db, "comments", `${mediaInfo.id}`), {});
 
-            await setDoc(doc(db, 'comments', `${mediaInfo.id}`), {})
+      mediaComments = await getDocs(
+        collection(
+          db,
+          "comments",
+          `${mediaInfo.id}`,
+          isOnWatchPage ? `${episodeId}` : "all"
+        )
+      );
 
-            mediaComments = await getDocs(collection(db, 'comments', `${mediaInfo.id}`, isOnWatchPage ? `${episodeId}` : "all"))
-
-            return
-
-        }
-
-        if (isOnWatchPage) {
-            let commentsForCurrEpisode: DocumentData[] = []
-
-            const queryCommentsToThisEpisode = query(collection(db, 'comments', `${mediaInfo.id}`, "all"), where("episodeNumber", "==", episodeNumber))
-
-            const querySnapshot = await getDocs(queryCommentsToThisEpisode)
-
-            querySnapshot.docs.forEach(doc => commentsForCurrEpisode.push(doc.data()))
-
-            await handleCommentsSortBy("date", commentsForCurrEpisode)
-
-            return
-        }
-
-        const mediaCommentsMapped = mediaComments.docs.map((doc: QueryDocumentSnapshot) => doc.data())
-
-        await handleCommentsSortBy("date", mediaCommentsMapped)
-
-        setIsLoading(false)
-
-        return mediaCommentsMapped
-
+      return;
     }
 
-    return (
-        <div id={styles.container}>
+    if (isOnWatchPage) {
+      const commentsForCurrEpisode: DocumentData[] = [];
 
-            <WriteCommentFormContainer
-                isLoadingHook={isLoading}
-                loadComments={getCommentsForCurrMedia}
-                mediaInfo={mediaInfo}
-                setIsLoadingHook={setIsLoading}
-                setIsUserModalOpenHook={() => dispatch(toggleShowLoginModalValue())}
-                episodeId={episodeId}
-                episodeNumber={episodeNumber}
-                isOnWatchPage={isOnWatchPage}
-            />
+      const queryCommentsToThisEpisode = query(
+        collection(db, "comments", `${mediaInfo.id}`, "all"),
+        where("episodeNumber", "==", episodeNumber)
+      );
 
-            {/* ALL COMMENTS FROM DB FOR THIS MEDIA */}
-            <div id={styles.all_comments_container}>
+      const querySnapshot = await getDocs(queryCommentsToThisEpisode);
 
-                {commentsList.length > 0 && (
-                    <React.Fragment>
-                        <div id={styles.comments_heading}>
-                            {commentsList.length > 1 && (
-                                <div id={styles.custom_select}>
+      querySnapshot.docs.forEach((doc) =>
+        commentsForCurrEpisode.push(doc.data())
+      );
 
-                                    <SvgFilter width={16} height={16} alt="Filter" />
+      await handleCommentsSortBy("date", commentsForCurrEpisode);
 
-                                    <select
-                                        onChange={(e) => handleCommentsSortBy(e.target.value as "date" | "likes" | "dislikes")}
-                                        title="Choose How To Sort The Comments"
-                                    >
-                                        <option selected value="date">Most Recent</option>
-                                        <option value="likes">Most Likes</option>
-                                        <option value="dislikes">Most Dislikes</option>
-                                    </select>
+      return;
+    }
 
-                                </div>
-                            )}
+    const mediaCommentsMapped = mediaComments.docs.map(
+      (doc: QueryDocumentSnapshot) => doc.data()
+    );
 
-                            <p>{commentsList.length} comment{commentsList.length > 1 ? "s" : ""}</p>
-                        </div>
+    await handleCommentsSortBy("date", mediaCommentsMapped);
 
-                        <ul>
-                            {!isLoading && (
-                                commentsList.slice(0, commentsSliceRange).map((comment) => (
-                                    <CommentContainer
-                                        key={comment.createdAt}
-                                        comment={comment as UserComment}
-                                        mediaId={mediaInfo.id}
-                                        isLoadingHook={isLoading}
-                                        loadComments={getCommentsForCurrMedia}
-                                        mediaInfo={mediaInfo}
-                                        setIsLoadingHook={setIsLoading}
-                                        setIsUserModalOpenHook={() => dispatch(toggleShowLoginModalValue())}
-                                        episodeId={episodeId}
-                                        episodeNumber={episodeNumber}
-                                        isOnWatchPage={isOnWatchPage}
-                                    />
-                                ))
-                            )}
-                        </ul>
+    setIsLoading(false);
 
-                        {commentsList.length > commentsSliceRange && (
+    return mediaCommentsMapped;
+  }
 
-                            <button onClick={() => handleCommentsSliceRange()}>
-                                SEE MORE COMMENTS
-                            </button>
+  return (
+    <div id={styles.container}>
+      <WriteCommentFormContainer
+        isLoadingHook={isLoading}
+        loadComments={getCommentsForCurrMedia}
+        mediaInfo={mediaInfo}
+        setIsLoadingHook={setIsLoading}
+        setIsUserModalOpenHook={() => dispatch(toggleShowLoginModalValue())}
+        episodeId={episodeId}
+        episodeNumber={episodeNumber}
+        isOnWatchPage={isOnWatchPage}
+      />
 
-                        )}
-                    </React.Fragment>
-                )}
+      {/* ALL COMMENTS FROM DB FOR THIS MEDIA */}
+      <div id={styles.all_comments_container}>
+        {commentsList.length > 0 && (
+          <React.Fragment>
+            <div id={styles.comments_heading}>
+              {commentsList.length > 1 && (
+                <div id={styles.custom_select}>
+                  <SvgFilter width={16} height={16} alt="Filter" />
 
-                {isLoading && (
-                    <div>
+                  <select
+                    onChange={(e) =>
+                      handleCommentsSortBy(
+                        e.target.value as "date" | "likes" | "dislikes"
+                      )
+                    }
+                    title="Choose How To Sort The Comments"
+                  >
+                    <option selected value="date">
+                      Most Recent
+                    </option>
+                    <option value="likes">Most Likes</option>
+                    <option value="dislikes">Most Dislikes</option>
+                  </select>
+                </div>
+              )}
 
-                        <SvgLoading width={120} height={120} alt="Loading" />
-
-                    </div>
-                )}
-
-                {(commentsList.length == 0 && !isLoading) && (
-                    <div id={styles.no_comments_container}>
-
-                        <p>No Comments Yet</p>
-
-                    </div>
-                )}
-
+              <p>
+                {commentsList.length} comment
+                {commentsList.length > 1 ? "s" : ""}
+              </p>
             </div>
 
-        </div>
-    )
+            <ul>
+              {!isLoading &&
+                commentsList
+                  .slice(0, commentsSliceRange)
+                  .map((comment) => (
+                    <CommentContainer
+                      key={comment.createdAt}
+                      comment={comment as UserComment}
+                      mediaId={mediaInfo.id}
+                      isLoadingHook={isLoading}
+                      loadComments={getCommentsForCurrMedia}
+                      mediaInfo={mediaInfo}
+                      setIsLoadingHook={setIsLoading}
+                      setIsUserModalOpenHook={() =>
+                        dispatch(toggleShowLoginModalValue())
+                      }
+                      episodeId={episodeId}
+                      episodeNumber={episodeNumber}
+                      isOnWatchPage={isOnWatchPage}
+                    />
+                  ))}
+            </ul>
 
+            {commentsList.length > commentsSliceRange && (
+              <button onClick={() => handleCommentsSliceRange()}>
+                SEE MORE COMMENTS
+              </button>
+            )}
+          </React.Fragment>
+        )}
+
+        {isLoading && (
+          <div>
+            <SvgLoading width={120} height={120} alt="Loading" />
+          </div>
+        )}
+
+        {commentsList.length == 0 && !isLoading && (
+          <div id={styles.no_comments_container}>
+            <p>No Comments Yet</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

@@ -3,8 +3,8 @@ import React, { SetStateAction, useEffect, useState } from "react";
 import styles from "./component.module.css";
 import Link from "next/link";
 import {
-  ApiAiringMidiaResults,
-  ApiDefaultResult,
+  AiringMediaResult,
+  MediaData,
 } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import anilist from "@/app/api/anilist/anilistMedias";
 import CloseSvg from "@/public/assets/x.svg";
@@ -52,7 +52,6 @@ const framerMotionPopUpMedia = {
 
 function NavigationThroughMedias({
   headingTitle,
-  route,
   mediaFormat,
   isFetchByDateButtonsOnScreen,
   sortBy,
@@ -62,7 +61,7 @@ function NavigationThroughMedias({
 }: ComponentType) {
   const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1); // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
 
-  const [mediaList, setMediaList] = useState<ApiDefaultResult[]>([]);
+  const [mediaList, setMediaList] = useState<MediaData[]>([]);
 
   const [isTrailerBeeingShown, setIsTrailerBeeingShown] =
     useState<boolean>(false);
@@ -74,9 +73,7 @@ function NavigationThroughMedias({
   >(null);
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [mediaSelect, setMediaSelected] = useState<ApiDefaultResult | null>(
-    null
-  );
+  const [mediaSelect, setMediaSelected] = useState<MediaData | null>(null);
 
   useEffect(() => {
     if (sortBy == "RELEASE") fetchMediaListByDays(1);
@@ -102,7 +99,7 @@ function NavigationThroughMedias({
   async function fetchMediaListByDays(days: 1 | 7 | 30) {
     setIsLoading(true);
 
-    let fetchedMedia: ApiAiringMidiaResults[] | ApiDefaultResult[] = [];
+    let fetchedMedia: AiringMediaResult[] | MediaData[] = [];
 
     const isAdultContentAllowed = await getUserPreference();
 
@@ -111,11 +108,11 @@ function NavigationThroughMedias({
       days: days!,
       perPage: 40,
       showAdultContent: isAdultContentAllowed,
-    })) as ApiAiringMidiaResults[];
+    })) as AiringMediaResult[];
 
     // Remove releases from "today" to show on other options
     if (days != 1 && days != undefined) {
-      fetchedMedia = (fetchedMedia as ApiAiringMidiaResults[]).filter(
+      fetchedMedia = (fetchedMedia as AiringMediaResult[]).filter(
         (item) =>
           convertToUnix(1) > item.airingAt &&
           item.airingAt > convertToUnix(days) &&
@@ -123,20 +120,20 @@ function NavigationThroughMedias({
       );
     }
 
-    const mapResultMediaInnerInfo = (
-      fetchedMedia as ApiAiringMidiaResults[]
-    ).map((item) => item.media);
+    const mapResultMediaInnerInfo = (fetchedMedia as AiringMediaResult[]).map(
+      (item) => item.media
+    );
 
     fetchedMedia = mapResultMediaInnerInfo;
 
     setDaysRange(days!);
 
     if (isResultsSortedByTrending)
-      fetchedMedia = (fetchedMedia as ApiDefaultResult[])
+      fetchedMedia = (fetchedMedia as MediaData[])
         .sort((a, b) => a.trending - b.trending)
         .reverse();
 
-    setMediaList(fetchedMedia as ApiDefaultResult[]);
+    setMediaList(fetchedMedia as MediaData[]);
 
     setIsLoading(false);
   }
@@ -144,7 +141,7 @@ function NavigationThroughMedias({
   async function fetchMediaList() {
     setIsLoading(true);
 
-    let fetchedMedia: ApiAiringMidiaResults[] | ApiDefaultResult[] = [];
+    let fetchedMedia: AiringMediaResult[] | MediaData[] = [];
 
     const isAdultContentAllowed = await getUserPreference();
 
@@ -156,17 +153,17 @@ function NavigationThroughMedias({
         showAdultContent: isAdultContentAllowed,
       })
       .then((res) =>
-        (res as ApiDefaultResult[]).filter(
+        (res as MediaData[]).filter(
           (item) => item.isAdult == isAdultContentAllowed
         )
       );
 
     if (isResultsSortedByTrending)
-      fetchedMedia = (fetchedMedia as ApiDefaultResult[])
+      fetchedMedia = (fetchedMedia as MediaData[])
         .sort((a, b) => a.trending - b.trending)
         .reverse();
 
-    setMediaList(fetchedMedia as ApiDefaultResult[]);
+    setMediaList(fetchedMedia as MediaData[]);
 
     setIsLoading(false);
   }
@@ -177,7 +174,7 @@ function NavigationThroughMedias({
       setMediaSelected(
         mediaList.find(
           (item) => item.id == media
-        ) as SetStateAction<ApiDefaultResult | null>
+        ) as SetStateAction<MediaData | null>
       );
 
       return;

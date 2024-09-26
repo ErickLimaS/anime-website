@@ -1,67 +1,61 @@
-"use client"
-import React, { useEffect } from 'react'
-import ErrorImg from "@/public/error-img-4.png"
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import styles from "./errorStyles.module.css"
-import { usePathname } from 'next/navigation'
+"use client";
+import React, { useEffect } from "react";
+import ErrorImg from "@/public/error-img-4.png";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import styles from "./errorStyles.module.css";
+import { usePathname } from "next/navigation";
 
-function ErrorPage({ error, reset }: {
-    error: Error & { digest?: string }
-    reset: () => void
+function ErrorPage({
+  error,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
 
-    useEffect(() => {
-        console.error(error)
-    }, [error])
+  const pathname = usePathname();
 
-    const pathname = usePathname()
-    
-    return (
+  return (
+    <div id={styles.error_container}>
+      <div id={styles.img_container}>
+        <Image src={ErrorImg} height={240} alt={"Error 404"} />
+      </div>
 
-        <div id={styles.error_container}>
+      <div id={styles.heading_container}>
+        <h1>Something went wrong!</h1>
 
-            <div id={styles.img_container}>
-                <Image src={ErrorImg} height={240} alt={'Error 404'} />
-            </div>
+        <p>
+          Sometimes is due to the API Hosting! <b>Reloading Page Might Work!</b>
+        </p>
 
-            <div id={styles.heading_container}>
+        {pathname.slice(0, 6) == "/watch" && (
+          <p>
+            On videos, try to change between <b>dub</b> and <b>sub</b> options.
+          </p>
+        )}
 
-                <h1>Something went wrong!</h1>
+        <span>
+          <b>{error.name}</b>: {error.message}
+        </span>
+      </div>
 
-                <p>Sometimes is due to the API Hosting! <b>Reloading Page Might Work!</b></p>
+      <div id={styles.buttons_container}>
+        <motion.button
+          onClick={() => window.location.reload()}
+          whileTap={{ scale: 0.9 }}
+        >
+          Try again
+        </motion.button>
 
-                {pathname.slice(0, 6) == "/watch" && (
-                    <p>On videos, try to change between <b>dub</b> and <b>sub</b> options.</p>
-                )}
-
-                <span>
-                    <b>{error.name}</b>: {error.message}
-                </span>
-
-            </div>
-
-            <div id={styles.buttons_container}>
-
-                <motion.button
-                    onClick={() => window.location.reload()}
-                    whileTap={{ scale: 0.9 }}
-                >
-                    Try again
-                </motion.button>
-
-                <motion.a
-                    href={"/"}
-                    whileTap={{ scale: 0.9 }}
-                >
-                    Return to Home Page
-                </motion.a>
-
-            </div>
-
-        </div >
-
-    )
+        <motion.a href={"/"} whileTap={{ scale: 0.9 }}>
+          Return to Home Page
+        </motion.a>
+      </div>
+    </div>
+  );
 }
 
-export default ErrorPage
+export default ErrorPage;

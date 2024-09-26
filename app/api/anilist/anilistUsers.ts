@@ -4,48 +4,43 @@ import { createNewUserDocument } from "../../lib/user/userLoginActions";
 import userSettingsActions from "../cookie/userCookieSettingsActions";
 import { BASE_ANILIST_URL } from "./utils";
 
-export async function getHeadersWithAuthorization({ accessToken }: { accessToken?: string }) {
+export async function getHeadersWithAuthorization({
+  accessToken,
+}: {
+  accessToken?: string;
+}) {
+  if (accessToken) {
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/json",
+    };
+  }
 
-    if (accessToken) {
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-            'Accept': 'application/json',
-        }
-    }
+  try {
+    const { data } = await Axios({
+      url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`,
+      method: "GET",
+    });
 
-    try {
-
-        const { data } = await Axios({
-            url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/anilist`,
-            method: "GET"
-        })
-
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${data.access_token}`,
-            'Accept': 'application/json',
-        }
-
-    }
-    catch (err) {
-
-        return {
-            'Content-Type': 'application/json',
-        }
-
-    }
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${data.access_token}`,
+      Accept: "application/json",
+    };
+  } catch {
+    return {
+      "Content-Type": "application/json",
+    };
+  }
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-
-    getUserDataByID: cache(async ({ userId }: { userId: number }) => {
-
-        try {
-
-            const graphqlQuery = {
-                "query": `
+  getUserDataByID: cache(async ({ userId }: { userId: number }) => {
+    try {
+      const graphqlQuery = {
+        query: `
                     query($id: Int) {
                         User(id: $id){
                             id
@@ -87,37 +82,37 @@ export default {
                         }
                     }
                 `,
-                "variables": {
-                    'id': userId
-                }
-            }
+        variables: {
+          id: userId,
+        },
+      };
 
-            const { data } = await Axios({
-                url: `${BASE_ANILIST_URL}`,
-                method: 'POST',
-                headers: await getHeadersWithAuthorization({ accessToken: undefined }),
-                data: graphqlQuery
-            })
+      const { data } = await Axios({
+        url: `${BASE_ANILIST_URL}`,
+        method: "POST",
+        headers: await getHeadersWithAuthorization({ accessToken: undefined }),
+        data: graphqlQuery,
+      });
 
-            return data
+      return data;
+    } catch (err) {
+      console.log(err);
 
-        }
-        catch (err) {
+      return err;
+    }
+  }),
 
-            console.log(err)
-
-            return err
-
-        }
-
-    }),
-
-    getCurrUserData: cache(async ({ accessToken, getOnlyId }: { accessToken?: string, getOnlyId?: boolean }) => {
-
-        try {
-
-            const graphqlQuery = {
-                "query": `
+  getCurrUserData: cache(
+    async ({
+      accessToken,
+      getOnlyId,
+    }: {
+      accessToken?: string;
+      getOnlyId?: boolean;
+    }) => {
+      try {
+        const graphqlQuery = {
+          query: `
                     query {
 
                         Viewer {
@@ -177,40 +172,47 @@ export default {
 
                     }
                 `,
-            }
+        };
 
-            const { data } = await Axios({
-                url: `${BASE_ANILIST_URL}`,
-                method: 'POST',
-                headers: await getHeadersWithAuthorization({ accessToken: accessToken }),
-                data: graphqlQuery
-            })
+        const { data } = await Axios({
+          url: `${BASE_ANILIST_URL}`,
+          method: "POST",
+          headers: await getHeadersWithAuthorization({
+            accessToken: accessToken,
+          }),
+          data: graphqlQuery,
+        });
 
-            const userDataFromAnilist = data.data.Viewer
+        const userDataFromAnilist = data.data.Viewer;
 
-            if (getOnlyId) return userDataFromAnilist.id
+        if (getOnlyId) return userDataFromAnilist.id;
 
-            const userDocFetchedOrCreated = await createNewUserDocument({ userAnilist: userDataFromAnilist }) as UserAnilist
+        const userDocFetchedOrCreated = (await createNewUserDocument({
+          userAnilist: userDataFromAnilist,
+        })) as UserAnilist;
 
-            return userDocFetchedOrCreated || undefined
+        return userDocFetchedOrCreated || undefined;
+      } catch (err) {
+        console.log(err);
 
-        }
-        catch (err) {
+        return undefined;
+      }
+    }
+  ),
 
-            console.log(err)
-
-            return undefined
-
-        }
-
-    }),
-
-    getCurrUserLists: cache(async ({ accessToken, userId, mediaType }: { userId: number, mediaType: "ANIME" | "MANGA", accessToken?: string }) => {
-
-        try {
-
-            const graphqlQuery = {
-                "query": `
+  getCurrUserLists: cache(
+    async ({
+      accessToken,
+      userId,
+      mediaType,
+    }: {
+      userId: number;
+      mediaType: "ANIME" | "MANGA";
+      accessToken?: string;
+    }) => {
+      try {
+        const graphqlQuery = {
+          query: `
                     query ($userId: Int, $type: MediaType){
                         MediaListCollection (userId: $userId, type: $type) {
                             user {
@@ -269,40 +271,42 @@ export default {
 
                     }
                 `,
-                "variables": {
-                    "userId": userId,
-                    "type": mediaType.toUpperCase()
-                }
-            }
+          variables: {
+            userId: userId,
+            type: mediaType.toUpperCase(),
+          },
+        };
 
-            const { data } = await Axios({
-                url: `${BASE_ANILIST_URL}`,
-                method: 'POST',
-                headers: await getHeadersWithAuthorization({ accessToken: accessToken }),
-                data: graphqlQuery
-            })
+        const { data } = await Axios({
+          url: `${BASE_ANILIST_URL}`,
+          method: "POST",
+          headers: await getHeadersWithAuthorization({
+            accessToken: accessToken,
+          }),
+          data: graphqlQuery,
+        });
 
-            const userDataFromAnilist = data.data.MediaListCollection
+        const userDataFromAnilist = data.data.MediaListCollection;
 
-            return userDataFromAnilist
+        return userDataFromAnilist;
+      } catch (error) {
+        console.log((error as Error).message);
 
-        }
-        catch (err: any) {
+        return (error as Error).message;
+      }
+    }
+  ),
 
-            console.log(err.response.data.errors)
-
-            return err.response
-
-        }
-
-    }),
-
-    addOrRemoveFromAnilistFavourites: async ({ format, mediaId }: { format: "anime" | "manga", mediaId: number }) => {
-
-        try {
-
-            const graphqlQuery = {
-                "query": `mutation ($id: Int) {
+  addOrRemoveFromAnilistFavourites: async ({
+    format,
+    mediaId,
+  }: {
+    format: "anime" | "manga";
+    mediaId: number;
+  }) => {
+    try {
+      const graphqlQuery = {
+        query: `mutation ($id: Int) {
                     ToggleFavourite (animeId: $id){
                         ${format} {
                             nodes {
@@ -314,41 +318,46 @@ export default {
                         }
                     }
                 }`,
-                "variables": {
-                    "id": mediaId,
-                }
-            }
+        variables: {
+          id: mediaId,
+        },
+      };
 
-            const { data } = await Axios({
-                url: `${BASE_ANILIST_URL}`,
-                method: 'POST',
-                headers: await getHeadersWithAuthorization({}),
-                data: graphqlQuery
-            })
+      const { data } = await Axios({
+        url: `${BASE_ANILIST_URL}`,
+        method: "POST",
+        headers: await getHeadersWithAuthorization({}),
+        data: graphqlQuery,
+      });
 
-            return data
+      return data;
+    } catch (err) {
+      console.log(err);
 
-        }
-        catch (err) {
+      return null;
+    }
+  },
 
-            console.log(err)
-
-            return null
-
-        }
-    },
-
-    addMediaToSelectedList: async ({ status, mediaId, episodeOrChapterNumber, numberWatchedOrReadUntilNow }: {
-        status: "COMPLETED" | "CURRENT" | "PLANNING" | "DROPPED" | "PAUSED" | "REPEATING",
-        mediaId: number,
-        episodeOrChapterNumber?: number,
-        numberWatchedOrReadUntilNow?: number
-    }) => {
-
-        try {
-
-            const graphqlQuery = {
-                "query": `mutation ($mediaId: Int, $status: MediaListStatus, $progress: Int) {
+  addMediaToSelectedList: async ({
+    status,
+    mediaId,
+    episodeOrChapterNumber,
+    numberWatchedOrReadUntilNow,
+  }: {
+    status:
+      | "COMPLETED"
+      | "CURRENT"
+      | "PLANNING"
+      | "DROPPED"
+      | "PAUSED"
+      | "REPEATING";
+    mediaId: number;
+    episodeOrChapterNumber?: number;
+    numberWatchedOrReadUntilNow?: number;
+  }) => {
+    try {
+      const graphqlQuery = {
+        query: `mutation ($mediaId: Int, $status: MediaListStatus, $progress: Int) {
                     SaveMediaListEntry (mediaId: $mediaId, status: $status, progress: $progress){
                         id
                         status
@@ -360,178 +369,155 @@ export default {
                         }
                     }
                 }`,
-                "variables": {
-                    "mediaId": mediaId,
-                    "status": status,
-                    "progress": episodeOrChapterNumber || numberWatchedOrReadUntilNow || 0
-                }
-            }
+        variables: {
+          mediaId: mediaId,
+          status: status,
+          progress: episodeOrChapterNumber || numberWatchedOrReadUntilNow || 0,
+        },
+      };
 
-            const { data } = await Axios({
-                url: `${BASE_ANILIST_URL}`,
-                method: 'POST',
-                headers: await getHeadersWithAuthorization({}),
-                data: graphqlQuery
-            })
+      const { data } = await Axios({
+        url: `${BASE_ANILIST_URL}`,
+        method: "POST",
+        headers: await getHeadersWithAuthorization({}),
+        data: graphqlQuery,
+      });
 
-            return data
+      return data;
+    } catch (err) {
+      console.log(err);
 
-        }
-        catch (err) {
+      return null;
+    }
+  },
 
-            console.log(err)
-
-            return null
-
-        }
-    },
-
-    removeMediaFromSelectedList: async ({ listItemEntryId }: { listItemEntryId: number }) => {
-
-        try {
-
-            const graphqlQuery = {
-                "query": `mutation ($id: Int) {
+  removeMediaFromSelectedList: async ({
+    listItemEntryId,
+  }: {
+    listItemEntryId: number;
+  }) => {
+    try {
+      const graphqlQuery = {
+        query: `mutation ($id: Int) {
                     DeleteMediaListEntry (id: $id){
                         deleted
                     }
                 }`,
-                "variables": {
-                    "id": listItemEntryId
-                }
-            }
+        variables: {
+          id: listItemEntryId,
+        },
+      };
 
-            const { data } = await Axios({
-                url: `${BASE_ANILIST_URL}`,
-                method: 'POST',
-                headers: await getHeadersWithAuthorization({}),
-                data: graphqlQuery
-            })
+      const { data } = await Axios({
+        url: `${BASE_ANILIST_URL}`,
+        method: "POST",
+        headers: await getHeadersWithAuthorization({}),
+        data: graphqlQuery,
+      });
 
-            return data
+      return data;
+    } catch (err) {
+      console.log(err);
 
-        }
-        catch (err) {
+      return null;
+    }
+  },
 
-            console.log(err)
+  handleMediaTitleLanguageSetting: async ({ lang }: { lang?: string }) => {
+    try {
+      const cookieSetResult =
+        await userSettingsActions.setMediaTitleLanguageCookie({ lang: lang });
 
-            return null
-
-        }
-    },
-
-    handleMediaTitleLanguageSetting: async ({ lang }: { lang?: string }) => {
-
-        try {
-
-            const cookieSetResult = await userSettingsActions.setMediaTitleLanguageCookie({ lang: lang })
-
-            const graphqlQuery = {
-                "query": `mutation ($lang: UserTitleLanguage) {
+      const graphqlQuery = {
+        query: `mutation ($lang: UserTitleLanguage) {
                     UpdateUser (titleLanguage: $lang){
                         options{
                             titleLanguage
                         }
                     }
                 }`,
-                "variables": {
-                    'lang': lang?.toUpperCase()
-                }
-            }
+        variables: {
+          lang: lang?.toUpperCase(),
+        },
+      };
 
-            const { data } = await Axios({
-                url: `${BASE_ANILIST_URL}`,
-                method: 'POST',
-                headers: await getHeadersWithAuthorization({}),
-                data: graphqlQuery
-            })
+      await Axios({
+        url: `${BASE_ANILIST_URL}`,
+        method: "POST",
+        headers: await getHeadersWithAuthorization({}),
+        data: graphqlQuery,
+      });
 
-            return cookieSetResult
-        }
-        catch (err) {
+      return cookieSetResult;
+    } catch (err) {
+      console.log(err);
 
-            console.log(err)
+      return null;
+    }
+  },
 
-            return null
+  handleAdultContentSetting: async ({ isEnabled }: { isEnabled?: string }) => {
+    try {
+      const cookieSetResult = await userSettingsActions.setAdultContentCookie({
+        isEnabled: isEnabled,
+      });
 
-        }
-    },
-
-    handleAdultContentSetting: async ({ isEnabled }: { isEnabled?: string }) => {
-
-        try {
-
-            const cookieSetResult = await userSettingsActions.setAdultContentCookie({ isEnabled: isEnabled })
-
-            const graphqlQuery = {
-                "query": `mutation ($isEnabled: Boolean) {
+      const graphqlQuery = {
+        query: `mutation ($isEnabled: Boolean) {
                     UpdateUser (displayAdultContent: $isEnabled){
                         options{
                             displayAdultContent
                         }
                     }
                 }`,
-                "variables": {
-                    'isEnabled': isEnabled == "true"
-                }
-            }
+        variables: {
+          isEnabled: isEnabled == "true",
+        },
+      };
 
-            await Axios({
-                url: `${BASE_ANILIST_URL}`,
-                method: 'POST',
-                headers: await getHeadersWithAuthorization({}),
-                data: graphqlQuery
-            })
+      await Axios({
+        url: `${BASE_ANILIST_URL}`,
+        method: "POST",
+        headers: await getHeadersWithAuthorization({}),
+        data: graphqlQuery,
+      });
 
-            return cookieSetResult
+      return cookieSetResult;
+    } catch (err) {
+      console.log(err);
 
-        }
-        catch (err) {
+      return null;
+    }
+  },
 
-            console.log(err)
+  handleSubtitleLanguageSetting: async ({ lang }: { lang?: string }) => {
+    try {
+      const cookieSetResult =
+        await userSettingsActions.setSubtitleLanguageCookie({ lang: lang });
 
-            return null
+      return cookieSetResult;
+    } catch (err) {
+      console.log(err);
 
-        }
+      return null;
+    }
+  },
 
-    },
+  handlePlayWrongMediaSetting: async ({
+    isEnabled,
+  }: {
+    isEnabled?: string;
+  }) => {
+    try {
+      const cookieSetResult = await userSettingsActions.setPlayWrongMediaCookie(
+        { playWrongMedia: isEnabled }
+      );
 
-    handleSubtitleLanguageSetting: async ({ lang }: { lang?: string }) => {
+      return cookieSetResult;
+    } catch (err) {
+      console.log(err);
 
-        try {
-
-            const cookieSetResult = await userSettingsActions.setSubtitleLanguageCookie({ lang: lang })
-
-            return cookieSetResult
-
-        }
-        catch (err) {
-
-            console.log(err)
-
-            return null
-
-        }
-
-    },
-
-    handlePlayWrongMediaSetting: async ({ isEnabled }: { isEnabled?: string }) => {
-
-        try {
-
-            const cookieSetResult = await userSettingsActions.setPlayWrongMediaCookie({ playWrongMedia: isEnabled })
-
-            return cookieSetResult
-
-        }
-        catch (err) {
-
-            console.log(err)
-
-            return null
-
-        }
-
-    },
-
-}
+      return null;
+    }
+  },
+};

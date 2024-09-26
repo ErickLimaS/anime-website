@@ -118,7 +118,7 @@ function UserSettingsModal({
     setIsLoading(true);
     setWasSuccessfull(false);
 
-    const form: any = e.target;
+    const form = e.target as HTMLFormElement;
 
     if (newImgProfileSelected || form.username.value) {
       if (user) {
@@ -467,6 +467,7 @@ function UserSettingsModal({
                             ? newImgProfileSelected == item.value
                             : false
                         }
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         onClick={(e: any) =>
                           setNewImgProfileSelected(
                             newImgProfileSelected == e.target.value

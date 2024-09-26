@@ -1,13 +1,22 @@
 import {
-    queryCharacters, queryCoverImage, queryMediaListEntry,
-    queryMediaTags, queryNextAiringEpisode, queryRecommendationsByCurrMedia,
-    queryRecommendationsByCurrMediaUserAuthenticated, queryRelatedMediasBasicInfo,
-    queryRelatedMediasFullInfoUserAuthenticated, queryStudios, queryTitles
-} from "./queryModulesByCategory"
+  queryCharacters,
+  queryCoverImage,
+  queryMediaListEntry,
+  queryMediaTags,
+  queryNextAiringEpisode,
+  queryRecommendationsByCurrMedia,
+  queryRecommendationsByCurrMediaUserAuthenticated,
+  queryRelatedMediasBasicInfo,
+  queryRelatedMediasFullInfoUserAuthenticated,
+  queryStudios,
+  queryTitles,
+} from "./queryModulesByCategory";
 
-export function requestMedias(otherQueryFields?: unknown, otherMediasFields?: unknown) {
-
-    return `query(
+export function requestMedias(
+  otherQueryFields?: unknown,
+  otherMediasFields?: unknown
+) {
+  return `query(
                 $type: MediaType, 
                 $format: MediaFormat, 
                 $sort: [MediaSort], 
@@ -16,7 +25,7 @@ export function requestMedias(otherQueryFields?: unknown, otherMediasFields?: un
                 $page: Int, 
                 $perPage: Int, 
                 $showAdultContent: Boolean
-                ${otherQueryFields ? otherQueryFields : ''}
+                ${otherQueryFields ? otherQueryFields : ""}
             ) {
                 Page(page: $page, perPage: $perPage){
                     media (
@@ -26,7 +35,7 @@ export function requestMedias(otherQueryFields?: unknown, otherMediasFields?: un
                         type: $type, 
                         format: $format, 
                         isAdult: $showAdultContent
-                        ${otherMediasFields ? otherMediasFields : ''}
+                        ${otherMediasFields ? otherMediasFields : ""}
                     ){
                             ${queryTitles}
                             description(asHtml: true)
@@ -85,12 +94,11 @@ export function requestMedias(otherQueryFields?: unknown, otherMediasFields?: un
                         }
                     }
                 }
-            `
+            `;
 }
 
 export function requestMediaById(isUserAuthenticated: boolean) {
-
-    return `query($id: Int) {
+  return `query($id: Int) {
                     Media (id: $id){
                             ${queryTitles}
                             description(asHtml: true)
@@ -152,12 +160,11 @@ export function requestMediaById(isUserAuthenticated: boolean) {
                         }
                 }
                 
-            `
+            `;
 }
 
 export function requestMediasByDateAndTimeRelease() {
-
-    return `query(
+  return `query(
                 $page: Int,
                 $sort: [AiringSort],
                 $perPage: Int, 
@@ -222,12 +229,11 @@ export function requestMediasByDateAndTimeRelease() {
                         }
                     }
                 }
-            `
+            `;
 }
 
 export function mediaTrendingApiQueryRequest() {
-
-    return `query Page (
+  return `query Page (
                 $page: Int,
                 $sort: [MediaTrendSort],
                 $perPage: Int
@@ -292,5 +298,5 @@ export function mediaTrendingApiQueryRequest() {
             }
         }
     }
-    `
+    `;
 }

@@ -1,38 +1,35 @@
-"use client"
-import { createSlice } from "@reduxjs/toolkit"
-import { removeCookies } from "../../user/anilistUserLoginOptions"
+"use client";
+import { createSlice } from "@reduxjs/toolkit";
+import { removeCookies } from "../../user/anilistUserLoginOptions";
 
 const initialState: { value: UserAnilist | null } = {
-
-    value: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem("anilist-user") as string) || null : null
-
-}
+  value:
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("anilist-user") as string) || null
+      : null,
+};
 
 export const userInfo = createSlice({
-    name: "UserInfo",
-    initialState,
-    reducers: {
-        addUserInfo: (state, { payload }) => {
+  name: "UserInfo",
+  initialState,
+  reducers: {
+    addUserInfo: (state, { payload }) => {
+      state.value = payload;
+    },
+    removeUserInfo: (state) => {
+      localStorage.removeItem("anilist-user");
 
-            state.value = payload
+      state.value = null;
 
-        },
-        removeUserInfo: (state) => {
+      removeCookies();
+    },
+  },
+});
 
-            localStorage.removeItem("anilist-user")
+const { addUserInfo } = userInfo.actions;
+const { removeUserInfo } = userInfo.actions;
 
-            state.value = null
+export { addUserInfo };
+export { removeUserInfo };
 
-            removeCookies()
-
-        },
-    }
-})
-
-const { addUserInfo } = userInfo.actions
-const { removeUserInfo } = userInfo.actions
-
-export { addUserInfo }
-export { removeUserInfo }
-
-export default userInfo.reducer
+export default userInfo.reducer;

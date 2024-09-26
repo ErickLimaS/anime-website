@@ -4,7 +4,7 @@ import styles from "./component.module.css";
 import * as MediaCard from "../../MediaCards/MediaCard";
 import * as MediaCardClientSide from "../../MediaCards/MediaCard/variantClientSide";
 import NavigationButtons from "../../NavigationButtons";
-import { ApiDefaultResult } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import anilist from "@/app/api/anilist/anilistMedias";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
@@ -22,10 +22,10 @@ const framerMotionShowUpItemVariant = {
 function MediaRankingSection({
   initialAnimesList,
 }: {
-  initialAnimesList: void | ApiDefaultResult[];
+  initialAnimesList: void | MediaData[];
 }) {
-  const [mediaList, setMediaList] = useState<ApiDefaultResult[] | null>(
-    initialAnimesList as ApiDefaultResult[]
+  const [mediaList, setMediaList] = useState<MediaData[] | null>(
+    initialAnimesList as MediaData[]
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -60,11 +60,11 @@ function MediaRankingSection({
     const listMediaByFormat = (await anilist.getMediaForThisFormat({
       type: format,
       showAdultContent: isAdultContentAllowed,
-    })) as ApiDefaultResult[];
+    })) as MediaData[];
 
     setCurrFormat(format);
 
-    setMediaList(listMediaByFormat as ApiDefaultResult[]);
+    setMediaList(listMediaByFormat as MediaData[]);
 
     setIsLoading(false);
   };

@@ -16,9 +16,11 @@ import CheckFillSvg from "@/public/assets/check-circle-fill.svg";
 import XSvg from "@/public/assets/x.svg";
 import CheckSvg from "@/public/assets/check-circle.svg";
 import styles from "./component.module.css";
-import { ApiDefaultResult } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreDataInterface";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
 
 const framerMotionOpenPanelTransition = {
   initial: {
@@ -48,16 +50,16 @@ export default function OptionsPanel({
   isPanelOpen: boolean;
   setIsPanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isFavourite: boolean | undefined;
-  mediaListEntryInfo: ApiDefaultResult["mediaListEntry"] | null;
-  mediaTitle: ApiDefaultResult["title"];
-  mediaInfo: ApiDefaultResult;
+  mediaListEntryInfo: MediaData["mediaListEntry"] | null;
+  mediaTitle: MediaData["title"];
+  mediaInfo: MediaData | MediaOnJSONFile | KeepWatchingMediaData;
   toggleLoginModalVisibility: () => void;
   amountWatchedOrRead?: number;
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [mediaStatus, setMediaStatus] = useState<
-    ApiDefaultResult["mediaListEntry"]["status"] | null
+    MediaData["mediaListEntry"]["status"] | null
   >(mediaListEntryInfo?.status || null);
 
   const anilistUser = useAppSelector((state) => state.UserInfo.value);
@@ -96,7 +98,7 @@ export default function OptionsPanel({
   async function handleAddMediaOnList({
     status,
   }: {
-    status: ApiDefaultResult["mediaListEntry"]["status"];
+    status: MediaData["mediaListEntry"]["status"];
   }) {
     // Opens Login Modal
     if (!user && !anilistUser) return toggleLoginModalVisibility();
@@ -135,9 +137,13 @@ export default function OptionsPanel({
       });
 
       // Remove from anilist list
-      if (anilistUser && mediaStatus?.toLowerCase() == status.toLowerCase()) {
+      if (
+        mediaListEntryInfo &&
+        anilistUser &&
+        mediaStatus?.toLowerCase() == status.toLowerCase()
+      ) {
         await anilistUsers.removeMediaFromSelectedList({
-          listItemEntryId: mediaListEntryInfo?.id!,
+          listItemEntryId: mediaListEntryInfo.id,
         });
 
         setIsLoading(false);

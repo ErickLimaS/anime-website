@@ -9,16 +9,16 @@ import {
 import BookSvg from "@/public/assets/book.svg";
 import PaginationButtons from "@/app/media/[id]/components/PaginationButtons";
 import manga from "@/app/api/consumet/consumetManga";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import simulateRange from "@/app/lib/simulateRange";
 import MarkChapterAsReadButton from "@/app/components/Buttons/MarkChapterAsRead";
-import { ApiMediaResults } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import { getClosestMangaResultByTitle } from "@/app/lib/dataFetch/optimizedFetchMangaOptions";
 import { stringToUrlFriendly } from "@/app/lib/convertStrings";
 import { useSearchParams } from "next/navigation";
 import ErrorPanel from "../ErrorPanel";
 
-const framerMotionLoadingChapters = {
+const framerMotionLoadingChapters: Variants = {
   initial: {
     opacity: 0.5,
   },
@@ -52,7 +52,7 @@ function MangaChaptersContainer({
   mediaInfo,
   chaptersReadOnAnilist,
 }: {
-  mediaInfo: ApiMediaResults;
+  mediaInfo: MediaDataFullInfo;
   chaptersReadOnAnilist?: number;
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -180,16 +180,13 @@ function MangaChaptersContainer({
           {isLoading && (
             <motion.li
               id={styles.loading_chapters_container}
-              variants={framerMotionLoadingChapters as any}
+              variants={framerMotionLoadingChapters}
               initial="initial"
               animate="animate"
               exit="exit"
             >
               {simulateRange(10).map((item, key) => (
-                <motion.div
-                  key={key}
-                  variants={framerMotionLoadingChapters as any}
-                />
+                <motion.div key={key} variants={framerMotionLoadingChapters} />
               ))}
             </motion.li>
           )}

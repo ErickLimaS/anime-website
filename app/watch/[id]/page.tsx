@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./page.module.css";
 import {
-  ApiDefaultResult,
-  ApiMediaResults,
+  MediaData,
+  MediaDataFullInfo,
 } from "../../ts/interfaces/apiAnilistDataInterface";
 import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
 import anilist from "@/app/api/anilist/anilistMedias";
@@ -51,7 +51,7 @@ export async function generateMetadata({
   const mediaInfo = (await anilist.getMediaInfo({
     id: params.id,
     accessToken: userAuthorization,
-  })) as ApiDefaultResult;
+  })) as MediaData;
 
   let pageTitle = "";
 
@@ -69,14 +69,14 @@ export async function generateMetadata({
     description: !mediaInfo
       ? ""
       : `Watch ${mediaInfo.title.userPreferred}${
-          mediaInfo.format != "MOVIE"
-            ? ` - episode ${searchParams.episode} `
-            : ""
-        }${searchParams.dub ? "Dubbed" : ""}. ${
-          mediaInfo.description
-            ? mediaInfo.description.replace(/(<([^>]+)>)/gi, "")
-            : ""
-        }`,
+        mediaInfo.format != "MOVIE"
+          ? ` - episode ${searchParams.episode} `
+          : ""
+      }${searchParams.dub ? "Dubbed" : ""}. ${
+        mediaInfo.description
+          ? mediaInfo.description.replace(/(<([^>]+)>)/gi, "")
+          : ""
+      }`,
   };
 }
 
@@ -103,7 +103,7 @@ export default async function WatchEpisode({
   const mediaInfo = (await anilist.getMediaInfo({
     id: params.id,
     accessToken: userAuthorization,
-  })) as ApiMediaResults;
+  })) as MediaDataFullInfo;
 
   // ACTES AS DEFAULT VALUE FOR PAGE PROPS
   if (Object.keys(searchParams).length === 0)
@@ -130,7 +130,7 @@ export default async function WatchEpisode({
   let episodesList: EpisodeAnimeWatch[] | MediaEpisodes[] = [];
   let videoUrlSrc: string | undefined = undefined;
   let imdbEpisodeInfo: ImdbEpisode | undefined;
-  let imdbEpisodesList: ImdbEpisode[] = [];
+  const imdbEpisodesList: ImdbEpisode[] = [];
 
   const loadImdbMediaAndEpisodeInfo = async () => {
     const imdbMediaInfo: ImdbMediaInfo = (await getMediaInfo({
@@ -182,6 +182,7 @@ export default async function WatchEpisode({
       episodesList = (await optimizedFetchOnAniwatch({
         textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
         only: "episodes",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }).then((res: any) => res?.episodes)) as EpisodeAnimeWatch[];
 
       searchParams.q = episodesList[0].episodeId;
@@ -204,8 +205,8 @@ export default async function WatchEpisode({
         textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
         only: "episodes",
         format: mediaInfo.format,
-        idToMatch: searchParams?.q?.split("?")[0],
-        isDubbed: searchParams.dub == "true",
+        idToMatch: searchParams?.q?.split("?")[0]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }).then((res: any) =>
         searchParams?.dub == "true"
           ? res?.episodes.slice(0, res.episodesDub)
@@ -356,9 +357,7 @@ export default async function WatchEpisode({
               </small>
             )}
 
-            <MediaCardExpanded.Container
-              mediaInfo={mediaInfo as ApiDefaultResult}
-            >
+            <MediaCardExpanded.Container mediaInfo={mediaInfo as MediaData}>
               <p>
                 <MediaCardExpanded.Description
                   description={

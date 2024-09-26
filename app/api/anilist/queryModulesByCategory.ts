@@ -3,14 +3,14 @@ export const queryTitles = `title{
                                 native
                                 english
                                 userPreferred
-                            }`
+                            }`;
 
 export const queryCoverImage = `coverImage {
                                         extraLarge
                                         large
                                         medium
                                         color
-                            }`
+                            }`;
 
 export const queryMediaListEntry = `mediaListEntry {
                                     id
@@ -22,7 +22,7 @@ export const queryMediaListEntry = `mediaListEntry {
                                         romaji
                                     }
                                 }
-                            }`
+                            }`;
 
 export const queryStudios = `studios(isMain: true){
                                     edges{
@@ -33,13 +33,13 @@ export const queryStudios = `studios(isMain: true){
                                             siteUrl
                                         }
                                     }
-                                }`
+                                }`;
 
 export const queryNextAiringEpisode = `nextAiringEpisode{
                                 id
                                 episode
                                 airingAt
-                            }`
+                            }`;
 
 export const queryRelatedMediasBasicInfo = `relations{
                                                 nodes{
@@ -50,7 +50,7 @@ export const queryRelatedMediasBasicInfo = `relations{
                                                     ${queryTitles}
                                                     ${queryCoverImage}
                                                 }
-                                        }`
+                                        }`;
 
 export const queryRelatedMediasFullInfo = `relations {
                                                 edges {
@@ -140,7 +140,7 @@ export const queryRelatedMediasFullInfo = `relations {
                                                     isReviewBlocked
                                                     modNotes
                                                 }
-                            }`
+                            }`;
 
 export const queryRelatedMediasFullInfoUserAuthenticated = `relations {
                                 edges {
@@ -231,14 +231,14 @@ export const queryRelatedMediasFullInfoUserAuthenticated = `relations {
                                     isReviewBlocked
                                     modNotes
                                 }
-                            }`
+                            }`;
 
 export const queryMediaTags = `tags{
                                     name
                                     description
                                     isAdult
                                     isMediaSpoiler
-                                }`
+                                }`;
 
 export const queryCharacters = `characters(sort: [ROLE, FAVOURITES_DESC]){
                                         edges{
@@ -277,7 +277,7 @@ export const queryCharacters = `characters(sort: [ROLE, FAVOURITES_DESC]){
                                                 }
                                             }
                                         }
-                                    }`
+                                    }`;
 
 export const queryRecommendationsByCurrMedia = `recommendations{
                                                     edges{
@@ -293,7 +293,7 @@ export const queryRecommendationsByCurrMedia = `recommendations{
                                                             }
                                                         }
                                                     }
-                            }`
+                            }`;
 
 export const queryRecommendationsByCurrMediaUserAuthenticated = `recommendations{
                                         edges{
@@ -313,4 +313,4 @@ export const queryRecommendationsByCurrMediaUserAuthenticated = `recommendations
                                                 }
                                             }
                                         }
-                                    }`
+                                    }`;

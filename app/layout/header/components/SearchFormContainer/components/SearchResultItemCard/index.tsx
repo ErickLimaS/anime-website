@@ -1,14 +1,14 @@
 import React, { MouseEventHandler, useId } from "react";
 import styles from "./component.module.css";
 import Image from "next/image";
-import { ApiDefaultResult } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import Link from "next/link";
-import { MediaDbOffline } from "@/app/ts/interfaces/dbOffilineInterface";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
 
 type SearchResultsTypes = {
   handleChoseResult?: MouseEventHandler<HTMLDivElement>;
-  mediaFromAnilist?: ApiDefaultResult;
-  mediaFromOfflineDB?: MediaDbOffline;
+  mediaFromAnilist?: MediaData;
+  mediaFromOfflineDB?: MediaOnJSONFile;
 };
 
 function SearchResultItemCard({

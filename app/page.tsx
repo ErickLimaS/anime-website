@@ -8,8 +8,8 @@ import parse from "html-react-parser";
 import NewestMediaSection from "./components/HomePage/NewestMediaSection";
 import MediaRankingSection from "./components/HomePage/MediaRankingSection";
 import {
-  ApiAiringMidiaResults,
-  ApiDefaultResult,
+  AiringMediaResult,
+  MediaData,
 } from "./ts/interfaces/apiAnilistDataInterface";
 import { Metadata } from "next";
 import * as AddToPlaylistButton from "./components/Buttons/AddToFavourites";
@@ -39,7 +39,7 @@ export default async function Home() {
   const listAnimesTrending = (await anilist.getMediaForThisFormat({
     type: "ANIME",
     accessToken: userAuthorization,
-  })) as ApiDefaultResult[];
+  })) as MediaData[];
 
   // section 1
   const listAnimesTrendingWithBackground = listAnimesTrending.filter(
@@ -56,7 +56,7 @@ export default async function Home() {
       perPage: 12,
       accessToken: userAuthorization,
     })
-    .then((res) => res as ApiDefaultResult[]);
+    .then((res) => res as MediaData[]);
 
   // section 3
   const listMediasToBannerSection = await anilist
@@ -66,7 +66,7 @@ export default async function Home() {
       accessToken: userAuthorization,
     })
     .then((res) =>
-      (res as ApiDefaultResult[]).filter((item) => item.isAdult == false)
+      (res as MediaData[]).filter((item) => item.isAdult == false)
     );
 
   const randomIndexForBannerSection =
@@ -81,7 +81,7 @@ export default async function Home() {
       accessToken: userAuthorization,
     })
     .then((res) =>
-      (res as ApiAiringMidiaResults[])
+      (res as AiringMediaResult[])
         .sort((a, b) => a.media.popularity - b.media.popularity)
         .reverse()
     )

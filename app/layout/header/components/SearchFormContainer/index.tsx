@@ -1,7 +1,7 @@
 "use client";
 import React, { FormEvent, useState } from "react";
 import styles from "./component.module.css";
-import { ApiDefaultResult } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import anilist from "@/app/api/anilist/anilistMedias";
 import SearchResultItemCard from "./components/SearchResultItemCard";
 import LoadingIcon from "@/public/assets/ripple-1s-200px.svg";
@@ -10,8 +10,7 @@ import CloseSvg from "@/public/assets/x.svg";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-import axios from "axios";
-import { MediaDbOffline } from "@/app/ts/interfaces/dbOffilineInterface";
+import { MediaOnJSONFile } from "@/app/ts/interfaces/dbOffilineInterface";
 import { getUserAdultContentPreference } from "@/app/lib/user/userDocFetchOptions";
 import { useAppSelector } from "@/app/lib/redux/hooks";
 
@@ -44,7 +43,7 @@ function SearchFormContainer() {
   );
 
   const [searchResultsList, setSearchResultsList] = useState<
-    ApiDefaultResult[] | MediaDbOffline[] | null
+    MediaData[] | MediaOnJSONFile[] | null
   >();
 
   const [searchInputValue, setSearchInputValue] = useState<string>("");
@@ -98,7 +97,7 @@ function SearchFormContainer() {
       showAdultContent: isAdultContentAllowed,
     });
 
-    setSearchResultsList(searchResults as ApiDefaultResult[]);
+    setSearchResultsList(searchResults as MediaData[]);
 
     setIsLoading(false);
   }
@@ -220,17 +219,15 @@ function SearchFormContainer() {
               )}
 
               {searchResultsList.map(
-                (item: ApiDefaultResult | MediaDbOffline, key: number) => (
+                (item: MediaData | MediaOnJSONFile, key: number) => (
                   <SearchResultItemCard
                     key={key}
                     mediaFromAnilist={
-                      searchType == "anilist"
-                        ? (item as ApiDefaultResult)
-                        : undefined
+                      searchType == "anilist" ? (item as MediaData) : undefined
                     }
                     mediaFromOfflineDB={
                       searchType == "json-database"
-                        ? (item as MediaDbOffline)
+                        ? (item as MediaOnJSONFile)
                         : undefined
                     }
                     handleChoseResult={() =>

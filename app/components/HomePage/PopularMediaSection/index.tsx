@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import * as MediaCard from "../../MediaCards/MediaCard";
-import { ApiDefaultResult } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import Link from "next/link";
 import styles from "./component.module.css";
 import ChevronRightIcon from "@/public/assets/chevron-right.svg";
@@ -23,15 +23,11 @@ const framerMotionVariants = {
   },
 };
 
-function PopularMediaSection({
-  animesList,
-}: {
-  animesList: ApiDefaultResult[];
-}) {
+function PopularMediaSection({ animesList }: { animesList: MediaData[] }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isBtnDisable, setIsBtnDisable] = useState<boolean>(false);
 
-  const [fetchedData, setFetchedData] = useState<ApiDefaultResult[]>([]);
+  const [fetchedData, setFetchedData] = useState<MediaData[]>([]);
   const [currFetchPage, setCurrFetchPage] = useState(2); // next fetch will start on page 2
 
   async function fetchAnimesListNextPage() {
@@ -45,7 +41,7 @@ function PopularMediaSection({
         page: currFetchPage,
         perPage: 14,
       })
-      .then((res) => res as ApiDefaultResult[]);
+      .then((res) => res as MediaData[]);
 
     if (
       !listAnimesReleasingByPopularity ||

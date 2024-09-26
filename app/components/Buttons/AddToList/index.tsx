@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { initFirebase } from "@/app/firebaseApp";
 import { getAuth } from "firebase/auth";
-import { ApiDefaultResult } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -31,9 +31,9 @@ export function Button({
   amountWatchedOrRead,
   children,
 }: {
-  mediaInfo: ApiDefaultResult;
+  mediaInfo: MediaData;
   imdbEpisodesList?: ImdbEpisode[];
-  statusOnAnilist?: ApiDefaultResult["mediaListEntry"]["status"];
+  statusOnAnilist?: MediaData["mediaListEntry"]["status"];
   listEntryId?: number;
   amountWatchedOrRead?: number;
   children?: React.ReactNode[];
@@ -42,7 +42,7 @@ export function Button({
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const [mediaStatus, setMediaStatus] = useState<
-    ApiDefaultResult["mediaListEntry"]["status"] | null
+    MediaData["mediaListEntry"]["status"] | null
   >(statusOnAnilist || null);
 
   const anilistUser = useAppSelector((state) => state.UserInfo.value);
@@ -76,9 +76,7 @@ export function Button({
       );
 
       if (wasMediaFound)
-        setMediaStatus(
-          btn.value as ApiDefaultResult["mediaListEntry"]["status"]
-        );
+        setMediaStatus(btn.value as MediaData["mediaListEntry"]["status"]);
     });
   }
 
@@ -117,7 +115,7 @@ export function Button({
   async function handleAddMediaOnList({
     status,
   }: {
-    status: ApiDefaultResult["mediaListEntry"]["status"];
+    status: MediaData["mediaListEntry"]["status"];
   }) {
     // Opens Login Modal
     if (!user && !anilistUser) return dispatch(toggleShowLoginModalValue());
@@ -225,7 +223,7 @@ export function Button({
                     onClick={() =>
                       handleAddMediaOnList({
                         status:
-                          btn.value as ApiDefaultResult["mediaListEntry"]["status"],
+                          btn.value as MediaData["mediaListEntry"]["status"],
                       })
                     }
                     whileTap={{ scale: 0.9 }}

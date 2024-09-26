@@ -1,8 +1,8 @@
 import anilistUsers from "@/app/api/anilist/anilistUsers";
 import styles from "../../component.module.css";
 import {
-  ApiDefaultResult,
-  ApiMediaResults,
+  MediaData,
+  MediaDataFullInfo,
 } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import {
   ImdbMediaInfo,
@@ -33,7 +33,7 @@ export default function EpisodesOptionsPanel({
     mediaSeasons: ImdbMediaInfo["seasons"];
     episodesList: ImdbEpisode[];
   };
-  mediaInfo: ApiDefaultResult | ApiMediaResults;
+  mediaInfo: MediaData | MediaDataFullInfo;
   callDubbedFunction: () => void;
   dubbedStateValue: boolean;
 }) {

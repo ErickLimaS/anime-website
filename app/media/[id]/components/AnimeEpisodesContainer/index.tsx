@@ -1,50 +1,62 @@
-"use client"
-import React, { useEffect, useState } from 'react'
-import styles from "./component.module.css"
-import NavigationButtons from '../../../../components/NavigationButtons';
-import { MediaEpisodes } from '@/app/ts/interfaces/apiGogoanimeDataInterface';
-import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg"
-import { ApiDefaultResult, ApiMediaResults, EpisodesType } from '@/app/ts/interfaces/apiAnilistDataInterface';
-import PaginationButtons from '@/app/media/[id]/components/PaginationButtons';
-import aniwatch from '@/app/api/aniwatch';
+"use client";
+import React, { useEffect, useState } from "react";
+import styles from "./component.module.css";
+import NavigationButtons from "../../../../components/NavigationButtons";
+import { MediaEpisodes } from "@/app/ts/interfaces/apiGogoanimeDataInterface";
+import LoadingSvg from "@/public/assets/Eclipse-1s-200px.svg";
+import {
+  MediaData,
+  MediaDataFullInfo,
+  EpisodesType,
+} from "@/app/ts/interfaces/apiAnilistDataInterface";
+import PaginationButtons from "@/app/media/[id]/components/PaginationButtons";
+import aniwatch from "@/app/api/aniwatch";
 import {
   EpisodeAnimeWatch,
   EpisodesFetchedAnimeWatch,
-  MediaInfoAniwatch
-} from '@/app/ts/interfaces/apiAnimewatchInterface';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { getAuth } from 'firebase/auth';
+  MediaInfoAniwatch,
+} from "@/app/ts/interfaces/apiAnimewatchInterface";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 import {
-  doc, DocumentData,
+  doc,
+  DocumentData,
   DocumentSnapshot,
-  getDoc, getFirestore
-} from 'firebase/firestore';
-import { initFirebase } from '@/app/firebaseApp';
-import { AnimatePresence, motion } from 'framer-motion';
-import simulateRange from '@/app/lib/simulateRange';
-import { optimizedFetchOnAniwatch, optimizedFetchOnGoGoAnime } from '@/app/lib/dataFetch/optimizedFetchAnimeOptions';
-import { ImdbEpisode, ImdbMediaInfo } from '@/app/ts/interfaces/apiImdbInterface';
-import { SourceType } from '@/app/ts/interfaces/episodesSourceInterface';
-import { checkAnilistTitleMisspelling } from '@/app/lib/checkApiMediaMisspelling';
-import { useSearchParams } from 'next/navigation';
-import { useAppSelector } from '@/app/lib/redux/hooks';
-import EpisodesOptionsPanel from './components/EpisodesOptionsPanel';
-import { EpisodeBySource } from './components/EpisodeBySource';
-import ErrorPanel from '../ErrorPanel';
+  getDoc,
+  getFirestore,
+} from "firebase/firestore";
+import { initFirebase } from "@/app/firebaseApp";
+import { AnimatePresence, motion, Variants } from "framer-motion";
+import simulateRange from "@/app/lib/simulateRange";
+import {
+  optimizedFetchOnAniwatch,
+  optimizedFetchOnGoGoAnime,
+} from "@/app/lib/dataFetch/optimizedFetchAnimeOptions";
+import {
+  ImdbEpisode,
+  ImdbMediaInfo,
+} from "@/app/ts/interfaces/apiImdbInterface";
+import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
+import { checkAnilistTitleMisspelling } from "@/app/lib/checkApiMediaMisspelling";
+import { useSearchParams } from "next/navigation";
+import { useAppSelector } from "@/app/lib/redux/hooks";
+import EpisodesOptionsPanel from "./components/EpisodesOptionsPanel";
+import { EpisodeBySource } from "./components/EpisodeBySource";
+import ErrorPanel from "../ErrorPanel";
 
 type EpisodesContainerTypes = {
   imdb: {
-    mediaSeasons: ImdbMediaInfo["seasons"],
-    episodesList: ImdbEpisode[],
-  },
-  mediaInfo: ApiDefaultResult | ApiMediaResults,
-  crunchyrollInitialEpisodes: EpisodesType[],
-  episodesWatchedOnAnilist?: number
-}
+    mediaSeasons: ImdbMediaInfo["seasons"];
+    episodesList: ImdbEpisode[];
+  };
+  mediaInfo: MediaData | MediaDataFullInfo;
+  crunchyrollInitialEpisodes: EpisodesType[];
+  episodesWatchedOnAnilist?: number;
+};
 
-const framerMotionLoadingEpisodes = {
+const framerMotionLoadingEpisodes: Variants = {
   initial: {
-    opacity: 0.5
+    opacity: 0.5,
   },
   animate: {
     opacity: 1,
@@ -55,313 +67,344 @@ const framerMotionLoadingEpisodes = {
     },
   },
   exit: {
-    opacity: 0
+    opacity: 0,
   },
-}
+};
 
-export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialEpisodes, episodesWatchedOnAnilist }: EpisodesContainerTypes) {
+export default function EpisodesContainer({
+  imdb,
+  mediaInfo,
+  crunchyrollInitialEpisodes,
+  episodesWatchedOnAnilist,
+}: EpisodesContainerTypes) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [episodesList, setEpisodesList] = useState<
+    EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]
+  >(crunchyrollInitialEpisodes);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [episodesList, setEpisodesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[]>(crunchyrollInitialEpisodes)
+  const [isEpisodesDubbed, setIsEpisodesDubbed] = useState<boolean | null>(
+    null
+  );
 
-  const [isEpisodesDubbed, setIsEpisodesDubbed] = useState<boolean | null>(null)
+  const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<
+    MediaInfoAniwatch[]
+  >([]);
 
-  const [mediaResultsInfoArray, setMediaResultsInfoArray] = useState<MediaInfoAniwatch[]>([])
+  const [currAnimesList, setCurrAnimesList] = useState<
+    | EpisodesType[]
+    | MediaEpisodes[]
+    | EpisodeAnimeWatch[]
+    | ImdbEpisode[]
+    | null
+  >(null);
+  const [itemOffset, setItemOffset] = useState<number>(0);
 
-  const [currAnimesList, setCurrAnimesList] = useState<EpisodesType[] | MediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[] | null>(null)
-  const [itemOffset, setItemOffset] = useState<number>(0)
+  const [currEpisodesSource, setCurrEpisodesSource] =
+    useState<SourceType["source"]>("crunchyroll");
 
-  const [currEpisodesSource, setCurrEpisodesSource] = useState<SourceType["source"]>("crunchyroll")
+  const [currEpisodesWatched, setCurrEpisodesWatched] = useState<
+    {
+      mediaId: number;
+      episodeNumber: number;
+      episodeTitle: string;
+    }[]
+  >();
 
-  const [currEpisodesWatched, setCurrEpisodesWatched] = useState<{
-    mediaId: number;
-    episodeNumber: number;
-    episodeTitle: string;
-  }[]>()
+  const searchParams = useSearchParams();
 
-  const searchParams = useSearchParams()
+  const currSearchParams = new URLSearchParams(
+    Array.from(searchParams.entries())
+  );
 
-  const currSearchParams = new URLSearchParams(Array.from(searchParams.entries()))
+  const [totalNumberPages, setTotalNumberPages] = useState<number>(0);
+  const [currActivePage, setCurrActivePage] = useState<number>(0);
 
-  const [totalNumberPages, setTotalNumberPages] = useState<number>(0)
-  const [currActivePage, setCurrActivePage] = useState<number>(0)
+  const anilistUser = useAppSelector((state) => state.UserInfo.value);
 
-  const anilistUser = useAppSelector((state) => (state.UserInfo).value)
+  const auth = getAuth();
+  const [user] = useAuthState(auth);
 
-  const auth = getAuth()
-  const [user] = useAuthState(auth)
-
-  const db = getFirestore(initFirebase())
+  const db = getFirestore(initFirebase());
 
   // the episodes array length will be divided by 20, getting the range of pagination
-  const rangeEpisodesPerPage = 20
+  const rangeEpisodesPerPage = 20;
 
   useEffect(() => {
-
-    if (typeof window !== 'undefined') {
-
-      if (isEpisodesDubbed == null) setIsEpisodesDubbed(localStorage.getItem("dubEpisodes") == "true")
-
+    if (typeof window !== "undefined") {
+      if (isEpisodesDubbed == null)
+        setIsEpisodesDubbed(localStorage.getItem("dubEpisodes") == "true");
     }
-
-  }, [typeof window])
-
-  useEffect(() => {
-
-    if (user || anilistUser) getUserPreferredSource()
-    else fetchEpisodesFromSource(crunchyrollInitialEpisodes.length == 0 ? "gogoanime" : "crunchyroll")
-
-  }, [user, anilistUser])
+  }, [typeof window]);
 
   useEffect(() => {
+    if (user || anilistUser) getUserPreferredSource();
+    else
+      fetchEpisodesFromSource(
+        crunchyrollInitialEpisodes.length == 0 ? "gogoanime" : "crunchyroll"
+      );
+  }, [user, anilistUser]);
 
+  useEffect(() => {
     const endOffset = itemOffset + rangeEpisodesPerPage;
 
-    if (currEpisodesSource == "crunchyroll") setTotalNumberPages(Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage));
+    if (currEpisodesSource == "crunchyroll")
+      setTotalNumberPages(
+        Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage)
+      );
 
-    if (episodesList) setCurrAnimesList(episodesList.slice(itemOffset, endOffset))
-
-  }, [episodesList, itemOffset, crunchyrollInitialEpisodes, currEpisodesSource])
-
-  useEffect(() => { if (user || anilistUser) getUserEpisodesWatched() }, [user, anilistUser, mediaInfo.id, currEpisodesSource, itemOffset])
+    if (episodesList)
+      setCurrAnimesList(episodesList.slice(itemOffset, endOffset));
+  }, [
+    episodesList,
+    itemOffset,
+    crunchyrollInitialEpisodes,
+    currEpisodesSource,
+  ]);
 
   useEffect(() => {
+    if (user || anilistUser) getUserEpisodesWatched();
+  }, [user, anilistUser, mediaInfo.id, currEpisodesSource, itemOffset]);
 
-    const paramsSource = currSearchParams.get("source") as SourceType["source"]
+  useEffect(() => {
+    const paramsSource = currSearchParams.get("source") as SourceType["source"];
 
-    if (paramsSource == "crunchyroll" || paramsSource == "aniwatch" || paramsSource == "gogoanime") {
-
-      setCurrEpisodesSource(paramsSource)
-      fetchEpisodesFromSource(paramsSource)
-
+    if (
+      paramsSource == "crunchyroll" ||
+      paramsSource == "aniwatch" ||
+      paramsSource == "gogoanime"
+    ) {
+      setCurrEpisodesSource(paramsSource);
+      fetchEpisodesFromSource(paramsSource);
     }
-
-  }, [searchParams])
+  }, [searchParams]);
 
   useEffect(() => {
-
-    const pageParams = Number(currSearchParams.get("page"))
+    const pageParams = Number(currSearchParams.get("page"));
 
     if (episodesList && pageParams) {
-      setItemOffset((pageParams || 0) * rangeEpisodesPerPage % episodesList.length)
+      setItemOffset(
+        ((pageParams || 0) * rangeEpisodesPerPage) % episodesList.length
+      );
     }
-
-  }, [episodesList, currSearchParams.get("source")])
+  }, [episodesList, currSearchParams.get("source")]);
 
   useEffect(() => {
-
-    if (currEpisodesSource != "crunchyroll") fetchEpisodesFromSource(currEpisodesSource)
-
-  }, [isEpisodesDubbed])
+    if (currEpisodesSource != "crunchyroll")
+      fetchEpisodesFromSource(currEpisodesSource);
+  }, [isEpisodesDubbed]);
 
   // handles which page last episode watched is on
   useEffect(() => {
-
-    if (!episodesWatchedOnAnilist) return
+    if (!episodesWatchedOnAnilist) return;
 
     for (let pageIndex = 0; pageIndex < totalNumberPages; pageIndex++) {
-
-      const episodesOnPage = pageIndex * rangeEpisodesPerPage % episodesList.length
+      const episodesOnPage =
+        (pageIndex * rangeEpisodesPerPage) % episodesList.length;
 
       if (episodesOnPage >= episodesWatchedOnAnilist) {
+        handleButtonPageNavigation({ selected: pageIndex - 1 });
 
-        handleButtonPageNavigation({ selected: pageIndex - 1 })
+        setCurrActivePage(pageIndex - 1);
 
-        setCurrActivePage(pageIndex - 1)
-
-        return
-
+        return;
       }
-
     }
-
-  }, [totalNumberPages])
+  }, [totalNumberPages]);
 
   async function getUserPreferredSource() {
+    const useDoc = await getDoc(
+      doc(db, "users", user?.uid || `${anilistUser?.id}`)
+    );
 
-    const useDoc = await getDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`))
+    const userSelectedSource =
+      (await useDoc.get("videoSource").toLowerCase()) || "crunchyroll";
 
-    const userSelectedSource = await useDoc.get("videoSource").toLowerCase() || "crunchyroll"
+    fetchEpisodesFromSource(userSelectedSource);
 
-    fetchEpisodesFromSource(userSelectedSource)
-
-    setCurrEpisodesSource(userSelectedSource)
-
+    setCurrEpisodesSource(userSelectedSource);
   }
 
   async function getUserEpisodesWatched() {
+    if (!user && !anilistUser) return;
 
-    if (!user && !anilistUser) return
+    const userDoc: DocumentSnapshot<DocumentData> = await getDoc(
+      doc(db, "users", user?.uid || `${anilistUser?.id}`)
+    );
 
-    const userDoc: DocumentSnapshot<DocumentData> = await getDoc(doc(db, 'users', user?.uid || `${anilistUser?.id}`))
+    const userEpisodesWatchedList = userDoc.get("episodesWatched");
 
-    const userEpisodesWatchedList = userDoc.get("episodesWatched")
+    const mediaEpisodesWatchedList =
+      userEpisodesWatchedList[mediaInfo.id] || null;
 
-    const mediaEpisodesWatchedList = userEpisodesWatchedList[mediaInfo.id] || null
-
-    if (mediaEpisodesWatchedList) setCurrEpisodesWatched(mediaEpisodesWatchedList)
-
+    if (mediaEpisodesWatchedList)
+      setCurrEpisodesWatched(mediaEpisodesWatchedList);
   }
 
   async function fetchEpisodesFromSource(newSourceChose: SourceType["source"]) {
+    setIsLoading(true);
 
-    setIsLoading(true)
+    const paginationEndOffset = itemOffset + rangeEpisodesPerPage;
 
-    const paginationEndOffset = itemOffset + rangeEpisodesPerPage
-
-    let mediaEpisodesList: MediaEpisodes[] | {
-      episodesDub: number,
-      episodesSub: number,
-      episodes: EpisodesFetchedAnimeWatch["episodes"]
-    }
+    let mediaEpisodesList:
+      | MediaEpisodes[]
+      | {
+          episodesDub: number;
+          episodesSub: number;
+          episodes: EpisodesFetchedAnimeWatch["episodes"];
+        };
 
     switch (newSourceChose) {
-
       case "crunchyroll":
+        setCurrEpisodesSource(newSourceChose);
 
-        setCurrEpisodesSource(newSourceChose)
+        setEpisodesList(crunchyrollInitialEpisodes);
 
-        setEpisodesList(crunchyrollInitialEpisodes)
+        setCurrAnimesList(
+          crunchyrollInitialEpisodes.slice(itemOffset, paginationEndOffset)
+        );
 
-        setCurrAnimesList(crunchyrollInitialEpisodes.slice(itemOffset, paginationEndOffset))
+        setTotalNumberPages(
+          Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage)
+        );
 
-        setTotalNumberPages(Math.ceil(crunchyrollInitialEpisodes.length / rangeEpisodesPerPage))
-
-        break
+        break;
 
       case "gogoanime":
+        setCurrEpisodesSource(newSourceChose);
 
-        setCurrEpisodesSource(newSourceChose)
-
-        mediaEpisodesList = await optimizedFetchOnGoGoAnime({
+        mediaEpisodesList = (await optimizedFetchOnGoGoAnime({
           textToSearch: mediaInfo.title.english,
           only: "episodes",
-          isDubbed: isEpisodesDubbed || false
-        }) as MediaEpisodes[]
+          isDubbed: isEpisodesDubbed || false,
+        })) as MediaEpisodes[];
 
         if (!mediaEpisodesList) {
+          setIsLoading(false);
 
-          setIsLoading(false)
+          setEpisodesList([]);
 
-          setEpisodesList([])
+          setCurrAnimesList(null);
 
-          setCurrAnimesList(null)
+          setTotalNumberPages(0);
 
-          setTotalNumberPages(0)
-
-          return
-
+          return;
         }
 
-        setEpisodesList(mediaEpisodesList as MediaEpisodes[])
+        setEpisodesList(mediaEpisodesList as MediaEpisodes[]);
 
-        setCurrAnimesList((mediaEpisodesList as MediaEpisodes[]).slice(itemOffset, paginationEndOffset))
+        setCurrAnimesList(
+          (mediaEpisodesList as MediaEpisodes[]).slice(
+            itemOffset,
+            paginationEndOffset
+          )
+        );
 
-        setTotalNumberPages(Math.ceil((mediaEpisodesList as MediaEpisodes[]).length / rangeEpisodesPerPage))
+        setTotalNumberPages(
+          Math.ceil(
+            (mediaEpisodesList as MediaEpisodes[]).length / rangeEpisodesPerPage
+          )
+        );
 
-        break
+        break;
 
       case "aniwatch":
+        setCurrEpisodesSource(newSourceChose);
 
-        setCurrEpisodesSource(newSourceChose)
-
-        const searchResultsListForCurrMedia = await optimizedFetchOnAniwatch({
+        const searchResultsListForCurrMedia = (await optimizedFetchOnAniwatch({
           textToSearch: mediaInfo.title.english,
           only: "search_list",
           format: mediaInfo.format,
-          mediaTotalEpisodes: mediaInfo.nextAiringEpisode?.episode || imdb.episodesList.length
-        }) as MediaInfoAniwatch[]
+          mediaTotalEpisodes:
+            mediaInfo.nextAiringEpisode?.episode || imdb.episodesList.length,
+        })) as MediaInfoAniwatch[];
 
-        setMediaResultsInfoArray(searchResultsListForCurrMedia)
+        setMediaResultsInfoArray(searchResultsListForCurrMedia);
 
-        mediaEpisodesList = await optimizedFetchOnAniwatch({
+        mediaEpisodesList = (await optimizedFetchOnAniwatch({
           textToSearch: mediaInfo.title.english,
           only: "episodes",
           format: mediaInfo.format,
-          mediaTotalEpisodes: mediaInfo.nextAiringEpisode?.episode || imdb.episodesList.length
-        }) as {
-          episodesDub: number,
-          episodesSub: number,
-          episodes: EpisodesFetchedAnimeWatch["episodes"]
-        }
+          mediaTotalEpisodes:
+            mediaInfo.nextAiringEpisode?.episode || imdb.episodesList.length,
+        })) as {
+          episodesDub: number;
+          episodesSub: number;
+          episodes: EpisodesFetchedAnimeWatch["episodes"];
+        };
 
-        const episodesFilteredByDubOrSub = isEpisodesDubbed ?
-          mediaEpisodesList.episodes.slice(0, mediaEpisodesList.episodesDub)
-          :
-          mediaEpisodesList.episodes.slice(0, mediaEpisodesList.episodesSub)
+        const episodesFilteredByDubOrSub = isEpisodesDubbed
+          ? mediaEpisodesList.episodes.slice(0, mediaEpisodesList.episodesDub)
+          : mediaEpisodesList.episodes.slice(0, mediaEpisodesList.episodesSub);
 
-
-        setEpisodesList(episodesFilteredByDubOrSub)
+        setEpisodesList(episodesFilteredByDubOrSub);
 
         if (episodesFilteredByDubOrSub) {
+          setCurrAnimesList(
+            episodesFilteredByDubOrSub.slice(itemOffset, paginationEndOffset)
+          );
 
-          setCurrAnimesList(episodesFilteredByDubOrSub.slice(itemOffset, paginationEndOffset))
+          setTotalNumberPages(
+            Math.ceil(episodesFilteredByDubOrSub.length / rangeEpisodesPerPage)
+          );
+        } else {
+          setCurrAnimesList(null);
 
-          setTotalNumberPages(Math.ceil(episodesFilteredByDubOrSub.length / rangeEpisodesPerPage))
-
+          setTotalNumberPages(0);
         }
-        else {
 
-          setCurrAnimesList(null)
-
-          setTotalNumberPages(0)
-
-        }
-
-        break
+        break;
 
       default:
+        alert(
+          "need to work on it. give me a shoutout on Git Issues if i forget"
+        );
 
-        alert("need to work on it. give me a shoutout on Git Issues if i forget")
-
-        break
-
+        break;
     }
 
-    setIsLoading(false)
-
+    setIsLoading(false);
   }
 
   async function handleRefetchMediaEpisodesFromSelectTag(id: string) {
+    setIsLoading(true);
 
-    setIsLoading(true)
+    const endOffset = itemOffset + rangeEpisodesPerPage;
 
-    const endOffset = itemOffset + rangeEpisodesPerPage
+    const mediaEpisodes = (await aniwatch.getEpisodes({
+      episodeId: id,
+    })) as EpisodesFetchedAnimeWatch;
 
-    const mediaEpisodes = await aniwatch.getEpisodes({ episodeId: id }) as EpisodesFetchedAnimeWatch
-
-    setEpisodesList(mediaEpisodes.episodes)
+    setEpisodesList(mediaEpisodes.episodes);
 
     setCurrAnimesList(mediaEpisodes.episodes.slice(itemOffset, endOffset));
-    setTotalNumberPages(Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage));
+    setTotalNumberPages(
+      Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage)
+    );
 
-    setIsLoading(false)
-
+    setIsLoading(false);
   }
 
   async function handleButtonPageNavigation(event: { selected: number }) {
+    setIsLoading(true); // Needed to refresh episodes "Marked as Watched"
 
-    setIsLoading(true) // Needed to refresh episodes "Marked as Watched"
+    const newOffset =
+      (event.selected * rangeEpisodesPerPage) % episodesList.length;
 
-    const newOffset = event.selected * rangeEpisodesPerPage % episodesList.length
+    setItemOffset(newOffset);
 
-    setItemOffset(newOffset)
-
-    setTimeout(() => setIsLoading(false), 400)  // Needed to refresh episodes "Marked as Watched"
-
+    setTimeout(() => setIsLoading(false), 400); // Needed to refresh episodes "Marked as Watched"
   }
 
-  const handleSourcesButtonValue: (parameter: SourceType["source"]) => void = async (parameter: SourceType["source"]) => {
+  const handleSourcesButtonValue: (
+    parameter: SourceType["source"]
+  ) => void = async (parameter: SourceType["source"]) => {
+    setCurrEpisodesSource(parameter);
 
-    setCurrEpisodesSource(parameter)
-
-    fetchEpisodesFromSource(parameter)
-
-  }
+    fetchEpisodesFromSource(parameter);
+  };
 
   return (
     <React.Fragment>
-
       <div id={styles.episodes_heading}>
         <h2 className={styles.heading_style}>EPISODES</h2>
 
@@ -369,85 +412,97 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
           callDubbedFunction={() => setIsEpisodesDubbed(!isEpisodesDubbed)}
           dubbedStateValue={isEpisodesDubbed || false}
           userId={user?.uid || anilistUser ? `${anilistUser?.id}` : undefined}
-          isAnilistUser={user != undefined || anilistUser?.isUserFromAnilist || false}
+          isAnilistUser={
+            user != undefined || anilistUser?.isUserFromAnilist || false
+          }
           db={db}
           mediaInfo={mediaInfo}
           imdb={imdb}
         />
-
       </div>
 
       <div>
-
         <div id={styles.container_heading}>
-
           <NavigationButtons
-            propsFunction={handleSourcesButtonValue as (parameter: string | number) => void}
+            propsFunction={
+              handleSourcesButtonValue as (parameter: string | number) => void
+            }
             currValue={currEpisodesSource}
             showSourceStatus
             sepateBtnsWithSpan={true}
             buttonOptions={[
               { name: "Crunchyroll", value: "crunchyroll" },
               { name: "GoGoAnime", value: "gogoanime" },
-              { name: "Aniwatch", value: "aniwatch" }
+              { name: "Aniwatch", value: "aniwatch" },
             ]}
           />
 
           {/* SHOWS A SELECT WITH OTHER RESULTS FOR THIS MEDIA, ANIWATCH DONT GET THE RIGHT RESULT MOST OF TIMES */}
           <AnimatePresence>
-            {(currEpisodesSource == "aniwatch" && mediaResultsInfoArray.length > 1) && (
-              <motion.div
-                id={styles.select_media_container}
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-              >
-
-                <small>Wrong Episodes? Select bellow!</small>
-
-                <select
-                  onChange={(e) => handleRefetchMediaEpisodesFromSelectTag(e.target.value)}
-                  defaultValue={checkAnilistTitleMisspelling(mediaInfo.title.romaji || mediaInfo.title.native).toLowerCase()}
+            {currEpisodesSource == "aniwatch" &&
+              mediaResultsInfoArray.length > 1 && (
+                <motion.div
+                  id={styles.select_media_container}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
                 >
-                  {mediaResultsInfoArray?.map((media, key) => (
-                    <option
-                      key={key}
-                      value={media.id.toLowerCase()}
-                    >
-                      {media.name}
-                    </option>
-                  ))}
-                </select>
+                  <small>Wrong Episodes? Select bellow!</small>
 
-              </motion.div>
-            )}
+                  <select
+                    onChange={(e) =>
+                      handleRefetchMediaEpisodesFromSelectTag(e.target.value)
+                    }
+                    defaultValue={checkAnilistTitleMisspelling(
+                      mediaInfo.title.romaji || mediaInfo.title.native
+                    ).toLowerCase()}
+                  >
+                    {mediaResultsInfoArray?.map((media, key) => (
+                      <option key={key} value={media.id.toLowerCase()}>
+                        {media.name}
+                      </option>
+                    ))}
+                  </select>
+                </motion.div>
+              )}
           </AnimatePresence>
-
         </div>
 
         {!isLoading && (
-          <motion.ol id={styles.container} data-loading={isLoading} animate={{ height: "auto" }}>
-
+          <motion.ol
+            id={styles.container}
+            data-loading={isLoading}
+            animate={{ height: "auto" }}
+          >
             <AnimatePresence>
-
-              {currAnimesList?.map((episode: EpisodesType | MediaEpisodes | EpisodeAnimeWatch | ImdbEpisode, key) => (
-
-                <EpisodeBySource
-                  key={key}
-                  index={key}
-                  episodeInfo={episode}
-                  mediaInfo={mediaInfo}
-                  currEpisodesSource={currEpisodesSource}
-                  imdb={imdb}
-                  crunchyrollInitialEpisodes={crunchyrollInitialEpisodes}
-                  wasEpisodeWatchedOnAnilist={episodesWatchedOnAnilist ? (key + itemOffset + 1) < episodesWatchedOnAnilist : undefined}
-                  itemOffset={itemOffset}
-                  currEpisodesWatched={currEpisodesWatched}
-                  useDubbedRoute={isEpisodesDubbed || false}
-                />
-
-              ))}
-
+              {currAnimesList?.map(
+                (
+                  episode:
+                    | EpisodesType
+                    | MediaEpisodes
+                    | EpisodeAnimeWatch
+                    | ImdbEpisode,
+                  key
+                ) => (
+                  <EpisodeBySource
+                    key={key}
+                    index={key}
+                    episodeInfo={episode}
+                    mediaInfo={mediaInfo}
+                    currEpisodesSource={currEpisodesSource}
+                    imdb={imdb}
+                    crunchyrollInitialEpisodes={crunchyrollInitialEpisodes}
+                    wasEpisodeWatchedOnAnilist={
+                      episodesWatchedOnAnilist
+                        ? key + itemOffset + 1 < episodesWatchedOnAnilist
+                        : undefined
+                    }
+                    itemOffset={itemOffset}
+                    currEpisodesWatched={currEpisodesWatched}
+                    useDubbedRoute={isEpisodesDubbed || false}
+                  />
+                )
+              )}
             </AnimatePresence>
           </motion.ol>
         )}
@@ -455,50 +510,45 @@ export default function EpisodesContainer({ imdb, mediaInfo, crunchyrollInitialE
         {isLoading && (
           <motion.div
             id={styles.loading_episodes_container}
-            variants={framerMotionLoadingEpisodes as any}
+            variants={framerMotionLoadingEpisodes}
             initial="initial"
             animate="animate"
             exit="exit"
           >
-
             {simulateRange(rangeEpisodesPerPage).map((item, key) => (
-
               <div key={key}>
-
                 <motion.div className={styles.loading_img_placeholder}>
-
                   <LoadingSvg width={60} height={60} alt="Loading Episodes" />
-
                 </motion.div>
 
                 <span className={styles.loading_text_placeholder}></span>
-
               </div>
             ))}
-
           </motion.div>
         )}
 
-        {((episodesList?.length == 0 || episodesList == null) && !isLoading) && (
-
+        {(episodesList?.length == 0 || episodesList == null) && !isLoading && (
           <ErrorPanel
-            errorText={<>Not available on <span>{currEpisodesSource}</span></>}
+            errorText={
+              <>
+                Not available on <span>{currEpisodesSource}</span>
+              </>
+            }
           />
-
         )}
 
         {totalNumberPages >= 1 && (
           <nav id={styles.pagination_buttons_container}>
-
             <PaginationButtons
               onPageChange={handleButtonPageNavigation}
               pageCount={totalNumberPages}
-              redirectToPage={Number(currSearchParams.get("page")) || currActivePage}
+              redirectToPage={
+                Number(currSearchParams.get("page")) || currActivePage
+              }
             />
-
           </nav>
         )}
       </div>
-    </React.Fragment >
-  )
+    </React.Fragment>
+  );
 }

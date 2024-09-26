@@ -2,7 +2,7 @@
 import styles from "./component.module.css";
 import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
-import { ApiMediaResults } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import { initFirebase } from "@/app/firebaseApp";
 import { getAuth } from "firebase/auth";
 import {
@@ -39,12 +39,12 @@ import { SourceType } from "@/app/ts/interfaces/episodesSourceInterface";
 import SkipSvg from "@/public/assets/chevron-double-right.svg";
 import PlaySvg from "@/public/assets/play.svg";
 import { useAppSelector } from "@/app/lib/redux/hooks";
-import { KeepWatchingItem } from "@/app/ts/interfaces/firestoreDataInterface";
+import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreDataInterface";
 import anilistUsers from "@/app/api/anilist/anilistUsers";
 
 type VideoPlayerType = {
   mediaSource: SourceType["source"];
-  mediaInfo: ApiMediaResults;
+  mediaInfo: MediaDataFullInfo;
   mediaEpisodes?: MediaEpisodes[] | EpisodeAnimeWatch[];
   videoInfo: {
     urlSource: string;
@@ -154,9 +154,9 @@ export default function VideoPlayer({
   }
 
   async function getUserPreferredLanguage() {
-    let subtitleLanguage = videoInfo.subtitleLang;
+    const subtitleLanguage = videoInfo.subtitleLang;
 
-    let subtitleListMapped: SubtitlesType[] = [];
+    const subtitleListMapped: SubtitlesType[] = [];
 
     // get user language and filter through the available subtitles to this media
     videoInfo.subtitlesList?.map((subtitle) => {
@@ -190,7 +190,7 @@ export default function VideoPlayer({
 
     let keepWatchingList = userDoc.get("keepWatching");
 
-    let convertedListFromObjectToArray = Object.keys(keepWatchingList).map(
+    const convertedListFromObjectToArray = Object.keys(keepWatchingList).map(
       (key) => {
         return keepWatchingList[key];
       }
@@ -198,7 +198,7 @@ export default function VideoPlayer({
 
     keepWatchingList = convertedListFromObjectToArray
       .filter((media) => media.length != 0 && media)
-      .find((media: KeepWatchingItem) => media.id == mediaInfo.id);
+      .find((media: KeepWatchingMediaData) => media.id == mediaInfo.id);
 
     if (keepWatchingList)
       return setEpisodeLastStop(keepWatchingList.episodeTimeLastStop);
@@ -294,8 +294,7 @@ export default function VideoPlayer({
       dub: searchParams?.get("dub") == "true" ? true : false,
       source: mediaSource,
       updatedAt:
-        Date.parse(new Date(Date.now() - 0 * 24 * 60 * 60 * 1000) as any) /
-        1000,
+        Date.parse(`${new Date(Date.now() - 0 * 24 * 60 * 60 * 1000)}`) / 1000,
     };
 
     await setDoc(
@@ -309,6 +308,7 @@ export default function VideoPlayer({
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleSkipEpisodeIntrosAndOutros(e: any) {
     const currentTime = Math.round(e.currentTime);
     const duration = Math.round(e.duration);
@@ -370,7 +370,7 @@ export default function VideoPlayer({
   async function fetchNextEpisodeInfo() {
     if (!mediaEpisodes) return;
 
-    let nextEpisodeInfo = mediaEpisodes.find(
+    const nextEpisodeInfo = mediaEpisodes.find(
       (item: { number: number }) =>
         item.number == Number(episodeInfo.episodeNumber) + 1
     );
@@ -390,7 +390,7 @@ export default function VideoPlayer({
           useAlternateLinkOption: true,
         });
 
-        let nextEpisodeVideoUrl = nextEpisode!.sources.find(
+        const nextEpisodeVideoUrl = nextEpisode!.sources.find(
           (item) => item.quality == "default"
         ).url;
 

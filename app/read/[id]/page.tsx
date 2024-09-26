@@ -9,8 +9,8 @@ import {
 } from "@/app/ts/interfaces/apiMangadexDataInterface";
 import manga from "@/app/api/consumet/consumetManga";
 import {
-  ApiDefaultResult,
-  ApiMediaResults,
+  MediaData,
+  MediaDataFullInfo,
 } from "../../ts/interfaces/apiAnilistDataInterface";
 import ChaptersPages from "./components/ChaptersPages/index";
 import ChaptersListContainer from "./components/ChaptersListContainer";
@@ -29,7 +29,7 @@ export async function generateMetadata({
 }) {
   const mediaInfo = (await anilist.getMediaInfo({
     id: params.id,
-  })) as ApiDefaultResult;
+  })) as MediaData;
 
   return {
     title: !mediaInfo
@@ -55,7 +55,7 @@ async function ReadChapter({
 }) {
   const mediaInfo = (await anilist.getMediaInfo({
     id: params.id,
-  })) as ApiMediaResults;
+  })) as MediaDataFullInfo;
 
   let currChapterInfo: MangaChapters | undefined = undefined;
   let allAvailableChaptersList: MangaChapters[] | undefined = undefined;
@@ -125,7 +125,7 @@ async function ReadChapter({
       />
 
       <div id={styles.all_chapters_container}>
-        <MediaCardExpanded.Container mediaInfo={mediaInfo as ApiDefaultResult}>
+        <MediaCardExpanded.Container mediaInfo={mediaInfo as MediaData}>
           <MediaCardExpanded.Description description={mediaInfo.description} />
         </MediaCardExpanded.Container>
 

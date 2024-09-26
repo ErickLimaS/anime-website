@@ -25,8 +25,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { convertFromUnix, getCurrentUnixDate } from "@/app/lib/formatDateUnix";
 import anilist from "@/app/api/anilist/anilistMedias";
-import { ApiMediaResults } from "@/app/ts/interfaces/apiAnilistDataInterface";
-import { useAppSelector, useAppDispatch } from "@/app/lib/redux/hooks";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { useAppSelector } from "@/app/lib/redux/hooks";
 import { NotificationsCollectionFirebase } from "@/app/ts/interfaces/firestoreDataInterface";
 
 function NotificationsContainer() {
@@ -109,7 +109,7 @@ function NotificationsContainer() {
     );
 
     if (userAssignedNotifications.length > 0) {
-      let mediasIDsArray = [];
+      const mediasIDsArray = [];
 
       mediasIDsArray.push(
         userAssignedNotifications.map((item) => `${item.mediaId}`)
@@ -168,7 +168,7 @@ function NotificationsContainer() {
 
     if (isCurrDateBiggerThanLastUpdate()) {
       if (userAssignedNotifications) {
-        let notificationsToBeShownList = [];
+        const notificationsToBeShownList = [];
 
         for (let i = 0; userAssignedNotifications.length >= i + 1; i++) {
           const notificationsMatchingIDsList = userAssignedNotifications.find(
@@ -246,7 +246,7 @@ function NotificationsContainer() {
       );
 
     async function updateMediaOnNotificationsCollection(
-      mediaData: ApiMediaResults
+      mediaData: MediaDataFullInfo
     ) {
       const mediaNotificationDoc = (await getDoc(
         doc(db, "notifications", `${mediaData.id}`)
@@ -306,7 +306,7 @@ function NotificationsContainer() {
         // gets curr media's latest info
         const mediaInfo = (await anilist.getMediaInfo({
           id: Number(mediaNotification.mediaId),
-        })) as ApiMediaResults;
+        })) as MediaDataFullInfo;
 
         await updateMediaOnNotificationsCollection(mediaInfo);
 

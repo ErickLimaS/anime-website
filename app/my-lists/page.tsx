@@ -4,7 +4,7 @@ import MediasContainer from "./components/MediasContainer";
 import NavigationSideBar from "./components/NavigationSideBar";
 import { cookies, headers } from "next/headers";
 import anilistUsers from "../api/anilist/anilistUsers";
-import { ApiDefaultResult } from "../ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "../ts/interfaces/apiAnilistDataInterface";
 import { checkDeviceIsMobile } from "../lib/checkMobileOrDesktop";
 
 export async function generateMetadata() {
@@ -26,16 +26,14 @@ type FetchListsResultsType = {
       id: number;
       userId: number;
       mediaId: number;
-      media: ApiDefaultResult;
+      media: MediaData;
     }[];
   }[];
 };
 
 async function MyListsPage({
-  params,
   searchParams,
 }: {
-  params?: unknown;
   searchParams?: {
     format: string;
     sort: "title_desc" | "title_asc";
@@ -82,10 +80,10 @@ async function MyListsPage({
             <span>
               {searchParams?.type
                 ? `/ ${
-                    searchParams.type == "tv"
-                      ? "ANIME"
-                      : searchParams.type.toUpperCase()
-                  }`
+                  searchParams.type == "tv"
+                    ? "ANIME"
+                    : searchParams.type.toUpperCase()
+                }`
                 : ""}
             </span>
           </h1>

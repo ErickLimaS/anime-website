@@ -1,3 +1,3 @@
 export default function simulateRange(n: number) {
-    return [...Array(n).keys()]
+  return [...Array(n).keys()];
 }

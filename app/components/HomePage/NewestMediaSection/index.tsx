@@ -6,8 +6,8 @@ import * as MediaCardClientSide from "../../MediaCards/MediaCard/variantClientSi
 import * as MediaInfoExpanded from "../../MediaCards/MediaInfoExpandedWithCover";
 import NavigationButtons from "../../NavigationButtons";
 import {
-  ApiAiringMidiaResults,
-  ApiDefaultResult,
+  AiringMediaResult,
+  MediaData,
 } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import anilist from "@/app/api/anilist/anilistMedias";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -19,10 +19,10 @@ export const revalidate = 1800; // revalidate the data every 30 min
 function NewestMediaSection({
   initialAnimesList,
 }: {
-  initialAnimesList: ApiDefaultResult[];
+  initialAnimesList: MediaData[];
 }) {
   const [animesList, setAnimesList] = useState<
-    ApiAiringMidiaResults[] | ApiDefaultResult[]
+    AiringMediaResult[] | MediaData[]
   >([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -79,7 +79,7 @@ function NewestMediaSection({
         showAdultContent: isAdultContentAllowed,
       })
       .then((res) =>
-        (res as ApiAiringMidiaResults[])
+        (res as AiringMediaResult[])
           .sort((a, b) => a.media.popularity - b.media.popularity)
           .reverse()
       )
@@ -120,18 +120,16 @@ function NewestMediaSection({
             <li>
               {animesList[0] ? (
                 <MediaInfoExpanded.Container
-                  mediaInfo={animesList[0] as ApiDefaultResult}
+                  mediaInfo={animesList[0] as MediaData}
                 >
                   <MediaInfoExpanded.Description
-                    description={
-                      (animesList as ApiDefaultResult[])[0].description
-                    }
+                    description={(animesList as MediaData[])[0].description}
                   />
 
                   <MediaInfoExpanded.Buttons
-                    media={(animesList as ApiDefaultResult[])[0]}
-                    mediaId={(animesList as ApiDefaultResult[])[0].id}
-                    mediaFormat={(animesList as ApiDefaultResult[])[0].format}
+                    media={(animesList as MediaData[])[0]}
+                    mediaId={(animesList as MediaData[])[0].id}
+                    mediaFormat={(animesList as MediaData[])[0].format}
                   />
                 </MediaInfoExpanded.Container>
               ) : (
@@ -139,18 +137,16 @@ function NewestMediaSection({
               )}
             </li>
 
-            {(animesList as ApiDefaultResult[])
-              .slice(1, 11)
-              .map((media, key) => (
-                <MediaCardClientSide.ListItemContainer
-                  key={key}
-                  positionIndex={key + 1}
-                  showCoverArt={{ mediaInfo: media }}
-                  alternativeBorder
-                >
-                  <MediaCard.MediaInfo mediaInfo={media} />
-                </MediaCardClientSide.ListItemContainer>
-              ))}
+            {(animesList as MediaData[]).slice(1, 11).map((media, key) => (
+              <MediaCardClientSide.ListItemContainer
+                key={key}
+                positionIndex={key + 1}
+                showCoverArt={{ mediaInfo: media }}
+                alternativeBorder
+              >
+                <MediaCard.MediaInfo mediaInfo={media} />
+              </MediaCardClientSide.ListItemContainer>
+            ))}
           </React.Fragment>
         )}
       </ul>

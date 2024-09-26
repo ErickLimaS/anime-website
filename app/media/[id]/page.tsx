@@ -1,4 +1,4 @@
-import { ApiMediaResults } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaDataFullInfo } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import React from "react";
 import anilist from "@/app/api/anilist/anilistMedias";
 import styles from "./page.module.css";
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
   const mediaData = (await anilist.getMediaInfo({
     id: params.id,
     accessToken: headers().get("Authorization")?.slice(7),
-  })) as ApiMediaResults;
+  })) as MediaDataFullInfo;
 
   return {
     title: `${mediaData.title.romaji || mediaData.title.native} | AniProject`,
@@ -48,7 +48,7 @@ export default async function MediaPage({
   const mediaInfo = (await anilist.getMediaInfo({
     id: params.id,
     accessToken: headers().get("Authorization")?.slice(7),
-  })) as ApiMediaResults;
+  })) as MediaDataFullInfo;
 
   // GET MEDIA INFO ON IMDB
   const imdbMediaInfo = (await getMediaInfo({
@@ -74,7 +74,7 @@ export default async function MediaPage({
 
   // GET MEDIA EPISODES ON IMDB
   function getImdbEpisodesListWithNoSeasons() {
-    let imdbEpisodesMapped: ImdbEpisode[] = [];
+    const imdbEpisodesMapped: ImdbEpisode[] = [];
 
     imdbMediaInfo?.seasons?.map((itemA) =>
       itemA.episodes?.map((itemB) => imdbEpisodesMapped.push(itemB))

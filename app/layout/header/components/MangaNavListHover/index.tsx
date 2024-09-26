@@ -4,13 +4,13 @@ import styles from "./component.module.css";
 import * as MediaInfoExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
 import Link from "next/link";
 import anilist from "@/app/api/anilist/anilistMedias";
-import { ApiDefaultResult } from "@/app/ts/interfaces/apiAnilistDataInterface";
+import { MediaData } from "@/app/ts/interfaces/apiAnilistDataInterface";
 import * as MediaCard from "@/app/components/MediaCards/MediaCard";
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg";
 import ErrorPlaceholder from "../ErrorPlaceholder";
 
 function MangaNavListHover() {
-  const [mangaList, setMangaList] = useState<ApiDefaultResult[] | null>([]);
+  const [mangaList, setMangaList] = useState<MediaData[] | null>([]);
 
   useEffect(() => {
     fetchTrendingMangasList();
@@ -20,7 +20,7 @@ function MangaNavListHover() {
     const trendingMangas = (await anilist.getMediaForThisFormat({
       type: "MANGA",
       sort: "TRENDING_DESC",
-    })) as ApiDefaultResult[];
+    })) as MediaData[];
 
     setMangaList(trendingMangas);
   };

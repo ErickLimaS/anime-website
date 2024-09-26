@@ -1,98 +1,72 @@
-import Axios from "axios"
+import Axios from "axios";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
+  setMediaTitleLanguageCookie: async ({ lang }: { lang?: string }) => {
+    try {
+      const setCookieResult = await Axios({
+        url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`,
+        method: "POST",
+        data: { titleLanguage: lang },
+      });
 
-    setMediaTitleLanguageCookie: async ({ lang }: { lang?: string }) => {
+      return setCookieResult;
+    } catch (err) {
+      console.log(err);
 
-        try {
+      return err;
+    }
+  },
 
-            const setCookieResult = await Axios({
-                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/media-title-language`,
-                method: "POST",
-                data: { titleLanguage: lang }
-            })
+  setAdultContentCookie: async ({ isEnabled }: { isEnabled?: string }) => {
+    try {
+      const setAdultContentResult = await Axios({
+        url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`,
+        method: "POST",
+        data: { isAdultContentEnabled: isEnabled },
+      });
 
-            return setCookieResult
+      return setAdultContentResult;
+    } catch (err) {
+      console.log(err);
 
-        }
-        catch (err) {
+      return err;
+    }
+  },
 
-            console.log(err)
+  setSubtitleLanguageCookie: async ({ lang }: { lang?: string }) => {
+    try {
+      const setAdultContentResult = await Axios({
+        url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`,
+        method: "POST",
+        data: { subtitleLanguage: lang },
+      });
 
-            return err
+      return setAdultContentResult;
+    } catch (err) {
+      console.log(err);
 
-        }
+      return err;
+    }
+  },
 
-    },
+  setPlayWrongMediaCookie: async ({
+    playWrongMedia,
+  }: {
+    playWrongMedia?: string;
+  }) => {
+    try {
+      const setPlayWrongMedia = await Axios({
+        url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/wrong-media-enabled`,
+        method: "POST",
+        data: { isEnabled: playWrongMedia },
+      });
 
-    setAdultContentCookie: async ({ isEnabled }: { isEnabled?: string }) => {
+      return setPlayWrongMedia;
+    } catch (err) {
+      console.log(err);
 
-        try {
-
-            const setAdultContentResult = await Axios({
-                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/adult-content`,
-                method: "POST",
-                data: { isAdultContentEnabled: isEnabled }
-            })
-
-            return setAdultContentResult
-
-        }
-        catch (err) {
-
-            console.log(err)
-
-            return err
-
-        }
-
-    },
-
-    setSubtitleLanguageCookie: async ({ lang }: { lang?: string }) => {
-
-        try {
-
-            const setAdultContentResult = await Axios({
-                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/subtitle`,
-                method: "POST",
-                data: { subtitleLanguage: lang }
-            })
-
-            return setAdultContentResult
-
-        }
-        catch (err) {
-
-            console.log(err)
-
-            return err
-
-        }
-
-    },
-
-    setPlayWrongMediaCookie: async ({ playWrongMedia }: { playWrongMedia?: string }) => {
-
-        try {
-
-            const setPlayWrongMedia = await Axios({
-                url: `${process.env.NEXT_PUBLIC_WEBSITE_ORIGIN_URL}/api/wrong-media-enabled`,
-                method: "POST",
-                data: { isEnabled: playWrongMedia }
-            })
-
-            return setPlayWrongMedia
-
-        }
-        catch (err) {
-
-            console.log(err)
-
-            return err
-
-        }
-
-    },
-
-}
+      return err;
+    }
+  },
+};
