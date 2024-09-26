@@ -119,11 +119,11 @@ export function Button({
       title={
         wasAddedToFavourites
           ? `Remove ${
-              mediaInfo.title && mediaInfo.title?.userPreferred
-            } from Favourites`
+            mediaInfo.title && mediaInfo.title?.userPreferred
+          } from Favourites`
           : `Add ${
-              mediaInfo.title && mediaInfo.title?.userPreferred
-            } To Favourites`
+            mediaInfo.title && mediaInfo.title?.userPreferred
+          } To Favourites`
       }
     >
       {isLoading && <LoadingSvg alt="Loading Icon" width={16} height={16} />}

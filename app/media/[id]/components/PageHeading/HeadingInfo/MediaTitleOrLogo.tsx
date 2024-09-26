@@ -14,6 +14,7 @@ export default function HeadingTextAndMediaLogo({
   preferredLanguage?: string;
 }) {
   const userPreferredTitleLanguage = preferredLanguage
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ? (mediaTitles as any)[preferredLanguage.toLowerCase()]
     : null;
 

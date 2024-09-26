@@ -72,16 +72,16 @@ export default function GridHeadingMediaInfo({
         {mediaInfo.type == "ANIME" &&
           mediaInfo.format != "MOVIE" &&
           mediaInfo.status != "NOT_YET_RELEASED" && (
-            <li className={`${styles.info_item}`}>
-              <span>
-                <PlaySvg width={16} height={16} alt="Episodes" />
-              </span>
+          <li className={`${styles.info_item}`}>
+            <span>
+              <PlaySvg width={16} height={16} alt="Episodes" />
+            </span>
 
-              <h2>EPISODES</h2>
+            <h2>EPISODES</h2>
 
-              <p>{getEpisodesQuantity()}</p>
-            </li>
-          )}
+            <p>{getEpisodesQuantity()}</p>
+          </li>
+        )}
 
         {mediaInfo.type == "MANGA" && (
           <li className={`${styles.info_item}`}>

@@ -70,21 +70,21 @@ function AnimeNavListHover() {
 
           {animeData.length > 0 &&
           animeData[animeData.length - 1]?.trailer?.id ? (
-            <iframe
-              className="yt_embed_video"
-              src={`https://www.youtube.com/embed/${
-                animeData[animeData.length - 1].trailer.id
-              } `}
-              frameBorder={0}
-              title={
-                animeData[animeData.length - 1].title.userPreferred + " Trailer"
-              }
-              allow="accelerometer; autoplay; encrypted-media; gyroscope;"
-              allowFullScreen
-            />
-          ) : (
-            <LoadingSvg />
-          )}
+              <iframe
+                className="yt_embed_video"
+                src={`https://www.youtube.com/embed/${
+                  animeData[animeData.length - 1].trailer.id
+                } `}
+                frameBorder={0}
+                title={
+                  animeData[animeData.length - 1].title.userPreferred + " Trailer"
+                }
+                allow="accelerometer; autoplay; encrypted-media; gyroscope;"
+                allowFullScreen
+              />
+            ) : (
+              <LoadingSvg />
+            )}
         </div>
       </li>
     </ul>

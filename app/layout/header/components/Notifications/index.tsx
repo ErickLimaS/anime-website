@@ -100,6 +100,7 @@ function NotificationsContainer() {
   }
 
   async function mapUserAssignedNotificationsToFullMediaDoc() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let userAssignedNotifications: any[] = [];
 
     await getDoc(doc(db, "users", user?.uid || `${anilistUser?.id}`)).then(

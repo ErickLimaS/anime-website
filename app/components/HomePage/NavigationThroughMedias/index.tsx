@@ -353,8 +353,8 @@ function NavigationThroughMedias({
                     mediaSelect.format != "MOVIE" &&
                     mediaSelect.format != "MUSIC" &&
                     mediaSelect.format != "MANGA" && (
-                      <motion.p>{mediaSelect.episodes} Episodes</motion.p>
-                    )}
+                    <motion.p>{mediaSelect.episodes} Episodes</motion.p>
+                  )}
 
                   {mediaSelect.genres && (
                     <motion.p className={styles.smaller_fonts}>

@@ -159,16 +159,16 @@ export async function optimizedFetchOnAniwatch({
     return mediaEpisodesList?.episodes?.length == 0
       ? null
       : {
-          episodesDub:
+        episodesDub:
             mediaFoundByID?.episodes?.dub ||
             mediasWithSameTitle[0]?.episodes?.dub ||
             0,
-          episodesSub:
+        episodesSub:
             mediaFoundByID?.episodes?.sub ||
             mediasWithSameTitle[0]?.episodes?.sub ||
             0,
-          episodes: mediaEpisodesList.episodes,
-        };
+        episodes: mediaEpisodesList.episodes,
+      };
   }
 
   return mediasWithSameTitle;

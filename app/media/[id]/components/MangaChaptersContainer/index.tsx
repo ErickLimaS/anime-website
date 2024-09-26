@@ -239,8 +239,8 @@ function MangaChaptersContainer({
           {/* SHOWS WHEN THERES NO RESULTS  */}
           {!isLoading &&
             (chaptersList.length == 0 || currMangasList == null) && (
-              <ErrorPanel errorText={<>No chapters available.</>} />
-            )}
+            <ErrorPanel errorText={<>No chapters available.</>} />
+          )}
         </motion.ol>
       </AnimatePresence>
 

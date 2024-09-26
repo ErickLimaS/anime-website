@@ -80,10 +80,10 @@ async function MyListsPage({
             <span>
               {searchParams?.type
                 ? `/ ${
-                    searchParams.type == "tv"
-                      ? "ANIME"
-                      : searchParams.type.toUpperCase()
-                  }`
+                  searchParams.type == "tv"
+                    ? "ANIME"
+                    : searchParams.type.toUpperCase()
+                }`
                 : ""}
             </span>
           </h1>

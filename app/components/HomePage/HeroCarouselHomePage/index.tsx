@@ -131,22 +131,22 @@ function HeroCarousel({
             >
               {autoPlayTrailer &&
                 animesList[currMediaOnScreenIndex]?.trailer && (
-                  <AnimatePresence>
-                    <motion.div className={styles.video_container}>
-                      <motion.iframe
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 3 }}
-                        src={`https://www.youtube.com/embed/${animesList[currMediaOnScreenIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0&playlist=${animesList[currMediaOnScreenIndex].trailer.id}`}
-                        frameBorder={0}
-                        title={
-                          animesList[currMediaOnScreenIndex].title
-                            .userPreferred + " Trailer"
-                        }
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                )}
+                <AnimatePresence>
+                  <motion.div className={styles.video_container}>
+                    <motion.iframe
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 3 }}
+                      src={`https://www.youtube.com/embed/${animesList[currMediaOnScreenIndex].trailer.id}?controls=0&autoplay=1&mute=1&playsinline=1&loop=1&showinfo=0&playlist=${animesList[currMediaOnScreenIndex].trailer.id}`}
+                      frameBorder={0}
+                      title={
+                        animesList[currMediaOnScreenIndex].title
+                          .userPreferred + " Trailer"
+                      }
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              )}
 
               <div className={styles.carousel_position_wrapper}>
                 <div className={styles.item_info}>
@@ -192,21 +192,21 @@ function HeroCarousel({
                       animesList[currMediaOnScreenIndex].format != "MOVIE" &&
                       animesList[currMediaOnScreenIndex]?.nextAiringEpisode ==
                         null && (
-                        <p>
-                          {animesList[
-                            currMediaOnScreenIndex
-                          ].episodes.toString()}{" "}
-                          {animesList[currMediaOnScreenIndex].episodes > 1
-                            ? "Episodes"
-                            : "Episode"}
-                        </p>
-                      )}
+                      <p>
+                        {animesList[
+                          currMediaOnScreenIndex
+                        ].episodes.toString()}{" "}
+                        {animesList[currMediaOnScreenIndex].episodes > 1
+                          ? "Episodes"
+                          : "Episode"}
+                      </p>
+                    )}
                     {animesList[currMediaOnScreenIndex]?.duration &&
                       animesList[currMediaOnScreenIndex].format == "MOVIE" && (
-                        <p>
-                          {animesList[currMediaOnScreenIndex].duration} Minutes
-                        </p>
-                      )}
+                      <p>
+                        {animesList[currMediaOnScreenIndex].duration} Minutes
+                      </p>
+                    )}
                     {animesList[currMediaOnScreenIndex]?.nextAiringEpisode && (
                       <span>|</span>
                     )}

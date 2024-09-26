@@ -152,24 +152,24 @@ function PlaylistItemsResults({
                   </li>
                 ))
               : userBookmarksList.map((media, key) => (
-                  <li key={key}>
-                    <MediaCard.Container onDarkMode>
-                      <MediaCard.MediaImgLink
-                        hideOptionsButton
-                        mediaInfo={media as MediaData}
-                        mediaId={media.id}
-                        title={media.title.userPreferred}
-                        formatOrType={media.format}
-                        url={media.coverImage.extraLarge}
-                      />
+                <li key={key}>
+                  <MediaCard.Container onDarkMode>
+                    <MediaCard.MediaImgLink
+                      hideOptionsButton
+                      mediaInfo={media as MediaData}
+                      mediaId={media.id}
+                      title={media.title.userPreferred}
+                      formatOrType={media.format}
+                      url={media.coverImage.extraLarge}
+                    />
 
-                      <MediaCard.LinkTitle
-                        title={media.title.userPreferred}
-                        id={media.id}
-                      />
-                    </MediaCard.Container>
-                  </li>
-                ))}
+                    <MediaCard.LinkTitle
+                      title={media.title.userPreferred}
+                      id={media.id}
+                    />
+                  </MediaCard.Container>
+                </li>
+              ))}
           </ul>
         </div>
       )}

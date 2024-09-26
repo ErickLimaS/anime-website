@@ -20,15 +20,15 @@ import { AnimatePresence, motion } from "framer-motion";
 type ComponentTypes = {
   mediaFetched:
     | {
-        name: string;
-        status: string;
-        entries: {
-          id: number;
-          userId: number;
-          mediaId: number;
-          media: MediaData;
-        }[];
-      }[]
+      name: string;
+      status: string;
+      entries: {
+        id: number;
+        userId: number;
+        mediaId: number;
+        media: MediaData;
+      }[];
+    }[]
     | undefined;
   params?: {
     format: string;
@@ -48,7 +48,9 @@ export default function MediasContainer({
     { name: string; medias: ListItemOnMediasSaved[] }[]
   >([]);
 
-  const anilistUser = useAppSelector((state) => state.UserInfo?.value);
+  const anilistUser = useAppSelector(
+    (state) => state.UserInfo?.value as UserAnilist
+  );
 
   const auth = getAuth();
   const [user, loading] = useAuthState(auth);

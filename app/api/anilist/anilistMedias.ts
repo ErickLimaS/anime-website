@@ -261,8 +261,8 @@ export default {
         return showAdultContent
           ? (data.data.Page.airingSchedules as AiringMediaResult[])
           : (filterMediasWithAdultContent(
-              data.data.Page.airingSchedules
-            ) as AiringMediaResult[]);
+            data.data.Page.airingSchedules
+          ) as AiringMediaResult[]);
       } catch (error) {
         console.log((error as Error).message);
 
@@ -360,9 +360,9 @@ export default {
         return showAdultContent
           ? (data.data.Page.media as MediaData[])
           : (filterMediasWithAdultContent(
-              data.data.Page.media,
-              "mediaByFormat"
-            ) as MediaData[]);
+            data.data.Page.media,
+            "mediaByFormat"
+          ) as MediaData[]);
       } catch (error) {
         console.log((error as Error).message);
 

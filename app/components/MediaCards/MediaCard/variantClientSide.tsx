@@ -44,9 +44,9 @@ export function FramerMotionContainer({
       onClick={
         framerMotionProps
           ? () =>
-              framerMotionProps.framerMotionExpandCardFunction(
-                String(framerMotionProps.mediaId)
-              )
+            framerMotionProps.framerMotionExpandCardFunction(
+              String(framerMotionProps.mediaId)
+            )
           : undefined
       } // framer motion
       className={`${styles.media_item_container} ${onDarkMode ? styles.darkMode : ""} ${isHiddenOnDesktop ? styles.midia_item_container_hidden : ""}`}

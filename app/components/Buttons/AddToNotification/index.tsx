@@ -163,7 +163,7 @@ function AddToNotificationsButton({
     } else {
       const mediaInfoDoc = mediaNotificationDoc.data();
 
-      let mediaEpisodes = mediaInfoDoc.episodes.sort(
+      const mediaEpisodes = mediaInfoDoc.episodes.sort(
         (a: { number: number }, b: { number: number }) => a.number - b.number
       );
 
