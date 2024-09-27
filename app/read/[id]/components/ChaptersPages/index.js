@@ -16,199 +16,199 @@ import RectangleSvg from "@/public/assets/rectangle.svg"
 
 export default function ChaptersPages({ chapters, initialPage }) {
 
-    const [currPageNumber, setCurrPageNumber] = useState(initialPage || 0)
-    const [showOnModal, setShowOnModal] = useState(false)
+  const [currPageNumber, setCurrPageNumber] = useState(initialPage || 0)
+  const [showOnModal, setShowOnModal] = useState(false)
 
-    const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-    const [format, setFormat] = useState("manga")
+  const [format, setFormat] = useState("manga")
 
-    const pagesComponentRef = useRef()
+  const pagesComponentRef = useRef()
 
-    useEffect(() => { setCurrPageNumber(0) }, [chapters, initialPage])
+  useEffect(() => { setCurrPageNumber(0) }, [chapters, initialPage])
 
-    useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "smooth" }) }, [])
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "smooth" }) }, [])
 
-    function handleChangeViewFormat() {
+  function handleChangeViewFormat() {
 
-        setIsLoading(true)
+    setIsLoading(true)
 
-        setFormat(format == "manga" ? "webtoon" : "manga")
+    setFormat(format == "manga" ? "webtoon" : "manga")
 
-        setTimeout(() => setIsLoading(false), 400)
+    setTimeout(() => setIsLoading(false), 400)
 
-    }
+  }
 
-    function changeCurrPage(number) { setCurrPageNumber(number) }
+  function changeCurrPage(number) { setCurrPageNumber(number) }
 
-    return (
-        <section id={styles.container}>
+  return (
+    <section id={styles.container}>
 
-            <PagesContainer
-                ref={pagesComponentRef}
-                format={format}
-                isLoading={isLoading}
-                chapters={chapters}
-                initialPage={initialPage}
-                changePageFunction={(e) => changeCurrPage(e.data)}
-            />
+      <PagesContainer
+        ref={pagesComponentRef}
+        format={format}
+        isLoading={isLoading}
+        chapters={chapters}
+        initialPage={initialPage}
+        changePageFunction={(e) => changeCurrPage(e.data)}
+      />
 
-            <div id={styles.btns_container}>
+      <div id={styles.btns_container}>
 
-                <motion.button id={styles.change_format_btn} onClick={() => handleChangeViewFormat()} whileTap={{ scale: 0.9 }}>
-                    {format == "manga" ?
-                        <RectangleSvg width={16} height={16} style={{ scale: "1.4", transform: "rotate(90deg)" }} />
-                        :
-                        <MangaSvg width={16} height={16} />
-                    }
-                    {format == "manga" ? "Webtoon" : "Manga"} Mode {format == "manga" ? "(BETA)" : ""}
-                </motion.button>
+        <motion.button id={styles.change_format_btn} onClick={() => handleChangeViewFormat()} whileTap={{ scale: 0.9 }}>
+          {format == "manga" ?
+            <RectangleSvg width={16} height={16} style={{ scale: "1.4", transform: "rotate(90deg)" }} />
+            :
+            <MangaSvg width={16} height={16} />
+          }
+          {format == "manga" ? "Webtoon" : "Manga"} Mode {format == "manga" ? "(BETA)" : ""}
+        </motion.button>
 
-                <motion.button id={styles.fullscreen_btn} onClick={() => setShowOnModal(true)} whileTap={{ scale: 0.9 }}>
-                    <FullScreenSvg width={16} height={16} /> Read on Fullscreen
-                </motion.button>
+        <motion.button id={styles.fullscreen_btn} onClick={() => setShowOnModal(true)} whileTap={{ scale: 0.9 }}>
+          <FullScreenSvg width={16} height={16} /> Read on Fullscreen
+        </motion.button>
 
-            </div>
+      </div>
 
-            <FullScreenPagesView
-                ref={pagesComponentRef}
-                isLoading={isLoading}
-                chapters={chapters}
-                format={format}
-                showOnModal={showOnModal}
-                initialPage={initialPage}
-                currPageNumber={currPageNumber}
-                closeModalFunction={() => setShowOnModal(false)}
-                changePageFunction={(e) => changeCurrPage(e.data)}
-            />
+      <FullScreenPagesView
+        ref={pagesComponentRef}
+        isLoading={isLoading}
+        chapters={chapters}
+        format={format}
+        showOnModal={showOnModal}
+        initialPage={initialPage}
+        currPageNumber={currPageNumber}
+        closeModalFunction={() => setShowOnModal(false)}
+        changePageFunction={(e) => changeCurrPage(e.data)}
+      />
 
-            <span className={styles.page_indicator_text}>
-                Page <b>{currPageNumber + 1 >= chapters.length ? chapters.length : `${currPageNumber + 1}`}</b> <b className={styles.text_only_desktop}>{currPageNumber + 2 > chapters.length ? "" : ` - ${currPageNumber + 2}`}</b> out of <b>{chapters.length}</b>
-            </span>
+      <span className={styles.page_indicator_text}>
+        Page <b>{currPageNumber + 1 >= chapters.length ? chapters.length : `${currPageNumber + 1}`}</b> <b className={styles.text_only_desktop}>{currPageNumber + 2 > chapters.length ? "" : ` - ${currPageNumber + 2}`}</b> out of <b>{chapters.length}</b>
+      </span>
 
-        </section>
-    )
+    </section>
+  )
 }
 
 function PagesContainer({ isLoading, chapters, format, initialPage, changePageFunction, ref }) {
 
-    return (
+  return (
 
-        <AnimatePresence>
-            {(!isLoading && chapters) && (
-                <motion.div
-                    id={styles.pages_container}
-                    data-format={format}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1, transition: { duration: .4 } }}
-                    exit={{ opacity: 0, height: 0 }}
-                >
+    <AnimatePresence>
+      {(!isLoading && chapters) && (
+        <motion.div
+          id={styles.pages_container}
+          data-format={format}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: .4 } }}
+          exit={{ opacity: 0, height: 0 }}
+        >
 
-                    <HTMLFlipBook
-                        ref={ref}
-                        size='stretch'
-                        autoSize
-                        width={750}
-                        height={format == "manga" ? 933 : 2000}
-                        minWidth={315}
-                        maxWidth={1000}
-                        minHeight={400}
-                        maxHeight={1533}
-                        startZIndex={initialPage || 0}
-                        flippingTime={300}
-                        onFlip={changePageFunction}
-                    >
+          <HTMLFlipBook
+            ref={ref}
+            size='stretch'
+            autoSize
+            width={750}
+            height={format == "manga" ? 933 : 2000}
+            minWidth={315}
+            maxWidth={1000}
+            minHeight={400}
+            maxHeight={1533}
+            startZIndex={initialPage || 0}
+            flippingTime={300}
+            onFlip={changePageFunction}
+          >
 
-                        {chapters.map((page, key) => (
-                            <div key={key}>
-                                <Image
-                                    src={page.img}
-                                    alt={`Page ${page.page}`}
-                                    fill
-                                    sizes='550px'
-                                    quality={100}
-                                />
-                            </div>
-                        ))}
+            {chapters.map((page, key) => (
+              <div key={key}>
+                <Image
+                  src={page.img}
+                  alt={`Page ${page.page}`}
+                  fill
+                  sizes='550px'
+                  quality={100}
+                />
+              </div>
+            ))}
 
-                    </HTMLFlipBook>
+          </HTMLFlipBook>
 
-                </motion.div>
-            )}
+        </motion.div>
+      )}
 
-        </AnimatePresence>
+    </AnimatePresence>
 
-    )
+  )
 
 }
 
 function FullScreenPagesView({ isLoading, chapters, format, showOnModal, currPageNumber, initialPage, closeModalFunction, changePageFunction, ref }) {
 
-    return (
-        <AnimatePresence>
-            {(!isLoading && chapters && showOnModal) && (
-                <motion.div
-                    id={styles.modal_chapter_pages_fullscreen_container}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1, transition: { duration: 0.3 } }}
-                    exit={{ opacity: 0 }}
-                >
+  return (
+    <AnimatePresence>
+      {(!isLoading && chapters && showOnModal) && (
+        <motion.div
+          id={styles.modal_chapter_pages_fullscreen_container}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.3 } }}
+          exit={{ opacity: 0 }}
+        >
 
-                    <div id={styles.close_btn_container}>
+          <div id={styles.close_btn_container}>
 
-                        <span className={styles.page_indicator_text}>
-                            Page <b>{currPageNumber + 1 >= chapters.length ? chapters.length : `${currPageNumber + 1}`}</b> <b className={styles.text_only_desktop}>{currPageNumber + 2 > chapters.length ? "" : ` - ${currPageNumber + 2}`}</b> out of <b>{chapters.length}</b>
-                        </span>
+            <span className={styles.page_indicator_text}>
+              Page <b>{currPageNumber + 1 >= chapters.length ? chapters.length : `${currPageNumber + 1}`}</b> <b className={styles.text_only_desktop}>{currPageNumber + 2 > chapters.length ? "" : ` - ${currPageNumber + 2}`}</b> out of <b>{chapters.length}</b>
+            </span>
 
-                        <motion.button onClick={closeModalFunction} whileTap={{ scale: 0.9 }} aria-label={showOnModal ? "Close" : "Open on Fullscreen"}>
-                            <CloseSvg width={16} height={16} />
-                        </motion.button>
+            <motion.button onClick={closeModalFunction} whileTap={{ scale: 0.9 }} aria-label={showOnModal ? "Close" : "Open on Fullscreen"}>
+              <CloseSvg width={16} height={16} />
+            </motion.button>
 
-                    </div>
+          </div>
 
-                    <HTMLFlipBook
-                        onClick={(e) => e.stopPropagation()}
-                        ref={ref}
-                        size='stretch'
-                        autoSize
-                        width={format == "manga" ? 850 : 31000}
-                        height={format == "manga" ? 1033 : 202000}
-                        minWidth={315}
-                        maxWidth={1000}
-                        minHeight={400}
-                        maxHeight={1533}
-                        startZIndex={initialPage || 0}
-                        flippingTime={300}
-                        onFlip={changePageFunction}
-                    >
+          <HTMLFlipBook
+            onClick={(e) => e.stopPropagation()}
+            ref={ref}
+            size='stretch'
+            autoSize
+            width={format == "manga" ? 850 : 31000}
+            height={format == "manga" ? 1033 : 202000}
+            minWidth={315}
+            maxWidth={1000}
+            minHeight={400}
+            maxHeight={1533}
+            startZIndex={initialPage || 0}
+            flippingTime={300}
+            onFlip={changePageFunction}
+          >
 
-                        {chapters.map((chapter, key) => (
-                            <div
-                                key={key}
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                <Image
-                                    src={chapter.img}
-                                    alt={`Page ${chapter.page}`}
-                                    fill
-                                    sizes='550px'
-                                    quality={100}
-                                />
-                            </div>
-                        ))}
+            {chapters.map((chapter, key) => (
+              <div
+                key={key}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Image
+                  src={chapter.img}
+                  alt={`Page ${chapter.page}`}
+                  fill
+                  sizes='550px'
+                  quality={100}
+                />
+              </div>
+            ))}
 
-                    </HTMLFlipBook>
+          </HTMLFlipBook>
 
-                </motion.div>
-            )}
+        </motion.div>
+      )}
 
-            {!chapters && (
+      {!chapters && (
 
-                <h2>Not Available</h2>
+        <h2>Not Available</h2>
 
-            )}
+      )}
 
-        </AnimatePresence>
-    )
+    </AnimatePresence>
+  )
 
 }

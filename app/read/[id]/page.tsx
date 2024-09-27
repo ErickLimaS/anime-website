@@ -1,109 +1,142 @@
-import React from 'react'
-import styles from "./page.module.css"
-import anilist from '@/app/api/anilistMedias'
-import * as MediaCardExpanded from '@/app/components/MediaCards/MediaInfoExpandedWithCover'
-import { MangaChapters, MangaInfo, MangaPages } from '@/app/ts/interfaces/apiMangadexDataInterface'
-import manga from '@/app/api/consumetManga'
-import { ApiDefaultResult, ApiMediaResults } from '../../ts/interfaces/apiAnilistDataInterface'
-import ChaptersPages from './components/ChaptersPages/index'
-import ChaptersListContainer from './components/ChaptersListContainer'
-import { getClosestMangaResultByTitle } from '@/app/lib/dataFetch/optimizedFetchMangaOptions'
-import { stringToUrlFriendly } from '@/app/lib/convertStrings'
-import { FetchEpisodeError } from '@/app/components/MediaFetchErrorPage'
+import React from "react";
+import styles from "./page.module.css";
+import anilist from "@/app/api/anilist/anilistMedias";
+import * as MediaCardExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
+import {
+  MangadexMangaChapters,
+  MangadexMangaInfo,
+  MangadexMangaPages,
+} from "@/app/ts/interfaces/mangadex";
+import manga from "@/app/api/consumet/consumetManga";
+import {
+  MediaData,
+  MediaDataFullInfo,
+} from "../../ts/interfaces/anilistMediaData";
+import ChaptersPages from "./components/ChaptersPages/index";
+import ChaptersListContainer from "./components/ChaptersListContainer";
+import { getClosestMangaResultByTitle } from "@/app/lib/dataFetch/optimizedFetchMangaOptions";
+import { stringToUrlFriendly } from "@/app/lib/convertStrings";
+import { FetchEpisodeError } from "@/app/components/MediaFetchErrorPage";
 
-export const revalidate = 1800 // revalidate cached data every 30 minutes
+export const revalidate = 1800; // revalidate cached data every 30 minutes
 
-export async function generateMetadata({ params, searchParams }: {
-    params: { id: number }, // ANILIST MANGA ID
-    searchParams: { chapter: string, source: string, q: string } // EPISODE NUMBER, SOURCE, EPISODE ID
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: { id: number }; // ANILIST MANGA ID
+  searchParams: { chapter: string; source: string; q: string }; // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
+  const mediaInfo = (await anilist.getMediaInfo({
+    id: params.id,
+  })) as MediaData;
 
-    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiDefaultResult
-
-    return {
-        title: !mediaInfo ? "Error | AniProject" : `Chapter ${searchParams.chapter} - ${mediaInfo.title.userPreferred} | AniProject`,
-        description: `Read ${mediaInfo.title.userPreferred} - Chapter ${searchParams.chapter}. ${mediaInfo.description && mediaInfo.description}`,
-    }
+  return {
+    title: !mediaInfo
+      ? "Error | AniProject"
+      : `Chapter ${searchParams.chapter} - ${mediaInfo.title.userPreferred} | AniProject`,
+    description: `Read ${mediaInfo.title.userPreferred} - Chapter ${
+      searchParams.chapter
+    }. ${mediaInfo.description && mediaInfo.description}`,
+  };
 }
 
-async function ReadChapter({ params, searchParams }: {
-    params: { id: number }, // ANILIST ANIME ID
-    searchParams: { chapter: string, source: "mangadex", q: string, page: string } // EPISODE NUMBER, SOURCE, EPISODE ID, LAST PAGE 
+async function ReadChapter({
+  params,
+  searchParams,
+}: {
+  params: { id: number }; // ANILIST ANIME ID
+  searchParams: {
+    chapter: string;
+    source: "mangadex";
+    q: string;
+    page: string;
+  }; // EPISODE NUMBER, SOURCE, EPISODE ID, LAST PAGE
 }) {
+  const mediaInfo = (await anilist.getMediaInfo({
+    id: params.id,
+  })) as MediaDataFullInfo;
 
-    const mediaInfo = await anilist.getMediaInfo({ id: params.id }) as ApiMediaResults
+  let currChapterInfo: MangadexMangaChapters | undefined = undefined;
+  let allAvailableChaptersList: MangadexMangaChapters[] | undefined = undefined;
+  let hadFetchError = false;
 
-    let currChapterInfo: MangaChapters | undefined = undefined
-    let allAvailableChaptersList: MangaChapters[] | undefined = undefined
-    let hadFetchError = false
+  const currMangaChapters = (await manga.getChapterPages({
+    chapterId: searchParams.q,
+  })) as MangadexMangaPages[];
 
-    const currMangaChapters = await manga.getChapterPages({ chapterId: searchParams.q }) as MangaPages[]
+  const mangaTitleUrlFrindly = stringToUrlFriendly(
+    mediaInfo.title.userPreferred
+  ).toLowerCase();
 
-    const mangaTitleUrlFrindly = stringToUrlFriendly(mediaInfo.title.userPreferred).toLowerCase()
+  let mangaInfo = (await manga.getInfoFromThisMedia({
+    id: mangaTitleUrlFrindly,
+  })) as MangadexMangaInfo;
 
-    let mangaInfo = await manga.getInfoFromThisMedia({ id: mangaTitleUrlFrindly }) as MangaInfo
+  if (!mangaInfo) {
+    const mangaClosestResult = await getClosestMangaResultByTitle(
+      mangaTitleUrlFrindly,
+      mediaInfo
+    );
 
-    if (!mangaInfo) {
-        const mangaClosestResult = await getClosestMangaResultByTitle(mangaTitleUrlFrindly, mediaInfo)
+    mangaInfo = (await manga.getInfoFromThisMedia({
+      id: mangaClosestResult as string,
+    })) as MangadexMangaInfo;
 
-        mangaInfo = await manga.getInfoFromThisMedia({ id: mangaClosestResult as string }) as MangaInfo
+    if (!mangaInfo) hadFetchError = true;
+  }
 
-        if (!mangaInfo) hadFetchError = true
-
-    }
-
-    if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
-
-    allAvailableChaptersList = mangaInfo.chapters.filter(item => item.pages != 0)
-
-    currChapterInfo = allAvailableChaptersList.find((item) => item.id == searchParams.q)
-
-    if (!currMangaChapters || !allAvailableChaptersList) hadFetchError = true
-
-    if (hadFetchError) return <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
-
+  if (hadFetchError)
     return (
-        <main id={styles.container}>
+      <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
+    );
 
-            <div id={styles.heading_container}>
+  allAvailableChaptersList = mangaInfo.chapters.filter(
+    (item) => item.pages != 0
+  );
 
-                <h1>
-                    <span>{mediaInfo.title.userPreferred}: </span>
-                    {currChapterInfo!.title == currChapterInfo!.chapterNumber ? `Chapter ${currChapterInfo!.chapterNumber}` : currChapterInfo!.title}
-                </h1>
+  currChapterInfo = allAvailableChaptersList.find(
+    (item) => item.id == searchParams.q
+  );
 
-                <small>{currChapterInfo!.pages} Pages</small>
+  if (!currMangaChapters || !allAvailableChaptersList) hadFetchError = true;
 
-            </div>
+  if (hadFetchError)
+    return (
+      <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
+    );
 
-            <ChaptersPages
-                chapters={currMangaChapters}
-                initialPage={Number(searchParams.page) || undefined}
-            />
+  return (
+    <main id={styles.container}>
+      <div id={styles.heading_container}>
+        <h1>
+          <span>{mediaInfo.title.userPreferred}: </span>
+          {currChapterInfo!.title == currChapterInfo!.chapterNumber
+            ? `Chapter ${currChapterInfo!.chapterNumber}`
+            : currChapterInfo!.title}
+        </h1>
 
-            <div id={styles.all_chapters_container}>
+        <small>{currChapterInfo!.pages} Pages</small>
+      </div>
 
-                <MediaCardExpanded.Container
-                    mediaInfo={mediaInfo as ApiDefaultResult}
+      <ChaptersPages
+        chapters={currMangaChapters}
+        initialPage={Number(searchParams.page) || undefined}
+      />
 
-                >
+      <div id={styles.all_chapters_container}>
+        <MediaCardExpanded.Container mediaInfo={mediaInfo as MediaData}>
+          <MediaCardExpanded.Description description={mediaInfo.description} />
+        </MediaCardExpanded.Container>
 
-                    <MediaCardExpanded.Description
-                        description={mediaInfo.description}
-                    />
-
-                </MediaCardExpanded.Container>
-
-                <ChaptersListContainer
-                    mediaId={params.id}
-                    currChapterId={searchParams.q}
-                    chaptersList={allAvailableChaptersList!}
-                />
-
-            </div>
-
-        </main>
-    )
+        <ChaptersListContainer
+          mediaId={params.id}
+          currChapterId={searchParams.q}
+          chaptersList={allAvailableChaptersList!}
+        />
+      </div>
+    </main>
+  );
 }
 
-export default ReadChapter
+export default ReadChapter;
