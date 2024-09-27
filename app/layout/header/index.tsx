@@ -11,19 +11,6 @@ import SearchFormContainer from "./components/SearchFormContainer";
 import NewsNavListHover from "./components/NewsNavListHover";
 import NotificationsContainer from "./components/Notifications";
 
-export const animesGenres = [
-  { name: "Action", value: "action" },
-  { name: "Adventure", value: "adventure" },
-  { name: "Comedy", value: "comedy" },
-  { name: "Drama", value: "drama" },
-  { name: "Sci-Fi", value: "sci-fi" },
-  { name: "Thriller", value: "thriller" },
-  { name: "Romance", value: "romance" },
-  { name: "Slice of Life", value: "slice-of-life" },
-  { name: "Mystery", value: "mystery" },
-  { name: "Sports", value: "sports" },
-];
-
 function Header() {
   return (
     <header id={styles.background}>

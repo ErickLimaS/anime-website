@@ -1,166 +1,18 @@
 import React from "react";
 import styles from "./footerComponent.module.css";
 import Link from "next/link";
-import Image from "next/image";
-import FacebookSvg from "@/public/assets/facebook.svg";
-import InstagramSvg from "@/public/assets/instagram.svg";
-import YoutubeSvg from "@/public/assets/youtube.svg";
-import TwitterSvg from "@/public/assets/twitter-x.svg";
-import anilistMedias from "@/app/api/anilist/anilistMedias";
-import { animesGenres } from "../header";
-import { cookies } from "next/headers";
+import FooterHeading from "./components/footerHeading";
+import NavLinks from "./components/navLinks";
 
-async function Footer() {
-  const accessTokenCookie = cookies().get("access_token")?.value;
-
-  const userAuthorization = accessTokenCookie
-    ? JSON.parse(accessTokenCookie).accessToken
-    : undefined;
-
-  const animesReleasingList = await anilistMedias.getReleasingThisWeek({
-    type: "ANIME",
-    accessToken: userAuthorization,
-  });
-
+function Footer() {
   return (
     <footer id={styles.footer}>
       <section id={styles.info_container}>
-        <div id={styles.social_links_container} className="display_flex_row">
-          <Link id={styles.img_container} href="/">
-            <Image
-              src="/logo.png"
-              alt="Aniproject Site Logo"
-              fill
-              sizes="91px"
-            ></Image>
-          </Link>
-
-          <div id={styles.social_media_container}>
-            <ul className="display_flex_row">
-              <li>
-                <Link href="#">
-                  <FacebookSvg width={16} height={16} title="Facebook" />{" "}
-                  <span>Facebook</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="#">
-                  <TwitterSvg width={16} height={16} title="Twitter" />{" "}
-                  <span>Twitter</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="#">
-                  <InstagramSvg width={16} height={16} title="Instagram" />{" "}
-                  <span>Instagram</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="#">
-                  <YoutubeSvg width={16} height={16} title="YouTube" />{" "}
-                  <span>YouTube</span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <FooterHeading />
 
         <span id={styles.span_border1}></span>
 
-        <div id={styles.nav_links_container}>
-          <div className={styles.list_container}>
-            <h5>Categories</h5>
-
-            <ul className={`${styles.grid_template} display_grid`}>
-              {animesGenres.map((media) => (
-                <li key={media.value}>
-                  <Link href={`/search?genre=[${media.value}]`}>
-                    {media.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className={styles.list_container}>
-            <h5>Airing This Week</h5>
-
-            <ul className={`${styles.grid_template} display_grid`}>
-              {animesReleasingList ? (
-                animesReleasingList.slice(0, 10).map((media, key) => (
-                  <li key={key}>
-                    <Link href={`/media/${media.id}`}>
-                      {media.title.userPreferred}
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <li>No Results</li>
-              )}
-            </ul>
-          </div>
-
-          <div className="display_flex_row">
-            <span id={styles.span_border2}></span>
-
-            <div id={styles.div_custom_margin}>
-              <h5>About</h5>
-
-              <ul>
-                <li>
-                  <Link
-                    href="https://github.com/ErickLimaS/anime-website/"
-                    target="_blank"
-                  >
-                    This Project
-                  </Link>
-                </li>
-
-                {/* What about leave a link to the creator's repository? /}
-                {/* 😊 */}
-                {/* <li>
-                  <Link
-                    href="https://github.com/ErickLimaS/anime-website/"
-                    target="_blank"
-                  >
-                    Forked From ErickLimaS
-                  </Link>
-                </li> */}
-
-                <li>
-                  <Link
-                    href="https://anilist.gitbook.io/anilist-apiv2-docs/"
-                    target="_blank"
-                  >
-                    AniList API
-                  </Link>
-                </li>
-                <li>
-                  <Link href="https://docs.consumet.org/" target="_blank">
-                    Consumet API
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="https://github.com/ghoshRitesh12/aniwatch-api"
-                    target="_blank"
-                  >
-                    Aniwatch API
-                  </Link>
-                </li>
-                {/* REMOVE THE ITEM BELLOW IF YOU FORKED THIS PROJECT */}
-                <li>
-                  <Link
-                    href="https://www.fiverr.com/erick_limas/create-a-responsive-landpage-using-react-next-js-javascript-or-typescript"
-                    target="_blank"
-                  >
-                    Want a website?
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        <NavLinks />
       </section>
 
       <section id={styles.copyright_section} className="">

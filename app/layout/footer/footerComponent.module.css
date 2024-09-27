@@ -269,3 +269,47 @@ section#copyright_section>div {
     padding: 0 24px;
     justify-content: space-between;
 }
+
+/* PLACEHOLDER WHILE LOADING */
+div.list_container>span.heading_placeholder {
+
+    animation: fadeInAndOut infinite 1.5s;
+
+    display: block;
+
+    margin-bottom: 32px;
+
+    width: 100%;
+    height: 24px;
+
+    background-color: var(--white-50);
+    border-radius: 4px;
+
+}
+
+div.list_container .grid_template li.list_item_placeholder {
+
+    animation: fadeInAndOut infinite 1.5s;
+
+    display: block;
+
+    width: 100%;
+    height: 17px;
+
+    background-color: var(--white-50);
+    border-radius: 4px;
+}
+
+@keyframes fadeInAndOut {
+    0% {
+        opacity: 0.25;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.25;
+    }
+}
