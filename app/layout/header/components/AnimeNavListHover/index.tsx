@@ -6,7 +6,7 @@ import Link from "next/link";
 import anilist from "@/app/api/anilist/anilistMedias";
 import { MediaData } from "@/app/ts/interfaces/anilistMediaData";
 import LoadingSvg from "@/public/assets/ripple-1s-200px.svg";
-import { animesGenres } from "../../index";
+import animesGenres from "@/app/data/animeGenres.json";
 import ErrorPlaceholder from "../ErrorPlaceholder";
 
 function AnimeNavListHover() {

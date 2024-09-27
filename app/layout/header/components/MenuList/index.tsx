@@ -6,7 +6,7 @@ import MenuListSvg from "@/public/assets/list.svg";
 import ChevronUpIcon from "@/public/assets/chevron-up.svg";
 import ChevronDownIcon from "@/public/assets/chevron-down.svg";
 import { AnimatePresence, motion } from "framer-motion";
-import { animesGenres } from "../../index";
+import animesGenres from "@/app/data/animeGenres.json";
 
 const framerMotionShowUpMotion = {
   hidden: {
