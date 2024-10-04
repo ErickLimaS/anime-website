@@ -39,7 +39,7 @@ function filterMediasWithAdultContent(
 // HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
 axiosRetry(Axios, {
   retries: 3,
-  retryDelay: (retryAttempt) => retryAttempt * 1200,
+  retryDelay: (retryAttempt) => retryAttempt * 250,
   retryCondition: (error) =>
     error.response?.status == 500 ||
     error.response?.status == 404 ||
