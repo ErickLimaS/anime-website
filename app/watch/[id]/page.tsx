@@ -24,7 +24,7 @@ import {
   optimizedFetchOnGoGoAnime,
 } from "@/app/lib/dataFetch/optimizedFetchAnimeOptions";
 import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
-import { getMediaInfo } from "@/app/api/consumet/consumetImdb";
+import { getMediaInfoOnIMDB } from "@/app/api/consumet/consumetImdb";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import { FetchEpisodeError } from "@/app/components/MediaFetchErrorPage";
 import { cookies } from "next/headers";
@@ -130,7 +130,7 @@ export default async function WatchEpisode({
   const imdbEpisodesList: ImdbEpisode[] = [];
 
   const loadImdbMediaAndEpisodeInfo = async () => {
-    const imdbMediaInfo: ImdbMediaInfo = (await getMediaInfo({
+    const imdbMediaInfo: ImdbMediaInfo = (await getMediaInfoOnIMDB({
       search: true,
       seachTitle: mediaInfo.title.english || mediaInfo.title.romaji,
       releaseYear: mediaInfo.startDate.year,

@@ -11,7 +11,7 @@ import ScoreRating from "@/app/components/DynamicAssets/ScoreRating";
 import { headers } from "next/headers";
 import { checkDeviceIsMobile } from "@/app/lib/checkMobileOrDesktop";
 import { convertFromUnix, getMediaReleaseDate } from "@/app/lib/formatDateUnix";
-import { getMediaInfo } from "@/app/api/consumet/consumetImdb";
+import { getMediaInfoOnIMDB } from "@/app/api/consumet/consumetImdb";
 import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import MediaRelatedContainer from "./components/MediaRelatedContainer";
 import CommentsSection from "../../components/CommentsSection";
@@ -48,7 +48,7 @@ export default async function MediaPage({
   })) as MediaDataFullInfo;
 
   // GET MEDIA INFO ON IMDB
-  const imdbMediaInfo = (await getMediaInfo({
+  const imdbMediaInfo = (await getMediaInfoOnIMDB({
     search: true,
     seachTitle: mediaInfo.title.romaji,
     releaseYear: mediaInfo.startDate.year,
