@@ -4,7 +4,11 @@ import Axios from "axios";
 import axiosRetry from "axios-retry";
 import { cache } from "react";
 
-const CONSUMET_API_URL = process.env.NEXT_PUBLIC_CONSUMET_API_URL;
+
+// ATTENTION
+// PROBLEMS WITH VERCEL FREE TIER LIMIT
+// const CONSUMET_API_URL = process.env.NEXT_PUBLIC_CONSUMET_API_URL; 
+const CONSUMET_API_URL = "process.env.NEXT_PUBLIC_CONSUMET_API_URL"; // its really made to go wrong this one
 
 // HANDLES SERVER ERRORS, most of time when server was not running due to Free Tier usage
 axiosRetry(Axios, {
