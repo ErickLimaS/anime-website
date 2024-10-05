@@ -30,8 +30,8 @@ export default {
         const { data } = await Axios({
           url: `${BASE_URL}/search?q=${query}${page ? `&page=${page}` : ""}`,
         });
-
-        return data as MediaInfoFetchedAnimeWatch;
+        
+        return data.data as MediaInfoFetchedAnimeWatch;
       } catch (error) {
         console.log((error as Error).message);
 
@@ -47,7 +47,7 @@ export default {
         url: `${BASE_URL}/anime/${mediaId}/episodes`,
       });
 
-      return data as EpisodesFetchedAnimeWatch;
+      return data.data as EpisodesFetchedAnimeWatch;
     } catch (error) {
       console.log((error as Error).message);
 
@@ -70,7 +70,7 @@ export default {
           url: `${BASE_URL}/episode/sources?animeEpisodeId=${episodeId}${server ? `&server=${server}` : ""}${category ? `&category=${category}` : ""}`,
         });
 
-        return data as EpisodeLinksAnimeWatch;
+        return data.data as EpisodeLinksAnimeWatch;
       } catch (error) {
         console.log((error as Error).message);
 
