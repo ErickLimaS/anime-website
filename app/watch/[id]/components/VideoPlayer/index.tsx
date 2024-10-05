@@ -404,7 +404,7 @@ export default function VideoPlayer({
       case "aniwatch":
         nextEpisodeId = (nextEpisodeInfo as EpisodeAnimeWatch).episodeId;
 
-        nextEpisode = await aniwatch.episodesLinks({
+        nextEpisode = await aniwatch.getEpisodeLink({
           episodeId: nextEpisodeId,
           category: searchParams?.get("dub") == "true" ? "dub" : "sub",
         });

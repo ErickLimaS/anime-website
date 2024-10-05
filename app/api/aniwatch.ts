@@ -7,7 +7,7 @@ import Axios from "axios";
 import axiosRetry from "axios-retry";
 import { cache } from "react";
 
-const BASE_URL = process.env.NEXT_PUBLIC_ANIWATCH_API_URL;
+const BASE_URL = `${process.env.NEXT_PUBLIC_ANIWATCH_API_URL}/api/v2/hianime`;
 
 // HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
 axiosRetry(Axios, {
@@ -28,10 +28,10 @@ export default {
     async ({ query, page }: { query: string; page?: number }) => {
       try {
         const { data } = await Axios({
-          url: `${BASE_URL}/anime/search?q=${query}${page ? `&page=${page}` : ""}`,
+          url: `${BASE_URL}/search?q=${query}${page ? `&page=${page}` : ""}`,
         });
-
-        return data as MediaInfoFetchedAnimeWatch;
+        
+        return data.data as MediaInfoFetchedAnimeWatch;
       } catch (error) {
         console.log((error as Error).message);
 
@@ -41,13 +41,13 @@ export default {
   ),
 
   // GET EPISODES, NO LINKS INCLUDED
-  getEpisodes: cache(async ({ episodeId }: { episodeId: string }) => {
+  getMediaEpisodes: cache(async ({ mediaId }: { mediaId: string }) => {
     try {
       const { data } = await Axios({
-        url: `${BASE_URL}/anime/episodes/${episodeId}`,
+        url: `${BASE_URL}/anime/${mediaId}/episodes`,
       });
 
-      return data as EpisodesFetchedAnimeWatch;
+      return data.data as EpisodesFetchedAnimeWatch;
     } catch (error) {
       console.log((error as Error).message);
 
@@ -55,8 +55,7 @@ export default {
     }
   }),
 
-  // GET EPISODES, NO LINKS INCLUDED
-  episodesLinks: cache(
+  getEpisodeLink: cache(
     async ({
       episodeId,
       server,
@@ -68,10 +67,10 @@ export default {
     }) => {
       try {
         const { data } = await Axios({
-          url: `${BASE_URL}/anime/episode-srcs?id=${episodeId}${server ? `&server=${server}` : ""}${category ? `&category=${category}` : ""}`,
+          url: `${BASE_URL}/episode/sources?animeEpisodeId=${episodeId}${server ? `&server=${server}` : ""}${category ? `&category=${category}` : ""}`,
         });
 
-        return data as EpisodeLinksAnimeWatch;
+        return data.data as EpisodeLinksAnimeWatch;
       } catch (error) {
         console.log((error as Error).message);
 

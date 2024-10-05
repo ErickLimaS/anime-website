@@ -248,10 +248,10 @@ export default function EpisodesContainer({
     let mediaEpisodesList:
       | GogoanimeMediaEpisodes[]
       | {
-        episodesDub: number;
-        episodesSub: number;
-        episodes: EpisodesFetchedAnimeWatch["episodes"];
-      };
+          episodesDub: number;
+          episodesSub: number;
+          episodes: EpisodesFetchedAnimeWatch["episodes"];
+        };
 
     switch (newSourceChose) {
       case "crunchyroll":
@@ -372,8 +372,8 @@ export default function EpisodesContainer({
 
     const endOffset = itemOffset + rangeEpisodesPerPage;
 
-    const mediaEpisodes = (await aniwatch.getEpisodes({
-      episodeId: id,
+    const mediaEpisodes = (await aniwatch.getMediaEpisodes({
+      mediaId: id,
     })) as EpisodesFetchedAnimeWatch;
 
     setEpisodesList(mediaEpisodes.episodes);
@@ -443,30 +443,30 @@ export default function EpisodesContainer({
           <AnimatePresence>
             {currEpisodesSource == "aniwatch" &&
               mediaResultsInfoArray.length > 1 && (
-              <motion.div
-                id={styles.select_media_container}
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-              >
-                <small>Wrong Episodes? Select bellow!</small>
-
-                <select
-                  onChange={(e) =>
-                    handleRefetchMediaEpisodesFromSelectTag(e.target.value)
-                  }
-                  defaultValue={checkAnilistTitleMisspelling(
-                    mediaInfo.title.romaji || mediaInfo.title.native
-                  ).toLowerCase()}
+                <motion.div
+                  id={styles.select_media_container}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
                 >
-                  {mediaResultsInfoArray?.map((media, key) => (
-                    <option key={key} value={media.id.toLowerCase()}>
-                      {media.name}
-                    </option>
-                  ))}
-                </select>
-              </motion.div>
-            )}
+                  <small>Wrong Episodes? Select bellow!</small>
+
+                  <select
+                    onChange={(e) =>
+                      handleRefetchMediaEpisodesFromSelectTag(e.target.value)
+                    }
+                    defaultValue={checkAnilistTitleMisspelling(
+                      mediaInfo.title.romaji || mediaInfo.title.native
+                    ).toLowerCase()}
+                  >
+                    {mediaResultsInfoArray?.map((media, key) => (
+                      <option key={key} value={media.id.toLowerCase()}>
+                        {media.name}
+                      </option>
+                    ))}
+                  </select>
+                </motion.div>
+              )}
           </AnimatePresence>
         </div>
 

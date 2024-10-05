@@ -186,7 +186,7 @@ export default async function WatchEpisode({
     }
 
     // fetch episode data
-    episodeDataFetched = (await aniwatch.episodesLinks({
+    episodeDataFetched = (await aniwatch.getEpisodeLink({
       episodeId: searchParams.q,
       category: searchParams.dub == "true" ? "dub" : "sub",
     })) as EpisodeLinksAnimeWatch;
