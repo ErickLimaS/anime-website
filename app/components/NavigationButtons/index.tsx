@@ -64,7 +64,7 @@ export default function NavigationButtons({
           break;
 
         case "aniwatch":
-          const aniwatchResponse = (await aniwatch.episodesLinks({
+          const aniwatchResponse = (await aniwatch.getEpisodeLink({
             episodeId: "one-piece-100?ep=2142",
           })) as EpisodeLinksAnimeWatch;
 

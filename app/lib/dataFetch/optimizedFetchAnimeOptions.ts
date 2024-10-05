@@ -152,23 +152,23 @@ export async function optimizedFetchOnAniwatch({
         (media) => media.id == idToMatch
       );
 
-    const mediaEpisodesList = (await aniwatch.getEpisodes({
-      episodeId: mediaFoundByID?.id || mediasWithSameTitle[0].id,
+    const mediaEpisodesList = (await aniwatch.getMediaEpisodes({
+      mediaId: mediaFoundByID?.id || mediasWithSameTitle[0].id,
     })) as EpisodesFetchedAnimeWatch;
 
     return mediaEpisodesList?.episodes?.length == 0
       ? null
       : {
-        episodesDub:
+          episodesDub:
             mediaFoundByID?.episodes?.dub ||
             mediasWithSameTitle[0]?.episodes?.dub ||
             0,
-        episodesSub:
+          episodesSub:
             mediaFoundByID?.episodes?.sub ||
             mediasWithSameTitle[0]?.episodes?.sub ||
             0,
-        episodes: mediaEpisodesList.episodes,
-      };
+          episodes: mediaEpisodesList.episodes,
+        };
   }
 
   return mediasWithSameTitle;
