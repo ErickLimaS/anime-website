@@ -30,6 +30,15 @@ export async function generateMetadata({ params }: { params: { id: number } }) {
     description:
       mediaData.description ||
       `See more info about ${mediaData.title.romaji || mediaData.title.native}`,
+    keywords: [
+      mediaData.title.romaji,
+      mediaData.title.english,
+      mediaData.title.native,
+      `${mediaData.title.romaji} anime`,
+      `${mediaData.title.romaji} release`,
+      `${mediaData.title.english} release`,
+      "anime info",
+    ],
   };
 }
 
@@ -132,21 +141,21 @@ export default async function MediaPage({
             {isOnMobileScreen == true &&
               mediaInfo.nextAiringEpisode &&
               mediaInfo.format != "MOVIE" && (
-              <div id={styles.next_episode_container}>
-                <h2 className={styles.heading_style}>NEXT EPISODE</h2>
+                <div id={styles.next_episode_container}>
+                  <h2 className={styles.heading_style}>NEXT EPISODE</h2>
 
-                <p>
-                  <span>Episode {mediaInfo.nextAiringEpisode.episode}</span>{" "}
-                  on{" "}
-                  {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, {
-                    month: "long",
-                    year: "numeric",
-                    hour: undefined,
-                    minute: undefined,
-                  })}
-                </p>
-              </div>
-            )}
+                  <p>
+                    <span>Episode {mediaInfo.nextAiringEpisode.episode}</span>{" "}
+                    on{" "}
+                    {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, {
+                      month: "long",
+                      year: "numeric",
+                      hour: undefined,
+                      minute: undefined,
+                    })}
+                  </p>
+                </div>
+              )}
 
             {/* DESCRIPTION */}
             <section id={styles.description_container}>
@@ -183,35 +192,35 @@ export default async function MediaPage({
                         {/* SHOWS ACTOR ONLY FOR ANIMES  */}
                         {mediaInfo.type == "ANIME" &&
                           character.voiceActorRoles[0] && (
-                          <div className={styles.actor_container}>
-                            <div className={styles.img_container}>
-                              <Image
-                                src={
-                                  character.voiceActorRoles[0] &&
+                            <div className={styles.actor_container}>
+                              <div className={styles.img_container}>
+                                <Image
+                                  src={
+                                    character.voiceActorRoles[0] &&
                                     character.voiceActorRoles[0].voiceActor
                                       .image.large
-                                }
-                                alt={
-                                  `${
-                                    character.voiceActorRoles[0] &&
+                                  }
+                                  alt={
+                                    `${
+                                      character.voiceActorRoles[0] &&
                                       character.voiceActorRoles[0].voiceActor
                                         .name.full
-                                  } voiceover for ${
-                                    character.node.name.full
-                                  }` || "No Name Actor"
-                                }
-                                fill
-                                sizes="90px"
-                              />
-                            </div>
+                                    } voiceover for ${
+                                      character.node.name.full
+                                    }` || "No Name Actor"
+                                  }
+                                  fill
+                                  sizes="90px"
+                                />
+                              </div>
 
-                            <h3>
-                              {character.voiceActorRoles[0] &&
+                              <h3>
+                                {character.voiceActorRoles[0] &&
                                   character.voiceActorRoles[0].voiceActor.name
                                     .full}
-                            </h3>
-                          </div>
-                        )}
+                              </h3>
+                            </div>
+                          )}
                       </li>
                     ))}
                   </ul>
@@ -223,20 +232,20 @@ export default async function MediaPage({
             {mediaInfo.type == "ANIME" &&
               mediaInfo.format != "MOVIE" &&
               mediaInfo.status != "NOT_YET_RELEASED" && (
-              <section id={styles.episodes_container}>
-                <EpisodesContainer
-                  crunchyrollInitialEpisodes={getCrunchyrollEpisodes()}
-                  mediaInfo={mediaInfo}
-                  episodesWatchedOnAnilist={
-                    mediaInfo.mediaListEntry?.progress || undefined
-                  }
-                  imdb={{
-                    mediaSeasons: imdbMediaInfo?.seasons,
-                    episodesList: getImdbEpisodesListWithNoSeasons(),
-                  }}
-                />
-              </section>
-            )}
+                <section id={styles.episodes_container}>
+                  <EpisodesContainer
+                    crunchyrollInitialEpisodes={getCrunchyrollEpisodes()}
+                    mediaInfo={mediaInfo}
+                    episodesWatchedOnAnilist={
+                      mediaInfo.mediaListEntry?.progress || undefined
+                    }
+                    imdb={{
+                      mediaSeasons: imdbMediaInfo?.seasons,
+                      episodesList: getImdbEpisodesListWithNoSeasons(),
+                    }}
+                  />
+                </section>
+              )}
 
             {/* CHAPTERS - ONLY FOR MANGAS */}
             {mediaInfo.type == "MANGA" && (
@@ -333,21 +342,21 @@ export default async function MediaPage({
             {isOnMobileScreen == false &&
               mediaInfo.nextAiringEpisode &&
               mediaInfo.format != "MOVIE" && (
-              <div id={styles.next_episode_container}>
-                <h2 className={styles.heading_style}>NEXT EPISODE</h2>
+                <div id={styles.next_episode_container}>
+                  <h2 className={styles.heading_style}>NEXT EPISODE</h2>
 
-                <p>
-                  <span>Episode {mediaInfo.nextAiringEpisode.episode}</span>{" "}
-                  on{" "}
-                  {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, {
-                    month: "long",
-                    year: "numeric",
-                    hour: undefined,
-                    minute: undefined,
-                  })}
-                </p>
-              </div>
-            )}
+                  <p>
+                    <span>Episode {mediaInfo.nextAiringEpisode.episode}</span>{" "}
+                    on{" "}
+                    {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, {
+                      month: "long",
+                      year: "numeric",
+                      hour: undefined,
+                      minute: undefined,
+                    })}
+                  </p>
+                </div>
+              )}
 
             {/* SCORE */}
             {(mediaInfo.averageScore || imdbMediaInfo?.rating != 0) && (
@@ -370,14 +379,14 @@ export default async function MediaPage({
 
                   {imdbMediaInfo?.rating != 0 &&
                     imdbMediaInfo?.rating != null && (
-                    <li className="display_flex_row align_items_center">
-                      <ScoreRating
-                        ratingScore={Number(imdbMediaInfo.rating.toFixed(1))}
-                        source="imdb"
-                        ratingType="string"
-                      />
-                    </li>
-                  )}
+                      <li className="display_flex_row align_items_center">
+                        <ScoreRating
+                          ratingScore={Number(imdbMediaInfo.rating.toFixed(1))}
+                          source="imdb"
+                          ratingType="string"
+                        />
+                      </li>
+                    )}
                 </ul>
               </div>
             )}

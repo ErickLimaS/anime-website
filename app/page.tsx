@@ -21,6 +21,28 @@ export const metadata: Metadata = {
   title: "Home | AniProject",
   description:
     "A anime platform that showcases popular and trending animes, mangas and movies. Explore the latest releases, keep watching your favorites, and discover what's popular in the anime world.",
+  keywords: [
+    "Aniproject",
+    "Ani project",
+    "Ani project github",
+    "Animes",
+    "Anime Reviews",
+    "Latest Anime Releases",
+    "Anime Genres",
+    "Popular Anime Series",
+    "Anime News",
+    "Anime Characters",
+    "Manga Recommendations",
+    "Anime Community",
+    "Anime Events",
+    "Subbed Anime",
+    "Dubbed Anime",
+    "Classic Anime",
+    "Anime Trailers",
+    "Anime Forums",
+    "Anime Art",
+    "Anime Culture",
+  ],
 };
 
 export default async function Home() {
