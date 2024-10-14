@@ -314,3 +314,20 @@ export const queryRecommendationsByCurrMediaUserAuthenticated = `recommendations
                                             }
                                         }
                                     }`;
+
+export const queryMediaReviews = `reviews {
+                                        nodes {
+                                            summary
+                                            rating
+                                            userRating
+                                            ratingAmount
+                                            user {
+                                                id
+                                                name
+                                                about
+                                                bannerImage
+                                            }
+                                            body(asHtml: true)
+                                        }
+                                    }
+                                    `;
