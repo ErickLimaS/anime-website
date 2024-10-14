@@ -12,7 +12,6 @@ import {
   GogoanimeMediaEpisodes,
 } from "@/app/ts/interfaces/gogoanimeData";
 import EpisodesListContainer from "./components/EpisodesListContainer";
-import CommentsSection from "@/app/components/CommentsSection";
 import aniwatch from "@/app/api/aniwatch";
 import VideoPlayer from "./components/VideoPlayer";
 import {
@@ -66,14 +65,14 @@ export async function generateMetadata({
     description: !mediaInfo
       ? ""
       : `Watch ${mediaInfo.title.userPreferred}${
-        mediaInfo.format != "MOVIE"
-          ? ` - episode ${searchParams.episode} `
-          : ""
-      }${searchParams.dub ? "Dubbed" : ""}. ${
-        mediaInfo.description
-          ? mediaInfo.description.replace(/(<([^>]+)>)/gi, "")
-          : ""
-      }`,
+          mediaInfo.format != "MOVIE"
+            ? ` - episode ${searchParams.episode} `
+            : ""
+        }${searchParams.dub ? "Dubbed" : ""}. ${
+          mediaInfo.description
+            ? mediaInfo.description.replace(/(<([^>]+)>)/gi, "")
+            : ""
+        }`,
   };
 }
 
@@ -373,13 +372,8 @@ export default async function WatchEpisode({
                   `FOR EPISODE ${searchParams.episode}`}
               </h2>
 
-              {/* ONLY ON DESKTOP */}
-              <CommentsSection
-                mediaInfo={mediaInfo}
-                isOnWatchPage={true}
-                episodeId={searchParams.q}
-                episodeNumber={Number(searchParams.episode)}
-              />
+              {/* SHOW ONLY ON DESKTOP */}
+              {/* ADD EPISODE REVIEW */}
             </div>
           </div>
         </div>
@@ -410,12 +404,7 @@ export default async function WatchEpisode({
                   `FOR EPISODE ${searchParams.episode}`}
               </h2>
 
-              <CommentsSection
-                mediaInfo={mediaInfo}
-                isOnWatchPage={true}
-                episodeId={searchParams.q}
-                episodeNumber={Number(searchParams.episode)}
-              />
+              {/* ADD EPISODE REVIEW */}
             </div>
           </div>
         </div>
