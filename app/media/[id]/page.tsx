@@ -15,6 +15,7 @@ import { getMediaInfoOnIMDB } from "@/app/api/consumet/consumetImdb";
 import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import MediaRelatedContainer from "./components/MediaRelatedContainer";
 import PageHeading from "./components/PageHeading";
+import Reviews from "./components/Reviews";
 
 export const revalidate = 43200; // revalidate cached data every 12 hours
 
@@ -111,6 +112,7 @@ export default async function MediaPage({
     }
   }
 
+  console.log(mediaInfo.reviews.nodes);
   return (
     <main id={styles.container}>
       {/* BANNER or BACKGROUND COLOR*/}
@@ -140,21 +142,21 @@ export default async function MediaPage({
             {isOnMobileScreen == true &&
               mediaInfo.nextAiringEpisode &&
               mediaInfo.format != "MOVIE" && (
-              <div id={styles.next_episode_container}>
-                <h2 className={styles.heading_style}>NEXT EPISODE</h2>
+                <div id={styles.next_episode_container}>
+                  <h2 className={styles.heading_style}>NEXT EPISODE</h2>
 
-                <p>
-                  <span>Episode {mediaInfo.nextAiringEpisode.episode}</span>{" "}
+                  <p>
+                    <span>Episode {mediaInfo.nextAiringEpisode.episode}</span>{" "}
                     on{" "}
-                  {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, {
-                    month: "long",
-                    year: "numeric",
-                    hour: undefined,
-                    minute: undefined,
-                  })}
-                </p>
-              </div>
-            )}
+                    {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, {
+                      month: "long",
+                      year: "numeric",
+                      hour: undefined,
+                      minute: undefined,
+                    })}
+                  </p>
+                </div>
+              )}
 
             {/* DESCRIPTION */}
             <section id={styles.description_container}>
@@ -191,35 +193,35 @@ export default async function MediaPage({
                         {/* SHOWS ACTOR ONLY FOR ANIMES  */}
                         {mediaInfo.type == "ANIME" &&
                           character.voiceActorRoles[0] && (
-                          <div className={styles.actor_container}>
-                            <div className={styles.img_container}>
-                              <Image
-                                src={
-                                  character.voiceActorRoles[0] &&
+                            <div className={styles.actor_container}>
+                              <div className={styles.img_container}>
+                                <Image
+                                  src={
+                                    character.voiceActorRoles[0] &&
                                     character.voiceActorRoles[0].voiceActor
                                       .image.large
-                                }
-                                alt={
-                                  `${
-                                    character.voiceActorRoles[0] &&
+                                  }
+                                  alt={
+                                    `${
+                                      character.voiceActorRoles[0] &&
                                       character.voiceActorRoles[0].voiceActor
                                         .name.full
-                                  } voiceover for ${
-                                    character.node.name.full
-                                  }` || "No Name Actor"
-                                }
-                                fill
-                                sizes="90px"
-                              />
-                            </div>
+                                    } voiceover for ${
+                                      character.node.name.full
+                                    }` || "No Name Actor"
+                                  }
+                                  fill
+                                  sizes="90px"
+                                />
+                              </div>
 
-                            <h3>
-                              {character.voiceActorRoles[0] &&
+                              <h3>
+                                {character.voiceActorRoles[0] &&
                                   character.voiceActorRoles[0].voiceActor.name
                                     .full}
-                            </h3>
-                          </div>
-                        )}
+                              </h3>
+                            </div>
+                          )}
                       </li>
                     ))}
                   </ul>
@@ -231,20 +233,20 @@ export default async function MediaPage({
             {mediaInfo.type == "ANIME" &&
               mediaInfo.format != "MOVIE" &&
               mediaInfo.status != "NOT_YET_RELEASED" && (
-              <section id={styles.episodes_container}>
-                <EpisodesContainer
-                  crunchyrollInitialEpisodes={getCrunchyrollEpisodes()}
-                  mediaInfo={mediaInfo}
-                  episodesWatchedOnAnilist={
-                    mediaInfo.mediaListEntry?.progress || undefined
-                  }
-                  imdb={{
-                    mediaSeasons: imdbMediaInfo?.seasons,
-                    episodesList: getImdbEpisodesListWithNoSeasons(),
-                  }}
-                />
-              </section>
-            )}
+                <section id={styles.episodes_container}>
+                  <EpisodesContainer
+                    crunchyrollInitialEpisodes={getCrunchyrollEpisodes()}
+                    mediaInfo={mediaInfo}
+                    episodesWatchedOnAnilist={
+                      mediaInfo.mediaListEntry?.progress || undefined
+                    }
+                    imdb={{
+                      mediaSeasons: imdbMediaInfo?.seasons,
+                      episodesList: getImdbEpisodesListWithNoSeasons(),
+                    }}
+                  />
+                </section>
+              )}
 
             {/* CHAPTERS - ONLY FOR MANGAS */}
             {mediaInfo.type == "MANGA" && (
@@ -277,12 +279,8 @@ export default async function MediaPage({
               </section>
             )}
 
-            {/* COMMENTS SECTION */}
-            <section id={styles.comments_container}>
-              <h2 className={styles.heading_style}>COMMENTS</h2>
-
-              {/* ADD MEDIA REVIEWS */}
-            </section>
+            {/* REVIEWS SECTION */}
+            <Reviews reviews={mediaInfo.reviews.nodes} />
 
             {/* RECOMMENDATIONS ACCORDING TO THIS MEDIA */}
             {mediaInfo.recommendations.edges[0] && (
@@ -341,21 +339,21 @@ export default async function MediaPage({
             {isOnMobileScreen == false &&
               mediaInfo.nextAiringEpisode &&
               mediaInfo.format != "MOVIE" && (
-              <div id={styles.next_episode_container}>
-                <h2 className={styles.heading_style}>NEXT EPISODE</h2>
+                <div id={styles.next_episode_container}>
+                  <h2 className={styles.heading_style}>NEXT EPISODE</h2>
 
-                <p>
-                  <span>Episode {mediaInfo.nextAiringEpisode.episode}</span>{" "}
+                  <p>
+                    <span>Episode {mediaInfo.nextAiringEpisode.episode}</span>{" "}
                     on{" "}
-                  {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, {
-                    month: "long",
-                    year: "numeric",
-                    hour: undefined,
-                    minute: undefined,
-                  })}
-                </p>
-              </div>
-            )}
+                    {convertFromUnix(mediaInfo.nextAiringEpisode.airingAt, {
+                      month: "long",
+                      year: "numeric",
+                      hour: undefined,
+                      minute: undefined,
+                    })}
+                  </p>
+                </div>
+              )}
 
             {/* SCORE */}
             {(mediaInfo.averageScore || imdbMediaInfo?.rating != 0) && (
@@ -378,14 +376,14 @@ export default async function MediaPage({
 
                   {imdbMediaInfo?.rating != 0 &&
                     imdbMediaInfo?.rating != null && (
-                    <li className="display_flex_row align_items_center">
-                      <ScoreRating
-                        ratingScore={Number(imdbMediaInfo.rating.toFixed(1))}
-                        source="imdb"
-                        ratingType="string"
-                      />
-                    </li>
-                  )}
+                      <li className="display_flex_row align_items_center">
+                        <ScoreRating
+                          ratingScore={Number(imdbMediaInfo.rating.toFixed(1))}
+                          source="imdb"
+                          ratingType="string"
+                        />
+                      </li>
+                    )}
                 </ul>
               </div>
             )}

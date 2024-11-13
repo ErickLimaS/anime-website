@@ -318,6 +318,7 @@ export const queryRecommendationsByCurrMediaUserAuthenticated = `recommendations
 export const queryMediaReviews = `reviews {
                                         nodes {
                                             summary
+                                            body(asHtml: true)
                                             rating
                                             userRating
                                             ratingAmount
@@ -325,9 +326,12 @@ export const queryMediaReviews = `reviews {
                                                 id
                                                 name
                                                 about
+                                                avatar {
+                                                    large
+                                                    medium
+                                                }
                                                 bannerImage
                                             }
-                                            body(asHtml: true)
                                         }
                                     }
                                     `;

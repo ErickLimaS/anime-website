@@ -154,4 +154,22 @@ export interface MediaDataFullInfo extends MediaData {
       },
     ];
   };
+  reviews: {
+    nodes: {
+      summary: string;
+      rating: number;
+      userRating: string;
+      ratingAmount: number;
+      body: string;
+      user: {
+        id: number;
+        name: string;
+        avatar: {
+          large: string;
+          medium: string;
+        };
+        about: string;
+      };
+    }[];
+  };
 }
