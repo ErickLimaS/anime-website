@@ -1,0 +1,17 @@
+.anchor_tag {
+
+    font-family: var(--font-family-sans-serif);
+    color: var(--brand-color);
+    width: fit-content;
+
+    display: flex;
+    align-items: center;
+    gap: 0 16px;
+
+    margin: 24px 0;
+    padding: 8px;
+
+    border: 1px solid var(--brand-color);
+    border-radius: 4px;
+
+}

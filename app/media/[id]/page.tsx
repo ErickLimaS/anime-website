@@ -14,8 +14,8 @@ import { convertFromUnix, getMediaReleaseDate } from "@/app/lib/formatDateUnix";
 import { getMediaInfoOnIMDB } from "@/app/api/consumet/consumetImdb";
 import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import MediaRelatedContainer from "./components/MediaRelatedContainer";
-import CommentsSection from "../../components/CommentsSection";
 import PageHeading from "./components/PageHeading";
+import Reviews from "./components/Reviews";
 
 export const revalidate = 43200; // revalidate cached data every 12 hours
 
@@ -278,12 +278,10 @@ export default async function MediaPage({
               </section>
             )}
 
-            {/* COMMENTS SECTION */}
-            <section id={styles.comments_container}>
-              <h2 className={styles.heading_style}>COMMENTS</h2>
-
-              <CommentsSection mediaInfo={mediaInfo} />
-            </section>
+            {/* REVIEWS SECTION */}
+            {mediaInfo.reviews?.nodes.length > 0 && (
+              <Reviews reviews={mediaInfo.reviews.nodes} />
+            )}
 
             {/* RECOMMENDATIONS ACCORDING TO THIS MEDIA */}
             {mediaInfo.recommendations.edges[0] && (

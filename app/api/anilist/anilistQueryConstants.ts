@@ -2,6 +2,7 @@ import {
   queryCharacters,
   queryCoverImage,
   queryMediaListEntry,
+  queryMediaReviews,
   queryMediaTags,
   queryNextAiringEpisode,
   queryRecommendationsByCurrMedia,
@@ -43,6 +44,7 @@ export function requestMedias(
                             isFavourite
                             ${queryMediaListEntry}
                             status
+                            ${queryMediaReviews}
                             ${queryRelatedMediasBasicInfo}
                             episodes
                             chapters
@@ -105,6 +107,7 @@ export function requestMediaById(isUserAuthenticated: boolean) {
                             isAdult
                             status
                             isFavourite
+                            ${queryMediaReviews}
                             ${queryMediaListEntry}
                             ${queryRelatedMediasBasicInfo}
                                     episodes
@@ -183,6 +186,7 @@ export function requestMediasByDateAndTimeRelease() {
                                 idMal
                                 isAdult
                                 description
+                                ${queryMediaReviews}
                                 ${queryTitles}
                                 id
                                 ${queryCoverImage}
@@ -254,6 +258,7 @@ export function mediaTrendingApiQueryRequest() {
                     isAdult
                     ${queryTitles}
                     id
+                    ${queryMediaReviews}
                     ${queryCoverImage}
                     trailer{
                         id
