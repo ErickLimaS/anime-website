@@ -172,15 +172,20 @@ With all that done, you can follow the pre-made `.env.example` on the root folde
 ```javascript
 // Consumet API
 NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
+
 // Aniwatch API
 NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.com
+
 // Anilist OAuth Settings
 NEXT_PUBLIC_ANILIST_CLIENT_ID=your-anilist-client-id
 ANILIST_CLIENT_SECRET=your-anilist-secret
+
 // Next.js Route Handler - Make sure to add the pathname "/api/animes-database" bellow
 NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API=https://url-to-where-your-website-is-hosted.com/api/animes-database
+
 // Bellow is the url to use ONLY on Dev Enviroment. You WILL NEED TO CHANGE IT when on hosted mode to the respective url. Look for something like Enviroment Variables to do it.
 NEXT_PUBLIC_WEBSITE_ORIGIN_URL=http://localhost:3000
+
 // Firebase Settings
 NEXT_PUBLIC_FIREBASE_API_KEY=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase-setting-related-to-this-field
@@ -190,6 +195,9 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_APP_ID=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=firebase-setting-related-to-this-field
 NEXT_PUBLIC_FIREBASE_DATABASE_URL=firebase-setting-related-to-this-field
+
+// GOOGLE ANALYTICS: optional
+NEXT_PUBLIC_MEASUREMENT_ID=your-measurement-id
 ```
 
 4. Now run `npm run dev` to initialize the website
@@ -217,7 +225,7 @@ It is used to store on User Document things like:
 - User Profile Photo
 - Username
 - Preferences (media source, adult content, subtitles and more)
-- Comments
+- [DEPRECATED]Comments
 - Notifications
 - Bookmarked Medias
 - Currently Watching Medias
