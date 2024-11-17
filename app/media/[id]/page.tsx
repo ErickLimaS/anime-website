@@ -279,7 +279,9 @@ export default async function MediaPage({
             )}
 
             {/* REVIEWS SECTION */}
-            <Reviews reviews={mediaInfo.reviews.nodes} />
+            {mediaInfo.reviews?.nodes.length > 0 && (
+              <Reviews reviews={mediaInfo.reviews.nodes} />
+            )}
 
             {/* RECOMMENDATIONS ACCORDING TO THIS MEDIA */}
             {mediaInfo.recommendations.edges[0] && (
