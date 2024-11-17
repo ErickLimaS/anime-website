@@ -29,6 +29,8 @@ h2.heading_style {
 
     margin: 16px 0;
 
+    font-family: var(--font-family-sans-serif);
+
 }
 
 .review_heading img {
@@ -54,6 +56,8 @@ h2.heading_style {
 }
 
 .review_text_container {
+
+    font-family: var(--font-family-sans-serif);
 
     position: relative;
     display: flex;
@@ -108,6 +112,12 @@ h2.heading_style {
 
         left: 0;
     }
+}
+
+.review_text_container>div>* {
+
+    margin-bottom: 8px;
+
 }
 
 .review_text_container * {

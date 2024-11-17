@@ -161,6 +161,7 @@ export interface MediaDataFullInfo extends MediaData {
       rating: number;
       userRating: string;
       ratingAmount: number;
+      score: number;
       body: string;
       user: {
         id: number;

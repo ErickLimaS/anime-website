@@ -323,6 +323,7 @@ export const queryMediaReviews = `reviews {
                                             rating
                                             userRating
                                             ratingAmount
+                                            score
                                             user {
                                                 id
                                                 name

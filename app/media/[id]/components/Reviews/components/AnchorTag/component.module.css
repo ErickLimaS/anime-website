@@ -1,9 +1,11 @@
 .anchor_tag {
 
+    font-family: var(--font-family-sans-serif);
     color: var(--brand-color);
     width: fit-content;
 
     display: flex;
+    align-items: center;
     gap: 0 16px;
 
     margin: 24px 0;

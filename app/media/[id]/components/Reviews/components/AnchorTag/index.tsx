@@ -12,7 +12,7 @@ function AnchorTag({ reviewId }: { reviewId: number }) {
       whileTap={{ scale: 0.9 }}
       className={styles.anchor_tag}
     >
-      Continue it on AniList <OutsideLinkSvg />
+      Continue on AniList <OutsideLinkSvg />
     </motion.a>
   );
 }

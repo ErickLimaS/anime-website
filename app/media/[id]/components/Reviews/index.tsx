@@ -5,6 +5,7 @@ import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import parse from "html-react-parser";
 import QuoteSvg from "@/public/assets/quote.svg";
 import AnchorTag from "./components/AnchorTag";
+import ReviewRating from "./components/ReviewRating";
 
 function Reviews({
   reviews,
@@ -30,6 +31,7 @@ function Reviews({
 
               <div>
                 <h3>{review.user.name}</h3>
+                <ReviewRating ratingScore={review.score} />
               </div>
             </div>
 
