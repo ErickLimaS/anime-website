@@ -112,7 +112,6 @@ export default async function MediaPage({
     }
   }
 
-  console.log(mediaInfo.reviews.nodes);
   return (
     <main id={styles.container}>
       {/* BANNER or BACKGROUND COLOR*/}

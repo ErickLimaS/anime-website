@@ -12,7 +12,8 @@ h2.heading_style {
 
 #reviews_container>ul {
 
-    display: grid;
+    display: flex;
+    flex-direction: column;
 
     gap: 24px 0;
 
@@ -84,7 +85,7 @@ h2.heading_style {
 
 }
 
-.review_text_container>p {
+.review_text_container>div {
 
     position: relative;
 
@@ -101,10 +102,34 @@ h2.heading_style {
 }
 
 @media(min-width:840px) {
-    .review_text_container>p {
+    .review_text_container>div {
 
         width: 100%;
 
         left: 0;
     }
+}
+
+.review_text_container * {
+    color: var(--white-100);
+}
+
+.review_text_container img {
+    width: 95%;
+}
+
+.review_container>a {
+
+    color: var(--brand-color);
+    width: fit-content;
+
+    display: flex;
+    gap: 0 16px;
+
+    margin: 24px 0;
+    padding: 8px;
+
+    border: 1px solid var(--brand-color);
+    border-radius: 4px;
+
 }

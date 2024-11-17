@@ -156,6 +156,7 @@ export interface MediaDataFullInfo extends MediaData {
   };
   reviews: {
     nodes: {
+      id: number;
       summary: string;
       rating: number;
       userRating: string;

@@ -1,0 +1,15 @@
+.anchor_tag {
+
+    color: var(--brand-color);
+    width: fit-content;
+
+    display: flex;
+    gap: 0 16px;
+
+    margin: 24px 0;
+    padding: 8px;
+
+    border: 1px solid var(--brand-color);
+    border-radius: 4px;
+
+}

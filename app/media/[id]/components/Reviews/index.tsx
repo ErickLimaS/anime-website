@@ -4,6 +4,7 @@ import styles from "./component.module.css";
 import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import parse from "html-react-parser";
 import QuoteSvg from "@/public/assets/quote.svg";
+import AnchorTag from "./components/AnchorTag";
 
 function Reviews({
   reviews,
@@ -16,7 +17,7 @@ function Reviews({
 
       <ul>
         {reviews.slice(0, 3).map((review) => (
-          <li key={review.user.id} className={styles.review_container}>
+          <li key={review.id} className={styles.review_container}>
             <div className={styles.review_heading}>
               <div>
                 <Image
@@ -39,9 +40,11 @@ function Reviews({
                 <span className={styles.quote_svg_container}>
                   <QuoteSvg />
                 </span>
-                <p>{parse(review.body) || "No review"}</p>
+                <div>{parse(review.body) || "No review"}</div>
               </div>
             </div>
+
+            <AnchorTag reviewId={review.id} />
           </li>
         ))}
       </ul>

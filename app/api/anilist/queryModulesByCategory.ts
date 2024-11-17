@@ -317,6 +317,7 @@ export const queryRecommendationsByCurrMediaUserAuthenticated = `recommendations
 
 export const queryMediaReviews = `reviews {
                                         nodes {
+                                            id
                                             summary
                                             body(asHtml: true)
                                             rating
