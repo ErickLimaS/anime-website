@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const redis = require("redis");
 const searchRoute = require('./routes/searchRoute');
+const mediaInfoRoute = require('./routes/getMediaInfoRoute');
 
 const redisClient = redis.createClient();
 
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 });
 
 app.use("/search", searchRoute)
+app.use("/media-info", mediaInfoRoute)
 
 // Start server
 app.listen(port, () => {

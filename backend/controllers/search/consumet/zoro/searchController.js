@@ -1,4 +1,5 @@
 const expressAsyncHandler = require("express-async-handler")
+const setRedisKey = require("../../../redisUtils").setRedisKey;
 
 exports.searchAnimeOnZoro = (req, res) => expressAsyncHandler(async (req, res) => {
 
@@ -37,11 +38,7 @@ exports.searchAnimeOnZoro = (req, res) => expressAsyncHandler(async (req, res) =
                 return res.status(500).json({ error: "Internal Server Error" });
             });
 
-
-        await redisClient.set(key, JSON.stringify(results), {
-            type: "EX",
-            value: process.env.REDIS_EXPIRATION
-        })
+        await setRedisKey({ redisClient, key, data: results });
 
         return res.status(200).json({
             message: `Results for: ${req.query.query.toUpperCase()}`, results: results
