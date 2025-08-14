@@ -12,8 +12,26 @@ function handleError({ error, res }) {
     });
 }
 
+function fetchOptions({ graphqlQuery, authToken }) {
+
+    const headersOptions = authToken ? {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+        'Accept': 'application/json',
+    } : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    };
+
+    return {
+        method: "POST",
+        headers: headersOptions,
+        body: JSON.stringify(graphqlQuery)
+    }
+}
+
 module.exports = {
+    fetchOptions,
     handleResponse,
-    handleData,
     handleError
-} 
+}

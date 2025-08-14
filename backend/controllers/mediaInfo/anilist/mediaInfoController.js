@@ -3,6 +3,7 @@ const { requestMediaById } = require("../../anilistUtils/queryConstants")
 const setRedisKey = require("../../redisUtils").setRedisKey;
 const handleResponse = require("../../anilistUtils/utils").handleResponse;
 const handleError = require("../../anilistUtils/utils").handleError;
+const fetchOptions = require("../../anilistUtils/utils").fetchOptions;
 
 exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
 
@@ -39,14 +40,7 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
             },
         };
 
-        await fetch(ANILIST_MEDIA_INFO_URI, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify(graphqlQuery)
-        })
+        await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery }))
             .then(handleResponse)
             .then(data => {
                 results = data.data.Media || null;
