@@ -25,7 +25,7 @@ exports.searchAnimeOnAnilist = (req, res) => expressAsyncHandler(async (req, res
 
         let results = null
 
-        const key = "search:anime:anilist:" + reqQuery;
+        const key = `search:anime:anilist:page-${page}:per-page-${perPage}:${reqQuery}`;
 
         const value = await redisClient.get(key);
 
@@ -70,7 +70,7 @@ exports.searchAnimeOnAnilist = (req, res) => expressAsyncHandler(async (req, res
         await setRedisKey({ redisClient, key, data: results });
 
         return res.status(200).json({
-            message: `Results for: ${reqQuery}`, results: results
+            message: `Results for: ${reqQuery}, page ${page}`, results: results
         });
 
 
