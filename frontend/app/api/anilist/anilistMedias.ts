@@ -120,49 +120,49 @@ export default {
   ),
 
   //SEARCH
-  getSeachResults: cache(
-    async ({
-      query,
-      showAdultContent,
-      accessToken,
-    }: {
-      query: string;
-      showAdultContent?: boolean;
-      accessToken?: string;
-    }) => {
-      try {
-        const headersCustom = await getHeadersWithAuthorization({
-          accessToken: accessToken,
-        });
+  // getSeachResults: cache(
+  //   async ({
+  //     query,
+  //     showAdultContent,
+  //     accessToken,
+  //   }: {
+  //     query: string;
+  //     showAdultContent?: boolean;
+  //     accessToken?: string;
+  //   }) => {
+  //     try {
+  //       const headersCustom = await getHeadersWithAuthorization({
+  //         accessToken: accessToken,
+  //       });
 
-        const graphqlQuery = {
-          query: requestMedias(", $search: String", ", search: $search"),
-          variables: {
-            page: 1,
-            sort: "TRENDING_DESC",
-            perPage: 15,
-            showAdultContent: showAdultContent == true ? undefined : false,
-            search: query,
-          },
-        };
+  //       const graphqlQuery = {
+  //         query: requestMedias(", $search: String", ", search: $search"),
+  //         variables: {
+  //           page: 1,
+  //           sort: "TRENDING_DESC",
+  //           perPage: 15,
+  //           showAdultContent: showAdultContent == true ? undefined : false,
+  //           search: query,
+  //         },
+  //       };
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+  //       const { data } = await Axios({
+  //         url: `${BASE_ANILIST_URL}`,
+  //         method: "POST",
+  //         headers: headersCustom,
+  //         data: graphqlQuery,
+  //       });
 
-        return showAdultContent
-          ? (data.data.Page.media as MediaData[])
-          : filterMediasWithAdultContent(data.data.Page.media, "mediaByFormat");
-      } catch (error) {
-        console.log((error as Error).message);
+  //       return showAdultContent
+  //         ? (data.data.Page.media as MediaData[])
+  //         : filterMediasWithAdultContent(data.data.Page.media, "mediaByFormat");
+  //     } catch (error) {
+  //       console.log((error as Error).message);
 
-        return null;
-      }
-    }
-  ),
+  //       return null;
+  //     }
+  //   }
+  // ),
 
   // RELEASING THIS WEEK
   getReleasingThisWeek: cache(
@@ -318,87 +318,87 @@ export default {
   ),
 
   // MEDIAS WITH INDICATED FORMAT
-  getMediaForThisFormat: cache(
-    async ({
-      type,
-      sort,
-      pageNumber,
-      perPage,
-      showAdultContent,
-      accessToken,
-    }: {
-      type: string;
-      sort?: string;
-      pageNumber?: number;
-      perPage?: number;
-      showAdultContent?: boolean;
-      accessToken?: string;
-    }) => {
-      try {
-        const headersCustom = await getHeadersWithAuthorization({
-          accessToken: accessToken,
-        });
+  // getMediaForThisFormat: cache(
+  //   async ({
+  //     type,
+  //     sort,
+  //     pageNumber,
+  //     perPage,
+  //     showAdultContent,
+  //     accessToken,
+  //   }: {
+  //     type: string;
+  //     sort?: string;
+  //     pageNumber?: number;
+  //     perPage?: number;
+  //     showAdultContent?: boolean;
+  //     accessToken?: string;
+  //   }) => {
+  //     try {
+  //       const headersCustom = await getHeadersWithAuthorization({
+  //         accessToken: accessToken,
+  //       });
 
-        const graphqlQuery = {
-          query: requestMedias(),
-          variables: {
-            page: pageNumber || 1,
-            sort: sort || "TRENDING_DESC",
-            perPage: perPage || 20,
-            showAdultContent: showAdultContent == true ? undefined : false,
-            type: type,
-          },
-        };
+  //       const graphqlQuery = {
+  //         query: requestMedias(),
+  //         variables: {
+  //           page: pageNumber || 1,
+  //           sort: sort || "TRENDING_DESC",
+  //           perPage: perPage || 20,
+  //           showAdultContent: showAdultContent == true ? undefined : false,
+  //           type: type,
+  //         },
+  //       };
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+  //       const { data } = await Axios({
+  //         url: `${BASE_ANILIST_URL}`,
+  //         method: "POST",
+  //         headers: headersCustom,
+  //         data: graphqlQuery,
+  //       });
 
-        return showAdultContent
-          ? (data.data.Page.media as MediaData[])
-          : (filterMediasWithAdultContent(
-            data.data.Page.media,
-            "mediaByFormat"
-          ) as MediaData[]);
-      } catch (error) {
-        console.log((error as Error).message);
+  //       return showAdultContent
+  //         ? (data.data.Page.media as MediaData[])
+  //         : (filterMediasWithAdultContent(
+  //           data.data.Page.media,
+  //           "mediaByFormat"
+  //         ) as MediaData[]);
+  //     } catch (error) {
+  //       console.log((error as Error).message);
 
-        return null;
-      }
-    }
-  ),
+  //       return null;
+  //     }
+  //   }
+  // ),
 
   // GET MEDIA INFO BY ID
-  getMediaInfo: cache(
-    async ({ id, accessToken }: { id: number; accessToken?: string }) => {
-      try {
-        const headersCustom = await getHeadersWithAuthorization({
-          accessToken: accessToken,
-        });
+  // getMediaInfo: cache(
+  //   async ({ id, accessToken }: { id: number; accessToken?: string }) => {
+  //     try {
+  //       const headersCustom = await getHeadersWithAuthorization({
+  //         accessToken: accessToken,
+  //       });
 
-        const graphqlQuery = {
-          query: requestMediaById(headersCustom.Authorization ? true : false),
-          variables: {
-            id: id,
-          },
-        };
+  //       const graphqlQuery = {
+  //         query: requestMediaById(headersCustom.Authorization ? true : false),
+  //         variables: {
+  //           id: id,
+  //         },
+  //       };
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+  //       const { data } = await Axios({
+  //         url: `${BASE_ANILIST_URL}`,
+  //         method: "POST",
+  //         headers: headersCustom,
+  //         data: graphqlQuery,
+  //       });
 
-        return data.data.Media as MediaData;
-      } catch (error) {
-        console.log((error as Error).message);
+  //       return data.data.Media as MediaData;
+  //     } catch (error) {
+  //       console.log((error as Error).message);
 
-        return null;
-      }
-    }
-  ),
+  //       return null;
+  //     }
+  //   }
+  // ),
 };

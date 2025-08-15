@@ -4,17 +4,18 @@ const dotenv = require('dotenv');
 const redis = require("redis");
 const searchRoute = require('./routes/searchRoute');
 const mediaInfoRoute = require('./routes/getMediaInfoRoute');
+const mediasByParamsRoute = require('./routes/getMediasByParamsRoute');
 
 const redisClient = redis.createClient();
 
 (async () => {
 
     redisClient.on("error", (err) => {
-        console.error("Redis Client Error! ", err);
+        console.error("#### -> Redis Client Error! ", err);
     })
 
     redisClient.on("ready", () => {
-        console.log("Redis Client is ready!");
+        console.log("#### -> Redis Client is ready!");
     })
 
     await redisClient.connect();
@@ -43,8 +44,9 @@ app.get('/', (req, res) => {
 
 app.use("/search", searchRoute)
 app.use("/media-info", mediaInfoRoute)
+app.use("/medias", mediasByParamsRoute)
 
 // Start server
 app.listen(port, () => {
-    console.log(`Server is live! Running on port: ${port}`);
+    console.log(`#### -> Server is live! Running on port: ${port}`);
 });
