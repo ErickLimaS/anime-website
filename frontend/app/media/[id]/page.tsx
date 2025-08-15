@@ -17,8 +17,6 @@ import MediaRelatedContainer from "./components/MediaRelatedContainer";
 import PageHeading from "./components/PageHeading";
 import Reviews from "./components/Reviews";
 
-export const revalidate = 43200; // revalidate cached data every 12 hours
-
 export async function generateMetadata({ params }: { params: { id: number } }) {
   const mediaData = (await anilist.getMediaInfo({
     id: params.id,
