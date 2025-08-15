@@ -40,10 +40,16 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
             },
         };
 
-        await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery }))
+        await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery, authToken: req.query.authToken }))
             .then(handleResponse)
             .then(data => {
+
+                if (!data.data) {
+                    return res.status(data.errors[0].status).json(data.errors)
+                }
+
                 results = data.data.Media || null;
+
                 if (!results) {
                     return res.status(404).json({ message: "No results found", result: results });
                 }

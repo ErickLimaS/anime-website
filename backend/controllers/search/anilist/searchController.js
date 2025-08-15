@@ -10,14 +10,14 @@ exports.searchAnimeOnAnilist = (req, res) => expressAsyncHandler(async (req, res
     // Anilist USES GraphQL for Queries
 
     const reqQuery = req.query.query;  // MEDIA ID 
-    const showAdultContent = req.query.showAdultContent || false;  
+    const showAdultContent = req.query.showAdultContent || false;
     const type = req.query.type || "ANIME";  // ANIME or MANGA
     const format = req.query.format || "TV"; // TV_SHORT MOVIE SPECIAL OVA ONA MUSIC MANGA NOVEL ONE_SHOT
-    const sort = req.query.sort || "TRENDING_DESC"; 
+    const sort = req.query.sort || "TRENDING_DESC";
     const season = req.query.season || null;
-    const seasonYear = req.query.seasonYear || null;  
-    const page = req.query.page || 1;  
-    const perPage = req.query.perPage || 15;  
+    const seasonYear = req.query.seasonYear || null;
+    const page = req.query.page || 1;
+    const perPage = req.query.perPage || 15;
 
     const redisClient = req.redisClient;
 
@@ -49,15 +49,21 @@ exports.searchAnimeOnAnilist = (req, res) => expressAsyncHandler(async (req, res
                 page: page,
                 sort: sort,
                 perPage: perPage,
-                season: season, 
+                season: season,
                 seasonYear: seasonYear
             },
         };
 
-        await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery }))
+        await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery, authToken: req.query.authToken }))
             .then(response => response.json())
             .then(data => {
+
+                if (!data.data) {
+                    return res.status(data.errors[0].status).json(data.errors)
+                }
+
                 results = data.data.Page.media || [];
+
                 if (results.length === 0) {
                     return res.status(404).json({ message: "No results found", results: results });
                 }

@@ -95,10 +95,16 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
             },
         };
 
-        await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery }))
+        await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery, authToken: req.query.authToken }))
             .then(response => response.json())
             .then(data => {
-                results = data.data.Page.media || data.data.Page.mediaTrends || data.data.Page.airingSchedules || [];
+
+                if (!data.data) {
+                    return res.status(data.errors[0].status).json(data.errors)
+                }
+
+                results = data.data.Page?.media || data.data.Page?.mediaTrends || data.data.Page?.airingSchedules || [];
+
                 if (results.length === 0) {
                     return res.status(404).json({ message: "No results found", results: results });
                 }
@@ -122,6 +128,5 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 
         return res.status(500).json({ error: `Internal Server Error! Route /medias${currRoute} ` });
     }
-
 
 })
