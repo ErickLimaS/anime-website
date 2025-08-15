@@ -1,3 +1,5 @@
+const anilistMediasTypes = ["ANIME", "MANGA", "MOVIE"];
+
 function handleResponse(response) {
     return response.json().then(function (json) {
         return response.ok ? json : Promise.reject(json);
@@ -32,25 +34,25 @@ function fetchOptions({ graphqlQuery, authToken }) {
 
 function getMediaFormatByType({ type, formatOnParams }) {
 
-    const typesAvailableForAnime = ['TV', 'TV_SHORT', 'OVA', 'ONA', 'MUSIC'];
-    const typesAvailableForManga = ['MANGA', 'NOVEL', 'ONE_SHOT'];
-    const typesAvailableForMovie = ['MOVIE'];
-    
+    const formatsAvailableForAnime = ['TV', 'TV_SHORT', 'OVA', 'ONA', 'MUSIC'];
+    const formatsAvailableForManga = ['MANGA', 'NOVEL', 'ONE_SHOT'];
+    const formatsAvailableForMovie = ['MOVIE'];
+
     switch (type.toLowerCase()) {
         case 'anime':
-            if (typesAvailableForAnime.find((item) => item == formatOnParams.toUpperCase())) return formatOnParams.toUpperCase();
+            if (formatsAvailableForAnime.find((item) => item == formatOnParams?.toUpperCase())) return formatOnParams.toUpperCase();
 
             return 'TV'
 
         case 'manga':
 
-            if (typesAvailableForManga.find((item) => item == formatOnParams.toUpperCase())) return formatOnParams.toUpperCase();
+            if (formatsAvailableForManga.find((item) => item == formatOnParams?.toUpperCase())) return formatOnParams.toUpperCase();
 
             return 'MANGA'
 
         case 'movie':
 
-            if (typesAvailableForMovie.find((item) => item == formatOnParams.toUpperCase())) return formatOnParams.toUpperCase();
+            if (formatsAvailableForMovie.find((item) => item == formatOnParams?.toUpperCase())) return formatOnParams.toUpperCase();
 
             return 'MOVIE'
 
@@ -64,6 +66,7 @@ function getMediaFormatByType({ type, formatOnParams }) {
 }
 
 module.exports = {
+    anilistMediasTypes,
     fetchOptions,
     getMediaFormatByType,
     handleResponse,

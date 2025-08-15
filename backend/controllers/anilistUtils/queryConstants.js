@@ -25,7 +25,8 @@ function requestMedias(
                 $seasonYear: Int, 
                 $page: Int, 
                 $perPage: Int, 
-                $showAdultContent: Boolean
+                $showAdultContent: Boolean,
+                $status: MediaStatus
                 ${otherQueryFields ? otherQueryFields : ""}
             ) {
                 Page(page: $page, perPage: $perPage){
@@ -35,7 +36,8 @@ function requestMedias(
                         sort: $sort, 
                         type: $type, 
                         format: $format, 
-                        isAdult: $showAdultContent
+                        isAdult: $showAdultContent,
+                        status: $status
                         ${otherMediasFields ? otherMediasFields : ""}
                     ){
                             ${queryTitles}

@@ -3,6 +3,7 @@ const setRedisKey = require("../../redisUtils").setRedisKey;
 const { requestMedias } = require("../../anilistUtils/queryConstants")
 const fetchOptions = require("../../anilistUtils/utils").fetchOptions;
 const getMediaFormatByType = require("../../anilistUtils/utils").getMediaFormatByType;
+const anilistMediasTypes = require("../../anilistUtils/utils").anilistMediasTypes;
 
 exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 
@@ -11,8 +12,9 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
     // Anilist USES GraphQL for Queries
 
     const showAdultContent = req.query.showAdultContent === 'true';
-    const type = req.url.slice(1, 6).toUpperCase() || "ANIME";  // ANIME or MANGA
+    const type = anilistMediasTypes.find((item) => item == req.url.slice(1, 6).toUpperCase()) ? req.url.slice(1, 6).toUpperCase() : "ANIME";
     const format = getMediaFormatByType({ type, formatOnParams: req.params.format });
+    const status = req.query.status?.toUpperCase() || undefined; // only for latest-releases route
     const sort = req.query.sort || "TRENDING_DESC";
     const season = req.query.season || null;
     const seasonYear = req.query.seasonYear || null;
@@ -25,7 +27,7 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 
         let results = null
 
-        const key = `medias:${type.toLowerCase()}:anilist:page-${page}:per-page-${perPage}:format-${format.toLowerCase()}:type-${type.toLowerCase()}:sort-${sort.toLowerCase()}:season-${season}:seasonYear-${seasonYear}:showAdultContent-${showAdultContent}`;
+        const key = `medias:${type.toLowerCase()}:anilist:page-${page}:per-page-${perPage}:format-${format.toLowerCase()}:type-${type.toLowerCase()}:status-${status?.toLowerCase()}:sort-${sort?.toLowerCase()}:season-${season?.toLowerCase()}:seasonYear-${seasonYear}:showAdultContent-${showAdultContent}`;
 
         const value = await redisClient.get(key);
 
@@ -45,6 +47,7 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
                 showAdultContent: showAdultContent,
                 type: type,
                 format: format,
+                status: status || undefined,
                 page: page,
                 sort: sort,
                 perPage: perPage,
@@ -75,7 +78,10 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 
     }
     catch (err) {
-        console.error("Error in /medias/anime/anilist route: ", err);
+
+        if (req.url.includes('/latest-releases')) console.error("Error in /medias/latest-releases route: ", err);
+        else console.error("Error in /medias/:format route: ", err);
+
         res.status(500).json({ error: "Internal Server Error" });
     }
 
