@@ -215,61 +215,61 @@ export default {
   // ),
 
   // RELEASING BY DAYS RANGE - use medias route on back
-  getReleasingByDaysRange: cache(
-    async ({
-      type,
-      days,
-      pageNumber,
-      perPage,
-      showAdultContent,
-      accessToken,
-    }: {
-      type: string;
-      days: 1 | 7 | 30;
-      pageNumber?: number;
-      perPage?: number;
-      showAdultContent?: boolean;
-      accessToken?: string;
-    }) => {
-      try {
-        const headersCustom = await getHeadersWithAuthorization({
-          accessToken: accessToken,
-        });
+  // getReleasingByDaysRange: cache(
+  //   async ({
+  //     type,
+  //     days,
+  //     pageNumber,
+  //     perPage,
+  //     showAdultContent,
+  //     accessToken,
+  //   }: {
+  //     type: string;
+  //     days: 1 | 7 | 30;
+  //     pageNumber?: number;
+  //     perPage?: number;
+  //     showAdultContent?: boolean;
+  //     accessToken?: string;
+  //   }) => {
+  //     try {
+  //       const headersCustom = await getHeadersWithAuthorization({
+  //         accessToken: accessToken,
+  //       });
 
-        const dateInUnix = convertToUnix(days);
+  //       const dateInUnix = convertToUnix(days);
 
-        const graphqlQuery = {
-          query: requestMediasByDateAndTimeRelease(),
-          variables: {
-            page: pageNumber || 1,
-            perPage: perPage || 5,
-            type: type,
-            sort: "TIME_DESC",
-            showAdultContent: showAdultContent == true ? undefined : false,
-            airingAt_greater: dateInUnix,
-            airingAt_lesser: lastHourOfTheDay(1), // returns today last hour
-          },
-        };
+  //       const graphqlQuery = {
+  //         query: requestMediasByDateAndTimeRelease(),
+  //         variables: {
+  //           page: pageNumber || 1,
+  //           perPage: perPage || 5,
+  //           type: type,
+  //           sort: "TIME_DESC",
+  //           showAdultContent: showAdultContent == true ? undefined : false,
+  //           airingAt_greater: dateInUnix,
+  //           airingAt_lesser: lastHourOfTheDay(1), // returns today last hour
+  //         },
+  //       };
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+  //       const { data } = await Axios({
+  //         url: `${BASE_ANILIST_URL}`,
+  //         method: "POST",
+  //         headers: headersCustom,
+  //         data: graphqlQuery,
+  //       });
 
-        return showAdultContent
-          ? (data.data.Page.airingSchedules as AiringMediaResult[])
-          : (filterMediasWithAdultContent(
-              data.data.Page.airingSchedules
-            ) as AiringMediaResult[]);
-      } catch (error) {
-        console.log((error as Error).message);
+  //       return showAdultContent
+  //         ? (data.data.Page.airingSchedules as AiringMediaResult[])
+  //         : (filterMediasWithAdultContent(
+  //             data.data.Page.airingSchedules
+  //           ) as AiringMediaResult[]);
+  //     } catch (error) {
+  //       console.log((error as Error).message);
 
-        return null;
-      }
-    }
-  ),
+  //       return null;
+  //     }
+  //   }
+  // ),
 
   // TRENDING - use medias route on back
   // getTrendingMedia: cache(

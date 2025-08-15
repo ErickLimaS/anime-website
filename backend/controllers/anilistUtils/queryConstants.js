@@ -13,6 +13,7 @@ const {
   queryTitles,
 } = require("./querySnippetsByCategory");
 
+// General Medias Query for various routes
 function requestMedias(
   otherQueryFields,
   otherMediasFields
@@ -101,6 +102,7 @@ function requestMedias(
             `;
 }
 
+// Media By ID Query for Media Info Route
 function requestMediaById(isUserAuthenticated) {
   return `query($id: Int) {
                     Media (id: $id){
@@ -176,7 +178,8 @@ function requestMediaById(isUserAuthenticated) {
             `;
 }
 
-function requestMediasByDateAndTimeRelease() {
+// Medias By Date Release Query 
+function requestMediasByDateRelease() {
   return `query(
                 $page: Int,
                 $sort: [AiringSort],
@@ -246,6 +249,7 @@ function requestMediasByDateAndTimeRelease() {
             `;
 }
 
+// Medias Trends Query for Trending Route
 function requestMediasByTrendingSort() {
   return `query Page (
                 $page: Int,
@@ -319,6 +323,6 @@ function requestMediasByTrendingSort() {
 module.exports = {
   requestMedias,
   requestMediaById,
-  requestMediasByDateAndTimeRelease,
+  requestMediasByDateRelease,
   requestMediasByTrendingSort,
 };
