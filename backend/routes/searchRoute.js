@@ -7,9 +7,10 @@ const searchOnAnilistController = require("../controllers/search/anilist/searchC
 const searchRoute = express.Router();
 
 // Search Anime
+searchRoute.get("/any/anilist", searchOnAnilistController.searchAnimeOnAnilist()) // ?query=xxx&showAdultContent=false&type=ANIME&format=TV&sort=TRENDING_DESC&season=null&seasonYear=null&page=1&perPage=15
+searchRoute.get("/anime/anilist", searchOnAnilistController.searchAnimeOnAnilist()) // ?query=xxx&showAdultContent=false&type=ANIME&format=TV&sort=TRENDING_DESC&season=null&seasonYear=null&page=1&perPage=15
 searchRoute.get(`/anime/aniwatch`, searchOnAniwatchController.searchAnimeOnAniwatch())
 searchRoute.get("/anime/consumet/zoro", searchOnZoroController.searchAnimeOnZoro())
-searchRoute.get("/anime/anilist", searchOnAnilistController.searchAnimeOnAnilist()) // ?query=xxx&showAdultContent=false&type=ANIME&format=TV&sort=TRENDING_DESC&season=null&seasonYear=null&page=1&perPage=15
 // searchRoute.get(`/anime/consumet/gogoanime`, searchOnZoroController.searchAnimeOnZoro()) TODO
 
 // Search Manga 

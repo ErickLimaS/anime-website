@@ -9,8 +9,10 @@ exports.searchAnimeOnAnilist = (req, res) => expressAsyncHandler(async (req, res
 
     // Anilist USES GraphQL for Queries
 
+    const fetchByType = !req.url.includes("any") // if URL has ANY, it doesnt use TYPE or FORMAT as parameter
+
     const reqQuery = req.query.query;  // MEDIA ID 
-    const showAdultContent = req.query.showAdultContent || false;
+    const showAdultContent = req.query.showAdultContent == "true" || false;
     const type = req.query.type || "ANIME";  // ANIME or MANGA
     const format = req.query.format || "TV"; // TV_SHORT MOVIE SPECIAL OVA ONA MUSIC MANGA NOVEL ONE_SHOT
     const sort = req.query.sort || "TRENDING_DESC";
@@ -25,7 +27,9 @@ exports.searchAnimeOnAnilist = (req, res) => expressAsyncHandler(async (req, res
 
         let results = null
 
-        const key = `search:anime:anilist:page-${page}:per-page-${perPage}:${reqQuery}`;
+        const key = `search:any:anilist:page-${page}:per-page-${perPage}:${reqQuery}`;
+        // const key = `search:anime:anilist:page-${page}:per-page-${perPage}:${reqQuery}`;
+        // const key = `search:manga:anilist:page-${page}:per-page-${perPage}:${reqQuery}`;
 
         const value = await redisClient.get(key);
 
@@ -44,8 +48,8 @@ exports.searchAnimeOnAnilist = (req, res) => expressAsyncHandler(async (req, res
             variables: {
                 search: reqQuery,
                 showAdultContent: showAdultContent,
-                type: type,
-                format: format,
+                type: fetchByType ? type : undefined,
+                format: fetchByType ? format : undefined,
                 page: page,
                 sort: sort,
                 perPage: perPage,
