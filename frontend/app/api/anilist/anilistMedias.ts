@@ -53,71 +53,71 @@ axiosRetry(Axios, {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   // HOME PAGE
-  getNewReleases: cache(
-    async ({
-      type,
-      format,
-      sort,
-      showAdultContent,
-      status,
-      page,
-      perPage,
-      accessToken,
-    }: {
-      type: string;
-      format?: string;
-      sort?: string;
-      showAdultContent?: boolean;
-      status?:
-        | "FINISHED"
-        | "RELEASING"
-        | "NOT_YET_RELEASED"
-        | "CANCELLED"
-        | "HIATUS";
-      page?: number;
-      perPage?: number;
-      accessToken?: string;
-    }) => {
-      const season = getCurrentSeason();
+  // getNewReleases: cache(
+  //   async ({
+  //     type,
+  //     format,
+  //     sort,
+  //     showAdultContent,
+  //     status,
+  //     page,
+  //     perPage,
+  //     accessToken,
+  //   }: {
+  //     type: string;
+  //     format?: string;
+  //     sort?: string;
+  //     showAdultContent?: boolean;
+  //     status?:
+  //       | "FINISHED"
+  //       | "RELEASING"
+  //       | "NOT_YET_RELEASED"
+  //       | "CANCELLED"
+  //       | "HIATUS";
+  //     page?: number;
+  //     perPage?: number;
+  //     accessToken?: string;
+  //   }) => {
+  //     const season = getCurrentSeason();
 
-      const headersCustom = await getHeadersWithAuthorization({
-        accessToken: accessToken,
-      });
+  //     const headersCustom = await getHeadersWithAuthorization({
+  //       accessToken: accessToken,
+  //     });
 
-      try {
-        const graphqlQuery = {
-          query: requestMedias(
-            status ? ", $status: MediaStatus" : undefined,
-            status ? ", status: $status" : undefined
-          ),
-          variables: {
-            type: `${type}`,
-            format: `${(format === "MOVIE" && "MOVIE") || (type === "MANGA" && "MANGA") || (type === "ANIME" && "TV")}`,
-            page: page || 1,
-            sort: sort || "POPULARITY_DESC",
-            perPage: perPage || 20,
-            season: status ? undefined : `${season}`,
-            status: status ? status : undefined,
-            seasonYear: `${new Date().getFullYear()}`,
-            showAdultContent: showAdultContent || false,
-          },
-        };
+  //     try {
+  //       const graphqlQuery = {
+  //         query: requestMedias(
+  //           status ? ", $status: MediaStatus" : undefined,
+  //           status ? ", status: $status" : undefined
+  //         ),
+  //         variables: {
+  //           type: `${type}`,
+  //           format: `${(format === "MOVIE" && "MOVIE") || (type === "MANGA" && "MANGA") || (type === "ANIME" && "TV")}`,
+  //           page: page || 1,
+  //           sort: sort || "POPULARITY_DESC",
+  //           perPage: perPage || 20,
+  //           season: status ? undefined : `${season}`,
+  //           status: status ? status : undefined,
+  //           seasonYear: `${new Date().getFullYear()}`,
+  //           showAdultContent: showAdultContent || false,
+  //         },
+  //       };
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+  //       const { data } = await Axios({
+  //         url: `${BASE_ANILIST_URL}`,
+  //         method: "POST",
+  //         headers: headersCustom,
+  //         data: graphqlQuery,
+  //       });
 
-        return data.data.Page.media as MediaData[];
-      } catch (error) {
-        console.log((error as Error).message);
+  //       return data.data.Page.media as MediaData[];
+  //     } catch (error) {
+  //       console.log((error as Error).message);
 
-        return null;
-      }
-    }
-  ),
+  //       return null;
+  //     }
+  //   }
+  // ),
 
   //SEARCH
   // getSeachResults: cache(
@@ -165,56 +165,56 @@ export default {
   // ),
 
   // RELEASING THIS WEEK
-  getReleasingThisWeek: cache(
-    async ({
-      type,
-      page,
-      showAdultContent,
-      accessToken,
-    }: {
-      type: string;
-      format?: string;
-      page?: number;
-      showAdultContent?: boolean;
-      accessToken?: string;
-    }) => {
-      try {
-        const headersCustom = await getHeadersWithAuthorization({
-          accessToken: accessToken,
-        });
+  // getReleasingThisWeek: cache(
+  //   async ({
+  //     type,
+  //     page,
+  //     showAdultContent,
+  //     accessToken,
+  //   }: {
+  //     type: string;
+  //     format?: string;
+  //     page?: number;
+  //     showAdultContent?: boolean;
+  //     accessToken?: string;
+  //   }) => {
+  //     try {
+  //       const headersCustom = await getHeadersWithAuthorization({
+  //         accessToken: accessToken,
+  //       });
 
-        const thisYear = new Date().getFullYear();
+  //       const thisYear = new Date().getFullYear();
 
-        const graphqlQuery = {
-          query: requestMedias(),
-          variables: {
-            type: type || "ANIME",
-            page: page || 1,
-            sort: "TRENDING_DESC",
-            perPage: 10,
-            showAdultContent: showAdultContent || false,
-            season: getCurrentSeason(),
-            year: thisYear,
-          },
-        };
+  //       const graphqlQuery = {
+  //         query: requestMedias(),
+  //         variables: {
+  //           type: type || "ANIME",
+  //           page: page || 1,
+  //           sort: "TRENDING_DESC",
+  //           perPage: 10,
+  //           showAdultContent: showAdultContent || false,
+  //           season: getCurrentSeason(),
+  //           year: thisYear,
+  //         },
+  //       };
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+  //       const { data } = await Axios({
+  //         url: `${BASE_ANILIST_URL}`,
+  //         method: "POST",
+  //         headers: headersCustom,
+  //         data: graphqlQuery,
+  //       });
 
-        return data.data.Page.media as MediaData[];
-      } catch (error) {
-        console.log((error as Error).message);
+  //       return data.data.Page.media as MediaData[];
+  //     } catch (error) {
+  //       console.log((error as Error).message);
 
-        return null;
-      }
-    }
-  ),
+  //       return null;
+  //     }
+  //   }
+  // ),
 
-  // RELEASING BY DAYS RANGE
+  // RELEASING BY DAYS RANGE - use medias route on back
   getReleasingByDaysRange: cache(
     async ({
       type,
@@ -261,8 +261,8 @@ export default {
         return showAdultContent
           ? (data.data.Page.airingSchedules as AiringMediaResult[])
           : (filterMediasWithAdultContent(
-            data.data.Page.airingSchedules
-          ) as AiringMediaResult[]);
+              data.data.Page.airingSchedules
+            ) as AiringMediaResult[]);
       } catch (error) {
         console.log((error as Error).message);
 
@@ -271,51 +271,51 @@ export default {
     }
   ),
 
-  // TRENDING
-  getTrendingMedia: cache(
-    async ({
-      sort,
-      showAdultContent,
-      accessToken,
-    }: {
-      sort?: string;
-      showAdultContent?: boolean;
-      accessToken?: string;
-    }) => {
-      try {
-        const headersCustom = await getHeadersWithAuthorization({
-          accessToken: accessToken,
-        });
+  // TRENDING - use medias route on back
+  // getTrendingMedia: cache(
+  //   async ({
+  //     sort,
+  //     showAdultContent,
+  //     accessToken,
+  //   }: {
+  //     sort?: string;
+  //     showAdultContent?: boolean;
+  //     accessToken?: string;
+  //   }) => {
+  //     try {
+  //       const headersCustom = await getHeadersWithAuthorization({
+  //         accessToken: accessToken,
+  //       });
 
-        const thisYear = new Date().getFullYear();
+  //       const thisYear = new Date().getFullYear();
 
-        const graphqlQuery = {
-          query: mediaTrendingApiQueryRequest(),
-          variables: {
-            page: 1,
-            sort: sort || "TRENDING_DESC",
-            perPage: 20,
-            showAdultContent: showAdultContent == true ? undefined : false,
-            season: getCurrentSeason(),
-            year: thisYear,
-          },
-        };
+  //       const graphqlQuery = {
+  //         query: mediaTrendingApiQueryRequest(),
+  //         variables: {
+  //           page: 1,
+  //           sort: sort || "TRENDING_DESC",
+  //           perPage: 20,
+  //           showAdultContent: showAdultContent == true ? undefined : false,
+  //           season: getCurrentSeason(),
+  //           year: thisYear,
+  //         },
+  //       };
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+  //       const { data } = await Axios({
+  //         url: `${BASE_ANILIST_URL}`,
+  //         method: "POST",
+  //         headers: headersCustom,
+  //         data: graphqlQuery,
+  //       });
 
-        return data.data.Page.mediaTrends as TrendingMediaResult[];
-      } catch (error) {
-        console.log((error as Error).message);
+  //       return data.data.Page.mediaTrends as TrendingMediaResult[];
+  //     } catch (error) {
+  //       console.log((error as Error).message);
 
-        return null;
-      }
-    }
-  ),
+  //       return null;
+  //     }
+  //   }
+  // ),
 
   // MEDIAS WITH INDICATED FORMAT
   // getMediaForThisFormat: cache(

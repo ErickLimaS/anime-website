@@ -1,6 +1,6 @@
 const expressAsyncHandler = require("express-async-handler");
 const setRedisKey = require("../../redisUtils").setRedisKey;
-const { requestMedias } = require("../../anilistUtils/queryConstants")
+const { requestMedias, requestMediasByTrendingSort } = require("../../anilistUtils/queryConstants")
 const fetchOptions = require("../../anilistUtils/utils").fetchOptions;
 const getMediaFormatByType = require("../../anilistUtils/utils").getMediaFormatByType;
 const anilistMediasTypes = require("../../anilistUtils/utils").anilistMediasTypes;
@@ -8,6 +8,20 @@ const anilistMediasTypes = require("../../anilistUtils/utils").anilistMediasType
 exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 
     const ANILIST_MEDIA_INFO_URI = process.env.ANILIST_API_URL
+
+    const currRoute = (() => {
+
+        const routesUsedOnThisController = [
+            '/anime',
+            '/manga',
+            '/movie',
+            '/latest-releases',
+            '/trending'
+        ];
+
+        return routesUsedOnThisController.find((item) => req.url.includes(item))
+
+    })()
 
     // Anilist USES GraphQL for Queries
 
@@ -41,8 +55,22 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 
         console.log("Cache MISS for key:", key);
 
+        const queryByRoute = () => {
+            switch (currRoute) {
+                case '/anime':
+                case '/manga':
+                case '/movie':
+                case '/latest-releases':
+                    return requestMedias();
+                case '/trending':
+                    return requestMediasByTrendingSort();
+                default:
+                    throw new Error("Invalid route");
+            }
+        }
+
         const graphqlQuery = {
-            query: requestMedias(),
+            query: queryByRoute(),
             variables: {
                 showAdultContent: showAdultContent,
                 type: type,
@@ -59,7 +87,7 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
         await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery }))
             .then(response => response.json())
             .then(data => {
-                results = data.data.Page.media || [];
+                results = data.data.Page.media || data.data.Page.mediaTrends || [];
                 if (results.length === 0) {
                     return res.status(404).json({ message: "No results found", results: results });
                 }
@@ -72,17 +100,16 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
         await setRedisKey({ redisClient, key, data: results });
 
         return res.status(200).json({
-            message: `Results for ${type}-${format}, page ${page}`, results: results
+            message: `${currRoute}: Results for ${type}-${format}, page ${page}`, results: results
         });
 
 
     }
     catch (err) {
 
-        if (req.url.includes('/latest-releases')) console.error("Error in /medias/latest-releases route: ", err);
-        else console.error("Error in /medias/:format route: ", err);
+        console.error(`Error in /medias${currRoute} route: `, err);
 
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error! Route /medias${currRoute} " });
     }
 
 

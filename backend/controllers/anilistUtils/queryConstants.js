@@ -246,7 +246,7 @@ function requestMediasByDateAndTimeRelease() {
             `;
 }
 
-function mediaTrendingApiQueryRequest() {
+function requestMediasByTrendingSort() {
   return `query Page (
                 $page: Int,
                 $sort: [MediaTrendSort],
@@ -320,5 +320,5 @@ module.exports = {
   requestMedias,
   requestMediaById,
   requestMediasByDateAndTimeRelease,
-  mediaTrendingApiQueryRequest,
+  requestMediasByTrendingSort,
 };

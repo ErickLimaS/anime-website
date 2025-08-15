@@ -13,6 +13,8 @@ mediasByFormatRoute.get('/anime/:format', mediasByParamsController.mediasByParam
 mediasByFormatRoute.get('/manga/:format', mediasByParamsController.mediasByParamsOnAnilist);
 mediasByFormatRoute.get('/movie/:format', mediasByParamsController.mediasByParamsOnAnilist);
 
-mediasByFormatRoute.get('/latest-releases', mediasByParamsController.mediasByParamsOnAnilist); 
+mediasByFormatRoute.get('/latest-releases', mediasByParamsController.mediasByParamsOnAnilist);
+
+mediasByFormatRoute.get('/trending', mediasByParamsController.mediasByParamsOnAnilist); 
 
 module.exports = mediasByFormatRoute
