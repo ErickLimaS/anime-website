@@ -2,6 +2,7 @@ const expressAsyncHandler = require("express-async-handler");
 const setRedisKey = require("../../redisUtils").setRedisKey;
 const { requestMedias } = require("../../anilistUtils/queryConstants")
 const fetchOptions = require("../../anilistUtils/utils").fetchOptions;
+const getMediaFormatByType = require("../../anilistUtils/utils").getMediaFormatByType;
 
 exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 
@@ -11,7 +12,7 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 
     const showAdultContent = req.query.showAdultContent === 'true';
     const type = req.url.slice(1, 6).toUpperCase() || "ANIME";  // ANIME or MANGA
-    const format = type.toLowerCase() == "manga" ? "MANGA" : req.params.format.toUpperCase() || "TV"; // TV_SHORT MOVIE SPECIAL OVA ONA MUSIC MANGA NOVEL ONE_SHOT
+    const format = getMediaFormatByType({ type, formatOnParams: req.params.format });
     const sort = req.query.sort || "TRENDING_DESC";
     const season = req.query.season || null;
     const seasonYear = req.query.seasonYear || null;
