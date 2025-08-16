@@ -1,17 +1,11 @@
-import { convertToUnix, lastHourOfTheDay } from "@/app/lib/formatDateUnix";
 import {
   AiringMediaResult,
   MediaData,
   TrendingMediaResult,
 } from "@/app/ts/interfaces/anilistMediaData";
 import Axios from "axios";
-import {
-  requestMedias,
-  requestMediasByDateAndTimeRelease,
-  mediaTrendingApiQueryRequest,
-} from "./anilistQueryConstants";
+import { mediaTrendingApiQueryRequest } from "./anilistQueryConstants";
 import { cache } from "react";
-import axiosRetry from "axios-retry";
 import { getHeadersWithAuthorization } from "./anilistUsers";
 import { BASE_ANILIST_URL, getCurrentSeason } from "./utils";
 import axios from "axios";
@@ -38,88 +32,57 @@ function filterMediasWithAdultContent(
   }
 }
 
-// HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
-axiosRetry(Axios, {
-  retries: 3,
-  retryDelay: (retryAttempt) => retryAttempt * 250,
-  retryCondition: (error) =>
-    error.response?.status == 500 ||
-    error.response?.status == 404 ||
-    error.response?.status == 503,
-  onRetry: (retryNumber) =>
-    console.log(
-      `retry: ${retryNumber} ${retryNumber == 3 ? " - Last Attempt" : ""}`
-    ),
-});
-
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   // HOME PAGE
-  getNewReleases: cache(
-    async ({
-      type,
-      format,
-      sort,
-      showAdultContent,
-      status,
-      page,
-      perPage,
-      accessToken,
-    }: {
-      type: string;
-      format?: string;
-      sort?: string;
-      showAdultContent?: boolean;
-      status?:
-        | "FINISHED"
-        | "RELEASING"
-        | "NOT_YET_RELEASED"
-        | "CANCELLED"
-        | "HIATUS";
-      page?: number;
-      perPage?: number;
-      accessToken?: string;
-    }) => {
-      const season = getCurrentSeason();
+  getNewReleases: async ({
+    type,
+    format,
+    sort,
+    showAdultContent,
+    status,
+    page,
+    perPage,
+    accessToken,
+  }: {
+    type: string;
+    format?: string;
+    sort?: string;
+    showAdultContent?: boolean;
+    status?:
+      | "FINISHED"
+      | "RELEASING"
+      | "NOT_YET_RELEASED"
+      | "CANCELLED"
+      | "HIATUS";
+    page?: number;
+    perPage?: number;
+    accessToken?: string;
+  }) => {
+    const season = getCurrentSeason();
 
-      const headersCustom = await getHeadersWithAuthorization({
-        accessToken: accessToken,
+    try {
+      const { data } = await axios({
+        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/${type.toLowerCase()}/${format || "TV"}`,
+        params: {
+          authToken: accessToken,
+          page: page || 1,
+          sort: sort || "POPULARITY_DESC",
+          perPage: perPage || 20,
+          status: status ? status : undefined,
+          season: status ? undefined : season,
+          seasonYear: new Date().getFullYear(),
+          showAdultContent: showAdultContent || false,
+        },
       });
 
-      try {
-        const graphqlQuery = {
-          query: requestMedias(
-            status ? ", $status: MediaStatus" : undefined,
-            status ? ", status: $status" : undefined
-          ),
-          variables: {
-            type: `${type}`,
-            format: `${(format === "MOVIE" && "MOVIE") || (type === "MANGA" && "MANGA") || (type === "ANIME" && "TV")}`,
-            page: page || 1,
-            sort: sort || "POPULARITY_DESC",
-            perPage: perPage || 20,
-            season: status ? undefined : `${season}`,
-            status: status ? status : undefined,
-            seasonYear: `${new Date().getFullYear()}`,
-            showAdultContent: showAdultContent || false,
-          },
-        };
+      return data.results as MediaData[];
+    } catch (error) {
+      console.error((error as Error).message);
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
-
-        return data.data.Page.media as MediaData[];
-      } catch (error) {
-        console.log((error as Error).message);
-
-        return null;
-      }
+      return null;
     }
-  ),
+  },
 
   //SEARCH
   getSeachResults: async ({
@@ -154,7 +117,7 @@ export default {
         ? (data.results as MediaData[])
         : filterMediasWithAdultContent(data.results, "mediaByFormat");
     } catch (error) {
-      console.log((error as Error).message);
+      console.error((error as Error).message);
 
       return null;
     }
@@ -204,61 +167,50 @@ export default {
   },
 
   // RELEASING BY DAYS RANGE - use medias route on back
-  getReleasingByDaysRange: cache(
-    async ({
-      type,
-      days,
-      pageNumber,
-      perPage,
-      showAdultContent,
-      accessToken,
-    }: {
-      type: string;
-      days: 1 | 7 | 30;
-      pageNumber?: number;
-      perPage?: number;
-      showAdultContent?: boolean;
-      accessToken?: string;
-    }) => {
-      try {
-        const headersCustom = await getHeadersWithAuthorization({
-          accessToken: accessToken,
-        });
+  getReleasingByDaysRange: async ({
+    type,
+    days,
+    pageNumber,
+    perPage,
+    showAdultContent,
+    accessToken,
+  }: {
+    type: string;
+    days: 0 | 7 | 30;
+    pageNumber?: number;
+    perPage?: number;
+    showAdultContent?: boolean;
+    accessToken?: string;
+  }) => {
+    try {
+      const headersCustom = await getHeadersWithAuthorization({
+        accessToken: accessToken,
+      });
 
-        const dateInUnix = convertToUnix(days);
+      const authToken = headersCustom?.Authorization?.slice(8);
 
-        const graphqlQuery = {
-          query: requestMediasByDateAndTimeRelease(),
-          variables: {
-            page: pageNumber || 1,
-            perPage: perPage || 5,
-            type: type,
-            sort: "TIME_DESC",
-            showAdultContent: showAdultContent == true ? undefined : false,
-            airingAt_greater: dateInUnix,
-            airingAt_lesser: lastHourOfTheDay(1), // returns today last hour
-          },
-        };
+      const { data } = await axios({
+        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
+        params: {
+          authToken: authToken,
+          page: pageNumber || 1,
+          perPage: perPage || 5,
+          type: type,
+          sort: "TIME_DESC",
+          showAdultContent: showAdultContent == true ? undefined : false,
+          releasedOnLastXDays: days,
+        },
+      });
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+      return showAdultContent
+        ? (data.results as AiringMediaResult[])
+        : (filterMediasWithAdultContent(data.results) as AiringMediaResult[]);
+    } catch (error) {
+      console.log((error as Error).message);
 
-        return showAdultContent
-          ? (data.data.Page.airingSchedules as AiringMediaResult[])
-          : (filterMediasWithAdultContent(
-              data.data.Page.airingSchedules
-            ) as AiringMediaResult[]);
-      } catch (error) {
-        console.log((error as Error).message);
-
-        return null;
-      }
+      return null;
     }
-  ),
+  },
 
   // TRENDING - use medias route on back
   getTrendingMedia: cache(
@@ -299,7 +251,7 @@ export default {
 
         return data.data.Page.mediaTrends as TrendingMediaResult[];
       } catch (error) {
-        console.log((error as Error).message);
+        console.error((error as Error).message);
 
         return null;
       }
@@ -309,6 +261,7 @@ export default {
   // MEDIAS WITH INDICATED FORMAT
   getMediaForThisFormat: async ({
     type,
+    status,
     sort,
     pageNumber,
     perPage,
@@ -317,6 +270,7 @@ export default {
   }: {
     type: string;
     sort?: string;
+    status?: string | string[];
     pageNumber?: number;
     perPage?: number;
     showAdultContent?: boolean;
@@ -330,11 +284,13 @@ export default {
       const authToken = headersCustom?.Authorization?.slice(8);
 
       const { data } = await axios({
+        // url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/trending`,
         url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
         params: {
           authToken: authToken,
           page: pageNumber || 1,
           sort: sort || "TRENDING_DESC",
+          status: status || undefined,
           perPage: perPage || 20,
           showAdultContent: showAdultContent == true ? undefined : false,
         },

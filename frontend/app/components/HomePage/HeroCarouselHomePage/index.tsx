@@ -175,9 +175,9 @@ function HeroCarousel({
                     {animesList[currMediaOnScreenIndex]?.genres && (
                       <p>
                         <Link
-                          href={`/search?genre=[${animesList[currMediaOnScreenIndex]?.genres[0].toLowerCase()}]`}
+                          href={`/search?genre=[${animesList[currMediaOnScreenIndex]?.genres[0]?.toLowerCase()}]`}
                         >
-                          {animesList[currMediaOnScreenIndex]?.genres[0]}
+                          {animesList[currMediaOnScreenIndex]?.genres[0] || "Unknown"}
                         </Link>
                       </p>
                     )}

@@ -59,7 +59,7 @@ function NavigationThroughMedias({
   isLayoutInverted,
   isResultsSortedByTrending,
 }: ComponentType) {
-  const [daysRange, setDaysRange] = useState<1 | 7 | 30>(1); // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
+  const [daysRange, setDaysRange] = useState<0 | 7 | 30>(0); // IF SORT = RELEASE --> 1: 1 day (today), 7: 7 days (week), 30: 30 days (month)
 
   const [mediaList, setMediaList] = useState<MediaData[]>([]);
 
@@ -76,7 +76,7 @@ function NavigationThroughMedias({
   const [mediaSelect, setMediaSelected] = useState<MediaData | null>(null);
 
   useEffect(() => {
-    if (sortBy == "RELEASE") fetchMediaListByDays(1);
+    if (sortBy == "RELEASE") fetchMediaListByDays(0);
     else fetchMediaList();
   }, []);
 
@@ -96,7 +96,7 @@ function NavigationThroughMedias({
     return userAdultContentPreference;
   }
 
-  async function fetchMediaListByDays(days: 1 | 7 | 30) {
+  async function fetchMediaListByDays(days: 0 | 7 | 30) {
     setIsLoading(true);
 
     let fetchedMedia: AiringMediaResult[] | MediaData[] = [];
@@ -111,10 +111,10 @@ function NavigationThroughMedias({
     })) as AiringMediaResult[];
 
     // Remove releases from "today" to show on other options
-    if (days != 1 && days != undefined) {
+    if (days != 0 && days != undefined) {
       fetchedMedia = (fetchedMedia as AiringMediaResult[]).filter(
         (item) =>
-          convertToUnix(1) > item.airingAt &&
+          convertToUnix(0) > item.airingAt &&
           item.airingAt > convertToUnix(days) &&
           item.media
       );
@@ -195,9 +195,9 @@ function NavigationThroughMedias({
           <ul className="display_flex_row">
             <li>
               <button
-                disabled={daysRange === 1}
-                data-active={daysRange == 1}
-                onClick={() => fetchMediaListByDays(1)}
+                disabled={daysRange === 0}
+                data-active={daysRange == 0}
+                onClick={() => fetchMediaListByDays(0)}
               >
                 Today
               </button>
@@ -270,7 +270,7 @@ function NavigationThroughMedias({
             <p className="display_align_justify_center">
               {!isFetchByDateButtonsOnScreen && "No results"}
               {isFetchByDateButtonsOnScreen &&
-                daysRange == 1 &&
+                daysRange == 0 &&
                 "Nothing Releasing Today"}
               {isFetchByDateButtonsOnScreen &&
                 daysRange == 7 &&

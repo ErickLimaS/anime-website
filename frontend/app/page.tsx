@@ -15,8 +15,6 @@ import { cookies, headers } from "next/headers";
 import KeepWatchingSection from "./components/HomePage/KeepWatchingSection";
 import PopularMediaSection from "./components/HomePage/PopularMediaSection";
 
-export const revalidate = 21600; // revalidate cached data every 6 hours
-
 export const metadata: Metadata = {
   title: "Home | AniProject",
   description:
@@ -95,7 +93,7 @@ export default async function Home() {
   const listMediasReleasedToday = await anilist
     .getReleasingByDaysRange({
       type: "ANIME",
-      days: 1,
+      days: 0,
       perPage: 11,
       accessToken: userAuthorization,
     })
