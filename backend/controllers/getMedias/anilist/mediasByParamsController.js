@@ -34,8 +34,8 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
     const type = anilistMediasTypes.find((item) => item == req.url.slice(1, 6).toUpperCase()) ? req.url.slice(1, 6).toUpperCase() : "ANIME";
     const format = getMediaFormatByType({ type, formatOnParams: req.params.format });
     const status = req.query.status?.toUpperCase() || undefined; // only for latest-releases route
-    const season = req.query.season || null;
-    const seasonYear = req.query.seasonYear || null;
+    const season = req.query.season || undefined;
+    const seasonYear = req.query.seasonYear || undefined;
     const page = req.query.page || 1;
     const perPage = req.query.perPage || 15;
 
@@ -83,7 +83,7 @@ exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
             variables: {
                 showAdultContent: showAdultContent,
                 type: type,
-                format: format,
+                // format: req.params.format ? format : "TV",
                 status: status || undefined,
                 page: page,
                 sort: sort,

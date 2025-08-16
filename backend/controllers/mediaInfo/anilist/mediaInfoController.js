@@ -19,7 +19,7 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
 
         let results = null
 
-        const key = "mediaInfo:anime:anilist:" + reqQuery;
+        const key = "mediaInfo:any:anilist:" + reqQuery;
 
         const value = await redisClient.get(key);
 
