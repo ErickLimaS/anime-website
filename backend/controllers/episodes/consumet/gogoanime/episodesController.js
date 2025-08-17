@@ -5,7 +5,7 @@ exports.getEpisodesByMediaId = (req, res) => expressAsyncHandler(async (req, res
 
     const mediaId = req.query.id;
 
-    const CONSUMET_MEDIA_EPISODES_URI = process.env.CONSUMET_API_URL + "/anime/zoro/info?id=" + mediaId
+    const CONSUMET_MEDIA_EPISODES_URI = process.env.CONSUMET_API_URL + "/anime/gogoanime/info?id=" + mediaId
 
     const redisClient = req.redisClient;
 
@@ -13,7 +13,7 @@ exports.getEpisodesByMediaId = (req, res) => expressAsyncHandler(async (req, res
 
         let results = null
 
-        const key = "episodes:anime:consumet:zoro" + mediaId.toLowerCase();
+        const key = "episodes:anime:consumet:gogoanime:" + mediaId.toLowerCase();
 
         const value = await redisClient.get(key);
 
@@ -58,7 +58,7 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
 
     const episodeId = req.query.id;
 
-    const CONSUMET_MEDIA_EPISODE_URI = process.env.CONSUMET_API_URL + "/anime/zoro/watch/" + episodeId
+    const CONSUMET_MEDIA_EPISODE_URI = process.env.CONSUMET_API_URL + "/anime/gogoanime/watch/" + episodeId
 
     const redisClient = req.redisClient;
 
@@ -66,7 +66,7 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
 
         let results = null
 
-        const key = "episode:anime:consumet:zoro" + episodeId.toLowerCase();
+        const key = "episode:anime:consumet:gogoanime:" + episodeId.toLowerCase();
 
         const value = await redisClient.get(key);
 
@@ -89,7 +89,7 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
                 }
             })
             .catch(err => {
-                console.error("Error fetching data from Zoro API:", err);
+                console.error("Error fetching data from Gogoanime API:", err);
                 return res.status(500).json({ error: "Internal Server Error" });
             });
 
@@ -101,7 +101,7 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
 
     }
     catch (err) {
-        console.error("Error in /episodes/anime/consumet/zoro/episode route: ", err);
+        console.error("Error in /episodes/anime/consumet/gogoanime/episode route: ", err);
         res.status(500).json({ error: "Internal Server Error" });
     }
 

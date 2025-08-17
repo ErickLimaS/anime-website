@@ -17,7 +17,7 @@ exports.getEpisodesByMediaId = (req, res) => expressAsyncHandler(async (req, res
 
         let results = null
 
-        const key = "episodes:anime:" + mediaId.toLowerCase();
+        const key = "episodes:anime:aniwatch:" + mediaId.toLowerCase();
 
         const value = await redisClient.get(key);
 
@@ -76,7 +76,7 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
 
         let results = null
 
-        let key = "episode:anime:" + episodeId.toLowerCase();
+        let key = "episode:anime:aniwatch" + episodeId.toLowerCase();
 
         const value = await redisClient.get(key);
 
