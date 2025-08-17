@@ -10,6 +10,7 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
     // Anilist USES GraphQL for Queries
 
     const reqQuery = req.query.query;  // MEDIA ID 
+    const lang = req.query.lang || "ENGLISH";
 
     const ANILIST_MEDIA_INFO_URI = process.env.ANILIST_API_URL
 
@@ -19,7 +20,7 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
 
         let results = null
 
-        const key = "mediaInfo:any:anilist:" + reqQuery;
+        const key = "mediaInfo:any:anilist:" + reqQuery + ":lang-" + lang.toLowerCase();
 
         const value = await redisClient.get(key);
 
