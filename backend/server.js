@@ -6,6 +6,7 @@ const searchRoute = require('./routes/searchRoute');
 const mediaInfoRoute = require('./routes/getMediaInfoRoute');
 const mediasByParamsRoute = require('./routes/getMediasByParamsRoute');
 const newsRoute = require('./routes/getNews');
+const mediaEpisodesRoute = require('./routes/mediaEpisodesRoute');
 
 const redisClient = redis.createClient();
 
@@ -46,6 +47,7 @@ app.get('/', (req, res) => {
 app.use("/search", searchRoute)
 app.use("/media-info", mediaInfoRoute)
 app.use("/medias", mediasByParamsRoute)
+app.use("/episodes", mediaEpisodesRoute)
 app.use("/news", newsRoute)
 
 // Start server
