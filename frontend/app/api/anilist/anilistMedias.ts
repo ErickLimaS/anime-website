@@ -3,11 +3,8 @@ import {
   MediaData,
   TrendingMediaResult,
 } from "@/app/ts/interfaces/anilistMediaData";
-import Axios from "axios";
-import { mediaTrendingApiQueryRequest } from "./anilistQueryConstants";
-import { cache } from "react";
 import { getHeadersWithAuthorization } from "./anilistUsers";
-import { BASE_ANILIST_URL, getCurrentSeason } from "./utils";
+import { getCurrentSeason } from "./utils";
 import axios from "axios";
 
 const NEXT_PUBLIC_NEXT_BACKEND_URL = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
@@ -145,7 +142,7 @@ export default {
 
       const thisYear = new Date().getFullYear();
 
-      const { data } = await Axios({
+      const { data } = await axios({
         url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/${type.toLowerCase()}/TV}`,
         params: {
           authToken: authToken,
@@ -166,7 +163,7 @@ export default {
     }
   },
 
-  // RELEASING BY DAYS RANGE - use medias route on back
+  // RELEASING BY DAYS RANGE
   getReleasingByDaysRange: async ({
     type,
     days,
@@ -212,51 +209,45 @@ export default {
     }
   },
 
-  // TRENDING - use medias route on back
-  getTrendingMedia: cache(
-    async ({
-      sort,
-      showAdultContent,
-      accessToken,
-    }: {
-      sort?: string;
-      showAdultContent?: boolean;
-      accessToken?: string;
-    }) => {
-      try {
-        const headersCustom = await getHeadersWithAuthorization({
-          accessToken: accessToken,
-        });
+  // TRENDING 
+  getTrendingMedia: async ({
+    sort,
+    showAdultContent,
+    accessToken,
+  }: {
+    sort?: string;
+    showAdultContent?: boolean;
+    accessToken?: string;
+  }) => {
+    try {
+      const headersCustom = await getHeadersWithAuthorization({
+        accessToken: accessToken,
+      });
 
-        const thisYear = new Date().getFullYear();
+      const authToken = headersCustom?.Authorization?.slice(8);
 
-        const graphqlQuery = {
-          query: mediaTrendingApiQueryRequest(),
-          variables: {
-            page: 1,
-            sort: sort || "TRENDING_DESC",
-            perPage: 20,
-            showAdultContent: showAdultContent == true ? undefined : false,
-            season: getCurrentSeason(),
-            year: thisYear,
-          },
-        };
+      const thisYear = new Date().getFullYear();
 
-        const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
-          method: "POST",
-          headers: headersCustom,
-          data: graphqlQuery,
-        });
+      const { data } = await axios({
+        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/trending`,
+        params: {
+          authToken: authToken,
+          sort: sort || "TRENDING_DESC",
+          perPage: 20,
+          showAdultContent: showAdultContent == true ? undefined : false,
+          season: getCurrentSeason(),
+          year: thisYear,
+        },
+      });
 
-        return data.data.Page.mediaTrends as TrendingMediaResult[];
-      } catch (error) {
-        console.error((error as Error).message);
+      return data.results as TrendingMediaResult[];
 
-        return null;
-      }
+    } catch (error) {
+      console.error((error as Error).message);
+
+      return null;
     }
-  ),
+  },
 
   // MEDIAS WITH INDICATED FORMAT
   getMediaForThisFormat: async ({
