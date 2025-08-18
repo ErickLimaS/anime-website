@@ -1,13 +1,14 @@
 import {
   AiringMediaResult,
   MediaData,
+  MediaDataFullInfo,
   TrendingMediaResult,
 } from "@/app/ts/interfaces/anilistMediaData";
 import { getHeadersWithAuthorization } from "./anilistUsers";
 import { getCurrentSeason } from "./utils";
 import axios from "axios";
 
-const NEXT_PUBLIC_NEXT_BACKEND_URL = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
+const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 // returns medias with adult content
 function filterMediasWithAdultContent(
@@ -60,7 +61,7 @@ export default {
 
     try {
       const { data } = await axios({
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/${type.toLowerCase()}/${format || "TV"}`,
+        url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/${format || "TV"}`,
         params: {
           authToken: accessToken,
           page: page || 1,
@@ -99,7 +100,7 @@ export default {
       const authToken = headersCustom?.Authorization?.slice(8);
 
       const { data } = await axios({
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/search/any/anilist`,
+        url: `${NEXT_PUBLIC_BACKEND_URL}/search/any/anilist`,
         params: {
           query: query,
           authToken: authToken,
@@ -143,7 +144,7 @@ export default {
       const thisYear = new Date().getFullYear();
 
       const { data } = await axios({
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/${type.toLowerCase()}/TV}`,
+        url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV}`,
         params: {
           authToken: authToken,
           page: page || 1,
@@ -187,7 +188,7 @@ export default {
       const authToken = headersCustom?.Authorization?.slice(8);
 
       const { data } = await axios({
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
+        url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
         params: {
           authToken: authToken,
           page: pageNumber || 1,
@@ -209,7 +210,7 @@ export default {
     }
   },
 
-  // TRENDING 
+  // TRENDING
   getTrendingMedia: async ({
     sort,
     showAdultContent,
@@ -229,7 +230,7 @@ export default {
       const thisYear = new Date().getFullYear();
 
       const { data } = await axios({
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/trending`,
+        url: `${NEXT_PUBLIC_BACKEND_URL}/medias/trending`,
         params: {
           authToken: authToken,
           sort: sort || "TRENDING_DESC",
@@ -241,7 +242,6 @@ export default {
       });
 
       return data.results as TrendingMediaResult[];
-
     } catch (error) {
       console.error((error as Error).message);
 
@@ -276,7 +276,7 @@ export default {
 
       const { data } = await axios({
         // url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/trending`,
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
+        url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
         params: {
           authToken: authToken,
           page: pageNumber || 1,
@@ -315,19 +315,20 @@ export default {
 
       const authToken = headersCustom?.Authorization?.slice(8);
 
-      const { data } = await axios({
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/media-info/anime/anilist`,
+      const { data }: { data: { result: MediaDataFullInfo } } = await axios({
+        url: `${NEXT_PUBLIC_BACKEND_URL}/media-info/anime/anilist`,
         params: {
           query: id,
           authToken: authToken,
         },
       });
 
-      return data.result as MediaData;
+      return data.result;
     } catch (error) {
-      console.error((error as Error).message);
 
-      return null;
+      console.error((error as Error).message);
+      throw new Error(`Failed to fetch media info for ID ${id}`);
+
     }
   },
 };
