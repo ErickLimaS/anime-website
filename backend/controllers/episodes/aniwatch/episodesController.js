@@ -76,7 +76,7 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
 
         let results = null
 
-        let key = "episode:anime:aniwatch" + episodeId.toLowerCase();
+        let key = "episode:anime:aniwatch:" + episodeId.toLowerCase();
 
         const value = await redisClient.get(key);
 
