@@ -1,13 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./component.module.css";
-import aniwatch from "@/app/api/aniwatch";
-import { EpisodeLinksAnimeWatch } from "@/app/ts/interfaces/aniwatchData";
-import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
-import { EpisodeLinksGoGoAnime } from "@/app/ts/interfaces/gogoanimeData";
 import CloudOfflineSvg from "@/public/assets/cloud-offline.svg";
 import CloudOnlineSvg from "@/public/assets/cloud.svg";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
+import { getAniwatchEpisodeByEpisodeId } from "@/app/api/episodes/aniwatch/episodesInfo";
+import { consumetEpisodeByEpisodeId } from "@/app/api/episodes/consumet/episodesInfo";
 
 type PropsType = {
   propsFunction: (parameter: string | number) => void;
@@ -54,19 +52,19 @@ export default function NavigationButtons({
     videoSourcesAvailable.map(async (source) => {
       switch (source.value) {
         case "gogoanime":
-          const gogoanimeResponse = (await gogoanime.getEpisodeStreamingLinks({
+          const gogoanimeResponse = await consumetEpisodeByEpisodeId({
             episodeId: "one-piece-episode-1",
-            useAlternateLinkOption: true,
-          })) as EpisodeLinksGoGoAnime;
+            provider: "gogoanime",
+          });
 
           setGogoanimeAvailble(gogoanimeResponse != null ? true : false);
 
           break;
 
         case "aniwatch":
-          const aniwatchResponse = (await aniwatch.getEpisodeLink({
+          const aniwatchResponse = await getAniwatchEpisodeByEpisodeId({
             episodeId: "one-piece-100?ep=2142",
-          })) as EpisodeLinksAnimeWatch;
+          });
 
           setAniwatchAvailable(aniwatchResponse != null ? true : false);
 

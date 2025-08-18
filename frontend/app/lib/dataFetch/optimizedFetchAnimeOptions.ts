@@ -1,17 +1,12 @@
-import aniwatch from "@/app/api/aniwatch";
-import {
-  EpisodesFetchedAnimeWatch,
-  AniwatchMediaData,
-} from "../../ts/interfaces/aniwatchData";
+import { AniwatchMediaData } from "../../ts/interfaces/aniwatchData";
 import simulateRange from "../simulateRange";
-import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
-import {
-  GogoanimeMediaEpisodes,
-  GogoanimeMediaData,
-  GogoanimeMediaSearchResult,
-} from "../../ts/interfaces/gogoanimeData";
+import { GogoanimeMediaEpisodes } from "../../ts/interfaces/gogoanimeData";
 import stringToOnlyAlphabetic from "../convertStrings";
 import { checkAnilistTitleMisspelling } from "../checkApiMediaMisspelling";
+import { aniwatchSearchMedia } from "@/app/api/search/aniwatch/search";
+import { getAniwatchMediaEpisodes } from "@/app/api/episodes/aniwatch/episodesInfo";
+import { consumetSearchMedia } from "@/app/api/search/consumet/search";
+import { consumetMediaInfo } from "@/app/api/mediaInfo/consumet/mediaInfo";
 
 // Always tries to give at least one result that resembles the query
 export async function optimizedFetchOnGoGoAnime({
@@ -27,15 +22,17 @@ export async function optimizedFetchOnGoGoAnime({
     checkAnilistTitleMisspelling(textToSearch)
   ).toLowerCase();
 
-  let mediaInfo = (await gogoanime.getInfoFromThisMedia({
-    id: titleFixed,
-  })) as GogoanimeMediaData;
+  let mediaInfo = await consumetMediaInfo({
+    query: titleFixed,
+    provider: "zoro",
+  });
 
   if (mediaInfo && !only) return mediaInfo;
 
-  const resultsForMediaSearch = (await gogoanime.searchMedia({
+  const resultsForMediaSearch = await consumetSearchMedia({
     query: titleFixed,
-  })) as GogoanimeMediaSearchResult[];
+    provider: "zoro",
+  });
 
   let closestResultsByMediaTitle;
 
@@ -53,9 +50,10 @@ export async function optimizedFetchOnGoGoAnime({
   }
 
   mediaInfo =
-    ((await gogoanime.getInfoFromThisMedia({
-      id: closestResultsByMediaTitle[0]?.id || resultsForMediaSearch![0]?.id,
-    })) as GogoanimeMediaData) || null;
+    (await consumetMediaInfo({
+      query: closestResultsByMediaTitle[0]?.id || resultsForMediaSearch![0]?.id,
+      provider: "zoro",
+    })) || null;
 
   if (!mediaInfo) return null;
 
@@ -94,9 +92,7 @@ export async function optimizedFetchOnAniwatch({
     checkAnilistTitleMisspelling(textToSearch)
   ).toLowerCase();
 
-  let resultsForMediaSearch = (await aniwatch
-    .searchMedia({ query: titleFixed })
-    .then((res) => res!.animes)) as AniwatchMediaData[];
+  let resultsForMediaSearch = await aniwatchSearchMedia({ query: titleFixed });
 
   if (format) {
     const filterFormat = resultsForMediaSearch.filter(
@@ -152,11 +148,11 @@ export async function optimizedFetchOnAniwatch({
         (media) => media.id == idToMatch
       );
 
-    const mediaEpisodesList = (await aniwatch.getMediaEpisodes({
-      mediaId: mediaFoundByID?.id || mediasWithSameTitle[0].id,
-    })) as EpisodesFetchedAnimeWatch;
+    const mediaEpisodesList = await getAniwatchMediaEpisodes({
+      query: mediaFoundByID?.id || mediasWithSameTitle[0].id,
+    });
 
-    return mediaEpisodesList?.episodes?.length == 0
+    return mediaEpisodesList?.length == 0
       ? null
       : {
           episodesDub:
@@ -167,7 +163,7 @@ export async function optimizedFetchOnAniwatch({
             mediaFoundByID?.episodes?.sub ||
             mediasWithSameTitle[0]?.episodes?.sub ||
             0,
-          episodes: mediaEpisodesList.episodes,
+          episodes: mediaEpisodesList,
         };
   }
 

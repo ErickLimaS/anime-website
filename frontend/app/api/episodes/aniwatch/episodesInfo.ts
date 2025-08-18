@@ -11,7 +11,7 @@ export async function getAniwatchMediaEpisodes({ query }: { query: string }) {
   const data: EpisodeAnimeWatch[] = await axios
     .get(BACKEND_URI, {
       params: {
-        query: query,
+        id: query,
       },
     })
     .then((res) => res.data.results);

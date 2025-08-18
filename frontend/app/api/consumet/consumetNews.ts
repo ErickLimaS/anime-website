@@ -1,7 +1,7 @@
 import { News } from "@/app/ts/interfaces/newsInterface";
 import Axios from "axios";
 
-const NEXT_PUBLIC_NEXT_BACKEND_URL = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
+const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -9,14 +9,12 @@ export default {
   getNews: async ({ topic }: { topic?: string }) => {
     try {
       const { data } = await Axios({
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/news/consumet/ann/all`,
+        url: `${NEXT_PUBLIC_BACKEND_URL}/news/consumet/ann/all`,
         method: "GET",
         params: {
           topic: topic,
         },
       });
-
-      console.log("News data:", data);
 
       return data.result as News[];
     } catch (err) {
@@ -30,7 +28,7 @@ export default {
   getNewsInfo: async ({ id }: { id: string }) => {
     try {
       const { data } = await Axios({
-        url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/news/consumet/ann?id=${id}`,
+        url: `${NEXT_PUBLIC_BACKEND_URL}/news/consumet/ann?id=${id}`,
         method: "GET",
       });
 

@@ -18,10 +18,10 @@ import PageHeading from "./components/PageHeading";
 import Reviews from "./components/Reviews";
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
-  const mediaData = (await anilist.getMediaInfo({
+  const mediaData = await anilist.getMediaInfo({
     id: params.id,
     accessToken: headers().get("Authorization")?.slice(7),
-  })) as MediaDataFullInfo;
+  });
 
   return {
     title: `${mediaData.title.romaji || mediaData.title.native} | AniProject`,

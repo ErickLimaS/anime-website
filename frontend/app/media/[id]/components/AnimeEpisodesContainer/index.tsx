@@ -10,7 +10,6 @@ import {
   EpisodesType,
 } from "@/app/ts/interfaces/anilistMediaData";
 import PaginationButtons from "@/app/media/[id]/components/PaginationButtons";
-import aniwatch from "@/app/api/aniwatch";
 import {
   EpisodeAnimeWatch,
   EpisodesFetchedAnimeWatch,
@@ -40,6 +39,7 @@ import { useAppSelector } from "@/app/lib/redux/hooks";
 import EpisodesOptionsPanel from "./components/EpisodesOptionsPanel";
 import { EpisodeBySource } from "./components/EpisodeBySource";
 import ErrorPanel from "../ErrorPanel";
+import { getAniwatchMediaEpisodes } from "@/app/api/episodes/aniwatch/episodesInfo";
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -372,15 +372,15 @@ export default function EpisodesContainer({
 
     const endOffset = itemOffset + rangeEpisodesPerPage;
 
-    const mediaEpisodes = (await aniwatch.getMediaEpisodes({
-      mediaId: id,
-    })) as EpisodesFetchedAnimeWatch;
+    const mediaEpisodes = await getAniwatchMediaEpisodes({
+      query: id,
+    });
 
-    setEpisodesList(mediaEpisodes.episodes);
+    setEpisodesList(mediaEpisodes);
 
-    setCurrAnimesList(mediaEpisodes.episodes.slice(itemOffset, endOffset));
+    setCurrAnimesList(mediaEpisodes.slice(itemOffset, endOffset));
     setTotalNumberPages(
-      Math.ceil(mediaEpisodes.episodes.length / rangeEpisodesPerPage)
+      Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage)
     );
 
     setIsLoading(false);
