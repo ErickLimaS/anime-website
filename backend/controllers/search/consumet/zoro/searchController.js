@@ -11,7 +11,7 @@ exports.searchAnimeOnZoro = (req, res) => expressAsyncHandler(async (req, res) =
 
         let results = null
 
-        const key = "search:anime:" + req.query.query.toLowerCase();
+        const key = "search:anime:consumet:zoro:" + req.query.query.toLowerCase();
 
         const value = await redisClient.get(key);
 

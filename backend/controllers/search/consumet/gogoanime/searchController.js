@@ -11,7 +11,7 @@ exports.searchAnimeOnGogoanime = (req, res) => expressAsyncHandler(async (req, r
 
         let results = null
 
-        const key = "search:anime:" + req.query.query.toLowerCase();
+        const key = "search:anime:consumet:gogoanime" + req.query.query.toLowerCase();
 
         const value = await redisClient.get(key);
 
