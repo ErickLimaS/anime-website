@@ -42,12 +42,10 @@ export interface EpisodeLinksAnimeWatch {
     start: number;
     end: number;
   };
-  sources: [
-    {
-      url: string;
-      type: string;
-    },
-  ];
+  sources: {
+    url: string;
+    type: string;
+  }[];
 }
 
 export interface EpisodesFetchedAnimeWatch {

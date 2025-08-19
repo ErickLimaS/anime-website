@@ -32,8 +32,6 @@ import {
   EpisodeAnimeWatch,
   EpisodeLinksAnimeWatch,
 } from "@/app/ts/interfaces/aniwatchData";
-import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
-import aniwatch from "@/app/api/aniwatch";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import SkipSvg from "@/public/assets/chevron-double-right.svg";
@@ -41,6 +39,8 @@ import PlaySvg from "@/public/assets/play.svg";
 import { useAppSelector } from "@/app/lib/redux/hooks";
 import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
 import anilistUsers from "@/app/api/anilist/anilistUsers";
+import { getAniwatchEpisodeByEpisodeId } from "@/app/api/episodes/aniwatch/episodesInfo";
+import { consumetEpisodeByEpisodeId } from "@/app/api/episodes/consumet/episodesInfo";
 
 type VideoPlayerType = {
   mediaSource: SourceType["source"];
@@ -385,9 +385,9 @@ export default function VideoPlayer({
       case "gogoanime":
         nextEpisodeId = (nextEpisodeInfo as GogoanimeMediaEpisodes).id;
 
-        nextEpisode = await gogoanime.getEpisodeStreamingLinks({
+        nextEpisode = await consumetEpisodeByEpisodeId({
           episodeId: nextEpisodeId,
-          useAlternateLinkOption: true,
+          // useAlternateLinkOption: true,
         });
 
         const nextEpisodeVideoUrl = nextEpisode!.sources.find(
@@ -404,7 +404,7 @@ export default function VideoPlayer({
       case "aniwatch":
         nextEpisodeId = (nextEpisodeInfo as EpisodeAnimeWatch).episodeId;
 
-        nextEpisode = await aniwatch.getEpisodeLink({
+        nextEpisode = await getAniwatchEpisodeByEpisodeId({
           episodeId: nextEpisodeId,
           category: searchParams?.get("dub") == "true" ? "dub" : "sub",
         });

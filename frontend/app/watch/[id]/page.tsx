@@ -4,7 +4,6 @@ import {
   MediaData,
   MediaDataFullInfo,
 } from "../../ts/interfaces/anilistMediaData";
-import gogoanime from "@/app/api/consumet/consumetGoGoAnime";
 import anilist from "@/app/api/anilist/anilistMedias";
 import * as MediaCardExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
 import {
@@ -12,7 +11,6 @@ import {
   GogoanimeMediaEpisodes,
 } from "@/app/ts/interfaces/gogoanimeData";
 import EpisodesListContainer from "./components/EpisodesListContainer";
-import aniwatch from "@/app/api/aniwatch";
 import VideoPlayer from "./components/VideoPlayer";
 import {
   EpisodeAnimeWatch,
@@ -28,6 +26,8 @@ import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import { FetchEpisodeError } from "@/app/components/MediaFetchErrorPage";
 import { cookies } from "next/headers";
 import { AlertWrongMediaVideoOnMediaId } from "./components/AlertContainer";
+import { consumetEpisodeByEpisodeId } from "@/app/api/episodes/consumet/episodesInfo";
+import { getAniwatchEpisodeByEpisodeId } from "@/app/api/episodes/aniwatch/episodesInfo";
 
 export const revalidate = 900; // revalidate cached data every 15 minutes
 
@@ -146,10 +146,10 @@ export default async function WatchEpisode({
   };
 
   async function getGogoanimeStreamingLink() {
-    episodeDataFetched = (await gogoanime.getEpisodeStreamingLinks({
+    episodeDataFetched = await consumetEpisodeByEpisodeId({
       episodeId: searchParams.q,
-      useAlternateLinkOption: true,
-    })) as EpisodeLinksGoGoAnime;
+      // useAlternateLinkOption: true,
+    });
 
     if (!episodeDataFetched) {
       hadFetchError = true;
@@ -185,10 +185,14 @@ export default async function WatchEpisode({
     }
 
     // fetch episode data
-    episodeDataFetched = (await aniwatch.getEpisodeLink({
+    episodeDataFetched = await getAniwatchEpisodeByEpisodeId({
       episodeId: searchParams.q,
       category: searchParams.dub == "true" ? "dub" : "sub",
-    })) as EpisodeLinksAnimeWatch;
+    });
+
+    if (!episodeDataFetched) {
+      hadFetchError = true;
+    }
 
     if (!episodeDataFetched) hadFetchError = true;
 
