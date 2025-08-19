@@ -19,19 +19,31 @@ export async function consumetEpisodeByEpisodeId({
     }
   }
 
-  // alternative: /meta/anilist
-  const BACKEND_URI =
-    process.env.NEXT_PUBLIC_BACKEND_URL +
-    `/episodes/consumet/${provider ? provider : "gogoanime"}/episode`;
+  try {
+    // alternative: /meta/anilist
+    const BACKEND_URI =
+      process.env.NEXT_PUBLIC_BACKEND_URL +
+      `/episodes/consumet/${provider ? provider : "gogoanime"}/episode`;
 
-  const data: EpisodeLinksGoGoAnime = await axios
-    .get(BACKEND_URI, {
-      params: {
-        id: episodeId,
-        server: server || null,
-      },
-    })
-    .then((res) => res.data.results)
+    const data: EpisodeLinksGoGoAnime = await axios
+      .get(BACKEND_URI, {
+        params: {
+          id: episodeId,
+          server: server || null,
+        },
+      })
+      .then((res) => res.data.results);
 
-  return data;
+    if (data.sources.length == 0) {
+      throw new Error(
+        `No episode data found for the given ID. Might be a ${provider} API error.`
+      );
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(`Error fetching ${provider} episode data:`, error);
+    throw new Error(`Failed to fetch episode data from ${provider}.`);
+  }
 }

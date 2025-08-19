@@ -5,18 +5,23 @@ import {
 import axios from "axios";
 
 export async function getAniwatchMediaEpisodes({ query }: { query: string }) {
-  const BACKEND_URI =
-    process.env.NEXT_PUBLIC_BACKEND_URL + "/episodes/aniwatch/all";
+  try {
+    const BACKEND_URI =
+      process.env.NEXT_PUBLIC_BACKEND_URL + "/episodes/aniwatch/all";
 
-  const data: EpisodeAnimeWatch[] = await axios
-    .get(BACKEND_URI, {
-      params: {
-        id: query,
-      },
-    })
-    .then((res) => res.data.results);
+    const data: EpisodeAnimeWatch[] = await axios
+      .get(BACKEND_URI, {
+        params: {
+          id: query,
+        },
+      })
+      .then((res) => res.data.results);
 
-  return data;
+    return data;
+  } catch (error) {
+    console.error("Error fetching Aniwatch media episodes:", error);
+    throw new Error("Failed to fetch media episodes from Aniwatch.");
+  }
 }
 
 export async function getAniwatchEpisodeByEpisodeId({
@@ -28,18 +33,29 @@ export async function getAniwatchEpisodeByEpisodeId({
   server?: string;
   category?: string;
 }) {
-  const BACKEND_URI =
-    process.env.NEXT_PUBLIC_BACKEND_URL + "/episodes/aniwatch/episode";
+  try {
+    const BACKEND_URI =
+      process.env.NEXT_PUBLIC_BACKEND_URL + "/episodes/aniwatch/episode";
 
-  const data: EpisodeLinksAnimeWatch = await axios
-    .get(BACKEND_URI, {
-      params: {
-        id: episodeId,
-        server: server || null,
-        category: category || null,
-      },
-    })
-    .then((res) => res.data.results);
+    const data: EpisodeLinksAnimeWatch = await axios
+      .get(BACKEND_URI, {
+        params: {
+          id: episodeId,
+          server: server || null,
+          category: category || null,
+        },
+      })
+      .then((res) => res.data.results);
 
-  return data;
+    if (data.sources.length == 0) {
+      throw new Error("Failed to fetch episode data from Aniwatch.");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching Aniwatch episode data:", error);
+    throw new Error(
+      `No episode data found for the given ID. Might be a Aniwatch API error.`
+    );
+  }
 }
