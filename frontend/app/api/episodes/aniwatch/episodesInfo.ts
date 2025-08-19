@@ -47,15 +47,19 @@ export async function getAniwatchEpisodeByEpisodeId({
       })
       .then((res) => res.data.results);
 
-    if (data.sources.length == 0) {
-      throw new Error("Failed to fetch episode data from Aniwatch.");
+    if (!data) {
+      throw new Error(
+        "Failed to fetch episode data from Aniwatch. No data returned."
+      );
+    }
+    if (data.sources?.length == 0) {
+      throw new Error(
+        "Failed to fetch episode data from Aniwatch. No sources found."
+      );
     }
 
     return data;
   } catch (error) {
-    console.error("Error fetching Aniwatch episode data:", error);
-    throw new Error(
-      `No episode data found for the given ID. Might be a Aniwatch API error.`
-    );
+    console.error(error);
   }
 }

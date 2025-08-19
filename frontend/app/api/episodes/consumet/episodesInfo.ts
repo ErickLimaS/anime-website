@@ -34,16 +34,20 @@ export async function consumetEpisodeByEpisodeId({
       })
       .then((res) => res.data.results);
 
-    if (data.sources.length == 0) {
+    if (!data) {
       throw new Error(
-        `No episode data found for the given ID. Might be a ${provider} API error.`
+        "Failed to fetch episode data. No data returned."
+      );
+    }
+    if (data.sources?.length == 0) {
+      throw new Error(
+        `No episode data found for the given ID. No sources found.`
       );
       return null;
     }
 
     return data;
   } catch (error) {
-    console.error(`Error fetching ${provider} episode data:`, error);
-    throw new Error(`Failed to fetch episode data from ${provider}.`);
+    console.error(`${provider}:`, error);
   }
 }
