@@ -18,6 +18,9 @@ npm install
      - Now you need to add the name of your forked project/website and the URL to redirect when user accept the login, then hit "Save".
      - Store the Client ID and Secret on your ".env".
      - TIP: Create 2 of these, one for the dev enviroment and other to production.
+  - **Setting Redis Up**:
+    - If dont have a Redis Server yet, you can try for free on <a href='https://redis.io/' target="_blank" rel="noreferrer">Redis Website</a>.
+    - Just create a account, create a database and copy the info to use on the enviroment file (ex: username, password, host, port)
 
    - OPTIONAL: This project uses a JSON file (~47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
      - Go to <a href='https://github.com/manami-project/anime-offline-database' target="_blank" rel="noreferrer">anime-offline-database</a> and download the JSON file that will be used only on `Search Page` (or you can make some changes and use some API to fetch the data).
