@@ -4,7 +4,7 @@ const { requestMedias, requestMediasByTrendingSort, requestMediasByDateRelease }
 const fetchOptions = require("../../anilistUtils/utils").fetchOptions;
 const getMediaFormatByType = require("../../anilistUtils/utils").getMediaFormatByType;
 const anilistMediasTypes = require("../../anilistUtils/utils").anilistMediasTypes;
-const { getDateInUnixTimestamp } = require("../../utils");
+const { getDateInUnixTimestamp } = require("./utils");
 
 exports.mediasByParamsOnAnilist = expressAsyncHandler(async (req, res) => {
 

@@ -1,5 +1,5 @@
 const express = require('express')
-const mediasByParamsController = require('../controllers/getMedias/anilist/mediasByParamsController');
+const mediasByParamsController = require('../controllers/medias/anilist/mediasByParamsController');
 
 const mediasByFormatRoute = express.Router();
 

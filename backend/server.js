@@ -3,9 +3,9 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const redis = require("redis");
 const searchRoute = require('./routes/searchRoute');
-const mediaInfoRoute = require('./routes/getMediaInfoRoute');
-const mediasByParamsRoute = require('./routes/getMediasByParamsRoute');
-const newsRoute = require('./routes/getNews');
+const mediaInfoRoute = require('./routes/mediaInfoRoute');
+const mediasByParamsRoute = require('./routes/mediasByParamsRoute');
+const newsRoute = require('./routes/newsRoute');
 const mediaEpisodesRoute = require('./routes/mediaEpisodesRoute');
 const imdbRoute = require('./routes/imdbRoute');
 const mediaChaptersRoute = require('./routes/mediaChaptersRoute');
@@ -66,5 +66,6 @@ app.use("/imdb", imdbRoute)
 
 // Start server
 app.listen(port, () => {
-    console.log(`#### -> Server is live! Running on port: ${port}`);
+    console.log(`#### -> Server is live!`);
+    console.log(`#### -> Listening on port: ${port}`);
 });
