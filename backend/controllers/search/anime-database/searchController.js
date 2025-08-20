@@ -108,9 +108,16 @@ exports.searchMediasOnAnimeDatabase = (req, res) => expressAsyncHandler(async (r
             break;
     }
 
-    if (results.length > 0) results = getMediasWithAnilistId(results);
+    if (results.length == 0) {
+        return res.status(404).json({
+            message: "No results found",
+            results: [],
+            allResultsLength: 0,
+            lastUpdate: lastUpdateDate,
+        });
+    }
 
-    await setRedisKey({ redisClient, key, data: results });
+    results = getMediasWithAnilistId(results);
 
     // Query Results Length
     totalQueryResultsLength = results.length;
@@ -118,10 +125,12 @@ exports.searchMediasOnAnimeDatabase = (req, res) => expressAsyncHandler(async (r
     // Pagination
     results = results.slice(0, page * resultsPerPageLimit);
 
+    await setRedisKey({ redisClient, key, data: results });
+
     return res.status(200).json({
         message: responseMessage,
         results: results,
-        allResultsLength: totalQueryResultsLength,
+        allResultsLength: totalQueryResultsLength == 0 ? undefined : totalQueryResultsLength,
         lastUpdate: lastUpdateDate,
     })
 
