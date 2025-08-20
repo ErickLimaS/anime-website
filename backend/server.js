@@ -12,14 +12,15 @@ const mediaChaptersRoute = require('./routes/mediaChaptersRoute');
 
 dotenv.config();
 
-const redisClient = redis.createClient({
-    username: `${process.env.REDIS_USERNAME}`,
-    password: `${process.env.REDIS_PASSWORD}`,
-    socket: {
-        host: `${process.env.REDIS_HOST}`,
-        port: process.env.REDIS_PORT
-    }
-});
+const redisClient = redis.createClient(
+    process.env.DEV_MODE === 'true' ? {} : {
+        username: `${process.env.REDIS_USERNAME}`,
+        password: `${process.env.REDIS_PASSWORD}`,
+        socket: {
+            host: `${process.env.REDIS_HOST}`,
+            port: process.env.REDIS_PORT
+        }
+    });
 
 (async () => {
 
@@ -66,6 +67,8 @@ app.use("/imdb", imdbRoute)
 
 // Start server
 app.listen(port, () => {
+    console.log(`#### -> Starting AniProject API Server...`);
+    console.log(`#### -> Environment: ${process.env.DEV_MODE === 'true' ? 'Development' : 'Production'}`);
     console.log(`#### -> Server is live!`);
     console.log(`#### -> Listening on port: ${port}`);
 });
