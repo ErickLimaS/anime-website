@@ -58,7 +58,7 @@ export default {
     const season = getCurrentSeason();
 
     try {
-      const { data }: { data: MediaData[] } = await axios({
+      const data: MediaData[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/${format || "TV"}`,
         params: {
           authToken: accessToken,
@@ -97,7 +97,7 @@ export default {
 
       const authToken = headersCustom?.Authorization?.slice(8);
 
-      const { data }: { data: MediaData[] } = await axios({
+      const data: MediaData[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/search/any/anilist`,
         params: {
           query: query,
@@ -143,7 +143,7 @@ export default {
 
       const thisYear = new Date().getFullYear();
 
-      const { data }: { data: MediaData[] } = await axios({
+      const data: MediaData[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV}`,
         params: {
           authToken: authToken,
@@ -187,7 +187,7 @@ export default {
 
       const authToken = headersCustom?.Authorization?.slice(8);
 
-      const { data }: { data: AiringMediaResult[] } = await axios({
+      const data: AiringMediaResult[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
         params: {
           authToken: authToken,
@@ -231,7 +231,7 @@ export default {
 
       const thisYear = new Date().getFullYear();
 
-      const { data }: { data: TrendingMediaResult[] } = await axios({
+      const data: TrendingMediaResult[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/trending`,
         params: {
           authToken: authToken,
@@ -277,7 +277,7 @@ export default {
       const authToken = headersCustom?.Authorization?.slice(8);
 
       try {
-        const { data }: { data: MediaData[] } = await axios({
+        const data: MediaData[] = await axios({
           // url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/trending`,
           url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
           params: {

@@ -1,5 +1,3 @@
-export const BASE_ANILIST_URL = "https://graphql.anilist.co/";
-
 export function getCurrentSeason() {
   const mm = new Date().getMonth();
   const dd = new Date().getDate();

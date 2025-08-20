@@ -2,7 +2,8 @@ import Axios from "axios";
 import { cache } from "react";
 import { createNewUserDocument } from "../../lib/user/userLoginActions";
 import userSettingsActions from "../cookie/userCookieSettingsActions";
-import { BASE_ANILIST_URL } from "./utils";
+
+const ANILIST_URL = process.env.NEXT_PUBLIC_ANILIST_API_URL;
 
 export async function getHeadersWithAuthorization({
   accessToken,
@@ -88,7 +89,7 @@ export default {
       };
 
       const { data } = await Axios({
-        url: `${BASE_ANILIST_URL}`,
+        url: `${ANILIST_URL}`,
         method: "POST",
         headers: await getHeadersWithAuthorization({ accessToken: undefined }),
         data: graphqlQuery,
@@ -175,7 +176,7 @@ export default {
         };
 
         const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
+          url: `${ANILIST_URL}`,
           method: "POST",
           headers: await getHeadersWithAuthorization({
             accessToken: accessToken,
@@ -278,7 +279,7 @@ export default {
         };
 
         const { data } = await Axios({
-          url: `${BASE_ANILIST_URL}`,
+          url: `${ANILIST_URL}`,
           method: "POST",
           headers: await getHeadersWithAuthorization({
             accessToken: accessToken,
@@ -324,7 +325,7 @@ export default {
       };
 
       const { data } = await Axios({
-        url: `${BASE_ANILIST_URL}`,
+        url: `${ANILIST_URL}`,
         method: "POST",
         headers: await getHeadersWithAuthorization({}),
         data: graphqlQuery,
@@ -377,7 +378,7 @@ export default {
       };
 
       const { data } = await Axios({
-        url: `${BASE_ANILIST_URL}`,
+        url: `${ANILIST_URL}`,
         method: "POST",
         headers: await getHeadersWithAuthorization({}),
         data: graphqlQuery,
@@ -409,7 +410,7 @@ export default {
       };
 
       const { data } = await Axios({
-        url: `${BASE_ANILIST_URL}`,
+        url: `${ANILIST_URL}`,
         method: "POST",
         headers: await getHeadersWithAuthorization({}),
         data: graphqlQuery,
@@ -442,7 +443,7 @@ export default {
       };
 
       await Axios({
-        url: `${BASE_ANILIST_URL}`,
+        url: `${ANILIST_URL}`,
         method: "POST",
         headers: await getHeadersWithAuthorization({}),
         data: graphqlQuery,
@@ -476,7 +477,7 @@ export default {
       };
 
       await Axios({
-        url: `${BASE_ANILIST_URL}`,
+        url: `${ANILIST_URL}`,
         method: "POST",
         headers: await getHeadersWithAuthorization({}),
         data: graphqlQuery,
