@@ -1,7 +1,6 @@
 import {
   AiringMediaResult,
   MediaData,
-  MediaDataFullInfo,
   TrendingMediaResult,
 } from "@/app/ts/interfaces/anilistMediaData";
 import { getHeadersWithAuthorization } from "./anilistUsers";
@@ -21,13 +20,12 @@ function filterMediasWithAdultContent(
     );
 
     return mediasFiltered;
-  } else {
-    const mediasFiltered = (mediasList as AiringMediaResult[]).filter(
-      (item) => item.media.isAdult == false
-    );
-
-    return mediasFiltered;
   }
+  const mediasFiltered = (mediasList as AiringMediaResult[]).filter(
+    (item) => item.media.isAdult == false
+  );
+
+  return mediasFiltered;
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -60,7 +58,7 @@ export default {
     const season = getCurrentSeason();
 
     try {
-      const { data } = await axios({
+      const { data }: { data: MediaData[] } = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/${format || "TV"}`,
         params: {
           authToken: accessToken,
@@ -72,9 +70,9 @@ export default {
           seasonYear: new Date().getFullYear(),
           showAdultContent: showAdultContent || false,
         },
-      });
+      }).then((res) => res.data.results);
 
-      return data.results as MediaData[];
+      return data;
     } catch (error) {
       console.error((error as Error).message);
 
@@ -99,7 +97,7 @@ export default {
 
       const authToken = headersCustom?.Authorization?.slice(8);
 
-      const { data } = await axios({
+      const { data }: { data: MediaData[] } = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/search/any/anilist`,
         params: {
           query: query,
@@ -111,9 +109,11 @@ export default {
         },
       });
 
-      return showAdultContent
-        ? (data.results as MediaData[])
-        : filterMediasWithAdultContent(data.results, "mediaByFormat");
+      if (!showAdultContent) {
+        return filterMediasWithAdultContent(data, "mediaByFormat");
+      }
+
+      return data;
     } catch (error) {
       console.error((error as Error).message);
 
@@ -143,7 +143,7 @@ export default {
 
       const thisYear = new Date().getFullYear();
 
-      const { data } = await axios({
+      const { data }: { data: MediaData[] } = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV}`,
         params: {
           authToken: authToken,
@@ -154,9 +154,9 @@ export default {
           season: getCurrentSeason(),
           seasonYear: thisYear,
         },
-      });
+      }).then((res) => res.data.results);
 
-      return data.results as MediaData[];
+      return data;
     } catch (error) {
       console.error((error as Error).message);
 
@@ -187,7 +187,7 @@ export default {
 
       const authToken = headersCustom?.Authorization?.slice(8);
 
-      const { data } = await axios({
+      const { data }: { data: AiringMediaResult[] } = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
         params: {
           authToken: authToken,
@@ -198,11 +198,13 @@ export default {
           showAdultContent: showAdultContent == true ? undefined : false,
           releasedOnLastXDays: days,
         },
-      });
+      }).then((res) => res.data.results);
 
-      return showAdultContent
-        ? (data.results as AiringMediaResult[])
-        : (filterMediasWithAdultContent(data.results) as AiringMediaResult[]);
+      if (!showAdultContent) {
+        return filterMediasWithAdultContent(data);
+      }
+
+      return data;
     } catch (error) {
       console.log((error as Error).message);
 
@@ -229,7 +231,7 @@ export default {
 
       const thisYear = new Date().getFullYear();
 
-      const { data } = await axios({
+      const { data }: { data: TrendingMediaResult[] } = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/trending`,
         params: {
           authToken: authToken,
@@ -239,9 +241,9 @@ export default {
           season: getCurrentSeason(),
           year: thisYear,
         },
-      });
+      }).then((res) => res.data.results);
 
-      return data.results as TrendingMediaResult[];
+      return data;
     } catch (error) {
       console.error((error as Error).message);
 
@@ -274,61 +276,33 @@ export default {
 
       const authToken = headersCustom?.Authorization?.slice(8);
 
-      const { data } = await axios({
-        // url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/trending`,
-        url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
-        params: {
-          authToken: authToken,
-          page: pageNumber || 1,
-          sort: sort || "TRENDING_DESC",
-          status: status || undefined,
-          perPage: perPage || 20,
-          showAdultContent: showAdultContent == true ? undefined : false,
-        },
-      });
+      try {
+        const { data }: { data: MediaData[] } = await axios({
+          // url: `${NEXT_PUBLIC_NEXT_BACKEND_URL}/trending`,
+          url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
+          params: {
+            authToken: authToken,
+            page: pageNumber || 1,
+            sort: sort || "TRENDING_DESC",
+            status: status || undefined,
+            perPage: perPage || 20,
+            showAdultContent: showAdultContent == true ? undefined : false,
+          },
+        }).then((res) => res.data.results);
 
-      return showAdultContent
-        ? (data.results as MediaData[])
-        : (filterMediasWithAdultContent(
-            data.results,
-            "mediaByFormat"
-          ) as MediaData[]);
+        if (!showAdultContent) {
+          return filterMediasWithAdultContent(data, "mediaByFormat");
+        }
+
+        return data;
+      } catch (error) {
+        console.error((error as Error).message);
+        throw new Error(`Failed to fetch media for type ${type}`);
+      }
     } catch (error) {
       console.error((error as Error).message);
 
       return null;
-    }
-  },
-
-  // GET MEDIA INFO BY ID
-  getMediaInfo: async ({
-    id,
-    accessToken,
-  }: {
-    id: number;
-    accessToken?: string;
-  }) => {
-    try {
-      const headersCustom = await getHeadersWithAuthorization({
-        accessToken: accessToken,
-      });
-
-      const authToken = headersCustom?.Authorization?.slice(8);
-
-      const { data }: { data: { result: MediaDataFullInfo } } = await axios({
-        url: `${NEXT_PUBLIC_BACKEND_URL}/media-info/anime/anilist`,
-        params: {
-          query: id,
-          authToken: authToken,
-        },
-      });
-
-      return data.result;
-    } catch (error) {
-
-      console.error((error as Error).message);
-      throw new Error(`Failed to fetch media info for ID ${id}`);
-
     }
   },
 };

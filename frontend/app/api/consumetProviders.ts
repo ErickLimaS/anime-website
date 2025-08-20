@@ -1,1 +1,1 @@
-export const consumetProviders = ["gogoanime", "zoro"];
+export const consumetProviders = ["mangadex", "gogoanime", "zoro"];

@@ -1,6 +1,5 @@
 import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import React from "react";
-import anilist from "@/app/api/anilist/anilistMedias";
 import styles from "./page.module.css";
 import Image from "next/image";
 import parse from "html-react-parser";
@@ -16,9 +15,10 @@ import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import MediaRelatedContainer from "./components/MediaRelatedContainer";
 import PageHeading from "./components/PageHeading";
 import Reviews from "./components/Reviews";
+import { getMediaInfo } from "@/app/api/mediaInfo/anilist/mediaInfo";
 
 export async function generateMetadata({ params }: { params: { id: number } }) {
-  const mediaData = await anilist.getMediaInfo({
+  const mediaData = await getMediaInfo({
     id: params.id,
     accessToken: headers().get("Authorization")?.slice(7),
   });
@@ -49,7 +49,7 @@ export default async function MediaPage({
 }) {
   const isOnMobileScreen = checkDeviceIsMobile(headers()) || false;
 
-  const mediaInfo = (await anilist.getMediaInfo({
+  const mediaInfo = (await getMediaInfo({
     id: params.id,
     accessToken: headers().get("Authorization")?.slice(7),
   })) as MediaDataFullInfo;
