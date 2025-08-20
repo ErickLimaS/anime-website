@@ -10,9 +10,20 @@ const mediaEpisodesRoute = require('./routes/mediaEpisodesRoute');
 const imdbRoute = require('./routes/imdbRoute');
 const mediaChaptersRoute = require('./routes/mediaChaptersRoute');
 
-const redisClient = redis.createClient();
+dotenv.config();
+
+const redisClient = redis.createClient({
+    username: `${process.env.REDIS_USERNAME}`,
+    password: `${process.env.REDIS_PASSWORD}`,
+    socket: {
+        host: `${process.env.REDIS_HOST}`,
+        port: process.env.REDIS_PORT
+    }
+});
 
 (async () => {
+
+    console.log("#### -> Connecting to Redis...");
 
     redisClient.on("error", (err) => {
         console.error("#### -> Redis Client Error! ", err);
@@ -30,7 +41,6 @@ const redisClient = redis.createClient();
 
 const app = express();
 
-dotenv.config();
 const port = process.env.PORT || 3000;
 
 // Middleware

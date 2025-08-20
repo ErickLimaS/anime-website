@@ -30,6 +30,10 @@ With all that done, you can follow the pre-made `.env.example` on the root folde
 PORT=3456
 
 REDIS_EXPIRATION=300
+REDIS_USERNAME=your_redis_username
+REDIS_PASSWORD=your_redis_password
+REDIS_PORT=your_redis_port
+REDIS_HOST=your_redis_host
 
 ANILIST_API_URL=https://graphql.anilist.co/
 
