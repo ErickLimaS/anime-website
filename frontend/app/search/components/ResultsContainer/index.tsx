@@ -28,7 +28,7 @@ function ResultsContainer({
   lastUpdate,
 }: {
   mediasList: MediaOnJSONFile[];
-  totalLength: number;
+  totalLength: number | undefined;
   lastUpdate: string;
 }) {
   const [currPageNumber, setCurrPageNumber] = useState<number>(1);
@@ -97,7 +97,9 @@ function ResultsContainer({
                       hideOptionsButton
                       mediaInfo={media}
                       title={media.title}
-                      formatOrType={media.type}
+                      formatOrType={
+                        media.type === "UNKNOWN" ? "SPECIAL" : media.type
+                      }
                       url={media.picture}
                       mediaId={media.anilistId as string}
                     />
@@ -119,7 +121,8 @@ function ResultsContainer({
         </div>
       )}
 
-      {totalLength > resultsPerPage * currPageNumber && (
+      {/* totalLength == 0 is a exception, because backend returns that when data is cached */}
+      {resultsPerPage * currPageNumber && (
         <button
           onClick={() => fetchNextResultPage()}
           aria-label={isLoading ? "Loading" : "View More Results"}
@@ -131,10 +134,10 @@ function ResultsContainer({
       {mediasList.length > 0 && (
         <span>
           Showing{" "}
-          {resultsPerPage * currPageNumber >= totalLength
+          {resultsPerPage * currPageNumber >= (totalLength || 0)
             ? "all "
             : `${resultsPerPage * currPageNumber} out of `}
-          <span>{totalLength.toLocaleString("en-US")}</span> results
+          <span>{(totalLength || 0).toLocaleString("en-US")}</span> results
         </span>
       )}
 

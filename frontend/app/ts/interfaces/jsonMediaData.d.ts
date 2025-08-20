@@ -14,7 +14,7 @@ export interface MediaOnJSONFile {
     year: number;
   };
   format: string;
-  type: string;
+  type: "TV" | "MOVIE" | "OVA" | "ONA" | "SPECIAL" | "UNKNOWN";
   status: string;
   sources: string[];
   id: number;

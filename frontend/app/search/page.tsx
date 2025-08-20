@@ -5,7 +5,7 @@ import ResultsContainer from "./components/ResultsContainer";
 import { headers } from "next/headers";
 import { checkDeviceIsMobile } from "../lib/checkMobileOrDesktop";
 import { Metadata } from "next";
-import axios from "axios";
+import { animeDatabaseSearchMedias } from "../api/search/anime-database/search";
 
 export const metadata: Metadata = {
   title: "Search | AniProject",
@@ -27,15 +27,7 @@ type SearchPageTypes = {
 async function SearchPage({ searchParams }: { searchParams: SearchPageTypes }) {
   const isMobile = checkDeviceIsMobile(headers());
 
-  const OFFLINE_ANIME_DATABASE = process.env.NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API;
-
-  const sortedMedias = await axios
-    .get(
-      `${OFFLINE_ANIME_DATABASE}?${Object.entries(searchParams)
-        .map((e) => e.join("="))
-        .join("&")}`
-    )
-    .then((res) => res.data);
+  const sortedMedias = await animeDatabaseSearchMedias({ searchParams });
 
   return (
     <main id={styles.container}>
@@ -44,7 +36,7 @@ async function SearchPage({ searchParams }: { searchParams: SearchPageTypes }) {
       </div>
 
       <ResultsContainer
-        mediasList={sortedMedias.data}
+        mediasList={sortedMedias.results}
         lastUpdate={sortedMedias.lastUpdate}
         totalLength={sortedMedias.allResultsLength}
       />
