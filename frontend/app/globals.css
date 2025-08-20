@@ -1,0 +1,202 @@
+:root {
+  --max-width: 1380px;
+
+  --btn-border-radius: 12px;
+
+  /* breakpoints */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1440px;
+
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* fs -- 16px - 18px.. 1.25scl - 1.25scl */
+  --font-size--small-2: clamp(0.72rem, 0.81rem + -0.1vi, 0.79rem);
+  --font-size--small-1: clamp(0.889rem, 0.886rem + 0.016vi, 0.9rem);
+  --font-size--p: clamp(1rem, 0.964rem + 0.179vi, 1.125rem);
+  --font-size--h5: clamp(1.125rem, 1.045rem + 0.402vi, 1.406rem);
+  --font-size--h4: clamp(1.266rem, 1.125rem + 0.703vi, 1.758rem);
+  --font-size--h3: clamp(1.424rem, 1.203rem + 1.105vi, 2.197rem);
+  --font-size--h2: clamp(1.602rem, 1.275rem + 1.635vi, 2.747rem);
+  --font-size--h1: clamp(1.802rem, 1.336rem + 2.33vi, 3.433rem);
+
+  /* colors */
+  /* --background: #181818; */
+  --background: #030f16;
+
+  --white-100: #fff;
+  --white-75: rgba(255, 255, 255, 0.75);
+  --white-50: rgba(255, 255, 255, 0.5);
+  --white-25: rgba(255, 255, 255, 0.25);
+  --white-05: rgba(255, 255, 255, 0.05);
+
+  --black-100: rgb(8, 33, 48);
+  --black-75: rgba(8, 33, 48, 0.75);
+  --black-50: rgba(8, 33, 48, 0.5);
+  --black-25: rgba(8, 33, 48, 0.25);
+  --black-05: rgba(8, 33, 48, 0.05);
+
+  --error: #f44336;
+
+  --brand-color: #ff1a75;
+  --brand-dark-color: #3b0018;
+
+  --pink-variant-1: #ff5ebc;
+  --pink-variant-2: #ff0095;
+  --pink-variant-3: #ffa2c8;
+
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+}
+
+body {
+  min-height: 75vh;
+  background-color: var(--background);
+}
+
+body:has(*[data-disabled-scroll=true]) {
+  overflow: hidden;
+}
+
+/* *:focus{
+
+  outline: solid;
+  outline-width: 1px;
+  outline-color: var(--brand-color);
+
+} */
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-family-sans-serif);
+}
+
+p,
+a,
+button,
+li,
+small,
+option,
+input {
+  font-size: var(--font-size--p);
+}
+
+h1 {
+  font-size: var(--font-size--h1);
+}
+
+h2 {
+  font-size: var(--font-size--h2);
+}
+
+h3 {
+  font-size: var(--font-size--h3);
+}
+
+h4 {
+  font-size: var(--font-size--h4);
+}
+
+h5 {
+  font-size: var(--font-size--h5);
+}
+
+small {
+  font-size: var(--font-size--small-1);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--white-100) inset !important;
+}
+
+button {
+  cursor: pointer;
+}
+
+li {
+  list-style-type: none;
+}
+
+.padding_16px {
+  padding: 0 16px;
+}
+
+.display_align_justify_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display_flex_row {
+  display: flex;
+  flex-direction: row;
+}
+
+.align_items_center {
+  align-items: center;
+}
+
+.display_grid {
+  display: grid;
+}
+
+.display_wrap {
+  flex-wrap: wrap;
+}
+
+.space_beetween {
+  justify-content: space-between;
+}
+
+.center {
+  margin: 0 auto;
+}
+
+.gap_8px {
+  gap: 8px;
+}
+
+.gap_16px {
+  gap: 16px;
+}
+
+.text_center {
+  text-align: center;
+}
+
+.yt_embed_video {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+
+/* SWIPER JS */
+.custom_swiper_list_item>* {
+
+  height: inherit;
+  width: inherit !important;
+
+}

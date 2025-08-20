@@ -1,0 +1,183 @@
+header#background {
+
+    background-color: var(--background);
+
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+}
+
+header#background a {
+
+    display: block;
+
+}
+
+#logo {
+
+    transform: scale(1.2);
+
+}
+
+header>div#container {
+
+    justify-content: space-between;
+
+    margin: auto;
+
+    min-height: 60px;
+
+}
+
+@media((min-width: 576px) and (max-width: 768px)) {
+    header>div#container {
+        width: var(--breakpoint-sm);
+    }
+}
+
+@media((min-width: 1201px) and (max-width: 1400px)) {
+    header>div#container {
+        width: var(--breakpoint-xl);
+    }
+}
+
+@media((min-width: 1441px)) {
+    header>div#container {
+        width: var(--breakpoint-xxl);
+    }
+}
+
+#menu_and_logo_container>a {
+
+    position: relative;
+    top: 0;
+    aspect-ratio: 1117/393;
+    width: 100%;
+    height: 32px;
+
+}
+
+/* BUTTON */
+header#background button.heading_btn {
+
+    background-color: var(--background);
+
+    padding: 8px;
+
+    height: 32px;
+
+    border: none;
+
+}
+
+
+@media(min-width: 1060px) {
+    header#background button#btn_open_menu {
+
+        display: none;
+
+    }
+}
+
+/* BUTTON */
+header#background button svg {
+
+    fill: var(--white-100);
+
+}
+
+#user_and_search_container {
+    position: static;
+    gap: 8px;
+}
+
+@media(min-width: 768px) {
+    #user_and_search_container {
+        position: relative;
+    }
+}
+
+#navbar_container {
+
+    width: 100%;
+
+    padding-left: 64px;
+
+}
+
+@media(max-width: 1060px) {
+    #navbar_container {
+
+        padding-left: 32px;
+
+    }
+}
+
+@media(max-width: 1060px) {
+    #navbar_container {
+
+        display: none;
+
+    }
+}
+
+#navbar_container>ul {
+
+    height: 100%;
+
+    grid-template-columns: 1fr 1fr 1fr;
+
+    width: max-content;
+
+}
+
+#navbar_container>ul>li {
+
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-right: 16px;
+    padding-left: 16px;
+
+    width: max-content;
+
+    font-weight: 500;
+
+    color: var(--brand-color);
+    position: static;
+
+}
+
+#navbar_container>ul>li>a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#navbar_container>ul>li>ul,
+#navbar_container>ul>li>div {
+    display: none;
+}
+
+/* NAV LIST HOVER */
+#navbar_container>ul>li:hover {
+
+    background-color: var(--black-100);
+
+    color: var(--white-100);
+
+}
+
+#navbar_container>ul>li:hover>ul,
+#navbar_container>ul>li:hover>div {
+
+    display: block;
+
+}
+
+#navbar_container>ul>li>svg,
+#navbar_container>ul>li>a>svg {
+
+    margin-left: 4px;
+
+}

@@ -1,0 +1,237 @@
+/* COMMENT INPUT */
+#write_comment_container {
+
+    margin-top: 16px;
+    margin-bottom: 40px;
+
+    display: grid;
+    grid-template-columns: minmax(50px, 60px) minmax(120px, 1fr);
+
+}
+
+#write_comment_container .img_container {
+
+    position: relative;
+    top: 0;
+    height: 100%;
+    max-height: 48px;
+    aspect-ratio: 1;
+
+}
+
+#write_comment_container .img_container img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#write_comment_container form label:first-child {
+
+    display: flex;
+    flex-direction: column;
+
+    font-size: var(--font-size--p);
+
+    color: var(--white-100);
+
+}
+
+/*  */
+#write_comment_container #is_spoiler_checkbox_container {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0 8px;
+
+    padding: 4px 8px;
+
+    background-color: var(--white-25);
+
+    border-radius: 4px;
+
+}
+
+#write_comment_container #is_spoiler_checkbox_container label {
+
+    position: relative;
+    display: inline-block;
+    height: 25px;
+    width: 40px;
+
+    background-color: var(--black-50);
+
+    border-radius: 16px;
+
+}
+
+#write_comment_container #is_spoiler_checkbox_container input {
+
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+}
+
+#write_comment_container #is_spoiler_checkbox_container span {
+
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    border-radius: 16px;
+    box-shadow: inset 0px 0px 3px 0px var(--white-100);
+
+}
+
+#write_comment_container #is_spoiler_checkbox_container span::before {
+
+    transition: all ease-in-out 100ms;
+
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 4px;
+    bottom: 4px;
+
+    box-shadow: 0px 0px 3px 0px var(--white-50);
+    border-radius: 50%;
+
+    background-color: var(--white-50);
+
+}
+
+#write_comment_container #is_spoiler_checkbox_container input:checked+span::before {
+
+    -webkit-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
+
+    background-color: var(--brand-color);
+}
+
+#write_comment_container #is_spoiler_checkbox_container p {
+
+    transition: all ease-in-out 100ms;
+
+    color: var(--white-100);
+
+    font-size: var(--font-size--small-1);
+
+    font-weight: 500;
+
+}
+
+#write_comment_container #is_spoiler_checkbox_container label:has(input:checked)+p {
+
+    font-size: calc(var(--font-size--small-1) + 2px);
+
+}
+
+/*  */
+#write_comment_container form label textarea {
+
+    resize: vertical;
+
+    padding: 8px;
+
+    border: 0;
+    border-radius: 4px;
+
+    margin: 8px 0;
+
+    font-family: var(--font-family-sans-serif);
+    font-size: var(--font-size--p);
+
+}
+
+#write_comment_container form label textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+#write_comment_container form label textarea::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 8px var(--black-25);
+    border-radius: 10px;
+}
+
+#write_comment_container form label textarea::-webkit-scrollbar-thumb {
+    background: var(--black-50);
+    border-radius: 6px;
+}
+
+#write_comment_container form label textarea:focus {
+
+    border-radius: 4px;
+    outline-width: 2px;
+    outline-style: outset;
+    outline-color: var(--brand-color);
+
+}
+
+#write_comment_container .flex_row_justify_between {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+#write_comment_container .flex_row_justify_between small {
+    color: var(--white-100);
+}
+
+#write_comment_container .flex_row_justify_between small[data-over-limit=true] {
+    color: var(--error);
+
+    font-weight: 600;
+
+}
+
+#write_comment_container form button {
+
+    margin-top: 16px;
+    margin-left: auto;
+
+    width: 100%;
+
+    background: var(--brand-color);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+
+    border: 0;
+    border-radius: 8px;
+
+    color: var(--white-100);
+
+    padding: 12px 24px;
+
+}
+
+#write_comment_container form button:disabled {
+
+    background: #3c3c3c;
+    cursor: not-allowed;
+
+}
+
+@media(min-width: 600px) {
+
+    #write_comment_container form button {
+        width: auto;
+        justify-content: start;
+    }
+
+}
+
+#write_comment_container form button svg {
+
+    transform: scale(1.4);
+
+}

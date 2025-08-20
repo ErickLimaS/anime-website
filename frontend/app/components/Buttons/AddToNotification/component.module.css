@@ -1,0 +1,44 @@
+#container {
+
+    transition: all ease-in-out 200ms;
+
+    height: inherit;
+
+    text-align: center;
+
+    font-weight: 600;
+
+    border: 1px solid var(--white-100) !important;
+
+    background-color: transparent !important;
+
+}
+
+#container svg {
+
+    transform: scale(1.4);
+
+}
+
+#container[data-added=false] svg {
+
+    fill: var(--white-100);
+
+}
+
+#container[disabled] {
+
+    background-color: var(--white-100);
+
+}
+
+#container[data-added=true] {
+
+    gap: 0 8px;
+
+    background-color: var(--white-100) !important;
+    color: #ee9b0d !important;
+
+    border-color: var(--black-100) !important;
+
+}

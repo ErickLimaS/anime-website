@@ -1,0 +1,262 @@
+#container {
+
+    margin-top: 24px;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px 0;
+
+}
+
+@media(min-width: 1193px) {
+    #container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* SECTION HEADING */
+#container_heading {
+
+    margin: 32px 0;
+
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+
+    gap: 16px 0;
+
+}
+
+@media(min-width: 540px) {
+    #container_heading {
+
+        margin: 8px 0;
+
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+}
+
+#container_heading h3 {
+
+    font-size: var(--font-size--h5);
+    color: var(--white-75);
+
+}
+
+#container_heading #btn_other_sources {
+
+    border-radius: 4px;
+    padding: 8px;
+    background: transparent;
+    border: 2px solid var(--white-100);
+    color: var(--white-100);
+
+    gap: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#container_heading #btn_other_sources:hover {
+
+    border-color: var(--brand-color);
+    color: var(--brand-color);
+
+}
+
+#container_heading #btn_other_sources svg {
+    transform: scale(1.2);
+}
+
+/* LOADING */
+#loading_chapters_container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px 0;
+
+}
+
+#loading_chapters_container>div {
+
+    animation: 2.5s ease-in-out infinite alternate loopLoading;
+
+    height: 67px;
+    width: 100%;
+    background: var(--white-25);
+
+}
+
+@media(min-width: 520px) {
+    #loading_chapters_container>div {
+
+        height: 68px;
+
+    }
+}
+
+@media(min-width: 960px) {
+    #loading_chapters_container>div {
+
+        height: 68.3px;
+
+    }
+}
+
+@media(min-width: 1020px) {
+    #loading_chapters_container>div {
+
+        height: 69.2px;
+
+    }
+}
+
+@media(min-width: 1440px) {
+    #loading_chapters_container>div {
+
+        height: 70.2px;
+
+    }
+}
+
+@keyframes loopLoading {
+
+    0% {
+        background: var(--white-25);
+    }
+
+    50% {
+        background: var(--white-50);
+    }
+
+    100% {
+        background: var(--white-25);
+    }
+
+}
+
+/* CHAPTER ITEM RESULT */
+.chapter_container {
+
+    background: var(--brand-dark-color);
+    border: 1px solid var(--brand-color);
+
+    display: grid;
+    grid-template-columns: 15% 70% 15%;
+    align-items: center;
+    justify-items: start;
+
+}
+
+@media(min-width: 1020px) {
+    .chapter_container {
+        grid-template-columns: 10% 80% 10%;
+    }
+}
+
+/* NO PAGES AVAILABLE */
+.chapter_container[data-disabled=true] {
+
+    border: 1px solid var(--white-50);
+    background: var(--background);
+
+}
+
+/*  */
+
+.chapter_container a {
+    width: 100%;
+}
+
+.chapter_container .icon_container {
+
+    margin: auto;
+
+}
+
+.chapter_container .icon_container svg {
+    display: block;
+    transform: scale(1.5);
+    fill: var(--white-100);
+}
+
+@media(min-width: 560px) {
+    .chapter_container .icon_container svg {
+        transform: scale(1.8);
+    }
+}
+
+.chapter_container .info_container {
+
+    width: 100%;
+
+    border-left: 2px solid var(--white-25);
+
+    padding: 8px 0;
+    padding-left: 16px;
+
+}
+
+.chapter_container .info_container h3 {
+
+    font-size: var(--font-size--p);
+    font-weight: 500;
+    color: var(--white-100);
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+
+}
+
+.chapter_container .info_container p {
+
+    margin-top: 8px;
+
+    font-size: var(--font-size--small-1);
+
+    color: var(--white-75) !important;
+
+}
+
+/* NO CHAPTERS */
+#no_chapters_container {
+
+    box-shadow: inset 0px 0px 20px 1px var(--background);
+
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 340px;
+    max-height: 60vh;
+
+    background-color: var(--white-100);
+
+}
+
+#no_chapters_container p {
+
+    font-weight: 500;
+    color: var(--black-100) !important;
+
+}
+
+#no_chapters_container p span {
+
+    color: var(--brand-color) !important;
+
+}
+
+/* PAGINATION BUTTONS */
+#pagination_buttons_container {
+
+    margin: 32px 0;
+
+}

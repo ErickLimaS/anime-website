@@ -1,0 +1,191 @@
+.container {
+
+    position: relative;
+
+}
+
+.container img {
+    transition: all ease-in-out 100ms;
+}
+
+.container:hover img {
+
+    transform: scale(1.1);
+
+}
+
+/* FILLER ALERT */
+.alert_filler_text {
+
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+
+    padding: 2px 6px;
+
+    background-color: rgb(4, 112, 4);
+    border-radius: 8px 0 4px 0;
+
+    font-size: var(--font-size--small-1);
+    font-weight: 400;
+
+    box-shadow: 1px 1px 3px 1px var(--black-100);
+
+}
+
+.container a {
+
+    display: block;
+
+    color: var(--white-100);
+    font-size: var(--font-size--small-1);
+    font-weight: 500;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+
+}
+
+.container a.img_container {
+
+    box-shadow: 0px 0px 2px 0px var(--black-50);
+
+    position: relative;
+    top: 0;
+
+    aspect-ratio: 4 / 3;
+
+    margin-bottom: 16px;
+
+    border-radius: 8px;
+
+}
+
+.container a.img_container img {
+
+    object-fit: cover;
+
+    transition: all ease-in-out 100ms;
+
+    background: var(--background);
+
+}
+
+.container:hover a.img_container img {
+
+    opacity: 0.5;
+
+}
+
+.container:hover a.img_container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: center;
+    background-repeat: no-repeat;
+    background-image: url("../../../../../../../public/assets/play-circle-fill.svg");
+    background-size: 20%;
+}
+
+.container .title_button_container {
+
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    justify-content: space-between;
+
+}
+
+.container .title_button_container h3:hover {
+
+    color: var(--white-100);
+    text-decoration: underline;
+
+}
+
+.container .episode_description_container {
+
+    transition: all ease-in-out 100ms;
+
+    position: absolute;
+
+    top: 25%;
+    left: 105%;
+
+    opacity: 0;
+    display: none;
+
+    padding: 32px 16px;
+
+    box-shadow: 2px 2px 5px 0px var(--white-05);
+    background-color: var(--black-100);
+    border-radius: 8px;
+
+    min-width: 200px;
+    max-width: 100vw;
+
+}
+
+@media(min-width: 920px) {
+    .container .episode_description_container {
+
+        min-width: 280px;
+        max-width: 280px;
+
+    }
+}
+
+@media(min-width: 720px) {
+    .container.container:hover .episode_description_container {
+
+        opacity: 1;
+        display: block;
+
+        z-index: 2;
+
+    }
+}
+
+.container.container:hover .episode_description_container::before {
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: -6px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-color: var(--black-100) transparent transparent transparent;
+}
+
+.container .episode_description_container p {
+
+    font-size: var(--font-size--small-1);
+    font-weight: 500;
+
+    overflow: auto;
+
+    max-height: 300px;
+
+}
+
+@media(min-width: 920px) {
+    .container .episode_description_container p::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .container .episode_description_container p::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 8px var(--white-25);
+        border-radius: 10px;
+    }
+
+    .container .episode_description_container p::-webkit-scrollbar-thumb {
+        background: var(--white-50);
+        border-radius: 6px;
+    }
+}

@@ -1,0 +1,336 @@
+#backdrop {
+
+    z-index: 100;
+
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#modal {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px 0;
+
+    overflow: auto;
+
+    width: 96%;
+
+    max-width: 500px;
+
+    min-height: 400px;
+    height: auto;
+    max-height: 80vh;
+
+    background-color: var(--white-100);
+
+    padding: 24px;
+
+    border-radius: 8px;
+
+    box-shadow: 0px 0px 3px var(--black-100);
+
+}
+
+#modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+#modal::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 8px var(--black-05);
+    border-radius: 10px;
+}
+
+#modal::-webkit-scrollbar-thumb {
+    background: var(--black-50);
+    border-radius: 6px;
+}
+
+/* heading */
+#modal #heading {
+
+    display: flex;
+    justify-content: space-between;
+
+}
+
+#modal #heading h5 {
+
+    font-weight: 600;
+    color: var(--black-100);
+    font-size: var(--font-size--h4);
+
+}
+
+#modal #heading button {
+
+    padding: 8px 8px;
+
+    background-color: transparent;
+
+    border: 0;
+
+}
+
+#modal #heading button svg {
+
+    display: block;
+
+    margin: auto;
+
+    fill: var(--black-50);
+
+    transform: scale(2);
+
+}
+
+/* LOGINS CONTAINER */
+#login_buttons_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    gap: 16px;
+}
+
+#login_buttons_container>div {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 0;
+
+}
+
+#login_buttons_container #anonymous_button,
+#login_buttons_container #google_button,
+#login_buttons_container #github_button,
+#login_buttons_container #anilist_button {
+
+    transition: all ease-in-out 100ms;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+
+    padding: 24px;
+
+    border: 2px solid var(--black-25);
+    border-radius: 50%;
+
+}
+
+#login_buttons_container #anonymous_button {
+    background-color: transparent;
+    border-color: var(--black-50);
+}
+
+#login_buttons_container #google_button {
+    background-color: var(--white-100);
+}
+
+#login_buttons_container #github_button {
+    background-color: #000;
+}
+
+#login_buttons_container #anilist_button {
+    background-color: #18202c;
+}
+
+#login_buttons_container #anonymous_button svg,
+#login_buttons_container #google_button svg,
+#login_buttons_container #github_button svg,
+#login_buttons_container #anilist_button svg {
+
+    transition: all ease-in-out 100ms;
+
+    transform: scale(2);
+
+}
+
+#login_buttons_container #anonymous_button svg {
+    fill: var(--black-50);
+}
+
+#login_buttons_container #github_button svg {
+    fill: #fff;
+}
+
+#login_buttons_container #anilist_button svg {
+    fill: #02a9ff;
+}
+
+#login_buttons_container #anonymous_button:hover svg,
+#login_buttons_container #google_button:hover svg,
+#login_buttons_container #github_button:hover svg,
+#login_buttons_container #anilist_button:hover svg {
+
+    transform: scale(2.25);
+
+}
+
+#login_buttons_container small {
+
+    color: var(--black-100) !important;
+
+    font-weight: initial;
+
+}
+
+/* Span Container */
+#modal #span_container {
+
+
+    display: grid;
+
+    grid-template-columns: 2fr 1fr 2fr;
+    align-items: center;
+    justify-items: center;
+
+}
+
+#modal #span_container>span:nth-child(1),
+#modal #span_container>span:nth-child(3) {
+
+    width: 100%;
+
+    display: block;
+
+    border-bottom: 1px solid var(--black-25);
+
+}
+
+#modal #span_container>span:nth-child(2) {
+
+    color: var(--black-100);
+
+    font-weight: 600;
+    font-size: var(--font-size--h5);
+
+    padding: 0 24px;
+
+}
+
+/*  */
+#modal form {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+#modal form label {
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+#modal form input,
+#modal form input:-webkit-autofill,
+#modal form input:-webkit-autofill:hover,
+#modal form input:-webkit-autofill:active {
+
+    box-shadow: inset 0px 0px 3px var(--black-25) !important;
+    -webkit-box-shadow: inset 0px 0px 3px var(--black-25) !important;
+
+    background-color: var(--black-05) !important;
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+    border: 1px solid transparent;
+
+}
+
+#modal form input:focus,
+#modal form input:-webkit-autofill:focus {
+
+    -webkit-box-shadow: inset 0px 0px 3px var(--black-25) !important;
+    box-shadow: inset 0px 0px 3px var(--black-25) !important;
+
+    background-color: var(--black-05) !important;
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+
+    border: 1px solid transparent;
+
+    outline-width: 0;
+    border: 1px solid var(--brand-color);
+
+}
+
+#modal form[data-error-occurred=true] input,
+#modal form[data-error-occurred=true] input:-webkit-autofill,
+#modal form[data-error-occurred=true] input:-webkit-autofill:hover,
+#modal form[data-error-occurred=true] input:-webkit-autofill:focus,
+#modal form[data-error-occurred=true] input:-webkit-autofill:active {
+    background-color: rgb(255 172 166 / 60%) !important;
+    box-shadow: 0 0 0 3px rgb(255 172 166 / 60%) inset !important;
+    -webkit-box-shadow: 0 0 0 3px rgb(255 172 166 / 60%) inset !important;
+}
+
+#modal form button {
+
+    color: var(--white-100);
+
+    background-color: var(--brand-color);
+    border: 1px solid transparent;
+
+    margin-top: 32px;
+
+    padding: 18px 8px;
+
+    width: 100%;
+
+    border-radius: 8px;
+
+}
+
+#modal form button:disabled {
+
+    cursor: default;
+
+    background-color: transparent;
+    border: 2px solid var(--black-05);
+
+}
+
+
+#modal #create_account_button {
+
+    margin: auto;
+    width: max-content;
+
+    font-size: var(--font-size--small-1);
+
+
+    background-color: transparent;
+
+    border: 0;
+
+    color: var(--brand-color);
+
+}
+
+#modal #create_account_button {
+
+    text-decoration: underline;
+
+}

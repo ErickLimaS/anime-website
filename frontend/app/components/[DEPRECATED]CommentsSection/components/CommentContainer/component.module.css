@@ -1,0 +1,218 @@
+.comment_container {
+
+    display: grid;
+    grid-template-columns: minmax(50px, 72px) minmax(120px, 1fr);
+
+}
+
+.comment_container .user_img_container {
+
+    position: relative;
+    top: 0;
+    height: 100%;
+    max-height: 60px;
+    aspect-ratio: 1;
+
+}
+
+.comment_container .user_img_container img {
+    border-radius: 50%;
+}
+
+@media(max-width:420px) {
+    .comment_container .flex {
+
+        flex-direction: column;
+
+    }
+
+}
+
+.comment_container .heading_container {
+
+    margin-top: 4px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+
+}
+
+@media(min-width: 500px) {
+    .comment_container .heading_container {
+        flex-direction: row;
+    }
+}
+
+.comment_container .heading_container h5 {
+
+    color: var(--white-100);
+
+    font-size: var(--font-size--p);
+    font-weight: 500;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+
+}
+
+.comment_container .heading_container p {
+
+    color: var(--white-75);
+
+    font-size: var(--font-size--small-2);
+    font-weight: 300;
+
+}
+
+@media(min-width: 500px) {
+    .comment_container .heading_container p {
+        font-size: var(--font-size--small-1);
+    }
+}
+
+.comment_container .comment_text_container {
+
+    margin-top: 8px;
+    margin-bottom: 16px;
+
+}
+
+.comment_container[data-has-spoiler=true] .comment_text_container {
+
+    position: relative;
+
+}
+
+.comment_container .comment_text_container p {
+
+    position: relative;
+
+    padding: 8px;
+
+    background-color: var(--white-25);
+    border-radius: 4px;
+
+    font-weight: 300;
+    color: var(--white-100);
+
+}
+
+.comment_container .comment_text_container p::before {
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: -6px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-color: #424b50 transparent transparent transparent;
+}
+
+.comment_container[data-has-spoiler=true] .comment_text_container p {
+
+    transition: all ease-in-out 100ms;
+
+    filter: blur(4px) brightness(70%);
+
+}
+
+.comment_container[data-has-spoiler=true] .comment_text_container::before {
+
+    color: var(--white-100);
+    font-weight: 600;
+
+    content: "SPOILER!!! Click to Reveal.";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.comment_container .buttons_container {
+    display: flex;
+
+    gap: 8px;
+}
+
+.comment_container .buttons_container button {
+
+    transition: all ease-in-out 100ms;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    background: transparent;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    color: var(--white-100);
+    padding: 4px;
+    font-size: var(--font-size--small-1);
+
+}
+
+.comment_container .buttons_container button:hover {
+
+    border: 1px solid var(--brand-color);
+
+}
+
+.comment_container .buttons_container button svg {
+
+    fill: var(--brand-color);
+
+}
+
+.comment_container .buttons_container button.delete_btn:hover {
+
+    border-color: rgb(173, 24, 24);
+    background-color: rgb(173, 24, 24);
+
+}
+
+.comment_container .buttons_container button.delete_btn svg {
+
+    fill: rgb(173, 24, 24);
+
+}
+
+.comment_container .buttons_container button.delete_btn:hover svg {
+
+    fill: var(--white-100);
+
+}
+
+.comment_container small {
+    color: var(--white-50);
+}
+
+/* REPLY CONTAINER */
+.reply_form_container {
+
+    margin-left: 5%;
+
+}
+
+@media(min-width: 460px) {
+
+    .reply_form_container {
+
+        margin-left: 5%;
+
+    }
+
+}

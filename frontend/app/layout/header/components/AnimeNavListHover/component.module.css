@@ -1,0 +1,90 @@
+#anime_header_nav_container {
+
+    z-index: 2;
+    position: absolute;
+    top: 69px;
+    left: 0;
+
+    padding-top: 32px;
+    padding-bottom: 64px;
+    padding-left: 64px;
+    padding-right: 64px;
+
+    background-color: var(--black-100);
+
+    width: 100%;
+
+}
+
+#anime_header_nav_container>li {
+
+    max-width: var(--breakpoint-xxl);
+
+    margin: auto;
+
+    display: grid;
+
+}
+
+#anime_header_nav_container>li {
+
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+
+}
+
+#anime_header_nav_container>li>div>h5 {
+
+    margin-bottom: 24px;
+
+    font-size: var(--font-size--p);
+
+}
+
+#anime_header_nav_container>li>div li a {
+
+    font-size: var(--font-size--small-1);
+
+}
+
+#anime_header_nav_container>li>div li a:hover {
+
+    color: var(--brand-color);
+
+}
+
+#anime_card_container p,
+#anime_card_container p p {
+
+    font-size: var(--font-size--small-2);
+
+}
+
+#anime_card_container>div {
+    
+    grid-template-columns: minmax(110px, 160px) 1fr;
+
+}
+
+#anime_header_nav_container>li>div#anime_genres_container {
+
+    padding: 0 16px;
+
+    border-left: 1px solid var(--white-25);
+    border-right: 1px solid var(--white-25);
+
+}
+
+#anime_header_nav_container>li>div#anime_genres_container ul {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 32px;
+
+}
+
+#anime_header_nav_container>li>div#anime_genres_container ul li {
+
+    padding: 8px 0;
+
+}

@@ -1,0 +1,125 @@
+.nav_button_container {
+    overflow-x: auto;
+}
+
+.nav_button_container::-webkit-scrollbar {
+
+    height: 0;
+
+}
+
+.nav_button_container,
+#dynamic_container {
+    display: flex;
+    gap: 0 8px;
+}
+
+.nav_button_container>button,
+#dynamic_container>button {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0 8px;
+
+    background-color: transparent;
+    border: none;
+
+    text-wrap: nowrap;
+
+    color: var(--white-50);
+
+    font-size: var(--font-size--small-1);
+
+    font-weight: 600;
+
+    height: 36px;
+
+}
+
+.nav_button_container>button.white_color:hover,
+#dynamic_container>button.white_color:hover {
+
+    color: var(--white-75) !important;
+
+}
+
+.nav_button_container>button.white_color,
+#dynamic_container>button.white_color {
+
+    color: var(--white-50) !important;
+
+}
+
+/* SOURCE IS AVAILABLE */
+.nav_button_container>button .source_status {
+
+    transition: all ease-in-out 150ms;
+
+    fill: var(--white-100);
+
+}
+
+.nav_button_container>button .source_status:not([data-available]) {
+
+    animation: infinite 1.5s dimmeLoading;
+
+}
+
+.nav_button_container>button .source_status[data-available=true] {
+    fill: rgb(72 255 55);
+    color: rgb(72 255 55);
+}
+
+.nav_button_container>button .source_status[data-available=false] {
+    fill: #ff3324;
+    color: #ff3324;
+}
+
+@keyframes dimmeLoading {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+/*  */
+.nav_button_container>button[data-active=false]:hover,
+#dynamic_container>button[data-active=false]:hover {
+
+    color: var(--white-75);
+
+}
+
+.nav_button_container>button[data-active=true],
+#dynamic_container>button[data-active=true] {
+
+    color: var(--brand-color);
+
+}
+
+.nav_button_container>button.white_color[data-active=true],
+#dynamic_container>button.white_color[data-active=true] {
+
+    color: var(--white-100) !important;
+
+}
+
+.nav_button_container span.separate_text {
+
+    display: flex;
+    align-items: flex-end;
+
+    font-size: var(--font-size--h5);
+
+}

@@ -1,0 +1,129 @@
+#menu_container button#btn_open_menu {
+
+    background-color: transparent;
+
+    border: 0;
+
+    margin-right: 32px;
+
+}
+
+#menu_container button#btn_open_menu svg {
+
+    fill: var(--white-100);
+    transform: scale(1.6);
+
+}
+
+@media(min-width: 1060px) {
+    #menu_container button#btn_open_menu {
+
+        display: none;
+
+    }
+}
+
+header#background #menu_container button#btn_open_menu {
+    margin-right: 32px;
+}
+
+/* MOBILE MENU VIEW WIDTH */
+#menu_container>#menu_list {
+
+    background-color: var(--white-100);
+
+    z-index: 100;
+
+    min-width: 60vw;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    overflow: auto;
+
+}
+
+/* DESKTOP MENU VIEW WIDTH */
+@media(min-width: 992px) {
+
+    #menu_container>#menu_list {
+
+        min-width: 25vw;
+
+    }
+}
+
+#menu_container>#menu_list h5,
+#menu_container>#menu_list>ul>li a {
+
+    cursor: pointer;
+
+    transition: all ease-in-out 100ms;
+
+    font-size: var(--font-size--p);
+    font-weight: 600;
+
+    justify-content: space-between;
+
+    padding: 16px 0;
+    padding-left: 24px;
+    padding-right: 24px;
+
+}
+
+#menu_container>#menu_list h5 svg {
+
+    margin-left: 8px;
+
+}
+
+#menu_container>#menu_list h5[data-opened=true] {
+
+    background-color: var(--brand-color);
+    color: var(--white-100);
+
+}
+
+#menu_list ul[data-visible=false] {
+
+    display: none;
+
+}
+
+#menu_container>#menu_list>ul>li {
+
+    color: var(--brand-color);
+
+}
+
+#menu_container>#menu_list ul ul li a {
+
+    color: var(--black-100);
+
+    padding: 16px 0;
+    padding-right: 8px;
+    padding-left: 40px;
+
+}
+
+#menu_container>#menu_list ul ul li:hover {
+
+    background-color: var(--black-05);
+
+}
+
+/* Shadow Effect behind mobile menu */
+#menu_overlay {
+
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+
+}

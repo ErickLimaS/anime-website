@@ -1,9 +1,0 @@
-.list_container {
-    overflow: hidden;
-    width: 100%;
-}
-
-.list_container>div {
-    display: flex;
-    flex-direction: row;
-}

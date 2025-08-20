@@ -1,0 +1,59 @@
+.button_container {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.button_container button {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px 0;
+
+    background: transparent;
+    border: 0;
+
+    border-radius: 50%;
+
+    padding: 4px;
+
+}
+
+.button_container button[data-active=false]:hover {
+    background: var(--white-25);
+}
+
+.button_container button[data-active=false]:hover svg {
+    fill: var(--brand-color);
+}
+
+.button_container button[data-active=true]:hover {
+    background: var(--black-100);
+}
+
+.button_container button[data-active=true]:hover svg {
+    fill: var(--white-75);
+}
+
+.button_container button[data-active=true] svg {
+
+    fill: var(--brand-color);
+
+}
+
+.button_container button[data-active=false] svg {
+
+    fill: var(--white-75);
+
+}
+
+.button_container span.text_span {
+
+    color: var(--white-75);
+    font-size: var(--font-size--small-2);
+    font-weight: 600;
+
+}

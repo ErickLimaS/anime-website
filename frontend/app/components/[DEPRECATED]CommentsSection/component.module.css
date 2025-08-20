@@ -1,0 +1,109 @@
+#all_comments_container ul {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 32px 0;
+
+}
+
+#no_comments_container {
+
+    background-color: var(--white-25);
+
+    padding: 32px;
+
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#no_comments_container p {
+
+    color: var(--white-100);
+    font-weight: 600;
+
+}
+
+/* ALL COMMENTS */
+#all_comments_container #comments_heading {
+
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    width: inherit;
+
+    margin-bottom: 16px;
+
+}
+
+#all_comments_container #comments_heading p {
+
+    color: var(--white-100);
+    font-weight: 600;
+
+}
+
+#all_comments_container #comments_heading #custom_select {
+
+    width: 170px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+#all_comments_container #comments_heading #custom_select svg {
+    transform: scale(2);
+    fill: var(--brand-color);
+}
+
+#all_comments_container select {
+
+    padding: 8px 16px;
+
+    background-color: transparent;
+    border: 1px solid var(--brand-color);
+    border-radius: 4px;
+
+    font-weight: 600;
+    font-family: var(--font-family-sans-serif);
+    color: var(--white-100);
+
+}
+
+#all_comments_container #comments_heading select option {
+
+    padding: 8px 16px;
+    background-color: var(--black-100);
+
+}
+
+#all_comments_container>button {
+
+    transition: all ease-in-out 100ms;
+
+    display: flex;
+    margin: 32px auto;
+
+    padding: 16px 32px;
+
+    border-radius: 4px;
+
+    background-color: var(--brand-color);
+    border: 0;
+
+    color: var(--white-100);
+
+}
+
+#all_comments_container>button:hover {
+
+    filter: brightness(90%);
+
+}

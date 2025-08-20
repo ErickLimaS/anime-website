@@ -1,0 +1,277 @@
+.midia_item_container {
+
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+}
+
+@media(min-width: 300px) {
+    .midia_item_container {
+        grid-template-columns: minmax(110px, 1fr) 3fr;
+
+    }
+}
+
+@media(min-width: 580px) {
+    .midia_item_container {
+        width: 100%;
+        gap: 0;
+
+    }
+}
+
+@media(min-width: 1280px) {
+    .midia_item_container {
+        grid-template-columns: minmax(110px, 220px) 1fr;
+        width: 100%;
+        gap: 0;
+
+    }
+}
+
+.midia_item_container:hover #img_container {
+
+    filter: brightness(85%);
+
+}
+
+.midia_item_container #img_container {
+
+    background-color: var(--white-25);
+
+    margin: auto;
+
+    position: relative;
+    top: 0;
+
+    aspect-ratio: 46 / 65;
+
+    width: 100%;
+
+    transition: all ease-in-out 190ms;
+}
+
+@media(min-width: 580px) {
+    .midia_item_container #img_container {
+
+        margin: initial;
+
+        width: inherit;
+    }
+}
+
+.item_info_container {
+
+    margin: 24px auto;
+
+    position: relative;
+
+}
+
+@media(min-width: 580px) {
+    .item_info_container {
+
+        margin: auto;
+
+        width: 88%;
+
+    }
+}
+
+.item_info_container.watch_page_custom_margin {
+
+    margin: 24px auto;
+
+}
+
+
+.item_info_container>small {
+    display: block;
+    font-size: var(--font-size--small-2);
+
+    color: var(--white-75);
+}
+
+.item_info_container>h4 {
+    color: var(--white-100);
+
+    margin-bottom: 16px;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+
+}
+
+.item_info_container>p,
+.item_info_container p.paragrath_container {
+
+    color: var(--white-100);
+
+    font-size: var(--font-size--small-1);
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+
+}
+
+.item_info_container p.paragrath_container.watch_page_custom_line_limit {
+
+    color: var(--white-100);
+
+    font-size: var(--font-size--small-1);
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    overflow: hidden;
+
+}
+
+/* CHECKBOX EXPAND */
+input.expand_description {
+
+    cursor: pointer;
+
+    appearance: none;
+
+    position: absolute;
+    bottom: 0;
+
+    padding: 4px;
+
+    width: 100%;
+
+    background: var(--black-50);
+    border-radius: 2px;
+
+    text-align: center;
+    color: var(--white-75);
+    font-family: var(--font-family-sans-sarif);
+    font-weight: 600;
+
+}
+
+input.expand_description:hover {
+
+    color: var(--white-100);
+
+}
+
+input.expand_description::before {
+
+    appearance: none;
+
+    content: "See More";
+
+}
+
+input.expand_description:checked::before {
+
+    content: "See Less";
+
+}
+
+/* EXPAND DESCRIPTION */
+.expand_description:checked+p.paragrath_container {
+
+    margin-bottom: 36px;
+
+    -webkit-line-clamp: initial;
+
+}
+
+.item_info_container .buttons_container {
+
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    margin: 24px 0;
+
+    gap: 16px;
+
+}
+
+@media(min-width: 580px) {
+    .item_info_container .buttons_container {
+        display: grid;
+        grid-template-columns: 120px 120px;
+        justify-content: initial;
+    }
+}
+
+.buttons_container>* {
+
+    width: 100%;
+
+    transition: all ease-in-out 190ms;
+
+    font-size: var(--font-size--small-2);
+    font-weight: 600;
+
+    border: none;
+    border-radius: 4px;
+
+}
+
+.buttons_container>a {
+
+    background-color: var(--brand-color);
+    color: var(--white-100);
+
+    padding: 16px 16px;
+
+    text-align: center;
+
+}
+
+.buttons_container>a:hover {
+
+    filter: brightness(85%);
+
+}
+
+.buttons_container>button {
+
+    background-color: transparent;
+    color: var(--white-100);
+
+    padding: 16px 16px;
+
+}
+
+@media(min-width: 580px) {
+    .buttons_container>button {
+
+        padding: 16px 4px;
+        gap: 0 8px !important;
+
+    }
+}
+
+.buttons_container>button[data-added=true] svg {
+
+    fill: var(--brand-color) !important;
+
+}
+
+.buttons_container>button:hover {
+
+    background-color: var(--white-100);
+    color: var(--black-100);
+
+}
+
+.buttons_container>button:hover svg {
+
+    fill: var(--brand-color) !important;
+
+}

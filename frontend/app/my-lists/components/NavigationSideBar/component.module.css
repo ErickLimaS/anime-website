@@ -1,0 +1,153 @@
+/* btn */
+#btn_filters {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0px 16px;
+
+    z-index: 1;
+
+    position: sticky;
+    top: 80px;
+
+    width: 80%;
+    max-width: 340px;
+
+    margin: 0 auto;
+    padding: 8px 16px;
+
+    background-color: #101b22;
+    border: 1px solid var(--brand-color);
+    border-radius: 4px;
+
+    color: var(--white-100);
+
+    box-shadow: 0px 0px 3px 0px var(--white-50);
+
+}
+
+#backdrop {
+
+    height: fit-content;
+    z-index: 2;
+
+
+    top: 128px;
+
+}
+
+@media(min-width: 1020px) {
+
+    #backdrop {
+
+        z-index: 1;
+
+        top: 80px;
+
+    }
+}
+
+/* SIDE NAV */
+#side_nav_container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px 0;
+
+    height: fit-content;
+
+    overflow: auto;
+    max-height: 65vh;
+
+    margin-left: 16px;
+    margin-right: 16px;
+
+    background-color: #101b22;
+
+    padding: 32px 16px;
+
+}
+
+@media(min-width: 1020px) {
+    #side_nav_container {
+
+        max-height: initial;
+
+        position: sticky;
+        top: 68px;
+
+    }
+}
+
+@media(min-width: 1220px) {
+    #side_nav_container {
+
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+#side_nav_container h5 {
+
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+
+    font-size: var(--font-size--h5);
+    border-bottom: 1px solid var(--white-25);
+    color: var(--white-75);
+
+}
+
+#nav_container ul {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+#nav_container ul li {
+
+    font-size: var(--font-size--small-1);
+
+    color: var(--white-100);
+
+    padding: 8px 0;
+
+    border-bottom: 1px solid var(--white-25);
+
+}
+
+#nav_container ul li:hover {
+
+    color: var(--brand-color);
+
+}
+
+#nav_container ul li a {
+
+    display: flex;
+    justify-content: space-between;
+
+}
+
+#nav_container ul li a span {
+
+    font-size: var(--font-size--small-1);
+
+    color: var(--white-50);
+
+}
+
+#nav_container ul li[data-active=true] {
+    color: var(--brand-color);
+}
+
+#nav_container ul li:last-child {
+
+    border: 0;
+
+}

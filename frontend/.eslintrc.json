@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "next/typescript",
+    "prettier"
+  ],
+  "plugins": [
+    "@stylistic"
+  ],
+  "rules": {
+    "@stylistic/indent": [
+      "warn",
+      2
+    ]
+  }
+}

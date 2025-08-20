@@ -1,0 +1,47 @@
+.error_container {
+
+    z-index: 2;
+    position: absolute;
+    top: 69px;
+    left: 0;
+
+    padding-top: 32px;
+    padding-bottom: 64px;
+    padding-left: 64px;
+    padding-right: 64px;
+
+    background-color: var(--black-100);
+
+    min-height: 340px;
+    max-height: 60vh;
+    width: 100%;
+
+}
+
+.error_container .wrapper {
+
+    box-shadow: inset 0px 0px 20px 1px var(--background);
+
+    max-width: var(--breakpoint-xxl);
+    margin: auto;
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 4px;
+
+}
+
+.error_container .wrapper {
+    background-color: var(--white-100);
+}
+
+.error_container p {
+
+    font-weight: 500;
+    color: var(--black-100) !important;
+
+}

@@ -1,0 +1,242 @@
+#episodes_list_container {
+
+    background: var(--white-05);
+
+    padding: 16px;
+
+}
+
+#episodes_list_container .heading_container {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    margin-bottom: 32px;
+}
+
+#episodes_list_container .heading_container h3 {
+
+    color: var(--white-75);
+
+    font-size: var(--font-size--p);
+    font-weight: 500;
+
+}
+
+#episodes_list_container .heading_container p {
+
+    color: var(--white-50);
+
+    font-size: var(--font-size--small-1);
+
+}
+
+#list_container {
+
+    scroll-behavior: smooth;
+    transition: all ease-in-out 100ms;
+
+    padding-right: 8px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px 0;
+
+    max-height: 500px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+}
+
+@media(min-width:600px) {
+
+    #list_container {
+        max-height: 70vh;
+    }
+
+}
+
+#list_container[data-loading=true] li.item_placeholder {
+
+    height: 70px;
+    width: 100%;
+
+    animation: loading-pulse infinite 1700ms;
+
+}
+
+@keyframes loading-pulse {
+    0% {
+        background: var(--white-75);
+    }
+
+    50% {
+        background: var(--white-50);
+    }
+
+    100% {
+        background: var(--white-75);
+    }
+}
+
+#list_container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#list_container::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 8px var(--white-25);
+    border-radius: 10px;
+}
+
+#list_container::-webkit-scrollbar-thumb {
+    background: var(--white-50);
+    border-radius: 6px;
+}
+
+#list_container li {
+
+    background-color: var(--white-05);
+
+}
+
+#list_container li[data-active=true] {
+
+    border-color: var(--brand-color);
+    background-color: var(--black-100);
+
+}
+
+#list_container li>a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#list_container li .img_container {
+
+    padding: 8px;
+
+    position: relative;
+    top: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#list_container li .img_container>span {
+
+    transition: all ease-in-out 100ms;
+
+    display: block;
+
+    text-shadow: 2px 2px var(--black-25);
+
+    color: var(--white-25);
+    font-family: var(--font-family-sans-serif);
+    font-size: var(--font-size--h2);
+    font-weight: 700;
+
+}
+
+#list_container li[data-active=true] .img_container>span {
+    color: var(--brand-color);
+    text-shadow: 2px 2px var(--black-100);
+}
+
+#list_container li {
+
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 0 16px;
+    align-items: center;
+
+    border: 2px solid var(--white-05);
+
+}
+
+#list_container li[data-active=false]:hover {
+    border: 2px solid var(--white-25);
+}
+
+#list_container li .episode_info_container {
+
+    display: flex;
+    gap: 0 16px;
+
+    margin-right: 8px;
+
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+@media((min-width: 768px) and (max-width: 1200px)) {
+    #list_container li .episode_info_container {
+        width: 85%;
+    }
+}
+
+#list_container li .episode_info_container a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* FILLER TEXT */
+.episode_info_container .filler_alert_text {
+
+    background-color: rgb(4, 112, 4);
+    width: fit-content;
+
+    padding: 0 4px;
+
+    color: var(--white-100);
+
+}
+
+#list_container li .episode_info_container h4 {
+
+    font-size: var(--font-size--p);
+    font-weight: 500;
+
+    color: var(--white-100);
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+
+}
+
+/* "MARK AS WATCHED" btn */
+#list_container li .episode_info_container>div {
+
+    min-width: 50px;
+
+}
+
+/* NEXT EPISODE */
+.next_episode_container {
+
+    background-color: transparent !important;
+
+}
+
+.next_episode_container .episode_info_container small {
+
+    background-color: var(--brand-color);
+
+    color: var(--white-100);
+
+    padding: 2px 4px;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+
+}

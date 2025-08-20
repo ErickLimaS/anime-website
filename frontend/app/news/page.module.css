@@ -1,0 +1,479 @@
+#container {
+
+    margin-top: 32px;
+    margin-bottom: 32px;
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 96%;
+    max-width: var(--breakpoint-sm);
+
+    gap: 32px;
+
+}
+
+@media((min-width: 768px)) {
+    #container {
+        max-width: var(--breakpoint-md);
+    }
+}
+
+@media((min-width: 860px)) {
+    #container {
+        width: 100%;
+        margin: auto;
+        margin-top: 64px;
+        margin-bottom: 64px;
+    }
+}
+
+@media((min-width: 1020px)) {
+    #container {
+        width: 96%;
+        max-width: var(--breakpoint-xl);
+    }
+}
+
+@media((min-width: 1280px)) {
+    #container {
+        width: 100%;
+    }
+}
+
+#container>h1 {
+
+    font-size: var(--font-size--h4);
+    background-color: var(--brand-color);
+
+    color: var(--white-100);
+
+    width: fit-content;
+
+    margin-bottom: 32px;
+
+    padding: 8px 16px;
+
+}
+
+/* HIGHLIGHT */
+#container #highlight {
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+
+}
+
+@media(min-width: 1020px) {
+
+    #container #highlight {
+
+        grid-template-columns: 2fr 1fr;
+
+    }
+
+}
+
+#container #highlight {
+
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--white-50);
+
+}
+
+#highlighted_news {
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+}
+
+#highlighted_news #main_news {
+    position: relative;
+    background-color: var(--black-100);
+
+    display: grid;
+    grid-template-columns: 1fr;
+
+}
+
+@media(min-width: 520px) {
+    #highlighted_news #main_news {
+        grid-template-columns: 35% 1fr;
+    }
+}
+
+
+#highlighted_news #main_news .image_container {
+
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 400/583;
+
+}
+
+#highlighted_news #main_news .image_container img {
+    object-fit: cover;
+
+    transition: all ease-in-out 100ms;
+}
+
+@media(min-width: 600px) {
+    #highlighted_news #main_news .image_container {
+        min-height: 420px;
+    }
+}
+
+#highlighted_news #main_news:hover .image_container img {
+
+    transform: scale(1.1);
+
+}
+
+#highlighted_news #main_news .highlight_title {
+    position: absolute;
+
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    background-image: linear-gradient(0deg, var(--background), transparent);
+    padding: 0 8px;
+    padding-bottom: 32px;
+
+
+}
+
+@media(min-width: 520px) {
+    #highlighted_news #main_news .highlight_title {
+
+        background-image: none;
+
+        padding: 0;
+
+        left: 208px;
+        bottom: 32px;
+        right: 8px;
+    }
+}
+
+@media(min-width: 600px) {
+    #highlighted_news #main_news .highlight_title {
+        left: 320px;
+    }
+}
+
+.topic {
+
+    width: min-content;
+
+    display: block;
+
+    margin-bottom: 16px;
+
+    padding: 8px 16px;
+    background-color: var(--white-100);
+
+    border-radius: 4px;
+
+    font-weight: 400;
+    font-size: var(--font-size--small-2);
+}
+
+#highlighted_news #main_news .highlight_title h2 a {
+
+    display: block;
+
+    color: var(--white-100);
+
+    font-family: var(--font-family-sans-serif);
+    font-size: var(--font-size--h4);
+    font-weight: 600;
+
+}
+
+/*  */
+
+#news_second {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+
+}
+
+@media(min-width: 1020px) {
+    #news_second {
+        gap: 32px;
+    }
+}
+
+#news_second .hero_news_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#news_second .hero_news_container .image_container {
+
+    overflow: hidden;
+
+    position: relative;
+
+    aspect-ratio: 16/9;
+
+    width: 100%;
+
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+
+#news_second .hero_news_container .image_container img {
+
+    transition: all ease-in-out 100ms;
+
+    object-fit: cover;
+}
+
+@media(min-width: 780px) {
+    #news_second .hero_news_container .image_container {
+        min-height: 120px;
+        height: auto;
+    }
+}
+
+#news_second .hero_news_container:hover .image_container img {
+
+    transform: scale(1.1);
+
+}
+
+#news_second .hero_news_container .topic {
+
+    margin-top: 32px;
+    margin-bottom: 8px;
+
+}
+
+#news_second .hero_news_container h2 a {
+
+    transition: all ease-in-out 300ms;
+
+}
+
+#news_second .hero_news_container h2:hover a {
+
+    color: var(--brand-color);
+
+}
+
+/* HERO NEWS LIST */
+
+#hero_news_list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#hero_news_list>div:not(:last-child) {
+
+    border-bottom: 1px solid var(--white-50);
+
+}
+
+
+.highlight_title h2 a {
+
+    transition: all ease-in-out 300ms;
+
+    line-height: 1.4;
+
+    font-family: var(--font-family-sans-serif);
+    font-weight: 600;
+    color: var(--white-100);
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+
+}
+
+.highlight_title h2:hover a {
+
+    color: var(--brand-color);
+
+}
+
+/* ANIMES NEWS */
+#animes_container {
+
+    margin-bottom: 32px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--white-50);
+
+}
+
+@media(min-width: 600px) {
+    #animes_container {
+        margin-bottom: 0;
+    }
+}
+
+#animes_container h2 {
+
+    font-size: var(--font-size--h4);
+    color: var(--white-100);
+    margin-bottom: 24px;
+
+}
+
+/* 3 TOPICS CONTAINER */
+#manga_games_industry_container {
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+
+}
+
+@media(min-width: 600px) {
+    #manga_games_industry_container {
+
+        grid-template-columns: 1fr 1fr 1fr;
+
+    }
+}
+
+#manga_games_industry_container .list_container {
+
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+}
+
+@media(min-width: 600px) {
+    #manga_games_industry_container .list_container {
+        margin: 24px 0;
+    }
+}
+
+#manga_games_industry_container .list_container:not(:last-child) {
+
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--white-50);
+
+}
+
+@media(min-width: 600px) {
+    #manga_games_industry_container .list_container:not(:last-child) {
+        border-bottom: 0;
+    }
+}
+
+#manga_games_industry_container .list_container .item_container .image_container img,
+#manga_games_industry_container .list_container .highlighted_container .image_container img {
+
+    transition: all ease-in-out 100ms;
+
+}
+
+#manga_games_industry_container .list_container .item_container:hover .image_container img,
+#manga_games_industry_container .list_container .highlighted_container:hover .image_container img {
+
+    transform: scale(1.05);
+
+}
+
+#manga_games_industry_container .list_container>h2 {
+
+    padding: 8px 16px;
+
+    width: max-content;
+
+    font-size: var(--font-size--p);
+    color: var(--white-100);
+
+    background-color: var(--brand-color);
+
+}
+
+#manga_games_industry_container .list_container .highlighted_container {
+
+    position: relative;
+    min-height: 260px;
+
+    border-radius: 4px 4px 0 0;
+
+    overflow: hidden;
+
+}
+
+.image_container img {
+
+    object-fit: cover;
+
+}
+
+#manga_games_industry_container .list_container .highlighted_container .highlight_title {
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    background-image: linear-gradient(transparent, rgba(24 24 24 / 0.5) 43%)
+}
+
+#manga_games_industry_container .list_container .highlighted_container .highlight_title h2,
+#manga_games_industry_container .list_container .highlighted_container .highlight_title>a {
+    position: relative;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+}
+
+#manga_games_industry_container .list_container .highlighted_container .highlight_title h2 a {
+    color: var(--white-100);
+    width: 92%;
+}
+
+#manga_games_industry_container .item_container {
+
+    display: grid;
+    grid-template-columns: 35% 1fr;
+    gap: 16px;
+
+}
+
+#manga_games_industry_container .item_container .image_container {
+    position: relative;
+
+    aspect-ratio: 16/13;
+
+    border-radius: 4px;
+
+    overflow: hidden;
+}
+
+#manga_games_industry_container .item_container .item_title_container {
+
+    max-height: fit-content;
+    margin: auto;
+
+}
+
+#manga_games_industry_container .item_container .item_title_container small {
+    margin-top: 4px;
+
+    display: flex;
+    gap: 0 8px;
+    align-items: center;
+
+    font-weight: 300;
+    color: var(--white-50);
+}

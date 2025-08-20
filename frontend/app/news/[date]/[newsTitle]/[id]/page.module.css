@@ -1,0 +1,138 @@
+#container {
+
+    margin-top: 32px;
+    margin-bottom: 32px;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: grid;
+
+    width: 96%;
+
+    max-width: var(--breakpoint-sm);
+
+}
+
+@media((min-width: 768px)) {
+    #container {
+        max-width: var(--breakpoint-md);
+    }
+}
+
+@media((min-width: 1020px)) {
+    #container {
+        max-width: var(--breakpoint-xl);
+        gap: 32px;
+        grid-template-columns: 3fr 1fr;
+    }
+}
+
+@media((min-width: 1480px)) {
+    #container {
+
+        width: auto;
+        max-width: var(--breakpoint-xxl);
+
+    }
+}
+
+#heading_container h1 {
+
+    font-family: var(--font-family-sans-sarif);
+    color: var(--white-100);
+}
+
+#img_intro_container {
+
+    margin: 32px 0;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+
+    gap: 16px;
+
+}
+
+@media((min-width: 440px)) {
+    #img_intro_container {
+        grid-template-columns: 120px 1fr;
+    }
+}
+
+#img_container {
+
+    overflow: hidden;
+    border-radius: 4px;
+
+    position: relative;
+
+    aspect-ratio: 9/12;
+
+}
+
+#img_container img {
+    object-fit: cover;
+}
+
+#img_intro_container small {
+
+    padding: 16px 32px;
+
+    background-color: var(--brand-color);
+
+    font-size: var(--font-size--p);
+    font-weight: 800;
+
+    color: var(--white-100);
+
+}
+
+#main_text_container p {
+
+    color: var(--white-100);
+
+    line-height: 1.5;
+
+    font-family: var(--font-family-sans-sarif);
+    font-weight: 300;
+    font-size: calc(var(--font-size--p) + 1px);
+
+}
+
+#footer_container {
+
+    margin: 32px 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+
+}
+
+#footer_container small {
+
+    color: var(--white-100);
+    font-weight: 300;
+
+}
+
+#footer_container small a {
+
+    color: var(--brand-color);
+
+}
+
+#footer_container small a:hover {
+
+    text-decoration: underline;
+
+}
+
+/* OTHER NEWS */
+#other_news_container>ul>li:not(:last-child) {
+
+    border-bottom: 1px solid var(--white-50);
+
+}

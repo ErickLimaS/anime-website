@@ -1,0 +1,34 @@
+.container {
+
+    display: flex;
+    align-items: center;
+    gap: 0 8px;
+
+}
+
+.container>svg {
+    transform: scale(1.2);
+    fill: #ffe234;
+}
+
+.source {
+
+    transform: scale(1.2);
+    border-radius: 50%;
+    padding: 6px;
+
+    margin-right: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-size: var(--font-size--small-1);
+
+}
+
+.rating_on_line {
+
+    font-size: var(--font-size--h5);
+
+}

@@ -1,0 +1,577 @@
+#backdrop {
+
+    z-index: 100;
+
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#modal {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px 0;
+
+    width: 100%;
+
+    max-width: 500px;
+
+    height: 100vh;
+
+    overflow-y: auto;
+
+    background-color: var(--white-100);
+
+    box-shadow: 0px 0px 3px var(--black-100);
+
+}
+
+@media(min-width:700px) {
+    #modal {
+        border-radius: 8px;
+
+        height: auto;
+        min-height: 500px;
+        max-height: 80vh;
+
+        width: 96%;
+    }
+}
+
+#modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+#modal::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 8px var(--black-05);
+    border-radius: 10px;
+}
+
+#modal::-webkit-scrollbar-thumb {
+    background: var(--black-50);
+    border-radius: 6px;
+}
+
+#modal .settings_heading {
+
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    background-color: var(--white-100);
+
+    padding: 24px 24px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+#modal .settings_heading h2 {
+
+    font-size: var(--font-size--p);
+    font-weight: 600;
+    color: var(--black-100);
+
+}
+
+#modal #close_menu_btn {
+
+    height: 32px;
+    width: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 0;
+
+}
+
+#modal #close_menu_btn svg {
+    transform: scale(2);
+    fill: var(--brand-color);
+}
+
+#modal form {
+
+    padding: 0 24px;
+
+    display: flex;
+    gap: 62px 0;
+    flex-direction: column;
+
+}
+
+.group_container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 28px 0;
+
+}
+
+#modal form h5 {
+
+    display: flex;
+    gap: 8px;
+
+    font-family: var(--font-family-sans-serif);
+
+    padding: 12px 16px;
+
+    border-radius: 8px;
+
+    background-color: var(--brand-color);
+
+    color: var(--white-100);
+
+}
+
+#modal form h5 svg {
+    transform: scale(1.25);
+}
+
+#modal form h5:last-child {
+
+    color: var(--error);
+
+}
+
+/* ANONYMOUS DISCLAIMER */
+#anonymous_disclaimer_container {
+
+    border: 2px solid var(--brand-color);
+    border-radius: 8px;
+
+    padding: 16px 8px;
+
+    margin: 0 24px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px 0;
+
+}
+
+#anonymous_disclaimer_container h5 {
+
+    color: var(--brand-color);
+    font-weight: 600;
+
+    border-bottom: 2px solid;
+
+}
+
+#modal form .user_acc_info_container {
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+
+}
+
+@media(min-width: 400px) {
+    #modal form .user_acc_info_container {
+
+        grid-template-columns: minmax(90px, 1fr) 3fr;
+        gap: 0 8px;
+
+    }
+}
+
+@media(min-width: 520px) {
+    #modal form .user_acc_info_container {
+
+        grid-template-columns: minmax(140px, 1fr) 3fr;
+
+    }
+}
+
+#modal form .user_acc_info_container #img_container {
+
+    cursor: pointer;
+
+    position: relative;
+    top: 0;
+
+    aspect-ratio: 1;
+
+    border-radius: 8px;
+    overflow: hidden;
+
+}
+
+#modal form .user_acc_info_container #img_container img {
+    object-fit: cover;
+}
+
+#modal form .user_acc_info_container #img_container::after {
+
+    transition: all ease-in-out 200ms;
+}
+
+#modal form .user_acc_info_container #img_container[data-disabled=undefined]:hover::after {
+
+    content: "Change Image";
+    display: flex;
+
+    text-align: center;
+
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(var(--black-25), var(--black-25));
+    color: var(--white-100);
+
+    z-index: 2;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#modal form .user_acc_info_container #img_container[data-disabled=undefined]:hover img {
+    filter: brightness(0.2);
+}
+
+/* IMAGES PANEL CONTAINER */
+#imgs_panel_container {
+
+    max-height: 400px;
+    overflow: auto;
+
+    padding: 8px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+
+    background-color: var(--black-05);
+
+    border-radius: 8px;
+
+}
+
+#imgs_panel_container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#imgs_panel_container::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 8px var(--black-05);
+    border-radius: 10px;
+}
+
+#imgs_panel_container::-webkit-scrollbar-thumb {
+    background: var(--black-50);
+    border-radius: 6px;
+}
+
+@media(min-width: 480px) {
+    #imgs_panel_container {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+#imgs_panel_container .img_checkbox {
+
+    position: relative;
+    aspect-ratio: 1/1;
+
+    overflow: hidden;
+
+}
+
+#imgs_panel_container .img_checkbox img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#imgs_panel_container .img_checkbox input {
+
+    border: 4px solid transparent;
+
+    position: relative;
+
+    border-radius: 50%;
+
+    background: rgba(40, 40, 40, 0.2);
+    color: black;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    z-index: 1;
+
+    width: 100%;
+    height: 100%;
+
+}
+
+#imgs_panel_container .img_checkbox input:checked {
+
+    border: 4px solid var(--brand-color);
+
+}
+
+/*  */
+#modal form label {
+
+    display: flex;
+    flex-direction: column;
+
+
+}
+
+#modal form label select,
+#modal form label input {
+
+    margin-top: 8px;
+
+    font-size: var(--font-size--p);
+
+    box-shadow: inset 0px 0px 3px var(--black-25);
+
+    background-color: var(--black-05);
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+    border: 1px solid transparent;
+
+}
+
+#modal form select:focus,
+#modal form input:focus {
+
+    outline-width: 0;
+    border: 1px solid var(--brand-color);
+
+}
+
+
+#modal form .btns_container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px 0;
+
+}
+
+#modal form button:not([type="submit"]) {
+
+    transition: all ease-in-out 150ms;
+
+
+    box-shadow: inset 0px 0px 3px var(--black-25);
+
+    background-color: var(--black-05);
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+    border: 1px solid transparent;
+
+}
+
+#modal form label>button:not([type="submit"])[data-active=true] {
+
+    background-color: var(--error);
+    color: var(--white-100);
+
+}
+
+#modal form label>button:not([type="submit"]):hover {
+
+    background-color: var(--error);
+    color: var(--white-100);
+
+}
+
+#modal form label>button:focus {
+
+    outline-width: 0;
+    border: 1px solid var(--brand-color);
+
+}
+
+/* CHECKBOX */
+#modal .checkbox_container {
+
+    grid-template-columns: 60px 1fr;
+    display: grid;
+    gap: 16px;
+    align-items: center;
+
+}
+
+#modal .checkbox_container p {
+
+    font-weight: 500;
+
+}
+
+#modal .checkbox_container label {
+
+    position: relative;
+    display: inline-block;
+    height: 34px;
+    width: 60px;
+
+    background-color: var(--black-05);
+
+    border-radius: 16px;
+
+}
+
+#modal .checkbox_container input {
+
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+}
+
+#modal .checkbox_container span {
+
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    border-radius: 16px;
+    box-shadow: inset 0px 0px 3px 0px var(--black-50);
+
+}
+
+#modal .checkbox_container span::before {
+
+    transition: all ease-in-out 100ms;
+
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+
+    box-shadow: 0px 0px 3px 0px var(--black-50);
+    border-radius: 50%;
+
+    background-color: var(--black-75);
+
+}
+
+#modal .checkbox_container input:checked+span::before {
+
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+
+    background-color: var(--brand-color);
+}
+
+#modal p {
+
+    font-size: calc(var(--font-size--small-1) + 2px);
+
+}
+
+/* DELETE */
+#modal form .confirm_delete_container {
+
+    text-align: center;
+
+}
+
+#modal form .confirm_delete_container p {
+
+    margin-bottom: 8px;
+
+}
+
+#modal form .confirm_delete_container button {
+
+    margin: 0 8px;
+
+}
+
+#modal form .confirm_delete_container button:nth-child(2) {
+
+    background-color: var(--white-100);
+    color: var(--brand-color);
+    border-color: var(--brand-color);
+
+}
+
+#modal form .confirm_delete_container button:last-child {
+
+    background-color: var(--error);
+    color: var(--white-100);
+
+}
+
+#modal form .confirm_delete_container button:hover {
+
+    filter: brightness(90%);
+
+}
+
+#modal form button[type="submit"] {
+
+    margin-bottom: 72px;
+
+    transition: all ease-in-out 150ms;
+
+    width: 100%;
+
+    box-shadow: inset 0px 0px 3px var(--black-25);
+
+    background-color: transparent;
+    color: var(--brand-color);
+    font-weight: 600;
+
+    padding: 16px 16px;
+
+    border-radius: 8px;
+    border: 1px solid var(--brand-color);
+
+}
+
+#modal form button[type="submit"][data-change-success=true] {
+
+    background-color: #2e882b;
+    color: var(--white-100);
+    border: 1px solid transparent;
+
+}
+
+#modal form button[type="submit"]:not(:disabled):hover {
+
+    filter: brightness(65%);
+
+}
+
+#modal form button[type="submit"][disabled] {
+
+    cursor: default;
+
+    border-color: var(--brand-color);
+
+    background-color: transparent;
+
+}

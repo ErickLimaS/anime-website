@@ -1,0 +1,46 @@
+/* KEEP WATCHING */
+#keep_watching_container {
+    width: 96%;
+
+    margin: auto;
+
+    margin-bottom: 56px;
+
+    padding-top: 32px;
+
+    justify-items: center;
+    justify-content: center;
+
+}
+
+@media((min-width: 576px) and (max-width: 768px)) {
+    #keep_watching_container {
+        width: var(--breakpoint-sm);
+    }
+}
+
+@media((min-width: 992px) and (max-width: 1200px)) {
+    #keep_watching_container {
+        width: var(--breakpoint-md);
+    }
+}
+
+@media((min-width: 1201px) and (max-width: 1400px)) {
+    #keep_watching_container {
+        width: var(--breakpoint-xl);
+    }
+}
+
+@media((min-width: 1441px)) {
+    #keep_watching_container {
+        width: var(--breakpoint-xxl);
+    }
+}
+
+#keep_watching_container>h2 {
+    font-size: var(--font-size--h3);
+
+    color: var(--white-100);
+
+    margin-bottom: 24px;
+}
