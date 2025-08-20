@@ -2,10 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./component.module.css";
 import Link from "next/link";
-import {
-  MangadexMangaChapters,
-  MangadexMangaInfo,
-} from "@/app/ts/interfaces/mangadex";
+import { MangadexMangaChapters } from "@/app/ts/interfaces/mangadex";
 import BookSvg from "@/public/assets/book.svg";
 import PaginationButtons from "@/app/media/[id]/components/PaginationButtons";
 import manga from "@/app/api/consumet/consumetManga";
@@ -129,9 +126,9 @@ function MangaChaptersContainer({
       mediaInfo.title.romaji
     ).toLowerCase();
 
-    let mangaInfo = (await manga.getInfoFromThisMedia({
+    let mangaInfo = await manga.getMangaChapters({
       id: mangaTitleUrlFrindly,
-    })) as MangadexMangaInfo;
+    });
 
     if (!mangaInfo) {
       const mangaClosestResult = await getClosestMangaResultByTitle(
@@ -139,9 +136,9 @@ function MangaChaptersContainer({
         mediaInfo
       );
 
-      mangaInfo = (await manga.getInfoFromThisMedia({
+      mangaInfo = await manga.getMangaChapters({
         id: mangaClosestResult as string,
-      })) as MangadexMangaInfo;
+      });
 
       if (!mangaInfo) {
         setIsLoading(false);
@@ -152,19 +149,17 @@ function MangaChaptersContainer({
       }
     }
 
-    setChaptersList(mangaInfo.chapters.filter((item) => item.pages != 0));
+    setChaptersList(mangaInfo.filter((item) => item.pages != 0));
 
     const endOffset = itemOffset + rangeChaptersPerPage;
 
     setCurrMangasList(
-      mangaInfo.chapters
-        .filter((item) => item.pages != 0)
-        .slice(itemOffset, endOffset)
+      mangaInfo.filter((item) => item.pages != 0).slice(itemOffset, endOffset)
     );
 
     setTotalNumberPages(
       Math.ceil(
-        mangaInfo.chapters.filter((item) => item.pages != 0).length /
+        mangaInfo.filter((item) => item.pages != 0).length /
           rangeChaptersPerPage
       )
     );
@@ -239,8 +234,8 @@ function MangaChaptersContainer({
           {/* SHOWS WHEN THERES NO RESULTS  */}
           {!isLoading &&
             (chaptersList.length == 0 || currMangasList == null) && (
-            <ErrorPanel errorText={<>No chapters available.</>} />
-          )}
+              <ErrorPanel errorText={<>No chapters available.</>} />
+            )}
         </motion.ol>
       </AnimatePresence>
 

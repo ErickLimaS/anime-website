@@ -1,82 +1,74 @@
 import {
-  MangadexMangaInfo,
+  MangadexMangaChapters,
   MangadexMangaPages,
   MangadexMangaSearchResult,
 } from "@/app/ts/interfaces/mangadex";
-import Axios from "axios";
-import axiosRetry from "axios-retry";
-import { cache } from "react";
+import axios from "axios";
 
-const CONSUMET_API_URL = process.env.NEXT_PUBLIC_CONSUMET_API_URL;
-
-// HANDLES SERVER ERRORS, most of time when server was not running due to be using the Free Tier
-axiosRetry(Axios, {
-  retries: 3,
-  retryDelay: (retryAttempt) => retryAttempt * 1500,
-  retryCondition: (error) =>
-    error.response?.status == 500 || error.response?.status == 503,
-  onRetry: (retryNumber) =>
-    console.log(
-      `retry: ${retryNumber} ${retryNumber == 3 ? " - Last Attempt" : ""}`
-    ),
-});
+const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   // SEARCH MANGA BY QUERY/TITLE
-  searchMedia: cache(
-    async ({ query, page }: { query: string; page?: number }) => {
-      try {
-        const { data } = await Axios({
-          url: `${CONSUMET_API_URL}/manga/mangadex/${query}${page ? `?page=${page} ` : ""}`,
-          method: "GET",
-        });
+  searchMedia: async ({ query, page }: { query: string; page?: number }) => {
+    try {
+      const data: MangadexMangaSearchResult[] = await axios({
+        url: `${NEXT_PUBLIC_BACKEND_URL}/search/manga/consumet/mangadex/${query}${page ? `?page=${page} ` : ""}`,
+        method: "GET",
+      }).then((res) => res.data.results);
 
-        return data.results as MangadexMangaSearchResult[];
-      } catch (error) {
-        console.log(error);
-
-        return null;
+      if (!data || data.length === 0) {
+        throw new Error("No results found");
       }
+
+      return data;
+    } catch (error) {
+      console.error("Mangadex: " + error);
     }
-  ),
+  },
 
   // GET MANGA INFO
-  getInfoFromThisMedia: cache(async ({ id }: { id: string | number }) => {
+  getMangaChapters: async ({ id }: { id: string | number }) => {
     try {
-      const { data } = await Axios({
-        url: `${CONSUMET_API_URL}/manga/mangadex/info/${id}`,
+      const data: MangadexMangaChapters[] = await axios({
+        url: `${NEXT_PUBLIC_BACKEND_URL}/chapters/consumet/mangadex/all?id=${id}`,
         method: "GET",
-      });
+      }).then((res) => res.data.results);
 
       // sort ASC chapters
-      const dataSorted = (data as MangadexMangaInfo).chapters.sort(
+      const dataSorted = data.sort(
         (a, b) => Number(a.chapterNumber) - Number(b.chapterNumber)
       );
 
-      data.chapters = dataSorted;
+      if (!dataSorted || dataSorted.length === 0) {
+        throw new Error("No results found");
+      }
 
-      return data as MangadexMangaInfo;
+      return dataSorted;
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       return null;
     }
-  }),
+  },
 
   // GET PAGES FOR MANGA CHAPTER
-  getChapterPages: cache(async ({ chapterId }: { chapterId: string }) => {
+  getChapterPages: async ({ chapterId }: { chapterId: string }) => {
     try {
-      const { data } = await Axios({
-        url: `${CONSUMET_API_URL}/manga/mangadex/read/${chapterId}`,
+      const data: MangadexMangaPages[] = await axios({
+        url: `${NEXT_PUBLIC_BACKEND_URL}/chapters/consumet/mangadex/chapter?id=${chapterId}`,
         method: "GET",
-      });
+      }).then((res) => res.data.results);
 
-      return data as MangadexMangaPages[];
+      if (!data || data.length === 0) {
+        throw new Error("No results found");
+      }
+
+      return data;
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       return null;
     }
-  }),
+  },
 };
