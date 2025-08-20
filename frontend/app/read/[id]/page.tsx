@@ -2,11 +2,7 @@ import React from "react";
 import styles from "./page.module.css";
 import anilist from "@/app/api/anilist/anilistMedias";
 import * as MediaCardExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
-import {
-  MangadexMangaChapters,
-  MangadexMangaInfo,
-  MangadexMangaPages,
-} from "@/app/ts/interfaces/mangadex";
+import { MangadexMangaChapters } from "@/app/ts/interfaces/mangadex";
 import manga from "@/app/api/consumet/consumetManga";
 import {
   MediaData,
@@ -16,7 +12,6 @@ import ChaptersPages from "./components/ChaptersPages/index";
 import ChaptersListContainer from "./components/ChaptersListContainer";
 import { getClosestMangaResultByTitle } from "@/app/lib/dataFetch/optimizedFetchMangaOptions";
 import { stringToUrlFriendly } from "@/app/lib/convertStrings";
-import { FetchEpisodeError } from "@/app/components/MediaFetchErrorPage";
 
 export const revalidate = 1800; // revalidate cached data every 30 minutes
 
@@ -59,19 +54,18 @@ async function ReadChapter({
 
   let currChapterInfo: MangadexMangaChapters | undefined = undefined;
   let allAvailableChaptersList: MangadexMangaChapters[] | undefined = undefined;
-  let hadFetchError = false;
 
-  const currMangaChapters = (await manga.getChapterPages({
+  const currMangaChapters = await manga.getChapterPages({
     chapterId: searchParams.q,
-  })) as MangadexMangaPages[];
+  });
 
   const mangaTitleUrlFrindly = stringToUrlFriendly(
     mediaInfo.title.userPreferred
   ).toLowerCase();
 
-  let mangaInfo = (await manga.getInfoFromThisMedia({
+  let mangaInfo = await manga.getMangaChapters({
     id: mangaTitleUrlFrindly,
-  })) as MangadexMangaInfo;
+  });
 
   if (!mangaInfo) {
     const mangaClosestResult = await getClosestMangaResultByTitle(
@@ -79,32 +73,26 @@ async function ReadChapter({
       mediaInfo
     );
 
-    mangaInfo = (await manga.getInfoFromThisMedia({
+    mangaInfo = await manga.getMangaChapters({
       id: mangaClosestResult as string,
-    })) as MangadexMangaInfo;
+    });
 
-    if (!mangaInfo) hadFetchError = true;
+    if (!mangaInfo) {
+      throw new Error(`No chapters found for ${mediaInfo.title.userPreferred}`);
+    }
   }
 
-  if (hadFetchError)
-    return (
-      <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
-    );
-
-  allAvailableChaptersList = mangaInfo.chapters.filter(
-    (item) => item.pages != 0
-  );
+  allAvailableChaptersList = mangaInfo.filter((item) => item.pages != 0);
 
   currChapterInfo = allAvailableChaptersList.find(
     (item) => item.id == searchParams.q
   );
 
-  if (!currMangaChapters || !allAvailableChaptersList) hadFetchError = true;
-
-  if (hadFetchError)
-    return (
-      <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
+  if (!currMangaChapters || !allAvailableChaptersList) {
+    throw new Error(
+      `No pages found for chapter ${searchParams.chapter} - ${mediaInfo.title.userPreferred}`
     );
+  }
 
   return (
     <main id={styles.container}>
