@@ -1,17 +1,16 @@
 import React from "react";
 import styles from "./page.module.css";
-import anilist from "@/app/api/anilist/anilistMedias";
 import * as MediaCardExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
 import { MangadexMangaChapters } from "@/app/ts/interfaces/mangadex";
 import manga from "@/app/api/consumet/consumetManga";
 import {
   MediaData,
-  MediaDataFullInfo,
 } from "../../ts/interfaces/anilistMediaData";
 import ChaptersPages from "./components/ChaptersPages/index";
 import ChaptersListContainer from "./components/ChaptersListContainer";
 import { getClosestMangaResultByTitle } from "@/app/lib/dataFetch/optimizedFetchMangaOptions";
 import { stringToUrlFriendly } from "@/app/lib/convertStrings";
+import { getMediaInfo } from "@/app/api/mediaInfo/anilist/mediaInfo";
 
 export const revalidate = 1800; // revalidate cached data every 30 minutes
 
@@ -22,9 +21,9 @@ export async function generateMetadata({
   params: { id: number }; // ANILIST MANGA ID
   searchParams: { chapter: string; source: string; q: string }; // EPISODE NUMBER, SOURCE, EPISODE ID
 }) {
-  const mediaInfo = (await anilist.getMediaInfo({
+  const mediaInfo = await getMediaInfo({
     id: params.id,
-  })) as MediaData;
+  });
 
   return {
     title: !mediaInfo
@@ -48,9 +47,9 @@ async function ReadChapter({
     page: string;
   }; // EPISODE NUMBER, SOURCE, EPISODE ID, LAST PAGE
 }) {
-  const mediaInfo = (await anilist.getMediaInfo({
+  const mediaInfo = await getMediaInfo({
     id: params.id,
-  })) as MediaDataFullInfo;
+  });
 
   let currChapterInfo: MangadexMangaChapters | undefined = undefined;
   let allAvailableChaptersList: MangadexMangaChapters[] | undefined = undefined;

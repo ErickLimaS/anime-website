@@ -60,13 +60,13 @@ function NewestMediaSection({
     return userAdultContentPreference;
   }
 
-  const handleParameterToFetchNewData: (parameter: 1 | 7 | 30) => void = async (
-    parameter: 1 | 7 | 30
+  const handleParameterToFetchNewData: (parameter: 0 | 7 | 30) => void = async (
+    parameter: 0 | 7 | 30
   ) => {
     fetchMediaByDaysRange(parameter);
   };
 
-  async function fetchMediaByDaysRange(days: 1 | 7 | 30) {
+  async function fetchMediaByDaysRange(days: 0 | 7 | 30) {
     setIsLoading(true);
 
     const isAdultContentAllowed = await getUserPreference();

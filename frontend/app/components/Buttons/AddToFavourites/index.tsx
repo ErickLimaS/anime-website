@@ -61,7 +61,7 @@ export function Button({
     const favouriteMediaData = {
       id: mediaInfo.id,
       title: {
-        romaji: mediaInfo.title.romaji,
+        romaji: typeof mediaInfo.title === 'string' ? mediaInfo.title : mediaInfo.title.romaji,
       },
       format: mediaInfo.format,
       description: mediaInfo.description,
@@ -119,10 +119,10 @@ export function Button({
       title={
         wasAddedToFavourites
           ? `Remove ${
-            mediaInfo.title && mediaInfo.title?.userPreferred
+            typeof mediaInfo.title === 'string' ? mediaInfo.title : mediaInfo.title?.userPreferred
           } from Favourites`
           : `Add ${
-            mediaInfo.title && mediaInfo.title?.userPreferred
+            typeof mediaInfo.title === 'string' ? mediaInfo.title : mediaInfo.title?.userPreferred
           } To Favourites`
       }
     >

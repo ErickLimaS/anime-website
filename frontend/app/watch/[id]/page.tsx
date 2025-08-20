@@ -1,10 +1,6 @@
 import React from "react";
 import styles from "./page.module.css";
-import {
-  MediaData,
-  MediaDataFullInfo,
-} from "../../ts/interfaces/anilistMediaData";
-import anilist from "@/app/api/anilist/anilistMedias";
+import { MediaData } from "../../ts/interfaces/anilistMediaData";
 import * as MediaCardExpanded from "@/app/components/MediaCards/MediaInfoExpandedWithCover";
 import {
   EpisodeLinksGoGoAnime,
@@ -23,11 +19,11 @@ import {
 import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import { getMediaInfoOnIMDB } from "@/app/api/consumet/consumetImdb";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
-import { FetchEpisodeError } from "@/app/components/MediaFetchErrorPage";
 import { cookies } from "next/headers";
 import { AlertWrongMediaVideoOnMediaId } from "./components/AlertContainer";
 import { consumetEpisodeByEpisodeId } from "@/app/api/episodes/consumet/episodesInfo";
 import { getAniwatchEpisodeByEpisodeId } from "@/app/api/episodes/aniwatch/episodesInfo";
+import { getMediaInfo } from "@/app/api/mediaInfo/anilist/mediaInfo";
 
 export const revalidate = 900; // revalidate cached data every 15 minutes
 
@@ -44,10 +40,10 @@ export async function generateMetadata({
     ? JSON.parse(accessTokenCookie).accessToken
     : undefined;
 
-  const mediaInfo = (await anilist.getMediaInfo({
+  const mediaInfo = await getMediaInfo({
     id: params.id,
     accessToken: userAuthorization,
-  })) as MediaData;
+  });
 
   let pageTitle = "";
 
@@ -96,24 +92,20 @@ export default async function WatchEpisode({
     ? JSON.parse(accessTokenCookie).accessToken
     : undefined;
 
-  const mediaInfo = (await anilist.getMediaInfo({
+  const mediaInfo = await getMediaInfo({
     id: params.id,
     accessToken: userAuthorization,
-  })) as MediaDataFullInfo;
+  });
 
   // ACTES AS DEFAULT VALUE FOR PAGE PROPS
   if (Object.keys(searchParams).length === 0)
     searchParams = { episode: "1", source: "aniwatch", q: "", t: "0" };
 
-  let hadFetchError = false;
   let videoIdDoesntMatch = false;
 
-  if (!mediaInfo) hadFetchError = true;
-
-  if (hadFetchError)
-    return (
-      <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
-    );
+  if (!mediaInfo) {
+    throw new Error("Media info not found");
+  }
 
   let episodeDataFetched:
     | EpisodeLinksGoGoAnime
@@ -146,15 +138,13 @@ export default async function WatchEpisode({
   };
 
   async function getGogoanimeStreamingLink() {
-    episodeDataFetched = await consumetEpisodeByEpisodeId({
+    episodeDataFetched = (await consumetEpisodeByEpisodeId({
       episodeId: searchParams.q,
       // useAlternateLinkOption: true,
-    });
+    })) as EpisodeLinksGoGoAnime;
 
     if (!episodeDataFetched) {
-      hadFetchError = true;
-
-      return;
+      throw new Error("Episode data not found on Gogoanime");
     }
 
     // Episode link source
@@ -185,16 +175,14 @@ export default async function WatchEpisode({
     }
 
     // fetch episode data
-    episodeDataFetched = await getAniwatchEpisodeByEpisodeId({
+    episodeDataFetched = (await getAniwatchEpisodeByEpisodeId({
       episodeId: searchParams.q,
       category: searchParams.dub == "true" ? "dub" : "sub",
-    });
+    })) as EpisodeLinksAnimeWatch;
 
     if (!episodeDataFetched) {
-      hadFetchError = true;
+      throw new Error("Episode data not found on Aniwatch");
     }
-
-    if (!episodeDataFetched) hadFetchError = true;
 
     // fetch episode link source
     videoUrlSrc = episodeDataFetched.sources[0].url;
@@ -232,7 +220,7 @@ export default async function WatchEpisode({
         break;
 
       default:
-        hadFetchError = true;
+        throw new Error("Episode data not found");
     }
   };
 
@@ -281,14 +269,8 @@ export default async function WatchEpisode({
     }
   };
 
-  if (
-    hadFetchError ||
-    videoUrlSrc == undefined ||
-    episodeDataFetched == undefined
-  ) {
-    return (
-      <FetchEpisodeError mediaId={params.id} searchParams={searchParams} />
-    );
+  if (videoUrlSrc == undefined || episodeDataFetched == undefined) {
+    throw new Error("Episode data not found on Gogoanime");
   }
 
   if (videoIdDoesntMatch && searchParams?.alert == "true") {

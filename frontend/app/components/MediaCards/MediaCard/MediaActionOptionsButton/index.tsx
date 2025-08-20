@@ -42,7 +42,7 @@ export default function MediaActionOptionsButton({
             setIsPanelOpen={setIsPanelOpen}
             isFavourite={mediaInfo?.isFavourite || false}
             mediaListEntryInfo={mediaInfo.mediaListEntry || null}
-            mediaTitle={mediaInfo.title}
+            mediaTitle={mediaInfo.title as MediaData["title"]}
             mediaInfo={mediaInfo}
             amountWatchedOrRead={0}
           />

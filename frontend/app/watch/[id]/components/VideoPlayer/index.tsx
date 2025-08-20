@@ -388,7 +388,7 @@ export default function VideoPlayer({
         nextEpisode = await consumetEpisodeByEpisodeId({
           episodeId: nextEpisodeId,
           // useAlternateLinkOption: true,
-        });
+        }) as EpisodeLinksGoGoAnime;
 
         const nextEpisodeVideoUrl = nextEpisode!.sources.find(
           (item) => item.quality == "default"
@@ -407,7 +407,7 @@ export default function VideoPlayer({
         nextEpisode = await getAniwatchEpisodeByEpisodeId({
           episodeId: nextEpisodeId,
           category: searchParams?.get("dub") == "true" ? "dub" : "sub",
-        });
+        }) as EpisodeLinksAnimeWatch;
 
         setNextEpisodeInfo({
           id: nextEpisodeId,

@@ -108,7 +108,7 @@ export default function OptionsPanel({
     const mediaData = {
       id: mediaInfo.id,
       title: {
-        romaji: mediaInfo.title.romaji,
+        romaji: typeof mediaInfo.title === 'string' ? mediaInfo.title : mediaInfo.title.romaji,
       },
       format: mediaInfo.format,
       description: mediaInfo.description,
