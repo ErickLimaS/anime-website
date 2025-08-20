@@ -27,7 +27,7 @@ If the Vercel one is blocked by payment, try this one (it takes up to 2 minutes 
   - [Authentication](#authentication)
   - [Collections and Documents](#collections-and-documents)
     - [Users](#users)
-    - [Comments](#[DEPRECATED]comments)
+    - [Comments](#deprecatedcomments)
     - [Notifications](#notifications)
 - [Previews/Screenshots](#camera-previewscreenshots)
 
@@ -77,13 +77,16 @@ Front-end:
 - `Framer Motion`
 - `Swiper`
 - `Anilist API`
-- `Consumet API`
-- `Aniwatch API`
 
 Back-End:
 
+- `Redis`
+- `Node`
+- `Express`
+- `Axios`
 - `Firebase: Firestore Database`
-- `Next.js (API) Route Handler`
+- `Consumet API`
+- `Aniwatch API`
 
 ## :computer: How Can I Run It?
 
@@ -93,120 +96,34 @@ Back-End:
   git clone https://github.com/ErickLimaS/anime-website.git
 ```
 
-2. Run `npm install` on your CMD to get all dependencies
+2. This project has 2 folders: `frontend` and `backend`!
 
-```javascript
-npm install
-```
+> [!IMPORTANT]
+> You will need to `read` the 2 README Files inside these folder for better understanding!
 
-3. Now you will need to create a `.env.local` file or fill the `.env.example` on the `project root folder`, and follow the instructions bellow.
+<dl><dd>
+<a href='https://github.com/ErickLimaS/anime-website/tree/master/frontend' padding=>Frontend Readme</a>
+</dl></dd>
 
-   - **External APIs** (go to these repos, host your own instance and save the URL to use on `.env.local`):
-     - <a href='https://github.com/consumet/api.consumet.org' target="_blank" rel="noreferrer">Consumet API</a>
-     - <a href='https://github.com/ghoshRitesh12/aniwatch-api' target="_blank" rel="noreferrer">Aniwatch API</a>
-   - **Anilist Login** (OAuth):
-     - You need to first login on your account on Anilist.
-     - Then go to <a href='https://anilist.co/settings/developer'>Developer Page</a> on the Settings and click "Create New Client".
-     - Now you need to add the name of your forked project/website and the URL to redirect when user accept the login, then hit "Save".
-     - Store the Client ID and Secret on your ".env.local".
-     - TIP: Create 2 of these, one for the dev env and other to production.
-   - **Firebase** (to use Google, Email and Anonymous Login and the Firestore Database):
+<dl><dd>
+<a href='https://github.com/ErickLimaS/anime-website/tree/master/backend'>Backend Readme</a>
+</dl></dd>
 
-     - Create a project for this fork/clone you did on <a href='https://console.firebase.google.com/' target="_blank" rel="noreferrer">Firebase</a>.
-     - All the Firebase info needed on `.env.local` **can be found when you create a new project**.
-     - **IMPORTANT**: Make Sure to ALLOW your Hosted Website Domain on Firebase Authentication!
-     - **IMPORTANT**: You'll need to **change the Rules** on **Firestore Database**. There is 2 options depending of what login methods you will use:
+3. Assuming you read the files and setted everything up...
 
-       - With **ALL** Login Methods available:
-
-         ```javascript
-            rules_version = '2';
-
-            service cloud.firestore {
-              match /databases/{database}/documents {
-
-                match /{document=**} {
-                  // will allow any write and read operation. No conditions due to Anilist OAuth Login.
-                  allow read, write: if true;
-                }
-
-              }
-            }
-         ```
-
-       - With **ONLY** Firebase Login Methods (no Anilist Login):
-
-         ```javascript
-           rules_version = '2';
-
-           service cloud.firestore {
-             match /databases/{database}/documents {
-
-               match /users/{document=**} {
-                 // allows only requests if a userUID is available.
-                 allow read, write: request.auth.uid != null;
-               }
-
-               match /comments/{document=**} {
-                 // allows only write request if a userUID is available.
-                 allow read: if true;
-                 allow write: request.auth.uid != null;
-               }
-
-               match /notifications/{document=**} {
-                 // allows only write request if a userUID is available.
-                 allow read: if true;
-                 allow write: request.auth.uid != null;
-               }
-
-             }
-           }
-         ```
-
-   - OPTIONAL: This project uses a JSON file (47 mb) filled with Animes and Mangas data as a offline Database. This repository already has this file, but it might be outdated, so you decide if you want to ignore this step.
-     - Go to <a href='https://github.com/manami-project/anime-offline-database' target="_blank" rel="noreferrer">anime-offline-database</a> and download the JSON file that will be used on only `Search Page` (or you can make some changes and use some API to fetch the data).
-     - With the file downloaded, put it in the `/app/api/animes-database` directory, replacing the previous one.
-
-With all that done, you can follow the pre-made `.env.example` on the root folder or fill the `.env.local` like the example bellow:
-
-```javascript
-// Consumet API
-NEXT_PUBLIC_CONSUMET_API_URL=https://your-hosted-consumet-api-url.com
-
-// Aniwatch API
-NEXT_PUBLIC_ANIWATCH_API_URL=https://your-hosted-aniwatch-api-url.com
-
-// Anilist OAuth Settings
-NEXT_PUBLIC_ANILIST_CLIENT_ID=your-anilist-client-id
-ANILIST_CLIENT_SECRET=your-anilist-secret
-
-// Next.js Route Handler - Make sure to add the pathname "/api/animes-database" bellow
-NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API=https://url-to-where-your-website-is-hosted.com/api/animes-database
-
-// Bellow is the url to use ONLY on Dev Enviroment. You WILL NEED TO CHANGE IT when on hosted mode to the respective url. Look for something like Enviroment Variables to do it.
-NEXT_PUBLIC_WEBSITE_ORIGIN_URL=http://localhost:3000
-
-// Firebase Settings
-NEXT_PUBLIC_FIREBASE_API_KEY=firebase-setting-related-to-this-field
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase-setting-related-to-this-field
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase-setting-related-to-this-field
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=firebase-setting-related-to-this-field
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER=firebase-setting-related-to-this-field
-NEXT_PUBLIC_FIREBASE_APP_ID=firebase-setting-related-to-this-field
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=firebase-setting-related-to-this-field
-NEXT_PUBLIC_FIREBASE_DATABASE_URL=firebase-setting-related-to-this-field
-
-// GOOGLE ANALYTICS: optional
-NEXT_PUBLIC_MEASUREMENT_ID=your-measurement-id
-```
-
-4. Now run `npm run dev` to initialize the website
+Now run `npm run dev` on `frontend` and `nodemon server.js` on `backend` to initialize the website
 
 ```javascript
 npm run dev
 ```
 
-5. That's it! It should be running.
+```javascript
+nodemon server.js
+```
+
+4. That's it! It should be running!
+
+The website runs on http://localhost:3000 as default
 
 ## :books: How Firebase Database is Organized
 
