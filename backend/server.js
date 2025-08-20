@@ -8,6 +8,7 @@ const mediasByParamsRoute = require('./routes/getMediasByParamsRoute');
 const newsRoute = require('./routes/getNews');
 const mediaEpisodesRoute = require('./routes/mediaEpisodesRoute');
 const imdbRoute = require('./routes/imdbRoute');
+const mediaChaptersRoute = require('./routes/mediaChaptersRoute');
 
 const redisClient = redis.createClient();
 
@@ -49,6 +50,7 @@ app.use("/search", searchRoute)
 app.use("/media-info", mediaInfoRoute)
 app.use("/medias", mediasByParamsRoute)
 app.use("/episodes", mediaEpisodesRoute)
+app.use("/chapters", mediaChaptersRoute)
 app.use("/news", newsRoute)
 app.use("/imdb", imdbRoute)
 
