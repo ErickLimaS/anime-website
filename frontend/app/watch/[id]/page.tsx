@@ -349,19 +349,6 @@ export default async function WatchEpisode({
               </p>
             </MediaCardExpanded.Container>
           </div>
-
-          <div className={styles.only_desktop}>
-            <div className={styles.comment_container}>
-              <h2>
-                COMMENTS{" "}
-                {mediaInfo.format != "MOVIE" &&
-                  `FOR EPISODE ${searchParams.episode}`}
-              </h2>
-
-              {/* SHOW ONLY ON DESKTOP */}
-              {/* ADD EPISODE REVIEW */}
-            </div>
-          </div>
         </div>
 
         <div data-format={mediaInfo.format}>
@@ -380,19 +367,6 @@ export default async function WatchEpisode({
               activeEpisodeNumber={Number(searchParams.episode)}
             />
           )}
-
-          {/* ONLY ON MOBILE */}
-          <div className={styles.only_mobile}>
-            <div className={styles.comment_container}>
-              <h2>
-                COMMENTS{" "}
-                {mediaInfo.format != "MOVIE" &&
-                  `FOR EPISODE ${searchParams.episode}`}
-              </h2>
-
-              {/* ADD EPISODE REVIEW */}
-            </div>
-          </div>
         </div>
       </section>
     </main>
