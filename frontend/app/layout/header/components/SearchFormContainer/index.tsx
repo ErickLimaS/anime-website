@@ -38,9 +38,9 @@ function SearchFormContainer() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [searchType, setSearchType] = useState<"json-database" | "anilist">(
-    "json-database"
-  );
+  const [searchType, setSearchType] = useState<
+    "aniwatch" | "consumet" | "json-database" | "anilist"
+  >("json-database");
 
   const [searchResultsList, setSearchResultsList] = useState<
     MediaData[] | MediaOnJSONFile[] | null
@@ -52,26 +52,6 @@ function SearchFormContainer() {
   const [user] = useAuthState(auth);
 
   const anilistUser = useAppSelector((state) => state.UserInfo.value);
-
-  // async function fetchSearchResultsOnInputChange(value: string) {
-  //   if (searchType == "anilist") setSearchResultsList(null);
-
-  //   setSearchType("json-database");
-
-  //   setSearchInputValue(value);
-
-  //   if (value.length <= 2) return setSearchResultsList(null);
-
-  //   setIsLoading(true);
-
-  //   const { data } = await axios.get(
-  //     `${process.env.NEXT_PUBLIC_NEXT_ROUTE_HANDLER_API}?title=${value}`
-  //   );
-
-  //   setSearchResultsList(data.data as MediaDbOffline[]);
-
-  //   setIsLoading(false);
-  // }
 
   async function handleSearchFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -97,7 +77,7 @@ function SearchFormContainer() {
       showAdultContent: isAdultContentAllowed,
     });
 
-    setSearchResultsList(searchResults as MediaData[]);
+    setSearchResultsList(searchResults);
 
     setIsLoading(false);
   }

@@ -107,10 +107,13 @@ export default {
           perPage: 15,
           showAdultContent: showAdultContent == true ? undefined : false,
         },
-      });
+      }).then((res) => res.data.results);
 
       if (!showAdultContent) {
-        return filterMediasWithAdultContent(data, "mediaByFormat");
+        return filterMediasWithAdultContent(
+          data,
+          "mediaByFormat"
+        ) as MediaData[];
       }
 
       return data;
