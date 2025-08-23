@@ -35,6 +35,8 @@ h2.heading_style {
 
 .review_heading img {
 
+    object-fit: cover;
+
     border: 3px solid var(--white-100);
     
     border-radius: 50%;
