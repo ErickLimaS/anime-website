@@ -96,7 +96,7 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
                 return res.status(500).json({ error: "Internal Server Error" });
             });
 
-        // await setRedisKey({ redisClient, key, data: results });
+        await setRedisKey({ redisClient, key, data: results });
 
         return res.status(200).json({
             message: `Results for: ${episodeId.toUpperCase()}`, results: results
