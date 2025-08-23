@@ -12,6 +12,7 @@ import { doc, getDoc, getFirestore } from "firebase/firestore";
 import {
   optimizedFetchOnAniwatch,
   optimizedFetchOnGoGoAnime,
+  optimizedFetchOnZoro,
 } from "@/app/lib/dataFetch/optimizedFetchAnimeOptions";
 import { AnimatePresence, motion } from "framer-motion";
 import { GogoanimeMediaEpisodes } from "@/app/ts/interfaces/gogoanimeData";
@@ -20,6 +21,7 @@ import { useAppSelector } from "@/app/lib/redux/hooks";
 import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
 import DubbedCheckboxButton from "../AnimeEpisodesContainer/components/ActiveDubbButton";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
+import { sourcesAvailable } from "../sourcesAvailable";
 
 export default function PlayBtn({
   mediaId,
@@ -51,11 +53,6 @@ export default function PlayBtn({
   const db = getFirestore(initFirebase());
 
   const router = useRouter();
-
-  const sourceOptions = [
-    { name: "GoGoAnime", value: "gogoanime" },
-    { name: "Aniwatch", value: "aniwatch" },
-  ];
 
   useEffect(() => {
     if (anilistUser || (user && !loading)) checkLastEpisodeWatched();
@@ -91,7 +88,7 @@ export default function PlayBtn({
 
     if (lastEpisodeWatched) return; // Priority for Keep Watching Episodes
 
-    const userPreferredSource = userDoc.get("videoSource") || "gogoanime";
+    const userPreferredSource = userDoc.get("videoSource") || "aniwatch";
 
     const episodesWatchedList = userDoc.get("episodesWatched");
 
@@ -206,7 +203,7 @@ export default function PlayBtn({
 
       if (nextEpisodeAfterLastWatched) {
         setEpisodeId(
-          sourceName == "gogoanime"
+          sourceName == "gogoanime" || "zoro"
             ? (nextEpisodeAfterLastWatched as GogoanimeMediaEpisodes)!.id
             : (nextEpisodeAfterLastWatched as EpisodeAnimeWatch)!.episodeId
         );
@@ -222,16 +219,37 @@ export default function PlayBtn({
       return false;
     }
 
-    async function fetchOnGoGoAnime() {
-      const searchResultsForMedia = await optimizedFetchOnGoGoAnime({
-        textToSearch: mediaTitle,
-        only: "episodes",
-        isDubbed: isDubbedActive,
-      });
+    async function fetchOnConsumet({
+      source,
+    }: {
+      source: "gogoanime" | "zoro";
+    }) {
+      let searchResultsForMedia;
 
-      setSourceName("gogoanime");
+      switch (source) {
+        case "gogoanime":
+          searchResultsForMedia = await optimizedFetchOnGoGoAnime({
+            textToSearch: mediaTitle,
+            only: "episodes",
+            isDubbed: isDubbedActive,
+          });
 
-      return searchResultsForMedia;
+          setSourceName("gogoanime");
+
+          return searchResultsForMedia;
+        case "zoro":
+          searchResultsForMedia = await optimizedFetchOnZoro({
+            textToSearch: mediaTitle,
+            only: "episodes",
+            isDubbed: isDubbedActive,
+          });
+
+          setSourceName("zoro");
+
+          return searchResultsForMedia;
+        default:
+          return null;
+      }
     }
 
     async function fetchOnAniWatch() {
@@ -256,8 +274,16 @@ export default function PlayBtn({
 
       switch (source) {
         case "gogoanime":
-          currMediaInfo =
-            (await fetchOnGoGoAnime()) as GogoanimeMediaEpisodes[];
+          currMediaInfo = (await fetchOnConsumet({
+            source,
+          })) as GogoanimeMediaEpisodes[];
+
+          break;
+
+        case "zoro":
+          currMediaInfo = (await fetchOnConsumet({
+            source,
+          })) as GogoanimeMediaEpisodes[];
 
           break;
 
@@ -292,7 +318,7 @@ export default function PlayBtn({
     }
 
     let currMediaEpisodes: GogoanimeMediaEpisodes[] | EpisodeAnimeWatch[] =
-      (await fetchOnGoGoAnime()) as GogoanimeMediaEpisodes[];
+      (await fetchOnConsumet({ source: "zoro" })) as GogoanimeMediaEpisodes[];
 
     if (!currMediaEpisodes)
       currMediaEpisodes = (await fetchOnAniWatch()) as EpisodeAnimeWatch[]; // High chances of getting the wrong media
@@ -406,7 +432,7 @@ export default function PlayBtn({
                       setSourceName(e.target.value as SourceType["source"])
                     }
                   >
-                    {sourceOptions.map((source) => (
+                    {sourcesAvailable.map((source) => (
                       <option value={source.value} key={source.value}>
                         {source.name}
                       </option>
@@ -476,7 +502,7 @@ function SourceName({
   return (
     movieId &&
     sourceName && (
-      <span id={styles.source_span}>{sourceName.toUpperCase()}</span>
+      <span id={styles.source_span}>{sourceName.toUpperCase()} (IN BETA)</span>
     )
   );
 }
