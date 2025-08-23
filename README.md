@@ -68,7 +68,7 @@ On Vercel: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com
 
 Front-end:
 
-- `Next.js`
+- `Next.js (v14.2.3)`
 - `TypeScript`
 - `Axios`
 - `Redux`
