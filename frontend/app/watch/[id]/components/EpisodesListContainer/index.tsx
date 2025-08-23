@@ -17,7 +17,7 @@ import { useSearchParams } from "next/navigation";
 import { useAppSelector } from "@/app/lib/redux/hooks";
 
 type ComponentTypes = {
-  sourceName: SourceType["source"];
+  sourceName: Omit<SourceType["source"], "crunchyroll">;
   mediaId: number;
   activeEpisodeNumber: number;
   episodesList: GogoanimeMediaEpisodes[] | EpisodeAnimeWatch[] | ImdbEpisode[];
@@ -103,7 +103,7 @@ export default function EpisodesListContainer({
 
   function getMediaIdParamByMediaSource(
     media: EpisodeAnimeWatch | GogoanimeMediaEpisodes,
-    source: SourceType["source"]
+    source: Omit<SourceType["source"], "crunchyroll">
   ) {
     switch (source) {
       case "gogoanime":
@@ -148,8 +148,8 @@ export default function EpisodesListContainer({
               >
                 {sourceName == "aniwatch" &&
                   (episode as EpisodeAnimeWatch).isFiller && (
-                  <small className={styles.filler_alert_text}>Filler</small>
-                )}
+                    <small className={styles.filler_alert_text}>Filler</small>
+                  )}
 
                 <h4>
                   {sourceName == "gogoanime"

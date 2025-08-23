@@ -1,6 +1,7 @@
 import axios from "axios";
 import { consumetProviders } from "../../consumetProviders";
 import { EpisodeLinksGoGoAnime } from "@/app/ts/interfaces/gogoanimeData";
+import { SourceType } from "@/app/ts/interfaces/episodesSource";
 
 export async function consumetEpisodeByEpisodeId({
   episodeId,
@@ -9,7 +10,7 @@ export async function consumetEpisodeByEpisodeId({
 }: {
   episodeId: string;
   server?: string;
-  provider?: string;
+  provider?: Omit<SourceType["source"], "crunchyroll" | "anilist" | "aniwatch">;
 }) {
   if (provider) {
     if (!consumetProviders.find((item) => item == provider.toLowerCase())) {
@@ -35,9 +36,7 @@ export async function consumetEpisodeByEpisodeId({
       .then((res) => res.data.results);
 
     if (!data) {
-      throw new Error(
-        "Failed to fetch episode data. No data returned."
-      );
+      throw new Error("Failed to fetch episode data. No data returned.");
     }
     if (data.sources?.length == 0) {
       throw new Error(
