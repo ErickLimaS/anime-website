@@ -85,6 +85,9 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
             .then(data => {
                 results = data || [];
                 console.log(data)
+                if (data.message.status == 404) {
+                    return res.status(404).json({ message: "No episode found", results: results });
+                }
                 if (results.length === 0) {
                     return res.status(404).json({ message: "No episode found", results: results });
                 }

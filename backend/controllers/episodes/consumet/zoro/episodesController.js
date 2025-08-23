@@ -84,6 +84,9 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
             .then(response => response.json())
             .then(data => {
                 results = data || [];
+                if (data.message.status == 404) {
+                    return res.status(404).json({ message: "No episode found", results: results });
+                }
                 if (results.length === 0) {
                     return res.status(404).json({ message: "No episode found", results: results });
                 }
@@ -93,7 +96,7 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
                 return res.status(500).json({ error: "Internal Server Error" });
             });
 
-        await setRedisKey({ redisClient, key, data: results });
+        // await setRedisKey({ redisClient, key, data: results });
 
         return res.status(200).json({
             message: `Results for: ${episodeId.toUpperCase()}`, results: results
