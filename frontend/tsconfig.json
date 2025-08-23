@@ -1,6 +1,12 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "es5",
+      "es6",
+      "dom",
+      "esnext",
+      "dom.iterable"
+    ],
     "target": "es2015",
     "allowJs": true,
     "skipLibCheck": true,
@@ -19,9 +25,19 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/read/[id]/components/ChaptersPages/index.js"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/read/[id]/components/ChaptersPages/index.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

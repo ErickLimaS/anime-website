@@ -21,7 +21,7 @@ export async function consumetMediaInfo({
         query: query,
       },
     })
-    .then((res) => res.data.results);
+    .then((res) => res.data.result);
 
   return data;
 }
