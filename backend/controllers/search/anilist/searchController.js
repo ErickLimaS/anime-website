@@ -14,7 +14,7 @@ exports.searchAnimeOnAnilist = (req, res) => expressAsyncHandler(async (req, res
     const reqQuery = req.query.query;  // MEDIA ID 
     const showAdultContent = req.query.showAdultContent == "true" || false;
     const type = req.query.type || "ANIME";  // ANIME or MANGA
-    const format = req.query.format || "TV"; // TV_SHORT MOVIE SPECIAL OVA ONA MUSIC MANGA NOVEL ONE_SHOT
+    const format = req.query.format || "TV"; // TV TV_SHORT MOVIE SPECIAL OVA ONA MUSIC MANGA NOVEL ONE_SHOT
     const sort = req.query.sort || "TRENDING_DESC";
     const season = req.query.season || null;
     const seasonYear = req.query.seasonYear || null;
