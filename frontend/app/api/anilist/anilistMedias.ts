@@ -95,7 +95,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       const data: MediaData[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/search/any/anilist`,
@@ -108,6 +108,8 @@ export default {
           showAdultContent: showAdultContent == true ? undefined : false,
         },
       }).then((res) => res.data.results);
+
+      console.log(data);
 
       if (!showAdultContent) {
         return filterMediasWithAdultContent(
@@ -142,7 +144,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       const thisYear = new Date().getFullYear();
 
@@ -188,7 +190,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       const data: AiringMediaResult[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
@@ -230,7 +232,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       const thisYear = new Date().getFullYear();
 
@@ -277,7 +279,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       try {
         const data: MediaData[] = await axios({
