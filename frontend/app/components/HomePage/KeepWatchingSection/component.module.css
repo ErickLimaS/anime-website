@@ -8,8 +8,8 @@
 
     padding-top: 32px;
 
-    justify-items: center;
-    justify-content: center;
+    /* justify-items: center; */
+    /* justify-content: center; */
 
 }
 
@@ -43,4 +43,10 @@
     color: var(--white-100);
 
     margin-bottom: 24px;
+}
+
+#keep_watching_container>div {
+
+    width: inherit;
+
 }
