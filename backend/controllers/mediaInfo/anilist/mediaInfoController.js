@@ -22,7 +22,7 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
 
         const key = "mediaInfo:any:anilist:" + reqQuery + ":lang-" + lang.toLowerCase();
 
-        const value = await redisClient.get(key);
+        const value = req.query?.authToken ? null : await redisClient.get(key);
 
         if (value) {
             console.log("Cache HIT for key:", key);
@@ -35,7 +35,7 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
         console.log("Cache MISS for key:", key);
 
         const graphqlQuery = {
-            query: requestMediaById(false),
+            query: requestMediaById(req.query?.authToken ? true : false),
             variables: {
                 id: reqQuery,
             },
@@ -44,7 +44,6 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
         await fetch(ANILIST_MEDIA_INFO_URI, fetchOptions({ graphqlQuery, authToken: req.query.authToken }))
             .then(handleResponse)
             .then(data => {
-
                 if (!data.data) {
                     return res.status(data.errors[0].status).json(data.errors)
                 }
@@ -57,7 +56,7 @@ exports.geMediaInfoOnAnilist = expressAsyncHandler(async (req, res) => {
             })
             .catch((error => handleError({ error, res })));
 
-        await setRedisKey({ redisClient, key, data: results });
+        if (!req.query?.authToken) await setRedisKey({ redisClient, key, data: results });
 
         return res.status(200).json({
             message: `Media Info for ID: ${reqQuery}`, result: results
