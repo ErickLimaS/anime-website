@@ -34,6 +34,8 @@ export async function optimizedFetchOnGoGoAnime({
     provider: "gogoanime",
   });
 
+  if (resultsForMediaSearch.length == 0) return null;
+
   let closestResultsByMediaTitle;
 
   if (isDubbed) {
@@ -99,6 +101,8 @@ export async function optimizedFetchOnZoro({
     provider: "zoro",
   });
 
+  if (resultsForMediaSearch.length == 0) return null;
+  
   let closestResultsByMediaTitle;
 
   if (isDubbed) {

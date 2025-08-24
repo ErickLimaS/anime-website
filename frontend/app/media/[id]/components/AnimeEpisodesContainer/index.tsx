@@ -170,11 +170,7 @@ export default function EpisodesContainer({
   useEffect(() => {
     const paramsSource = currSearchParams.get("source") as SourceType["source"];
 
-    if (
-      paramsSource == "crunchyroll" ||
-      paramsSource == "aniwatch" ||
-      paramsSource == "gogoanime"
-    ) {
+    if (paramsSource) {
       setCurrEpisodesSource(paramsSource);
       fetchEpisodesFromSource(paramsSource);
     }
@@ -562,7 +558,11 @@ export default function EpisodesContainer({
           <ErrorPanel
             errorText={
               <>
-                Not available on <span>{currEpisodesSource}</span>
+                Not available on{" "}
+                <span>
+                  {currEpisodesSource.slice(0, 1).toUpperCase() +
+                    currEpisodesSource.slice(1)}
+                </span>
               </>
             }
           />
