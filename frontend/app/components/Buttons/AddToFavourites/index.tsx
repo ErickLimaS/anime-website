@@ -61,7 +61,10 @@ export function Button({
     const favouriteMediaData = {
       id: mediaInfo.id,
       title: {
-        romaji: typeof mediaInfo.title === 'string' ? mediaInfo.title : mediaInfo.title.romaji,
+        romaji:
+          typeof mediaInfo.title === "string"
+            ? mediaInfo.title
+            : mediaInfo.title.romaji,
       },
       format: mediaInfo.format,
       description: mediaInfo.description,
@@ -82,7 +85,7 @@ export function Button({
       mediaId: mediaInfo.id,
     });
 
-    setWasAddedToFavourites(wasAddedToFavourites ? true : false);
+    setWasAddedToFavourites(!wasAddedToFavourites);
 
     setIsLoading(false);
   }
@@ -119,11 +122,15 @@ export function Button({
       title={
         wasAddedToFavourites
           ? `Remove ${
-            typeof mediaInfo.title === 'string' ? mediaInfo.title : mediaInfo.title?.userPreferred
-          } from Favourites`
+              typeof mediaInfo.title === "string"
+                ? mediaInfo.title
+                : mediaInfo.title?.userPreferred
+            } from Favourites`
           : `Add ${
-            typeof mediaInfo.title === 'string' ? mediaInfo.title : mediaInfo.title?.userPreferred
-          } To Favourites`
+              typeof mediaInfo.title === "string"
+                ? mediaInfo.title
+                : mediaInfo.title?.userPreferred
+            } To Favourites`
       }
     >
       {isLoading && <LoadingSvg alt="Loading Icon" width={16} height={16} />}
