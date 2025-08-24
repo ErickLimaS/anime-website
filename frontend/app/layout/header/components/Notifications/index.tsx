@@ -24,10 +24,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { convertFromUnix, getCurrentUnixDate } from "@/app/lib/formatDateUnix";
-import anilist from "@/app/api/anilist/anilistMedias";
 import { MediaDataFullInfo } from "@/app/ts/interfaces/anilistMediaData";
 import { useAppSelector } from "@/app/lib/redux/hooks";
 import { NotificationsCollectionFirebase } from "@/app/ts/interfaces/firestoreData";
+import { getMediaInfo } from "@/app/api/mediaInfo/anilist/mediaInfo";
 
 function NotificationsContainer() {
   //
@@ -305,7 +305,7 @@ function NotificationsContainer() {
     if (stillReleasingMediasNotifications.length > 0) {
       stillReleasingMediasNotifications.map(async (mediaNotification) => {
         // gets curr media's latest info
-        const mediaInfo = (await anilist.getMediaInfo({
+        const mediaInfo = (await getMediaInfo({
           id: Number(mediaNotification.mediaId),
         })) as MediaDataFullInfo;
 
@@ -429,7 +429,7 @@ function NotificationsContainer() {
                 id={styles.results_container}
                 aria-expanded={isPanelOpen}
               >
-                <h4>Latest Notifications</h4>
+                <h4>Latest Notifications (BETA)</h4>
 
                 {notificationsList.length == 0 && (
                   <div>
