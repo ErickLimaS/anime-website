@@ -21,7 +21,7 @@ import { useAppSelector } from "@/app/lib/redux/hooks";
 import { KeepWatchingMediaData } from "@/app/ts/interfaces/firestoreData";
 import DubbedCheckboxButton from "../AnimeEpisodesContainer/components/ActiveDubbButton";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
-import { sourcesAvailable } from "../sourcesAvailable";
+import { sourcesAvailable } from "../../../../data/animeSourcesAvailable";
 
 export default function PlayBtn({
   mediaId,

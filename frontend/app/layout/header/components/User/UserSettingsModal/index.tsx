@@ -24,6 +24,7 @@ import * as contantOptions from "./contantOptions";
 import anilistUsersActions from "@/app/api/anilist/anilistUsers";
 import userSettingsActions from "@/app/api/cookie/userCookieSettingsActions";
 import { removeCookies } from "@/app/lib/user/anilistUserLoginOptions";
+import { sourcesAvailable } from "@/app/data/animeSourcesAvailable";
 
 type SettingsTypes = {
   onClick?:
@@ -628,7 +629,7 @@ function UserSettingsModal({
                   <label>
                     Main Source of Episodes
                     <select name="source" defaultValue={currentSource}>
-                      {contantOptions.sourcesOptions.map((source) => (
+                      {sourcesAvailable.map((source) => (
                         <option key={source.value} value={source.value}>
                           {source.name}
                         </option>

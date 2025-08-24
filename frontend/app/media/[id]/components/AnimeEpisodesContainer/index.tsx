@@ -41,7 +41,7 @@ import EpisodesOptionsPanel from "./components/EpisodesOptionsPanel";
 import { EpisodeBySource } from "./components/EpisodeBySource";
 import ErrorPanel from "../ErrorPanel";
 import { getAniwatchMediaEpisodes } from "@/app/api/episodes/aniwatch/episodesInfo";
-import { sourcesAvailable } from "../sourcesAvailable";
+import { sourcesAvailable } from "../../../../data/animeSourcesAvailable";
 
 type EpisodesContainerTypes = {
   imdb: {
