@@ -1,11 +1,11 @@
 const expressAsyncHandler = require("express-async-handler");
 const setRedisKey = require("../../../redisUtils").setRedisKey;
 
-exports.getMediaInfoOnZoro = expressAsyncHandler(async (req, res) => {
+exports.getMediaInfoOnGogoanime = expressAsyncHandler(async (req, res) => {
 
     const reqQuery = req.query.query;
 
-    const CONSUMET_MEDIA_INFO_URI = process.env.CONSUMET_API_URL + "/anime/zoro/info?id=" + reqQuery
+    const CONSUMET_MEDIA_INFO_URI = process.env.CONSUMET_API_URL + "/anime/gogoanime/info/" + reqQuery
 
     const redisClient = req.redisClient;
 
@@ -13,7 +13,7 @@ exports.getMediaInfoOnZoro = expressAsyncHandler(async (req, res) => {
 
         let results = null
 
-        const key = "mediaInfo:anime:zoro:" + reqQuery.toLowerCase();
+        const key = "mediaInfo:anime:gogoanime:" + reqQuery.toLowerCase();
 
         const value = await redisClient.get(key);
 
@@ -36,7 +36,7 @@ exports.getMediaInfoOnZoro = expressAsyncHandler(async (req, res) => {
                 }
             })
             .catch(err => {
-                console.error("Error fetching data from Zoro API:", err);
+                console.error("Error fetching data from Gogoanime API:", err);
                 return res.status(500).json({ error: "Internal Server Error" });
             });
 
@@ -49,7 +49,7 @@ exports.getMediaInfoOnZoro = expressAsyncHandler(async (req, res) => {
     }
     catch (err) {
 
-        console.error("Error in /mediaInfo/anime/consumet/zoro route: ", err);
+        console.error("Error in /mediaInfo/anime/consumet/gogoanime route: ", err);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });

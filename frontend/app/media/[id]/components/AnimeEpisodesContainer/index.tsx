@@ -30,6 +30,7 @@ import simulateRange from "@/app/lib/simulateRange";
 import {
   optimizedFetchOnAniwatch,
   optimizedFetchOnGoGoAnime,
+  optimizedFetchOnZoro,
 } from "@/app/lib/dataFetch/optimizedFetchAnimeOptions";
 import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
@@ -40,6 +41,7 @@ import EpisodesOptionsPanel from "./components/EpisodesOptionsPanel";
 import { EpisodeBySource } from "./components/EpisodeBySource";
 import ErrorPanel from "../ErrorPanel";
 import { getAniwatchMediaEpisodes } from "@/app/api/episodes/aniwatch/episodesInfo";
+import { sourcesAvailable } from "../../../../data/animeSourcesAvailable";
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -168,11 +170,7 @@ export default function EpisodesContainer({
   useEffect(() => {
     const paramsSource = currSearchParams.get("source") as SourceType["source"];
 
-    if (
-      paramsSource == "crunchyroll" ||
-      paramsSource == "aniwatch" ||
-      paramsSource == "gogoanime"
-    ) {
+    if (paramsSource) {
       setCurrEpisodesSource(paramsSource);
       fetchEpisodesFromSource(paramsSource);
     }
@@ -308,6 +306,39 @@ export default function EpisodesContainer({
 
         break;
 
+      case "zoro":
+        setCurrEpisodesSource(newSourceChose);
+
+        mediaEpisodesList = (await optimizedFetchOnZoro({
+          textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
+          only: "episodes",
+          isDubbed: isEpisodesDubbed || false,
+        })) as GogoanimeMediaEpisodes[];
+
+        if (!mediaEpisodesList) {
+          setIsLoading(false);
+
+          setEpisodesList([]);
+
+          setCurrAnimesList(null);
+
+          setTotalNumberPages(0);
+
+          return;
+        }
+
+        setEpisodesList(mediaEpisodesList);
+
+        setCurrAnimesList(
+          mediaEpisodesList.slice(itemOffset, paginationEndOffset)
+        );
+
+        setTotalNumberPages(
+          Math.ceil(mediaEpisodesList.length / rangeEpisodesPerPage)
+        );
+
+        break;
+
       case "aniwatch":
         setCurrEpisodesSource(newSourceChose);
 
@@ -358,7 +389,7 @@ export default function EpisodesContainer({
 
       default:
         alert(
-          "need to work on it. give me a shoutout on Git Issues if i forget"
+          "Need to work on it. Give me a shoutout on Git Issues if i forget"
         );
 
         break;
@@ -379,9 +410,7 @@ export default function EpisodesContainer({
     setEpisodesList(mediaEpisodes);
 
     setCurrAnimesList(mediaEpisodes.slice(itemOffset, endOffset));
-    setTotalNumberPages(
-      Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage)
-    );
+    setTotalNumberPages(Math.ceil(mediaEpisodes.length / rangeEpisodesPerPage));
 
     setIsLoading(false);
   }
@@ -432,11 +461,7 @@ export default function EpisodesContainer({
             currValue={currEpisodesSource}
             showSourceStatus
             sepateBtnsWithSpan={true}
-            buttonOptions={[
-              { name: "Crunchyroll", value: "crunchyroll" },
-              { name: "GoGoAnime", value: "gogoanime" },
-              { name: "Aniwatch", value: "aniwatch" },
-            ]}
+            buttonOptions={sourcesAvailable}
           />
 
           {/* SHOWS A SELECT WITH OTHER RESULTS FOR THIS MEDIA, ANIWATCH DONT GET THE RIGHT RESULT MOST OF TIMES */}
@@ -533,7 +558,11 @@ export default function EpisodesContainer({
           <ErrorPanel
             errorText={
               <>
-                Not available on <span>{currEpisodesSource}</span>
+                Not available on{" "}
+                <span>
+                  {currEpisodesSource.slice(0, 1).toUpperCase() +
+                    currEpisodesSource.slice(1)}
+                </span>
               </>
             }
           />

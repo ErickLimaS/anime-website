@@ -12,18 +12,16 @@ import {
   EpisodeAnimeWatch,
   EpisodeLinksAnimeWatch,
 } from "@/app/ts/interfaces/aniwatchData";
-import {
-  optimizedFetchOnAniwatch,
-  optimizedFetchOnGoGoAnime,
-} from "@/app/lib/dataFetch/optimizedFetchAnimeOptions";
-import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
-import { getMediaInfoOnIMDB } from "@/app/api/consumet/consumetImdb";
+import { ImdbEpisode } from "@/app/ts/interfaces/imdb";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import { cookies } from "next/headers";
-import { AlertWrongMediaVideoOnMediaId } from "./components/AlertContainer";
-import { consumetEpisodeByEpisodeId } from "@/app/api/episodes/consumet/episodesInfo";
-import { getAniwatchEpisodeByEpisodeId } from "@/app/api/episodes/aniwatch/episodesInfo";
 import { getMediaInfo } from "@/app/api/mediaInfo/anilist/mediaInfo";
+import {
+  getAniwatchStreamingLink,
+  getGogoanimeStreamingLink,
+  getZoroStreamingLink,
+  loadImdbMediaAndEpisodeInfo,
+} from "./fetchFunctions";
 
 export const revalidate = 900; // revalidate cached data every 15 minutes
 
@@ -79,7 +77,7 @@ export default async function WatchEpisode({
   params: { id: number }; // ANILIST ANIME ID
   searchParams: {
     episode: string;
-    source: SourceType["source"];
+    source: Omit<SourceType["source"], "crunchyroll">;
     q: string;
     t: string;
     dub?: string;
@@ -101,161 +99,84 @@ export default async function WatchEpisode({
   if (Object.keys(searchParams).length === 0)
     searchParams = { episode: "1", source: "aniwatch", q: "", t: "0" };
 
-  let videoIdDoesntMatch = false;
+  let isEpisodeFromTheSameMedia = false;
 
   if (!mediaInfo) {
     throw new Error("Media info not found");
   }
 
-  let episodeDataFetched:
-    | EpisodeLinksGoGoAnime
-    | EpisodeLinksAnimeWatch
-    | null = null;
+  let episodeData: EpisodeLinksGoGoAnime | EpisodeLinksAnimeWatch | null = null;
   let episodeSubtitles: EpisodeLinksAnimeWatch["tracks"] | undefined =
     undefined;
   const subtitleLanguage =
     cookies().get("subtitle_language")?.value || "English";
   let episodesList: EpisodeAnimeWatch[] | GogoanimeMediaEpisodes[] = [];
-  let videoUrlSrc: string | undefined = undefined;
+  let episodeUrl: string | undefined = undefined;
   let imdbEpisodeInfo: ImdbEpisode | undefined;
   const imdbEpisodesList: ImdbEpisode[] = [];
 
-  const loadImdbMediaAndEpisodeInfo = async () => {
-    const imdbMediaInfo: ImdbMediaInfo = (await getMediaInfoOnIMDB({
-      search: true,
-      seachTitle: mediaInfo.title.english || mediaInfo.title.romaji,
-      releaseYear: mediaInfo.startDate.year,
-    })) as ImdbMediaInfo;
+  async function getVideoStreamingLinkFromSource() {
+    let info = null;
 
-    // get episodes on imdb
-    imdbMediaInfo?.seasons?.map((itemA) =>
-      itemA.episodes?.map((itemB) => imdbEpisodesList.push(itemB))
-    );
-
-    imdbEpisodeInfo = imdbEpisodesList?.find(
-      (item) => item.episode == Number(searchParams.episode)
-    );
-  };
-
-  async function getGogoanimeStreamingLink() {
-    episodeDataFetched = (await consumetEpisodeByEpisodeId({
-      episodeId: searchParams.q,
-      // useAlternateLinkOption: true,
-    })) as EpisodeLinksGoGoAnime;
-
-    if (!episodeDataFetched) {
-      throw new Error("Episode data not found on Gogoanime");
-    }
-
-    // Episode link source
-    videoUrlSrc = episodeDataFetched.sources.find(
-      (item) => item.quality == "default"
-    ).url;
-    if (!videoUrlSrc) videoUrlSrc = episodeDataFetched.sources[0].url;
-
-    // Episodes for this media
-    episodesList = (await optimizedFetchOnGoGoAnime({
-      textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
-      only: "episodes",
-      isDubbed: searchParams.dub == "true",
-    })) as GogoanimeMediaEpisodes[];
-
-    videoIdDoesntMatch = compareEpisodeIDs(episodesList, "gogoanime");
-  }
-
-  async function getAniwatchStreamingLink() {
-    if (!searchParams.q) {
-      episodesList = (await optimizedFetchOnAniwatch({
-        textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
-        only: "episodes",
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }).then((res: any) => res?.episodes)) as EpisodeAnimeWatch[];
-
-      searchParams.q = episodesList[0].episodeId;
-    }
-
-    // fetch episode data
-    episodeDataFetched = (await getAniwatchEpisodeByEpisodeId({
-      episodeId: searchParams.q,
-      category: searchParams.dub == "true" ? "dub" : "sub",
-    })) as EpisodeLinksAnimeWatch;
-
-    if (!episodeDataFetched) {
-      throw new Error("Episode data not found on Aniwatch");
-    }
-
-    // fetch episode link source
-    videoUrlSrc = episodeDataFetched.sources[0].url;
-
-    // fetch episodes for this media
-    if (episodesList.length == 0) {
-      episodesList = (await optimizedFetchOnAniwatch({
-        textToSearch: mediaInfo.title.english || mediaInfo.title.romaji,
-        only: "episodes",
-        format: mediaInfo.format,
-        idToMatch: searchParams?.q?.split("?")[0],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }).then((res: any) =>
-        searchParams?.dub == "true"
-          ? res?.episodes.slice(0, res.episodesDub)
-          : res?.episodes
-      )) as EpisodeAnimeWatch[];
-    }
-
-    episodeSubtitles = episodeDataFetched.tracks;
-
-    videoIdDoesntMatch = compareEpisodeIDs(episodesList, "aniwatch");
-  }
-
-  const getVideoStreamingLinkFromSource = async () => {
     switch (searchParams.source) {
       case "gogoanime":
-        await getGogoanimeStreamingLink();
+        info = await getGogoanimeStreamingLink({
+          episodeId: searchParams.q,
+          mediaInfo,
+          isDubbed: searchParams.dub == "true",
+        });
+
+        episodeData = info.episodeData;
+        episodeUrl = info.episodeUrl;
+        isEpisodeFromTheSameMedia = info.isEpisodeFromTheSameMedia;
+        episodesList = info.episodesList;
+
+        break;
+
+      case "zoro":
+        info = await getZoroStreamingLink({
+          episodeId: searchParams.q,
+          mediaInfo,
+          isDubbed: searchParams.dub == "true",
+        });
+
+        episodeData = info.episodeData;
+        episodeUrl = info.episodeUrl;
+        isEpisodeFromTheSameMedia = info.isEpisodeFromTheSameMedia;
+        episodesList = info.episodesList;
 
         break;
 
       case "aniwatch":
-        await getAniwatchStreamingLink();
+        info = await getAniwatchStreamingLink({
+          episodeId: searchParams.q,
+          mediaInfo,
+          isDubbed: searchParams.dub == "true",
+        });
+
+        episodeData = info.episodeData;
+        episodeUrl = info.episodeUrl;
+        isEpisodeFromTheSameMedia = info.isEpisodeFromTheSameMedia;
+        episodesList = info.episodesList;
+        episodeSubtitles = info.episodeSubtitles;
 
         break;
 
       default:
-        throw new Error("Episode data not found");
-    }
-  };
-
-  await Promise.all([
-    loadImdbMediaAndEpisodeInfo(),
-    getVideoStreamingLinkFromSource(),
-  ]);
-
-  function compareEpisodeIDs(
-    episodesList: { id?: string; episodeId?: string }[],
-    sourceName: SourceType["source"]
-  ) {
-    // Compare Episode ID from params with episodes fetched ID
-    switch (sourceName) {
-      case "aniwatch":
-        const aniwatchEpisodeIdFromParamsIsOnEpisodesList = episodesList.find(
-          (episode) => episode.episodeId == searchParams.q
-        );
-
-        return aniwatchEpisodeIdFromParamsIsOnEpisodesList == undefined;
-
-      case "gogoanime":
-        const gogoanimeEpisodeIdFromParamsIsOnEpisodesList = episodesList.find(
-          (episode) => episode.id == searchParams.q
-        );
-
-        return gogoanimeEpisodeIdFromParamsIsOnEpisodesList == undefined;
-
-      default:
-        return false;
+        throw new Error("Source not found");
     }
   }
 
+  await Promise.all([
+    getVideoStreamingLinkFromSource(),
+    (imdbEpisodeInfo = await loadImdbMediaAndEpisodeInfo({
+      mediaInfo,
+      currEpisode: searchParams.episode,
+    })),
+  ]);
+
   const episodeTitle = () => {
-    if (searchParams.source == "gogoanime") {
+    if (searchParams.source == "gogoanime" || "zoro") {
       return (
         imdbEpisodesList[Number(searchParams.episode) - 1]?.title ||
         imdbEpisodeInfo?.title ||
@@ -269,18 +190,12 @@ export default async function WatchEpisode({
     }
   };
 
-  if (videoUrlSrc == undefined || episodeDataFetched == undefined) {
-    throw new Error("Episode data not found on Gogoanime");
+  if (episodeUrl == undefined || episodeData == undefined) {
+    throw new Error(`Episode data not found on ${searchParams.source}`);
   }
 
-  if (videoIdDoesntMatch && searchParams?.alert == "true") {
-    return (
-      <AlertWrongMediaVideoOnMediaId
-        mediaId={params.id}
-        mediaTitle={mediaInfo.title.userPreferred}
-        mediaFormat={mediaInfo.format}
-      />
-    );
+  if (isEpisodeFromTheSameMedia && searchParams?.alert == "true") {
+    throw new Error("This episode doens't belong to this media! Try again!");
   }
 
   return (
@@ -293,7 +208,7 @@ export default async function WatchEpisode({
             mediaSource={searchParams.source}
             mediaInfo={mediaInfo}
             videoInfo={{
-              urlSource: videoUrlSrc,
+              urlSource: episodeUrl,
               subtitleLang: subtitleLanguage,
               subtitlesList: episodeSubtitles,
               currentLastStop: searchParams.t || undefined,
@@ -304,10 +219,9 @@ export default async function WatchEpisode({
               episodeId: searchParams.q,
               episodeIntro:
                 searchParams.source == "aniwatch"
-                  ? (episodeDataFetched as EpisodeLinksAnimeWatch).intro
+                  ? (episodeData as EpisodeLinksAnimeWatch).intro
                   : undefined,
-              episodeOutro: (episodeDataFetched as EpisodeLinksAnimeWatch)
-                ?.outro,
+              episodeOutro: (episodeData as EpisodeLinksAnimeWatch)?.outro,
               episodeNumber: searchParams.episode,
               episodeImg:
                 imdbEpisodesList[Number(searchParams.episode) - 1]?.img?.hd ||
@@ -333,7 +247,7 @@ export default async function WatchEpisode({
               )}
             </h1>
 
-            {videoIdDoesntMatch && (
+            {isEpisodeFromTheSameMedia && (
               <small id={styles.alert_wrong_media}>
                 This video {`doesn't`} belong to this media
               </small>
@@ -348,19 +262,6 @@ export default async function WatchEpisode({
                 />
               </p>
             </MediaCardExpanded.Container>
-          </div>
-
-          <div className={styles.only_desktop}>
-            <div className={styles.comment_container}>
-              <h2>
-                COMMENTS{" "}
-                {mediaInfo.format != "MOVIE" &&
-                  `FOR EPISODE ${searchParams.episode}`}
-              </h2>
-
-              {/* SHOW ONLY ON DESKTOP */}
-              {/* ADD EPISODE REVIEW */}
-            </div>
           </div>
         </div>
 
@@ -380,19 +281,6 @@ export default async function WatchEpisode({
               activeEpisodeNumber={Number(searchParams.episode)}
             />
           )}
-
-          {/* ONLY ON MOBILE */}
-          <div className={styles.only_mobile}>
-            <div className={styles.comment_container}>
-              <h2>
-                COMMENTS{" "}
-                {mediaInfo.format != "MOVIE" &&
-                  `FOR EPISODE ${searchParams.episode}`}
-              </h2>
-
-              {/* ADD EPISODE REVIEW */}
-            </div>
-          </div>
         </div>
       </section>
     </main>

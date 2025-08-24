@@ -12,6 +12,10 @@
 
 }
 
+#popular_list_container {
+    width: inherit;
+}
+
 @media((min-width: 576px) and (max-width: 768px)) {
     #popular_container {
         width: var(--breakpoint-sm);

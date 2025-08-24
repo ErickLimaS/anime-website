@@ -93,6 +93,13 @@
 
 }
 
+.loggin_advice {
+    
+    text-align: center;
+    font-size: var(--xx-small);
+
+}
+
 /* LOGINS CONTAINER */
 #login_buttons_container {
     display: flex;

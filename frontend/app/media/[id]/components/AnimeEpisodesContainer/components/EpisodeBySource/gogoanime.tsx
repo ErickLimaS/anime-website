@@ -24,7 +24,7 @@ type ComponentTypes = {
   wasEpisodeWatchedOnAnilist?: boolean;
 };
 
-export default function GoGoAnimeEpisode({
+export default function ConsumetEpisode({
   episodeInfo,
   mediaId,
   episodeTitle,

@@ -148,12 +148,6 @@ export const titlePrefferedLanguages = [
   { name: "Native (進撃の巨人)", value: "native" },
 ];
 
-export const sourcesOptions = [
-  { name: "Crunchyroll", value: "crunchyroll" },
-  { name: "GoGoAnime", value: "gogoanime" },
-  { name: "Aniwatch", value: "aniwatch" },
-];
-
 export const qualityOptions = [
   { name: "Auto", value: "auto" },
   { name: "1080p", value: "1080" },

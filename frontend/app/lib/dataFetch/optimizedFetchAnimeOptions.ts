@@ -24,6 +24,73 @@ export async function optimizedFetchOnGoGoAnime({
 
   let mediaInfo = await consumetMediaInfo({
     query: titleFixed,
+    provider: "gogoanime",
+  });
+
+  if (mediaInfo && !only) return mediaInfo;
+
+  const resultsForMediaSearch = await consumetSearchMedia({
+    query: titleFixed,
+    provider: "gogoanime",
+  });
+
+  if (resultsForMediaSearch.length == 0) return null;
+
+  let closestResultsByMediaTitle;
+
+  if (isDubbed) {
+    closestResultsByMediaTitle = resultsForMediaSearch.filter(
+      (media) => media.subOrDub == "dub"
+    );
+  } else {
+    closestResultsByMediaTitle = resultsForMediaSearch.filter(
+      (media) =>
+        stringToOnlyAlphabetic(media.title)
+          .toLowerCase()
+          .indexOf(titleFixed) !== -1
+    );
+  }
+
+  mediaInfo =
+    (await consumetMediaInfo({
+      query: closestResultsByMediaTitle[0]?.id || resultsForMediaSearch![0]?.id,
+      provider: "gogoanime",
+    })) || null;
+
+  if (!mediaInfo) return null;
+
+  if (only == "episodes") {
+    const episodesList: GogoanimeMediaEpisodes[] = [];
+
+    simulateRange(mediaInfo.totalEpisodes).map((item, key) => {
+      episodesList.push({
+        number: key + 1,
+        id: `${mediaInfo!.id.toLowerCase()}-episode-${key + 1}`,
+        url: "",
+      });
+    });
+
+    return mediaInfo.episodes.length == 0 ? episodesList : mediaInfo.episodes;
+  }
+
+  return mediaInfo;
+}
+
+export async function optimizedFetchOnZoro({
+  textToSearch,
+  only,
+  isDubbed,
+}: {
+  textToSearch: string;
+  only?: "episodes";
+  isDubbed?: boolean;
+}) {
+  const titleFixed = stringToOnlyAlphabetic(
+    checkAnilistTitleMisspelling(textToSearch)
+  ).toLowerCase();
+
+  let mediaInfo = await consumetMediaInfo({
+    query: titleFixed,
     provider: "zoro",
   });
 
@@ -34,6 +101,8 @@ export async function optimizedFetchOnGoGoAnime({
     provider: "zoro",
   });
 
+  if (resultsForMediaSearch.length == 0) return null;
+  
   let closestResultsByMediaTitle;
 
   if (isDubbed) {
@@ -58,22 +127,11 @@ export async function optimizedFetchOnGoGoAnime({
   if (!mediaInfo) return null;
 
   if (only == "episodes") {
-    const episodesList: GogoanimeMediaEpisodes[] = [];
-
-    simulateRange(mediaInfo.totalEpisodes).map((item, key) => {
-      episodesList.push({
-        number: key + 1,
-        id: `${mediaInfo!.id.toLowerCase()}-episode-${key + 1}`,
-        url: "",
-      });
-    });
-
-    return mediaInfo.episodes.length == 0 ? episodesList : mediaInfo.episodes;
+    return mediaInfo.episodes;
   }
 
   return mediaInfo;
 }
-
 // Always tries to give at least one result that resembles the query
 export async function optimizedFetchOnAniwatch({
   textToSearch,

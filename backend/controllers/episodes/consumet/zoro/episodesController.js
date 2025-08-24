@@ -83,7 +83,10 @@ exports.getEpisodeUrl = (req, res) => expressAsyncHandler(async (req, res) => {
         await fetch(CONSUMET_MEDIA_EPISODE_URI)
             .then(response => response.json())
             .then(data => {
-                results = data.episodes || [];
+                results = data || [];
+                if (data.message.status == 404) {
+                    return res.status(404).json({ message: "No episode found", results: results });
+                }
                 if (results.length === 0) {
                     return res.status(404).json({ message: "No episode found", results: results });
                 }

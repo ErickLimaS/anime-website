@@ -9,7 +9,7 @@ import { ImdbEpisode, ImdbMediaInfo } from "@/app/ts/interfaces/imdb";
 import { SourceType } from "@/app/ts/interfaces/episodesSource";
 import AniwatchEpisode from "./aniwatch";
 import CrunchyrollEpisode from "./crunchyroll";
-import GoGoAnimeEpisode from "./gogoanime";
+import ConsumetEpisode from "./gogoanime";
 
 type EpisodesContainerTypes = {
   imdb: {
@@ -78,8 +78,9 @@ export function EpisodeBySource({
       );
 
     case "gogoanime":
+    case "zoro":
       return (
-        <GoGoAnimeEpisode
+        <ConsumetEpisode
           motionStyle={framerMotionEpisodePopup}
           key={index}
           wasEpisodeWatchedOnAnilist={wasEpisodeWatchedOnAnilist}
@@ -121,6 +122,6 @@ export function EpisodeBySource({
       );
 
     default:
-      return <></>;
+      return <>{index + " placeholder"}</>;
   }
 }

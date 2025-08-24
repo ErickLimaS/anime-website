@@ -224,6 +224,10 @@ export default function UserModal({ onClick, auth }: ModalTypes) {
             </button>
           </div>
 
+          <p className={styles.loggin_advice}>
+            Use <b>Anilist</b> for better experience
+          </p>
+
           <LoginAlternativesButtons
             // withGitHub={() => signInGithub()}
             anonymously={() => signAnonymously()}
@@ -416,14 +420,14 @@ function LoginAlternativesButtons({
         <small>Anonymously</small>
       </div>
 
-      {/* People is not using this log in button. From 80 acc logged in, only 1 person used it.
+      {/* Github Deactivated. People was not using it enough. 
                 <div>
                     <button title='GitHub' id={styles.github_button} onClick={() => withGitHub()}>
                         <GitHubSvg width={16} height={16} alt={"GitHub icon"} />
                     </button>
                     <small>GitHub</small>
                 </div> 
-            */}
+      */}
 
       <div>
         <button
@@ -434,6 +438,7 @@ function LoginAlternativesButtons({
           <AnilistSvg width={16} height={16} alt={"Anilist icon"} />
         </button>
         <small>Anilist</small>
+        {/* <small>(Recommended)</small> */}
       </div>
     </div>
   );

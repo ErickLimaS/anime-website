@@ -24,8 +24,8 @@ function Reviews({
                 <Image
                   src={review.user.avatar.medium}
                   alt={review.user.name}
-                  width={40}
-                  height={40}
+                  width={64}
+                  height={64}
                 />
               </div>
 

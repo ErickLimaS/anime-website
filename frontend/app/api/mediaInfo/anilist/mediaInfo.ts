@@ -16,7 +16,7 @@ export async function getMediaInfo({
       accessToken: accessToken,
     });
 
-    const authToken = headersCustom?.Authorization?.slice(8);
+    const authToken = headersCustom?.Authorization?.slice(7);
 
     const { data }: { data: { result: MediaDataFullInfo } } = await axios({
       url: `${NEXT_PUBLIC_BACKEND_URL}/media-info/anime/anilist`,
@@ -29,6 +29,6 @@ export async function getMediaInfo({
     return data.result;
   } catch (error) {
     console.error((error as Error).message);
-    throw new Error(`Failed to fetch media info for ID ${id}`);
+    throw new Error(`Failed to fetch media info for ID ${id}. ${(error as Error).message}`);
   }
 }

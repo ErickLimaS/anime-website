@@ -10,8 +10,9 @@ import { consumetEpisodeByEpisodeId } from "@/app/api/episodes/consumet/episodes
 type PropsType = {
   propsFunction: (parameter: string | number) => void;
   buttonOptions: {
+    isAvailable: boolean;
     name: string;
-    value: number | string | SourceType["source"];
+    value: SourceType["source"];
   }[];
   currValue?: string | number;
   sepateBtnsWithSpan?: boolean;
@@ -27,8 +28,13 @@ export default function NavigationButtons({
 }: PropsType) {
   const [lastValueReturned, setLastValueReturned] = useState<string | number>();
 
-  const [gogoanimeAvailble, setGogoanimeAvailble] = useState<boolean | null>();
-  const [aniwatchAvailable, setAniwatchAvailable] = useState<boolean | null>();
+  const [sourcesAvailabilty, setSourcesAvailabilty] = useState<
+    {
+      name: string;
+      value: SourceType["source"];
+      isAvailable: boolean;
+    }[]
+  >([]);
 
   useEffect(() => setLastValueReturned(currValue || "" || 1), [currValue]);
 
@@ -46,6 +52,7 @@ export default function NavigationButtons({
     setLastValueReturned(btnActionValue);
   }
 
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   async function checkVideoSourceAvailability(
     videoSourcesAvailable: PropsType["buttonOptions"]
   ) {
@@ -55,18 +62,50 @@ export default function NavigationButtons({
           const gogoanimeResponse = await consumetEpisodeByEpisodeId({
             episodeId: "one-piece-episode-1",
             provider: "gogoanime",
-          });
+          }).then((res) => (res?.sources ?? []).length > 0 || false);
 
-          setGogoanimeAvailble(gogoanimeResponse != null ? true : false);
+          setSourcesAvailabilty((curr: any) => [
+            ...curr,
+            {
+              name: "GoGoAnime",
+              value: "gogoanime",
+              isAvailable: gogoanimeResponse ? true : false,
+            },
+          ]);
 
           break;
 
         case "aniwatch":
-          const aniwatchResponse = await getAniwatchEpisodeByEpisodeId({
+          const isAniwatchAvailable = await getAniwatchEpisodeByEpisodeId({
             episodeId: "one-piece-100?ep=2142",
-          });
+          }).then((res) => (res?.sources ?? []).length > 0 || false);
 
-          setAniwatchAvailable(aniwatchResponse != null ? true : false);
+          setSourcesAvailabilty((curr: any) => [
+            ...curr,
+            {
+              name: "Aniwatch",
+              value: "aniwatch",
+              isAvailable: isAniwatchAvailable,
+            },
+          ]);
+
+          break;
+
+        case "zoro":
+          const zoroResponse = await consumetEpisodeByEpisodeId({
+            episodeId:
+              "bakemonogatari-the-monogatari-series-174$episode$4284$sub",
+            provider: "zoro",
+          }).then((res) => (res?.sources ?? []).length > 0 || false);
+
+          setSourcesAvailabilty((curr: any) => [
+            ...curr,
+            {
+              name: "Zoro",
+              value: "zoro",
+              isAvailable: zoroResponse ? true : false,
+            },
+          ]);
 
           break;
 
@@ -74,19 +113,6 @@ export default function NavigationButtons({
           break;
       }
     });
-  }
-
-  function getBtnTitleByBtnValue(btnValue: SourceType["source"]) {
-    switch (btnValue) {
-      case "crunchyroll":
-        return "";
-      case "aniwatch":
-        return aniwatchAvailable ? "Online" : "Offline";
-      case "gogoanime":
-        return gogoanimeAvailble ? "Online" : "Offline";
-      default:
-        return "";
-    }
   }
 
   return (
@@ -98,16 +124,21 @@ export default function NavigationButtons({
             data-active={lastValueReturned == button.value}
             onClick={() => handlePropsFunctionWithBtnValue(button.value)}
             aria-label={button.name}
-            title={getBtnTitleByBtnValue(button.value as SourceType["source"])}
+            title={
+              button.value == "crunchyroll"
+                ? ""
+                : sourcesAvailabilty.find((item) => button.name == item.name)
+                      ?.isAvailable
+                  ? "Available"
+                  : "Not Available"
+            }
             disabled={currValue == button.value}
           >
-            {showSourceStatus && (
+            {showSourceStatus && button.value != "crunchyroll" && (
               <MediaSourceAvailabilityIcon
-                sourceName={button.value as "aniwatch" | "gogoanime"}
                 isAvailable={
-                  (button.value as "aniwatch" | "gogoanime") == "aniwatch"
-                    ? aniwatchAvailable
-                    : gogoanimeAvailble
+                  sourcesAvailabilty.find((item) => button.name == item.name)
+                    ?.isAvailable || false
                 }
               />
             )}
@@ -125,56 +156,27 @@ export default function NavigationButtons({
 }
 
 function MediaSourceAvailabilityIcon({
-  sourceName,
   isAvailable,
 }: {
-  sourceName: SourceType["source"];
-  isAvailable: boolean | null | undefined;
+  isAvailable: boolean;
 }) {
-  switch (sourceName) {
-    case "aniwatch":
-      if (isAvailable) {
-        return (
-          <CloudOnlineSvg
-            width={18}
-            height={18}
-            className={styles.source_status}
-            data-available={isAvailable}
-          />
-        );
-      }
-
-      return (
-        <CloudOfflineSvg
-          width={24}
-          height={24}
-          className={styles.source_status}
-          data-available={isAvailable}
-        />
-      );
-
-    case "gogoanime":
-      if (isAvailable) {
-        return (
-          <CloudOnlineSvg
-            width={18}
-            height={18}
-            className={styles.source_status}
-            data-available={isAvailable}
-          />
-        );
-      }
-
-      return (
-        <CloudOfflineSvg
-          width={24}
-          height={24}
-          className={styles.source_status}
-          data-available={isAvailable}
-        />
-      );
-
-    default:
-      return;
+  if (isAvailable) {
+    return (
+      <CloudOnlineSvg
+        width={18}
+        height={18}
+        className={styles.source_status}
+        data-available={isAvailable}
+      />
+    );
   }
+
+  return (
+    <CloudOfflineSvg
+      width={24}
+      height={24}
+      className={styles.source_status}
+      data-available={isAvailable}
+    />
+  );
 }

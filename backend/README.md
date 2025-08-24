@@ -29,9 +29,13 @@ npm install
 With all that done, you can follow the pre-made `.env.example` on the root folder or fill the `.env` like the example bellow:
 
 ```javascript
+// Change it fo false when you run it in Production mode
+DEV_MODE=true
+
 // PORT WHERE THE SERVER WILL BE RUNNING
 PORT=3456
 
+// 5 minutes in seconds
 REDIS_EXPIRATION=300
 REDIS_USERNAME=your_redis_username
 REDIS_PASSWORD=your_redis_password

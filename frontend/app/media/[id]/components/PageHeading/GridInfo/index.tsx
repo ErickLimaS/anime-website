@@ -31,7 +31,8 @@ export default function GridHeadingMediaInfo({
   function getEpisodesQuantity() {
     return imdbEpisodes?.length || mediaInfo.episodes || "Not Available";
   }
-
+  console.log(mediaInfo.startDate);
+  console.log(mediaInfo.endDate);
   return (
     <section id={styles.info_list_container}>
       <ul>
@@ -72,16 +73,16 @@ export default function GridHeadingMediaInfo({
         {mediaInfo.type == "ANIME" &&
           mediaInfo.format != "MOVIE" &&
           mediaInfo.status != "NOT_YET_RELEASED" && (
-          <li className={`${styles.info_item}`}>
-            <span>
-              <PlaySvg width={16} height={16} alt="Episodes" />
-            </span>
+            <li className={`${styles.info_item}`}>
+              <span>
+                <PlaySvg width={16} height={16} alt="Episodes" />
+              </span>
 
-            <h2>EPISODES</h2>
+              <h2>EPISODES</h2>
 
-            <p>{getEpisodesQuantity()}</p>
-          </li>
-        )}
+              <p>{getEpisodesQuantity()}</p>
+            </li>
+          )}
 
         {mediaInfo.type == "MANGA" && (
           <li className={`${styles.info_item}`}>
@@ -104,7 +105,9 @@ export default function GridHeadingMediaInfo({
 
           <p className={styles.width_min_content}>
             {getMediaReleaseDate(
-              mediaInfo.startDate ? mediaInfo.endDate : undefined
+              mediaInfo.startDate && mediaInfo.endDate.year
+                ? mediaInfo.endDate
+                : mediaInfo.startDate || undefined
             )}
           </p>
         </li>

@@ -244,6 +244,7 @@ section#copyright_section {
 section#copyright_section>div {
 
     flex-direction: column;
+    gap: 16px 0;
 }
 
 @media(min-width: 680px) {
@@ -266,7 +267,7 @@ section#copyright_section a:hover small {
 }
 
 section#copyright_section>div {
-    padding: 0 24px;
+    width: 96%;
     justify-content: space-between;
 }
 

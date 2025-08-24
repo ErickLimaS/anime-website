@@ -43,7 +43,7 @@ import { getAniwatchEpisodeByEpisodeId } from "@/app/api/episodes/aniwatch/episo
 import { consumetEpisodeByEpisodeId } from "@/app/api/episodes/consumet/episodesInfo";
 
 type VideoPlayerType = {
-  mediaSource: SourceType["source"];
+  mediaSource: Omit<SourceType["source"], "crunchyroll">;
   mediaInfo: MediaDataFullInfo;
   mediaEpisodes?: GogoanimeMediaEpisodes[] | EpisodeAnimeWatch[];
   videoInfo: {
@@ -385,10 +385,10 @@ export default function VideoPlayer({
       case "gogoanime":
         nextEpisodeId = (nextEpisodeInfo as GogoanimeMediaEpisodes).id;
 
-        nextEpisode = await consumetEpisodeByEpisodeId({
+        nextEpisode = (await consumetEpisodeByEpisodeId({
           episodeId: nextEpisodeId,
           // useAlternateLinkOption: true,
-        }) as EpisodeLinksGoGoAnime;
+        })) as EpisodeLinksGoGoAnime;
 
         const nextEpisodeVideoUrl = nextEpisode!.sources.find(
           (item) => item.quality == "default"
@@ -404,10 +404,10 @@ export default function VideoPlayer({
       case "aniwatch":
         nextEpisodeId = (nextEpisodeInfo as EpisodeAnimeWatch).episodeId;
 
-        nextEpisode = await getAniwatchEpisodeByEpisodeId({
+        nextEpisode = (await getAniwatchEpisodeByEpisodeId({
           episodeId: nextEpisodeId,
           category: searchParams?.get("dub") == "true" ? "dub" : "sub",
-        }) as EpisodeLinksAnimeWatch;
+        })) as EpisodeLinksAnimeWatch;
 
         setNextEpisodeInfo({
           id: nextEpisodeId,

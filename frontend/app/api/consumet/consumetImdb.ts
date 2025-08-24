@@ -11,14 +11,14 @@ export const searchMediaOnIMDB = async ({
   mediaTitle: string;
 }) => {
   try {
-    const { data } = await axios({
+    const data: ImdbSearchItem[] = await axios({
       url: `${BACKEND_URI}/imdb/search?query=${mediaTitle}`,
       method: "GET",
-    });
+    }).then((res) => res.data.result.results);
 
     return data;
   } catch (err) {
-    console.log(err);
+    console.error(err);
 
     return null;
   }
@@ -43,9 +43,11 @@ export const getMediaInfoOnIMDB = async ({
     let mediaSearchedType: string | null = null;
 
     if (search && seachTitle) {
-      const searchResults: ImdbSearchItem[] = await searchMediaOnIMDB({
+      const searchResults: ImdbSearchItem[] | null = await searchMediaOnIMDB({
         mediaTitle: stringToOnlyAlphabetic(seachTitle),
-      }).then((res) => res.results);
+      });
+
+      if (!searchResults) return null;
 
       const filteredRes = searchResults.find(
         (item) => Number(item.releaseDate) == releaseYear
@@ -55,14 +57,14 @@ export const getMediaInfoOnIMDB = async ({
       mediaSearchedType = filteredRes?.type || searchResults[0].type;
     }
 
-    const { data }: { data: ImdbMediaInfo } = await axios({
-      url: `${BACKEND_URI}/imdb/media-info?query=${mediaSearchedId || mediaId}&type=${mediaSearchedType || type}`,
+    const data: ImdbMediaInfo = await axios({
+      url: `${BACKEND_URI}/imdb/media-info?query=${mediaSearchedId || mediaId}&type=${mediaSearchedType?.replace(" ", "_") || type}`,
       method: "GET",
-    });
+    }).then((res) => res.data.result);
 
     return data;
   } catch (err) {
-    console.log(err);
+    console.error(err);
 
     return null;
   }

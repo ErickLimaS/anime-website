@@ -35,6 +35,10 @@ h2.heading_style {
 
 .review_heading img {
 
+    object-fit: cover;
+
+    border: 3px solid var(--white-100);
+    
     border-radius: 50%;
 
 }
@@ -126,6 +130,12 @@ h2.heading_style {
 
 .review_text_container img {
     width: 95%;
+}
+
+ul li.review_container:not(:last-child) {
+
+    border-bottom: 2px solid var(--white-50);
+
 }
 
 .review_container>a {

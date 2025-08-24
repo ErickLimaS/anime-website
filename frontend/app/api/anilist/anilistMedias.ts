@@ -95,7 +95,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       const data: MediaData[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/search/any/anilist`,
@@ -107,10 +107,13 @@ export default {
           perPage: 15,
           showAdultContent: showAdultContent == true ? undefined : false,
         },
-      });
+      }).then((res) => res.data.results);
 
       if (!showAdultContent) {
-        return filterMediasWithAdultContent(data, "mediaByFormat");
+        return filterMediasWithAdultContent(
+          data,
+          "mediaByFormat"
+        ) as MediaData[];
       }
 
       return data;
@@ -139,7 +142,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       const thisYear = new Date().getFullYear();
 
@@ -185,7 +188,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       const data: AiringMediaResult[] = await axios({
         url: `${NEXT_PUBLIC_BACKEND_URL}/medias/${type.toLowerCase()}/TV`,
@@ -206,7 +209,7 @@ export default {
 
       return data;
     } catch (error) {
-      console.log((error as Error).message);
+      console.error((error as Error).message);
 
       return null;
     }
@@ -227,7 +230,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       const thisYear = new Date().getFullYear();
 
@@ -274,7 +277,7 @@ export default {
         accessToken: accessToken,
       });
 
-      const authToken = headersCustom?.Authorization?.slice(8);
+      const authToken = headersCustom?.Authorization?.slice(7);
 
       try {
         const data: MediaData[] = await axios({
