@@ -109,8 +109,6 @@ export default {
         },
       }).then((res) => res.data.results);
 
-      console.log(data);
-
       if (!showAdultContent) {
         return filterMediasWithAdultContent(
           data,
@@ -211,7 +209,7 @@ export default {
 
       return data;
     } catch (error) {
-      console.log((error as Error).message);
+      console.error((error as Error).message);
 
       return null;
     }
