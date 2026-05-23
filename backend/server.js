@@ -18,7 +18,8 @@ const redisClient = redis.createClient(
         password: `${process.env.REDIS_PASSWORD}`,
         socket: {
             host: `${process.env.REDIS_HOST}`,
-            port: process.env.REDIS_PORT
+            port: process.env.REDIS_PORT,
+            tls: true
         }
     });
 
@@ -35,7 +36,6 @@ const redisClient = redis.createClient(
     })
 
     await redisClient.connect();
-
     await redisClient.ping()
 
 })()
@@ -45,7 +45,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || '*'
+}));
 app.use(express.json());
 
 app.use((req, res, next) => {
